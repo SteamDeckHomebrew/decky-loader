@@ -63,6 +63,7 @@ struct DebuggerCommand {
     params: DebuggerCommandParams
 }
 
+/// Downloads all content from a website
 async fn get_web_content(url: Uri) -> TokioResult<Vec<WebContent>> {
     let client = Client::new();
     let response = client.get(url).await?;
@@ -73,6 +74,7 @@ async fn get_web_content(url: Uri) -> TokioResult<Vec<WebContent>> {
     Ok(serde_json::from_str(data.as_str())?)
 }
 
+/// Loads plugins
 fn load_plugins() -> String {
     let paths = fs::read_dir("./plugins");
     if let Ok(paths) = paths {
@@ -99,15 +101,13 @@ fn load_plugins() -> String {
 
 #[tokio::main]
 async fn main() -> TokioResult<()> {
+    // If CEF Debugging is enabled, it will be accessible through port 8080
     let url = "http://127.0.0.1:8080/json".parse::<hyper::Uri>().unwrap();
 
+    // Load all available tabs that can be debugged
     let contents = get_web_content(url).await?;
 
-    println!("Available Content:");
-    for content in &contents {
-        println!("  {}", content.title);
-    }
-
+    // Find QuickAccess tab (sidebar menu) and get the debugger websocket interface url
     let mut quick_access_debug_url: Option<String> = None;
     for content in &contents {
         if content.title == "QuickAccess" {
@@ -117,8 +117,10 @@ async fn main() -> TokioResult<()> {
 
     if let Some(url) = quick_access_debug_url {
 
+        // Connect to debugger websocket
         let (mut socket, _) = tungstenite::connect(url)?;
 
+        // Create a inject command to send to the debugger
         let command = DebuggerCommand {
             id: 1,
             method: String::from("Runtime.evaluate"),
@@ -128,10 +130,11 @@ async fn main() -> TokioResult<()> {
             }
         };
 
+        // Send command to debugger
         socket.write_message(Message::Text(serde_json::to_string(&command)?))?;
 
+        // Print response
         let response = socket.read_message()?;
-
         println!("{}", response);
         
         socket.close(None)?;

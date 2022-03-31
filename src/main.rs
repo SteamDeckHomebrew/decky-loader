@@ -1,4 +1,5 @@
 use std::fmt::{Debug, Display, Formatter};
+use std::fs;
 use hyper::{Client, Uri};
 use hyper::body::Buf;
 use serde::{ Serialize, Deserialize };
@@ -72,6 +73,30 @@ async fn get_web_content(url: Uri) -> TokioResult<Vec<WebContent>> {
     Ok(serde_json::from_str(data.as_str())?)
 }
 
+fn load_plugins() -> String {
+    let paths = fs::read_dir("./plugins");
+    if let Ok(paths) = paths {
+
+        let mut result = String::new();
+
+        for entry in paths {
+            if let Ok(entry) = entry {
+                if let Ok(file_type) = entry.file_type() {
+                    if file_type.is_file() {
+                        if let Ok(content) = fs::read_to_string(entry.path()) {
+                            result.push_str(format!("plugins.push(new {});", content).as_str());
+                        }
+                    }
+                }
+            }
+        }
+
+        result
+    } else {
+        String::from("")
+    }
+}
+
 #[tokio::main]
 async fn main() -> TokioResult<()> {
     let url = "http://127.0.0.1:8080/json".parse::<hyper::Uri>().unwrap();
@@ -98,7 +123,7 @@ async fn main() -> TokioResult<()> {
             id: 1,
             method: String::from("Runtime.evaluate"),
             params: DebuggerCommandParams {
-                expression: String::from(include_str!("plugin_page.js")),
+                expression: String::from(include_str!("plugin_page.js").replace("{{ PLUGINS }}", load_plugins().as_str())),
                 userGesture: true
             }
         };

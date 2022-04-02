@@ -3,10 +3,11 @@ from aiohttp_jinja2 import template
 
 from os import path, listdir
 from importlib.util import spec_from_file_location, module_from_spec
-from logging import error
+from logging import getLogger
 
 class Loader:
     def __init__(self, server_instance, plugin_path) -> None:
+        self.logger = getLogger("Loader")
         self.plugin_path = plugin_path
         self.plugins = self.import_plugins()
 
@@ -26,15 +27,17 @@ class Loader:
                 module = module_from_spec(spec)
                 spec.loader.exec_module(module)
                 dc[module.Plugin.name] = module.Plugin
+                self.logger.info("Loaded {}".format(module.Plugin.name))
             except Exception as e:
-                error("Could not load {}. {}".format(file, e))
+                self.logger.error("Could not load {}. {}".format(file, e))
         return dc
     
     async def load_plugin(self, request):
         plugin = self.plugins[request.match_info["name"]]
-        return web.Response(plugin.main_view_html)
+        return web.Response(text=plugin.main_view_html, content_type="text/html")
 
     async def reload_plugins(self, request=None):
+        self.logger.info("Re-importing all plugins.")
         self.plugins = self.import_plugins()
 
     async def handle_plugin_method_call(self, request):
@@ -46,5 +49,5 @@ class Loader:
             return web.json_response({"result": e}, status=400)
 
     @template('plugin_view.html')
-    async def plugin_iframe_route(self):
-        return {"plugins": self.plugins}
+    async def plugin_iframe_route(self, request):
+        return {"plugins": self.plugins.values()}

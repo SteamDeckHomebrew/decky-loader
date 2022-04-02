@@ -5,5 +5,7 @@ Description=SteamDeck Plugin Manager
 ExecStart=/home/deck/homebrew/services/plugin_manager/plugin_manager
 WorkingDirectory=/home/deck/homebrew/services/plugin_manager/
 
+Environment=PLUGIN_PATH=/home/deck/homebrew/plugins
+
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target

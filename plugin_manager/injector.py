@@ -25,6 +25,20 @@ class Tab:
                 })
                 return await ws.receive_json()
     
+    async def get_steam_resource(self, url):
+        async with ClientSession() as web:
+            async with web.ws_connect(self.ws_url) as ws:
+                await ws.send_json({
+                    "id": 1,
+                    "method": "Runtime.evaluate",
+                    "params": {
+                        "expression": f'(async function test() {{ return await (await fetch("{url}")).text() }})()',
+                        "userGesture": True,
+                        "awaitPromise": True
+                    }
+                })
+                return await ws.receive_json()
+    
     def __repr__(self):
         return self.title
 

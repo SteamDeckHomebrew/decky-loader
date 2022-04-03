@@ -1,9 +1,9 @@
 class Plugin:
-    name = ""
+    name = "Template Plugin"
 
     author = ""
 
-    main_view_html = ""
+    main_view_html = "<html><body><h3>Template Plugin</h3></body></html>"
 
     tile_view_html = ""
 

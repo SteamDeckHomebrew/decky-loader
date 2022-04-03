@@ -53,7 +53,7 @@ class Tab:
             }
         })
         await self.client.close()
-        return res
+        return res["result"]["result"]["value"]
     
     def __repr__(self):
         return self.title

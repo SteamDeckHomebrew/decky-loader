@@ -1,5 +1,4 @@
-# This is a Work-In-Progress (WIP)
-# SteamOS Plugin Manager
+# Plugin Loader
 
 ![steamuserimages-a akamaihd](https://user-images.githubusercontent.com/10835354/161068262-ca723dc5-6795-417a-80f6-d8c1f9d03e93.jpg)
 

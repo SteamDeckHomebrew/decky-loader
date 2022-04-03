@@ -1,9 +1,8 @@
 {% if not plugins|length %}
-<div class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable"
-    style="--indent-level:0;">
+<div class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable" style="--indent-level:0;">
     <div class="basicdialog_FieldChildren_279n8" style="color: white; font-size: large; padding-top: 10px;">
         No plugins installed :(
-    </div>
+    </div>    
 </div>
 {% endif %}
 
@@ -11,21 +10,15 @@
     <div class="quickaccesscontrols_PanelSectionRow_26R5w">
         {% for plugin in plugins %}
         {% if plugin.tile_view_html|length %}
-        <div onclick="location.href = '/plugins/load/{{ plugin.name }}'"
-            class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable"
-            style="--indent-level:0;">
+        <div onclick="location.href = '/plugins/load/{{ plugin.name }}'" class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable" style="--indent-level:0;">
             {{ plugin.tile_view_html }}
         </div>
         {% else %}
         <div class="quickaccesscontrols_PanelSectionRow_26R5w">
-            <div onclick="location.href = '/plugins/load/{{ plugin.name }}'"
-                class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable"
-                style="--indent-level:0;">
+            <div onclick="location.href = '/plugins/load/{{ plugin.name }}'" class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable" style="--indent-level:0;">
                 <div class="basicdialog_FieldChildren_279n8">
-                    <button type="button" tabindex="0"
-                        class="DialogButton _DialogLayout Secondary basicdialog_Button_1Ievp Focusable">{{ plugin.name
-                        }}</button>
-                </div>
+                    <button type="button" tabindex="0" class="DialogButton _DialogLayout Secondary basicdialog_Button_1Ievp Focusable">{{ plugin.name }}</button>
+                </div>    
             </div>
         </div>
         {% endif %}

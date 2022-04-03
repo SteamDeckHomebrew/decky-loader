@@ -23,10 +23,10 @@ class Tab:
         async for message in self.websocket:
             yield message
 
-    async def _send_devtools_cmd(self, dc):
+    async def _send_devtools_cmd(self, dc, receive=True):
         if self.websocket:
             await self.websocket.send_json(dc)
-            return await self.websocket.receive_json()
+            return (await self.websocket.receive_json()) if receive else None
         raise RuntimeError("Websocket not opened")
 
     async def evaluate_js(self, js):

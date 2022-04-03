@@ -34,26 +34,26 @@ class Loader:
             except Exception as e:
                 self.logger.error("Could not load {}. {}".format(file, e))
         return dc
-    
-    async def load_plugin(self, request):
-        plugin = self.plugins[request.match_info["name"]]
-        return web.Response(text=plugin.main_view_html, content_type="text/html")
 
     async def reload_plugins(self, request=None):
         self.logger.info("Re-importing all plugins.")
         self.plugins = self.import_plugins()
 
-    async def handle_plugin_method_call(self, request):
-        data = await request.post()
-        try:
-            result = getattr(self.plugins[data["plugin"]], data["method"])(*data["args"])
-            return web.json_response({"result": result})
-        except Exception as e:
-            return web.json_response({"result": e}, status=400)
+    async def handle_plugin_method_call(self, plugin_name, method_name, **kwargs):
+        return await getattr(self.plugins[plugin_name], method_name)(**kwargs)
 
     async def get_steam_resource(self, request):
         tab = (await injector.get_tabs())[0]
         return web.Response(text=await tab.get_steam_resource(f"https://steamloopback.host/{request.match_info['path']}"), content_type="text/html")
+
+    async def load_plugin(self, request):
+        plugin = self.plugins[request.match_info["name"]]
+        ret = """
+        <script src="/static/library.js"></script>
+        <script>const plugin_name = '{}' </script>
+        {}
+        """.format(plugin.name, plugin.main_view_html)
+        return web.Response(text=ret, content_type="text/html")
 
     @template('plugin_view.html')
     async def plugin_iframe_route(self, request):

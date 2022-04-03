@@ -37,3 +37,8 @@
         }
     }, 100);
 })();
+
+function resolveMethodCall(call_id, result) {
+    let iframe = document.getElementById("plugin_iframe").contentWindow;
+    iframe.postMessage({'call_id': call_id, 'result': result}, "http://127.0.0.1:1337");
+}

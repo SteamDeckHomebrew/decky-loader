@@ -69,7 +69,7 @@ async def get_tabs():
                 break
             except:
                 print("Steam isn't available yet. Wait for a moment...")
-                await sleep(5000)
+                await sleep(5)
 
         if res.status == 200:
             res = await res.json()

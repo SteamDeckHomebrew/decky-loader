@@ -52,9 +52,7 @@ class Loader:
             return web.json_response({"result": e}, status=400)
 
     async def get_steam_resource(self, request):
-        tabs = await injector.get_tabs()
-        tab = next((i for i in tabs), None)
-
+        tab = (await injector.get_tabs())[0]
         return web.Response(text=await tab.get_steam_resource(f"https://steamloopback.host/{request.match_info['path']}"), content_type="text/html")
 
     @template('plugin_view.html')

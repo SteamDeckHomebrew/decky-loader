@@ -1,9 +1,0 @@
-[Unit]
-Description=SteamDeck Plugin Manager
-
-[Service]
-ExecStart=/home/deck/homebrew/services/plugin_manager/plugin_manager
-WorkingDirectory=/home/deck/homebrew/services/plugin_manager/
-
-[Install]
-WantedBy=multi-user.target

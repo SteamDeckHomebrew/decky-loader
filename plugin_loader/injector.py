@@ -2,6 +2,7 @@
 
 from aiohttp import ClientSession
 from logging import info
+from asyncio import sleep
 
 BASE_ADDRESS = "http://localhost:8080"
 
@@ -60,7 +61,16 @@ class Tab:
 
 async def get_tabs():
     async with ClientSession() as web:
-        res = await web.get("{}/json".format(BASE_ADDRESS))
+        res = {}
+
+        while True:
+            try:
+                res = await web.get("{}/json".format(BASE_ADDRESS))
+                break
+            except:
+                print("Steam isn't available yet. Wait for a moment...")
+                await sleep(5000)
+
         if res.status == 200:
             res = await res.json()
             return [Tab(i) for i in res]

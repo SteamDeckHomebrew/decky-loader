@@ -10,7 +10,7 @@ from injector import inject_to_tab, get_tabs
 from utilities import util_methods
 
 CONFIG = {
-    "plugin_path": getenv("PLUGIN_PATH", "/home/deck/plugins"),
+    "plugin_path": getenv("PLUGIN_PATH", "/home/deck/homebrew/plugins"),
     "server_host": getenv("SERVER_HOST", "127.0.0.1"),
     "server_port": int(getenv("SERVER_PORT", "1337"))
 }
@@ -21,7 +21,7 @@ class PluginManager:
         self.web_app = Application()
         self.plugin_loader = Loader(self.web_app, CONFIG["plugin_path"])
 
-        jinja_setup(self.web_app, loader=FileSystemLoader('templates'))
+        jinja_setup(self.web_app, loader=FileSystemLoader(path.join(path.dirname(__file__), 'templates')))
         self.web_app.on_startup.append(self.inject_javascript)
         self.loop.create_task(self.method_call_listener())
 

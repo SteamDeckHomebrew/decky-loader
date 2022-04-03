@@ -4,7 +4,6 @@ from aiohttp import ClientSession
 from logging import info
 
 BASE_ADDRESS = "http://localhost:8080"
-web = ClientSession()
 
 class Tab:
     def __init__(self, res) -> None:
@@ -12,28 +11,61 @@ class Tab:
         self.id = res["id"]
         self.ws_url = res["webSocketDebuggerUrl"]
 
+        self.websocket = None
+        self.client = None
+
+    async def open_websocket(self):
+        self.client = ClientSession()
+        self.websocket = await self.client.ws_connect(self.ws_url)
+    
+    async def listen_for_message(self):
+        async for message in self.websocket:
+            yield message
+
+    async def _send_devtools_cmd(self, dc):
+        if self.websocket:
+            await self.websocket.send_json(dc)
+            return await self.websocket.receive_json()
+        raise RuntimeError("Websocket not opened")
+
     async def evaluate_js(self, js):
-        async with web.ws_connect(self.ws_url) as ws:
-            await ws.send_json({
-                "id": 1,
-                "method": "Runtime.evaluate",
-                "params": {
-                    "expression": js,
-                    "userGesture": True
-                }
-            })
-            return await ws.receive_json()
+        await self.open_websocket()
+        res = await self._send_devtools_cmd({
+            "id": 1,
+            "method": "Runtime.evaluate",
+            "params": {
+                "expression": js,
+                "userGesture": True
+            }
+        })
+        await self.client.close()
+        return res
+        
+    async def get_steam_resource(self, url):
+        await self.open_websocket()
+        res = await self._send_devtools_cmd({
+            "id": 1,
+            "method": "Runtime.evaluate",
+            "params": {
+                "expression": f'(async function test() {{ return await (await fetch("{url}")).text() }})()',
+                "userGesture": True,
+                "awaitPromise": True
+            }
+        })
+        await self.client.close()
+        return res
     
     def __repr__(self):
         return self.title
 
 async def get_tabs():
-    res = await web.get("{}/json".format(BASE_ADDRESS))
-    if res.status == 200:
-        res = await res.json()
-        return [Tab(i) for i in res]
-    else:
-        raise Exception("/json did not return 200. {}".format(await res.text()))
+    async with ClientSession() as web:
+        res = await web.get("{}/json".format(BASE_ADDRESS))
+        if res.status == 200:
+            res = await res.json()
+            return [Tab(i) for i in res]
+        else:
+            raise Exception("/json did not return 200. {}".format(await res.text()))
 
 async def inject_to_tab(tab_name, js):
     tabs = await get_tabs()

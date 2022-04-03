@@ -17,7 +17,7 @@
         let pluginPage = pages.children[pages.children.length - 1];
         pluginPage.innerHTML = createTitle("Plugins");
 
-        pluginPage.innerHTML += `<iframe id="plugin_iframe" style="border: none; width: 100%; height: 100%;" src="http://127.0.0.1:1337"></iframe>`;
+        pluginPage.innerHTML += `<iframe id="plugin_iframe" style="border: none; width: 100%; height: 100%;" src="http://127.0.0.1:1337/plugins/iframe"></iframe>`;
     }
 
     function inject() {
@@ -31,7 +31,7 @@
         if (document.hasFocus()) {
             inject();
             document.getElementById("plugin_title").onclick = function() {
-                document.getElementById("plugin_iframe").location.reload()
+                document.getElementById("plugin_iframe").contentWindow.location.href = "http://127.0.0.1:1337/plugins/iframe";
             }
             clearInterval(injector);
         }

@@ -2,7 +2,6 @@ class PluginEventTarget extends EventTarget { }
 method_call_ev_target = new PluginEventTarget();
 
 window.addEventListener("message", function(evt) {
-    console.log(evt);
     let ev = new Event(evt.data.call_id);
     ev.data = evt.data.result;
     method_call_ev_target.dispatchEvent(ev);
@@ -27,6 +26,8 @@ async function fetch_nocors(url, request={}) {
     let args = { method: "POST", headers: {}, body: "" };
     request = {...args, ...request};
     request.url = url;
+    request.data = request.body;
+    delete request.body; //maintain api-compatibility with fetch
     return await call_server_method("http_request", request);
 }
 

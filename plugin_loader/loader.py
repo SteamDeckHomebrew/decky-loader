@@ -18,13 +18,13 @@ class FileChangeHandler(FileSystemEventHandler):
         src_path = event.src_path
         if "__pycache__" in src_path:
             return
-        self.loader.import_plugin(src_path)
+        self.loader.import_plugin(src_path, refresh=True)
     
     def on_modified(self, event):
         src_path = event.src_path
         if "__pycache__" in src_path:
             return
-        self.loader.import_plugin(src_path)
+        self.loader.import_plugin(src_path, refresh=True)
 
 class Loader:
     def __init__(self, server_instance, plugin_path, loop, live_reload=False) -> None:
@@ -47,7 +47,7 @@ class Loader:
             web.get("/steam_resource/{path:.+}", self.get_steam_resource)
         ])
 
-    def import_plugin(self, file):
+    def import_plugin(self, file, refresh=False):
         try:
             spec = spec_from_file_location("_", file)
             module = module_from_spec(spec)
@@ -69,14 +69,14 @@ class Loader:
             self.logger.info("Loaded {}".format(module.Plugin.name))
         except Exception as e:
             self.logger.error("Could not load {}. {}".format(file, e))
+        finally:
+            if refresh:
+                self.loop.create_task(self.refresh_iframe())
 
     def import_plugins(self):
         files = [i for i in listdir(self.plugin_path) if i.endswith(".py")]
         for file in files:
             self.import_plugin(path.join(self.plugin_path, file))
-    
-    async def watch_for_file_change(self):
-        pass
 
     async def reload_plugins(self, request=None):
         self.logger.info("Re-importing plugins.")
@@ -89,7 +89,10 @@ class Loader:
 
     async def get_steam_resource(self, request):
         tab = (await get_tabs())[0]
-        return web.Response(text=await tab.get_steam_resource(f"https://steamloopback.host/{request.match_info['path']}"), content_type="text/html")
+        try:
+            return web.Response(text=await tab.get_steam_resource(f"https://steamloopback.host/{request.match_info['path']}"), content_type="text/html")
+        except Exception as e:
+            return web.Response(text=str(e), status=400)
 
     async def load_plugin(self, request):
         plugin = self.plugins[request.match_info["name"]]
@@ -103,3 +106,8 @@ class Loader:
     @template('plugin_view.html')
     async def plugin_iframe_route(self, request):
         return {"plugins": self.plugins.values()}
+
+    async def refresh_iframe(self):
+        tab = next((i for i in await get_tabs() if i.title == "QuickAccess"), None)
+        await tab.open_websocket()
+        return await tab.evaluate_js("reloadIframe()")

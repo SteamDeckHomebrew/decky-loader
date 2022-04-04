@@ -3,13 +3,21 @@
 ![steamuserimages-a akamaihd](https://user-images.githubusercontent.com/10835354/161068262-ca723dc5-6795-417a-80f6-d8c1f9d03e93.jpg)
 
 ## Installation
-- Go into the Steam Deck Settings
-- Under System -> System Settings toggle `Enable Developer Mode`
-- Scroll the sidebar all the way down and click on `Developer`
-- Under Miscellaneous, enable `CEF Remote Debugging`
-- Place the executable under `~/homebrew/services/plugin_loader`. Do not change the name of the file.
-- Place the plugin_manager.service file under `/etc/systemd/system`
-- Open a Terminal and type `systemctl --now --user enable plugin_manager`
+
+While in Gaming Mode
+1. Go into the Steam Deck Settings
+2. Under System -> System Settings toggle `Enable Developer Mode`
+3. Scroll the sidebar all the way down and click on `Developer`
+4. Under Miscellaneous, enable `CEF Remote Debugging`
+
+
+While in Desktop Mode (Steam button -> Power -> Switch to Desktop)
+1. Download the .zip file from GitHub, extract it to your Downloads folder.
+2. Inside the extracted folder, locate "install.sh" and mark it as executable.
+    1. Either by right click -> Properties -> Permissions -> Tick the "Is executable" box
+    2. Or, chmod +x install.sh
+3. Open terminal (Konsole), "cd" into the extracted "PluginLoader-main" folder `cd Downloads/PluginLoader-main/`
+4. Run `sudo install.sh` in Konsole.
 
 ### Install Plugins
 - Simply copy the plugin's .py file into `~/homebrew/plugins`

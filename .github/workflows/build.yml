@@ -1,0 +1,42 @@
+name: Builder
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    name: Packager
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 🧰 Checkout
+      uses: actions/checkout@v3
+      
+    - name: 🐍 Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+        
+    - name: ⬇️ Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    
+    - name: 🛠️ Build
+      run: |
+        pyinstaller --noconfirm --onefile --name "PluginLoader" --add-data ./plugin_loader/static:/static --add-data ./plugin_loader/templates:/templates ./plugin_loader/*.py
+        
+    - name: ⬆️ Upload package
+      uses: actions/upload-artifact@v2
+      with:
+        name: Plugin Loader
+        path: |
+          ./dist/*

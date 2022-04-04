@@ -29,7 +29,7 @@ class Loader:
                 spec = spec_from_file_location("_", path.join(self.plugin_path, file))
                 module = module_from_spec(spec)
                 spec.loader.exec_module(module)
-                dc[module.Plugin.name] = module.Plugin
+                dc[module.Plugin.name] = module.Plugin()
                 self.logger.info("Loaded {}".format(module.Plugin.name))
             except Exception as e:
                 self.logger.error("Could not load {}. {}".format(file, e))

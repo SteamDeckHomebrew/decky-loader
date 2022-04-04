@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="/steam_resource/css/2.css">
 <link rel="stylesheet" href="/steam_resource/css/39.css">
 <link rel="stylesheet" href="/steam_resource/css/library.css">
+<script src="/static/library.js"></script>
 
 {% if not plugins|length %}
 <div class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable" style="--indent-level:0;">
@@ -15,7 +16,7 @@
         {% for plugin in plugins %}
         {% if plugin.tile_view_html|length %}
         <div onclick="location.href = '/plugins/load/{{ plugin.name }}'" class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable" style="--indent-level:0;">
-            {{ plugin.tile_view_html }}
+            {{ plugin.tile_view_html|safe }}
         </div>
         {% else %}
         <div class="quickaccesscontrols_PanelSectionRow_26R5w">

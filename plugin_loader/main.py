@@ -12,14 +12,15 @@ from utilities import util_methods
 CONFIG = {
     "plugin_path": getenv("PLUGIN_PATH", "/home/deck/homebrew/plugins"),
     "server_host": getenv("SERVER_HOST", "127.0.0.1"),
-    "server_port": int(getenv("SERVER_PORT", "1337"))
+    "server_port": int(getenv("SERVER_PORT", "1337")),
+    "live_reload": getenv("LIVE_RELOAD", "1") == "1"
 }
 
 class PluginManager:
     def __init__(self) -> None:
         self.loop = get_event_loop()
         self.web_app = Application()
-        self.plugin_loader = Loader(self.web_app, CONFIG["plugin_path"])
+        self.plugin_loader = Loader(self.web_app, CONFIG["plugin_path"], self.loop, CONFIG["live_reload"])
 
         jinja_setup(self.web_app, loader=FileSystemLoader(path.join(path.dirname(__file__), 'templates')))
         self.web_app.on_startup.append(self.inject_javascript)

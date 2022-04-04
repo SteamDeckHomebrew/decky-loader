@@ -7,8 +7,13 @@ class Plugin:
 
     tile_view_html = ""
 
-    async def method_1(**kwargs):
+    hot_reload = False
+
+    async def __main(self):
         pass
 
-    async def method_2(**kwargs):
+    async def method_1(self, **kwargs):
+        pass
+
+    async def method_2(self, **kwargs):
         pass

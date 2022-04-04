@@ -1,2 +1,3 @@
 aiohttp==3.8.1
 aiohttp-jinja2==1.5.0
+watchdog==2.1.7

@@ -21,6 +21,10 @@
 - Allows plugins to define python functions and run them from javascript.
 - Allows plugins to make fetch calls, bypassing cors completely.
 
+## Caveats
+
+- You can only interact with the Plugin Menu via touchscreen.
+
 ## Credit
 
 The original idea for the concept is based on the work of [marios8543's steamdeck-ui-inject](https://github.com/marios8543/steamdeck-ui-inject) project.

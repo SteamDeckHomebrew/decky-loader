@@ -1,13 +1,21 @@
 <link rel="stylesheet" href="/steam_resource/css/2.css">
 <link rel="stylesheet" href="/steam_resource/css/39.css">
 <link rel="stylesheet" href="/steam_resource/css/library.css">
-<script src="/static/library.js"></script>
+<script>
+    const tile_iframes = [];
+    window.addEventListener("message", function (evt) {
+        tile_iframes.forEach(iframe => {
+            iframe.contentWindow.postMessage(evt.data, "http://127.0.0.1:1337");
+        });
+    }, false);
+</script>
 
 {% if not plugins|length %}
-<div class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable" style="--indent-level:0;">
+<div class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable"
+    style="--indent-level:0;">
     <div class="basicdialog_FieldChildren_279n8" style="color: white; font-size: large; padding-top: 10px;">
         No plugins installed :(
-    </div>    
+    </div>
 </div>
 {% endif %}
 
@@ -15,15 +23,42 @@
     <div class="quickaccesscontrols_PanelSectionRow_26R5w">
         {% for plugin in plugins %}
         {% if plugin.tile_view_html|length %}
-        <div onclick="location.href = '/plugins/load/{{ plugin.name }}'" class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable" style="--indent-level:0;">
-            {{ plugin.tile_view_html|safe }}
+        <div onclick="location.href = '/plugins/load/{{ plugin.name }}'"
+            class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable"
+            style="--indent-level:0;">
+            <iframe id="tile_view_iframe_{{ plugin.name }}" style="display:block; padding: 0; border: none;"
+                src="/plugins/load_tile/{{ plugin.name }}"></iframe>
+            <script>
+                (function() {
+                    let iframe = document.getElementById("tile_view_iframe_{{ plugin.name }}");
+                    tile_iframes.push(document.getElementById("tile_view_iframe_{{ plugin.name }}"));
+                    iframe.onload = function() {
+                        let html = iframe.contentWindow.document.children[0];
+                        let last_height = 0;
+                        setInterval(function() {
+                            let height = iframe.contentWindow.document.children[0].scrollHeight;
+                            if (height != last_height) {
+                                iframe.height = height + "px";
+                                last_height = height;
+                            }
+                        }, 100);
+                        iframe.contentWindow.document.body.onclick = function () {
+                            location.href = '/plugins/load_main/{{ plugin.name }}';
+                        };
+                    }
+                })();
+            </script>
         </div>
         {% else %}
         <div class="quickaccesscontrols_PanelSectionRow_26R5w">
-            <div onclick="location.href = '/plugins/load/{{ plugin.name }}'" class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable" style="--indent-level:0;">
+            <div onclick="location.href = '/plugins/load_main/{{ plugin.name }}'"
+                class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable"
+                style="--indent-level:0;">
                 <div class="basicdialog_FieldChildren_279n8">
-                    <button type="button" tabindex="0" class="DialogButton _DialogLayout Secondary basicdialog_Button_1Ievp Focusable">{{ plugin.name }}</button>
-                </div>    
+                    <button type="button" tabindex="0"
+                        class="DialogButton _DialogLayout Secondary basicdialog_Button_1Ievp Focusable">{{ plugin.name
+                        }}</button>
+                </div>
             </div>
         </div>
         {% endif %}

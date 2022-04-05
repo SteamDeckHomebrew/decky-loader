@@ -43,7 +43,8 @@ class Loader:
             web.get("/plugins/iframe", self.plugin_iframe_route),
             web.get("/plugins/reload", self.reload_plugins),
             web.post("/plugins/method_call", self.handle_plugin_method_call),
-            web.get("/plugins/load/{name}", self.load_plugin),
+            web.get("/plugins/load_main/{name}", self.load_plugin_main_view),
+            web.get("/plugins/load_tile/{name}", self.load_plugin_tile_view),
             web.get("/steam_resource/{path:.+}", self.get_steam_resource)
         ])
 
@@ -94,13 +95,31 @@ class Loader:
         except Exception as e:
             return web.Response(text=str(e), status=400)
 
-    async def load_plugin(self, request):
+    async def load_plugin_main_view(self, request):
         plugin = self.plugins[request.match_info["name"]]
         ret = """
         <script src="/static/library.js"></script>
         <script>const plugin_name = '{}' </script>
         {}
         """.format(plugin.name, plugin.main_view_html)
+        return web.Response(text=ret, content_type="text/html")
+
+    async def load_plugin_tile_view(self, request):
+        plugin = self.plugins[request.match_info["name"]]
+        ret = """
+        <html style="height: fit-content;">
+            <head>
+                <link rel="stylesheet" href="/steam_resource/css/2.css">
+                <link rel="stylesheet" href="/steam_resource/css/39.css">
+                <link rel="stylesheet" href="/steam_resource/css/library.css">
+                <script src="/static/library.js"></script>
+                <script>const plugin_name = '{name}';</script>
+            </head>
+            <body style="height: fit-content; display: block;">
+                {content}
+            </body>
+        <html>
+        """.format(name=plugin.name, content=plugin.tile_view_html)
         return web.Response(text=ret, content_type="text/html")
 
     @template('plugin_view.html')

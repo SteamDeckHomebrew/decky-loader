@@ -8,6 +8,11 @@
             iframe.contentWindow.postMessage(evt.data, "http://127.0.0.1:1337");
         });
     }, false);
+
+    function loadPlugin(name) {
+        this.parent.postMessage(name, "https://steamloopback.host");
+        location.href = `/plugins/load_main/${name}`;
+    }
 </script>
 
 {% if not plugins|length %}
@@ -23,7 +28,7 @@
     <div class="quickaccesscontrols_PanelSectionRow_26R5w">
         {% for plugin in plugins %}
         {% if plugin.tile_view_html|length %}
-        <div onclick="location.href = '/plugins/load/{{ plugin.name }}'"
+        <div onclick="loadPlugin('{{ plugin.name }}')"
             class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable"
             style="--indent-level:0;">
             <iframe id="tile_view_iframe_{{ plugin.name }}" style="display:block; padding: 0; border: none;" scrolling="no"
@@ -43,7 +48,7 @@
                             }
                         }, 100);
                         iframe.contentWindow.document.body.onclick = function () {
-                            location.href = '/plugins/load_main/{{ plugin.name }}';
+                            loadPlugin('{{ plugin.name }}');
                         };
                     }
                 })();
@@ -51,7 +56,7 @@
         </div>
         {% else %}
         <div class="quickaccesscontrols_PanelSectionRow_26R5w">
-            <div onclick="location.href = '/plugins/load_main/{{ plugin.name }}'"
+            <div onclick="loadPlugin('{{ plugin.name }}')"
                 class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable"
                 style="--indent-level:0;">
                 <div class="basicdialog_FieldChildren_279n8">

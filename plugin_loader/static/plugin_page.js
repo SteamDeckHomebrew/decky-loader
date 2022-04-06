@@ -1,3 +1,21 @@
+function setPluginName(name) {
+    document.getElementById("plugin_title").innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-back" viewBox="0 0 16 16">
+        <path d="M0 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2H2a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H2z"/>
+    </svg>
+    ${name}
+    `;
+}
+
+function reloadIframe() {
+    document.getElementById("plugin_iframe").contentWindow.location.href = "http://127.0.0.1:1337/plugins/iframe";
+}
+
+function resolveMethodCall(call_id, result) {
+    let iframe = document.getElementById("plugin_iframe").contentWindow;
+    iframe.postMessage({'call_id': call_id, 'result': result}, "http://127.0.0.1:1337");
+}
+
 (function () {
     const PLUGIN_ICON = `
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plugin" viewBox="0 0 16 16">
@@ -31,19 +49,18 @@
         if (document.hasFocus()) {
             inject();
             document.getElementById("plugin_title").onclick = function() {
-                document.getElementById("plugin_iframe").contentWindow.location.href = "http://127.0.0.1:1337/plugins/iframe";
+                reloadIframe();
+                document.getElementById("plugin_title").innerText = "Plugins";
+            }
+            window.onmessage = function(ev) {
+                document.getElementById("plugin_title").innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-square-fill" viewBox="0 0 16 16">
+                    <path d="M16 14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12zm-4.5-6.5H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H11.5a.5.5 0 0 0 0-1z"/>
+                </svg>
+                ${ev.data}
+                `;         
             }
             clearInterval(injector);
         }
     }, 100);
 })();
-
-function reloadIframe() {
-    console.log("reloading iframe");
-    document.getElementById("plugin_iframe").contentWindow.location.href = "http://127.0.0.1:1337/plugins/iframe";
-}
-
-function resolveMethodCall(call_id, result) {
-    let iframe = document.getElementById("plugin_iframe").contentWindow;
-    iframe.postMessage({'call_id': call_id, 'result': result}, "http://127.0.0.1:1337");
-}

@@ -85,9 +85,10 @@ class Loader:
             if not hasattr(module.Plugin, "name"):
                 raise KeyError("Plugin {} has not defined a name".format(file))
             if module.Plugin.name in self.plugins:
-                    if hasattr(module.Plugin, "hot_reload") and not module.Plugin.hot_reload:
+                    if hasattr(module.Plugin, "hot_reload") and not module.Plugin.hot_reload  and refresh:
                         self.logger.info("Plugin {} is already loaded and has requested to not be re-loaded"
                         .format(module.Plugin.name))
+                        return
                     else:
                         if hasattr(self.plugins[module.Plugin.name], "task"):
                             self.plugins[module.Plugin.name].task.cancel()

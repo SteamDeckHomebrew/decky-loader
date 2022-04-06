@@ -1,20 +1,24 @@
+from logging import basicConfig, INFO, DEBUG
+from os import getenv
+CONFIG = {
+    "plugin_path": getenv("PLUGIN_PATH", "/home/deck/homebrew/plugins"),
+    "server_host": getenv("SERVER_HOST", "127.0.0.1"),
+    "server_port": int(getenv("SERVER_PORT", "1337")),
+    "live_reload": getenv("LIVE_RELOAD", "1") == "1",
+    "log_level": {"CRITICAL": 50, "ERROR": 40, "WARNING":30, "INFO": 20, "DEBUG": 10}[getenv("LOG_LEVEL", "INFO")]
+}
+basicConfig(level=CONFIG["log_level"], format="[%(module)s][%(levelname)s]: %(message)s")
+
 from aiohttp.web import Application, run_app, static
 from aiohttp_jinja2 import setup as jinja_setup
 from jinja2 import FileSystemLoader
-from os import getenv, path
+from os import path
 from asyncio import get_event_loop
 from json import loads, dumps
 
 from loader import Loader
 from injector import inject_to_tab, get_tabs
 from utilities import util_methods
-
-CONFIG = {
-    "plugin_path": getenv("PLUGIN_PATH", "/home/deck/homebrew/plugins"),
-    "server_host": getenv("SERVER_HOST", "127.0.0.1"),
-    "server_port": int(getenv("SERVER_PORT", "1337")),
-    "live_reload": getenv("LIVE_RELOAD", "1") == "1"
-}
 
 class PluginManager:
     def __init__(self) -> None:

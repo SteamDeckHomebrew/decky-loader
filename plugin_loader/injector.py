@@ -1,7 +1,7 @@
 #Injector code from https://github.com/SteamDeckHomebrew/steamdeck-ui-inject. More info on how it works there.
 
 from aiohttp import ClientSession
-from logging import info
+from logging import debug
 from asyncio import sleep
 
 BASE_ADDRESS = "http://localhost:8080"
@@ -82,4 +82,4 @@ async def inject_to_tab(tab_name, js):
     tab = next((i for i in tabs if i.title == tab_name), None)
     if not tab:
         raise ValueError("Tab {} not found in running tabs".format(tab_name))
-    info(await tab.evaluate_js(js))
+    debug(await tab.evaluate_js(js))

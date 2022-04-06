@@ -12,7 +12,10 @@
 7. Done! Reboot back into Gaming mode and enjoy your plugins!
 
 ### Install Plugins
-- Simply copy the plugin's .py file into `~/homebrew/plugins`
+- Simply copy the plugin's folder into `~/homebrew/plugins`
+
+### Developing plugins
+- There is no complete plugin development documentation yet. However a good starting point is the [Plugin Template](https://github.com/SteamDeckHomebrew/Plugin-Template) repository
 
 ## Features
 - Clean injecting and loading of one or more plugins

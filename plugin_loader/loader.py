@@ -69,6 +69,7 @@ class Loader:
             web.get("/plugins/reload", self.reload_plugins),
             web.post("/plugins/method_call", self.handle_plugin_method_call),
             web.get("/plugins/load_main/{name}", self.load_plugin_main_view),
+            web.get("/plugins/src/{name}/{path:.+}", self.handle_sub_route),
             web.get("/plugins/load_tile/{name}", self.load_plugin_tile_view),
             web.get("/steam_resource/{path:.+}", self.get_steam_resource)
         ])
@@ -138,9 +139,23 @@ class Loader:
             ret = """
             <script src="/static/library.js"></script>
             <script>const plugin_name = '{}' </script>
+            <base href="http://127.0.0.1:1337/plugins/src/{}/">
             {}
-            """.format(plugin.name, template_data)
+            """.format(plugin.name, plugin.name, template_data)
             return web.Response(text=ret, content_type="text/html")
+
+    async def handle_sub_route(self, request):
+        plugin = self.plugins[request.match_info["name"]]
+        route_path = request.match_info["path"]
+        self.logger.info(path)
+
+        ret = ""
+
+        file_path = path.join(self.plugin_path, plugin._plugin_directory, route_path)
+        with open(file_path, 'r') as resource_data:
+            ret = resource_data.read()
+
+        return web.Response(text=ret)
 
     async def load_plugin_tile_view(self, request):
         plugin = self.plugins[request.match_info["name"]]

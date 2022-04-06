@@ -1,5 +1,7 @@
 #!/bin/sh
 
+echo "Installing Steam Deck Plugin Loader nightly..."
+
 HOMEBREW_FOLDER=/home/deck/homebrew
 
 # Create folder structure
@@ -16,8 +18,8 @@ cp /tmp/plugin_loader/PluginLoader ${HOMEBREW_FOLDER}/services/PluginLoader
 rm -rf /tmp/plugin_loader
 chmod +x ${HOMEBREW_FOLDER}/services/PluginLoader
 
-systemctl --user stop plugin_loader
-systemctl --user disable plugin_loader
+systemctl --user stop plugin_loader 2> /dev/null
+systemctl --user disable plugin_loader 2> /dev/null
 rm -f /home/deck/.config/systemd/user/plugin_loader.service
 cat > /home/deck/.config/systemd/user/plugin_loader.service <<- EOM
 [Unit]

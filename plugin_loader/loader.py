@@ -10,21 +10,45 @@ from logging import getLogger
 from injector import get_tabs
 
 class FileChangeHandler(FileSystemEventHandler):
-    def __init__(self, loader) -> None:
+    def __init__(self, loader, plugin_path) -> None:
         super().__init__()
+        self.logger = getLogger("file-watcher")
         self.loader : Loader = loader
+        self.plugin_path = plugin_path
 
     def on_created(self, event):
         src_path = event.src_path
         if "__pycache__" in src_path:
             return
-        self.loader.import_plugin(src_path, refresh=True)
+
+        # check to make sure this isn't a directory
+        if path.isdir(src_path):
+            return
+
+        # get the directory name of the plugin so that we can find its "main.py" and reload it; the
+        # file that changed is not necessarily the one that needs to be reloaded
+        self.logger.debug(f"file created: {src_path}")
+        rel_path = path.relpath(src_path, path.commonprefix([self.plugin_path, src_path]))
+        plugin_dir = path.split(rel_path)[0]
+        main_file_path = path.join(self.plugin_path, plugin_dir, "main.py")
+        if not path.isfile(main_file_path):
+            return
+        self.loader.import_plugin(main_file_path, refresh=True)
     
     def on_modified(self, event):
         src_path = event.src_path
         if "__pycache__" in src_path:
             return
-        self.loader.import_plugin(src_path, refresh=True)
+
+        # check to make sure this isn't a directory
+        if path.isdir(src_path):
+            return
+
+        # get the directory name of the plugin so that we can find its "main.py" and reload it; the
+        # file that changed is not necessarily the one that needs to be reloaded
+        self.logger.debug(f"file modified: {src_path}")
+        plugin_dir = path.split(path.relpath(src_path, path.commonprefix([self.plugin_path, src_path])))[0]
+        self.loader.import_plugin(path.join(self.plugin_path, plugin_dir, "main.py"), refresh=True)
 
 class Loader:
     def __init__(self, server_instance, plugin_path, loop, live_reload=False) -> None:
@@ -36,7 +60,7 @@ class Loader:
 
         if live_reload:
             self.observer = Observer()
-            self.observer.schedule(FileChangeHandler(self), self.plugin_path)
+            self.observer.schedule(FileChangeHandler(self, plugin_path), self.plugin_path, recursive=True)
             self.observer.start()
 
         server_instance.add_routes([
@@ -75,9 +99,15 @@ class Loader:
                 self.loop.create_task(self.refresh_iframe())
 
     def import_plugins(self):
-        files = [i for i in listdir(self.plugin_path) if i.endswith(".py")]
-        for file in files:
-            self.import_plugin(path.join(self.plugin_path, file))
+        self.logger.info(f"import plugins from {self.plugin_path}")
+
+        for directory in filter(lambda f: path.isdir(f), listdir(self.plugin_path)):
+            self.logger.info(directory)
+
+        directories = [i for i in listdir(self.plugin_path) if path.isdir(path.join(self.plugin_path, i)) and path.isfile(path.join(self.plugin_path, i, "main.py"))]
+        for directory in directories:
+            self.logger.info(f"found plugin: {directory}")
+            self.import_plugin(path.join(self.plugin_path, directory, "main.py"))
 
     async def reload_plugins(self, request=None):
         self.logger.info("Re-importing plugins.")
@@ -97,11 +127,17 @@ class Loader:
 
     async def load_plugin_main_view(self, request):
         plugin = self.plugins[request.match_info["name"]]
+
+        self.logger.info(f"plugin.main_view_html: {plugin.main_view_html}")
+        # open up the main template
+        test = open(plugin.main_view_html, 'r')
+
+        # setup the main script, plugin, and pull in the template
         ret = """
         <script src="/static/library.js"></script>
         <script>const plugin_name = '{}' </script>
         {}
-        """.format(plugin.name, plugin.main_view_html)
+        """.format(plugin.name, test)
         return web.Response(text=ret, content_type="text/html")
 
     async def load_plugin_tile_view(self, request):

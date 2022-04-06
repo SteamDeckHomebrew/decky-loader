@@ -9,7 +9,8 @@
 4. Under Miscellaneous, enable `CEF Remote Debugging`
 5. Click on the `STEAM` button and select `Power` -> `Switch to Desktop`
 6. Open a terminal and paste the following command into it: 
-    - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_release.sh | sh`
+    - For users: `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_release.sh | sh`
+    - For developers: `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_nightly.sh | sh`
 8. Done! Reboot back into Gaming mode and enjoy your plugins!
 
 ### Install Plugins

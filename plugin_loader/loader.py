@@ -33,7 +33,7 @@ class FileChangeHandler(FileSystemEventHandler):
         main_file_path = path.join(self.plugin_path, plugin_dir, "main.py")
         if not path.isfile(main_file_path):
             return
-        self.loader.import_plugin(main_file_path, refresh=True)
+        self.loader.import_plugin(main_file_path, plugin_dir, refresh=True)
     
     def on_modified(self, event):
         src_path = event.src_path
@@ -48,13 +48,14 @@ class FileChangeHandler(FileSystemEventHandler):
         # file that changed is not necessarily the one that needs to be reloaded
         self.logger.debug(f"file modified: {src_path}")
         plugin_dir = path.split(path.relpath(src_path, path.commonprefix([self.plugin_path, src_path])))[0]
-        self.loader.import_plugin(path.join(self.plugin_path, plugin_dir, "main.py"), refresh=True)
+        self.loader.import_plugin(path.join(self.plugin_path, plugin_dir, "main.py"), plugin_dir, refresh=True)
 
 class Loader:
     def __init__(self, server_instance, plugin_path, loop, live_reload=False) -> None:
         self.loop = loop
         self.logger = getLogger("Loader")
         self.plugin_path = plugin_path
+        self.logger.info(f"plugin_path: {self.plugin_path}")
         self.plugins = {}
         self.import_plugins()
 
@@ -72,11 +73,15 @@ class Loader:
             web.get("/steam_resource/{path:.+}", self.get_steam_resource)
         ])
 
-    def import_plugin(self, file, refresh=False):
+    def import_plugin(self, file, plugin_directory, refresh=False):
         try:
             spec = spec_from_file_location("_", file)
             module = module_from_spec(spec)
             spec.loader.exec_module(module)
+
+            # add member for what directory the given plugin lives under
+            module.Plugin._plugin_directory = plugin_directory
+
             if not hasattr(module.Plugin, "name"):
                 raise KeyError("Plugin {} has not defined a name".format(file))
             if module.Plugin.name in self.plugins:
@@ -101,13 +106,10 @@ class Loader:
     def import_plugins(self):
         self.logger.info(f"import plugins from {self.plugin_path}")
 
-        for directory in filter(lambda f: path.isdir(f), listdir(self.plugin_path)):
-            self.logger.info(directory)
-
         directories = [i for i in listdir(self.plugin_path) if path.isdir(path.join(self.plugin_path, i)) and path.isfile(path.join(self.plugin_path, i, "main.py"))]
         for directory in directories:
             self.logger.info(f"found plugin: {directory}")
-            self.import_plugin(path.join(self.plugin_path, directory, "main.py"))
+            self.import_plugin(path.join(self.plugin_path, directory, "main.py"), directory)
 
     async def reload_plugins(self, request=None):
         self.logger.info("Re-importing plugins.")
@@ -128,20 +130,29 @@ class Loader:
     async def load_plugin_main_view(self, request):
         plugin = self.plugins[request.match_info["name"]]
 
-        self.logger.info(f"plugin.main_view_html: {plugin.main_view_html}")
         # open up the main template
-        test = open(plugin.main_view_html, 'r')
-
-        # setup the main script, plugin, and pull in the template
-        ret = """
-        <script src="/static/library.js"></script>
-        <script>const plugin_name = '{}' </script>
-        {}
-        """.format(plugin.name, test)
-        return web.Response(text=ret, content_type="text/html")
+        with open(path.join(self.plugin_path, plugin._plugin_directory, plugin.main_view_html), 'r') as template:
+            template_data = template.read()
+            # setup the main script, plugin, and pull in the template
+            ret = """
+            <script src="/static/library.js"></script>
+            <script>const plugin_name = '{}' </script>
+            {}
+            """.format(plugin.name, template_data)
+            return web.Response(text=ret, content_type="text/html")
 
     async def load_plugin_tile_view(self, request):
         plugin = self.plugins[request.match_info["name"]]
+
+        inner_content = ""
+
+        # open up the tile template (if we have one defined)
+        if len(plugin.tile_view_html) > 0:
+            with open(path.join(self.plugin_path, plugin._plugin_directory, plugin.tile_view_html), 'r') as template:
+                template_data = template.read()
+                inner_content = template_data
+        
+        # setup the default template
         ret = """
         <html style="height: fit-content;">
             <head>
@@ -155,7 +166,7 @@ class Loader:
                 {content}
             </body>
         <html>
-        """.format(name=plugin.name, content=plugin.tile_view_html)
+        """.format(name=plugin.name, content=inner_content)
         return web.Response(text=ret, content_type="text/html")
 
     @template('plugin_view.html')

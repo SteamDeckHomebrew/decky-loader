@@ -69,7 +69,7 @@ class Loader:
             web.get("/plugins/reload", self.reload_plugins),
             web.post("/plugins/method_call", self.handle_plugin_method_call),
             web.get("/plugins/load_main/{name}", self.load_plugin_main_view),
-            web.get("/plugins/src/{name}/{path:.+}", self.handle_sub_route),
+            web.get("/plugins/plugin_resource/{name}/{path:.+}", self.handle_sub_route),
             web.get("/plugins/load_tile/{name}", self.load_plugin_tile_view),
             web.get("/steam_resource/{path:.+}", self.get_steam_resource)
         ])
@@ -139,7 +139,7 @@ class Loader:
             ret = """
             <script src="/static/library.js"></script>
             <script>const plugin_name = '{}' </script>
-            <base href="http://127.0.0.1:1337/plugins/src/{}/">
+            <base href="http://127.0.0.1:1337/plugins/plugin_resource/{}/">
             {}
             """.format(plugin.name, plugin.name, template_data)
             return web.Response(text=ret, content_type="text/html")

@@ -1,5 +1,6 @@
-from logging import basicConfig, INFO, DEBUG
+from logging import getLogger, basicConfig, INFO, DEBUG
 from os import getenv
+
 CONFIG = {
     "plugin_path": getenv("PLUGIN_PATH", "/home/deck/homebrew/plugins"),
     "server_host": getenv("SERVER_HOST", "127.0.0.1"),
@@ -13,12 +14,15 @@ from aiohttp.web import Application, run_app, static
 from aiohttp_jinja2 import setup as jinja_setup
 from jinja2 import FileSystemLoader
 from os import path
-from asyncio import get_event_loop
+from asyncio import get_event_loop, sleep
 from json import loads, dumps
 
 from loader import Loader
-from injector import inject_to_tab, get_tabs
+from injector import inject_to_tab, get_tabs, tab_has_element
 from utilities import util_methods
+
+
+logger = getLogger("Main")
 
 class PluginManager:
     def __init__(self) -> None:
@@ -30,6 +34,14 @@ class PluginManager:
         self.web_app.on_startup.append(self.inject_javascript)
         self.web_app.add_routes([static("/static", path.join(path.dirname(__file__), 'static'))])
         self.loop.create_task(self.method_call_listener())
+        self.loop.create_task(self.loader_reinjector())
+
+        self.loop.set_exception_handler(self.exception_handler)
+
+    def exception_handler(self, loop, context):
+        if context["message"] == "Unclosed connection":
+            return
+        loop.default_exception_handler(context)
 
     async def resolve_method_call(self, tab, call_id, response):
         await tab._send_devtools_cmd({
@@ -72,8 +84,19 @@ class PluginManager:
                 method = loads(data["params"]["args"][0]["value"])
                 self.loop.create_task(self.handle_method_call(method, tab))
                 
+    async def loader_reinjector(self):
+        while True:
+            await sleep(1)
+            if not await tab_has_element("QuickAccess", "plugin_iframe"):
+                logger.info("Plugin loader isn't present in Steam anymore, reinjecting...")
+                await self.inject_javascript()
+
     async def inject_javascript(self, request=None):
-        await inject_to_tab("QuickAccess", open(path.join(path.dirname(__file__), "static/plugin_page.js"), "r").read())
+        try:
+            await inject_to_tab("QuickAccess", open(path.join(path.dirname(__file__), "static/plugin_page.js"), "r").read())
+        except:
+            logger.info("Failed to inject JavaScript into tab")
+            pass
 
     def run(self):
         return run_app(self.web_app, host=CONFIG["server_host"], port=CONFIG["server_port"], loop=self.loop)

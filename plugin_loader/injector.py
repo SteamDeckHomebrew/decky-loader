@@ -1,10 +1,12 @@
 #Injector code from https://github.com/SteamDeckHomebrew/steamdeck-ui-inject. More info on how it works there.
 
 from aiohttp import ClientSession
-from logging import debug
+from logging import debug, getLogger
 from asyncio import sleep
 
 BASE_ADDRESS = "http://localhost:8080"
+
+logger = getLogger("Injector")
 
 class Tab:
     def __init__(self, res) -> None:
@@ -68,7 +70,7 @@ async def get_tabs():
                 res = await web.get("{}/json".format(BASE_ADDRESS))
                 break
             except:
-                print("Steam isn't available yet. Wait for a moment...")
+                logger.info("Steam isn't available yet. Wait for a moment...")
                 await sleep(5)
 
         if res.status == 200:
@@ -82,4 +84,16 @@ async def inject_to_tab(tab_name, js):
     tab = next((i for i in tabs if i.title == tab_name), None)
     if not tab:
         raise ValueError("Tab {} not found in running tabs".format(tab_name))
-    debug(await tab.evaluate_js(js))
+    logger.debug(f"Injected JavaScript Result: {await tab.evaluate_js(js)}")
+
+async def tab_has_element(tab_name, element_name):
+    tabs = await get_tabs()
+    tab = next((i for i in tabs if i.title == tab_name), None)
+    if not tab:
+        return False
+    res = await tab.evaluate_js(f"document.getElementById('{element_name}') != null")
+    
+    if not "result" in res or not "result" in res["result"] or not "value" in res["result"]["result"]:
+        return False;
+
+    return res["result"]["result"]["value"]

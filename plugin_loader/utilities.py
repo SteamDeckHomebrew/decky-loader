@@ -1,18 +1,25 @@
 from aiohttp import ClientSession
 
-async def http_request(method="", url="", **kwargs):
-    async with ClientSession() as web:
-        res = await web.request(method, url, **kwargs)
-        return {
-            "status": res.status,
-            "headers": dict(res.headers),
-            "body": await res.text()
+class Utilities:
+    def __init__(self, context) -> None:
+        self.context = context
+        self.util_methods = {
+            "ping": self.ping,
+            "http_request": self.http_request,
+            "confirm_plugin_install": self.confirm_plugin_install
         }
 
-async def ping(**kwargs):
-    return "pong"
+    async def confirm_plugin_install(self, request_id):
+        return await self.context.plugin_browser.confirm_plugin_install(request_id)
 
-util_methods = {
-    "ping": ping,
-    "http_request": http_request
-}
+    async def http_request(self, method="", url="", **kwargs):
+        async with ClientSession() as web:
+            res = await web.request(method, url, **kwargs)
+            return {
+                "status": res.status,
+                "headers": dict(res.headers),
+                "body": await res.text()
+            }
+
+    async def ping(self, **kwargs):
+        return "pong"

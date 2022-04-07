@@ -79,21 +79,25 @@ async def get_tabs():
         else:
             raise Exception("/json did not return 200. {}".format(await res.text()))
 
-async def inject_to_tab(tab_name, js):
+async def get_tab(tab_name):
     tabs = await get_tabs()
     tab = next((i for i in tabs if i.title == tab_name), None)
     if not tab:
-        raise ValueError("Tab {} not found in running tabs".format(tab_name))
+        raise ValueError("Tab {} not found".format(tab_name))
+    return tab    
+
+async def inject_to_tab(tab_name, js):
+    tab = await get_tab(tab_name)
     logger.debug(f"Injected JavaScript Result: {await tab.evaluate_js(js)}")
 
 async def tab_has_element(tab_name, element_name):
-    tabs = await get_tabs()
-    tab = next((i for i in tabs if i.title == tab_name), None)
-    if not tab:
+    try:
+        tab = await get_tab(tab_name)
+    except ValueError:
         return False
     res = await tab.evaluate_js(f"document.getElementById('{element_name}') != null")
     
     if not "result" in res or not "result" in res["result"] or not "value" in res["result"]["result"]:
-        return False;
+        return False
 
     return res["result"]["result"]["value"]

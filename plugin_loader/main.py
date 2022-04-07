@@ -6,8 +6,10 @@ CONFIG = {
     "server_host": getenv("SERVER_HOST", "127.0.0.1"),
     "server_port": int(getenv("SERVER_PORT", "1337")),
     "live_reload": getenv("LIVE_RELOAD", "1") == "1",
-    "log_level": {"CRITICAL": 50, "ERROR": 40, "WARNING":30, "INFO": 20, "DEBUG": 10}[getenv("LOG_LEVEL", "INFO")]
+    "log_level": {"CRITICAL": 50, "ERROR": 40, "WARNING":30, "INFO": 20, "DEBUG": 10}[getenv("LOG_LEVEL", "INFO")],
+    "store_url": getenv("STORE_URL", "https://sdh.tzatzi.me/browse")
 }
+
 basicConfig(level=CONFIG["log_level"], format="[%(module)s][%(levelname)s]: %(message)s")
 
 from aiohttp.web import Application, run_app, static
@@ -18,8 +20,9 @@ from asyncio import get_event_loop, sleep
 from json import loads, dumps
 
 from loader import Loader
-from injector import inject_to_tab, get_tabs, tab_has_element
-from utilities import util_methods
+from injector import inject_to_tab, get_tab, tab_has_element
+from utilities import Utilities
+from browser import PluginBrowser
 
 
 logger = getLogger("Main")
@@ -29,6 +32,8 @@ class PluginManager:
         self.loop = get_event_loop()
         self.web_app = Application()
         self.plugin_loader = Loader(self.web_app, CONFIG["plugin_path"], self.loop, CONFIG["live_reload"])
+        self.plugin_browser = PluginBrowser(CONFIG["plugin_path"], self.web_app, CONFIG["store_url"])
+        self.utilities = Utilities(self)
 
         jinja_setup(self.web_app, loader=FileSystemLoader(path.join(path.dirname(__file__), 'templates')))
         self.web_app.on_startup.append(self.inject_javascript)
@@ -64,7 +69,7 @@ class PluginManager:
                 )
                 res["success"] = True
             else:
-                r = await util_methods[method["method"]](**method["args"])
+                r = await self.utilities.util_methods[method["method"]](**method["args"])
                 res["result"] = r
                 res["success"] = True
         except Exception as e:
@@ -74,7 +79,7 @@ class PluginManager:
             await self.resolve_method_call(tab, method["id"], res)
 
     async def method_call_listener(self):
-        tab = next((i for i in await get_tabs() if i.title == "QuickAccess"), None)
+        tab = await get_tab("QuickAccess")
         await tab.open_websocket()
         await tab._send_devtools_cmd({"id": 1, "method": "Runtime.discardConsoleEntries"})
         await tab._send_devtools_cmd({"id": 1, "method": "Runtime.enable"})
@@ -99,7 +104,7 @@ class PluginManager:
             pass
 
     def run(self):
-        return run_app(self.web_app, host=CONFIG["server_host"], port=CONFIG["server_port"], loop=self.loop)
+        return run_app(self.web_app, host=CONFIG["server_host"], port=CONFIG["server_port"], loop=self.loop, access_log=None)
 
 if __name__ == "__main__":
     PluginManager().run()

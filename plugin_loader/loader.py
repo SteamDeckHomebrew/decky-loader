@@ -7,7 +7,7 @@ from os import path, listdir
 from importlib.util import spec_from_file_location, module_from_spec
 from logging import getLogger
 
-from injector import get_tabs
+from injector import get_tabs, get_tab
 
 class FileChangeHandler(FileSystemEventHandler):
     def __init__(self, loader, plugin_path) -> None:
@@ -190,6 +190,6 @@ class Loader:
         return {"plugins": self.plugins.values()}
 
     async def refresh_iframe(self):
-        tab = next((i for i in await get_tabs() if i.title == "QuickAccess"), None)
+        tab = await get_tab("QuickAccess")
         await tab.open_websocket()
         return await tab.evaluate_js("reloadIframe()")

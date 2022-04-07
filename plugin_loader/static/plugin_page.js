@@ -16,6 +16,34 @@ function resolveMethodCall(call_id, result) {
     iframe.postMessage({'call_id': call_id, 'result': result}, "http://127.0.0.1:1337");
 }
 
+function installPlugin(request_id) {
+    let id = `${new Date().getTime()}`;
+    console.debug(JSON.stringify({
+        "id": id,
+        "method": "confirm_plugin_install",
+        "args": {"request_id": request_id}
+    }));
+    document.getElementById('plugin_install_list').removeChild(document.getElementById(`plugin_install_prompt_${request_id}`));
+}
+
+function addPluginInstallPrompt(artifact, version, request_id) {
+    let text = `
+    <div id="plugin_install_prompt_${request_id}" style="display: block; background: #304375; border-radius: 5px;">
+        <h3 style="padding-left: 1rem;">Install plugin</h3>
+        <ul style="padding-left: 10px; padding-right: 10px; padding-bottom: 20px; margin: 0;">
+            <li>${artifact}</li>
+            <li>${version}</li>
+        </ul>
+        <div style="text-align: center; padding-bottom: 10px;">
+            <button onclick="installPlugin('${request_id}')" style="display: inline-block; background-color: green;">Install</button>
+            <button onclick="document.getElementById('plugin_install_list').removeChild(document.getElementById('plugin_install_prompt_${request_id}'))" 
+            style="display: inline-block; background-color: red;">Ignore</button>
+        </div>
+    </div>
+    `;
+    document.getElementById('plugin_install_list').innerHTML += text;
+}
+
 (function () {
     const PLUGIN_ICON = `
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plugin" viewBox="0 0 16 16">
@@ -34,6 +62,8 @@ function resolveMethodCall(call_id, result) {
         let pages = document.getElementsByClassName("quickaccessmenu_AllTabContents_2yKG4 quickaccessmenu_Down_3rR0o")[0];
         let pluginPage = pages.children[pages.children.length - 1];
         pluginPage.innerHTML = createTitle("Plugins");
+
+        pluginPage.innerHTML += `<div id="plugin_install_list" style="position: fixed; height: 100%; z-index: 99; transform: translate(5%, 0);"></div>`
 
         pluginPage.innerHTML += `<iframe id="plugin_iframe" style="border: none; width: 100%; height: 100%;" src="http://127.0.0.1:1337/plugins/iframe"></iframe>`;
     }

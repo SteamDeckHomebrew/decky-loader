@@ -10,7 +10,7 @@
     }, false);
 
     function loadPlugin(name) {
-        this.parent.postMessage(name, "https://steamloopback.host");
+        this.parent.postMessage("PLUGIN_LOADER__"+name, "https://steamloopback.host");
         location.href = `/plugins/load_main/${name}`;
     }
 </script>

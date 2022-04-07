@@ -1,0 +1,266 @@
+@import url("/steam_resource/css/2.css");
+@import url("/steam_resource/css/39.css");
+@import url("/steam_resource/css/library.css");
+
+button {
+    border: 0;
+    font: inherit;
+    overflow: visible;
+    -webkit-user-select: none;
+    display: block;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    scroll-margin: 20px 0 55px 0;
+    margin: 0;
+    padding: 10px 24px;
+    min-width: 160px;
+    color: #dcdedf;
+    font-size: 16px;
+    line-height: 20px;
+    border-radius: 2px;
+    box-shadow: none;
+    box-sizing: border-box;
+    transition: none;
+    position: relative;
+    background: #23262e;
+    outline: none;
+}
+
+button:active {
+    background: #fff;
+    color: #23262e;
+}
+
+button.DialogButton {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    border: 0;
+    font: inherit;
+    overflow: visible;
+    padding: 0;
+    margin: 2px 0;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    display: block;
+    line-height: 32px;
+    color: #dfe3e6;
+    font-size: 14px;
+    text-align: center;
+    border-radius: 2px;
+    cursor: pointer;
+    width: 100%;
+    transition: all .2s ease-out;
+    background: #3d4450;
+    background-position: 99% 1%;
+    background-size: 300% 300%;
+    position: relative;
+}
+
+.quickaccesscontrols_PanelSection {
+    padding: 0px 16px;
+    margin: 0px 0px 24px;
+}
+
+.quickaccesscontrols_PanelSectionTitle {
+    font-family: "Motiva Sans",Helvetica,sans-serif;
+    font-weight: normal;
+    font-size: 16px;
+    font-style: normal;
+    line-height: 20px;
+    text-align: left;
+    text-decoration: none;
+    text-indent: 0;
+    text-shadow: none;
+    text-transform: none;
+    letter-spacing: 0px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 22px;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    color: #8b929a;
+    padding: 0px 0px 8px;
+    display: flex;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.quickaccesscontrols_PanelSectionTitle {
+    font-family: "Motiva Sans",Helvetica,sans-serif;
+    font-weight: normal;
+    font-size: 16px;
+    font-style: normal;
+    line-height: 20px;
+    text-align: left;
+    text-decoration: none;
+    text-indent: 0;
+    text-shadow: none;
+    text-transform: none;
+    letter-spacing: 0px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 22px;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    color: #8b929a;
+    padding: 0px 0px 8px;
+    display: flex;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.quickaccesscontrols_PanelSectionTitle .quickaccesscontrols_Text {
+    flex-grow: 1;
+}
+
+.basicdialog_Field {
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
+    position: relative;
+    background: none;
+    border-radius: 0;
+    padding-left: calc(var(--field-negative-horizontal-margin) + var(--indent-level)*20px);
+    padding-right: var(--field-negative-horizontal-margin);
+    margin-left: calc(-1*var(--field-negative-horizontal-margin));
+    margin-right: calc(-1*var(--field-negative-horizontal-margin));
+    transition-property: transform,background-color;
+    transition-duration: .32s,0s;
+    transition-timing-function: cubic-bezier(0.17, 0.45, 0.14, 0.83);
+    transform-origin: 12% 50%;
+    animation-timing-function: cubic-bezier(0.17, 0.45, 0.14, 0.83);
+    animation-duration: .5s;
+    animation-fill-mode: forwards;
+    transform: scale(1) rotateX(0deg);
+}
+
+.quickaccesscontrols_PanelSectionRow>:first-child {
+    --field-negative-horizontal-margin: 16px;
+    padding: 8px 16px;
+}
+
+.basicdialog_Field_ugL9c.basicdialog_CompactPadding {
+    padding: 8px 0;
+    --field-row-children-spacing: 8px;
+}
+
+.basicdialog_Field.basicdialog_ChildrenWidthFixed .basicdialog_FieldChildren {
+    min-width: 270px;
+}
+
+.basicdialog_Field .Focusable {
+    scroll-margin: 20px 0 55px 0;
+}
+
+.basicslider_SliderControlWithIcon {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.basicslider_SliderControlWithIcon .basicslider_Icon {
+    height: 24px;
+    width: 24px;
+    margin: auto 0;
+    margin-right: 12px;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.basicslider_SliderControlWithIcon .basicslider_SliderControl {
+    flex-grow: 1;
+}
+
+.basicslider_SliderControl:not(.basicslider_Disabled) {
+    cursor: pointer;
+}
+
+.basicslider_SliderControl {
+    --inverse-normalized-value: calc( 1 - var(--normalized-slider-value) );
+    --inverse-normalized-default-value: calc( 1 - var(--normalized-slider-default-value) );
+    position: relative;
+    display: flex;
+    height: 24px;
+    min-width: 100px;
+}
+
+.basicslider_SliderTrack {
+    background: #23262e;
+    margin: auto;
+    width: 100%;
+    height: 6px;
+    position: relative;
+    overflow: hidden;
+    --left-track-color: #1a9fff;
+}
+
+.basicslider_SliderHandleContainer {
+    pointer-events: none;
+    contain: layout;
+    margin: auto 0;
+    width: 100%;
+    position: absolute;
+    transform: translateX(calc(-100% * var(--inverse-normalized-value) + 24px * var(--inverse-normalized-value)));
+}
+
+.basicslider_SliderHandle {
+    background: #fff;
+    box-shadow: 0px 0px 5px rgba(0,0,0,.35);
+    border-radius: 1337px;
+    height: 24px;
+    width: 24px;
+    position: absolute;
+    right: 0;
+    box-sizing: content-box;
+    pointer-events: none;
+}
+
+.basicdialog_Toggle {
+    width: 38px;
+    height: 22px;
+    position: relative;
+}
+
+.basicdialog_Field.basicdialog_StandardPadding {
+    --field-row-children-spacing: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+.basicdialog_Field.basicdialog_InlineWrapShiftsChildrenBelow .basicdialog_FieldLabelRow {
+    flex-wrap: wrap;
+}
+
+.basicdialog_FieldLabelRow {
+    display: flex;
+    flex-direction: row;
+    column-gap: var(--field-row-children-spacing);
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.basicdialog_FieldLabel {
+    font-size: 16px;
+    line-height: 20px;
+    color: #dcdedf;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    max-width: 100%;
+    word-break: break-word;
+}
+
+.basicdialog_LabelFieldValue {
+    color: #8b929a;
+    word-break: break-word;
+}

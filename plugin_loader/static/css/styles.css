@@ -60,6 +60,15 @@ button.DialogButton {
     position: relative;
 }
 
+button.keyboardsettings_ShowKeyboardButton.DialogButton {
+    flex-shrink: 0;
+    width: 40px;
+    min-height: 40px;
+    min-width: 0;
+    padding: 0;
+    display: flex;
+}
+
 .quickaccesscontrols_PanelSection {
     padding: 0px 16px;
     margin: 0px 0px 24px;

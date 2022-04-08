@@ -8,11 +8,13 @@ from zipfile import ZipFile
 from concurrent.futures import ProcessPoolExecutor
 from asyncio import get_event_loop
 from time import time
+from hashlib import sha256
 
 class PluginInstallContext:
-    def __init__(self, gh_url, version) -> None:
+    def __init__(self, gh_url, version, hash) -> None:
         self.gh_url = gh_url
         self.version = version
+        self.hash = hash
 
 class PluginBrowser:
     def __init__(self, plugin_path, server_instance, store_url) -> None:
@@ -26,12 +28,16 @@ class PluginBrowser:
             web.get("/browser/iframe", self.redirect_to_store)
         ])
 
-    def _unzip_to_plugin_dir(self, zip, name):
+    def _unzip_to_plugin_dir(self, zip, name, hash):
+        zip_hash = sha256(zip.getbuffer()).hexdigest()
+        if zip_hash != hash:
+            return False
         zip_file = ZipFile(zip)
         zip_file.extractall(self.plugin_path)
-        (rename(path.join(self.plugin_path, zip_file.namelist()[0]), path.join(self.plugin_path, name)))
+        rename(path.join(self.plugin_path, zip_file.namelist()[0]), path.join(self.plugin_path, name))
+        return True
 
-    async def _install(self, artifact, version):
+    async def _install(self, artifact, version, hash):
         name = artifact.split("/")[-1]
         rmtree(path.join(self.plugin_path, name), ignore_errors=True)
         self.log.info("Installing {} (Version: {})".format(artifact, version))
@@ -46,13 +52,17 @@ class PluginBrowser:
                 res_zip = BytesIO(data)
                 with ProcessPoolExecutor() as executor:
                     self.log.debug("Unzipping...")
-                    await get_event_loop().run_in_executor(
+                    ret = await get_event_loop().run_in_executor(
                         executor,
                         self._unzip_to_plugin_dir,
                         res_zip,
-                        name
+                        name,
+                        hash
                     )
-                    self.log.info("Installed {} (Version: {})".format(artifact, version))
+                    if ret:
+                        self.log.info("Installed {} (Version: {})".format(artifact, version))
+                    else:
+                        self.log.fatal("SHA-256 Mismatch!!!! {} (Version: {})".format(artifact, version))
             else:
                 self.log.fatal("Could not fetch from github. {}".format(await res.text()))
 
@@ -61,16 +71,16 @@ class PluginBrowser:
     
     async def install_plugin(self, request):
         data = await request.post()
-        get_event_loop().create_task(self.request_plugin_install(data["artifact"], data["version"]))
+        get_event_loop().create_task(self.request_plugin_install(data["artifact"], data["version"], data["hash"]))
         return web.Response(text="Requested plugin install")
 
-    async def request_plugin_install(self, artifact, version):
+    async def request_plugin_install(self, artifact, version, hash):
         request_id = str(time())
-        self.install_requests[request_id] = PluginInstallContext(artifact, version)
+        self.install_requests[request_id] = PluginInstallContext(artifact, version, hash)
         tab = await get_tab("QuickAccess")
         await tab.open_websocket()
         await tab.evaluate_js("addPluginInstallPrompt('{}', '{}', '{}')".format(artifact, version, request_id))
     
     async def confirm_plugin_install(self, request_id):
         request = self.install_requests.pop(request_id)
-        await self._install(request.gh_url, request.version)
+        await self._install(request.gh_url, request.version, request.hash)

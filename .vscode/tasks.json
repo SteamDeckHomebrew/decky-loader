@@ -1,0 +1,10 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Stop Service",
+            "type": "shell",
+            "command":"systemctl --user stop plugin_loader",
+        }
+    ]
+}

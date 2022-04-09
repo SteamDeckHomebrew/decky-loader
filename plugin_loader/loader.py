@@ -172,9 +172,7 @@ class Loader:
         ret = """
         <html style="height: fit-content;">
             <head>
-                <link rel="stylesheet" href="/steam_resource/css/2.css">
-                <link rel="stylesheet" href="/steam_resource/css/39.css">
-                <link rel="stylesheet" href="/steam_resource/css/library.css">
+                <link rel="stylesheet" href="/static/styles.css">
                 <script src="/static/library.js"></script>
                 <script>const plugin_name = '{name}';</script>
             </head>

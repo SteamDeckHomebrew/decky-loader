@@ -1,13 +1,17 @@
+from asyncio import get_event_loop, sleep
 from aiohttp import web
 from aiohttp_jinja2 import template
 from watchdog.observers.polling import PollingObserver as Observer
 from watchdog.events import FileSystemEventHandler
 
-from os import path, listdir
+from os import getenv, path, listdir, setuid
 from importlib.util import spec_from_file_location, module_from_spec
 from logging import getLogger
+from multiprocess import Process, Queue
 
 from injector import get_tabs, get_tab
+
+DECK_UID = int(getenv("DECK_USER_ID", 1000))
 
 class FileChangeHandler(FileSystemEventHandler):
     def __init__(self, loader, plugin_path) -> None:
@@ -50,6 +54,17 @@ class FileChangeHandler(FileSystemEventHandler):
         plugin_dir = path.split(path.relpath(src_path, path.commonprefix([self.plugin_path, src_path])))[0]
         self.loader.import_plugin(path.join(self.plugin_path, plugin_dir, "main.py"), plugin_dir, refresh=True)
 
+def _isolated_call_wrapper(queue, uid, method, kwargs):
+    setuid(uid)
+    res = None
+    try:
+        res = method(**kwargs)
+    except Exception as e:
+        res = e
+    finally:
+        queue.put(res)
+        queue.put(vars(method.__self__))
+
 class Loader:
     def __init__(self, server_instance, plugin_path, loop, live_reload=False) -> None:
         self.loop = loop
@@ -67,7 +82,6 @@ class Loader:
         server_instance.add_routes([
             web.get("/plugins/iframe", self.plugin_iframe_route),
             web.get("/plugins/reload", self.reload_plugins),
-            web.post("/plugins/method_call", self.handle_plugin_method_call),
             web.get("/plugins/load_main/{name}", self.load_plugin_main_view),
             web.get("/plugins/plugin_resource/{name}/{path:.+}", self.handle_sub_route),
             web.get("/plugins/load_tile/{name}", self.load_plugin_tile_view),
@@ -82,6 +96,9 @@ class Loader:
 
             # add member for what directory the given plugin lives under
             module.Plugin._plugin_directory = plugin_directory
+
+            if path.isfile(path.join(self.plugin_path, plugin_directory, "root")):
+                module.Plugin.__root = True
 
             if not hasattr(module.Plugin, "name"):
                 raise KeyError("Plugin {} has not defined a name".format(file))
@@ -117,10 +134,32 @@ class Loader:
         self.logger.info("Re-importing plugins.")
         self.import_plugins()
 
+    async def isolated_plugin_method_call(self, uid, method, **kwargs):
+        queue = Queue()
+        proc = Process(target=_isolated_call_wrapper, args=[queue, uid, method, kwargs])
+        proc.start()
+        while proc.is_alive():
+            await sleep(0)
+        res = queue.get()
+        if isinstance(res, Exception):
+            raise res
+        ctx = queue.get()
+        return res, ctx
+
     async def handle_plugin_method_call(self, plugin_name, method_name, **kwargs):
         if method_name.startswith("__"):
             raise RuntimeError("Tried to call private method")
-        return await getattr(self.plugins[plugin_name], method_name)(**kwargs)
+        uid = DECK_UID
+        try:
+            if self.plugins[plugin_name].__root:
+                uid = 0
+        except AttributeError:
+            pass
+        res, ctx = await self.isolated_plugin_method_call(uid, getattr(self.plugins[plugin_name], method_name), **kwargs)
+        for i in ctx:
+            if not i.startswith("__"):
+                setattr(self.plugins[plugin_name], i, ctx[i])
+        return res
 
     async def get_steam_resource(self, request):
         tab = (await get_tabs())[0]

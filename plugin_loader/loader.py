@@ -1,17 +1,13 @@
-from asyncio import get_event_loop, sleep
 from aiohttp import web
 from aiohttp_jinja2 import template
 from watchdog.observers.polling import PollingObserver as Observer
 from watchdog.events import FileSystemEventHandler
 
-from os import getenv, path, listdir, setuid
-from importlib.util import spec_from_file_location, module_from_spec
+from os import path, listdir
 from logging import getLogger
-from multiprocess import Process, Queue
 
 from injector import get_tabs, get_tab
-
-DECK_UID = int(getenv("DECK_USER_ID", 1000))
+from plugin import PluginWrapper
 
 class FileChangeHandler(FileSystemEventHandler):
     def __init__(self, loader, plugin_path) -> None:
@@ -54,17 +50,6 @@ class FileChangeHandler(FileSystemEventHandler):
         plugin_dir = path.split(path.relpath(src_path, path.commonprefix([self.plugin_path, src_path])))[0]
         self.loader.import_plugin(path.join(self.plugin_path, plugin_dir, "main.py"), plugin_dir, refresh=True)
 
-def _isolated_call_wrapper(queue, uid, method, kwargs):
-    setuid(uid)
-    res = None
-    try:
-        res = method(**kwargs)
-    except Exception as e:
-        res = e
-    finally:
-        queue.put(res)
-        queue.put(vars(method.__self__))
-
 class Loader:
     def __init__(self, server_instance, plugin_path, loop, live_reload=False) -> None:
         self.loop = loop
@@ -90,32 +75,17 @@ class Loader:
 
     def import_plugin(self, file, plugin_directory, refresh=False):
         try:
-            spec = spec_from_file_location("_", file)
-            module = module_from_spec(spec)
-            spec.loader.exec_module(module)
-
-            # add member for what directory the given plugin lives under
-            module.Plugin._plugin_directory = plugin_directory
-
-            if path.isfile(path.join(self.plugin_path, plugin_directory, "root")):
-                module.Plugin.__root = True
-
-            if not hasattr(module.Plugin, "name"):
-                raise KeyError("Plugin {} has not defined a name".format(file))
-            if module.Plugin.name in self.plugins:
-                    if hasattr(module.Plugin, "hot_reload") and not module.Plugin.hot_reload  and refresh:
+            plugin = PluginWrapper(file, plugin_directory, self.plugin_path)
+            if plugin.name in self.plugins:
+                    if not "hot_reload" in plugin.flags and refresh:
                         self.logger.info("Plugin {} is already loaded and has requested to not be re-loaded"
-                        .format(module.Plugin.name))
+                        .format(plugin.name))
                         return
                     else:
-                        if hasattr(self.plugins[module.Plugin.name], "task"):
-                            self.plugins[module.Plugin.name].task.cancel()
-                        self.plugins.pop(module.Plugin.name, None)
-            self.plugins[module.Plugin.name] = module.Plugin()
-            if hasattr(module.Plugin, "__main"):
-                setattr(self.plugins[module.Plugin.name], "task",
-                self.loop.create_task(self.plugins[module.Plugin.name].__main()))
-            self.logger.info("Loaded {}".format(module.Plugin.name))
+                        self.plugins[plugin.name].stop(self.loop)
+                        self.plugins.pop(plugin.name, None)
+            self.plugins[plugin.name] = plugin.start(self.loop)
+            self.logger.info("Loaded {}".format(plugin.name))
         except Exception as e:
             self.logger.error("Could not load {}. {}".format(file, e))
         finally:
@@ -134,32 +104,10 @@ class Loader:
         self.logger.info("Re-importing plugins.")
         self.import_plugins()
 
-    async def isolated_plugin_method_call(self, uid, method, **kwargs):
-        queue = Queue()
-        proc = Process(target=_isolated_call_wrapper, args=[queue, uid, method, kwargs])
-        proc.start()
-        while proc.is_alive():
-            await sleep(0)
-        res = queue.get()
-        if isinstance(res, Exception):
-            raise res
-        ctx = queue.get()
-        return res, ctx
-
     async def handle_plugin_method_call(self, plugin_name, method_name, **kwargs):
-        if method_name.startswith("__"):
+        if method_name.startswith("_"):
             raise RuntimeError("Tried to call private method")
-        uid = DECK_UID
-        try:
-            if self.plugins[plugin_name].__root:
-                uid = 0
-        except AttributeError:
-            pass
-        res, ctx = await self.isolated_plugin_method_call(uid, getattr(self.plugins[plugin_name], method_name), **kwargs)
-        for i in ctx:
-            if not i.startswith("__"):
-                setattr(self.plugins[plugin_name], i, ctx[i])
-        return res
+        return await self.plugins[plugin_name].execute_method(method_name, kwargs)
 
     async def get_steam_resource(self, request):
         tab = (await get_tabs())[0]
@@ -172,7 +120,7 @@ class Loader:
         plugin = self.plugins[request.match_info["name"]]
 
         # open up the main template
-        with open(path.join(self.plugin_path, plugin._plugin_directory, plugin.main_view_html), 'r') as template:
+        with open(path.join(self.plugin_path, plugin.plugin_directory, plugin.main_view_html), 'r') as template:
             template_data = template.read()
             # setup the main script, plugin, and pull in the template
             ret = """
@@ -190,7 +138,7 @@ class Loader:
 
         ret = ""
 
-        file_path = path.join(self.plugin_path, plugin._plugin_directory, route_path)
+        file_path = path.join(self.plugin_path, plugin.plugin_directory, route_path)
         with open(file_path, 'r') as resource_data:
             ret = resource_data.read()
 
@@ -202,8 +150,8 @@ class Loader:
         inner_content = ""
 
         # open up the tile template (if we have one defined)
-        if len(plugin.tile_view_html) > 0:
-            with open(path.join(self.plugin_path, plugin._plugin_directory, plugin.tile_view_html), 'r') as template:
+        if hasattr(plugin, "tile_view_html"):
+            with open(path.join(self.plugin_path, plugin.plugin_directory, plugin.tile_view_html), 'r') as template:
                 template_data = template.read()
                 inner_content = template_data
         

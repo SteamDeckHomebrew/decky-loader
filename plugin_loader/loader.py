@@ -4,10 +4,10 @@ from watchdog.observers.polling import PollingObserver as Observer
 from watchdog.events import FileSystemEventHandler
 
 from os import path, listdir
-from importlib.util import spec_from_file_location, module_from_spec
 from logging import getLogger
 
 from injector import get_tabs, get_tab
+from plugin import PluginWrapper
 
 class FileChangeHandler(FileSystemEventHandler):
     def __init__(self, loader, plugin_path) -> None:
@@ -67,7 +67,6 @@ class Loader:
         server_instance.add_routes([
             web.get("/plugins/iframe", self.plugin_iframe_route),
             web.get("/plugins/reload", self.reload_plugins),
-            web.post("/plugins/method_call", self.handle_plugin_method_call),
             web.get("/plugins/load_main/{name}", self.load_plugin_main_view),
             web.get("/plugins/plugin_resource/{name}/{path:.+}", self.handle_sub_route),
             web.get("/plugins/load_tile/{name}", self.load_plugin_tile_view),
@@ -76,28 +75,16 @@ class Loader:
 
     def import_plugin(self, file, plugin_directory, refresh=False):
         try:
-            spec = spec_from_file_location("_", file)
-            module = module_from_spec(spec)
-            spec.loader.exec_module(module)
-
-            # add member for what directory the given plugin lives under
-            module.Plugin._plugin_directory = plugin_directory
-
-            if not hasattr(module.Plugin, "name"):
-                raise KeyError(f"Plugin {file} has not defined a name")
-            if module.Plugin.name in self.plugins:
-                    if hasattr(module.Plugin, "hot_reload") and not module.Plugin.hot_reload  and refresh:
-                        self.logger.info(f"Plugin {module.Plugin.name} is already loaded and has requested to not be re-loaded")
+            plugin = PluginWrapper(file, plugin_directory, self.plugin_path)
+            if plugin.name in self.plugins:
+                    if not "hot_reload" in plugin.flags and refresh:
+                        self.logger.info(f"Plugin {plugin.name} is already loaded and has requested to not be re-loaded")
                         return
                     else:
-                        if hasattr(self.plugins[module.Plugin.name], "task"):
-                            self.plugins[module.Plugin.name].task.cancel()
-                        self.plugins.pop(module.Plugin.name, None)
-            self.plugins[module.Plugin.name] = module.Plugin()
-            if hasattr(module.Plugin, "__main"):
-                setattr(self.plugins[module.Plugin.name], "task",
-                self.loop.create_task(self.plugins[module.Plugin.name].__main()))
-            self.logger.info(f"Loaded {module.Plugin.name}")
+                        self.plugins[plugin.name].stop(self.loop)
+                        self.plugins.pop(plugin.name, None)
+            self.plugins[plugin.name] = plugin.start(self.loop)
+            self.logger.info(f"Loaded {plugin.name}")
         except Exception as e:
             self.logger.error(f"Could not load {file}. {e}")
         finally:
@@ -117,9 +104,9 @@ class Loader:
         self.import_plugins()
 
     async def handle_plugin_method_call(self, plugin_name, method_name, **kwargs):
-        if method_name.startswith("__"):
+        if method_name.startswith("_"):
             raise RuntimeError("Tried to call private method")
-        return await getattr(self.plugins[plugin_name], method_name)(**kwargs)
+        return await self.plugins[plugin_name].execute_method(method_name, kwargs)
 
     async def get_steam_resource(self, request):
         tab = (await get_tabs())[0]
@@ -132,7 +119,7 @@ class Loader:
         plugin = self.plugins[request.match_info["name"]]
 
         # open up the main template
-        with open(path.join(self.plugin_path, plugin._plugin_directory, plugin.main_view_html), 'r') as template:
+        with open(path.join(self.plugin_path, plugin.plugin_directory, plugin.main_view_html), 'r') as template:
             template_data = template.read()
             # setup the main script, plugin, and pull in the template
             ret = f"""
@@ -150,7 +137,7 @@ class Loader:
 
         ret = ""
 
-        file_path = path.join(self.plugin_path, plugin._plugin_directory, route_path)
+        file_path = path.join(self.plugin_path, plugin.plugin_directory, route_path)
         with open(file_path, 'r') as resource_data:
             ret = resource_data.read()
 
@@ -162,8 +149,8 @@ class Loader:
         inner_content = ""
 
         # open up the tile template (if we have one defined)
-        if len(plugin.tile_view_html) > 0:
-            with open(path.join(self.plugin_path, plugin._plugin_directory, plugin.tile_view_html), 'r') as template:
+        if hasattr(plugin, "tile_view_html"):
+            with open(path.join(self.plugin_path, plugin.plugin_directory, plugin.tile_view_html), 'r') as template:
                 template_data = template.read()
                 inner_content = template_data
         

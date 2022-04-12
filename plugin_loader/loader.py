@@ -190,4 +190,4 @@ class Loader:
     async def refresh_iframe(self):
         tab = await get_tab("QuickAccess")
         await tab.open_websocket()
-        return await tab.evaluate_js("reloadIframe()")
+        return await tab.evaluate_js("reloadIframe()", False)

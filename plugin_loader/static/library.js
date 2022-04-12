@@ -48,3 +48,17 @@ async function execute_in_tab(tab, run_async, code) {
         'code': code
     });
 }
+
+async function inject_css_into_tab(tab, style) {
+    return await call_server_method("inject_css_into_tab", {
+        'tab': tab,
+        'style': style
+    });
+}
+
+async function remove_css_from_tab(tab, css_id) {
+    return await call_server_method("remove_css_from_tab", {
+        'tab': tab,
+        'css_id': css_id
+    });
+}

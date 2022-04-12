@@ -40,15 +40,15 @@ class PluginBrowser:
     async def _install(self, artifact, version, hash):
         name = artifact.split("/")[-1]
         rmtree(path.join(self.plugin_path, name), ignore_errors=True)
-        self.log.info("Installing {} (Version: {})".format(artifact, version))
+        self.log.info(f"Installing {artifact} (Version: {version})")
         async with ClientSession() as client:
-            url = "https://github.com/{}/archive/refs/tags/{}.zip".format(artifact, version)
-            self.log.debug("Fetching {}".format(url))
+            url = f"https://github.com/{artifact}/archive/refs/tags/{version}.zip"
+            self.log.debug(f"Fetching {url}")
             res = await client.get(url)
             if res.status == 200:
                 self.log.debug("Got 200. Reading...")
                 data = await res.read()
-                self.log.debug("Read {} bytes".format(len(data)))
+                self.log.debug(f"Read {len(data)} bytes")
                 res_zip = BytesIO(data)
                 with ProcessPoolExecutor() as executor:
                     self.log.debug("Unzipping...")
@@ -60,11 +60,11 @@ class PluginBrowser:
                         hash
                     )
                     if ret:
-                        self.log.info("Installed {} (Version: {})".format(artifact, version))
+                        self.log.info(f"Installed {artifact} (Version: {version})")
                     else:
-                        self.log.fatal("SHA-256 Mismatch!!!! {} (Version: {})".format(artifact, version))
+                        self.log.fatal(f"SHA-256 Mismatch!!!! {artifact} (Version: {version})")
             else:
-                self.log.fatal("Could not fetch from github. {}".format(await res.text()))
+                self.log.fatal(f"Could not fetch from github. {await res.text()}")
 
     async def redirect_to_store(self, request):
         return web.Response(status=302, headers={"Location": self.store_url})
@@ -79,7 +79,7 @@ class PluginBrowser:
         self.install_requests[request_id] = PluginInstallContext(artifact, version, hash)
         tab = await get_tab("QuickAccess")
         await tab.open_websocket()
-        await tab.evaluate_js("addPluginInstallPrompt('{}', '{}', '{}')".format(artifact, version, request_id))
+        await tab.evaluate_js(f"addPluginInstallPrompt('{artifact}', '{version}', '{request_id}')")
     
     async def confirm_plugin_install(self, request_id):
         request = self.install_requests.pop(request_id)

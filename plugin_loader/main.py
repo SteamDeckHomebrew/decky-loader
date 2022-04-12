@@ -53,7 +53,7 @@ class PluginManager:
             "id": 1,
             "method": "Runtime.evaluate",
             "params": {
-                "expression": "resolveMethodCall({}, {})".format(call_id, dumps(response)),
+                "expression": f"resolveMethodCall({call_id}, {dumps(response)})",
                 "userGesture": True
             }
         }, receive=False)

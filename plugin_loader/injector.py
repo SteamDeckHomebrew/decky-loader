@@ -58,7 +58,7 @@ async def get_tabs():
 
         while True:
             try:
-                res = await web.get("{}/json".format(BASE_ADDRESS))
+                res = await web.get(f"{BASE_ADDRESS}/json")
                 break
             except:
                 logger.info("Steam isn't available yet. Wait for a moment...")
@@ -68,13 +68,13 @@ async def get_tabs():
             res = await res.json()
             return [Tab(i) for i in res]
         else:
-            raise Exception("/json did not return 200. {}".format(await res.text()))
+            raise Exception(f"/json did not return 200. {await res.text()}")
 
 async def get_tab(tab_name):
     tabs = await get_tabs()
     tab = next((i for i in tabs if i.title == tab_name), None)
     if not tab:
-        raise ValueError("Tab {} not found".format(tab_name))
+        raise ValueError(f"Tab {tab_name} not found")
     return tab    
 
 async def inject_to_tab(tab_name, js, run_async=False):

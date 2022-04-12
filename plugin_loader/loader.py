@@ -84,11 +84,10 @@ class Loader:
             module.Plugin._plugin_directory = plugin_directory
 
             if not hasattr(module.Plugin, "name"):
-                raise KeyError("Plugin {} has not defined a name".format(file))
+                raise KeyError(f"Plugin {file} has not defined a name")
             if module.Plugin.name in self.plugins:
                     if hasattr(module.Plugin, "hot_reload") and not module.Plugin.hot_reload  and refresh:
-                        self.logger.info("Plugin {} is already loaded and has requested to not be re-loaded"
-                        .format(module.Plugin.name))
+                        self.logger.info(f"Plugin {module.Plugin.name} is already loaded and has requested to not be re-loaded")
                         return
                     else:
                         if hasattr(self.plugins[module.Plugin.name], "task"):
@@ -98,9 +97,9 @@ class Loader:
             if hasattr(module.Plugin, "__main"):
                 setattr(self.plugins[module.Plugin.name], "task",
                 self.loop.create_task(self.plugins[module.Plugin.name].__main()))
-            self.logger.info("Loaded {}".format(module.Plugin.name))
+            self.logger.info(f"Loaded {module.Plugin.name}")
         except Exception as e:
-            self.logger.error("Could not load {}. {}".format(file, e))
+            self.logger.error(f"Could not load {file}. {e}")
         finally:
             if refresh:
                 self.loop.create_task(self.refresh_iframe())
@@ -136,12 +135,12 @@ class Loader:
         with open(path.join(self.plugin_path, plugin._plugin_directory, plugin.main_view_html), 'r') as template:
             template_data = template.read()
             # setup the main script, plugin, and pull in the template
-            ret = """
+            ret = f"""
             <script src="/static/library.js"></script>
-            <script>const plugin_name = '{}' </script>
-            <base href="http://127.0.0.1:1337/plugins/plugin_resource/{}/">
-            {}
-            """.format(plugin.name, plugin.name, template_data)
+            <script>const plugin_name = '{plugin.name}' </script>
+            <base href="http://127.0.0.1:1337/plugins/plugin_resource/{plugin.name}/">
+            {template_data}
+            """
             return web.Response(text=ret, content_type="text/html")
 
     async def handle_sub_route(self, request):
@@ -169,18 +168,18 @@ class Loader:
                 inner_content = template_data
         
         # setup the default template
-        ret = """
+        ret = f"""
         <html style="height: fit-content;">
             <head>
                 <link rel="stylesheet" href="/static/styles.css">
                 <script src="/static/library.js"></script>
-                <script>const plugin_name = '{name}';</script>
+                <script>const plugin_name = '{plugin.name}';</script>
             </head>
             <body style="height: fit-content; display: block;">
-                {content}
+                {inner_content}
             </body>
         <html>
-        """.format(name=plugin.name, content=inner_content)
+        """
         return web.Response(text=ret, content_type="text/html")
 
     @template('plugin_view.html')

@@ -11,7 +11,7 @@ class PluginWrapper:
         self.plugin_directory = plugin_directory
         self.reader = None
         self.writer = None
-        self.socket_addr = "/tmp/plugin_socket_{}".format(time())
+        self.socket_addr = f"/tmp/plugin_socket_{time()}"
         self.method_call_lock = Lock()
 
         json = load(open(path.join(plugin_path, plugin_directory, "plugin.json"), "r"))

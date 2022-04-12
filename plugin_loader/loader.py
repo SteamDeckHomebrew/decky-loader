@@ -78,16 +78,15 @@ class Loader:
             plugin = PluginWrapper(file, plugin_directory, self.plugin_path)
             if plugin.name in self.plugins:
                     if not "hot_reload" in plugin.flags and refresh:
-                        self.logger.info("Plugin {} is already loaded and has requested to not be re-loaded"
-                        .format(plugin.name))
+                        self.logger.info(f"Plugin {plugin.name} is already loaded and has requested to not be re-loaded")
                         return
                     else:
                         self.plugins[plugin.name].stop(self.loop)
                         self.plugins.pop(plugin.name, None)
             self.plugins[plugin.name] = plugin.start(self.loop)
-            self.logger.info("Loaded {}".format(plugin.name))
+            self.logger.info(f"Loaded {plugin.name}")
         except Exception as e:
-            self.logger.error("Could not load {}. {}".format(file, e))
+            self.logger.error(f"Could not load {file}. {e}")
         finally:
             if refresh:
                 self.loop.create_task(self.refresh_iframe())
@@ -123,12 +122,12 @@ class Loader:
         with open(path.join(self.plugin_path, plugin.plugin_directory, plugin.main_view_html), 'r') as template:
             template_data = template.read()
             # setup the main script, plugin, and pull in the template
-            ret = """
+            ret = f"""
             <script src="/static/library.js"></script>
-            <script>const plugin_name = '{}' </script>
-            <base href="http://127.0.0.1:1337/plugins/plugin_resource/{}/">
-            {}
-            """.format(plugin.name, plugin.name, template_data)
+            <script>const plugin_name = '{plugin.name}' </script>
+            <base href="http://127.0.0.1:1337/plugins/plugin_resource/{plugin.name}/">
+            {template_data}
+            """
             return web.Response(text=ret, content_type="text/html")
 
     async def handle_sub_route(self, request):
@@ -156,20 +155,20 @@ class Loader:
                 inner_content = template_data
         
         # setup the default template
-        ret = """
+        ret = f"""
         <html style="height: fit-content;">
             <head>
                 <link rel="stylesheet" href="/steam_resource/css/2.css">
                 <link rel="stylesheet" href="/steam_resource/css/39.css">
                 <link rel="stylesheet" href="/steam_resource/css/library.css">
                 <script src="/static/library.js"></script>
-                <script>const plugin_name = '{name}';</script>
+                <script>const plugin_name = '{plugin.name}';</script>
             </head>
             <body style="height: fit-content; display: block;">
-                {content}
+                {inner_content}
             </body>
         <html>
-        """.format(name=plugin.name, content=inner_content)
+        """
         return web.Response(text=ret, content_type="text/html")
 
     @template('plugin_view.html')

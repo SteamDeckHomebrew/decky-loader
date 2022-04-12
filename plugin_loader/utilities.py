@@ -1,4 +1,6 @@
 from aiohttp import ClientSession
+from injector import inject_to_tab
+import uuid
 
 class Utilities:
     def __init__(self, context) -> None:
@@ -6,7 +8,10 @@ class Utilities:
         self.util_methods = {
             "ping": self.ping,
             "http_request": self.http_request,
-            "confirm_plugin_install": self.confirm_plugin_install
+            "confirm_plugin_install": self.confirm_plugin_install,
+            "execute_in_tab": self.execute_in_tab,
+            "inject_css_into_tab": self.inject_css_into_tab,
+            "remove_css_from_tab": self.remove_css_from_tab
         }
 
     async def confirm_plugin_install(self, request_id):
@@ -23,3 +28,80 @@ class Utilities:
 
     async def ping(self, **kwargs):
         return "pong"
+
+    async def execute_in_tab(self, tab, run_async, code):       
+        try:
+            result = await inject_to_tab(tab, code, run_async)
+
+            if "exceptionDetails" in result["result"]:
+                return {
+                    "success": False,
+                    "result": result["result"]
+                }
+
+            return {
+                "success": True,
+                "result" : result["result"]["result"]["value"]
+            }
+        except Exception as e:
+            return { 
+                "success": False,
+                "result": e
+            }
+
+    async def inject_css_into_tab(self, tab, style):
+        try:
+            css_id = str(uuid.uuid4())
+
+            result = await inject_to_tab(tab, 
+                f"""
+                (function() {{
+                    const style = document.createElement('style');
+                    style.id = "{css_id}";
+                    document.head.append(style);
+                        style.sheet.insertRule(`{style}`);
+                }})()
+                """, False)
+
+            if "exceptionDetails" in result["result"]:
+                return {
+                    "success": False,
+                    "result": result["result"]
+                }
+
+            return {
+                "success": True,
+                "result" : css_id
+            }
+        except Exception as e:
+            return { 
+                "success": False,
+                "result": e
+            }
+
+    async def remove_css_from_tab(self, tab, css_id):
+        try:
+            result = await inject_to_tab(tab, 
+                f"""
+                (function() {{
+                    let style = document.getElementById("{css_id}");
+
+                    if (style.nodeName.toLowerCase() == 'style')
+                        style.parentNode.removeChild(style);
+                }})()
+                """, False)
+
+            if "exceptionDetails" in result["result"]:
+                return {
+                    "success": False,
+                    "result": result
+                }
+
+            return {
+                "success": True
+            }
+        except Exception as e:
+            return { 
+                "success": False,
+                "result": e
+            }

@@ -31,31 +31,22 @@ class Tab:
             return (await self.websocket.receive_json()) if receive else None
         raise RuntimeError("Websocket not opened")
 
-    async def evaluate_js(self, js):
+    async def evaluate_js(self, js, run_async):
         await self.open_websocket()
         res = await self._send_devtools_cmd({
             "id": 1,
             "method": "Runtime.evaluate",
             "params": {
                 "expression": js,
-                "userGesture": True
+                "userGesture": True,
+                "awaitPromise": run_async
             }
         })
         await self.client.close()
         return res
         
     async def get_steam_resource(self, url):
-        await self.open_websocket()
-        res = await self._send_devtools_cmd({
-            "id": 1,
-            "method": "Runtime.evaluate",
-            "params": {
-                "expression": f'(async function test() {{ return await (await fetch("{url}")).text() }})()',
-                "userGesture": True,
-                "awaitPromise": True
-            }
-        })
-        await self.client.close()
+        res = await self.evaluate_js(f'(async function test() {{ return await (await fetch("{url}")).text() }})()', True)
         return res["result"]["result"]["value"]
     
     def __repr__(self):
@@ -86,16 +77,17 @@ async def get_tab(tab_name):
         raise ValueError(f"Tab {tab_name} not found")
     return tab    
 
-async def inject_to_tab(tab_name, js):
+async def inject_to_tab(tab_name, js, run_async=False):
     tab = await get_tab(tab_name)
-    logger.debug(f"Injected JavaScript Result: {await tab.evaluate_js(js)}")
+
+    return await tab.evaluate_js(js, run_async)
 
 async def tab_has_element(tab_name, element_name):
     try:
         tab = await get_tab(tab_name)
     except ValueError:
         return False
-    res = await tab.evaluate_js(f"document.getElementById('{element_name}') != null")
+    res = await tab.evaluate_js(f"document.getElementById('{element_name}') != null", False)
     
     if not "result" in res or not "result" in res["result"] or not "value" in res["result"]["result"]:
         return False

@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/plugin_loader/main.py",
+            "preLaunchTask": "Stop Service",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}

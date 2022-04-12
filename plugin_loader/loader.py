@@ -158,9 +158,7 @@ class Loader:
         ret = f"""
         <html style="height: fit-content;">
             <head>
-                <link rel="stylesheet" href="/steam_resource/css/2.css">
-                <link rel="stylesheet" href="/steam_resource/css/39.css">
-                <link rel="stylesheet" href="/steam_resource/css/library.css">
+                <link rel="stylesheet" href="/static/styles.css">
                 <script src="/static/library.js"></script>
                 <script>const plugin_name = '{plugin.name}';</script>
             </head>
@@ -178,4 +176,4 @@ class Loader:
     async def refresh_iframe(self):
         tab = await get_tab("QuickAccess")
         await tab.open_websocket()
-        return await tab.evaluate_js("reloadIframe()")
+        return await tab.evaluate_js("reloadIframe()", False)

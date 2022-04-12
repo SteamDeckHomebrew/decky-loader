@@ -40,3 +40,11 @@ async function call_plugin_method(method_name, arg_object={}) {
         'args': arg_object
     });
 }
+
+async function execute_in_tab(tab, run_async, code) {
+    return await call_server_method("execute_in_tab", {
+        'tab': tab,
+        'run_async': run_async,
+        'code': code
+    });
+}

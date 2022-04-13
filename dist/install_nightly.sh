@@ -20,9 +20,14 @@ cp /tmp/plugin_loader/PluginLoader ${HOMEBREW_FOLDER}/services/PluginLoader
 rm -rf /tmp/plugin_loader
 chmod +x ${HOMEBREW_FOLDER}/services/PluginLoader
 
+systemctl --user stop plugin_loader 2> /dev/null
+systemctl --user disable plugin_loader 2> /dev/null
+rm -f /home/deck/.config/systemd/user/plugin_loader.service
+
 systemctl stop plugin_loader 2> /dev/null
 systemctl disable plugin_loader 2> /dev/null
 rm -f /etc/systemd/system/plugin_loader.service
+
 cat > /etc/systemd/system/plugin_loader.service <<- EOM
 [Unit]
 Description=SteamDeck Plugin Loader

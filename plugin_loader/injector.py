@@ -31,7 +31,7 @@ class Tab:
             return (await self.websocket.receive_json()) if receive else None
         raise RuntimeError("Websocket not opened")
 
-    async def evaluate_js(self, js, run_async):
+    async def evaluate_js(self, js, run_async=False):
         await self.open_websocket()
         res = await self._send_devtools_cmd({
             "id": 1,

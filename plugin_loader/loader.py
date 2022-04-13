@@ -83,6 +83,8 @@ class Loader:
                     else:
                         self.plugins[plugin.name].stop(self.loop)
                         self.plugins.pop(plugin.name, None)
+            if plugin.passive:
+                self.logger.info(f"Plugin {plugin.name} is passive")
             self.plugins[plugin.name] = plugin.start(self.loop)
             self.logger.info(f"Loaded {plugin.name}")
         except Exception as e:
@@ -94,7 +96,7 @@ class Loader:
     def import_plugins(self):
         self.logger.info(f"import plugins from {self.plugin_path}")
 
-        directories = [i for i in listdir(self.plugin_path) if path.isdir(path.join(self.plugin_path, i)) and path.isfile(path.join(self.plugin_path, i, "main.py"))]
+        directories = [i for i in listdir(self.plugin_path) if path.isdir(path.join(self.plugin_path, i)) and path.isfile(path.join(self.plugin_path, i, "plugin.json"))]
         for directory in directories:
             self.logger.info(f"found plugin: {directory}")
             self.import_plugin(path.join(self.plugin_path, directory, "main.py"), directory)

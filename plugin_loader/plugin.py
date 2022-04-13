@@ -22,7 +22,11 @@ class PluginWrapper:
         self.tile_view_html = json["tile_view_html"] if "tile_view_html" in json else ""
         self.flags = json["flags"]
 
+        self.passive = not path.isfile(self.file)
+
     def _init(self):
+        if self.passive:
+            return
         setuid(0 if "root" in self.flags else 1000)
         spec = spec_from_file_location("_", self.file)
         module = module_from_spec(spec)
@@ -62,6 +66,8 @@ class PluginWrapper:
                     await sleep(0)
 
     def start(self, loop):
+        if self.passive:
+            return self
         executor = ProcessPoolExecutor()
         loop.run_in_executor(
             executor,
@@ -70,6 +76,8 @@ class PluginWrapper:
         return self
 
     def stop(self, loop):
+        if self.passive:
+            return
         async def _(self):
             await self._open_socket_if_not_exists()
             self.writer.write((dumps({"stop": True})+"\n").encode("utf-8"))
@@ -77,6 +85,8 @@ class PluginWrapper:
         loop.create_task(_(self))
 
     async def execute_method(self, method_name, kwargs):
+        if self.passive:
+            raise RuntimeError("This plugin is passive (aka does not implement main.py)")
         async with self.method_call_lock:
             await self._open_socket_if_not_exists()
             self.writer.write(

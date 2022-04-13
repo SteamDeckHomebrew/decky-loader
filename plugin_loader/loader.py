@@ -31,8 +31,6 @@ class FileChangeHandler(FileSystemEventHandler):
         rel_path = path.relpath(src_path, path.commonprefix([self.plugin_path, src_path]))
         plugin_dir = path.split(rel_path)[0]
         main_file_path = path.join(self.plugin_path, plugin_dir, "main.py")
-        if not path.isfile(main_file_path):
-            return
         self.loader.import_plugin(main_file_path, plugin_dir, refresh=True)
     
     def on_modified(self, event):

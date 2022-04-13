@@ -45,7 +45,9 @@ class PluginWrapper:
         while True:
             data = loads((await reader.readline()).decode("utf-8"))
             if "stop" in data:
-                return get_event_loop().stop()
+                get_event_loop().stop()
+                get_event_loop().close()
+                return
             d = {"res": None, "success": True}
             try:
                 d["res"] = await getattr(self.Plugin, data["method"])(self.Plugin, **data["args"])
@@ -82,6 +84,7 @@ class PluginWrapper:
             await self._open_socket_if_not_exists()
             self.writer.write((dumps({"stop": True})+"\n").encode("utf-8"))
             await self.writer.drain()
+            self.writer.close()
         loop.create_task(_(self))
 
     async def execute_method(self, method_name, kwargs):

@@ -62,6 +62,7 @@ class PluginManager:
 
     async def inject_javascript(self, request=None):
         try:
+            await inject_to_tab("QuickAccess", open(path.join(path.dirname(__file__), "static/library.js"), "r").read())
             await inject_to_tab("QuickAccess", open(path.join(path.dirname(__file__), "static/plugin_page.js"), "r").read())
         except:
             logger.info("Failed to inject JavaScript into tab")

@@ -19,20 +19,28 @@ function installPlugin(request_id) {
 
 function addPluginInstallPrompt(artifact, version, request_id) {
     let text = `
-    <div id="plugin_install_prompt_${request_id}" style="display: block; background: #304375; border-radius: 5px;">
-        <h3 style="padding-left: 1rem;">Install plugin</h3>
-        <ul style="padding-left: 10px; padding-right: 10px; padding-bottom: 20px; margin: 0;">
-            <li>${artifact}</li>
-            <li>${version}</li>
-        </ul>
-        <div style="text-align: center; padding-bottom: 10px;">
-            <button onclick="installPlugin('${request_id}')" style="display: inline-block; background-color: green;">Install</button>
-            <button onclick="document.getElementById('plugin_install_list').removeChild(document.getElementById('plugin_install_prompt_${request_id}'))" 
-            style="display: inline-block; background-color: red;">Ignore</button>
-        </div>
+    <link rel="stylesheet" href="/static/styles.css">
+
+    <div id="plugin_install_prompt_${request_id}" style="background-color: #0c131b; display: block; border: 1px solid #22262f; box-shadow: 0px 0px 8px #202020; width: calc(100% - 50px); padding: 0px 10px 10px 10px;">
+        <h3>Install Plugin?</h3>
+        <p style="font-size: 12px;">
+            ${artifact}
+            Version: ${version}
+        </p>
+        <button type="button" tabindex="0" class="DialogButton _DialogLayout Secondary basicdialog_Button_1Ievp Focusable"
+            onclick="installPlugin('${request_id}')">
+            Install
+        </button>
+        <p style="margin: 2px;"></p>
+        <button type="button" tabindex="0" class="DialogButton _DialogLayout Secondary basicdialog_Button_1Ievp Focusable"
+            onclick="document.getElementById('plugin_install_list').removeChild(document.getElementById('plugin_install_prompt_${request_id}'))">
+            Cancel
+        </button>
     </div>
     `;
-    document.getElementById('plugin_install_list').innerHTML += text;
+    document.getElementById('plugin_install_list').innerHTML = text;
+
+    execute_in_tab('SP', false, 'FocusNavController.DispatchVirtualButtonClick(28)')
 }
 
 (function () {

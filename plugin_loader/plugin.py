@@ -1,5 +1,5 @@
 from importlib.util import spec_from_file_location, module_from_spec
-from asyncio import get_event_loop, start_unix_server, open_unix_connection, sleep, Lock
+from asyncio import get_event_loop, new_event_loop, set_event_loop, start_unix_server, open_unix_connection, sleep, Lock
 from os import path, setuid
 from json import loads, dumps, load
 from concurrent.futures import ProcessPoolExecutor
@@ -25,6 +25,7 @@ class PluginWrapper:
         self.passive = not path.isfile(self.file)
 
     def _init(self):
+        set_event_loop(new_event_loop())
         if self.passive:
             return
         setuid(0 if "root" in self.flags else 1000)
@@ -46,6 +47,8 @@ class PluginWrapper:
             data = loads((await reader.readline()).decode("utf-8"))
             if "stop" in data:
                 get_event_loop().stop()
+                while get_event_loop().is_running():
+                    await sleep(0)
                 get_event_loop().close()
                 return
             d = {"res": None, "success": True}
@@ -67,17 +70,16 @@ class PluginWrapper:
                 except:
                     await sleep(0)
 
-    def start(self, loop):
+    def start(self):
         if self.passive:
             return self
-        executor = ProcessPoolExecutor()
-        loop.run_in_executor(
-            executor,
+        get_event_loop().run_in_executor(
+            ProcessPoolExecutor(),
             self._init
         )
         return self
 
-    def stop(self, loop):
+    def stop(self):
         if self.passive:
             return
         async def _(self):
@@ -85,7 +87,7 @@ class PluginWrapper:
             self.writer.write((dumps({"stop": True})+"\n").encode("utf-8"))
             await self.writer.drain()
             self.writer.close()
-        loop.create_task(_(self))
+        get_event_loop().create_task(_(self))
 
     async def execute_method(self, method_name, kwargs):
         if self.passive:

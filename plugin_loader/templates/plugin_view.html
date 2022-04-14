@@ -7,9 +7,9 @@
         });
     }, false);
 
-    function loadPlugin(name) {
+    function loadPlugin(callsign, name) {
         this.parent.postMessage("PLUGIN_LOADER__"+name, "https://steamloopback.host");
-        location.href = `/plugins/load_main/${name}`;
+        location.href = `/plugins/load_main/${callsign}`;
     }
 </script>
 
@@ -26,15 +26,15 @@
     {% for plugin in plugins %}
     {% if plugin.tile_view_html|length %}
         <div class="quickaccesscontrols_PanelSectionRow_26R5w">
-            <div onclick="loadPlugin('{{ plugin.name }}')"
+            <div onclick="loadPlugin('{{ plugin.callsign }}', '{{ plugin.name }}')"
                 class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable"
                 style="--indent-level:0;">
-                <iframe id="tile_view_iframe_{{ plugin.name }}" style="display:block; padding: 0; border: none;" scrolling="no"
-                    src="/plugins/load_tile/{{ plugin.name }}"></iframe>
+                <iframe id="tile_view_iframe_{{ plugin.callsign}}" style="display:block; padding: 0; border: none;" scrolling="no"
+                    src="/plugins/load_tile/{{ plugin.callsign}}"></iframe>
                 <script>
                     (function() {
-                        let iframe = document.getElementById("tile_view_iframe_{{ plugin.name }}");
-                        tile_iframes.push(document.getElementById("tile_view_iframe_{{ plugin.name }}"));
+                        let iframe = document.getElementById("tile_view_iframe_{{ plugin.callsign }}");
+                        tile_iframes.push(document.getElementById("tile_view_iframe_{{ plugin.callsign }}"));
                         iframe.onload = function() {
                             let html = iframe.contentWindow.document.children[0];
                             let last_height = 0;
@@ -46,7 +46,7 @@
                                 }
                             }, 100);
                             iframe.contentWindow.document.body.onclick = function () {
-                                loadPlugin('{{ plugin.name }}');
+                                loadPlugin('{{ plugin.callsign }}', '{{ plugin.name }}');
                             };
                         }
                     })();
@@ -55,7 +55,7 @@
         </div>
         {% else %}
         <div class="quickaccesscontrols_PanelSectionRow_26R5w">
-            <div onclick="loadPlugin('{{ plugin.name }}')"
+            <div onclick="loadPlugin('{{ plugin.callsign }}', '{{ plugin.name }}')"
                 class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable"
                 style="--indent-level:0;">
                 <div class="basicdialog_FieldChildren_279n8">

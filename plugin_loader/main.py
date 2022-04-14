@@ -18,14 +18,18 @@ from jinja2 import FileSystemLoader
 from os import path
 from asyncio import get_event_loop, sleep
 from json import loads, dumps
+from subprocess import Popen
 
 from loader import Loader
 from injector import inject_to_tab, get_tab, tab_has_element
 from utilities import Utilities
 from browser import PluginBrowser
 
-
 logger = getLogger("Main")
+
+async def chown_plugin_dir(_):
+    Popen(["chown", "-R", "deck:deck", CONFIG["plugin_path"]])
+    Popen(["chmod", "-R", "555", CONFIG["plugin_path"]])
 
 class PluginManager:
     def __init__(self) -> None:
@@ -37,6 +41,7 @@ class PluginManager:
 
         jinja_setup(self.web_app, loader=FileSystemLoader(path.join(path.dirname(__file__), 'templates')))
         self.web_app.on_startup.append(self.inject_javascript)
+        self.web_app.on_startup.append(chown_plugin_dir)
         self.web_app.add_routes([static("/static", path.join(path.dirname(__file__), 'static'))])
         self.loop.create_task(self.method_call_listener())
         self.loop.create_task(self.loader_reinjector())
@@ -47,6 +52,20 @@ class PluginManager:
         if context["message"] == "Unclosed connection":
             return
         loop.default_exception_handler(context)
+                
+    async def loader_reinjector(self):
+        while True:
+            await sleep(1)
+            if not await tab_has_element("QuickAccess", "plugin_iframe"):
+                logger.info("Plugin loader isn't present in Steam anymore, reinjecting...")
+                await self.inject_javascript()
+
+    async def inject_javascript(self, request=None):
+        try:
+            await inject_to_tab("QuickAccess", open(path.join(path.dirname(__file__), "static/plugin_page.js"), "r").read())
+        except:
+            logger.info("Failed to inject JavaScript into tab")
+            pass
 
     async def resolve_method_call(self, tab, call_id, response):
         await tab._send_devtools_cmd({
@@ -88,20 +107,6 @@ class PluginManager:
             if not "id" in data and data["method"] == "Runtime.consoleAPICalled" and data["params"]["type"] == "debug":
                 method = loads(data["params"]["args"][0]["value"])
                 self.loop.create_task(self.handle_method_call(method, tab))
-                
-    async def loader_reinjector(self):
-        while True:
-            await sleep(1)
-            if not await tab_has_element("QuickAccess", "plugin_iframe"):
-                logger.info("Plugin loader isn't present in Steam anymore, reinjecting...")
-                await self.inject_javascript()
-
-    async def inject_javascript(self, request=None):
-        try:
-            await inject_to_tab("QuickAccess", open(path.join(path.dirname(__file__), "static/plugin_page.js"), "r").read())
-        except:
-            logger.info("Failed to inject JavaScript into tab")
-            pass
 
     def run(self):
         return run_app(self.web_app, host=CONFIG["server_host"], port=CONFIG["server_port"], loop=self.loop, access_log=None)

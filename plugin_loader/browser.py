@@ -9,6 +9,7 @@ from concurrent.futures import ProcessPoolExecutor
 from asyncio import get_event_loop
 from time import time
 from hashlib import sha256
+from subprocess import Popen
 
 class PluginInstallContext:
     def __init__(self, gh_url, version, hash) -> None:
@@ -35,6 +36,8 @@ class PluginBrowser:
         zip_file = ZipFile(zip)
         zip_file.extractall(self.plugin_path)
         rename(path.join(self.plugin_path, zip_file.namelist()[0]), path.join(self.plugin_path, name))
+        Popen(["chown", "-R", "deck:deck", self.plugin_path])
+        Popen(["chmod", "-R", "555", self.plugin_path])
         return True
 
     async def _install(self, artifact, version, hash):

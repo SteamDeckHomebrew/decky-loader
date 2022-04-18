@@ -7,64 +7,70 @@
         });
     }, false);
 
-    function loadPlugin(name) {
+    function loadPlugin(callsign, name) {
         this.parent.postMessage("PLUGIN_LOADER__"+name, "https://steamloopback.host");
-        location.href = `/plugins/load_main/${name}`;
+        location.href = `/plugins/load_main/${callsign}`;
     }
 </script>
 
 {% if not plugins|length %}
-<div class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable"
-    style="--indent-level:0;">
-    <div class="basicdialog_FieldChildren_279n8" style="color: white; font-size: large; padding-top: 10px;">
-        No plugins installed :(
+    <div class="quickaccessmenu_TabGroupPanel_1QO7b Panel Focusable">
+        <div class="quickaccesscontrols_EmptyNotifications_3ZjbM" style="padding-top:7px;">
+            No plugins installed
+        </div>
     </div>
-</div>
 {% endif %}
 
 <div class="quickaccessmenu_TabGroupPanel_1QO7b Panel Focusable">
     {% for plugin in plugins %}
-    {% if plugin.tile_view_html|length %}
-        <div class="quickaccesscontrols_PanelSectionRow_26R5w">
-            <div onclick="loadPlugin('{{ plugin.name }}')"
-                class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable"
-                style="--indent-level:0;">
-                <iframe id="tile_view_iframe_{{ plugin.name }}" style="display:block; padding: 0; border: none;" scrolling="no"
-                    src="/plugins/load_tile/{{ plugin.name }}"></iframe>
-                <script>
-                    (function() {
-                        let iframe = document.getElementById("tile_view_iframe_{{ plugin.name }}");
-                        tile_iframes.push(document.getElementById("tile_view_iframe_{{ plugin.name }}"));
-                        iframe.onload = function() {
-                            let html = iframe.contentWindow.document.children[0];
-                            let last_height = 0;
-                            setInterval(function() {
-                                let height = iframe.contentWindow.document.children[0].scrollHeight;
-                                if (height != last_height) {
-                                    iframe.height = height + "px";
-                                    last_height = height;
-                                }
-                            }, 100);
-                            iframe.contentWindow.document.body.onclick = function () {
-                                loadPlugin('{{ plugin.name }}');
-                            };
-                        }
-                    })();
-                </script>
-            </div>
-        </div>
-        {% else %}
-        <div class="quickaccesscontrols_PanelSectionRow_26R5w">
-            <div onclick="loadPlugin('{{ plugin.name }}')"
-                class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable"
-                style="--indent-level:0;">
-                <div class="basicdialog_FieldChildren_279n8">
-                    <button type="button" tabindex="0"
-                        class="DialogButton _DialogLayout Secondary basicdialog_Button_1Ievp Focusable">{{ plugin.name
-                        }}</button>
+        {% if plugin.tile_view_html|length %}
+            <div class="quickaccesscontrols_PanelSectionRow_26R5w">
+                <div onclick="loadPlugin('{{ plugin.callsign }}', '{{ plugin.name }}')"
+                    class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable"
+                    style="--indent-level:0; margin: 0px; padding: 0px; padding-top: 8px;">
+                    <iframe id="tile_view_iframe_{{ plugin.callsign }}" 
+                        scrolling="no" marginwidth="0" marginheight="0"
+                        hspace="0" vspace="0" frameborder="0"
+                        style="border-radius: 2px;"
+                        src="/plugins/load_tile/{{ plugin.callsign }}">
+                    </iframe>
+                    <script>
+                        (function() {
+                            let iframe = document.getElementById("tile_view_iframe_{{ plugin.callsign }}");
+                            tile_iframes.push(document.getElementById("tile_view_iframe_{{ plugin.callsign }}"));
+
+                            iframe.onload = function() {
+                                let html = iframe.contentWindow.document.children[0];
+                                let last_height = 0;
+
+                                setInterval(function() {
+                                    let height = iframe.contentWindow.document.children[0].scrollHeight;
+                                    if (height != last_height) {
+                                        iframe.height = height + "px";
+                                        last_height = height;
+                                    }
+                                }, 100);
+
+                                iframe.contentWindow.document.body.onclick = function () {
+                                    loadPlugin('{{ plugin.callsign }}', '{{ plugin.name }}');
+                                };
+                            }
+                        })();
+                    </script>
                 </div>
             </div>
-        </div>
+        {% else %}
+            <div class="quickaccesscontrols_PanelSectionRow_26R5w">
+                <div onclick="loadPlugin('{{ plugin.callsign }}', '{{ plugin.name }}')"
+                    class="basicdialog_Field_ugL9c basicdialog_WithChildrenBelow_1RjOd basicdialog_InlineWrapShiftsChildrenBelow_3a6QZ basicdialog_ExtraPaddingOnChildrenBelow_2-owv basicdialog_StandardPadding_1HrfN basicdialog_HighlightOnFocus_1xh2W Panel Focusable"
+                    style="--indent-level:0; margin: 0px; padding: 0px; padding-top: 8px;">
+                    <div class="basicdialog_FieldChildren_279n8">
+                        <button type="button" tabindex="0"
+                            class="DialogButton _DialogLayout Secondary basicdialog_Button_1Ievp Focusable">{{ plugin.name }}
+                        </button>
+                    </div>
+                </div>
+            </div>
         {% endif %}
-        {% endfor %}
+    {% endfor %}
 </div>

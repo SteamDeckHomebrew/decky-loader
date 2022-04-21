@@ -1,9 +1,6 @@
 #!/bin/sh
 
-if [ "$(whoami)" != "root" ]; then
-    su -c "$0 $*"
-    exit
-fi
+[ "$UID" -eq 0 ] || exec sudo "$0" "$@"
 
 echo "Installing Steam Deck Plugin Loader release..."
 

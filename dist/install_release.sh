@@ -15,6 +15,9 @@ mkdir -p ${HOMEBREW_FOLDER}/plugins
 curl -L https://github.com/SteamDeckHomebrew/PluginLoader/releases/latest/download/PluginLoader --output ${HOMEBREW_FOLDER}/services/PluginLoader
 chmod +x ${HOMEBREW_FOLDER}/services/PluginLoader
 
+systemctl --user stop plugin_loader 2> /dev/null
+systemctl --user disable plugin_loader 2> /dev/null
+
 systemctl stop plugin_loader 2> /dev/null
 systemctl disable plugin_loader 2> /dev/null
 rm -f /etc/systemd/system/plugin_loader.service

@@ -8,8 +8,8 @@ HOMEBREW_FOLDER=/home/deck/homebrew
 
 # Create folder structure
 rm -rf ${HOMEBREW_FOLDER}/services
-mkdir -p ${HOMEBREW_FOLDER}/services
-mkdir -p ${HOMEBREW_FOLDER}/plugins
+sudo -u deck mkdir -p ${HOMEBREW_FOLDER}/services
+sudo -u deck mkdir -p ${HOMEBREW_FOLDER}/plugins
 
 # Download latest nightly build and install it
 rm -rf /tmp/plugin_loader

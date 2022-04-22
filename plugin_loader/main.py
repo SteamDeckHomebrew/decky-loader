@@ -54,11 +54,19 @@ class PluginManager:
         loop.default_exception_handler(context)
                 
     async def loader_reinjector(self):
+        finished_reinjection = False
+
         while True:
             await sleep(1)
             if not await tab_has_element("QuickAccess", "plugin_iframe"):
                 logger.info("Plugin loader isn't present in Steam anymore, reinjecting...")
                 await self.inject_javascript()
+                finished_reinjection = True
+            elif finished_reinjection:
+                finished_reinjection = False
+                logger.info("Reinjecting successful!")
+
+                self.loop.create_task(self.method_call_listener())
 
     async def inject_javascript(self, request=None):
         try:

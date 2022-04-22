@@ -59,7 +59,7 @@ class Utilities:
                     const style = document.createElement('style');
                     style.id = "{css_id}";
                     document.head.append(style);
-                        style.sheet.insertRule(`{style}`);
+                    style.textContent = `{style}`;
                 }})()
                 """, False)
 

@@ -19,12 +19,12 @@ class Utilities:
 
     async def http_request(self, method="", url="", **kwargs):
         async with ClientSession() as web:
-            res = await web.request(method, url, **kwargs)
-            return {
-                "status": res.status,
-                "headers": dict(res.headers),
-                "body": await res.text()
-            }
+            async with web.request(method, url, **kwargs) as res:
+                return {
+                    "status": res.status,
+                    "headers": dict(res.headers),
+                    "body": await res.text()
+                }
 
     async def ping(self, **kwargs):
         return "pong"

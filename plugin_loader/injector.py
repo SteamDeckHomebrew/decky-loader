@@ -3,6 +3,7 @@
 from aiohttp import ClientSession
 from logging import debug, getLogger
 from asyncio import sleep
+from traceback import format_exc
 
 BASE_ADDRESS = "http://localhost:8080"
 
@@ -61,14 +62,15 @@ async def get_tabs():
                 res = await web.get(f"{BASE_ADDRESS}/json")
                 break
             except:
-                logger.info("Steam isn't available yet. Wait for a moment...")
+                logger.debug("Steam isn't available yet. Wait for a moment...")
+                logger.debug(format_exc())
                 await sleep(5)
 
         if res.status == 200:
-            res = await res.json()
-            return [Tab(i) for i in res]
+            r = await res.json()
+            return [Tab(i) for i in r]
         else:
-            raise Exception(f"/json did not return 200. {await res.text()}")
+            raise Exception(f"/json did not return 200. {await r.text()}")
 
 async def get_tab(tab_name):
     tabs = await get_tabs()

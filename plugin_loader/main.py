@@ -1,4 +1,4 @@
-from logging import getLogger, basicConfig, INFO, DEBUG
+from logging import getLogger, basicConfig, INFO, DEBUG, Filter, root
 from os import getenv
 
 CONFIG = {
@@ -7,10 +7,19 @@ CONFIG = {
     "server_port": int(getenv("SERVER_PORT", "1337")),
     "live_reload": getenv("LIVE_RELOAD", "1") == "1",
     "log_level": {"CRITICAL": 50, "ERROR": 40, "WARNING":30, "INFO": 20, "DEBUG": 10}[getenv("LOG_LEVEL", "INFO")],
-    "store_url": getenv("STORE_URL", "https://sdh.tzatzi.me/browse")
+    "store_url": getenv("STORE_URL", "https://plugins.deckbrew.xyz"),
+    "log_base_events": getenv("LOG_BASE_EVENTS", "0")=="1"
 }
 
+class NoBaseEvents(Filter):
+    def filter(self, record):
+        return not "asyncio" in record.name
+
 basicConfig(level=CONFIG["log_level"], format="[%(module)s][%(levelname)s]: %(message)s")
+for handler in root.handlers:
+    if not CONFIG["log_base_events"]:
+        print("adding filter")
+        handler.addFilter(NoBaseEvents())
 
 from aiohttp.web import Application, run_app, static
 from aiohttp_jinja2 import setup as jinja_setup
@@ -77,11 +86,17 @@ class PluginManager:
             pass
 
     async def resolve_method_call(self, tab, call_id, response):
+        try:
+            r = dumps(response)
+        except Exception as e:
+            logger.error(e)
+            response["result"] = str(response)
+            r = response
         await tab._send_devtools_cmd({
             "id": 1,
             "method": "Runtime.evaluate",
             "params": {
-                "expression": f"resolveMethodCall({call_id}, {dumps(response)})",
+                "expression": f"resolveMethodCall({call_id}, {r})",
                 "userGesture": True
             }
         }, receive=False)
@@ -107,7 +122,12 @@ class PluginManager:
             await self.resolve_method_call(tab, method["id"], res)
 
     async def method_call_listener(self):
-        tab = await get_tab("QuickAccess")
+        while True:
+            try:
+                tab = await get_tab("QuickAccess")
+                break
+            except:
+                await sleep(1)
         await tab.open_websocket()
         await tab._send_devtools_cmd({"id": 1, "method": "Runtime.discardConsoleEntries"})
         await tab._send_devtools_cmd({"id": 1, "method": "Runtime.enable"})

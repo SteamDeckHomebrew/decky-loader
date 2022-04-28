@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "Uninstalling Steam Deck Plugin Loader and all plugins..."
+echo "Uninstalling Steam Deck Plugin Loader..."
 
 HOMEBREW_FOLDER=/home/deck/homebrew
 

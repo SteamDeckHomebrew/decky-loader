@@ -12,6 +12,6 @@ sudo rm -f /etc/systemd/system/plugin_loader.service
 # Remove temporary folder if it exists from the install process
 rm -rf /tmp/plugin_loader
 
-# Remove folder structure
-sudo rm -rf ${HOMEBREW_FOLDER}
+# Cleanup services folder
+sudo rm ${HOMEBREW_FOLDER}/services/PluginLoader
 

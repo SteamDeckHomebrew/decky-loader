@@ -1,7 +1,7 @@
-FROM archlinux:base-devel-20210110.0.13332
+FROM ubuntu:focal
 
-RUN pacman -Syy --noconfirm
-RUN pacman -S python3 --noconfirm
+RUN apt -y update 
+RUN apt -y install python3
 
 WORKDIR /build
 

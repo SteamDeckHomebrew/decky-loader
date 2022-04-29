@@ -58,6 +58,7 @@ class Loader:
         self.logger.info(f"plugin_path: {self.plugin_path}")
         self.plugins = {}
         self.callsigns = {}
+        self.callsign_matches = {}
         self.import_plugins()
 
         if live_reload:
@@ -85,13 +86,14 @@ class Loader:
                     else:
                         self.plugins[plugin.name].stop()
                         self.plugins.pop(plugin.name, None)
-                        self.callsigns.pop(plugin.callsign, None)
+                        self.callsigns.pop(self.callsign_matches[file], None)
             if plugin.passive:
                 self.logger.info(f"Plugin {plugin.name} is passive")
             callsign = str(time())
             plugin.callsign = callsign
             self.plugins[plugin.name] = plugin.start()
             self.callsigns[callsign] = plugin
+            self.callsign_matches[file] = callsign
             self.logger.info(f"Loaded {plugin.name}")
         except Exception as e:
             self.logger.error(f"Could not load {file}. {e}")

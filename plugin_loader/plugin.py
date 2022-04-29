@@ -73,10 +73,7 @@ class PluginWrapper:
     def start(self):
         if self.passive:
             return self
-        get_event_loop().run_in_executor(
-            ProcessPoolExecutor(),
-            self._init
-        )
+        ProcessPoolExecutor().submit(self._init, self)
         return self
 
     def stop(self):

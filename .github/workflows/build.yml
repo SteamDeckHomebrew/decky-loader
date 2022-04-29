@@ -19,10 +19,11 @@ jobs:
     - name: 🧰 Checkout
       uses: actions/checkout@v3
       
-    - name: 🐳 Setup Docker
-      run: |
-        sudo apt install docker.io
-        docker build -t "github_runner" .
+    - name: 🐋 Setup Docker
+      uses: docker-practice/actions-setup-docker@master
+
+    - name: 🐳 Build Container
+      run: docker build -t "github_runner" .
 
     - name: 🛠️ Build
       run: |

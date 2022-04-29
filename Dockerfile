@@ -5,7 +5,6 @@ RUN apt -y install python3
 
 WORKDIR /build
 
-RUN python -m ensurepip
-RUN python -m pip install --upgrade pip
-RUN python -m pip install pyinstaller
-RUN if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+RUN python3 -m ensurepip
+RUN python3 -m pip install --upgrade pip
+RUN python3 -m pip install pyinstaller

@@ -27,9 +27,9 @@ jobs:
 
     - name: 🛠️ Build
       run: |
-        docker run -v $(pwd):/build "github_runner" \
-        pip3 install -r requirements.txt && \
-        python3 -m pyinstaller --noconfirm --onefile --distpath ./out --name "PluginLoader" --add-data ./plugin_loader/static:/static --add-data ./plugin_loader/templates:/templates ./plugin_loader/*.py
+        docker run -v $(pwd):/build "github_runner" /bin/bash \
+        "pip3 install -r requirements.txt && \
+        python3 -m pyinstaller --noconfirm --onefile --distpath ./out --name \"PluginLoader\" --add-data ./plugin_loader/static:/static --add-data ./plugin_loader/templates:/templates ./plugin_loader/*.py"
         
     - name: ⬆️ Upload package
       uses: actions/upload-artifact@v2

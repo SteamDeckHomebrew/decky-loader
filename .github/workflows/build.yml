@@ -21,7 +21,7 @@ jobs:
       
     - name: 🐳 Setup Docker
       run: |
-        apt install docker
+        sudo apt install docker
         docker build -t "github_runner" .
 
     - name: 🛠️ Build

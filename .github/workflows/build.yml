@@ -27,12 +27,12 @@ jobs:
 
     - name: 🛠️ Build
       run: |
-        docker run -v $(pwd):/build -it "github_runner" \
-        pyinstaller --noconfirm --onefile --name "PluginLoader" --add-data ./plugin_loader/static:/static --add-data ./plugin_loader/templates:/templates ./plugin_loader/*.py
+        docker run -v $(pwd):/build "github_runner" \
+        pyinstaller --noconfirm --onefile --distpath ./out --name "PluginLoader" --add-data ./plugin_loader/static:/static --add-data ./plugin_loader/templates:/templates ./plugin_loader/*.py
         
     - name: ⬆️ Upload package
       uses: actions/upload-artifact@v2
       with:
         name: Plugin Loader
         path: |
-          ./dist/*
+          ./out/*

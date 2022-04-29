@@ -1,4 +1,4 @@
-FROM archlinux:base-devel
+FROM archlinux:base-devel-20210110.0.13332
 
 RUN pacman -Syyu --noconfirm
 RUN pacman -S python3 --noconfirm

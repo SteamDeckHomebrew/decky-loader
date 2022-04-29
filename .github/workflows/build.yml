@@ -19,19 +19,14 @@ jobs:
     - name: 🧰 Checkout
       uses: actions/checkout@v3
       
-    - name: 🐍 Set up Python 3.10
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.10"
-        
-    - name: ⬇️ Install dependencies
+    - name: 🐳 Setup Docker
       run: |
-        python -m pip install --upgrade pip
-        pip install pyinstaller
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    
+        apt install docker
+        docker build -t "github_runner" .
+
     - name: 🛠️ Build
       run: |
+        docker run -v $(pwd):/build -it "github_runner" \
         pyinstaller --noconfirm --onefile --name "PluginLoader" --add-data ./plugin_loader/static:/static --add-data ./plugin_loader/templates:/templates ./plugin_loader/*.py
         
     - name: ⬆️ Upload package

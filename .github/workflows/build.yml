@@ -28,7 +28,7 @@ jobs:
     - name: 🛠️ Build
       run: |
         docker run -v $(pwd):/build "github_runner" \
-        if [ -f requirements.txt ]; then pip3 install -r requirements.txt; fi && \
+        pip3 install -r requirements.txt && \
         pyinstaller --noconfirm --onefile --distpath ./out --name "PluginLoader" --add-data ./plugin_loader/static:/static --add-data ./plugin_loader/templates:/templates ./plugin_loader/*.py
         
     - name: ⬆️ Upload package

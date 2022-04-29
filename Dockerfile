@@ -1,6 +1,6 @@
 FROM archlinux:base-devel-20210110.0.13332
 
-RUN pacman -Syyu --noconfirm
+RUN pacman -Syy --noconfirm
 RUN pacman -S python3 --noconfirm
 
 WORKDIR /build

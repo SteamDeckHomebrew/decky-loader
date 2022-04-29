@@ -1,10 +1,9 @@
 FROM ubuntu:focal
 
 RUN apt -y update 
-RUN apt -y install python3
+RUN apt -y install python3 python3-pip
 
 WORKDIR /build
 
-RUN python3 -m ensurepip
-RUN python3 -m pip install --upgrade pip
-RUN python3 -m pip install pyinstaller
+RUN pip3 install --upgrade pip
+RUN pip3 install pyinstaller

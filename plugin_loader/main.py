@@ -18,7 +18,6 @@ class NoBaseEvents(Filter):
 basicConfig(level=CONFIG["log_level"], format="[%(module)s][%(levelname)s]: %(message)s")
 for handler in root.handlers:
     if not CONFIG["log_base_events"]:
-        print("adding filter")
         handler.addFilter(NoBaseEvents())
 
 from aiohttp.web import Application, run_app, static
@@ -35,6 +34,7 @@ from utilities import Utilities
 from browser import PluginBrowser
 
 logger = getLogger("Main")
+from traceback import print_exc
 
 async def chown_plugin_dir(_):
     Popen(["chown", "-R", "deck:deck", CONFIG["plugin_path"]])
@@ -64,11 +64,11 @@ class PluginManager:
                 
     async def loader_reinjector(self):
         finished_reinjection = False
-
+        logger.info("Plugin loader isn't present in Steam anymore, reinjecting...")
         while True:
             await sleep(1)
             if not await tab_has_element("QuickAccess", "plugin_iframe"):
-                logger.info("Plugin loader isn't present in Steam anymore, reinjecting...")
+                logger.debug("Plugin loader isn't present in Steam anymore, reinjecting...")
                 await self.inject_javascript()
                 finished_reinjection = True
             elif finished_reinjection:
@@ -89,8 +89,8 @@ class PluginManager:
         try:
             r = dumps(response)
         except Exception as e:
-            logger.error(e)
-            response["result"] = str(response)
+            logger.error(response["result"])
+            response["result"] = str(response["result"])
             r = response
         await tab._send_devtools_cmd({
             "id": 1,

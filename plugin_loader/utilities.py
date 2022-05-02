@@ -32,7 +32,6 @@ class Utilities:
     async def execute_in_tab(self, tab, run_async, code):       
         try:
             result = await inject_to_tab(tab, code, run_async)
-
             if "exceptionDetails" in result["result"]:
                 return {
                     "success": False,
@@ -41,7 +40,7 @@ class Utilities:
 
             return {
                 "success": True,
-                "result" : result["result"]["result"]["value"]
+                "result" : result["result"]["result"].get("value")
             }
         except Exception as e:
             return { 

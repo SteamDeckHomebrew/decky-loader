@@ -2,8 +2,10 @@ from importlib.util import spec_from_file_location, module_from_spec
 from asyncio import get_event_loop, new_event_loop, set_event_loop, start_unix_server, open_unix_connection, sleep, Lock
 from os import path, setuid
 from json import loads, dumps, load
-from concurrent.futures import ProcessPoolExecutor
 from time import time
+from multiprocessing import Process
+from signal import signal, SIGINT
+from sys import exit
 
 class PluginWrapper:
     def __init__(self, file, plugin_directory, plugin_path) -> None:
@@ -25,6 +27,8 @@ class PluginWrapper:
         self.passive = not path.isfile(self.file)
 
     def _init(self):
+        signal(SIGINT, lambda s, f: exit(0))
+
         set_event_loop(new_event_loop())
         if self.passive:
             return
@@ -73,10 +77,7 @@ class PluginWrapper:
     def start(self):
         if self.passive:
             return self
-        get_event_loop().run_in_executor(
-            ProcessPoolExecutor(),
-            self._init
-        )
+        Process(target=self._init).start()
         return self
 
     def stop(self):

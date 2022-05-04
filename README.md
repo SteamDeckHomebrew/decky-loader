@@ -18,6 +18,11 @@
 ### Install Plugins
 - Simply copy the plugin's folder into `~/homebrew/plugins`
 
+### Uninstall
+- Open a terminal and paste the following command into it:
+    - For both users and developers:
+        - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/uninstall.sh | sh`
+
 ### Developing plugins
 - There is no complete plugin development documentation yet. However a good starting point is the [Plugin Template](https://github.com/SteamDeckHomebrew/Plugin-Template) repository
 

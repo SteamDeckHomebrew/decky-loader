@@ -12,7 +12,8 @@
     - For users:
         - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_release.sh | sh`
     - For developers:
-        - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_nightly.sh | sh`
+        ~~- `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_nightly.sh | sh`~~
+        Nightly releases are currently broken.
 8. Done! Reboot back into Gaming mode and enjoy your plugins!
 
 ### Install Plugins

@@ -96,7 +96,7 @@ class PluginManager:
             "id": 1,
             "method": "Runtime.evaluate",
             "params": {
-                "expression": f"resolveMethodCall({call_id}, {r})",
+                "expression": f"resolveMethodCall('{call_id}', {r})",
                 "userGesture": True
             }
         }, receive=False)

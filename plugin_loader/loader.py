@@ -6,6 +6,8 @@ from asyncio import Queue
 from os import path, listdir
 from logging import getLogger
 from time import time
+from genericpath import exists
+from pathlib import Path
 
 from injector import get_tabs, get_tab
 from plugin import PluginWrapper
@@ -18,6 +20,12 @@ class FileChangeHandler(FileSystemEventHandler):
         self.plugin_path = plugin_path
         self.queue = queue
 
+    def maybe_reload(self, src_path):
+        plugin_dir = Path(path.relpath(src_path, self.plugin_path)).parts[0]
+        self.logger.info(path.join(self.plugin_path, plugin_dir, "plugin.json"))
+        if exists(path.join(self.plugin_path, plugin_dir, "plugin.json")):
+            self.queue.put_nowait((path.join(self.plugin_path, plugin_dir, "main.py"), plugin_dir, True))
+
     def on_created(self, event):
         src_path = event.src_path
         if "__pycache__" in src_path:
@@ -27,13 +35,8 @@ class FileChangeHandler(FileSystemEventHandler):
         if path.isdir(src_path):
             return
 
-        # get the directory name of the plugin so that we can find its "main.py" and reload it; the
-        # file that changed is not necessarily the one that needs to be reloaded
         self.logger.debug(f"file created: {src_path}")
-        rel_path = path.relpath(src_path, path.commonprefix([self.plugin_path, src_path]))
-        plugin_dir = path.split(rel_path)[0]
-        main_file_path = path.join(self.plugin_path, plugin_dir, "main.py")
-        self.queue.put_nowait((main_file_path, plugin_dir, True))
+        self.maybe_reload(src_path)
     
     def on_modified(self, event):
         src_path = event.src_path
@@ -44,11 +47,8 @@ class FileChangeHandler(FileSystemEventHandler):
         if path.isdir(src_path):
             return
 
-        # get the directory name of the plugin so that we can find its "main.py" and reload it; the
-        # file that changed is not necessarily the one that needs to be reloaded
         self.logger.debug(f"file modified: {src_path}")
-        plugin_dir = path.split(path.relpath(src_path, path.commonprefix([self.plugin_path, src_path])))[0]
-        self.queue.put_nowait((path.join(self.plugin_path, plugin_dir, "main.py"), plugin_dir, True))
+        self.maybe_reload(src_path)
 
 class Loader:
     def __init__(self, server_instance, plugin_path, loop, live_reload=False) -> None:

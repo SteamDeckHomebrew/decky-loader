@@ -121,7 +121,7 @@ class Loader:
         return await self.callsigns[callsign].execute_method(method_name, kwargs)
 
     async def get_steam_resource(self, request):
-        tab = (await get_tabs())[0]
+        tab = await get_tab("QuickAccess")
         try:
             return web.Response(text=await tab.get_steam_resource(f"https://steamloopback.host/{request.match_info['path']}"), content_type="text/html")
         except Exception as e:

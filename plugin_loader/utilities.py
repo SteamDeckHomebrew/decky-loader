@@ -1,5 +1,5 @@
 from aiohttp import ClientSession
-from injector import get_tab, get_tabs, inject_to_tab
+from injector import inject_to_tab
 import uuid
 
 class Utilities:
@@ -107,15 +107,14 @@ class Utilities:
             }
 
     async def open_plugin_store(self):
-        if self.context.plugin_browser.store_url in await get_tabs():
-            return
-        res = await inject_to_tab("SP", """
-        window.PLUGIN_STORE_TAB_INSTANCE = (function() {
-            let i = SteamClient.BrowserView.Create()
-            i.SetBounds(0, 60, 1280, 800-59-60)
-            i.LoadURL('http://127.0.0.1:1337/browser/redirect')
-            i.SetVisible(true);
-            return i;
+        await inject_to_tab("SP", """
+        (function() {
+            wpRequire = webpackJsonp.push([[], { get_require: (mod, _exports, wpRequire) => mod.exports = wpRequire }, [["get_require"]]]);
+            const all = () => Object.keys(wpRequire.c).map((x) => wpRequire.c[x].exports).filter((x) => x);
+            router = all().map(m => {
+            if (typeof m !== "object") return undefined;
+            for (let prop in m) { if (m[prop]?.Navigate) return m[prop]}
+            }).find(x => x)
+            router.NavigateToExternalWeb("http://127.0.0.1:1337/browser/redirect")
         })();
         """)
-        setattr(self, "store_is_open", True)

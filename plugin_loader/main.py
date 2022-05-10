@@ -7,7 +7,7 @@ CONFIG = {
     "server_port": int(getenv("SERVER_PORT", "1337")),
     "live_reload": getenv("LIVE_RELOAD", "1") == "1",
     "log_level": {"CRITICAL": 50, "ERROR": 40, "WARNING":30, "INFO": 20, "DEBUG": 10}[getenv("LOG_LEVEL", "INFO")],
-    "store_url": getenv("STORE_URL", "https://plugins.deckbrew.xyz"),
+    "store_url": getenv("STORE_URL", "https://beta.deckbrew.xyz"),
     "log_base_events": getenv("LOG_BASE_EVENTS", "0")=="1"
 }
 
@@ -96,7 +96,7 @@ class PluginManager:
             "id": 1,
             "method": "Runtime.evaluate",
             "params": {
-                "expression": f"resolveMethodCall({call_id}, {r})",
+                "expression": f"resolveMethodCall('{call_id}', {r})",
                 "userGesture": True
             }
         }, receive=False)

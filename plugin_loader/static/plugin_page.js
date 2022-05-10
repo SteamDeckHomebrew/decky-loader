@@ -67,7 +67,7 @@ function addPluginInstallPrompt(artifact, version, request_id) {
 
     function createTitle(text) {
         return `
-        <div id="plugin_title" class="quickaccessmenu_Title_34nl5">${text}${SHOP_ICON}</div>
+        <div class="quickaccessmenu_Title_34nl5"><div id="plugin_title">${text}</div>${SHOP_ICON}</div>
         `;
     }
 
@@ -93,10 +93,10 @@ function addPluginInstallPrompt(artifact, version, request_id) {
             inject();
             document.getElementById("plugin_title").onclick = function() {
                 reloadIframe();
-                document.getElementById("plugin_title").innerHTML = `Plugins ${SHOP_ICON}`;
+                document.getElementById("plugin_title").innerText = `Plugins`;
+                document.getElementById("open_shop_button").style.display = 'block';
             }
             document.getElementById("open_shop_button").onclick = function(ev) {
-                ev.stopPropagation();
                 console.debug(JSON.stringify({
                     "id": 1,
                     "method": "open_plugin_store",
@@ -106,6 +106,7 @@ function addPluginInstallPrompt(artifact, version, request_id) {
             window.onmessage = function(ev) {
                 let title = ev.data;
                 if (title.startsWith("PLUGIN_LOADER__")) {
+                    document.getElementById("open_shop_button").style.display = 'none';
                     document.getElementById("plugin_title").innerHTML = `
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-square-fill" viewBox="0 0 16 16">
                         <path d="M16 14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12zm-4.5-6.5H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H11.5a.5.5 0 0 0 0-1z"/>

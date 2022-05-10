@@ -8,7 +8,7 @@ window.addEventListener("message", function(evt) {
 }, false);
 
 async function call_server_method(method_name, arg_object={}) {
-    let id = `${new Date().getTime()}`;
+    let id = `${uuidv4()}`;
     console.debug(JSON.stringify({
         "id": id,
         "method": method_name,
@@ -20,6 +20,13 @@ async function call_server_method(method_name, arg_object={}) {
             else reject(event.data.result);
         });
     });
+}
+
+// Source: https://stackoverflow.com/a/2117523 Thanks!
+function uuidv4() {
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
 }
 
 async function fetch_nocors(url, request={}) {

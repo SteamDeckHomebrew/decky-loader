@@ -1,4 +1,4 @@
-from injector import get_tab
+from injector import get_tab, inject_to_tab
 from logging import getLogger
 from os import path, rename
 from shutil import rmtree
@@ -26,7 +26,8 @@ class PluginBrowser:
 
         server_instance.add_routes([
             web.post("/browser/install_plugin", self.install_plugin),
-            web.get("/browser/iframe", self.redirect_to_store)
+            web.get("/browser/redirect", self.redirect_to_store),
+            web.post("/browser/close_store", self.close_store)
         ])
 
     def _unzip_to_plugin_dir(self, zip, name, hash):
@@ -71,6 +72,10 @@ class PluginBrowser:
 
     async def redirect_to_store(self, request):
         return web.Response(status=302, headers={"Location": self.store_url})
+    
+    async def close_store(self, request):
+        await inject_to_tab("SP", "window.PLUGIN_STORE_TAB_INSTANCE.SetVisible(false)")
+        await inject_to_tab("SP", "SteamClient.BrowserView.Destroy(window.PLUGIN_STORE_TAB_INSTANCE)")
     
     async def install_plugin(self, request):
         data = await request.post()

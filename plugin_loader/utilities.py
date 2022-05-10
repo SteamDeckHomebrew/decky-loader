@@ -1,5 +1,5 @@
 from aiohttp import ClientSession
-from injector import inject_to_tab
+from injector import get_tab, get_tabs, inject_to_tab
 import uuid
 
 class Utilities:
@@ -11,7 +11,8 @@ class Utilities:
             "confirm_plugin_install": self.confirm_plugin_install,
             "execute_in_tab": self.execute_in_tab,
             "inject_css_into_tab": self.inject_css_into_tab,
-            "remove_css_from_tab": self.remove_css_from_tab
+            "remove_css_from_tab": self.remove_css_from_tab,
+            "open_plugin_store": self.open_plugin_store
         }
 
     async def confirm_plugin_install(self, request_id):
@@ -104,3 +105,17 @@ class Utilities:
                 "success": False,
                 "result": e
             }
+
+    async def open_plugin_store(self):
+        if self.context.plugin_browser.store_url in await get_tabs():
+            return
+        res = await inject_to_tab("SP", """
+        window.PLUGIN_STORE_TAB_INSTANCE = (function() {
+            let i = SteamClient.BrowserView.Create()
+            i.SetBounds(0, 60, 1280, 800-59-60)
+            i.LoadURL('http://127.0.0.1:1337/browser/redirect')
+            i.SetVisible(true);
+            return i;
+        })();
+        """)
+        setattr(self, "store_is_open", True)

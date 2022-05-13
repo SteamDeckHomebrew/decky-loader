@@ -1,0 +1,27 @@
+{
+  "name": "decky_frontend",
+  "version": "0.0.1",
+  "private": true,
+  "license": "GPLV2",
+  "scripts": {
+    "prepare": "cd .. && husky install frontend/.husky",
+    "build": "rollup -c",
+    "lint": "prettier -c src",
+    "format": "prettier -c src -w"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^22.0.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-typescript": "^8.3.2",
+    "husky": "^8.0.1",
+    "import-sort-style-module": "^6.0.0",
+    "prettier": "^2.6.2",
+    "prettier-plugin-import-sort": "^0.0.7",
+    "rollup": "^2.71.1"
+  },
+  "importSort": {
+    ".js, .jsx, .ts, .tsx": {
+      "style": "module"
+    }
+  }
+}

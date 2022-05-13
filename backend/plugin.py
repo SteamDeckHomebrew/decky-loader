@@ -1,11 +1,17 @@
-from importlib.util import spec_from_file_location, module_from_spec
-from asyncio import get_event_loop, new_event_loop, set_event_loop, start_unix_server, open_unix_connection, sleep, Lock
-from os import path, setuid
-from json import loads, dumps, load
-from time import time
+from asyncio import (Lock, get_event_loop, new_event_loop,
+                     open_unix_connection, set_event_loop, sleep,
+                     start_unix_server)
+from concurrent.futures import ProcessPoolExecutor
+from importlib.util import module_from_spec, spec_from_file_location
+from json import dumps, load, loads
 from multiprocessing import Process
-from signal import signal, SIGINT
+from os import path, setuid
+from signal import SIGINT, signal
 from sys import exit
+from time import time
+
+from injector import inject_to_tab
+
 
 class PluginWrapper:
     def __init__(self, file, plugin_directory, plugin_path) -> None:
@@ -20,8 +26,7 @@ class PluginWrapper:
 
         self.name = json["name"]
         self.author = json["author"]
-        self.main_view_html = json["main_view_html"]
-        self.tile_view_html = json["tile_view_html"] if "tile_view_html" in json else ""
+        self.frontend_bundle = json["frontend_bundle"]
         self.flags = json["flags"]
 
         self.passive = not path.isfile(self.file)

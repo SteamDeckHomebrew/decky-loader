@@ -1,9 +1,10 @@
 #Injector code from https://github.com/SteamDeckHomebrew/steamdeck-ui-inject. More info on how it works there.
 
-from aiohttp import ClientSession
-from logging import debug, getLogger
 from asyncio import sleep
+from logging import debug, getLogger
 from traceback import format_exc
+
+from aiohttp import ClientSession
 
 BASE_ADDRESS = "http://localhost:8080"
 
@@ -21,7 +22,7 @@ class Tab:
     async def open_websocket(self):
         self.client = ClientSession()
         self.websocket = await self.client.ws_connect(self.ws_url)
-    
+
     async def listen_for_message(self):
         async for message in self.websocket:
             yield message
@@ -43,13 +44,10 @@ class Tab:
                 "awaitPromise": run_async
             }
         })
+
         await self.client.close()
         return res
-        
-    async def get_steam_resource(self, url):
-        res = await self.evaluate_js(f'(async function test() {{ return await (await fetch("{url}")).text() }})()', True)
-        return res["result"]["result"]["value"]
-    
+
     def __repr__(self):
         return self.title
 
@@ -77,20 +75,20 @@ async def get_tab(tab_name):
     tab = next((i for i in tabs if i.title == tab_name), None)
     if not tab:
         raise ValueError(f"Tab {tab_name} not found")
-    return tab    
+    return tab
 
 async def inject_to_tab(tab_name, js, run_async=False):
     tab = await get_tab(tab_name)
 
     return await tab.evaluate_js(js, run_async)
 
-async def tab_has_element(tab_name, element_name):
+async def tab_has_global_var(tab_name, var_name):
     try:
         tab = await get_tab(tab_name)
     except ValueError:
         return False
-    res = await tab.evaluate_js(f"document.getElementById('{element_name}') != null", False)
-    
+    res = await tab.evaluate_js(f"window['{var_name}'] !== null && window['{var_name}'] !== undefined", False)
+
     if not "result" in res or not "result" in res["result"] or not "value" in res["result"]["result"]:
         return False
 

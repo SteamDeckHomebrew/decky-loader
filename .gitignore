@@ -150,3 +150,6 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# static files are built
+backend/static

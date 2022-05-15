@@ -36,8 +36,8 @@ class PluginBrowser:
         zip_file = ZipFile(zip)
         zip_file.extractall(self.plugin_path)
         rename(path.join(self.plugin_path, zip_file.namelist()[0]), path.join(self.plugin_path, name))
-        chownug = user=getenv('USER')+":"+getegid()
-        Popen(["chown", "-R", chownug, self.plugin_path])
+        chowner = user=getenv('USER')+":"+getegid()
+        Popen(["chown", "-R", chowner, self.plugin_path])
         Popen(["chmod", "-R", "555", self.plugin_path])
         return True
 

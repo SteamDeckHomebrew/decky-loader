@@ -38,7 +38,7 @@ logger = getLogger("Main")
 from traceback import print_exc
 
 async def chown_plugin_dir(_):
-    chowner = user=getenv('USER')+":"+getegid()
+    chowner = user=getenv('USER')+":"+str(getegid())
     Popen(["chown", "-R", chowner, CONFIG["plugin_path"]])
     Popen(["chmod", "-R", "555", CONFIG["plugin_path"]])
 

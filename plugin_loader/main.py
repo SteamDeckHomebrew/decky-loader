@@ -1,8 +1,9 @@
 from logging import getLogger, basicConfig, INFO, DEBUG, Filter, root
 from os import getenv
 
+
 CONFIG = {
-    "plugin_path": getenv("PLUGIN_PATH", "/home/deck/homebrew/plugins"),
+    "plugin_path": getenv("PLUGIN_PATH", getenv('HOME')+"/homebrew/plugins"),
     "server_host": getenv("SERVER_HOST", "127.0.0.1"),
     "server_port": int(getenv("SERVER_PORT", "1337")),
     "live_reload": getenv("LIVE_RELOAD", "1") == "1",
@@ -23,7 +24,7 @@ for handler in root.handlers:
 from aiohttp.web import Application, run_app, static
 from aiohttp_jinja2 import setup as jinja_setup
 from jinja2 import FileSystemLoader
-from os import path
+from os import path, getegid
 from asyncio import get_event_loop, sleep
 from json import loads, dumps
 from subprocess import Popen
@@ -37,7 +38,8 @@ logger = getLogger("Main")
 from traceback import print_exc
 
 async def chown_plugin_dir(_):
-    Popen(["chown", "-R", "deck:deck", CONFIG["plugin_path"]])
+    chownug = user=getenv('USER')+":"+getegid()
+    Popen(["chown", "-R", chownug , CONFIG["plugin_path"]])
     Popen(["chmod", "-R", "555", CONFIG["plugin_path"]])
 
 class PluginManager:

@@ -40,6 +40,12 @@ async def chown_plugin_dir(_):
     Popen(["chown", "-R", "deck:deck", CONFIG["plugin_path"]])
     Popen(["chmod", "-R", "555", CONFIG["plugin_path"]])
 
+async def disable_cef_remote_port(_):
+    cef_firewall_disable_file = path.join(CONFIG["plugin_path"], "../allow_cef_from_network")
+    if (not path.exists(cef_firewall_disable_file) or not path.isfile(cef_firewall_disable_file)):
+        logger.info("Firewalling CEF to deny remote connections")
+        Popen(["iptables", "-I", "INPUT", "!", "-i", "lo", "-p", "tcp", "--dport", "8081", "-j", "DROP"])
+
 class PluginManager:
     def __init__(self) -> None:
         self.loop = get_event_loop()
@@ -51,6 +57,7 @@ class PluginManager:
         jinja_setup(self.web_app, loader=FileSystemLoader(path.join(path.dirname(__file__), 'templates')))
         self.web_app.on_startup.append(self.inject_javascript)
         self.web_app.on_startup.append(chown_plugin_dir)
+        self.web_app.on_startup.append(disable_cef_remote_port)
         self.web_app.add_routes([static("/static", path.join(path.dirname(__file__), 'static'))])
         self.loop.create_task(self.method_call_listener())
         self.loop.create_task(self.loader_reinjector())

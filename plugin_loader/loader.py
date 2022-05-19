@@ -106,7 +106,7 @@ class Loader:
         self.logger.info(f"import plugins from {self.plugin_path}")
 
         directories = [i for i in listdir(self.plugin_path) if path.isdir(path.join(self.plugin_path, i)) and path.isfile(path.join(self.plugin_path, i, "plugin.json"))]
-        for directory in directories:
+        for directory in sorted(directories, key=lambda i : path.getmtime(path.join(self.plugin_path, i))):
             self.logger.info(f"found plugin: {directory}")
             self.import_plugin(path.join(self.plugin_path, directory, "main.py"), directory)
 

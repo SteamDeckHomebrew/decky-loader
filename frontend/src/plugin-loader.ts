@@ -1,5 +1,6 @@
 import Logger from './logger';
 import TabsHook from './tabs-hook';
+import WindowHook from './window-hook';
 
 interface Plugin {
   title: any;
@@ -11,6 +12,7 @@ interface Plugin {
 class PluginLoader extends Logger {
   private pluginInstances: Record<string, Plugin> = {};
   private tabsHook: TabsHook;
+  private windowHook: WindowHook;
   private lock = 0;
 
   constructor() {
@@ -18,6 +20,7 @@ class PluginLoader extends Logger {
 
     this.log('Initialized');
     this.tabsHook = new TabsHook();
+    this.windowHook = new WindowHook();
   }
 
   dismountPlugin(name: string) {

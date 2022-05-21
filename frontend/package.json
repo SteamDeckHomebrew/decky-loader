@@ -6,6 +6,7 @@
   "scripts": {
     "prepare": "cd .. && husky install frontend/.husky",
     "build": "rollup -c",
+    "watch": "rollup -c -w",
     "lint": "prettier -c src",
     "format": "prettier -c src -w"
   },

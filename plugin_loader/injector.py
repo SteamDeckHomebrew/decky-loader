@@ -28,17 +28,24 @@ class Tab:
             if data["id"] == id:
                 return data
 
+    async def _send_devtools_cmd(self, dc, receive=True):
+        logger.warn("_send_devtools_cmd function is deprecated, use send_devtools_cmd for better response handling")
+        if self.websocket:
+            await self.websocket.send_json(dc)
+            try:
+                return (await self.websocket.receive_json()) if receive else None
+            except TimeoutError:
+                return None
+        raise RuntimeError("Websocket not opened")
+
     id_iter = 1
-    async def send_devtools_cmd(self, dc, receive=True):
+    async def send_devtools_cmd(self, dc, response_timeout=10):
         if self.websocket:
             dc["id"] = self.id_iter
             self.id_iter += 1
             await self.websocket.send_json(dc)
-            response_timeout = 10
-            if isinstance(receive, int):
-                response_timeout = receive
             try:
-                return (await wait_for(self.listen_for_response(dc["id"]), timeout=response_timeout)) if receive else None
+                return (await wait_for(self.listen_for_response(dc["id"]), timeout=response_timeout)) if response_timeout else None
             except TimeoutError:
                 return None
         raise RuntimeError("Websocket not opened")

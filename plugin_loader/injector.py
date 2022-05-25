@@ -2,7 +2,7 @@
 
 from aiohttp import ClientSession
 from logging import debug, getLogger
-from asyncio import sleep
+from asyncio import sleep, wait_for
 from traceback import format_exc
 
 BASE_ADDRESS = "http://localhost:8080"
@@ -22,20 +22,30 @@ class Tab:
         self.client = ClientSession()
         self.websocket = await self.client.ws_connect(self.ws_url)
     
-    async def listen_for_message(self):
-        async for message in self.websocket:
-            yield message
+    async def listen_for_response(self, id):
+        while True:
+            data = await self.websocket.receive_json()
+            if data["id"] == id:
+                return data
 
-    async def _send_devtools_cmd(self, dc, receive=True):
+    id_iter = 1
+    async def send_devtools_cmd(self, dc, receive=True):
         if self.websocket:
+            dc["id"] = self.id_iter
+            self.id_iter += 1
             await self.websocket.send_json(dc)
-            return (await self.websocket.receive_json()) if receive else None
+            response_timeout = 10
+            if isinstance(receive, int):
+                response_timeout = receive
+            try:
+                return (await wait_for(self.listen_for_response(dc["id"]), timeout=response_timeout)) if receive else None
+            except TimeoutError:
+                return None
         raise RuntimeError("Websocket not opened")
 
     async def evaluate_js(self, js, run_async=False):
         await self.open_websocket()
-        res = await self._send_devtools_cmd({
-            "id": 1,
+        res = await self.send_devtools_cmd({
             "method": "Runtime.evaluate",
             "params": {
                 "expression": js,

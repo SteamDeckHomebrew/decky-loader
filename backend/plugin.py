@@ -26,7 +26,6 @@ class PluginWrapper:
 
         self.name = json["name"]
         self.author = json["author"]
-        self.frontend_bundle = json["frontend_bundle"]
         self.flags = json["flags"]
 
         self.passive = not path.isfile(self.file)

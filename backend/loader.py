@@ -76,6 +76,7 @@ class Loader:
             web.get("/plugins", self.handle_plugins),
             web.get("/plugins/{plugin_name}/frontend_bundle", self.handle_frontend_bundle),
             web.post("/plugins/{plugin_name}/methods/{method_name}", self.handle_plugin_method_call),
+            web.get("/plugins/{plugin_name}/assets/{path:.*}", self.handle_frontend_assets),
             web.post("/methods/{method_name}", self.handle_server_method_call)
         ])
 
@@ -83,10 +84,16 @@ class Loader:
       plugins = list(map(lambda kv: dict([("name", kv[0])]), self.plugins.items()))
       return web.json_response(plugins)
 
+    def handle_frontend_assets(self, request):
+        plugin = self.plugins[request.match_info["plugin_name"]]
+        file = path.join(self.plugin_path, plugin.plugin_directory, "dist/assets", request.match_info["path"])
+
+        return web.FileResponse(file)
+
     def handle_frontend_bundle(self, request):
         plugin = self.plugins[request.match_info["plugin_name"]]
 
-        with open(path.join(self.plugin_path, plugin.plugin_directory, plugin.frontend_bundle), 'r') as bundle:
+        with open(path.join(self.plugin_path, plugin.plugin_directory, "dist/index.js"), 'r') as bundle:
             return web.Response(text=bundle.read(), content_type="application/javascript")
 
     def import_plugin(self, file, plugin_directory, refresh=False):

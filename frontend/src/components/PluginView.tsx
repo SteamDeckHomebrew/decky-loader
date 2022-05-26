@@ -9,7 +9,7 @@ const PluginView: VFC = () => {
 
   if (activePlugin) {
     return (
-      <div>
+      <div style={{height: '100%'}}>
         <div style={{ position: 'absolute', top: '3px', left: '16px', zIndex: 20 }}>
           <DialogButton style={{ minWidth: 0, padding: '10px 12px' }} onClick={closeActivePlugin}>
             <FaArrowLeft style={{ display: 'block' }} />

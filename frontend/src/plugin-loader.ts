@@ -11,7 +11,7 @@ interface Plugin {
 class PluginLoader extends Logger {
   private pluginInstances: Record<string, Plugin> = {};
   private tabsHook: TabsHook;
-  private lock = 0;
+  private reloadSet = new Set();
 
   constructor() {
     super(PluginLoader.name);
@@ -35,14 +35,15 @@ class PluginLoader extends Logger {
     return Promise.all(plugins.map((plugin) => this.loadPlugin(plugin.name)));
   }
 
-  async loadPlugin(name) {
+  async loadPlugin(name: string) {
     this.log('Loading Plugin:', name);
 
     try {
-      while (this.lock === 1) {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (this.reloadSet.has(name)) {
+        this.log('Skipping loading of', name, "since it's already loading...");
+        return;
       }
-      this.lock = 1;
+      this.reloadSet.add(name);
 
       if (this.pluginInstances[name]) {
         this.dismountPlugin(name);
@@ -64,7 +65,7 @@ class PluginLoader extends Logger {
     } catch (e) {
       console.error(e);
     } finally {
-      this.lock = 0;
+      this.reloadSet.delete(name);
     }
   }
 
@@ -74,9 +75,9 @@ class PluginLoader extends Logger {
     }
   }
 
-  static createPluginAPI(pluginName) {
+  static createPluginAPI(pluginName: string) {
     return {
-      async callServerMethod(methodName, args = {}) {
+      async callServerMethod(methodName: string, args = {}) {
         const response = await fetch(`http://127.0.0.1:1337/methods/${methodName}`, {
           method: 'POST',
           headers: {
@@ -87,7 +88,7 @@ class PluginLoader extends Logger {
 
         return response.json();
       },
-      async callPluginMethod(methodName, args = {}) {
+      async callPluginMethod(methodName: string, args = {}) {
         const response = await fetch(`http://127.0.0.1:1337/plugins/${pluginName}/methods/${methodName}`, {
           method: 'POST',
           headers: {
@@ -100,25 +101,25 @@ class PluginLoader extends Logger {
 
         return response.json();
       },
-      fetchNoCors(url, request: any = {}) {
+      fetchNoCors(url: string, request: any = {}) {
         let args = { method: 'POST', headers: {}, body: '' };
         const req = { ...args, ...request, url, data: request.body };
         return this.callServerMethod('http_request', req);
       },
-      executeInTab(tab, runAsync, code) {
+      executeInTab(tab: string, runAsync: boolean, code: string) {
         return this.callServerMethod('execute_in_tab', {
           tab,
           run_async: runAsync,
           code,
         });
       },
-      injectCssIntoTab(tab, style) {
+      injectCssIntoTab(tab: string, style: string) {
         return this.callServerMethod('inject_css_into_tab', {
           tab,
           style,
         });
       },
-      removeCssFromTab(tab, cssId) {
+      removeCssFromTab(tab: string, cssId: any) {
         return this.callServerMethod('remove_css_from_tab', {
           tab,
           css_id: cssId,

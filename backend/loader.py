@@ -8,23 +8,22 @@ from traceback import print_exc
 from aiohttp import web
 from aiohttp_jinja2 import template
 from genericpath import exists
-from watchdog.events import FileSystemEventHandler
-from watchdog.observers.polling import PollingObserver as Observer
+from watchdog.events import RegexMatchingEventHandler
+from watchdog.observers.inotify import InotifyObserver as Observer
 
 from injector import inject_to_tab
 from plugin import PluginWrapper
 
 
-class FileChangeHandler(FileSystemEventHandler):
+class FileChangeHandler(RegexMatchingEventHandler):
     def __init__(self, queue, plugin_path) -> None:
-        super().__init__()
+        super().__init__(regexes=[r'^.*?dist\/index\.js$', r'^.*?main\.py$'])
         self.logger = getLogger("file-watcher")
         self.plugin_path = plugin_path
         self.queue = queue
 
     def maybe_reload(self, src_path):
         plugin_dir = Path(path.relpath(src_path, self.plugin_path)).parts[0]
-        self.logger.info(path.join(self.plugin_path, plugin_dir, "plugin.json"))
         if exists(path.join(self.plugin_path, plugin_dir, "plugin.json")):
             self.queue.put_nowait((path.join(self.plugin_path, plugin_dir, "main.py"), plugin_dir, True))
 

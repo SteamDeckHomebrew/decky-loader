@@ -1,6 +1,8 @@
 from logging import DEBUG, INFO, basicConfig, getLogger
 from os import getenv
 
+from aiohttp import ClientSession
+
 CONFIG = {
     "plugin_path": getenv("PLUGIN_PATH", "/home/deck/homebrew/plugins"),
     "chown_plugin_path": getenv("CHOWN_PLUGIN_PATH", "1") == "1",
@@ -8,7 +10,7 @@ CONFIG = {
     "server_port": int(getenv("SERVER_PORT", "1337")),
     "live_reload": getenv("LIVE_RELOAD", "1") == "1",
     "log_level": {"CRITICAL": 50, "ERROR": 40, "WARNING":30, "INFO": 20, "DEBUG": 10}[getenv("LOG_LEVEL", "INFO")],
-    "store_url": getenv("STORE_URL", "https://sdh.tzatzi.me/browse")
+    "store_url": getenv("STORE_URL", "https://beta.deckbrew.xyz")
 }
 
 basicConfig(level=CONFIG["log_level"], format="[%(module)s][%(levelname)s]: %(message)s")
@@ -21,10 +23,9 @@ from subprocess import Popen
 import aiohttp_cors
 from aiohttp.web import Application, run_app, static
 from aiohttp_jinja2 import setup as jinja_setup
-from jinja2 import FileSystemLoader
 
 from browser import PluginBrowser
-from injector import get_tab, inject_to_tab, tab_has_global_var
+from injector import inject_to_tab, tab_has_global_var
 from loader import Loader
 from utilities import Utilities
 
@@ -48,21 +49,33 @@ class PluginManager:
 
         jinja_setup(self.web_app)
         self.web_app.on_startup.append(self.inject_javascript)
-
         if CONFIG["chown_plugin_path"] == True:
             self.web_app.on_startup.append(chown_plugin_dir)
-
         self.loop.create_task(self.loader_reinjector())
-
+        self.loop.create_task(self.load_plugins())
         self.loop.set_exception_handler(self.exception_handler)
-
         for route in list(self.web_app.router.routes()):
           self.cors.add(route)
+        self.web_app.add_routes([static("/static", path.join(path.dirname(__file__), 'static'))])
 
     def exception_handler(self, loop, context):
         if context["message"] == "Unclosed connection":
             return
         loop.default_exception_handler(context)
+
+    async def wait_for_server(self):
+        async with ClientSession() as web:
+            while True:
+                try:
+                    await web.get(f"http://{CONFIG['server_host']}:{CONFIG['server_port']}")
+                    return
+                except Exception as e:
+                    await sleep(0.1)
+
+    async def load_plugins(self):
+        await self.wait_for_server()
+        self.plugin_loader.import_plugins()
+        #await inject_to_tab("SP", "window.syncDeckyPlugins();")
 
     async def loader_reinjector(self):
         while True:

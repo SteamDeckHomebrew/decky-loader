@@ -5,6 +5,11 @@
             "label": "Stop Service",
             "type": "shell",
             "command":"systemctl --user stop plugin_loader",
-        }
+        },
+        {
+            "label": "Build frontend",
+            "type": "shell",
+            "command":"cd ${workspaceFolder}/frontend; npm run build",
+        }        
     ]
 }

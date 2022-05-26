@@ -9,7 +9,7 @@ declare global {
   }
 }
 
-const isTabsArray = (tabs) => {
+const isTabsArray = (tabs: any) => {
   const length = tabs.length;
   return length === 7 && tabs[length - 1]?.key === 6 && tabs[length - 1]?.tab;
 };
@@ -35,7 +35,7 @@ class TabsHook extends Logger {
 
     const filter = Array.prototype.__filter ?? Array.prototype.filter;
     Array.prototype.__filter = filter;
-    Array.prototype.filter = function (...args) {
+    Array.prototype.filter = function (...args: any[]) {
       if (isTabsArray(this)) {
         self.render(this);
       }

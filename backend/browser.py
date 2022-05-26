@@ -26,7 +26,7 @@ class PluginBrowser:
 
         server_instance.add_routes([
             web.post("/browser/install_plugin", self.install_plugin),
-            web.get("/browser/iframe", self.redirect_to_store)
+            web.get("/browser/redirect", self.redirect_to_store)
         ])
 
     def _unzip_to_plugin_dir(self, zip, name, hash):

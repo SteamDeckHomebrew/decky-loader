@@ -10,9 +10,6 @@ from signal import SIGINT, signal
 from sys import exit
 from time import time
 
-from injector import inject_to_tab
-
-
 class PluginWrapper:
     def __init__(self, file, plugin_directory, plugin_path) -> None:
         self.file = file
@@ -24,12 +21,22 @@ class PluginWrapper:
 
         json = load(open(path.join(plugin_path, plugin_directory, "plugin.json"), "r"))
 
+        if "frontend_bundle" in json:
+            self.frontend_bundle = json["frontend_bundle"]
+            self.legacy = False
+        else:
+            self.main_view_html = json["main_view_html"]
+            self.tile_view_html = json["tile_view_html"] if "tile_view_html" in json else ""
+            self.legacy = True
+
         self.name = json["name"]
         self.author = json["author"]
-        self.frontend_bundle = json["frontend_bundle"]
         self.flags = json["flags"]
 
         self.passive = not path.isfile(self.file)
+
+    def __str__(self) -> str:
+        return self.name
 
     def _init(self):
         signal(SIGINT, lambda s, f: exit(0))

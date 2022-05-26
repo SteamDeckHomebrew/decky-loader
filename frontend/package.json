@@ -10,18 +10,28 @@
     "format": "prettier -c src -w"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^22.0.0",
-    "@rollup/plugin-node-resolve": "^13.3.0",
-    "@rollup/plugin-typescript": "^8.3.2",
     "husky": "^8.0.1",
     "import-sort-style-module": "^6.0.0",
     "prettier": "^2.6.2",
     "prettier-plugin-import-sort": "^0.0.7",
-    "rollup": "^2.71.1"
+    "@rollup/plugin-commonjs": "^21.1.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.2.1",
+    "@rollup/plugin-replace": "^4.0.0",
+    "@rollup/plugin-typescript": "^8.3.2",
+    "@types/react": "16.14.0",
+    "@types/webpack": "^5.28.0",
+    "react": "16.14.0",
+    "react-dom": "16.14.0",
+    "rollup": "^2.70.2"
   },
   "importSort": {
     ".js, .jsx, .ts, .tsx": {
       "style": "module"
     }
+  },
+  "dependencies": {
+    "decky-frontend-lib": "^0.0.2",
+    "react-icons": "^4.3.1"
   }
 }

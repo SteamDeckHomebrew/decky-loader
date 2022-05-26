@@ -5,10 +5,13 @@
             "name": "Debug",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/plugin_loader/main.py",
-            "preLaunchTask": "Stop Service",
+            "program": "${workspaceFolder}/backend/main.py",
+            "cwd": "${workspaceFolder}/backend",
             "console": "integratedTerminal",
-            "justMyCode": true
+            "env": {
+                "PLUGIN_PATH": "/home/deck/homebrew/plugins"
+            },
+            "preLaunchTask": "Build frontend"
         }
     ]
 }

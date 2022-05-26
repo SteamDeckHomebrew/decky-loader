@@ -1,3 +1,9 @@
+# TODO
+- Fix button size/display
+- Add plugin installation prompts for browser
+- Fix components not updating unless tab opened first (with new tab hook)
+- Clean up code
+
 # Plugin Loader [![Chat](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://discord.gg/ZU74G2NJzk)
 
 ![steamuserimages-a akamaihd](https://user-images.githubusercontent.com/10835354/161068262-ca723dc5-6795-417a-80f6-d8c1f9d03e93.jpg)

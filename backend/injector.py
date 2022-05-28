@@ -48,6 +48,10 @@ class Tab:
         await self.client.close()
         return res
 
+    async def get_steam_resource(self, url):
+        res = await self.evaluate_js(f'(async function test() {{ return await (await fetch("{url}")).text() }})()', True)
+        return res["result"]["result"]["value"]
+
     def __repr__(self):
         return self.title
 
@@ -89,6 +93,18 @@ async def tab_has_global_var(tab_name, var_name):
         return False
     res = await tab.evaluate_js(f"window['{var_name}'] !== null && window['{var_name}'] !== undefined", False)
 
+    if not "result" in res or not "result" in res["result"] or not "value" in res["result"]["result"]:
+        return False
+
+    return res["result"]["result"]["value"]
+
+async def tab_has_element(tab_name, element_name):
+    try:
+        tab = await get_tab(tab_name)
+    except ValueError:
+        return False
+    res = await tab.evaluate_js(f"document.getElementById('{element_name}') != null", False)
+    
     if not "result" in res or not "result" in res["result"] or not "value" in res["result"]["result"]:
         return False
 

@@ -24,7 +24,9 @@
     "prettier-plugin-import-sort": "^0.0.7",
     "react": "16.14.0",
     "react-dom": "16.14.0",
-    "rollup": "^2.70.2"
+    "rollup": "^2.70.2",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.2"
   },
   "importSort": {
     ".js, .jsx, .ts, .tsx": {

@@ -6,6 +6,7 @@ import PluginView from './components/PluginView';
 import TitleView from './components/TitleView';
 import Logger from './logger';
 import { Plugin } from './plugin';
+import RouterHook from './router-hook';
 import TabsHook from './tabs-hook';
 
 declare global {
@@ -15,6 +16,8 @@ declare global {
 class PluginLoader extends Logger {
   private plugins: Plugin[] = [];
   private tabsHook: TabsHook = new TabsHook();
+  // private windowHook: WindowHook = new WindowHook();
+  private routerHook: RouterHook = new RouterHook();
   private deckyState: DeckyState = new DeckyState();
 
   constructor() {

@@ -84,6 +84,7 @@ class PluginLoader extends Logger {
 
   static createPluginAPI(pluginName: string) {
     return {
+      routerHook: this.routerHook,
       async callServerMethod(methodName: string, args = {}) {
         const response = await fetch(`http://127.0.0.1:1337/methods/${methodName}`, {
           method: 'POST',

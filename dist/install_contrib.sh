@@ -21,8 +21,8 @@ USERDIR=$HOME
 DEFAULTPORT=22
 DECKIP=${1:-"noip"}
 SSHPORT=${2:-$DEFAULTPORT}
-SSHKEYLOC=${3:-"$HOME/.ssh/id_rsa.pub"}
-PASSWORD=${4:-""}
+PASSWORD=${3:-""}
+SSHKEYLOC=${4:-"$HOME/.ssh/id_rsa.pub"}
 
 # echo $DECKIP:$SSHPORT
 

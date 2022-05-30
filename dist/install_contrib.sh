@@ -51,8 +51,8 @@ fi
 CLONE_FOLDER="${USERDIR}/git"
 mkdir -p ${CLONE_FOLDER} 1>/dev/null 2>&1
 git clone https://github.com/SteamDeckHomebrew/PluginLoader ${CLONE_FOLDER}/pluginloader/ -b react-frontend-plugins 1>/dev/null 2>&1
-git clone git@github.com:SteamDeckHomebrew/decky-frontend-lib ${CLONE_FOLDER}/pluginlibrary/ 1>/dev/null 2>&1
-git clone git@github.com:SteamDeckHomebrew/decky-plugin-template ${CLONE_FOLDER}/plugintemplate/ 1>/dev/null 2>&1
+git clone https://github.com/SteamDeckHomebrew/decky-frontend-lib ${CLONE_FOLDER}/pluginlibrary/ 1>/dev/null 2>&1
+git clone https://github.com/SteamDeckHomebrew/decky-plugin-template ${CLONE_FOLDER}/plugintemplate/ 1>/dev/null 2>&1
 
 ## ssh into deck and disable PluginLoader release/nightly service
 ssh deck@$DECKIP -p $SSHPORT -i $SSHKEYLOC "echo ${PASSWORD} | sudo -S systemctl disable --now plugin_loader 1>/dev/null 2>&1" 1>/dev/null 2>&1
@@ -94,15 +94,3 @@ npm  run build --quiet &> '/dev/null'
 rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} -i ${SSHKEYLOC}" --exclude='.git/' --exclude='node_modules' --exclude='README.md' --exclude="package-lock.json" --exclude='LICENSE' --exclude=='frontend' --delete ${CLONE_FOLDER}/pluginloader/* deck@${DECKIP}:/home/deck/dev/pluginloader/
 
 rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} -i ${SSHKEYLOC}" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --exclude='README.md' --exclude='LICENSE' --delete ${CLONE_FOLDER}/plugintemplate/* deck@${DECKIP}:/home/deck/dev/plugins/plugintemplate
-
-## Create folder structure (old version, left as legacy support)
-# CLONE_FOLDER="${USERDIR}/tmpgit"
-# mkdir -p ${CLONE_FOLDER} 1>/dev/null 2>&1
-# git clone https://github.com/SteamDeckHomebrew/PluginLoader ${CLONE_FOLDER}/pluginloader 1>/dev/null 2>&1
-# git clone https://github.com/SteamDeckHomebrew/Plugin-Template ${CLONE_FOLDER}/plugintemplate 1>/dev/null 2>&1
-
-# ## Transfer relevant files to deck
-
-# rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} -i ${SSHKEYLOC}" --exclude='.git/' --exclude='README.md' --exclude='LICENSE' --exclude=='frontend' ${CLONE_FOLDER}/pluginloader/* deck@${DECKIP}:/home/deck/tmp/pluginloader/
-
-# rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} -i ${SSHKEYLOC}" --exclude='.git/' --exclude='README.md' --exclude='LICENSE' --exclude=='frontend' ${CLONE_FOLDER}/plugintemplate/* deck@${DECKIP}:/home/deck/tmp/plugins/plugintemplate

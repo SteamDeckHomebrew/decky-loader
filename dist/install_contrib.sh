@@ -49,17 +49,17 @@ fi
 ## Create folder structure (react)
 ## TODO: CHANGE TO HTTPS AFTER REPOS GO PUBLIC
 CLONE_FOLDER="${USERDIR}/git"
-mkdir -p ${CLONE_FOLDER} 2>/dev/null
-git clone https://github.com/SteamDeckHomebrew/PluginLoader ${CLONE_FOLDER}/pluginloader/ -b react-frontend-plugins 2>/dev/null
-git clone git@github.com:SteamDeckHomebrew/decky-frontend-lib ${CLONE_FOLDER}/pluginlibrary/ 2>/dev/null
-git clone git@github.com:SteamDeckHomebrew/decky-plugin-template ${CLONE_FOLDER}/plugintemplate/ 2>/dev/null
+mkdir -p ${CLONE_FOLDER} 1>/dev/null 2>&1
+git clone https://github.com/SteamDeckHomebrew/PluginLoader ${CLONE_FOLDER}/pluginloader/ -b react-frontend-plugins 1>/dev/null 2>&1
+git clone git@github.com:SteamDeckHomebrew/decky-frontend-lib ${CLONE_FOLDER}/pluginlibrary/ 1>/dev/null 2>&1
+git clone git@github.com:SteamDeckHomebrew/decky-plugin-template ${CLONE_FOLDER}/plugintemplate/ 1>/dev/null 2>&1
 
 ## ssh into deck and disable PluginLoader release/nightly service
-ssh deck@$DECKIP -p $SSHPORT -i $SSHKEYLOC "echo ${PASSWORD} | sudo -S systemctl disable --now plugin_loader 2>/dev/null" 2>/dev/null
+ssh deck@$DECKIP -p $SSHPORT -i $SSHKEYLOC "echo ${PASSWORD} | sudo -S systemctl disable --now plugin_loader 1>/dev/null 2>&1" 1>/dev/null 2>&1
 
 ## Transpile and bundle typescript
 
-type npm 2> /dev/null
+type npm &> '/dev/null'
 
 NPMLIVES=$?
 
@@ -70,34 +70,36 @@ fi
 
 printf "Input password to install typscript compilier.\n"
 
-sudo npm i -g tsc
+sudo npm install --quiet -g tsc &> '/dev/null'
+
+printf "Transpiling and bundling typescript.\n"
 
 cd ${CLONE_FOLDER}/pluginlibrary/
-npm install
-npm run build
-sudo npm link
+npm install --quiet &> '/dev/null'
+npm run build --quiet &> '/dev/null'
+sudo npm link --quiet &> '/dev/null'
 
 cd ${CLONE_FOLDER}/pluginloader/frontend
-npm install
-npm link decky-frontend-lib
-npm run build
+npm install --quiet &> '/dev/null'
+npm link decky-frontend-lib --quiet &> '/dev/null'
+npm run build --quiet &> '/dev/null'
 
 cd ${CLONE_FOLDER}/plugintemplate
-npm install
-npm link decky-frontend-lib
-npm run build
+npm install --quiet &> '/dev/null'
+npm link decky-frontend-lib --quiet &> '/dev/null'
+npm  run build --quiet &> '/dev/null'
 
 # Transfer relevant files to deck
 
-rsync -avzp --mkpath --rsh="ssh -p 55828 -i ${SSHKEYLOC}" --exclude='.git/' --exclude='node_modules' --exclude='README.md' --exclude='LICENSE' --exclude=='frontend' --delete ${CLONE_FOLDER}/pluginloader/* deck@${DECKIP}:/home/deck/dev/pluginloader/
+rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} -i ${SSHKEYLOC}" --exclude='.git/' --exclude='node_modules' --exclude='README.md' --exclude="package-lock.json" --exclude='LICENSE' --exclude=='frontend' --delete ${CLONE_FOLDER}/pluginloader/* deck@${DECKIP}:/home/deck/dev/pluginloader/
 
-rsync -avzp --mkpath --rsh="ssh -p 55828 -i ${SSHKEYLOC}" --exclude='.git/' --exclude='node_modules' --exclude='README.md' --exclude='LICENSE' --delete ${CLONE_FOLDER}/plugintemplate/* deck@${DECKIP}:/home/deck/dev/plugins/plugintemplate
+rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} -i ${SSHKEYLOC}" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --exclude='README.md' --exclude='LICENSE' --delete ${CLONE_FOLDER}/plugintemplate/* deck@${DECKIP}:/home/deck/dev/plugins/plugintemplate
 
 ## Create folder structure (old version, left as legacy support)
 # CLONE_FOLDER="${USERDIR}/tmpgit"
-# mkdir -p ${CLONE_FOLDER} 2>/dev/null
-# git clone https://github.com/SteamDeckHomebrew/PluginLoader ${CLONE_FOLDER}/pluginloader 2>/dev/null
-# git clone https://github.com/SteamDeckHomebrew/Plugin-Template ${CLONE_FOLDER}/plugintemplate 2>/dev/null
+# mkdir -p ${CLONE_FOLDER} 1>/dev/null 2>&1
+# git clone https://github.com/SteamDeckHomebrew/PluginLoader ${CLONE_FOLDER}/pluginloader 1>/dev/null 2>&1
+# git clone https://github.com/SteamDeckHomebrew/Plugin-Template ${CLONE_FOLDER}/plugintemplate 1>/dev/null 2>&1
 
 # ## Transfer relevant files to deck
 

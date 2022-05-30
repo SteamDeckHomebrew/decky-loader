@@ -8,7 +8,8 @@
 3. Scroll the sidebar all the way down and click on `Developer`
 4. Under Miscellaneous, enable `CEF Remote Debugging`
 5. Click on the `STEAM` button and select `Power` -> `Switch to Desktop`
-6. Open a terminal and paste the following command into it: 
+6. Make sure you have a password set with the "passwd" command in terminal to install it.
+7. Open a terminal and paste the following command into it: 
     - For users:
         - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_release.sh | sh`
     - For developers:

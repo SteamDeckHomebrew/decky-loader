@@ -89,9 +89,9 @@ npm run build
 
 # Transfer relevant files to deck
 
-rsync -avzp --mkpath --rsh="ssh -p 55828 -i ${SSHKEYLOC}" --exclude='.git/' --exclude='node_modules' --exclude='README.md' --exclude='LICENSE' --exclude=='frontend' --delete ${CLONE_FOLDER}/pluginloader/* deck@${DECKIP}:/home/deck/tmpdev/pluginloader/
+rsync -avzp --mkpath --rsh="ssh -p 55828 -i ${SSHKEYLOC}" --exclude='.git/' --exclude='node_modules' --exclude='README.md' --exclude='LICENSE' --exclude=='frontend' --delete ${CLONE_FOLDER}/pluginloader/* deck@${DECKIP}:/home/deck/dev/pluginloader/
 
-rsync -avzp --mkpath --rsh="ssh -p 55828 -i ${SSHKEYLOC}" --exclude='.git/' --exclude='node_modules' --exclude='README.md' --exclude='LICENSE' --delete ${CLONE_FOLDER}/plugintemplate/* deck@${DECKIP}:/home/deck/tmpdev/plugins/plugintemplate
+rsync -avzp --mkpath --rsh="ssh -p 55828 -i ${SSHKEYLOC}" --exclude='.git/' --exclude='node_modules' --exclude='README.md' --exclude='LICENSE' --delete ${CLONE_FOLDER}/plugintemplate/* deck@${DECKIP}:/home/deck/dev/plugins/plugintemplate
 
 ## Create folder structure (old version, left as legacy support)
 # CLONE_FOLDER="${USERDIR}/tmpgit"
@@ -101,6 +101,6 @@ rsync -avzp --mkpath --rsh="ssh -p 55828 -i ${SSHKEYLOC}" --exclude='.git/' --ex
 
 # ## Transfer relevant files to deck
 
-# rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} -i ${SSHKEYLOC}" --exclude='.git/' --exclude='README.md' --exclude='LICENSE' --exclude=='frontend' ${CLONE_FOLDER}/pluginloader/* deck@${DECKIP}:/home/deck/tmpdev/pluginloader/
+# rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} -i ${SSHKEYLOC}" --exclude='.git/' --exclude='README.md' --exclude='LICENSE' --exclude=='frontend' ${CLONE_FOLDER}/pluginloader/* deck@${DECKIP}:/home/deck/tmp/pluginloader/
 
-# rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} -i ${SSHKEYLOC}" --exclude='.git/' --exclude='README.md' --exclude='LICENSE' --exclude=='frontend' ${CLONE_FOLDER}/plugintemplate/* deck@${DECKIP}:/home/deck/tmpdev/plugins/plugintemplate
+# rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} -i ${SSHKEYLOC}" --exclude='.git/' --exclude='README.md' --exclude='LICENSE' --exclude=='frontend' ${CLONE_FOLDER}/plugintemplate/* deck@${DECKIP}:/home/deck/tmp/plugins/plugintemplate

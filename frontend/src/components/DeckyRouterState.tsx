@@ -1,5 +1,5 @@
 import { ComponentType, FC, createContext, useContext, useEffect, useState } from 'react';
-import { RouteProps } from 'react-router';
+import type { RouteProps } from 'react-router';
 
 export interface RouterEntry {
   props: Omit<RouteProps, 'path' | 'children'>;

@@ -17,6 +17,7 @@
     "@rollup/plugin-replace": "^4.0.0",
     "@rollup/plugin-typescript": "^8.3.2",
     "@types/react": "16.14.0",
+    "@types/react-router": "5.1.18",
     "@types/webpack": "^5.28.0",
     "husky": "^8.0.1",
     "import-sort-style-module": "^6.0.0",
@@ -34,7 +35,7 @@
     }
   },
   "dependencies": {
-    "decky-frontend-lib": "^0.0.3",
+    "decky-frontend-lib": "^0.0.4",
     "react-icons": "^4.3.1"
   }
 }

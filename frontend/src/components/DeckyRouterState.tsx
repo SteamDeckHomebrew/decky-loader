@@ -1,11 +1,17 @@
 import { ComponentType, FC, createContext, useContext, useEffect, useState } from 'react';
+import { RouteProps } from 'react-router';
+
+export interface RouterEntry {
+  props: Omit<RouteProps, 'path' | 'children'>;
+  component: ComponentType;
+}
 
 interface PublicDeckyRouterState {
-  routes: Map<string, ComponentType>;
+  routes: Map<string, RouterEntry>;
 }
 
 export class DeckyRouterState {
-  private _routes: Map<string, ComponentType> = new Map<string, ComponentType>();
+  private _routes = new Map<string, RouterEntry>();
 
   public eventBus = new EventTarget();
 
@@ -13,8 +19,8 @@ export class DeckyRouterState {
     return { routes: this._routes };
   }
 
-  addRoute(path: string, render: ComponentType) {
-    this._routes.set(path, render);
+  addRoute(path: string, component: RouterEntry['component'], props: RouterEntry['props'] = {}) {
+    this._routes.set(path, { props, component });
     this.notifyUpdate();
   }
 
@@ -29,7 +35,7 @@ export class DeckyRouterState {
 }
 
 interface DeckyRouterStateContext extends PublicDeckyRouterState {
-  addRoute(path: string, render: ComponentType): void;
+  addRoute(path: string, component: RouterEntry['component'], props: RouterEntry['props']): void;
   removeRoute(path: string): void;
 }
 
@@ -56,7 +62,8 @@ export const DeckyRouterStateContextProvider: FC<Props> = ({ children, deckyRout
     return () => deckyRouterState.eventBus.removeEventListener('update', onUpdate);
   }, []);
 
-  const addRoute = (path: string, render: ComponentType) => deckyRouterState.addRoute(path, render);
+  const addRoute = (path: string, component: RouterEntry['component'], props: RouterEntry['props'] = {}) =>
+    deckyRouterState.addRoute(path, component, props);
   const removeRoute = (path: string) => deckyRouterState.removeRoute(path);
 
   return (

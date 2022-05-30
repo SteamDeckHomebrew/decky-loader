@@ -64,7 +64,7 @@ class PluginLoader extends Logger {
   private async importReactPlugin(name: string) {
     let res = await fetch(`http://127.0.0.1:1337/plugins/${name}/frontend_bundle`);
     if (res.ok) {
-      let content = await eval(await res.text())(PluginLoader.createPluginAPI(name));
+      let content = await eval(await res.text())(this.createPluginAPI(name));
       this.plugins.push({
         name: name,
         icon: content.icon,
@@ -82,7 +82,7 @@ class PluginLoader extends Logger {
     });
   }
 
-  static createPluginAPI(pluginName: string) {
+  createPluginAPI(pluginName: string) {
     return {
       routerHook: this.routerHook,
       async callServerMethod(methodName: string, args = {}) {

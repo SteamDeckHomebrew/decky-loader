@@ -39,7 +39,7 @@ class RouterHook extends Logger {
     let Route: FC<RouteProps>;
     const DeckyWrapper = ({ children }: { children: ReactElement }) => {
       const { routes } = useDeckyRouterState();
-      console.log(children.props.children[0].props.children, routes);
+      
       const routerIndex = children.props.children[0].props.children.length - 1;
       if (
         !children.props.children[0].props.children[routerIndex].length ||

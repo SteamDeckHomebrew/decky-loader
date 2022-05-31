@@ -44,10 +44,7 @@ if [[ "$PASSWORD" == "" ]]; then
     exit 1
 fi
 
-## TODO: once react PR is merged and libraries are publicly avaliable, enable this block to add frontend-lib and plugin template
-
 ## Create folder structure (react)
-## TODO: CHANGE TO HTTPS AFTER REPOS GO PUBLIC
 CLONE_FOLDER="${USERDIR}/git"
 mkdir -p ${CLONE_FOLDER} 1>/dev/null 2>&1
 git clone https://github.com/SteamDeckHomebrew/PluginLoader ${CLONE_FOLDER}/pluginloader/ -b react-frontend-plugins 1>/dev/null 2>&1
@@ -68,7 +65,7 @@ if ! [[ "$NPMLIVES" -eq 0 ]]; then
     exit 1
 fi
 
-printf "Input password to install typscript compilier.\n"
+[ "$UID" -eq 0 ] || printf "Input password to install typscript compilier.\n"
 
 sudo npm install --quiet -g tsc &> '/dev/null'
 
@@ -89,7 +86,7 @@ npm install --quiet &> '/dev/null'
 npm link decky-frontend-lib --quiet &> '/dev/null'
 npm  run build --quiet &> '/dev/null'
 
-# Transfer relevant files to deck
+## Transfer relevant files to deck
 
 rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} -i ${SSHKEYLOC}" --exclude='.git/' --exclude='node_modules' --exclude='README.md' --exclude="package-lock.json" --exclude='LICENSE' --exclude=='frontend' --delete ${CLONE_FOLDER}/pluginloader/* deck@${DECKIP}:/home/deck/dev/pluginloader/
 

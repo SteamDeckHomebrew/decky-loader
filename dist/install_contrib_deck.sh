@@ -4,7 +4,7 @@
 ## This script defaults to port 22 unless otherwise specified, and cannot run without a sudo password or LAN IP.
 ## You will need to specify the path to the ssh key if using key connection exclusively.
 
-printf "Installing Steam Deck Plugin Loader contributor..."
+printf "Installing Steam Deck Plugin Loader contributor (for Steam Deck)..."
 
 printf "\nTHIS SCRIPT ASSUMES YOU ARE RUNNING IT ON A PC, NOT THE DECK!
 If you are not planning to contribute to PluginLoader then you should not be using this script.\n
@@ -87,6 +87,8 @@ npm link decky-frontend-lib --quiet &> '/dev/null'
 npm  run build --quiet &> '/dev/null'
 
 ## Transfer relevant files to deck
+
+printf "Copying relevant files to install directory\n"
 
 rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} -i ${SSHKEYLOC}" --exclude='.git/' --exclude='node_modules' --exclude='README.md' --exclude="package-lock.json" --exclude='LICENSE' --exclude=='frontend' --delete ${CLONE_FOLDER}/pluginloader/* deck@${DECKIP}:/home/deck/dev/pluginloader/
 

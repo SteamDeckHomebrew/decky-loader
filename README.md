@@ -17,10 +17,14 @@
 6. Open a terminal and paste the following command into it: 
     - For users:
         - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_release.sh | sh`
-    - For developers:
+    - For plugin developers:
         ~~- `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_nightly.sh | sh`~~
         Nightly releases are currently broken.
-8. Done! Reboot back into Gaming mode and enjoy your plugins!
+    - For PluginLoader contributors (in possession of a Steam Deck):
+      - `curl -L https://github.com/TrainDoctor/PluginLoader/raw/contrib-install/dist/install_contrib_deck.sh | sh`
+    - For PluginLoader contributors (without a Steam Deck):
+      - `curl -L https://github.com/TrainDoctor/PluginLoader/raw/contrib-install/dist/install_contrib_pc.sh | sh`
+7. Done! Reboot back into Gaming mode and enjoy your plugins!
 
 ### Install Plugins
 - Simply copy the plugin's folder into `~/homebrew/plugins`

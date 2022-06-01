@@ -12,6 +12,7 @@ class Utilities:
         self.util_methods = {
             "ping": self.ping,
             "http_request": self.http_request,
+            "cancel_plugin_install": self.cancel_plugin_install,
             "confirm_plugin_install": self.confirm_plugin_install,
             "execute_in_tab": self.execute_in_tab,
             "inject_css_into_tab": self.inject_css_into_tab,
@@ -26,8 +27,7 @@ class Utilities:
     async def _handle_server_method_call(self, request):
         method_name = request.match_info["method_name"]
         try:
-            method_info = await request.json()
-            args = method_info["args"]
+            args = await request.json()
         except JSONDecodeError:
             args = {}
         res = {}
@@ -42,6 +42,9 @@ class Utilities:
 
     async def confirm_plugin_install(self, request_id):
         return await self.context.plugin_browser.confirm_plugin_install(request_id)
+
+    def cancel_plugin_install(self, request_id):
+        return self.context.plugin_browser.cancel_plugin_install(request_id)
 
     async def http_request(self, method="", url="", **kwargs):
         async with ClientSession() as web:

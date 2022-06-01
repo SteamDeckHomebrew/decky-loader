@@ -1,3 +1,4 @@
+import { ModalRoot, showModal, staticClasses } from 'decky-frontend-lib';
 import { FaPlug } from 'react-icons/fa';
 
 import { DeckyState, DeckyStateContextProvider } from './components/DeckyState';
@@ -38,6 +39,25 @@ class PluginLoader extends Logger {
       ),
       icon: <FaPlug />,
     });
+  }
+
+  public addPluginInstallPrompt(artifact: string, version: string, request_id: string) {
+    showModal(
+      <ModalRoot
+        onOK={() => {
+          console.log('ok');
+          this.callServerMethod('confirm_plugin_install', { request_id });
+        }}
+        onCancel={() => {
+          console.log('nope');
+          this.callServerMethod('cancel_plugin_install', { request_id });
+        }}
+      >
+        <div className={staticClasses.Title}>
+          Install {artifact} version {version}?
+        </div>
+      </ModalRoot>,
+    );
   }
 
   public dismountAll() {
@@ -82,33 +102,22 @@ class PluginLoader extends Logger {
     });
   }
 
+  async callServerMethod(methodName: string, args = {}) {
+    const response = await fetch(`http://127.0.0.1:1337/methods/${methodName}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(args),
+    });
+
+    return response.json();
+  }
+
   createPluginAPI(pluginName: string) {
     return {
       routerHook: this.routerHook,
-      async callServerMethod(methodName: string, args = {}) {
-        const response = await fetch(`http://127.0.0.1:1337/methods/${methodName}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(args),
-        });
-
-        return response.json();
-      },
-      async callPluginMethod(methodName: string, args = {}) {
-        const response = await fetch(`http://127.0.0.1:1337/plugins/${pluginName}/methods/${methodName}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            args,
-          }),
-        });
-
-        return response.json();
-      },
+      callServerMethod: this.callServerMethod,
       fetchNoCors(url: string, request: any = {}) {
         let args = { method: 'POST', headers: {}, body: '' };
         const req = { ...args, ...request, url, data: request.body };

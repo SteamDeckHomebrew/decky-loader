@@ -80,10 +80,13 @@ class PluginBrowser:
     async def request_plugin_install(self, artifact, version, hash):
         request_id = str(time())
         self.install_requests[request_id] = PluginInstallContext(artifact, version, hash)
-        tab = await get_tab("QuickAccess")
+        tab = await get_tab("SP")
         await tab.open_websocket()
-        await tab.evaluate_js(f"addPluginInstallPrompt('{artifact}', '{version}', '{request_id}')")
+        await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{artifact}', '{version}', '{request_id}')")
     
     async def confirm_plugin_install(self, request_id):
         request = self.install_requests.pop(request_id)
         await self._install(request.gh_url, request.version, request.hash)
+
+    def cancel_plugin_install(self, request_id):
+        self.install_requests.pop(request_id)

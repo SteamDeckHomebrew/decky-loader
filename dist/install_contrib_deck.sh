@@ -40,9 +40,6 @@ fi
 CLONEDIR="$HOME/$CLONEFOLDER"
 INSTALLDIR="/home/deck/$INSTALLFOLDER"
 
-# echo "CLONEDIR=$CLONEDIR"
-# echo "INSTALLDIR=$INSTALLDIR"
-
 ## Input ip address, port, password and sshkey
 
 ### get ip address of deck from user
@@ -177,12 +174,12 @@ if [[ "$SSHKEYLOC" == "" ]]; then
     ### copy files for PluginLoader (without ssh key)
     rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT}" --exclude='.git/' --exclude='node_modules' --exclude='README.md' --exclude="package-lock.json" --exclude='LICENSE' --exclude=='frontend' --exclude="*dist*" --exclude="*.pyc" --delete ${CLONEDIR}/pluginloader/* deck@${DECKIP}:${INSTALLDIR}/pluginloader/ &> '/dev/null'
     ### copy files for PluginLoader template (without ssh key)
-    rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT}" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --exclude='README.md' --exclude='LICENSE' --delete ${CLONEDIR}/plugintemplate deck@${DECKIP}:${INSTALLDIR}/plugins/plugintemplate &> '/dev/null'
+    rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT}" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --exclude='README.md' --exclude='LICENSE' --delete ${CLONEDIR}/plugintemplate deck@${DECKIP}:${INSTALLDIR}/plugins &> '/dev/null'
 else
     ### copy files for PluginLoader (with ssh key)
     rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} -i ${SSHKEYLOC}" --exclude='.git/' --exclude='node_modules' --exclude='README.md' --exclude="package-lock.json" --exclude='LICENSE' --exclude=='frontend' --exclude="*dist*" --exclude="*.pyc" --delete ${CLONEDIR}/pluginloader/* deck@${DECKIP}:${INSTALLDIR}/pluginloader/ &> '/dev/null'
     ### copy files for PluginLoader template (with ssh key)
-    rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} -i ${SSHKEYLOC}" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --exclude='README.md' --exclude='LICENSE' --delete ${CLONEDIR}/plugintemplate deck@${DECKIP}:${INSTALLDIR}/plugins/plugintemplate &> '/dev/null'
+    rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} -i ${SSHKEYLOC}" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --exclude='README.md' --exclude='LICENSE' --delete ${CLONEDIR}/plugintemplate deck@${DECKIP}:${INSTALLDIR}/plugins &> '/dev/null'
 fi
 
 printf "All done!\n"

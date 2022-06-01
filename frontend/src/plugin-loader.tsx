@@ -118,6 +118,19 @@ class PluginLoader extends Logger {
     return {
       routerHook: this.routerHook,
       callServerMethod: this.callServerMethod,
+      async callPluginMethod(methodName: string, args = {}) {
+        const response = await fetch(`http://127.0.0.1:1337/plugins/${pluginName}/methods/${methodName}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            args,
+          }),
+        });
+
+        return response.json();
+      },
       fetchNoCors(url: string, request: any = {}) {
         let args = { method: 'POST', headers: {}, body: '' };
         const req = { ...args, ...request, url, data: request.body };

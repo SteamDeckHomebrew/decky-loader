@@ -29,8 +29,8 @@ if ! [[ "$INSTALLFOLDER" =~ ^[[:alnum:]]+$ ]]; then
     INSTALLFOLDER="loaderdev"
 fi
 
-CLONEDIR=$HOME/$CLONEFOLDER
-INSTALLDIR=$HOME/$INSTALLFOLDER
+CLONEDIR="$HOME/$CLONEFOLDER"
+INSTALLDIR="$HOME/$INSTALLFOLDER"
 
 ## Create folder structure
 
@@ -95,4 +95,5 @@ mkdir -p ${INSTALLDIR}/pluginloader
 mkdir -p ${INSTALLDIR}/plugins/plugintemplate
 
 rsync -avxr --exclude="*.git*" --exclude="*.vscode*"  --exclude="*dist*" --delete ${CLONEDIR}/pluginloader ${INSTALLDIR} &> '/dev/null'
+
 rsync -avxr --exclude="*.git*" --delete ${CLONEDIR}/plugintemplate ${INSTALLDIR}/plugins &> '/dev/null'

@@ -212,6 +212,11 @@ printf "\nCloning git repositories.\n"
 
 mkdir -p ${CLONEDIR} &> '/dev/null'
 
+### remove folders just in case
+# rm -r ${CLONEDIR}/pluginloader
+# rm -r ${CLONEDIR}/pluginlibrary
+# rm -r ${CLONEDIR}/plugintemplate
+
 clonefromto "https://github.com/SteamDeckHomebrew/PluginLoader" ${CLONEDIR}/pluginloader react-frontend-plugins
 
 clonefromto "https://github.com/SteamDeckHomebrew/decky-frontend-lib" ${CLONEDIR}/pluginlibrary
@@ -242,17 +247,6 @@ npmtransbundle ${CLONEDIR}/pluginloader/frontend "frontend"
 
 npmtransbundle ${CLONEDIR}/plugintemplate "template"
 
-## Disable Releases versions if they exist
-
-### ssh into deck and disable PluginLoader release/nightly service
-printf "Connecting via ssh to disable any PluginLoader release versions.\n"
-
-ssh deck@$DECKIP -p $SSHPORT $IDENINVOC "echo ${PASSWORD} | sudo -S systemctl disable --now plugin_loader"
-# if ! [[ $? -eq 0 ]]; then
-#     printf "Error occurred when connecting to deck@$DECKIP, exiting."
-#     exit 1
-# fi
-
 ## Transfer relevant files to deck
 
 printf "Copying relevant files to install directory\n\n"
@@ -279,4 +273,10 @@ printf "'rsync -avzp --mkpath --rsh=""\"ssh -p ${SSHPORT} ${IDENINVOC}\""" --exc
 
 printf "Run in console or in a script this command to run your development version:\n'ssh deck@${DECKIP} -p 22 ${IDENINVOC} 'export PLUGIN_PATH=${INSTALLDIR}/plugins; export CHOWN_PLUGIN_PATH=0; echo 'steam' | sudo -SE python3 ${INSTALLDIR}/pluginloader/backend/main.py'\n"
 
-printf "All done!\n"
+## Disable Releases versions if they exist
+
+### ssh into deck and disable PluginLoader release/nightly service
+printf "Connecting via ssh to disable any PluginLoader release versions.\n"
+printf "Script will exit after this. All done!\n"
+
+ssh deck@$DECKIP -p $SSHPORT $IDENINVOC "printf ${PASSWORD} | sudo -S systemctl disable --now plugin_loader; echo $?"

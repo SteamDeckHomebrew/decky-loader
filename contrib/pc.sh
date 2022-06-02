@@ -34,7 +34,10 @@ setfolder() {
 }
 
 clonefromto() {
-    if [[ $3 -eq 0 ]]; then
+    # printf "repo=$1\n"
+    # printf "outdir=$2\n"
+    # printf "branch=$3\n"
+    if [[ -z $3 ]]; then
         BRANCH=""
     else
         BRANCH="-b $3"
@@ -82,6 +85,11 @@ CLONEDIR="$HOME/$CLONEFOLDER"
 printf "\nCloning git repositories.\n"
 
 mkdir -p ${CLONEDIR} &> '/dev/null'
+
+### remove folders just in case
+# rm -r ${CLONEDIR}/pluginloader
+# rm -r ${CLONEDIR}/pluginlibrary
+# rm -r ${CLONEDIR}/plugintemplate
 
 clonefromto "https://github.com/SteamDeckHomebrew/PluginLoader" ${CLONEDIR}/pluginloader react-frontend-plugins
 

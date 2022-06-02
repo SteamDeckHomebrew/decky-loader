@@ -137,7 +137,11 @@ If you have a release/nightly installed this script will disable it.\n"
 
 printf "This script requires you to have nodejs installed. (If nodejs doesn't bundle npm on your OS/distro, then npm is required as well).\n"
 
-[[ $count -gt 0 ]] || read -p "Press any key to continue"
+# [[ $count -gt 0 ]] || read -p "Press any key to continue"
+
+if ! [[ $count -gt 0 ]] ; then
+    read -p "Press any key to continue"
+fi
 
 ## User chooses preffered clone & install directories
 
@@ -217,8 +221,7 @@ fi
 
 [ "$UID" -eq 0 ] || printf "Input password to install typscript compilier.\n"
 
-### echo yourpassword | sudo -S ...
-
+## TODO: add a way of verifying if tsc is installed and to skip this step if it is
 sudo npm install --quiet -g tsc &> '/dev/null'
 
 printf "Transpiling and bundling typescript.\n"
@@ -256,9 +259,12 @@ else
     rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} -i ${SSHKEYLOC}" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --exclude='README.md' --exclude='LICENSE' --delete ${CLONEDIR}/plugintemplate deck@${DECKIP}:${INSTALLDIR}/plugins &> '/dev/null'
 fi
 
-if [[ "$SSHKEYLOC" == "" ]]
-    printf "Run a script that invokes these commands in order to run your development version:\nssh deck@${DECKIP} -p 22 'export PLUGIN_PATH=${INSTALLDIR}/plugins; export CHOWN_PLUGIN_PATH=0; echo 'steam' | sudo -SE python3 ${INSTALLDIR}/pluginloader/backend/main.py'"
+if [[ "$SSHKEYLOC" == "" ]]; then
+    IDENINVOC=""
 else
-    printf "Run a script that invokes these commands in order to run your development version:\nssh deck@${DECKIP} -p 22 -i $SSHKEYLOC 'export PLUGIN_PATH=${INSTALLDIR}/plugins; export CHOWN_PLUGIN_PATH=0; echo 'steam' | sudo -SE python3 ${INSTALLDIR}/pluginloader/backend/main.py'"
+    IDENINVOC="-i $SSHKEYLOC"
+fi
 
-printf "All done!\n"
+printf "Run in console or in a script this command to run your development version:\n'ssh deck@${DECKIP} -p 22 ${IDENINVOC} 'export PLUGIN_PATH=${INSTALLDIR}/plugins; export CHOWN_PLUGIN_PATH=0; echo 'steam' | sudo -SE python3 ${INSTALLDIR}/pluginloader/backend/main.py'\n"
+
+printf "\nAll done!\n"

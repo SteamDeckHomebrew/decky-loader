@@ -67,14 +67,12 @@ If you are not planning to contribute to PluginLoader then you should not be usi
 
 printf "\nThis script requires you to have nodejs installed. (If nodejs doesn't bundle npm on your OS/distro, then npm is required as well).\n"
 
-[[ $1 -eq 0 ]] && read -p "Press any key to continue"
+if [[ -z $1 ]]; then
+    read -p "Press any key to continue"
+fi
 
 if [[ "$CLONEFOLDER" == "" ]]; then
     setfolder "$CLONEFOLDER" "clone"
-fi
-
-if [[ "$INSTALLFOLDER" == "" ]]; then
-    setfolder "$INSTALLFOLDER" "install"
 fi
 
 CLONEDIR="$HOME/$CLONEFOLDER"
@@ -115,10 +113,6 @@ npmtransbundle ${CLONEDIR}/plugintemplate "template"
 
 printf "Plugin Loader is located at '${CLONEDIR}/pluginloader/'.\n"
 
-printf "Run a script that invokes these commands in order to run your development version:\n
-    export PLUGIN_PATH=/home/user/installdirectory/plugins;
-    export CHOWN_PLUGIN_PATH=0;
-    sudo python3 /home/deck/loaderdev/pluginloader/backend/main.py
-"
+printf "Run in console or in a script these commands to run your development version:\n'export PLUGIN_PATH=${CLONEDIR}/plugins; export CHOWN_PLUGIN_PATH=0; sudo python3 ${CLONEDIR}/pluginloader/backend/main.py'\n"
 
 printf "All done!\n"

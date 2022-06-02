@@ -24,6 +24,8 @@
       - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/react-frontend-plugins/dist/install_contrib_deck.sh | sh`
     - For PluginLoader contributors (without a Steam Deck):
       - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/react-frontend-plugins/dist/install_contrib_pc.sh | sh`
+    - Here's how to get the Steam Deck UI on your enviroment of choice.
+      - (The video shows Windows usage but unless you're using WSL/cygwin this script is unsupported on Windows.)
 7. Done! Reboot back into Gaming mode and enjoy your plugins!
 
 ### Install Plugins

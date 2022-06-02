@@ -103,7 +103,10 @@ checksshkey() {
 }
 
 clonefromto() {
-    if [[ $3 -eq 0 ]]; then
+    # printf "repo=$1\n"
+    # printf "outdir=$2\n"
+    # printf "branch=$3\n"
+    if [[ -z $3 ]]; then
         BRANCH=""
     else
         BRANCH="-b $3"
@@ -213,7 +216,7 @@ clonefromto "https://github.com/SteamDeckHomebrew/PluginLoader" ${CLONEDIR}/plug
 
 clonefromto "https://github.com/SteamDeckHomebrew/decky-frontend-lib" ${CLONEDIR}/pluginlibrary
 
-clonefromto "https://github.com/SteamDeckHomebrew/decky-plugin-template" ${CLONEDIR}/plugintemplate 
+clonefromto "https://github.com/SteamDeckHomebrew/decky-plugin-template" ${CLONEDIR}/plugintemplate
 
 ## Transpile and bundle typescript
 
@@ -244,11 +247,11 @@ npmtransbundle ${CLONEDIR}/plugintemplate "template"
 ### ssh into deck and disable PluginLoader release/nightly service
 printf "Connecting via ssh to disable any PluginLoader release versions.\n"
 
-ssh deck@$DECKIP -p $SSHPORT $IDENINVOC "echo ${PASSWORD} | sudo -S systemctl disable --now plugin_loader" &> '/dev/null'
-if ! [[ $? -eq 0 ]]; then
-    printf "Error occurred when connecting to deck@$DECKIP, exiting."
-    exit 1
-fi
+ssh deck@$DECKIP -p $SSHPORT $IDENINVOC "echo ${PASSWORD} | sudo -S systemctl disable --now plugin_loader"
+# if ! [[ $? -eq 0 ]]; then
+#     printf "Error occurred when connecting to deck@$DECKIP, exiting."
+#     exit 1
+# fi
 
 ## Transfer relevant files to deck
 

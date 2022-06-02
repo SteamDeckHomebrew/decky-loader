@@ -22,6 +22,25 @@
         Nightly releases are currently broken.
 7. Done! Reboot back into Gaming mode and enjoy your plugins!
 
+### Install Plugins
+- Simply copy the plugin's folder into `~/homebrew/plugins`
+
+### Uninstall
+- Open a terminal and paste the following command into it:
+    - For both users and developers:
+        - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/uninstall.sh | sh`
+
+## Features
+- Clean injecting and loading of one or more plugins
+- Persistent. It doesn't need to be reinstalled after every system update 
+- Allows 2-way communication between the plugins and the loader.
+- Allows plugins to define python functions and run them from javascript.
+- Allows plugins to make fetch calls, bypassing cors completely.
+
+### Developing plugins
+- There is no complete plugin development documentation yet. However a good starting point is the [Plugin Template](https://github.com/SteamDeckHomebrew/Plugin-Template) repository
+
+
 ## Contribution
 - For Plugin Loader contributors (in possession of a Steam Deck):
     - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/react-frontend-plugins/contrib/deck.sh | sh`
@@ -40,29 +59,6 @@ export PLUGIN_PATH=/home/user/installdirectory/plugins;
 export CHOWN_PLUGIN_PATH=0;
 sudo python3 /home/deck/loaderdev/pluginloader/backend/main.py
 ```
-
-### Install Plugins
-- Simply copy the plugin's folder into `~/homebrew/plugins`
-
-### Uninstall
-- Open a terminal and paste the following command into it:
-    - For both users and developers:
-        - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/uninstall.sh | sh`
-
-### Developing plugins
-- There is no complete plugin development documentation yet. However a good starting point is the [Plugin Template](https://github.com/SteamDeckHomebrew/Plugin-Template) repository
-
-## Features
-- Clean injecting and loading of one or more plugins
-- Persistent. It doesn't need to be reinstalled after every system update 
-- Allows 2-way communication between the plugins and the loader.
-- Allows plugins to define python functions and run them from javascript.
-- Allows plugins to make fetch calls, bypassing cors completely.
-
-## Caveats
-
-- You can only interact with the Plugin Menu via touchscreen.
-
 ## Credit
 
 The original idea for the concept is based on the work of [marios8543's steamdeck-ui-inject](https://github.com/marios8543/steamdeck-ui-inject) project.

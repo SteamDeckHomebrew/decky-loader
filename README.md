@@ -20,13 +20,26 @@
     - For plugin developers:
         ~~- `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_nightly.sh | sh`~~
         Nightly releases are currently broken.
-    - For PluginLoader contributors (in possession of a Steam Deck):
-      - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/react-frontend-plugins/dist/install_contrib_deck.sh | sh`
-    - For PluginLoader contributors (without a Steam Deck):
-      - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/react-frontend-plugins/dist/install_contrib_pc.sh | sh`
-    - Here's how to get the Steam Deck UI on your enviroment of choice.
-      - (The video shows Windows usage but unless you're using WSL/cygwin this script is unsupported on Windows.)
 7. Done! Reboot back into Gaming mode and enjoy your plugins!
+
+## Contribution
+- For Plugin Loader contributors (in possession of a Steam Deck):
+    - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/react-frontend-plugins/contrib/deck.sh | sh`
+- For PluginLoader contributors (without a Steam Deck):
+  - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/react-frontend-plugins/contrib/pc.sh | sh`
+  - [Here's how to get the Steam Deck UI on your enviroment of choice.](https://youtu.be/1IAbZte8e7E?t=112)
+    - (The video shows Windows usage but unless you're using WSL/cygwin this script is unsupported on Windows.)
+
+To run your development version of Plugin Loader on Deck, run a command like this:
+```bash
+ssh deck@steamdeck 'export PLUGIN_PATH=/home/deck/loaderdev/plugins; export CHOWN_PLUGIN_PATH=0; echo 'password' | sudo -SE python3 /home/deck/loaderdev/pluginloader/backend/main.py'
+```
+Or on PC with the Deck UI enabled:
+```bash
+export PLUGIN_PATH=/home/user/installdirectory/plugins; 
+export CHOWN_PLUGIN_PATH=0;
+sudo python3 /home/deck/loaderdev/pluginloader/backend/main.py
+```
 
 ### Install Plugins
 - Simply copy the plugin's folder into `~/homebrew/plugins`

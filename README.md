@@ -37,7 +37,7 @@
 - Allows plugins to define python functions and run them from javascript.
 - Allows plugins to make fetch calls, bypassing cors completely.
 
-### Developing plugins
+## Developing plugins
 - There is no complete plugin development documentation yet. However a good starting point is the [Plugin Template](https://github.com/SteamDeckHomebrew/Plugin-Template) repository
 
 

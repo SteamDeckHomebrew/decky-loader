@@ -35,7 +35,7 @@
     }
   },
   "dependencies": {
-    "decky-frontend-lib": "^0.0.4",
+    "decky-frontend-lib": "^0.0.6",
     "react-icons": "^4.3.1"
   }
 }

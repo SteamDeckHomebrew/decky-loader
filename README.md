@@ -8,6 +8,8 @@
 
 ![steamuserimages-a akamaihd](https://user-images.githubusercontent.com/10835354/161068262-ca723dc5-6795-417a-80f6-d8c1f9d03e93.jpg)
 
+Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugin Loader, documentation + tools for plugin development and more.
+
 ## Installation
 1. Go into the Steam Deck Settings
 2. Under System -> System Settings toggle `Enable Developer Mode`
@@ -38,7 +40,8 @@
 - Allows plugins to make fetch calls, bypassing cors completely.
 
 ## Developing plugins
-- There is no complete plugin development documentation yet. However a good starting point is the [Plugin Template](https://github.com/SteamDeckHomebrew/Plugin-Template) repository
+- There is no complete plugin development documentation yet. However a good starting point is the [Plugin Template](https://github.com/SteamDeckHomebrew/decky-plugin-template) repository.
+
 
 
 ## Contribution

@@ -268,8 +268,8 @@ fi
 ## TODO: direct contributors to wiki for this info?
 
 printf "Run these commands to deploy your local changes to the deck:\n"
-printf "'rsync -avzp --mkpath --rsh=""\"ssh -p ${SSHPORT} ${IDENINVOC}\""" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --delete ${CLONEDIR}/pluginname deck@${DECKIP}:${INSTALLDIR}/plugins'\n"
-printf "'rsync -avzp --mkpath --rsh=""\"ssh -p ${SSHPORT} ${IDENINVOC}\""" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --exclude=='frontend' --exclude='*dist*' --exclude='*contrib*' --delete ${CLONEDIR}/pluginloader/* deck@${DECKIP}:${INSTALLDIR}/pluginloader/'\n"
+printf "'rsync -avzp --mkpath --rsh=""\"ssh -p ${SSHPORT} ${IDENINVOC}\""" --exclude='.git/' --exclude='node_modules' --exclude='package-lock.json' --delete ${CLONEDIR}/pluginname deck@${DECKIP}:${INSTALLDIR}/plugins'\n"
+printf "'rsync -avzp --mkpath --rsh=""\"ssh -p ${SSHPORT} ${IDENINVOC}\""" --exclude='.git/' --exclude='node_modules' --exclude='package-lock.json' --exclude=='frontend' --exclude='*dist*' --exclude='*contrib*' --delete ${CLONEDIR}/pluginloader/* deck@${DECKIP}:${INSTALLDIR}/pluginloader/'\n"
 
 printf "Run in console or in a script this command to run your development version:\n'ssh deck@${DECKIP} -p 22 ${IDENINVOC} 'export PLUGIN_PATH=${INSTALLDIR}/plugins; export CHOWN_PLUGIN_PATH=0; echo 'steam' | sudo -SE python3 ${INSTALLDIR}/pluginloader/backend/main.py'\n"
 

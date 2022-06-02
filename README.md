@@ -53,12 +53,16 @@ To run your development version of Plugin Loader on Deck, run a command like thi
 ```bash
 ssh deck@steamdeck 'export PLUGIN_PATH=/home/deck/loaderdev/plugins; export CHOWN_PLUGIN_PATH=0; echo 'password' | sudo -SE python3 /home/deck/loaderdev/pluginloader/backend/main.py'
 ```
+
 Or on PC with the Deck UI enabled:
 ```bash
 export PLUGIN_PATH=/home/user/installdirectory/plugins; 
 export CHOWN_PLUGIN_PATH=0;
 sudo python3 /home/deck/loaderdev/pluginloader/backend/main.py
 ```
+
+Source control and deploying plugins are left to each respective contributor for the cloned repos in order to keep depedencies up to date.
+
 ## Credit
 
 The original idea for the concept is based on the work of [marios8543's steamdeck-ui-inject](https://github.com/marios8543/steamdeck-ui-inject) project.

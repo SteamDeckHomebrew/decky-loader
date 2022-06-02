@@ -97,6 +97,7 @@ checksshkey() {
 
     ### check if sshkey is present at location
     if ! [[ -e "$1" ]]; then
+        SSHKEYLOC=""
         printf "ssh key does not exist. This script will use password authentication.\n"
     fi
 }
@@ -254,5 +255,10 @@ else
     ### copy files for PluginLoader template (with ssh key)
     rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} -i ${SSHKEYLOC}" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --exclude='README.md' --exclude='LICENSE' --delete ${CLONEDIR}/plugintemplate deck@${DECKIP}:${INSTALLDIR}/plugins &> '/dev/null'
 fi
+
+if [[ "$SSHKEYLOC" == "" ]]
+    printf "Run a script that invokes these commands in order to run your development version:\nssh deck@${DECKIP} -p 22 'export PLUGIN_PATH=${INSTALLDIR}/plugins; export CHOWN_PLUGIN_PATH=0; echo 'steam' | sudo -SE python3 ${INSTALLDIR}/pluginloader/backend/main.py'"
+else
+    printf "Run a script that invokes these commands in order to run your development version:\nssh deck@${DECKIP} -p 22 -i $SSHKEYLOC 'export PLUGIN_PATH=${INSTALLDIR}/plugins; export CHOWN_PLUGIN_PATH=0; echo 'steam' | sudo -SE python3 ${INSTALLDIR}/pluginloader/backend/main.py'"
 
 printf "All done!\n"

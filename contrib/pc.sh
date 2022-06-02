@@ -2,17 +2,6 @@
 
 ## Pre-parse arugments for ease of use
 CLONEFOLDER=${1:-""}
-INSTALLFOLDER=${2:-""}
-
-## gather options into an array 
-OPTIONSARRAY=("$CLONEFOLDER" $INSTALLFOLDER)
-
-## iterate through options array to check their presence
-count=0
-for OPTION in ${OPTIONSARRAY[@]}; do
-    ! [[ "$OPTION" == "" ]] && count=$(($count+1))
-    # printf "OPTION=$OPTION\n"
-done
 
 setfolder() {
     if [[ "$2" == "clone" ]]; then
@@ -78,7 +67,7 @@ If you are not planning to contribute to PluginLoader then you should not be usi
 
 printf "\nThis script requires you to have nodejs installed. (If nodejs doesn't bundle npm on your OS/distro, then npm is required as well).\n"
 
-[[ $count -gt 0 ]] || read -p "Press any key to continue"
+[[ $1 -eq 0 ]] && read -p "Press any key to continue"
 
 if [[ "$CLONEFOLDER" == "" ]]; then
     setfolder "$CLONEFOLDER" "clone"
@@ -89,7 +78,6 @@ if [[ "$INSTALLFOLDER" == "" ]]; then
 fi
 
 CLONEDIR="$HOME/$CLONEFOLDER"
-INSTALLDIR="$HOME/$INSTALLFOLDER"
 
 ## Create folder structure
 
@@ -125,15 +113,12 @@ npmtransbundle ${CLONEDIR}/pluginloader/frontend "frontend"
 
 npmtransbundle ${CLONEDIR}/plugintemplate "template"
 
-## Transfer relevant files to deck
+printf "Plugin Loader is located at '${CLONEDIR}/pluginloader/'.\n"
 
-printf "Copying relevant files to install directory\n"
-
-mkdir -p ${INSTALLDIR}/pluginloader
-mkdir -p ${INSTALLDIR}/plugins/plugintemplate
-
-rsync -avxr --exclude="*.git*" --exclude="*.vscode*"  --exclude="*dist*" --delete ${CLONEDIR}/pluginloader ${INSTALLDIR} &> '/dev/null'
-
-rsync -avxr --exclude="*.git*" --delete ${CLONEDIR}/plugintemplate ${INSTALLDIR}/plugins &> '/dev/null'
+printf "Run a script that invokes these commands in order to run your development version:\n
+    export PLUGIN_PATH=/home/user/installdirectory/plugins;
+    export CHOWN_PLUGIN_PATH=0;
+    sudo python3 /home/deck/loaderdev/pluginloader/backend/main.py
+"
 
 printf "All done!\n"

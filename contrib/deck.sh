@@ -132,7 +132,8 @@ npmtransbundle() {
 printf "Installing Steam Deck Plugin Loader contributor (for Steam Deck)...\n"
 
 printf "THIS SCRIPT ASSUMES YOU ARE RUNNING IT ON A PC, NOT THE DECK!
-If you are not planning to contribute to PluginLoader then you should not be using this script.
+Not planning to contribute to PluginLoader?
+If so, you should not be using this script.\n
 If you have a release/nightly installed this script will disable it.\n"
 
 printf "This script requires you to have nodejs installed. (If nodejs doesn't bundle npm on your OS/distro, then npm is required as well).\n"
@@ -196,6 +197,12 @@ fi
 ### validate SSHKEYLOC
 checksshkey "$SSHKEYLOC"
 
+if [[ "$SSHKEYLOC" == "" ]]; then
+    IDENINVOC=""
+else
+    IDENINVOC="-i ${SSHKEYLOC}"
+fi
+
 ## Create folder structure
 
 printf "\nCloning git repositories.\n"
@@ -237,34 +244,36 @@ npmtransbundle ${CLONEDIR}/plugintemplate "template"
 ### ssh into deck and disable PluginLoader release/nightly service
 printf "Connecting via ssh to disable any PluginLoader release versions.\n"
 
-if [[ "$SSHKEYLOC" == "" ]]; then
-    ssh deck@$DECKIP -p $SSHPORT "echo ${PASSWORD} | sudo -S systemctl disable --now plugin_loader"
-else
-    ssh deck@$DECKIP -p $SSHPORT -i $SSHKEYLOC "echo ${PASSWORD} | sudo -S systemctl disable --now plugin_loader" &> '/dev/null'
+ssh deck@$DECKIP -p $SSHPORT $IDENINVOC "echo ${PASSWORD} | sudo -S systemctl disable --now plugin_loader" &> '/dev/null'
+if ! [[ $? -eq 0 ]]; then
+    printf "Error occurred when connecting to deck@$DECKIP, exiting."
+    exit 1
 fi
 
 ## Transfer relevant files to deck
 
-printf "Copying relevant files to install directory\n"
+printf "Copying relevant files to install directory\n\n"
 
-if [[ "$SSHKEYLOC" == "" ]]; then
-    ### copy files for PluginLoader (without ssh key)
-    rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT}" --exclude='.git/' --exclude='node_modules' --exclude='README.md' --exclude="package-lock.json" --exclude='LICENSE' --exclude=='frontend' --exclude="*dist*" --exclude="*.pyc" --delete ${CLONEDIR}/pluginloader/* deck@${DECKIP}:${INSTALLDIR}/pluginloader/ &> '/dev/null'
-    ### copy files for PluginLoader template (without ssh key)
-    rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT}" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --exclude='README.md' --exclude='LICENSE' --delete ${CLONEDIR}/plugintemplate deck@${DECKIP}:${INSTALLDIR}/plugins &> '/dev/null'
-else
-    ### copy files for PluginLoader (with ssh key)
-    rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} -i ${SSHKEYLOC}" --exclude='.git/' --exclude='node_modules' --exclude='README.md' --exclude="package-lock.json" --exclude='LICENSE' --exclude=='frontend' --exclude="*dist*" --exclude="*.pyc" --delete ${CLONEDIR}/pluginloader/* deck@${DECKIP}:${INSTALLDIR}/pluginloader/ &> '/dev/null'
-    ### copy files for PluginLoader template (with ssh key)
-    rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} -i ${SSHKEYLOC}" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --exclude='README.md' --exclude='LICENSE' --delete ${CLONEDIR}/plugintemplate deck@${DECKIP}:${INSTALLDIR}/plugins &> '/dev/null'
+### copy files for PluginLoader
+rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} ${IDENINVOC}" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --exclude=='frontend' --exclude="*dist*" --exclude="*contrib*" --delete ${CLONEDIR}/pluginloader/* deck@${DECKIP}:${INSTALLDIR}/pluginloader/ &> '/dev/null'
+if ! [[ $? -eq 0 ]]; then
+    printf "Error occurred when copying ${CLONEDIR}/pluginloader/ to ${INSTALLDIR}/pluginloader/\n"
+    exit 1
 fi
 
-if [[ "$SSHKEYLOC" == "" ]]; then
-    IDENINVOC=""
-else
-    IDENINVOC="-i $SSHKEYLOC"
+### copy files for PluginLoader template
+rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} ${IDENINVOC}" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --delete ${CLONEDIR}/plugintemplate deck@${DECKIP}:${INSTALLDIR}/plugins &> '/dev/null'
+if ! [[ $? -eq 0 ]]; then
+    printf "Error occurred when copying ${CLONEDIR}/plugintemplate to ${INSTALLDIR}/plugins\n"
+    exit 1
 fi
+
+## TODO: direct contributors to wiki for this info?
+
+printf "Run these commands to deploy your local changes to the deck:\n"
+printf "'rsync -avzp --mkpath --rsh=""\"ssh -p ${SSHPORT} ${IDENINVOC}\""" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --delete ${CLONEDIR}/pluginname deck@${DECKIP}:${INSTALLDIR}/plugins'\n"
+printf "'rsync -avzp --mkpath --rsh=""\"ssh -p ${SSHPORT} ${IDENINVOC}\""" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --exclude=='frontend' --exclude='*dist*' --exclude='*contrib*' --delete ${CLONEDIR}/pluginloader/* deck@${DECKIP}:${INSTALLDIR}/pluginloader/'\n"
 
 printf "Run in console or in a script this command to run your development version:\n'ssh deck@${DECKIP} -p 22 ${IDENINVOC} 'export PLUGIN_PATH=${INSTALLDIR}/plugins; export CHOWN_PLUGIN_PATH=0; echo 'steam' | sudo -SE python3 ${INSTALLDIR}/pluginloader/backend/main.py'\n"
 
-printf "\nAll done!\n"
+printf "All done!\n"

@@ -80,14 +80,6 @@ checksshport() {
     fi
 }
 
-checkpassword() {
-    ### check to make sure a password was specified
-    if [[ "$1" == "" ]] || ! [[ "$1" =~ ^[[:alnum:]]+$ ]]; then
-        printf "Password was not provided, exiting.\n"
-        exit 1
-    fi
-}
-
 checksshkey() {
     ### check if ssh key is present at location provided
     if [[ "$1" == "" ]]; then
@@ -99,6 +91,14 @@ checksshkey() {
     if ! [[ -e "$1" ]]; then
         SSHKEYLOC=""
         printf "ssh key does not exist. This script will use password authentication.\n"
+    fi
+}
+
+checkpassword() {
+    ### check to make sure a password for 'deck' was specified
+    if [[ "$1" == "" ]] || ! [[ "$1" =~ ^[[:alnum:]]+$ ]]; then
+        printf "Remote deck user password was not provided, exiting.\n"
+        exit 1
     fi
 }
 

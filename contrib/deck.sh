@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ## Before using this script, enable sshd on the deck and setup an sshd key between the deck and your dev in sshd_config.
 ## This script defaults to port 22 unless otherwise specified, and cannot run without a sudo password or LAN IP.

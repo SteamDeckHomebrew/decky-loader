@@ -25,6 +25,7 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugi
 7. Done! Reboot back into Gaming mode and enjoy your plugins!
 
 ### Install Plugins
+- Using the shopping bag button in the top right corner, you can go to the offical ["Plugin Store"](https://plugins.deckbrew.xyz/)
 - Simply copy the plugin's folder into `~/homebrew/plugins`
 
 ### Uninstall
@@ -41,8 +42,6 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugi
 
 ## Developing plugins
 - There is no complete plugin development documentation yet. However a good starting point is the [Plugin Template](https://github.com/SteamDeckHomebrew/decky-plugin-template) repository.
-
-
 
 ## Contribution
 - For Plugin Loader contributors (in possession of a Steam Deck):

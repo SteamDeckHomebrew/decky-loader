@@ -234,7 +234,7 @@ if ! [[ "$NPMLIVES" -eq 0 ]]; then
     exit 1
 fi
 
-[ "$UID" -eq 0 ] || printf "Input password to install typscript compilier.\n"
+[ "$UID" -eq 0 ] || printf "Input password to install typscript compiler.\n"
 
 ## TODO: add a way of verifying if tsc is installed and to skip this step if it is
 sudo npm install --quiet -g tsc &> '/dev/null'

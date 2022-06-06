@@ -107,7 +107,7 @@ if ! [[ "$NPMLIVES" -eq 0 ]]; then
     exit 1
 fi
 
-[ "$UID" -eq 0 ] || printf "Input password to install typscript compilier.\n"
+[ "$UID" -eq 0 ] || printf "Input password to install typscript compiler.\n"
 
 sudo npm install --quiet -g tsc &> '/dev/null'
 

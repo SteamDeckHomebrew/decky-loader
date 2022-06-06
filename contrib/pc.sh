@@ -121,6 +121,6 @@ npmtransbundle ${CLONEDIR}/plugintemplate "template"
 
 printf "Plugin Loader is located at '${CLONEDIR}/pluginloader/'.\n"
 
-printf "Run in console or in a script these commands to run your development version:\n'export PLUGIN_PATH=${CLONEDIR}/plugins; export CHOWN_PLUGIN_PATH=0; sudo python3 ${CLONEDIR}/pluginloader/backend/main.py'\n"
+printf "Run in console or in a script these commands to run your development version:\n'export PLUGIN_PATH=${CLONEDIR}/plugins; export CHOWN_PLUGIN_PATH=0; sudo -E python3 ${CLONEDIR}/pluginloader/backend/main.py'\n"
 
 printf "All done!\n"

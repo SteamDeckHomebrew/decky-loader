@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ## Pre-parse arugments for ease of use
 CLONEFOLDER=${1:-""}

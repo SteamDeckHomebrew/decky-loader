@@ -96,7 +96,7 @@ checksshkey() {
 
 checkpassword() {
     ### check to make sure a password for 'deck' was specified
-    if [[ "$1" == "" ]] || ! [[ "$1" =~ ^[[:alnum:]]+$ ]]; then
+    if [[ "$1" == "" ]]; then
         printf "Remote deck user password was not provided, exiting.\n"
         exit 1
     fi

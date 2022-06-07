@@ -53,7 +53,7 @@ class Tab:
     def __repr__(self):
         return self.title
 
-async def get_tabs():
+async def get_tabs():  
     async with ClientSession() as web:
         res = {}
 
@@ -61,16 +61,15 @@ async def get_tabs():
             try:
                 res = await web.get(f"{BASE_ADDRESS}/json")
                 break
-            except:
+            except Exception:
                 logger.debug("Steam isn't available yet. Wait for a moment...")
                 logger.debug(format_exc())
                 await sleep(5)
 
-        if res.status == 200:
-            r = await res.json()
-            return [Tab(i) for i in r]
-        else:
+        if res.status != 200:
             raise Exception(f"/json did not return 200. {await r.text()}")
+        r = await res.json()
+        return [Tab(i) for i in r]
 
 async def get_tab(tab_name):
     tabs = await get_tabs()
@@ -90,8 +89,8 @@ async def tab_has_element(tab_name, element_name):
     except ValueError:
         return False
     res = await tab.evaluate_js(f"document.getElementById('{element_name}') != null", False)
-    
-    if not "result" in res or not "result" in res["result"] or not "value" in res["result"]["result"]:
+
+    if "result" not in res or "result" not in res["result"] or "value" not in res["result"]["result"]:
         return False
 
     return res["result"]["result"]["value"]

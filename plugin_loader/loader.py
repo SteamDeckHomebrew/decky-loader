@@ -80,13 +80,13 @@ class Loader:
         try:
             plugin = PluginWrapper(file, plugin_directory, self.plugin_path)
             if plugin.name in self.plugins:
-                    if not "debug" in plugin.flags and refresh:
-                        self.logger.info(f"Plugin {plugin.name} is already loaded and has requested to not be re-loaded")
-                        return
-                    else:
-                        self.plugins[plugin.name].stop()
-                        self.plugins.pop(plugin.name, None)
-                        self.callsigns.pop(self.callsign_matches[file], None)
+                if "debug" not in plugin.flags and refresh:
+                    self.logger.info(f"Plugin {plugin.name} is already loaded and has requested to not be re-loaded")
+                    return
+                else:
+                    self.plugins[plugin.name].stop()
+                    self.plugins.pop(plugin.name, None)
+                    self.callsigns.pop(self.callsign_matches[file], None)
             if plugin.passive:
                 self.logger.info(f"Plugin {plugin.name} is passive")
             callsign = str(time())

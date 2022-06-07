@@ -1,6 +1,6 @@
 from injector import get_tab, inject_to_tab
 from logging import getLogger
-from os import path, rename
+from os import path, rename, getegid
 from shutil import rmtree
 from aiohttp import ClientSession, web
 from io import BytesIO
@@ -36,7 +36,8 @@ class PluginBrowser:
         zip_file = ZipFile(zip)
         zip_file.extractall(self.plugin_path)
         rename(path.join(self.plugin_path, zip_file.namelist()[0]), path.join(self.plugin_path, name))
-        Popen(["chown", "-R", "deck:deck", self.plugin_path])
+        chowner = user=getenv('USER')+":"+str(getegid())
+        Popen(["chown", "-R", chowner, self.plugin_path])
         Popen(["chmod", "-R", "555", self.plugin_path])
         return True
 

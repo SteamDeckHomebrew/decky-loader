@@ -13,7 +13,7 @@ CONFIG = {
 
 class NoBaseEvents(Filter):
     def filter(self, record):
-        return not "asyncio" in record.name
+        return "asyncio" not in record.name
 
 basicConfig(level=CONFIG["log_level"], format="[%(module)s][%(levelname)s]: %(message)s")
 for handler in root.handlers:
@@ -81,9 +81,8 @@ class PluginManager:
         try:
             await inject_to_tab("QuickAccess", open(path.join(path.dirname(__file__), "static/library.js"), "r").read())
             await inject_to_tab("QuickAccess", open(path.join(path.dirname(__file__), "static/plugin_page.js"), "r").read())
-        except:
+        except Exception:
             logger.info("Failed to inject JavaScript into tab")
-            pass
 
     async def resolve_method_call(self, tab, call_id, response):
         try:
@@ -110,11 +109,10 @@ class PluginManager:
                     method["args"]["method_name"],
                     **method["args"]["args"]
                 )
-                res["success"] = True
             else:
                 r = await self.utilities.util_methods[method["method"]](**method["args"])
                 res["result"] = r
-                res["success"] = True
+            res["success"] = True
         except Exception as e:
             res["result"] = str(e)
             res["success"] = False
@@ -126,14 +124,14 @@ class PluginManager:
             try:
                 tab = await get_tab("QuickAccess")
                 break
-            except:
+            except Exception:
                 await sleep(1)
         await tab.open_websocket()
         await tab._send_devtools_cmd({"id": 1, "method": "Runtime.discardConsoleEntries"})
         await tab._send_devtools_cmd({"id": 1, "method": "Runtime.enable"})
         async for message in tab.listen_for_message():
             data = message.json()
-            if not "id" in data and data["method"] == "Runtime.consoleAPICalled" and data["params"]["type"] == "debug":
+            if "id" not in data and data["method"] == "Runtime.consoleAPICalled" and data["params"]["type"] == "debug":
                 method = loads(data["params"]["args"][0]["value"])
                 self.loop.create_task(self.handle_method_call(method, tab))
 

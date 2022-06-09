@@ -9,6 +9,7 @@ declare global {
 }
 
 window.DeckyPluginLoader?.dismountAll();
+window.DeckyPluginLoader?.deinit();
 
 window.DeckyPluginLoader = new PluginLoader();
 window.importDeckyPlugin = function (name: string) {

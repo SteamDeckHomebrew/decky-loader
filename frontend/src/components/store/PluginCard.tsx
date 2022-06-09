@@ -4,11 +4,11 @@ import {
   HorizontalFocus,
   Router,
   SingleDropdownOption,
+  SuspensefulImage,
   staticClasses,
 } from 'decky-frontend-lib';
 import { FC, useState } from 'react';
 
-import SuspensefulImage from '../SuspensefulImage';
 import { StorePlugin } from './Store';
 
 interface PluginCardProps {

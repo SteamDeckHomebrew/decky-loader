@@ -32,28 +32,6 @@ const StorePage: FC<{}> = () => {
         overflowY: 'scroll',
       }}
     >
-      {/* BUTTON LAYOUT HACK */}
-      <style scoped={true}>
-        {`
-                .deckyStoreButtons > div {
-                    flex: 1;
-                    padding-top: 0 !important;
-                    padding-bottom: 0 !important;
-                }
-
-                .deckyStoreButtons > div > div > div {
-                    --controls-list-spacing: 0px !important;
-                }
-
-                .deckyStoreButtons > div > div > div > div {
-                    max-width: unset !important;
-                }
-
-                .deckyStoreButtons > div > div > div > :nth-child(2) {
-                    flex-grow: 0;
-                }
-            `}
-      </style>
       <div
         style={{
           display: 'flex',

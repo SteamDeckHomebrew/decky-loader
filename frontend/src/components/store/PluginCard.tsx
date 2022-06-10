@@ -1,7 +1,8 @@
 import {
   DialogButton,
   Dropdown,
-  HorizontalFocus,
+  FocusPreferredPosition,
+  Focusable,
   Router,
   SingleDropdownOption,
   SuspensefulImage,
@@ -107,7 +108,6 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
           </div>
         </div>
         <div
-          className="deckyStoreButtons"
           style={{
             width: '100%',
             alignSelf: 'flex-end',
@@ -115,22 +115,40 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
             flexDirection: 'row',
           }}
         >
-          <HorizontalFocus>
-            <DialogButton onClick={() => requestPluginInstall(plugin, Object.keys(plugin.versions)[selectedOption])}>
-              Install
-            </DialogButton>
-            <Dropdown
-              rgOptions={
-                Object.keys(plugin.versions).map((v, k) => ({
-                  data: k,
-                  label: v,
-                })) as SingleDropdownOption[]
-              }
-              strDefaultLabel={'Select a version'}
-              selectedOption={selectedOption}
-              onChange={({ data }) => setSelectedOption(data)}
-            />
-          </HorizontalFocus>
+          <Focusable
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              width: '100%',
+            }}
+          >
+            <div
+              style={{
+                flex: '1',
+              }}
+            >
+              <DialogButton onClick={() => requestPluginInstall(plugin, Object.keys(plugin.versions)[selectedOption])}>
+                Install
+              </DialogButton>
+            </div>
+            <div
+              style={{
+                flex: '0',
+              }}
+            >
+              <Dropdown
+                rgOptions={
+                  Object.keys(plugin.versions).map((v, k) => ({
+                    data: k,
+                    label: v,
+                  })) as SingleDropdownOption[]
+                }
+                strDefaultLabel={'Select a version'}
+                selectedOption={selectedOption}
+                onChange={({ data }) => setSelectedOption(data)}
+              />
+            </div>
+          </Focusable>
         </div>
       </div>
     </div>

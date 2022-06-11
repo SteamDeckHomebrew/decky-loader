@@ -1,7 +1,6 @@
 import {
   DialogButton,
   Dropdown,
-  FocusPreferredPosition,
   Focusable,
   Router,
   SingleDropdownOption,

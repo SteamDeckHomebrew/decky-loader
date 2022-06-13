@@ -157,3 +157,6 @@ backend/static
 # ignore settings.json
 # prevents leaking login details
 .vscode/settings.json
+
+# plugins folder for local launches
+plugins/*

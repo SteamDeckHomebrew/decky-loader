@@ -10,6 +10,15 @@
             "command": "bash -c ${workspaceFolder}/.vscode/config.sh",
             "problemMatcher": []
         },
+        {
+            "label": "localrun",
+            "type": "shell",
+            "group": "none",
+            "dependsOn" : ["buildall"],
+            "detail": "Check for local runs, create a plugins folder",
+            "command": "mkdir -p plugins",
+            "problemMatcher": []
+        },
         // BUILD
         {
             "label": "pnpmsetup",
@@ -73,7 +82,7 @@
             "detail": "Run PluginLoader from python locally",
             "type": "shell",
             "group": "test",
-            "command": "export PLUGIN_PATH=/home/deck/loaderdev/plugins; export CHOWN_PLUGIN_PATH=0; sudo -E python3 ${env:HOME}homebrew/dev/pluginloader/backend/main.py",
+            "command": "export PLUGIN_PATH=${workspaceFolder}/plugins; export CHOWN_PLUGIN_PATH=0; sudo -E python3 ${workspaceFolder}/backend/main.py",
             "problemMatcher": []
         },
         // ALL-IN-ONE

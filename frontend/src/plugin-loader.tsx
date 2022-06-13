@@ -21,6 +21,10 @@ class PluginLoader extends Logger {
   private routerHook: RouterHook = new RouterHook();
   private deckyState: DeckyState = new DeckyState();
 
+  private reloadLock: boolean = false;
+  // stores a list of plugin names which requested to be reloaded
+  private pluginReloadQueue: string[] = [];
+
   constructor() {
     super(PluginLoader.name);
     this.log('Initialized');
@@ -68,17 +72,33 @@ class PluginLoader extends Logger {
   }
 
   public async importPlugin(name: string) {
-    this.log(`Trying to load ${name}`);
-    let find = this.plugins.find((x) => x.name == name);
-    if (find) this.plugins.splice(this.plugins.indexOf(find), 1);
-    if (name.startsWith('$LEGACY_')) {
-      await this.importLegacyPlugin(name.replace('$LEGACY_', ''));
-    } else {
-      await this.importReactPlugin(name);
-    }
-    this.log(`Loaded ${name}`);
+    try {
+      if (this.reloadLock) {
+        this.log('Reload currently in progress, adding to queue', name);
+        this.pluginReloadQueue.push(name);
+        return;
+      }
 
-    this.deckyState.setPlugins(this.plugins);
+      this.log(`Trying to load ${name}`);
+      let find = this.plugins.find((x) => x.name == name);
+      if (find) this.plugins.splice(this.plugins.indexOf(find), 1);
+      if (name.startsWith('$LEGACY_')) {
+        await this.importLegacyPlugin(name.replace('$LEGACY_', ''));
+      } else {
+        await this.importReactPlugin(name);
+      }
+      this.log(`Loaded ${name}`);
+
+      this.deckyState.setPlugins(this.plugins);
+    } catch (e) {
+      throw e;
+    } finally {
+      this.reloadLock = false;
+      const nextPlugin = this.pluginReloadQueue.shift();
+      if (nextPlugin) {
+        this.importPlugin(nextPlugin);
+      }
+    }
   }
 
   private async importReactPlugin(name: string) {

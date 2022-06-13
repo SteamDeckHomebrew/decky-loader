@@ -10,6 +10,7 @@ from signal import SIGINT, signal
 from sys import exit
 from time import time
 
+multiprocessing.set_start_method("fork")
 
 class PluginWrapper:
     def __init__(self, file, plugin_directory, plugin_path) -> None:
@@ -87,7 +88,6 @@ class PluginWrapper:
     def start(self):
         if self.passive:
             return self
-        multiprocessing.set_start_method("fork")
         multiprocessing.Process(target=self._init).start()
         return self
 

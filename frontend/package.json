@@ -31,7 +31,8 @@
   },
   "importSort": {
     ".js, .jsx, .ts, .tsx": {
-      "style": "module"
+      "style": "module",
+      "parser": "typescript"
     }
   },
   "dependencies": {

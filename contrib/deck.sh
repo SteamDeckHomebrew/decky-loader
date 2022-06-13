@@ -26,13 +26,15 @@ setfolder() {
     if [[ "$2" == "clone" ]]; then
         local ACTION="clone"
         local DEFAULT="git"
+        local HOMEBREW=""
     elif [[ "$2" == "install" ]]; then
         local ACTION="install"
-        local DEFAULT="loaderdev"
+        local DEFAULT="dev"
+        local HOMEBREW="/homebrew"
     fi
 
-    printf "Enter the directory in /home/user to ${ACTION} to.\n"
-    printf "Example: if your home directory is /home/user you would type: ${DEFAULT}\n"
+    printf "Enter the directory in /home/user${HOMEBREW} to ${ACTION} to.\n"
+    printf "Example: If your home directory is /home/user you would type: ${DEFAULT}\n"
     printf "The ${ACTION} directory would be: ${HOME}/${DEFAULT}\n"
     if [[ "$ACTION" == "clone" ]]; then
         read -p "Enter your ${ACTION} directory: " CLONEFOLDER
@@ -158,7 +160,7 @@ if [[ "$INSTALLFOLDER" == "" ]]; then
 fi
 
 CLONEDIR="$HOME/$CLONEFOLDER"
-INSTALLDIR="/home/deck/$INSTALLFOLDER"
+INSTALLDIR="/home/deck/hombrew/$INSTALLFOLDER"
 
 ## Input ip address, port, password and sshkey
 

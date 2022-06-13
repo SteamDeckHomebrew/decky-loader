@@ -8,4 +8,5 @@ if ! [[ -e "${SCRIPT_DIR}/settings.json" ]]; then
      exit 1
 else
     printf '.vscode/settings.json does exist. Congrats.\n'
+    printf 'Make sure to change settings.json to match your deck.\n'
 fi

@@ -153,3 +153,7 @@ cython_debug/
 
 # static files are built
 backend/static
+
+# ignore settings.json
+# prevents leaking login details
+.vscode/settings.json

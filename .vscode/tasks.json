@@ -55,7 +55,7 @@
             "type": "shell",
             "group": "none",
             "dependsOn" : ["checkforsettings"],
-            "command": "rsync -azp --mkpath --rsh='ssh -p ${config:deckport} -i ${config:deckkey}' --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='requirements.txt' --exclude='.gitignore' . deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader",
+            "command": "rsync -azp --mkpath --rsh='ssh -p ${config:deckport} -i ${config:deckkey}' --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='requirements.txt' --exclude='backend/__pycache__/' --exclude='.gitignore' . deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader",
             "problemMatcher": []
         },
         {
@@ -81,7 +81,7 @@
             "label": "runpylocal",
             "detail": "Run PluginLoader from python locally",
             "type": "shell",
-            "group": "test",
+            "group": "none",
             "command": "export PLUGIN_PATH=${workspaceFolder}/plugins; export CHOWN_PLUGIN_PATH=0; sudo -E python3 ${workspaceFolder}/backend/main.py",
             "problemMatcher": []
         },

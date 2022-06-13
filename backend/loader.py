@@ -8,7 +8,12 @@ from traceback import print_exc
 from aiohttp import web
 from genericpath import exists
 from watchdog.events import RegexMatchingEventHandler
-from watchdog.observers.inotify import InotifyObserver as Observer
+from watchdog.utils import UnsupportedLibc
+
+try:
+    from watchdog.observers.inotify import InotifyObserver as Observer
+except UnsupportedLibc:
+    from watchdog.observers.fsevents import FSEventsObserver as Observer
 
 from injector import get_tab, inject_to_tab
 from plugin import PluginWrapper
@@ -111,7 +116,7 @@ class Loader:
                 self.logger.info(f"Plugin {plugin.name} is passive")
             self.plugins[plugin.name] = plugin.start()
             self.logger.info(f"Loaded {plugin.name}")
-            #self.loop.create_task(self.dispatch_plugin(plugin.name))
+            self.loop.create_task(self.dispatch_plugin(plugin.name))
         except Exception as e:
             self.logger.error(f"Could not load {file}. {e}")
             print_exc()

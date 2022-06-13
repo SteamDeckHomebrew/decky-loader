@@ -1,10 +1,10 @@
+import multiprocessing
 from asyncio import (Lock, get_event_loop, new_event_loop,
                      open_unix_connection, set_event_loop, sleep,
                      start_unix_server)
 from concurrent.futures import ProcessPoolExecutor
 from importlib.util import module_from_spec, spec_from_file_location
 from json import dumps, load, loads
-from multiprocessing import Process
 from os import path, setuid
 from signal import SIGINT, signal
 from sys import exit
@@ -87,7 +87,8 @@ class PluginWrapper:
     def start(self):
         if self.passive:
             return self
-        Process(target=self._init).start()
+        multiprocessing.set_start_method("fork")
+        multiprocessing.Process(target=self._init).start()
         return self
 
     def stop(self):

@@ -1,6 +1,15 @@
 {
     "version": "2.0.0",
     "tasks": [
+        // OTHER
+        {
+            "label": "checkforsettings",
+            "type": "shell",
+            "group": "none",
+            "detail": "Check that settings.json has been created",
+            "command": "bash -c ${workspaceFolder}/.vscode/config.sh",
+            "problemMatcher": []
+        },
         // BUILD
         {
             "label": "pnpmsetup",
@@ -35,16 +44,18 @@
             "label": "deploy",
             "detail": "Deploy dev PluginLoader to deck",
             "type": "shell",
-            "command": "rsync -avvzp --mkpath --rsh='ssh -p ${config:deckport} -i ${config:deckkey}' --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='requirements.txt' --exclude='.gitignore' . --delete deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader",
+            "group": "none",
+            "dependsOn" : ["checkforsettings"],
+            "command": "rsync -azp --mkpath --rsh='ssh -p ${config:deckport} -i ${config:deckkey}' --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='requirements.txt' --exclude='.gitignore' . deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader",
             "problemMatcher": []
         },
         {
             "label": "deployall",
             "dependsOrder": "sequence",
-            "group": "test",
+            "group": "none",
             "dependsOn": [
                 "pnpmsetup",
-                "deploy",
+                "deploy"
             ]
         },
         // RUN/TEST
@@ -52,6 +63,8 @@
             "label": "runpydeck",
             "detail": "Run indev PluginLoader on Deck",
             "type": "shell",
+            "group": "test",
+            "dependsOn" : ["checkforsettings"],
             "command": "ssh deck@${config:deckip} -p ${config:deckport} -i ${config:deckkey} 'export PLUGIN_PATH=/home/deck/homebrew/dev/plugins; export CHOWN_PLUGIN_PATH=0; echo '${config:deckpass}' | sudo -SE python3 /home/deck/homebrew/dev/pluginloader/backend/main.py'",
             "problemMatcher": []
         },
@@ -59,7 +72,8 @@
             "label": "runpylocal",
             "detail": "Run PluginLoader from python locally",
             "type": "shell",
-            "command": "export PLUGIN_PATH=/home/deck/loaderdev/plugins; export CHOWN_PLUGIN_PATH=0; sudo -E python3 /home/deck/loaderdev/pluginloader/backend/main.py",
+            "group": "test",
+            "command": "export PLUGIN_PATH=/home/deck/loaderdev/plugins; export CHOWN_PLUGIN_PATH=0; sudo -E python3 ${env:HOME}homebrew/dev/pluginloader/backend/main.py",
             "problemMatcher": []
         },
         // ALL-IN-ONE
@@ -67,7 +81,7 @@
             "label": "allinone",
             "detail": "Build, deploy and run",
             "dependsOrder": "sequence",
-            "group": "build",
+            "group": "test",
             "dependsOn": [
                 "buildall",
                 "deployall",

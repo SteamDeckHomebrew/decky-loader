@@ -26,15 +26,13 @@ setfolder() {
     if [[ "$2" == "clone" ]]; then
         local ACTION="clone"
         local DEFAULT="git"
-        local HOMEBREW=""
     elif [[ "$2" == "install" ]]; then
         local ACTION="install"
-        local DEFAULT="dev"
-        local HOMEBREW="/homebrew"
+        local DEFAULT="loaderdev"
     fi
 
-    printf "Enter the directory in /home/user${HOMEBREW} to ${ACTION} to.\n"
-    printf "Example: If your home directory is /home/user you would type: ${DEFAULT}\n"
+    printf "Enter the directory in /home/user to ${ACTION} to.\n"
+    printf "Example: if your home directory is /home/user you would type: ${DEFAULT}\n"
     printf "The ${ACTION} directory would be: ${HOME}/${DEFAULT}\n"
     if [[ "$ACTION" == "clone" ]]; then
         read -p "Enter your ${ACTION} directory: " CLONEFOLDER

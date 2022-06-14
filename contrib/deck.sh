@@ -158,7 +158,7 @@ if [[ "$INSTALLFOLDER" == "" ]]; then
 fi
 
 CLONEDIR="$HOME/$CLONEFOLDER"
-INSTALLDIR="/home/deck/$INSTALLFOLDER"
+INSTALLDIR="/home/deck/hombrew/$INSTALLFOLDER"
 
 ## Input ip address, port, password and sshkey
 

@@ -1,15 +1,101 @@
 {
     "version": "2.0.0",
     "tasks": [
+        // OTHER
         {
-            "label": "Stop Service",
+            "label": "checkforsettings",
             "type": "shell",
-            "command":"systemctl --user stop plugin_loader",
+            "group": "none",
+            "detail": "Check that settings.json has been created",
+            "command": "bash -c ${workspaceFolder}/.vscode/config.sh",
+            "problemMatcher": []
         },
         {
-            "label": "Build frontend",
+            "label": "localrun",
             "type": "shell",
-            "command":"cd ${workspaceFolder}/frontend; npm run build",
-        }        
+            "group": "none",
+            "dependsOn" : ["buildall"],
+            "detail": "Check for local runs, create a plugins folder",
+            "command": "mkdir -p plugins",
+            "problemMatcher": []
+        },
+        // BUILD
+        {
+            "label": "pnpmsetup",
+            "type": "shell",
+            "group": "build",
+            "detail": "Setup pnpm",
+            "command": "cd frontend && pnpm i",
+            "problemMatcher": []
+        },
+        {
+            "label": "buildfrontend",
+            "type": "npm",
+            "group": "build",
+            "detail": "rollup -c",
+            "script": "build",
+            "path": "frontend",
+            "problemMatcher": [],
+            
+        },
+        {
+            "label": "buildall",
+            "group": "build",
+            "detail": "Deploy pluginloader to deck",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "pnpmsetup",
+                "buildfrontend"
+            ]
+        },
+        // DEPLOY
+        {
+            "label": "deploy",
+            "detail": "Deploy dev PluginLoader to deck",
+            "type": "shell",
+            "group": "none",
+            "dependsOn" : ["checkforsettings"],
+            "command": "rsync -azp --mkpath --rsh='ssh -p ${config:deckport} -i ${config:deckkey}' --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='requirements.txt' --exclude='backend/__pycache__/' --exclude='.gitignore' . deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader",
+            "problemMatcher": []
+        },
+        {
+            "label": "deployall",
+            "dependsOrder": "sequence",
+            "group": "none",
+            "dependsOn": [
+                "pnpmsetup",
+                "deploy"
+            ]
+        },
+        // RUN/TEST
+        {
+            "label": "runpydeck",
+            "detail": "Run indev PluginLoader on Deck",
+            "type": "shell",
+            "group": "test",
+            "dependsOn" : ["checkforsettings"],
+            "command": "ssh deck@${config:deckip} -p ${config:deckport} -i ${config:deckkey} 'export PLUGIN_PATH=/home/deck/homebrew/dev/plugins; export CHOWN_PLUGIN_PATH=0; echo '${config:deckpass}' | sudo -SE python3 /home/deck/homebrew/dev/pluginloader/backend/main.py'",
+            "problemMatcher": []
+        },
+        {
+            "label": "runpylocal",
+            "detail": "Run PluginLoader from python locally",
+            "type": "shell",
+            "group": "none",
+            "command": "export PLUGIN_PATH=${workspaceFolder}/plugins; export CHOWN_PLUGIN_PATH=0; sudo -E python3 ${workspaceFolder}/backend/main.py",
+            "problemMatcher": []
+        },
+        // ALL-IN-ONE
+        {
+            "label": "allinone",
+            "detail": "Build, deploy and run",
+            "dependsOrder": "sequence",
+            "group": "test",
+            "dependsOn": [
+                "buildall",
+                "deployall",
+                "runpydeck"
+            ]
+        }
     ]
 }

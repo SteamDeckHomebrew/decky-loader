@@ -100,7 +100,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
                     background: tag == 'root' ? '#842029' : '#ACB2C947',
                   }}
                 >
-                  {tag}
+                  {tag == 'root' ? 'Requires root' : tag}
                 </span>
               ))}
             </p>
@@ -132,7 +132,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
             </div>
             <div
               style={{
-                flex: '0',
+                flex: '0.2',
               }}
             >
               <Dropdown

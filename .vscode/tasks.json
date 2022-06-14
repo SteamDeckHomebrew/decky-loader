@@ -55,7 +55,7 @@
             "type": "shell",
             "group": "none",
             "dependsOn" : ["checkforsettings"],
-            "command": "rsync -azp --mkpath --rsh='ssh -p ${config:deckport} -i ${config:deckkey}' --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='requirements.txt' --exclude='backend/__pycache__/' --exclude='.gitignore' . deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader",
+            "command": "rsync -azp --mkpath --rsh='ssh -p ${config:deckport} ${config:deckkey}' --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='requirements.txt' --exclude='backend/__pycache__/' --exclude='.gitignore' . deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader",
             "problemMatcher": []
         },
         {
@@ -74,7 +74,7 @@
             "type": "shell",
             "group": "test",
             "dependsOn" : ["checkforsettings"],
-            "command": "ssh deck@${config:deckip} -p ${config:deckport} -i ${config:deckkey} 'export PLUGIN_PATH=/home/deck/homebrew/dev/plugins; export CHOWN_PLUGIN_PATH=0; echo '${config:deckpass}' | sudo -SE python3 /home/deck/homebrew/dev/pluginloader/backend/main.py'",
+            "command": "ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'export PLUGIN_PATH=/home/deck/homebrew/dev/plugins; export CHOWN_PLUGIN_PATH=0; echo '${config:deckpass}' | sudo -SE python3 /home/deck/homebrew/dev/pluginloader/backend/main.py'",
             "problemMatcher": []
         },
         {

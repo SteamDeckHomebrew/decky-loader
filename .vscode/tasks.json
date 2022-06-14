@@ -50,12 +50,23 @@
         },
         // DEPLOY
         {
+            "label": "createfolders",
+            "detail": "Create plugins folder in expected directory",
+            "type": "shell",
+            "group": "none",
+            "dependsOn": [
+                "checkforsettings"
+            ],
+            "command": "ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'mkdir -p ${config:deckdir}/homebrew/dev/pluginloader && mkdir -p ${config:deckdir}/homebrew/dev/plugins'",
+            "problemMatcher": []
+        },
+        {
             "label": "deploy",
             "detail": "Deploy dev PluginLoader to deck",
             "type": "shell",
             "group": "none",
-            "dependsOn" : ["checkforsettings"],
-            "command": "rsync -azp --mkpath --rsh='ssh -p ${config:deckport} ${config:deckkey}' --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='requirements.txt' --exclude='backend/__pycache__/' --exclude='.gitignore' . deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader",
+            "dependsOn" : ["createfolders"],
+            "command": "rsync -azp --rsh='ssh -p ${config:deckport} ${config:deckkey}' --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='requirements.txt' --exclude='backend/__pycache__/' --exclude='.gitignore' . deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader",
             "problemMatcher": []
         },
         {

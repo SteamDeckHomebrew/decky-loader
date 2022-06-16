@@ -1,0 +1,6 @@
+{
+  "[python]": {
+    "editor.detectIndentation": false,
+    "editor.tabSize": 4
+  }
+}

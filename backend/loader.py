@@ -1,4 +1,4 @@
-from asyncio import Queue
+from asyncio import Queue, get_event_loop, sleep, wait_for
 from json.decoder import JSONDecodeError
 from logging import getLogger
 from os import listdir, path
@@ -16,7 +16,7 @@ except UnsupportedLibc:
     from watchdog.observers.fsevents import FSEventsObserver as Observer
 
 from injector import get_tab, inject_to_tab
-from plugin import PluginWrapper
+from plugin_wrapper import PluginWrapper
 
 
 class FileChangeHandler(RegexMatchingEventHandler):
@@ -29,7 +29,7 @@ class FileChangeHandler(RegexMatchingEventHandler):
     def maybe_reload(self, src_path):
         plugin_dir = Path(path.relpath(src_path, self.plugin_path)).parts[0]
         if exists(path.join(self.plugin_path, plugin_dir, "plugin.json")):
-            self.queue.put_nowait((path.join(self.plugin_path, plugin_dir, "main.py"), plugin_dir, True))
+            self.queue.put_nowait(plugin_dir, True)
 
     def on_created(self, event):
         src_path = event.src_path
@@ -102,9 +102,9 @@ class Loader:
         with open(path.join(self.plugin_path, plugin.plugin_directory, "dist/index.js"), 'r') as bundle:
             return web.Response(text=bundle.read(), content_type="application/javascript")
 
-    def import_plugin(self, file, plugin_directory, refresh=False):
+    def import_plugin(self, plugin_directory, refresh=False):
         try:
-            plugin = PluginWrapper(file, plugin_directory, self.plugin_path)
+            plugin = PluginWrapper(plugin_directory, self.plugin_path)
             if plugin.name in self.plugins:
                     if not "debug" in plugin.flags and refresh:
                         self.logger.info(f"Plugin {plugin.name} is already loaded and has requested to not be re-loaded")
@@ -112,13 +112,12 @@ class Loader:
                     else:
                         self.plugins[plugin.name].stop()
                         self.plugins.pop(plugin.name, None)
-            if plugin.passive:
-                self.logger.info(f"Plugin {plugin.name} is passive")
-            self.plugins[plugin.name] = plugin.start()
+            self.plugins[plugin.name] = plugin
+            self.loop.create_task(plugin.start())
             self.logger.info(f"Loaded {plugin.name}")
             self.loop.create_task(self.dispatch_plugin(plugin.name))
         except Exception as e:
-            self.logger.error(f"Could not load {file}. {e}")
+            self.logger.error(f"Could not load {plugin_directory}. {e}")
             print_exc()
 
     async def dispatch_plugin(self, name):
@@ -130,7 +129,7 @@ class Loader:
         directories = [i for i in listdir(self.plugin_path) if path.isdir(path.join(self.plugin_path, i)) and path.isfile(path.join(self.plugin_path, i, "plugin.json"))]
         for directory in directories:
             self.logger.info(f"found plugin: {directory}")
-            self.import_plugin(path.join(self.plugin_path, directory, "main.py"), directory)
+            self.import_plugin(directory)
 
     async def handle_reloads(self):
         while True:
@@ -143,16 +142,15 @@ class Loader:
         method_name = request.match_info["method_name"]
         try:
             method_info = await request.json()
-            args = method_info["args"]
+            method_args = method_info["args"]
         except JSONDecodeError:
-            args = {}
+            method_args = {}
         try:
           if method_name.startswith("_"):
               raise RuntimeError("Tried to call private method")
-          res["result"] = await plugin.execute_method(method_name, args)
-          res["success"] = True
+          res = await plugin.call_method(method_name, method_args)
         except Exception as e:
-            res["result"] = str(e)
+            res["result"] = repr(e)
             res["success"] = False
         return web.json_response(res)
 

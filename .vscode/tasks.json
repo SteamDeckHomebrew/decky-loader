@@ -54,7 +54,8 @@
             "dependsOn": [
                 "pnpmsetup",
                 "buildfrontend"
-            ]
+            ],
+            "problemMatcher": []
         },
         // DEPLOY
         {
@@ -84,7 +85,8 @@
                 "createfolders",
                 "dependencies",
                 "deploy"
-            ]
+            ],
+            "problemMatcher": []
         },
         // RUN
         {
@@ -113,7 +115,8 @@
             "dependsOn": [
                 "buildall",
                 "deployall",
-            ]
+            ],
+            "problemMatcher": []
         },
         {
             "label": "allinone",
@@ -124,7 +127,8 @@
                 "buildall",
                 "deployall",
                 "runpydeck"
-            ]
+            ],
+            "problemMatcher": []
         }
     ]
 }

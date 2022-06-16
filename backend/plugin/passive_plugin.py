@@ -12,4 +12,7 @@ class PassivePlugin:
         pass
 
     async def start(self):
-        pass# Empty stub
+        pass
+
+    async def stop(self):
+        pass

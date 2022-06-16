@@ -53,6 +53,8 @@ class PythonPlugin:
         self.client = PluginProtocolClient(self, logger)
         self.server = PluginProtocolServer(self)
         self.connection = None
+        self.process = None
+        self.stopped = False
 
         self.plugin_directory = plugin_directory
         self.file_name = file_name
@@ -93,12 +95,22 @@ class PythonPlugin:
         self.process = multiprocessing.Process(target=self._init)
         self.process.start()
         get_event_loop().create_task(self.process_loop())
+        self.stopped = False
+
+    async def stop(self):
+        self.stopped = True
+        if self.connection:
+            self.connection.close()
+
+        if self.process and self.process.is_alive:
+            self.process.terminate()
 
     async def process_loop(self):
         await get_event_loop().run_in_executor(None, self.process.join)
-        self.logger.info("backend process was killed - restarting in 10 seconds")
-        await sleep(10)
-        await self.start()
+        if not self.stopped:
+            self.logger.info("backend process was killed - restarting in 10 seconds")
+            await sleep(10)
+            await self.start()
 
     # called on the server/loader process
     async def call_method(self, method_name, method_args):

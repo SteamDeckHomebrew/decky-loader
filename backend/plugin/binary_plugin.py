@@ -10,6 +10,8 @@ class BinaryPlugin:
     def __init__(self, plugin_directory, file_name, flags, logger) -> None:
         self.server = PluginProtocolServer(self)
         self.connection = None
+        self.process = None
+
         self.flags = flags
         self.logger = logger
 
@@ -18,7 +20,7 @@ class BinaryPlugin:
 
 
     async def start(self):
-        if self.connection:
+        if self.connection and self.connection.is_serving:
             self.connection.close()
 
         self.unix_socket_path = BinaryPlugin.generate_socket_path()
@@ -29,11 +31,20 @@ class BinaryPlugin:
         self.process = await subprocess.create_subprocess_exec(join(self.plugin_directory, self.file_name), env=env)
         get_event_loop().create_task(self.process_loop())
 
+    async def stop(self):
+        self.stopped = True
+        if self.connection and self.connection.is_serving:
+            self.connection.close()
+
+        if self.process and self.process.is_alive:
+            self.process.terminate()
+
     async def process_loop(self):
         await self.process.wait()
-        self.logger.info("backend process was killed - restarting in 10 seconds")
-        await sleep(10)
-        await self.start()
+        if not self.stopped:
+            self.logger.info("backend process was killed - restarting in 10 seconds")
+            await sleep(10)
+            await self.start()
 
     def generate_socket_path():
         tmp_dir = mkdtemp("decky-plugin")

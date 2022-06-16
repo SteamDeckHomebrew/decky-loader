@@ -30,5 +30,8 @@ class PluginWrapper:
     def start(self):
         return self.backend.start()
 
+    def stop(self):
+        return self.backend.stop()
+
     def __str__(self) -> str:
         return self.name

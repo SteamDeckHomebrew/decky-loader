@@ -81,7 +81,6 @@
             "dependsOrder": "sequence",
             "group": "none",
             "dependsOn": [
-                "pnpmsetup",
                 "createfolders",
                 "dependencies",
                 "deploy"
@@ -105,7 +104,17 @@
             "command": "export PLUGIN_PATH=${workspaceFolder}/plugins; export CHOWN_PLUGIN_PATH=0; sudo -E python3 ${workspaceFolder}/backend/main.py",
             "problemMatcher": []
         },
-        // ALL-IN-ONE
+        // ALL-IN-ONES
+        {
+            "label": "updateremote",
+            "detail": "Build and deploy",
+            "dependsOrder": "sequence",
+            "group": "none",
+            "dependsOn": [
+                "buildall",
+                "deployall",
+            ]
+        },
         {
             "label": "allinone",
             "detail": "Build, deploy and run",

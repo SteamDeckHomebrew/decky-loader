@@ -137,7 +137,9 @@ clonefromto() {
     fi
     if [[ ${LATEST} == "true" ]]; then
         git pull --all
-    else 
+    elif [[ ${LATEST} == "true" ]]; then
+        printf "Assuming user not pulling latest commits.\n"
+    else
         printf "Pull latest commits? (y/N): "
         read PULL
         case ${PULL:0:1} in
@@ -288,7 +290,7 @@ npmtransbundle ${CLONEDIR}/plugintemplate "template"
 printf "Copying relevant files to install directory\n\n"
 
 ### copy files for PluginLoader
-rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} ${IDENINVOC}" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --exclude=='frontend' --exclude="*dist*" --exclude="*contrib*" --delete ${CLONEDIR}/pluginloader/* deck@${DECKIP}:${INSTALLDIR}/pluginloader/
+rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} ${IDENINVOC}" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --exclude=='frontend' --exclude="*dist*" --exclude="*contrib*" --delete ${CLONEDIR}/pluginloader/* deck@${DECKIP}:${INSTALLDIR}/pluginloader/ &> '/dev/null'
 if ! [[ $? -eq 0 ]]; then
     printf "Error occurred when copying ${CLONEDIR}/pluginloader/ to ${INSTALLDIR}/pluginloader/\n"
     exit 1

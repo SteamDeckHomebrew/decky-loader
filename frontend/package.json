@@ -21,6 +21,7 @@
     "@types/webpack": "^5.28.0",
     "husky": "^8.0.1",
     "import-sort-style-module": "^6.0.0",
+    "inquirer": "^8.2.4",
     "prettier": "^2.6.2",
     "prettier-plugin-import-sort": "^0.0.7",
     "react": "16.14.0",
@@ -35,7 +36,7 @@
     }
   },
   "dependencies": {
-    "decky-frontend-lib": "^0.10.0",
+    "decky-frontend-lib": "^0.10.2",
     "react-icons": "^4.4.0"
   }
 }

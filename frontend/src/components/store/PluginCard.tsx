@@ -7,7 +7,7 @@ import {
   SuspensefulImage,
   staticClasses,
 } from 'decky-frontend-lib';
-import { FC, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 
 import { StorePlugin } from './Store';
 
@@ -32,6 +32,8 @@ async function requestPluginInstall(plugin: StorePlugin, selectedVer: string) {
 
 const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
   const [selectedOption, setSelectedOption] = useState<number>(0);
+  const buttonRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   return (
     <div
       style={{
@@ -40,8 +42,18 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
         paddingBottom: '10px',
       }}
     >
-      <div
-        className="Panel Focusable"
+      {/* TODO: abstract this messy focus hackiness into a custom component in lib */}
+      <Focusable
+        // className="Panel Focusable"
+        ref={containerRef}
+        onActivate={(e: CustomEvent) => {
+          buttonRef.current!.focus();
+        }}
+        onCancel={(e: CustomEvent) => {
+          containerRef.current!.querySelectorAll('* :focus').length === 0
+            ? Router.NavigateBackOrOpenMenu()
+            : containerRef.current!.focus();
+        }}
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -126,7 +138,10 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
                 flex: '1',
               }}
             >
-              <DialogButton onClick={() => requestPluginInstall(plugin, Object.keys(plugin.versions)[selectedOption])}>
+              <DialogButton
+                ref={buttonRef}
+                onClick={() => requestPluginInstall(plugin, Object.keys(plugin.versions)[selectedOption])}
+              >
                 Install
               </DialogButton>
             </div>
@@ -149,7 +164,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
             </div>
           </Focusable>
         </div>
-      </div>
+      </Focusable>
     </div>
   );
 };

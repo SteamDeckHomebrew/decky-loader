@@ -154,5 +154,9 @@ cython_debug/
 # static files are built
 backend/static
 
-# pnpm lockfile
-frontend/pnpm-lock.yaml
+# ignore settings.json
+# prevents leaking login details
+.vscode/settings.json
+
+# plugins folder for local launches
+plugins/*

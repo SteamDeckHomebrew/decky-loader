@@ -2,16 +2,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug",
+            "name": "Debug (Local)",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/backend/main.py",
             "cwd": "${workspaceFolder}/backend",
             "console": "integratedTerminal",
             "env": {
-                "PLUGIN_PATH": "/home/deck/homebrew/plugins"
+                "PLUGIN_PATH": "${workspaceFolder}/plugins"
             },
-            "preLaunchTask": "Build frontend"
+            "preLaunchTask": "localrun"
         }
     ]
 }

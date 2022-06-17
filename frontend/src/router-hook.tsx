@@ -92,6 +92,10 @@ class RouterHook extends Logger {
     this.routerState.addRoute(path, component, props);
   }
 
+  removeRoute(path: string) {
+    this.routerState.removeRoute(path);
+  }
+
   deinit() {
     unpatch(this.gamepadWrapper, 'render');
     this.router && unpatch(this.router, 'type');

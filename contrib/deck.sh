@@ -4,6 +4,8 @@
 ## This script defaults to port 22 unless otherwise specified, and cannot run without a sudo password or LAN IP.
 ## You will need to specify the path to the ssh key if using key connection exclusively.
 
+## TODO: document latest changes to wiki
+
 ## Pre-parse arugments for ease of use
 CLONEFOLDER=${1:-""}
 INSTALLFOLDER=${2:-""}
@@ -11,9 +13,13 @@ DECKIP=${3:-""}
 SSHPORT=${4:-""}
 PASSWORD=${5:-""}
 SSHKEYLOC=${6:-""}
+LOADERBRANCH=${7:-""}
+LIBRARYBRANCH=${8:-""}
+TEMPLATEBRANCH=${9:-""}
+LATEST=${10:-""}
 
 ## gather options into an array 
-OPTIONSARRAY=("$CLONEFOLDER" $INSTALLFOLDER "$DECKIP" "$SSHPORT" "$PASSWORD" "$SSHKEYLOC")
+OPTIONSARRAY=("$CLONEFOLDER" $INSTALLFOLDER "$DECKIP" "$SSHPORT" "$PASSWORD" "$SSHKEYLOC" "$LOADERBRANCH" "$LIBRARYBRANCH" "$TEMPLATEBRANCH" "$LATEST")
 
 ## iterate through options array to check their presence
 count=0
@@ -28,19 +34,21 @@ setfolder() {
         local DEFAULT="git"
     elif [[ "$2" == "install" ]]; then
         local ACTION="install"
-        local DEFAULT="loaderdev"
+        local DEFAULT="dev"
     fi
-
-    printf "Enter the directory in /home/user to ${ACTION} to.\n"
-    printf "Example: if your home directory is /home/user you would type: ${DEFAULT}\n"
-    printf "The ${ACTION} directory would be: ${HOME}/${DEFAULT}\n"
+    
     if [[ "$ACTION" == "clone" ]]; then
+        printf "Enter the directory in /home/user/ to ${ACTION} to.\n"
+        printf "The ${ACTION} directory would be: ${HOME}/${DEFAULT}\n"
         read -p "Enter your ${ACTION} directory: " CLONEFOLDER
         if ! [[ "$CLONEFOLDER" =~ ^[[:alnum:]]+$ ]]; then
             printf "Folder name not provided. Using default, '${DEFAULT}'.\n"
             CLONEFOLDER="${DEFAULT}"
         fi
     elif [[ "$ACTION" == "install" ]]; then
+        printf "Enter the directory in /home/deck/homebrew to ${ACTION} pluginloader to.\n"
+        printf "The ${ACTION} directory would be: /home/deck/homebrew/${DEFAULT}/pluginloader\n"
+        printf "It is highly recommended that you use the default folder path seen above, just press enter at the next prompt.\n"
         read -p "Enter your ${ACTION} directory: " INSTALLFOLDER
         if ! [[ "$INSTALLFOLDER" =~ ^[[:alnum:]]+$ ]]; then
             printf "Folder name not provided. Using default, '${DEFAULT}'.\n"
@@ -106,16 +114,46 @@ clonefromto() {
     # printf "repo=$1\n"
     # printf "outdir=$2\n"
     # printf "branch=$3\n"
-    if [[ -z $3 ]]; then
-        BRANCH=""
-    else
-        BRANCH="-b $3"
-    fi
-    git clone $1 $2 $BRANCH &> '/dev/null'
+    printf "Repository: $1\n"
+    git clone $1 $2 &> '/dev/null'
     CODE=$?
+    # printf "CODE=${CODE}"
     if [[ $CODE -eq 128 ]]; then
         cd $2
-        git fetch &> '/dev/null'
+        git fetch --all &> '/dev/null'
+    fi
+    if [[ -z $3 ]]; then
+        printf "Enter the desired branch for repository "$1" :\n"
+        local OUT="$(git branch -r | sed '/\/HEAD/d')"
+        # $OUT="$($OUT > )"
+        printf "$OUT\nbranch: "
+        read BRANCH
+    else
+        printf "on branch: $3\n"
+        BRANCH="$3"
+    fi
+    if ! [[ -z ${BRANCH} ]]; then
+        git checkout $BRANCH &> '/dev/null'
+    fi
+    if [[ ${LATEST} == "true" ]]; then
+        git pull --all
+    elif [[ ${LATEST} == "true" ]]; then
+        printf "Assuming user not pulling latest commits.\n"
+    else
+        printf "Pull latest commits? (y/N): "
+        read PULL
+        case ${PULL:0:1} in
+            y|Y )
+                printf "Pulling latest commits.\n"
+                git pull --all
+            ;;
+            * )
+                printf "Not pulling latest commits.\n"
+            ;;
+        esac
+        if ! [[ "$PULL" =~ ^[[:alnum:]]+$ ]]; then
+            printf "Assuming user not pulling latest commits.\n"
+        fi
     fi
 }
 
@@ -158,7 +196,7 @@ if [[ "$INSTALLFOLDER" == "" ]]; then
 fi
 
 CLONEDIR="$HOME/$CLONEFOLDER"
-INSTALLDIR="/home/deck/$INSTALLFOLDER"
+INSTALLDIR="/home/deck/hombrew/$INSTALLFOLDER"
 
 ## Input ip address, port, password and sshkey
 
@@ -217,11 +255,11 @@ mkdir -p ${CLONEDIR} &> '/dev/null'
 # rm -r ${CLONEDIR}/pluginlibrary
 # rm -r ${CLONEDIR}/plugintemplate
 
-clonefromto "https://github.com/SteamDeckHomebrew/PluginLoader" ${CLONEDIR}/pluginloader react-frontend-plugins
+clonefromto "https://github.com/SteamDeckHomebrew/PluginLoader" ${CLONEDIR}/pluginloader "$LOADERBRANCH" 
 
-clonefromto "https://github.com/SteamDeckHomebrew/decky-frontend-lib" ${CLONEDIR}/pluginlibrary
+clonefromto "https://github.com/SteamDeckHomebrew/decky-frontend-lib" ${CLONEDIR}/pluginlibrary "$LIBRARYBRANCH"
 
-clonefromto "https://github.com/SteamDeckHomebrew/decky-plugin-template" ${CLONEDIR}/plugintemplate
+clonefromto "https://github.com/SteamDeckHomebrew/decky-plugin-template" ${CLONEDIR}/plugintemplate "$TEMPLATEBRANCH"
 
 ## Transpile and bundle typescript
 
@@ -271,7 +309,7 @@ printf "Run these commands to deploy your local changes to the deck:\n"
 printf "'rsync -avzp --mkpath --rsh=""\"ssh -p ${SSHPORT} ${IDENINVOC}\""" --exclude='.git/' --exclude='node_modules' --exclude='package-lock.json' --delete ${CLONEDIR}/pluginname deck@${DECKIP}:${INSTALLDIR}/plugins'\n"
 printf "'rsync -avzp --mkpath --rsh=""\"ssh -p ${SSHPORT} ${IDENINVOC}\""" --exclude='.git/' --exclude='node_modules' --exclude='package-lock.json' --exclude=='frontend' --exclude='*dist*' --exclude='*contrib*' --delete ${CLONEDIR}/pluginloader/* deck@${DECKIP}:${INSTALLDIR}/pluginloader/'\n"
 
-printf "Run in console or in a script this command to run your development version:\n'ssh deck@${DECKIP} -p 22 ${IDENINVOC} 'export PLUGIN_PATH=${INSTALLDIR}/plugins; export CHOWN_PLUGIN_PATH=0; echo 'steam' | sudo -SE python3 ${INSTALLDIR}/pluginloader/backend/main.py'\n"
+printf "Run in console or in a script this command to run your development version:\n'ssh deck@${DECKIP} -p ${SSHPORT} ${IDENINVOC} 'export PLUGIN_PATH=${INSTALLDIR}/plugins; export CHOWN_PLUGIN_PATH=0; echo 'steam' | sudo -SE python3 ${INSTALLDIR}/pluginloader/backend/main.py'\n"
 
 ## Disable Releases versions if they exist
 

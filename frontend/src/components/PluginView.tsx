@@ -9,7 +9,7 @@ const PluginView: VFC = () => {
 
   const onStoreClick = () => {
     Router.CloseSideMenus();
-    Router.NavigateToExternalWeb('http://127.0.0.1:1337/browser/redirect');
+    Router.Navigate('/decky/store');
   };
 
   if (activePlugin) {

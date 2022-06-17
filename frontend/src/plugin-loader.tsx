@@ -4,6 +4,7 @@ import { FaPlug } from 'react-icons/fa';
 import { DeckyState, DeckyStateContextProvider } from './components/DeckyState';
 import LegacyPlugin from './components/LegacyPlugin';
 import PluginView from './components/PluginView';
+import StorePage from './components/store/Store';
 import TitleView from './components/TitleView';
 import Logger from './logger';
 import { Plugin } from './plugin';
@@ -43,6 +44,8 @@ class PluginLoader extends Logger {
       ),
       icon: <FaPlug />,
     });
+
+    this.routerHook.addRoute('/decky/store', () => <StorePage />);
   }
 
   public addPluginInstallPrompt(artifact: string, version: string, request_id: string) {
@@ -69,6 +72,10 @@ class PluginLoader extends Logger {
       this.log(`Dismounting ${plugin.name}`);
       plugin.onDismount?.();
     }
+  }
+
+  public deinit() {
+    this.routerHook.removeRoute('/decky/store');
   }
 
   public async importPlugin(name: string) {

@@ -79,13 +79,14 @@ class PluginLoader extends Logger {
   }
 
   public async importPlugin(name: string) {
-    try {
-      if (this.reloadLock) {
-        this.log('Reload currently in progress, adding to queue', name);
-        this.pluginReloadQueue.push(name);
-        return;
-      }
+    if (this.reloadLock) {
+      this.log('Reload currently in progress, adding to queue', name);
+      this.pluginReloadQueue.push(name);
+      return;
+    }
 
+    try {
+      this.reloadLock = true;
       this.log(`Trying to load ${name}`);
 
       const oldPlugin = this.plugins.find((plugin) => plugin.name === name);

@@ -111,11 +111,10 @@ class PluginLoader extends Logger {
   private async importReactPlugin(name: string) {
     let res = await fetch(`http://127.0.0.1:1337/plugins/${name}/frontend_bundle`);
     if (res.ok) {
-      let content = await eval(await res.text())(this.createPluginAPI(name));
+      let { name: _, content } = await eval(await res.text())(this.createPluginAPI(name));
       this.plugins.push({
         name: name,
-        icon: content.icon,
-        content: content.content,
+        ...content,
       });
     } else throw new Error(`${name} frontend_bundle not OK`);
   }

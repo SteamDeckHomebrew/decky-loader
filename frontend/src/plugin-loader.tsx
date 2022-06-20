@@ -87,16 +87,21 @@ class PluginLoader extends Logger {
       }
 
       this.log(`Trying to load ${name}`);
-      let find = this.plugins.find((x) => x.name == name);
-      if (find) this.plugins.splice(this.plugins.indexOf(find), 1);
+
+      const oldPlugin = this.plugins.find((plugin) => plugin.name === name);
+      if (oldPlugin) {
+        oldPlugin.onDismount?.();
+        this.plugins = this.plugins.filter((plugin) => plugin !== oldPlugin);
+      }
+
       if (name.startsWith('$LEGACY_')) {
         await this.importLegacyPlugin(name.replace('$LEGACY_', ''));
       } else {
         await this.importReactPlugin(name);
       }
-      this.log(`Loaded ${name}`);
 
       this.deckyState.setPlugins(this.plugins);
+      this.log(`Loaded ${name}`);
     } catch (e) {
       throw e;
     } finally {

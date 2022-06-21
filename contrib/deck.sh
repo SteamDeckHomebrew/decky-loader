@@ -19,7 +19,7 @@ TEMPLATEBRANCH=${9:-""}
 LATEST=${10:-""}
 
 ## gather options into an array 
-OPTIONSARRAY=("$CLONEFOLDER" $INSTALLFOLDER "$DECKIP" "$SSHPORT" "$PASSWORD" "$SSHKEYLOC" "$LOADERBRANCH" "$LIBRARYBRANCH" "$TEMPLATEBRANCH" "$LATEST")
+OPTIONSARRAY=("$CLONEFOLDER" "$INSTALLFOLDER" "$DECKIP" "$SSHPORT" "$PASSWORD" "$SSHKEYLOC" "$LOADERBRANCH" "$LIBRARYBRANCH" "$TEMPLATEBRANCH" "$LATEST")
 
 ## iterate through options array to check their presence
 count=0
@@ -170,10 +170,10 @@ npmtransbundle() {
     fi
 }
 
-printf "Installing Steam Deck Plugin Loader contributor (for Steam Deck)...\n"
+printf "Installing Steam Deck Plugin Loader contributor/developer (for Steam Deck)...\n"
 
 printf "THIS SCRIPT ASSUMES YOU ARE RUNNING IT ON A PC, NOT THE DECK!
-Not planning to contribute to PluginLoader?
+Not planning to contribute to or develop for PluginLoader?
 If so, you should not be using this script.\n
 If you have a release/nightly installed this script will disable it.\n"
 
@@ -260,6 +260,14 @@ clonefromto "https://github.com/SteamDeckHomebrew/PluginLoader" ${CLONEDIR}/plug
 clonefromto "https://github.com/SteamDeckHomebrew/decky-frontend-lib" ${CLONEDIR}/pluginlibrary "$LIBRARYBRANCH"
 
 clonefromto "https://github.com/SteamDeckHomebrew/decky-plugin-template" ${CLONEDIR}/plugintemplate "$TEMPLATEBRANCH"
+
+## install python dependencies to deck
+
+printf "\nInstalling python dependencies.\n"
+
+rsync -azp --rsh="ssh -p $SSHPORT $IDENINVOC" ${CLONEDIR}/pluginloader/requirements.txt deck@${DECKIP}:${INSTALLDIR}/pluginloader/requirements.txt
+
+ssh deck@${DECKIP} -p ${SSHPORT} ${IDENINVOC} "python -m ensurepip && python -m pip install --upgrade pip && python -m pip install --upgrade setuptools && python -m pip install -r $INSTALLDIR/pluginloader/requirements.txt"
 
 ## Transpile and bundle typescript
 

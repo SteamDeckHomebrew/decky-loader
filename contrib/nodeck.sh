@@ -63,10 +63,11 @@ npmtransbundle() {
     fi
 }
 
-printf "Installing Steam Deck Plugin Loader contributor (no Steam Deck)..."
+printf "Installing Steam Deck Plugin Loader contributor/developer (no Steam Deck)..."
 
 printf "\nTHIS SCRIPT ASSUMES YOU ARE RUNNING IT ON A PC, NOT THE DECK!
-If you are not planning to contribute to PluginLoader then you should not be using this script.\n"
+Not planning to contribute to or develop for PluginLoader?
+Then you should not be using this script.\n"
 
 printf "\nThis script requires you to have nodejs installed. (If nodejs doesn't bundle npm on your OS/distro, then npm is required as well).\n"
 
@@ -96,6 +97,10 @@ clonefromto "https://github.com/SteamDeckHomebrew/PluginLoader" ${CLONEDIR}/plug
 clonefromto "https://github.com/SteamDeckHomebrew/decky-frontend-lib" ${CLONEDIR}/pluginlibrary
 
 clonefromto "https://github.com/SteamDeckHomebrew/decky-plugin-template" ${CLONEDIR}/plugintemplate 
+
+## install python dependencies (maybe use venv?)
+
+python -m pip3 install -r ${CLONEDIR}/pluginloader/requirements.txt
 
 ## Transpile and bundle typescript
 type npm &> '/dev/null'

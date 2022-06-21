@@ -167,8 +167,8 @@ pnpmtransbundle() {
         pnpm i &> '/dev/null'
         pnpm run build &> '/dev/null'
     elif [[ "$2" == "template" ]]; then
-        pnpm i
-        pnpm run build
+        pnpm i &> '/dev/null'
+        pnpm run build &> '/dev/null'
     fi
 }
 

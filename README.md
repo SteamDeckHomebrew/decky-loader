@@ -20,8 +20,7 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugi
     - For users:
         - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_release.sh | sh`
     - For plugin developers:
-        ~~- `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_nightly.sh | sh`~~
-        Nightly releases are currently broken.
+        - [Wiki Link](https://deckbrew.xyz/en/loader-dev/development)
 7. Done! Reboot back into Gaming mode and enjoy your plugins!
 
 ### Install Plugins
@@ -43,25 +42,11 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugi
 ## Developing plugins
 - There is no complete plugin development documentation yet. However a good starting point is the [Plugin Template](https://github.com/SteamDeckHomebrew/decky-plugin-template) repository.
 
-## Contribution
-- For Plugin Loader contributors (in possession of a Steam Deck):
-    - `bash <(curl -s https://github.com/SteamDeckHomebrew/PluginLoader/raw/react-frontend-plugins/contrib/deck.sh)`
-- For PluginLoader contributors (without a Steam Deck):
-  - `bash <(curl -s https://github.com/SteamDeckHomebrew/PluginLoader/raw/react-frontend-plugins/contrib/nodeck.sh)`
-  - [Here's how to get the Steam Deck UI on your enviroment of choice.](https://youtu.be/1IAbZte8e7E?t=112)
+## [Contribution](https://deckbrew.xyz/en/loader-dev/development)
+- Please consult the [Wiki](https://deckbrew.xyz/en/loader-dev/development) for installing development versions of PluginLoader.
+  - This is also useful for Plugin Developers looking to target new but unreleased versions of PluginLoader.
+- [Here's how to get the Steam Deck UI on your enviroment of choice.](https://youtu.be/1IAbZte8e7E?t=112)
     - (The video shows Windows usage but unless you're using Arch WSL/cygwin this script is unsupported on Windows.)
-
-To run your development version of Plugin Loader on Deck, run a command like this:
-```bash
-ssh deck@steamdeck 'export PLUGIN_PATH=/home/deck/loaderdev/plugins; export CHOWN_PLUGIN_PATH=0; echo 'password' | sudo -SE python3 /home/deck/loaderdev/pluginloader/backend/main.py'
-```
-
-Or on PC with the Deck UI enabled:
-```bash
-export PLUGIN_PATH=/home/user/installdirectory/plugins; 
-export CHOWN_PLUGIN_PATH=0;
-sudo python3 /home/deck/loaderdev/pluginloader/backend/main.py
-```
 
 Source control and deploying plugins are left to each respective contributor for the cloned repos in order to keep depedencies up to date.
 

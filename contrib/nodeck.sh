@@ -2,88 +2,115 @@
 
 ## Pre-parse arugments for ease of use
 CLONEFOLDER=${1:-""}
+LOADERBRANCH=${2:-""}
+LIBRARYBRANCH=${3:-""}
+TEMPLATEBRANCH=${4:-""}
+LATEST=${5:-""}
 
-setfolder() {
-    if [[ "$2" == "clone" ]]; then
-        local ACTION="clone"
-        local DEFAULT="git"
-    elif [[ "$2" == "install" ]]; then
-        local ACTION="install"
-        local DEFAULT="loaderdev"
-    fi
+## gather options into an array 
+OPTIONSARRAY=("$CLONEFOLDER" "$LOADERBRANCH" "$LIBRARYBRANCH" "$TEMPLATEBRANCH" "$LATEST")
 
-    printf "Enter the directory in /home/user to ${ACTION} to.\n"
-    printf "Example: if your home directory is /home/user you would type: ${DEFAULT}\n"
-    printf "The ${ACTION} directory would be: ${HOME}/${DEFAULT}\n"
-    if [[ "$ACTION" == "clone" ]]; then
-        read -p "Enter your ${ACTION} directory: " CLONEFOLDER
-        if ! [[ "$CLONEFOLDER" =~ ^[[:alnum:]]+$ ]]; then
-            printf "Folder name not provided. Using default, '${DEFAULT}'.\n"
-            CLONEFOLDER="${DEFAULT}"
-        fi
-    elif [[ "$ACTION" == "install" ]]; then
-        read -p "Enter your ${ACTION} directory: " INSTALLFOLDER
-        if ! [[ "$INSTALLFOLDER" =~ ^[[:alnum:]]+$ ]]; then
-            printf "Folder name not provided. Using default, '${DEFAULT}'.\n"
-            INSTALLFOLDER="${DEFAULT}"
-        fi
-    else
-        printf "Folder type could not be determined, exiting\n"
-        exit 1
-    fi
-}
+## iterate through options array to check their presence
+count=0
+for OPTION in ${OPTIONSARRAY[@]}; do
+    ! [[ "$OPTION" == "" ]] && count=$(($count+1))
+    # printf "OPTION=$OPTION\n"
+done
 
 clonefromto() {
     # printf "repo=$1\n"
     # printf "outdir=$2\n"
     # printf "branch=$3\n"
-    if [[ -z $3 ]]; then
-        BRANCH=""
-    else
-        BRANCH="-b $3"
-    fi
-    git clone $1 $2 $BRANCH &> '/dev/null'
+    printf "Repository: $1\n"
+    git clone $1 $2 &> '/dev/null'
     CODE=$?
+    # printf "CODE=${CODE}"
     if [[ $CODE -eq 128 ]]; then
         cd $2
-        git fetch &> '/dev/null'
+        git fetch --all &> '/dev/null'
+    fi
+    if [[ -z $3 ]]; then
+        printf "Enter the desired branch for repository "$1" :\n"
+        local OUT="$(git branch -r | sed '/\/HEAD/d')"
+        # $OUT="$($OUT > )"
+        printf "$OUT\nbranch: "
+        read BRANCH
+    else
+        printf "on branch: $3\n"
+        BRANCH="$3"
+    fi
+    if ! [[ -z ${BRANCH} ]]; then
+        git checkout $BRANCH &> '/dev/null'
+    fi
+    if [[ ${LATEST} == "true" ]]; then
+        git pull --all
+    elif [[ ${LATEST} == "true" ]]; then
+        printf "Assuming user not pulling latest commits.\n"
+    else
+        printf "Pull latest commits? (y/N): "
+        read PULL
+        case ${PULL:0:1} in
+            y|Y )
+                printf "Pulling latest commits.\n"
+                git pull --all
+            ;;
+            * )
+                printf "Not pulling latest commits.\n"
+            ;;
+        esac
+        if ! [[ "$PULL" =~ ^[[:alnum:]]+$ ]]; then
+            printf "Assuming user not pulling latest commits.\n"
+        fi
     fi
 }
 
-npmtransbundle() {
+pnpmtransbundle() {
     cd $1
     if [[ "$2" == "library" ]]; then
         npm install --quiet &> '/dev/null'
         npm run build --quiet &> '/dev/null'
         sudo npm link --quiet &> '/dev/null'
-    elif [[ "$2" == "frontend" ]] || [[ "$2" == "template" ]]; then
-        npm install --quiet &> '/dev/null'
-        npm link decky-frontend-lib --quiet &> '/dev/null'
-        npm run build --quiet &> '/dev/null'
+    elif [[ "$2" == "frontend" ]]; then
+        pnpm i &> '/dev/null'
+        pnpm run build &> '/dev/null'
+    elif [[ "$2" == "template" ]]; then
+        pnpm i &> '/dev/null'
+        pnpm run build &> '/dev/null'
     fi
 }
 
-printf "Installing Steam Deck Plugin Loader contributor/developer (no Steam Deck)..."
 
-printf "\nTHIS SCRIPT ASSUMES YOU ARE RUNNING IT ON A PC, NOT THE DECK!
-Not planning to contribute to or develop for PluginLoader?
-Then you should not be using this script.\n"
+if ! [[ $count -gt 4 ]] ; then
+    printf "Installing Steam Deck Plugin Loader contributor/developer (no Steam Deck)..."
 
-printf "\nThis script requires you to have nodejs installed. (If nodejs doesn't bundle npm on your OS/distro, then npm is required as well).\n"
+    printf "\nTHIS SCRIPT ASSUMES YOU ARE RUNNING IT ON A PC, NOT THE DECK!
+    Not planning to contribute to or develop for PluginLoader?
+    Then you should not be using this script.\n"
 
-if [[ -z $1 ]]; then
+    printf "\nThis script requires you to have nodejs installed. (If nodejs doesn't bundle npm on your OS/distro, then npm is required as well).\n"
+fi
+
+if ! [[ $count -gt 0 ]] ; then
     read -p "Press any key to continue"
 fi
 
+printf "\n"
+
 if [[ "$CLONEFOLDER" == "" ]]; then
-    setfolder "$CLONEFOLDER" "clone"
+    printf "Enter the directory in /home/user/ to clone to.\n"
+    printf "The clone directory would be: ${HOME}/git \n"
+    read -p "Enter your clone directory: " CLONEFOLDER
+    if ! [[ "$CLONEFOLDER" =~ ^[[:alnum:]]+$ ]]; then
+        printf "Folder name not provided. Using default, '${DEFAULT}'.\n"
+        CLONEFOLDER="${DEFAULT}"
+    fi
 fi
 
 CLONEDIR="$HOME/$CLONEFOLDER"
 
 ## Create folder structure
 
-printf "\nCloning git repositories.\n"
+printf "Cloning git repositories.\n"
 
 mkdir -p ${CLONEDIR} &> '/dev/null'
 
@@ -92,37 +119,47 @@ mkdir -p ${CLONEDIR} &> '/dev/null'
 # rm -r ${CLONEDIR}/pluginlibrary
 # rm -r ${CLONEDIR}/plugintemplate
 
-clonefromto "https://github.com/SteamDeckHomebrew/PluginLoader" ${CLONEDIR}/pluginloader react-frontend-plugins
+clonefromto "https://github.com/SteamDeckHomebrew/PluginLoader" ${CLONEDIR}/pluginloader "$LOADERBRANCH"
 
-clonefromto "https://github.com/SteamDeckHomebrew/decky-frontend-lib" ${CLONEDIR}/pluginlibrary
+clonefromto "https://github.com/SteamDeckHomebrew/decky-frontend-lib" ${CLONEDIR}/pluginlibrary "$LIBRARYBRANCH"
 
-clonefromto "https://github.com/SteamDeckHomebrew/decky-plugin-template" ${CLONEDIR}/plugintemplate 
+clonefromto "https://github.com/SteamDeckHomebrew/decky-plugin-template" ${CLONEDIR}/plugintemplate "$TEMPLATEBRANCH"
 
 ## install python dependencies (maybe use venv?)
 
-python -m pip3 install -r ${CLONEDIR}/pluginloader/requirements.txt
+python -m pip install -r ${CLONEDIR}/pluginloader/requirements.txt &> '/dev/null'
 
 ## Transpile and bundle typescript
+
+[ "$UID" -eq 0 ] || printf "Input password to proceed with install.\n"
+
 type npm &> '/dev/null'
 
 NPMLIVES=$?
 
-if ! [[ "$NPMLIVES" -eq 0 ]]; then
-    printf "npm needs to be installed, exiting.\n"
+if ! [[ "$PNPMLIVES" -eq 0 ]]; then
+    printf "npm does not appear to be installed, exiting.\n"
     exit 1
 fi
 
-[ "$UID" -eq 0 ] || printf "Input password to install typscript compiler.\n"
+sudo npm install -g pnpm &> '/dev/null'
 
-sudo npm install --quiet -g tsc &> '/dev/null'
+type pnpm &> '/dev/null'
+
+PNPMLIVES=$?
+
+if ! [[ "$PNPMLIVES" -eq 0 ]]; then
+    printf "pnpm does not appear to be installed, exiting.\n"
+    exit 1
+fi
 
 printf "Transpiling and bundling typescript.\n"
 
-npmtransbundle ${CLONEDIR}/pluginlibrary/ "library"
+pnpmtransbundle ${CLONEDIR}/pluginlibrary/ "library"
 
-npmtransbundle ${CLONEDIR}/pluginloader/frontend "frontend"
+pnpmtransbundle ${CLONEDIR}/pluginloader/frontend "frontend"
 
-npmtransbundle ${CLONEDIR}/plugintemplate "template"
+pnpmtransbundle ${CLONEDIR}/plugintemplate "template"
 
 printf "Plugin Loader is located at '${CLONEDIR}/pluginloader/'.\n"
 

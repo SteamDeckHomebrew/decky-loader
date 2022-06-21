@@ -172,18 +172,22 @@ pnpmtransbundle() {
     fi
 }
 
-printf "Installing Steam Deck Plugin Loader contributor/developer (for Steam Deck)...\n"
+if ! [[ $count -gt 9 ]] ; then
+    printf "Installing Steam Deck Plugin Loader contributor/developer (for Steam Deck)...\n"
 
-printf "THIS SCRIPT ASSUMES YOU ARE RUNNING IT ON A PC, NOT THE DECK!
-Not planning to contribute to or develop for PluginLoader?
-If so, you should not be using this script.\n
-If you have a release/nightly installed this script will disable it.\n"
+    printf "THIS SCRIPT ASSUMES YOU ARE RUNNING IT ON A PC, NOT THE DECK!
+    Not planning to contribute to or develop for PluginLoader?
+    If so, you should not be using this script.\n
+    If you have a release/nightly installed this script will disable it.\n"
 
-printf "This script requires you to have nodejs installed. (If nodejs doesn't bundle npm on your OS/distro, then npm is required as well).\n"
+    printf "This script requires you to have nodejs installed. (If nodejs doesn't bundle npm on your OS/distro, then npm is required as well).\n"
+fi
 
 if ! [[ $count -gt 0 ]] ; then
     read -p "Press any key to continue"
 fi
+
+printf "\n"
 
 ## User chooses preffered clone & install directories
 
@@ -246,7 +250,7 @@ fi
 
 ## Create folder structure
 
-printf "\nCloning git repositories.\n"
+printf "Cloning git repositories.\n"
 
 mkdir -p ${CLONEDIR} &> '/dev/null'
 
@@ -255,7 +259,7 @@ mkdir -p ${CLONEDIR} &> '/dev/null'
 # rm -r ${CLONEDIR}/pluginlibrary
 # rm -r ${CLONEDIR}/plugintemplate
 
-clonefromto "https://github.com/SteamDeckHomebrew/PluginLoader" ${CLONEDIR}/pluginloader "$LOADERBRANCH" 
+clonefromto "https://github.com/SteamDeckHomebrew/PluginLoader" ${CLONEDIR}/pluginloader "$LOADERBRANCH"
 
 clonefromto "https://github.com/SteamDeckHomebrew/decky-frontend-lib" ${CLONEDIR}/pluginlibrary "$LIBRARYBRANCH"
 
@@ -271,6 +275,8 @@ ssh deck@${DECKIP} -p ${SSHPORT} ${IDENINVOC} "python -m ensurepip && python -m 
 
 ## Transpile and bundle typescript
 
+[ "$UID" -eq 0 ] || printf "Input password to proceed with install.\n"
+
 sudo npm install -g pnpm &> '/dev/null'
 
 type pnpm &> '/dev/null'
@@ -281,8 +287,6 @@ if ! [[ "$PNPMLIVES" -eq 0 ]]; then
     printf "pnpm does not appear to be installed, exiting.\n"
     exit 1
 fi
-
-[ "$UID" -eq 0 ] || printf "Input password to install typscript compiler.\n"
 
 printf "Transpiling and bundling typescript.\n"
 
@@ -303,6 +307,7 @@ rsync -avzp --rsh="ssh -p $SSHPORT $IDENINVOC" --exclude='.git/' --exclude='.git
 
 if ! [[ $? -eq 0 ]]; then
     printf "Error occurred when copying $CLONEDIR/pluginloader/ to $INSTALLDIR/pluginloader/\n"
+    printf "Check that your Steam Deck is active, ssh is enabled and running and is accepting connections.\n"
     exit 1
 fi
 
@@ -317,8 +322,7 @@ fi
 
 printf "Run these commands to deploy your local changes to the deck:\n"
 printf "'rsync -avzp --mkpath --rsh=""\"ssh -p $SSHPORT $IDENINVOC\""" --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='requirements.txt' --exclude='backend/__pycache__/' --exclude='.gitignore' --delete $CLONEDIR/pluginloader/* deck@$DECKIP:$INSTALLDIR/pluginloader/'\n"
-
-printf "'rsync -avzp --mkpath --rsh=""\"ssh -p $SSHPORT $IDENINVOC\""" --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='node_modules/' --exclude='src/' --exclude='*.log' --exclude='.gitignore' --exclude='package-lock.json' --delete $CLONEDIR/pluginname deck@$DECKIP:$INSTALLDIR/plugins'\n"
+printf "'rsync -avzp --mkpath --rsh=""\"ssh -p $SSHPORT $IDENINVOC\""" --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='node_modules/' --exclude='src/' --exclude='*.log' --exclude='.gitignore' --exclude='package-lock.json' --delete $CLONEDIR/pluginname deck@$DECKIP:$INSTALLDIR/plugins'\n\n"
 
 printf "Run in console or in a script this command to run your development version:\n'ssh deck@$DECKIP -p $SSHPORT $IDENINVOC 'export PLUGIN_PATH=$INSTALLDIR/plugins; export CHOWN_PLUGIN_PATH=0; echo 'steam' | sudo -SE python3 $INSTALLDIR/pluginloader/backend/main.py'\n"
 
@@ -328,4 +332,4 @@ printf "Run in console or in a script this command to run your development versi
 printf "Connecting via ssh to disable any PluginLoader release versions.\n"
 printf "Script will exit after this. All done!\n"
 
-ssh deck@${DECKIP} -p ${SSHPORT} ${IDENINVOC} "printf $PASSWORD | sudo -S systemctl disable --now plugin_loader; echo $?"
+ssh deck@${DECKIP} -p ${SSHPORT} ${IDENINVOC} "printf $PASSWORD | sudo -S systemctl disable --now plugin_loader; echo $?" &> '/dev/null'

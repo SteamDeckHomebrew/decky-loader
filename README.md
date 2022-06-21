@@ -45,11 +45,11 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugi
 
 ## Contribution
 - For Plugin Loader contributors (in possession of a Steam Deck):
-    - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/react-frontend-plugins/contrib/deck.sh | sh`
+    - `bash <(curl -s https://github.com/SteamDeckHomebrew/PluginLoader/raw/react-frontend-plugins/contrib/deck.sh)`
 - For PluginLoader contributors (without a Steam Deck):
-  - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/react-frontend-plugins/contrib/pc.sh | sh`
+  - `bash <(curl -s https://github.com/SteamDeckHomebrew/PluginLoader/raw/react-frontend-plugins/contrib/nodeck.sh)`
   - [Here's how to get the Steam Deck UI on your enviroment of choice.](https://youtu.be/1IAbZte8e7E?t=112)
-    - (The video shows Windows usage but unless you're using WSL/cygwin this script is unsupported on Windows.)
+    - (The video shows Windows usage but unless you're using Arch WSL/cygwin this script is unsupported on Windows.)
 
 To run your development version of Plugin Loader on Deck, run a command like this:
 ```bash

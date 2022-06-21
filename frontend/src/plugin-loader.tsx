@@ -119,8 +119,8 @@ class PluginLoader extends Logger {
     if (res.ok) {
       let plugin = await eval(await res.text())(this.createPluginAPI(name));
       this.plugins.push({
-        name: name,
         ...plugin,
+        name: name,
       });
     } else throw new Error(`${name} frontend_bundle not OK`);
   }

@@ -2,7 +2,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug (Local)",
+            "name": "Run (Remote)",
+            "type": "python",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "preLaunchTask": "remoterun",
+            "cwd": "",
+            "program": "",      
+        },
+        {
+            "name": "Run (Local)",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/backend/main.py",

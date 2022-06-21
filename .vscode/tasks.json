@@ -20,6 +20,18 @@
             "problemMatcher": []
         },
         {
+            "label": "remoterun",
+            "type": "shell",
+            "group": "none",
+            "dependsOn": [
+                "updateremote",
+                "runpydeck"
+            ],
+            "detail": "Task for remote run launches",
+            "command": "exit 0",
+            "problemMatcher": []
+        },
+        {
             "label": "dependencies",
             "type": "shell",
             "group": "none",
@@ -122,7 +134,10 @@
             "label": "allinone",
             "detail": "Build, deploy and run",
             "dependsOrder": "sequence",
-            "group": "none",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "dependsOn": [
                 "buildall",
                 "deployall",

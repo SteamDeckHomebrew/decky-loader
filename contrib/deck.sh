@@ -157,16 +157,18 @@ clonefromto() {
     fi
 }
 
-npmtransbundle() {
+pnpmtransbundle() {
     cd $1
     if [[ "$2" == "library" ]]; then
         npm install --quiet &> '/dev/null'
         npm run build --quiet &> '/dev/null'
         sudo npm link --quiet &> '/dev/null'
-    elif [[ "$2" == "frontend" ]] || [[ "$2" == "template" ]]; then
-        npm install --quiet &> '/dev/null'
-        npm link decky-frontend-lib --quiet &> '/dev/null'
-        npm run build --quiet &> '/dev/null'
+    elif [[ "$2" == "frontend" ]]; then
+        pnpm i &> '/dev/null'
+        pnpm run build &> '/dev/null'
+    elif [[ "$2" == "template" ]]; then
+        pnpm i
+        pnpm run build
     fi
 }
 
@@ -178,8 +180,6 @@ If so, you should not be using this script.\n
 If you have a release/nightly installed this script will disable it.\n"
 
 printf "This script requires you to have nodejs installed. (If nodejs doesn't bundle npm on your OS/distro, then npm is required as well).\n"
-
-# [[ $count -gt 0 ]] || read -p "Press any key to continue"
 
 if ! [[ $count -gt 0 ]] ; then
     read -p "Press any key to continue"
@@ -196,7 +196,7 @@ if [[ "$INSTALLFOLDER" == "" ]]; then
 fi
 
 CLONEDIR="$HOME/$CLONEFOLDER"
-INSTALLDIR="/home/deck/hombrew/$INSTALLFOLDER"
+INSTALLDIR="/home/deck/homebrew/$INSTALLFOLDER"
 
 ## Input ip address, port, password and sshkey
 
@@ -265,59 +265,62 @@ clonefromto "https://github.com/SteamDeckHomebrew/decky-plugin-template" ${CLONE
 
 printf "\nInstalling python dependencies.\n"
 
-rsync -azp --rsh="ssh -p $SSHPORT $IDENINVOC" ${CLONEDIR}/pluginloader/requirements.txt deck@${DECKIP}:${INSTALLDIR}/pluginloader/requirements.txt
+rsync -azp --rsh="ssh -p $SSHPORT $IDENINVOC" ${CLONEDIR}/pluginloader/requirements.txt deck@${DECKIP}:${INSTALLDIR}/pluginloader/requirements.txt &> '/dev/null'
 
-ssh deck@${DECKIP} -p ${SSHPORT} ${IDENINVOC} "python -m ensurepip && python -m pip install --upgrade pip && python -m pip install --upgrade setuptools && python -m pip install -r $INSTALLDIR/pluginloader/requirements.txt"
+ssh deck@${DECKIP} -p ${SSHPORT} ${IDENINVOC} "python -m ensurepip && python -m pip install --upgrade pip && python -m pip install --upgrade setuptools && python -m pip install -r $INSTALLDIR/pluginloader/requirements.txt" &> '/dev/null'
 
 ## Transpile and bundle typescript
 
-type npm &> '/dev/null'
+sudo npm install -g pnpm &> '/dev/null'
 
-NPMLIVES=$?
+type pnpm &> '/dev/null'
 
-if ! [[ "$NPMLIVES" -eq 0 ]]; then
-    printf "npm does not to be installed, exiting.\n"
+PNPMLIVES=$?
+
+if ! [[ "$PNPMLIVES" -eq 0 ]]; then
+    printf "pnpm does not appear to be installed, exiting.\n"
     exit 1
 fi
 
 [ "$UID" -eq 0 ] || printf "Input password to install typscript compiler.\n"
 
-## TODO: add a way of verifying if tsc is installed and to skip this step if it is
-sudo npm install --quiet -g tsc &> '/dev/null'
-
 printf "Transpiling and bundling typescript.\n"
 
-npmtransbundle ${CLONEDIR}/pluginlibrary/ "library"
+pnpmtransbundle ${CLONEDIR}/pluginlibrary/ "library"
 
-npmtransbundle ${CLONEDIR}/pluginloader/frontend "frontend"
+pnpmtransbundle ${CLONEDIR}/pluginloader/frontend "frontend"
 
-npmtransbundle ${CLONEDIR}/plugintemplate "template"
+pnpmtransbundle ${CLONEDIR}/plugintemplate "template"
 
 ## Transfer relevant files to deck
 
 printf "Copying relevant files to install directory\n\n"
 
+ssh deck@${DECKIP} -p ${SSHPORT} ${IDENINVOC} "mkdir -p $INSTALLDIR/pluginloader && mkdir -p $INSTALLDIR/plugins" &> '/dev/null'
+
 ### copy files for PluginLoader
-rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} ${IDENINVOC}" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --exclude=='frontend' --exclude="*dist*" --exclude="*contrib*" --delete ${CLONEDIR}/pluginloader/* deck@${DECKIP}:${INSTALLDIR}/pluginloader/ &> '/dev/null'
+rsync -avzp --rsh="ssh -p $SSHPORT $IDENINVOC" --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='requirements.txt' --exclude='backend/__pycache__/' --exclude='.gitignore' --delete ${CLONEDIR}/pluginloader/* deck@${DECKIP}:${INSTALLDIR}/pluginloader &> '/dev/null'
+
 if ! [[ $? -eq 0 ]]; then
-    printf "Error occurred when copying ${CLONEDIR}/pluginloader/ to ${INSTALLDIR}/pluginloader/\n"
+    printf "Error occurred when copying $CLONEDIR/pluginloader/ to $INSTALLDIR/pluginloader/\n"
     exit 1
 fi
 
-### copy files for PluginLoader template
-rsync -avzp --mkpath --rsh="ssh -p ${SSHPORT} ${IDENINVOC}" --exclude='.git/' --exclude='node_modules' --exclude="package-lock.json" --delete ${CLONEDIR}/plugintemplate deck@${DECKIP}:${INSTALLDIR}/plugins &> '/dev/null'
+### copy files for plugin template
+rsync -avzp --rsh="ssh -p $SSHPORT $IDENINVOC" --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='node_modules/' --exclude='src/' --exclude='*.log' --exclude='.gitignore' --exclude='pnpm-lock.yaml' --exclude='package.json' --exclude='rollup.config.js' --exclude='tsconfig.json' --delete ${CLONEDIR}/plugintemplate deck@${DECKIP}:${INSTALLDIR}/plugins &> '/dev/null'
 if ! [[ $? -eq 0 ]]; then
-    printf "Error occurred when copying ${CLONEDIR}/plugintemplate to ${INSTALLDIR}/plugins\n"
+    printf "Error occurred when copying $CLONEDIR/plugintemplate to $INSTALLDIR/plugins\n"
     exit 1
 fi
 
 ## TODO: direct contributors to wiki for this info?
 
 printf "Run these commands to deploy your local changes to the deck:\n"
-printf "'rsync -avzp --mkpath --rsh=""\"ssh -p ${SSHPORT} ${IDENINVOC}\""" --exclude='.git/' --exclude='node_modules' --exclude='package-lock.json' --delete ${CLONEDIR}/pluginname deck@${DECKIP}:${INSTALLDIR}/plugins'\n"
-printf "'rsync -avzp --mkpath --rsh=""\"ssh -p ${SSHPORT} ${IDENINVOC}\""" --exclude='.git/' --exclude='node_modules' --exclude='package-lock.json' --exclude=='frontend' --exclude='*dist*' --exclude='*contrib*' --delete ${CLONEDIR}/pluginloader/* deck@${DECKIP}:${INSTALLDIR}/pluginloader/'\n"
+printf "'rsync -avzp --mkpath --rsh=""\"ssh -p $SSHPORT $IDENINVOC\""" --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='requirements.txt' --exclude='backend/__pycache__/' --exclude='.gitignore' --delete $CLONEDIR/pluginloader/* deck@$DECKIP:$INSTALLDIR/pluginloader/'\n"
 
-printf "Run in console or in a script this command to run your development version:\n'ssh deck@${DECKIP} -p ${SSHPORT} ${IDENINVOC} 'export PLUGIN_PATH=${INSTALLDIR}/plugins; export CHOWN_PLUGIN_PATH=0; echo 'steam' | sudo -SE python3 ${INSTALLDIR}/pluginloader/backend/main.py'\n"
+printf "'rsync -avzp --mkpath --rsh=""\"ssh -p $SSHPORT $IDENINVOC\""" --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='node_modules/' --exclude='src/' --exclude='*.log' --exclude='.gitignore' --exclude='package-lock.json' --delete $CLONEDIR/pluginname deck@$DECKIP:$INSTALLDIR/plugins'\n"
+
+printf "Run in console or in a script this command to run your development version:\n'ssh deck@$DECKIP -p $SSHPORT $IDENINVOC 'export PLUGIN_PATH=$INSTALLDIR/plugins; export CHOWN_PLUGIN_PATH=0; echo 'steam' | sudo -SE python3 $INSTALLDIR/pluginloader/backend/main.py'\n"
 
 ## Disable Releases versions if they exist
 
@@ -325,4 +328,4 @@ printf "Run in console or in a script this command to run your development versi
 printf "Connecting via ssh to disable any PluginLoader release versions.\n"
 printf "Script will exit after this. All done!\n"
 
-ssh deck@$DECKIP -p $SSHPORT $IDENINVOC "printf ${PASSWORD} | sudo -S systemctl disable --now plugin_loader; echo $?"
+ssh deck@${DECKIP} -p ${SSHPORT} ${IDENINVOC} "printf $PASSWORD | sudo -S systemctl disable --now plugin_loader; echo $?"

@@ -1,9 +1,10 @@
-import { ModalRoot, showModal, staticClasses } from 'decky-frontend-lib';
+import { ModalRoot, QuickAccessTab, showModal, staticClasses } from 'decky-frontend-lib';
 import { FaPlug } from 'react-icons/fa';
 
 import { DeckyState, DeckyStateContextProvider } from './components/DeckyState';
 import LegacyPlugin from './components/LegacyPlugin';
 import PluginView from './components/PluginView';
+import SettingsPage from './components/settings';
 import StorePage from './components/store/Store';
 import TitleView from './components/TitleView';
 import Logger from './logger';
@@ -31,14 +32,11 @@ class PluginLoader extends Logger {
     this.log('Initialized');
 
     this.tabsHook.add({
-      id: 'main',
-      title: (
-        <DeckyStateContextProvider deckyState={this.deckyState}>
-          <TitleView />
-        </DeckyStateContextProvider>
-      ),
+      id: QuickAccessTab.Decky,
+      title: null,
       content: (
         <DeckyStateContextProvider deckyState={this.deckyState}>
+          <TitleView />
           <PluginView />
         </DeckyStateContextProvider>
       ),
@@ -46,22 +44,23 @@ class PluginLoader extends Logger {
     });
 
     this.routerHook.addRoute('/decky/store', () => <StorePage />);
+    this.routerHook.addRoute('/decky/settings', () => <SettingsPage />);
   }
 
-  public addPluginInstallPrompt(artifact: string, version: string, request_id: string) {
+  public addPluginInstallPrompt(artifact: string, version: string, request_id: string, hash: string) {
     showModal(
       <ModalRoot
         onOK={() => {
-          console.log('ok');
           this.callServerMethod('confirm_plugin_install', { request_id });
         }}
         onCancel={() => {
-          console.log('nope');
           this.callServerMethod('cancel_plugin_install', { request_id });
         }}
       >
-        <div className={staticClasses.Title}>
-          Install {artifact} version {version}?
+        <div className={staticClasses.Title} style={{ flexDirection: 'column' }}>
+          {hash == 'False' ? <h1 style={{ color: 'red' }}>!!!!NO HASH PROVIDED!!!!</h1> : null}
+          Install {artifact}
+          {version ? ' version ' + version : null}?
         </div>
       </ModalRoot>,
     );
@@ -76,6 +75,7 @@ class PluginLoader extends Logger {
 
   public deinit() {
     this.routerHook.removeRoute('/decky/store');
+    this.routerHook.removeRoute('/decky/settings');
   }
 
   public async importPlugin(name: string) {

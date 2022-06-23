@@ -1,4 +1,4 @@
-import { afterPatch, sleep, unpatch } from 'decky-frontend-lib';
+import { QuickAccessTab, afterPatch, sleep, unpatch } from 'decky-frontend-lib';
 import { memo } from 'react';
 
 import Logger from './logger';
@@ -18,7 +18,7 @@ const isTabsArray = (tabs: any) => {
 };
 
 interface Tab {
-  id: string;
+  id: QuickAccessTab | number;
   title: any;
   content: any;
   icon: any;

@@ -13,6 +13,26 @@ export interface StorePlugin {
   tags: string[];
 }
 
+export async function installFromURL(url: string) {
+  const formData = new FormData();
+  formData.append('artifact', url);
+  await fetch('http://localhost:1337/browser/install_plugin', {
+    method: 'POST',
+    body: formData,
+  });
+}
+
+export async function requestPluginInstall(plugin: StorePlugin, selectedVer: string) {
+  const formData = new FormData();
+  formData.append('artifact', `https://github.com/${plugin.artifact}/archive/refs/tags/${selectedVer}.zip`);
+  formData.append('version', selectedVer);
+  formData.append('hash', plugin.versions[selectedVer]);
+  await fetch('http://localhost:1337/browser/install_plugin', {
+    method: 'POST',
+    body: formData,
+  });
+}
+
 const StorePage: FC<{}> = () => {
   const [data, setData] = useState<StorePlugin[] | null>(null);
 

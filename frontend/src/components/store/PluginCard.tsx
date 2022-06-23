@@ -2,6 +2,7 @@ import {
   DialogButton,
   Dropdown,
   Focusable,
+  QuickAccessTab,
   Router,
   SingleDropdownOption,
   SuspensefulImage,
@@ -9,7 +10,7 @@ import {
 } from 'decky-frontend-lib';
 import { FC, useRef, useState } from 'react';
 
-import { StorePlugin } from './Store';
+import { StorePlugin, requestPluginInstall } from './Store';
 
 interface PluginCardProps {
   plugin: StorePlugin;
@@ -18,17 +19,6 @@ interface PluginCardProps {
 const classNames = (...classes: string[]) => {
   return classes.join(' ');
 };
-
-async function requestPluginInstall(plugin: StorePlugin, selectedVer: string) {
-  const formData = new FormData();
-  formData.append('artifact', plugin.artifact);
-  formData.append('version', selectedVer);
-  formData.append('hash', plugin.versions[selectedVer]);
-  await fetch('http://localhost:1337/browser/install_plugin', {
-    method: 'POST',
-    body: formData,
-  });
-}
 
 const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
   const [selectedOption, setSelectedOption] = useState<number>(0);
@@ -50,9 +40,12 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
           buttonRef.current!.focus();
         }}
         onCancel={(e: CustomEvent) => {
-          containerRef.current!.querySelectorAll('* :focus').length === 0
-            ? Router.NavigateBackOrOpenMenu()
-            : containerRef.current!.focus();
+          if (containerRef.current!.querySelectorAll('* :focus').length === 0) {
+            Router.NavigateBackOrOpenMenu();
+            setTimeout(() => Router.OpenQuickAccessMenu(QuickAccessTab.Decky), 1000);
+          } else {
+            containerRef.current!.focus();
+          }
         }}
         style={{
           display: 'flex',

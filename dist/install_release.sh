@@ -30,6 +30,7 @@ User=root
 Restart=always
 ExecStart=/home/deck/homebrew/services/PluginLoader
 WorkingDirectory=/home/deck/homebrew/services
+Environment=STORE_URL=https://plugins.deckbrew.xyz
 Environment=PLUGIN_PATH=/home/deck/homebrew/plugins
 [Install]
 WantedBy=multi-user.target

@@ -114,7 +114,7 @@ class TabsHook extends Logger {
     this.tabs.push(tab);
   }
 
-  removeById(id: string) {
+  removeById(id: number) {
     this.log('Removing tab', id);
     this.tabs = this.tabs.filter((tab) => tab.id !== id);
   }

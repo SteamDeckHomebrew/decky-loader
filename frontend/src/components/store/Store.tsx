@@ -19,6 +19,8 @@ export interface StorePlugin {
 
 export async function installFromURL(url: string) {
   const formData = new FormData();
+  const splitURL = url.split('/');
+  formData.append('name', splitURL[splitURL.length - 1].replace('.zip', ''));
   formData.append('artifact', url);
   await fetch('http://localhost:1337/browser/install_plugin', {
     method: 'POST',
@@ -28,6 +30,7 @@ export async function installFromURL(url: string) {
 
 export async function requestPluginInstall(plugin: StorePlugin, selectedVer: StorePluginVersion) {
   const formData = new FormData();
+  formData.append('name', plugin.name);
   formData.append('artifact', `https://cdn.tzatzikiweeb.moe/file/steam-deck-homebrew/versions/${selectedVer.hash}.zip`);
   formData.append('version', selectedVer.name);
   formData.append('hash', selectedVer.hash);

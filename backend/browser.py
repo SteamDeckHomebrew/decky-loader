@@ -40,8 +40,7 @@ class PluginBrowser:
         Popen(["chmod", "-R", "555", self.plugin_path])
         return True
 
-    async def _install(self, artifact, version, hash):
-        name = artifact.split("/")[-1]
+    async def _install(self, name, version, hash):
         rmtree(path.join(self.plugin_path, name), ignore_errors=True)
         self.log.info(f"Installing {artifact} (Version: {version})")
         async with ClientSession() as client:
@@ -73,15 +72,15 @@ class PluginBrowser:
     
     async def install_plugin(self, request):
         data = await request.post()
-        get_event_loop().create_task(self.request_plugin_install(data["artifact"], data.get("version", "dev"), data.get("hash", False)))
+        get_event_loop().create_task(self.request_plugin_install(data.get("name", "No name"), data.get("version", "dev"), data.get("hash", False)))
         return web.Response(text="Requested plugin install")
 
-    async def request_plugin_install(self, artifact, version, hash):
+    async def request_plugin_install(self, name, version, hash):
         request_id = str(time())
         self.install_requests[request_id] = PluginInstallContext(artifact, version, hash)
         tab = await get_tab("SP")
         await tab.open_websocket()
-        await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{artifact}', '{version}', '{request_id}', '{hash}')")
+        await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}')")
     
     async def confirm_plugin_install(self, request_id):
         request = self.install_requests.pop(request_id)

@@ -3,11 +3,15 @@ import { FC, useEffect, useState } from 'react';
 
 import PluginCard from './PluginCard';
 
+export interface StorePluginVersion {
+  name: string;
+  hash: string;
+}
+
 export interface StorePlugin {
-  artifact: string;
-  versions: {
-    [version: string]: string;
-  };
+  id: number;
+  name: string;
+  versions: StorePluginVersion[];
   author: string;
   description: string;
   tags: string[];
@@ -22,11 +26,11 @@ export async function installFromURL(url: string) {
   });
 }
 
-export async function requestPluginInstall(plugin: StorePlugin, selectedVer: string) {
+export async function requestPluginInstall(plugin: StorePlugin, selectedVer: StorePluginVersion) {
   const formData = new FormData();
-  formData.append('artifact', `https://github.com/${plugin.artifact}/archive/refs/tags/${selectedVer}.zip`);
-  formData.append('version', selectedVer);
-  formData.append('hash', plugin.versions[selectedVer]);
+  formData.append('artifact', `https://cdn.tzatzikiweeb.moe/file/steam-deck-homebrew/versions/${selectedVer.hash}.zip`);
+  formData.append('version', selectedVer.name);
+  formData.append('hash', selectedVer.hash);
   await fetch('http://localhost:1337/browser/install_plugin', {
     method: 'POST',
     body: formData,
@@ -38,7 +42,7 @@ const StorePage: FC<{}> = () => {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch('https://beta.deckbrew.xyz/get_plugins', { method: 'GET' }).then((r) => r.json());
+      const res = await fetch('https://beta.deckbrew.xyz/plugins', { method: 'GET' }).then((r) => r.json());
       console.log(res);
       setData(res);
     })();

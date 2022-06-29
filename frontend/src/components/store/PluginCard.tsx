@@ -10,7 +10,7 @@ import {
 } from 'decky-frontend-lib';
 import { FC, useRef, useState } from 'react';
 
-import { StorePlugin, requestPluginInstall } from './Store';
+import { StorePlugin, StorePluginVersion, requestPluginInstall } from './Store';
 
 interface PluginCardProps {
   plugin: StorePlugin;
@@ -62,10 +62,9 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
           <a
             style={{ fontSize: '18pt', padding: '10px' }}
             className={classNames(staticClasses.Text)}
-            onClick={() => Router.NavigateToExternalWeb('https://github.com/' + plugin.artifact)}
+            // onClick={() => Router.NavigateToExternalWeb('https://github.com/' + plugin.artifact)}
           >
-            <span style={{ color: 'grey' }}>{plugin.artifact.split('/')[0]}/</span>
-            {plugin.artifact.split('/')[1]}
+            {plugin.name}
           </a>
         </div>
         <div
@@ -80,7 +79,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               width: 'auto',
               height: '160px',
             }}
-            src={`https://cdn.tzatzikiweeb.moe/file/steam-deck-homebrew/artifact_images/${plugin.artifact.replace(
+            src={`https://cdn.tzatzikiweeb.moe/file/steam-deck-homebrew/artifact_images/${plugin.name.replace(
               '/',
               '_',
             )}.png`}
@@ -133,7 +132,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
             >
               <DialogButton
                 ref={buttonRef}
-                onClick={() => requestPluginInstall(plugin, Object.keys(plugin.versions)[selectedOption])}
+                onClick={() => requestPluginInstall(plugin, plugin.versions[selectedOption])}
               >
                 Install
               </DialogButton>
@@ -145,9 +144,9 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
             >
               <Dropdown
                 rgOptions={
-                  Object.keys(plugin.versions).map((v, k) => ({
-                    data: k,
-                    label: v,
+                  plugin.versions.map((version: StorePluginVersion, index) => ({
+                    data: index,
+                    label: version.name,
                   })) as SingleDropdownOption[]
                 }
                 strDefaultLabel={'Select a version'}

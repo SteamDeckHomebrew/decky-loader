@@ -164,7 +164,7 @@ class PluginLoader extends Logger {
         return response.json();
       },
       fetchNoCors(url: string, request: any = {}) {
-        let args = { method: 'POST', headers: {}, body: '' };
+        let args = { method: 'POST', headers: {} };
         const req = { ...args, ...request, url, data: request.body };
         return this.callServerMethod('http_request', req);
       },

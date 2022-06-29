@@ -58,7 +58,7 @@ class PluginLoader extends Logger {
         }}
       >
         <div className={staticClasses.Title} style={{ flexDirection: 'column' }}>
-          {hash == 'False' ? <h1 style={{ color: 'red' }}>!!!!NO HASH PROVIDED!!!!</h1> : null}
+          {hash == 'False' ? <h3 style={{ color: 'red' }}>!!!!NO HASH PROVIDED!!!!</h3> : null}
           Install {artifact}
           {version ? ' version ' + version : null}?
         </div>

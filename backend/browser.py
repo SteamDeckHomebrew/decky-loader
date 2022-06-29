@@ -42,10 +42,10 @@ class PluginBrowser:
 
     async def _install(self, name, version, hash):
         rmtree(path.join(self.plugin_path, name), ignore_errors=True)
-        self.log.info(f"Installing {artifact} (Version: {version})")
+        self.log.info(f"Installing {name} (Version: {version})")
         async with ClientSession() as client:
-            self.log.debug(f"Fetching {artifact}")
-            res = await client.get(artifact)
+            self.log.debug(f"Fetching {name}")
+            res = await client.get(name)
             if res.status == 200:
                 self.log.debug("Got 200. Reading...")
                 data = await res.read()
@@ -61,9 +61,9 @@ class PluginBrowser:
                         hash
                     )
                     if ret:
-                        self.log.info(f"Installed {artifact} (Version: {version})")
+                        self.log.info(f"Installed {name} (Version: {version})")
                     else:
-                        self.log.fatal(f"SHA-256 Mismatch!!!! {artifact} (Version: {version})")
+                        self.log.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
             else:
                 self.log.fatal(f"Could not fetch from URL. {await res.text()}")
 
@@ -77,7 +77,7 @@ class PluginBrowser:
 
     async def request_plugin_install(self, name, version, hash):
         request_id = str(time())
-        self.install_requests[request_id] = PluginInstallContext(artifact, version, hash)
+        self.install_requests[request_id] = PluginInstallContext(name, version, hash)
         tab = await get_tab("SP")
         await tab.open_websocket()
         await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}')")

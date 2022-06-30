@@ -12,21 +12,20 @@ from hashlib import sha256
 from subprocess import Popen
 
 class PluginInstallContext:
-    def __init__(self, gh_url, version, hash) -> None:
-        self.gh_url = gh_url
+    def __init__(self, artifact, name, version, hash) -> None:
+        self.artifact = artifact
+        self.name = name
         self.version = version
         self.hash = hash
 
 class PluginBrowser:
-    def __init__(self, plugin_path, server_instance, store_url) -> None:
+    def __init__(self, plugin_path, server_instance) -> None:
         self.log = getLogger("browser")
         self.plugin_path = plugin_path
-        self.store_url = store_url
         self.install_requests = {}
 
         server_instance.add_routes([
-            web.post("/browser/install_plugin", self.install_plugin),
-            web.get("/browser/redirect", self.redirect_to_store)
+            web.post("/browser/install_plugin", self.install_plugin)
         ])
 
     def _unzip_to_plugin_dir(self, zip, name, hash):
@@ -40,12 +39,12 @@ class PluginBrowser:
         Popen(["chmod", "-R", "555", self.plugin_path])
         return True
 
-    async def _install(self, name, version, hash):
+    async def _install(self, artifact, name, version, hash):
         rmtree(path.join(self.plugin_path, name), ignore_errors=True)
         self.log.info(f"Installing {name} (Version: {version})")
         async with ClientSession() as client:
-            self.log.debug(f"Fetching {name}")
-            res = await client.get(name)
+            self.log.debug(f"Fetching {artifact}")
+            res = await client.get(artifact)
             if res.status == 200:
                 self.log.debug("Got 200. Reading...")
                 data = await res.read()
@@ -67,24 +66,21 @@ class PluginBrowser:
             else:
                 self.log.fatal(f"Could not fetch from URL. {await res.text()}")
 
-    async def redirect_to_store(self, request):
-        return web.Response(status=302, headers={"Location": self.store_url})
-    
     async def install_plugin(self, request):
         data = await request.post()
-        get_event_loop().create_task(self.request_plugin_install(data.get("name", "No name"), data.get("version", "dev"), data.get("hash", False)))
+        get_event_loop().create_task(self.request_plugin_install(data.get("artifact", ""), data.get("name", "No name"), data.get("version", "dev"), data.get("hash", False)))
         return web.Response(text="Requested plugin install")
 
-    async def request_plugin_install(self, name, version, hash):
+    async def request_plugin_install(self, artifact, name, version, hash):
         request_id = str(time())
-        self.install_requests[request_id] = PluginInstallContext(name, version, hash)
+        self.install_requests[request_id] = PluginInstallContext(artifact, name, version, hash)
         tab = await get_tab("SP")
         await tab.open_websocket()
         await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}')")
     
     async def confirm_plugin_install(self, request_id):
         request = self.install_requests.pop(request_id)
-        await self._install(request.gh_url, request.version, request.hash)
+        await self._install(request.artifact, request.name, request.version, request.hash)
 
     def cancel_plugin_install(self, request_id):
         self.install_requests.pop(request_id)

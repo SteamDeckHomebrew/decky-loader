@@ -10,15 +10,25 @@ import {
 } from 'decky-frontend-lib';
 import { FC, useRef, useState } from 'react';
 
-import { StorePlugin, StorePluginVersion, requestPluginInstall } from './Store';
+import {
+  LegacyStorePlugin,
+  StorePlugin,
+  StorePluginVersion,
+  requestLegacyPluginInstall,
+  requestPluginInstall,
+} from './Store';
 
 interface PluginCardProps {
-  plugin: StorePlugin;
+  plugin: StorePlugin | LegacyStorePlugin;
 }
 
 const classNames = (...classes: string[]) => {
   return classes.join(' ');
 };
+
+function isLegacyPlugin(plugin: LegacyStorePlugin | StorePlugin): plugin is LegacyStorePlugin {
+  return 'artifact' in plugin;
+}
 
 const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
   const [selectedOption, setSelectedOption] = useState<number>(0);
@@ -36,10 +46,10 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
       <Focusable
         // className="Panel Focusable"
         ref={containerRef}
-        onActivate={(e: CustomEvent) => {
+        onActivate={(_: CustomEvent) => {
           buttonRef.current!.focus();
         }}
-        onCancel={(e: CustomEvent) => {
+        onCancel={(_: CustomEvent) => {
           if (containerRef.current!.querySelectorAll('* :focus').length === 0) {
             Router.NavigateBackOrOpenMenu();
             setTimeout(() => Router.OpenQuickAccessMenu(QuickAccessTab.Decky), 1000);
@@ -64,7 +74,14 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
             className={classNames(staticClasses.Text)}
             // onClick={() => Router.NavigateToExternalWeb('https://github.com/' + plugin.artifact)}
           >
-            {plugin.name}
+            {isLegacyPlugin(plugin) ? (
+              <div>
+                <span style={{ color: 'grey' }}>{plugin.artifact.split('/')[0]}/</span>
+                {plugin.artifact.split('/')[1]}
+              </div>
+            ) : (
+              plugin.name
+            )}
           </a>
         </div>
         <div
@@ -79,10 +96,17 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               width: 'auto',
               height: '160px',
             }}
-            src={`https://cdn.tzatzikiweeb.moe/file/steam-deck-homebrew/artifact_images/${plugin.name.replace(
-              '/',
-              '_',
-            )}.png`}
+            src={
+              isLegacyPlugin(plugin)
+                ? `https://cdn.tzatzikiweeb.moe/file/steam-deck-homebrew/artifact_images/${plugin.artifact.replace(
+                    '/',
+                    '_',
+                  )}.png`
+                : `https://cdn.tzatzikiweeb.moe/file/steam-deck-homebrew/artifact_images/${plugin.name.replace(
+                    '/',
+                    '_',
+                  )}.png`
+            }
           />
           <div
             style={{
@@ -107,6 +131,18 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
                   {tag == 'root' ? 'Requires root' : tag}
                 </span>
               ))}
+              {isLegacyPlugin(plugin) && (
+                <span
+                  style={{
+                    padding: '5px',
+                    marginRight: '10px',
+                    borderRadius: '5px',
+                    background: '#ACB2C947',
+                  }}
+                >
+                  legacy
+                </span>
+              )}
             </p>
           </div>
         </div>
@@ -132,7 +168,11 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
             >
               <DialogButton
                 ref={buttonRef}
-                onClick={() => requestPluginInstall(plugin, plugin.versions[selectedOption])}
+                onClick={() =>
+                  isLegacyPlugin(plugin)
+                    ? requestLegacyPluginInstall(plugin, Object.keys(plugin.versions)[selectedOption])
+                    : requestPluginInstall(plugin, plugin.versions[selectedOption])
+                }
               >
                 Install
               </DialogButton>
@@ -144,10 +184,15 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
             >
               <Dropdown
                 rgOptions={
-                  plugin.versions.map((version: StorePluginVersion, index) => ({
-                    data: index,
-                    label: version.name,
-                  })) as SingleDropdownOption[]
+                  (isLegacyPlugin(plugin)
+                    ? Object.keys(plugin.versions).map((v, k) => ({
+                        data: k,
+                        label: v,
+                      }))
+                    : plugin.versions.map((version: StorePluginVersion, index) => ({
+                        data: index,
+                        label: version.name,
+                      }))) as SingleDropdownOption[]
                 }
                 strDefaultLabel={'Select a version'}
                 selectedOption={selectedOption}

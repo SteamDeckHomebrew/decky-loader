@@ -116,7 +116,7 @@ class Loader:
                 self.logger.info(f"Plugin {plugin.name} is passive")
             self.plugins[plugin.name] = plugin.start()
             self.logger.info(f"Loaded {plugin.name}")
-            self.loop.create_task(self.dispatch_plugin(plugin.name))
+            self.loop.create_task(self.dispatch_plugin(plugin.name if not plugin.legacy else "$LEGACY_" + plugin.name))
         except Exception as e:
             self.logger.error(f"Could not load {file}. {e}")
             print_exc()
@@ -168,8 +168,8 @@ class Loader:
         with open(path.join(self.plugin_path, plugin.plugin_directory, plugin.main_view_html), 'r') as template:
             template_data = template.read()
             ret = f"""
-            <script src="/static/legacy-library.js"></script>
-            <script>const plugin_name = '{plugin.name}' </script>
+            <script src="/legacy/library.js"></script>
+            <script>window.plugin_name = '{plugin.name}' </script>
             <base href="http://127.0.0.1:1337/plugins/plugin_resource/{plugin.name}/">
             {template_data}
             """

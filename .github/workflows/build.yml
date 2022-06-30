@@ -43,7 +43,7 @@ jobs:
 
     - name: 🛠️ Build
       run: |
-        pyinstaller --noconfirm --onefile --name "Decky" --add-data ./backend/static:/static ./backend/*.py
+        pyinstaller --noconfirm --onefile --name "Decky" --add-data ./backend/static:/static --add-data ./backend/legacy:/legacy ./backend/*.py
         
     - name: ⬆️ Upload package
       uses: actions/upload-artifact@v2

@@ -38,6 +38,15 @@ export async function installFromURL(url: string) {
   });
 }
 
+export async function uninstall(name: string) {
+  const formData = new FormData();
+  formData.append('name', name);
+  await fetch('http://localhost:1337/browser/uninstall_plugin', {
+    method: 'POST',
+    body: formData,
+  });
+}
+
 export async function requestLegacyPluginInstall(plugin: LegacyStorePlugin, selectedVer: string) {
   const formData = new FormData();
   formData.append('name', plugin.artifact);

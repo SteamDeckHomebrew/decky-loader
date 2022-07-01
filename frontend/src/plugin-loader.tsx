@@ -66,6 +66,20 @@ class PluginLoader extends Logger {
     );
   }
 
+  public addPluginUninstallPrompt(artifact: string) {
+    showModal(
+      <ModalRoot
+        onOK={() => {
+          this.callServerMethod('confirm_plugin_install', { artifact });
+        }}
+      >
+        <div className={staticClasses.Title} style={{ flexDirection: 'column' }}>
+          Uninstall {artifact}?
+        </div>
+      </ModalRoot>,
+    );
+  }
+
   public dismountAll() {
     for (const plugin of this.plugins) {
       this.log(`Dismounting ${plugin.name}`);

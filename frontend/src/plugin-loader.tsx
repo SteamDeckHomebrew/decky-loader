@@ -70,7 +70,10 @@ class PluginLoader extends Logger {
     showModal(
       <ModalRoot
         onOK={() => {
-          this.callServerMethod('confirm_plugin_install', { artifact });
+          this.callServerMethod('confirm_plugin_uninstall', { artifact });
+        }}
+        onCancel={() => {
+          // do nothing
         }}
       >
         <div className={staticClasses.Title} style={{ flexDirection: 'column' }}>

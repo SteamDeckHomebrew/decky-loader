@@ -40,23 +40,22 @@ class PluginBrowser:
         Popen(["chmod", "-R", "555", self.plugin_path])
         return True
 
-    async def uninstall_plugin(self, artifact):
+    async def uninstall_plugin(self, name):
         tab = await get_tab("SP")
         await tab.open_websocket()
 
         try:
-            if type(artifact) != str:
-                data = await artifact.post()
-                artifact = data.get("artifact")
-            await tab.evaluate_js(f"DeckyPluginLoader.plugins['{artifact}'].onDismount?.()")
-            self.log.info('the artifact is ' + artifact)
-            rmtree(path.join(self.plugin_path, artifact))
+            if type(name) != str:
+                data = await name.post()
+                name = data.get("name")
+            await tab.evaluate_js(f"DeckyPluginLoader.unloadPlugin('{name}')")
+            rmtree(path.join(self.plugin_path, name))
         except FileNotFoundError:
-            self.log.warning(f"Plugin {artifact} not installed, skipping uninstallation")
+            self.log.warning(f"Plugin {name} not installed, skipping uninstallation")
             return web.Response(text="Requested plugin uninstall")
 
     async def _install(self, artifact, name, version, hash):
-        self.uninstall_plugin(artifact)
+        self.uninstall_plugin(name)
         self.log.info(f"Installing {name} (Version: {version})")
         async with ClientSession() as client:
             self.log.debug(f"Fetching {artifact}")

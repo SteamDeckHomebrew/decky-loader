@@ -10,7 +10,6 @@ import {
 } from 'decky-frontend-lib';
 import { FC, useRef, useState } from 'react';
 
-import { Plugin } from '../../plugin';
 import {
   LegacyStorePlugin,
   StorePlugin,
@@ -18,8 +17,6 @@ import {
   requestLegacyPluginInstall,
   requestPluginInstall,
 } from './Store';
-
-const plugins = window.DeckyPluginLoader?.getPlugins();
 
 interface PluginCardProps {
   plugin: StorePlugin | LegacyStorePlugin;
@@ -31,11 +28,6 @@ const classNames = (...classes: string[]) => {
 
 function isLegacyPlugin(plugin: LegacyStorePlugin | StorePlugin): plugin is LegacyStorePlugin {
   return 'artifact' in plugin;
-}
-
-function isInstalled(plugin: LegacyStorePlugin | StorePlugin): boolean {
-  const name = isLegacyPlugin(plugin) ? plugin.artifact : plugin.name;
-  return name in plugins.map((p: Plugin) => p.name);
 }
 
 const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
@@ -177,14 +169,12 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               <DialogButton
                 ref={buttonRef}
                 onClick={() =>
-                  isInstalled(plugin)
-                    ? window.DeckyPluginLoader.uninstall_plugin(isLegacyPlugin(plugin) ? plugin.artifact : plugin.name)
-                    : isLegacyPlugin(plugin)
+                  isLegacyPlugin(plugin)
                     ? requestLegacyPluginInstall(plugin, Object.keys(plugin.versions)[selectedOption])
                     : requestPluginInstall(plugin, plugin.versions[selectedOption])
                 }
               >
-                {isInstalled(plugin) ? 'Install' : 'Uninstall'}
+                Install
               </DialogButton>
             </div>
             <div

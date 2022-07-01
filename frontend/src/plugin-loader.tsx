@@ -66,11 +66,16 @@ class PluginLoader extends Logger {
     );
   }
 
-  public addPluginUninstallPrompt(artifact: string) {
+  public uninstall_plugin(artifact: string) {
     showModal(
       <ModalRoot
-        onOK={() => {
-          this.callServerMethod('confirm_plugin_uninstall', { artifact });
+        onOK={async () => {
+          const formData = new FormData();
+          formData.append('artifact', artifact);
+          await fetch('http://localhost:1337/browser/uninstall_plugin', {
+            method: 'POST',
+            body: formData,
+          });
         }}
         onCancel={() => {
           // do nothing

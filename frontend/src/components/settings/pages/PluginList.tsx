@@ -2,7 +2,6 @@ import { DialogButton, Field, TextField } from 'decky-frontend-lib';
 import { FaTrash } from 'react-icons/fa';
 
 import { useDeckyState } from '../../DeckyState';
-import { uninstall } from '../../store/Store';
 
 export default function PluginList() {
   const { plugins } = useDeckyState();
@@ -17,7 +16,7 @@ export default function PluginList() {
       {plugins.map(({ name }) => (
         <li>
           <span className="plugin-name">{name}</span>
-          <DialogButton onClick={() => uninstall(name)}>
+          <DialogButton onClick={() => window.DeckyPluginLoader.uninstall_plugin(name)}>
             <FaTrash />
           </DialogButton>
         </li>

@@ -40,18 +40,18 @@ class PluginBrowser:
         Popen(["chmod", "-R", "555", self.plugin_path])
         return True
 
-    async def _uninstall(self, name):
+    async def uninstall_plugin(self, artifact):
         tab = await get_tab("SP")
         await tab.open_websocket()
 
         try:
-            await tab.evaluate_js(f"DeckyPluginLoader.plugins['{name}'].onDismount?.()")
-            rmtree(path.join(self.plugin_path, name))
+            await tab.evaluate_js(f"DeckyPluginLoader.plugins['{artifact}'].onDismount?.()")
+            rmtree(path.join(self.plugin_path, artifact))
         except FileNotFoundError:
-            self.log.warning(f"Plugin {name} not installed, skipping uninstallation")
+            self.log.warning(f"Plugin {artifact} not installed, skipping uninstallation")
 
     async def _install(self, artifact, name, version, hash):
-        self._uninstall(name)
+        self.uninstall_plugin(name)
         self.log.info(f"Installing {name} (Version: {version})")
         async with ClientSession() as client:
             self.log.debug(f"Fetching {artifact}")
@@ -82,11 +82,6 @@ class PluginBrowser:
         get_event_loop().create_task(self.request_plugin_install(data.get("artifact", ""), data.get("name", "No name"), data.get("version", "dev"), data.get("hash", False)))
         return web.Response(text="Requested plugin install")
 
-    async def uninstall_plugin(self, request):
-        data = await request.post()
-        get_event_loop().create_task(self.request_plugin_uninstall(data.get("name", "")))
-        return web.Response(text="Requested plugin uninstall")
-
     async def request_plugin_install(self, artifact, name, version, hash):
         request_id = str(time())
         self.install_requests[request_id] = PluginInstallContext(artifact, name, version, hash)
@@ -100,11 +95,3 @@ class PluginBrowser:
 
     def cancel_plugin_install(self, request_id):
         self.install_requests.pop(request_id)
-
-    async def request_plugin_uninstall(self, artifact):
-        tab = await get_tab("SP")
-        await tab.open_websocket()
-        await tab.evaluate_js(f"DeckyPluginLoader.addPluginUninstallPrompt('{artifact}')")
-
-    async def confirm_plugin_uninstall(self, artifact):
-        await self._uninstall(artifact)

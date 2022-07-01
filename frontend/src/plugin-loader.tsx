@@ -47,6 +47,10 @@ class PluginLoader extends Logger {
     this.routerHook.addRoute('/decky/settings', () => <SettingsPage />);
   }
 
+  public getPlugins() {
+    return this.plugins;
+  }
+
   public addPluginInstallPrompt(artifact: string, version: string, request_id: string, hash: string) {
     showModal(
       <ModalRoot

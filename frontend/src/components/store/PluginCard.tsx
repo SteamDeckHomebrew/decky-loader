@@ -18,6 +18,8 @@ import {
   requestPluginInstall,
 } from './Store';
 
+const plugins = window.DeckyPluginLoader.getPlugins();
+
 interface PluginCardProps {
   plugin: StorePlugin | LegacyStorePlugin;
 }
@@ -28,6 +30,11 @@ const classNames = (...classes: string[]) => {
 
 function isLegacyPlugin(plugin: LegacyStorePlugin | StorePlugin): plugin is LegacyStorePlugin {
   return 'artifact' in plugin;
+}
+
+function isInstalled(plugin: LegacyStorePlugin | StorePlugin): boolean {
+  const name = isLegacyPlugin(plugin) ? plugin.artifact : plugin.name;
+  return name in plugins.map((p) => p.name);
 }
 
 const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
@@ -169,12 +176,14 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               <DialogButton
                 ref={buttonRef}
                 onClick={() =>
-                  isLegacyPlugin(plugin)
+                  isInstalled(plugin)
+                    ? window.DeckyPluginLoader.uninstall_plugin(isLegacyPlugin(plugin) ? plugin.artifact : plugin.name)
+                    : isLegacyPlugin(plugin)
                     ? requestLegacyPluginInstall(plugin, Object.keys(plugin.versions)[selectedOption])
                     : requestPluginInstall(plugin, plugin.versions[selectedOption])
                 }
               >
-                Install
+                {isInstalled(plugin) ? 'Install' : 'Uninstall'}
               </DialogButton>
             </div>
             <div

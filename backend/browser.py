@@ -47,7 +47,6 @@ class PluginBrowser:
             with open(path.join(self.plugin_path, folder, 'plugin.json'), 'r') as f:
                 plugin = json.load(f)
             
-            self.log.info(plugin['name'], name)
             if plugin['name'] == name:
                 return path.join(self.plugin_path, folder)       
 
@@ -60,7 +59,6 @@ class PluginBrowser:
                 data = await name.post()
                 name = data.get("name")
             await tab.evaluate_js(f"DeckyPluginLoader.unloadPlugin('{name}')")
-            self.log.info(name, self.find_plugin_folder(name))
             rmtree(self.find_plugin_folder(name))
         except FileNotFoundError:
             self.log.warning(f"Plugin {name} not installed, skipping uninstallation")

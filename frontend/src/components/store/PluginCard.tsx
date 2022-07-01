@@ -18,7 +18,7 @@ import {
   requestPluginInstall,
 } from './Store';
 
-const plugins = window.DeckyPluginLoader.getPlugins();
+const plugins = window.DeckyPluginLoader?.getPlugins();
 
 interface PluginCardProps {
   plugin: StorePlugin | LegacyStorePlugin;

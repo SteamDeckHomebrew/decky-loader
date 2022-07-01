@@ -84,7 +84,7 @@ class PluginBrowser:
 
     async def uninstall_plugin(self, request):
         data = await request.post()
-        get_event_loop().create_task(self.confirm_plugin_uninstall(data.get("name", "")))
+        get_event_loop().create_task(self.request_plugin_uninstall(data.get("name", "")))
         return web.Response(text="Requested plugin uninstall")
 
     async def request_plugin_install(self, artifact, name, version, hash):
@@ -101,8 +101,10 @@ class PluginBrowser:
     def cancel_plugin_install(self, request_id):
         self.install_requests.pop(request_id)
 
-    async def confirm_plugin_uninstall(self, artifact):
+    async def request_plugin_uninstall(self, artifact):
         tab = await get_tab("SP")
         await tab.open_websocket()
         await tab.evaluate_js(f"DeckyPluginLoader.addPluginUninstallPrompt('{artifact}')")
+
+    async def confirm_plugin_uninstall(self, artifact):
         await self._uninstall(artifact)

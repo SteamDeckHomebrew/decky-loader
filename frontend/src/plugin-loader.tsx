@@ -47,6 +47,10 @@ class PluginLoader extends Logger {
     this.routerHook.addRoute('/decky/settings', () => <SettingsPage />);
   }
 
+  public getPlugins() {
+    return this.plugins;
+  }
+
   public addPluginInstallPrompt(artifact: string, version: string, request_id: string, hash: string) {
     showModal(
       <ModalRoot
@@ -66,6 +70,28 @@ class PluginLoader extends Logger {
     );
   }
 
+  public uninstall_plugin(name: string) {
+    showModal(
+      <ModalRoot
+        onOK={async () => {
+          const formData = new FormData();
+          formData.append('name', name);
+          await fetch('http://localhost:1337/browser/uninstall_plugin', {
+            method: 'POST',
+            body: formData,
+          });
+        }}
+        onCancel={() => {
+          // do nothing
+        }}
+      >
+        <div className={staticClasses.Title} style={{ flexDirection: 'column' }}>
+          Uninstall {name}?
+        </div>
+      </ModalRoot>,
+    );
+  }
+
   public dismountAll() {
     for (const plugin of this.plugins) {
       this.log(`Dismounting ${plugin.name}`);
@@ -76,6 +102,13 @@ class PluginLoader extends Logger {
   public deinit() {
     this.routerHook.removeRoute('/decky/store');
     this.routerHook.removeRoute('/decky/settings');
+  }
+
+  public unloadPlugin(name: string) {
+    const plugin = this.plugins.find((plugin) => plugin.name === name || plugin.name === name.replace('$LEGACY_', ''));
+    plugin?.onDismount?.();
+    this.plugins = this.plugins.filter((p) => p !== plugin);
+    this.deckyState.setPlugins(this.plugins);
   }
 
   public async importPlugin(name: string) {
@@ -89,13 +122,7 @@ class PluginLoader extends Logger {
       this.reloadLock = true;
       this.log(`Trying to load ${name}`);
 
-      const oldPlugin = this.plugins.find(
-        (plugin) => plugin.name === name || plugin.name === name.replace('$LEGACY_', ''),
-      );
-      if (oldPlugin) {
-        oldPlugin.onDismount?.();
-        this.plugins = this.plugins.filter((plugin) => plugin !== oldPlugin);
-      }
+      this.unloadPlugin(name);
 
       if (name.startsWith('$LEGACY_')) {
         await this.importLegacyPlugin(name.replace('$LEGACY_', ''));

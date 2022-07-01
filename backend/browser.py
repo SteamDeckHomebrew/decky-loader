@@ -1,6 +1,6 @@
 from injector import get_tab
 from logging import getLogger
-from os import path, rename
+from os import path, rename, listdir
 from shutil import rmtree
 from aiohttp import ClientSession, web
 from io import BytesIO
@@ -10,6 +10,8 @@ from asyncio import get_event_loop
 from time import time
 from hashlib import sha256
 from subprocess import Popen
+
+import json
 
 class PluginInstallContext:
     def __init__(self, artifact, name, version, hash) -> None:
@@ -25,7 +27,8 @@ class PluginBrowser:
         self.install_requests = {}
 
         server_instance.add_routes([
-            web.post("/browser/install_plugin", self.install_plugin)
+            web.post("/browser/install_plugin", self.install_plugin),
+            web.post("/browser/uninstall_plugin", self.uninstall_plugin)
         ])
 
     def _unzip_to_plugin_dir(self, zip, name, hash):
@@ -39,8 +42,31 @@ class PluginBrowser:
         Popen(["chmod", "-R", "555", self.plugin_path])
         return True
 
+    def find_plugin_folder(self, name):
+        for folder in listdir(self.plugin_path):
+            with open(path.join(self.plugin_path, folder, 'plugin.json'), 'r') as f:
+                plugin = json.load(f)
+            
+            if plugin['name'] == name:
+                return path.join(self.plugin_path, folder)       
+
+    async def uninstall_plugin(self, name):
+        tab = await get_tab("SP")
+        await tab.open_websocket()
+
+        try:
+            if type(name) != str:
+                data = await name.post()
+                name = data.get("name")
+            await tab.evaluate_js(f"DeckyPluginLoader.unloadPlugin('{name}')")
+            rmtree(self.find_plugin_folder(name))
+        except FileNotFoundError:
+            self.log.warning(f"Plugin {name} not installed, skipping uninstallation")
+
+        return web.Response(text="Requested plugin uninstall")
+
     async def _install(self, artifact, name, version, hash):
-        rmtree(path.join(self.plugin_path, name), ignore_errors=True)
+        self.uninstall_plugin(name)
         self.log.info(f"Installing {name} (Version: {version})")
         async with ClientSession() as client:
             self.log.debug(f"Fetching {artifact}")

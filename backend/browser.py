@@ -45,13 +45,18 @@ class PluginBrowser:
         await tab.open_websocket()
 
         try:
+            if type(artifact) != str:
+                data = await artifact.post()
+                artifact = data.get("artifact")
             await tab.evaluate_js(f"DeckyPluginLoader.plugins['{artifact}'].onDismount?.()")
+            self.log.info('the artifact is ' + artifact)
             rmtree(path.join(self.plugin_path, artifact))
         except FileNotFoundError:
             self.log.warning(f"Plugin {artifact} not installed, skipping uninstallation")
+            return web.Response(text="Requested plugin uninstall")
 
     async def _install(self, artifact, name, version, hash):
-        self.uninstall_plugin(name)
+        self.uninstall_plugin(artifact)
         self.log.info(f"Installing {name} (Version: {version})")
         async with ClientSession() as client:
             self.log.debug(f"Fetching {artifact}")

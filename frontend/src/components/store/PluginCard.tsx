@@ -10,6 +10,7 @@ import {
 } from 'decky-frontend-lib';
 import { FC, useRef, useState } from 'react';
 
+import { Plugin } from '../../plugin';
 import {
   LegacyStorePlugin,
   StorePlugin,
@@ -34,7 +35,7 @@ function isLegacyPlugin(plugin: LegacyStorePlugin | StorePlugin): plugin is Lega
 
 function isInstalled(plugin: LegacyStorePlugin | StorePlugin): boolean {
   const name = isLegacyPlugin(plugin) ? plugin.artifact : plugin.name;
-  return name in plugins.map((p) => p.name);
+  return name in plugins.map((p: Plugin) => p.name);
 }
 
 const PluginCard: FC<PluginCardProps> = ({ plugin }) => {

@@ -4,8 +4,13 @@ import { FaTrash } from 'react-icons/fa';
 import { useDeckyState } from '../../DeckyState';
 import { uninstall } from '../../store/Store';
 
-export default function GeneralSettings() {
+export default function PluginList() {
   const { plugins } = useDeckyState();
+
+  if (plugins === []) {
+    plugins.push({ icon: '', name: 'bobby', content: '' });
+    plugins.push({ icon: '', name: 'johjy', content: '' });
+  }
 
   return (
     <ul>

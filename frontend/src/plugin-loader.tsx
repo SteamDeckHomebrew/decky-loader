@@ -89,7 +89,9 @@ class PluginLoader extends Logger {
       this.reloadLock = true;
       this.log(`Trying to load ${name}`);
 
-      const oldPlugin = this.plugins.find((plugin) => plugin.name === name);
+      const oldPlugin = this.plugins.find(
+        (plugin) => plugin.name === name || plugin.name === name.replace('$LEGACY_', ''),
+      );
       if (oldPlugin) {
         oldPlugin.onDismount?.();
         this.plugins = this.plugins.filter((plugin) => plugin !== oldPlugin);

@@ -33,6 +33,7 @@ Restart=always
 ExecStart=/home/deck/homebrew/services/PluginLoader
 WorkingDirectory=/home/deck/homebrew/services
 Environment=PLUGIN_PATH=/home/deck/homebrew/plugins
+Enviornment=LOG_LEVEL=DEBUG
 [Install]
 WantedBy=multi-user.target
 EOM

@@ -66,7 +66,7 @@ class PluginBrowser:
         return web.Response(text="Requested plugin uninstall")
 
     async def _install(self, artifact, name, version, hash):
-        self.uninstall_plugin(name)
+        await self.uninstall_plugin(name)
         self.log.info(f"Installing {name} (Version: {version})")
         async with ClientSession() as client:
             self.log.debug(f"Fetching {artifact}")

@@ -10,21 +10,22 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugi
 3. Scroll the sidebar all the way down and click on `Developer`
 4. Under Miscellaneous, enable `CEF Remote Debugging`
 5. Click on the `STEAM` button and select `Power` -> `Switch to Desktop`
-6. Open a terminal and paste the following command into it: 
+6. Make sure you have a password set with the "passwd" command in terminal to install it ([YouTube Guide](https://www.youtube.com/watch?v=1vOMYGj22rQ)).
+7. Open a terminal and paste the following command into it: 
     - For users:
         - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_release.sh | sh`
     - For plugin developers:
         - [Wiki Link](https://deckbrew.xyz/en/loader-dev/development)
 7. Done! Reboot back into Gaming mode and enjoy your plugins!
 
-### Install Plugins
+### Install/Uninstall Plugins
 - Using the shopping bag button in the top right corner, you can go to the offical ["Plugin Store"](https://plugins.deckbrew.xyz/)
 - Simply copy the plugin's folder into `~/homebrew/plugins`
+- Use the settings menu to uninstall plugins, this will not remove any files made in different directories by plugins.
 
 ### Uninstall
 - Open a terminal and paste the following command into it:
-    - For both users and developers:
-        - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/uninstall.sh | sh`
+  - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/uninstall.sh | sh`
 
 ## Features
 - Clean injecting and loading of one or more plugins

@@ -10,6 +10,8 @@ from asyncio import get_event_loop
 from time import time
 from hashlib import sha256
 from subprocess import Popen
+import ssl
+import certifi
 
 import json
 
@@ -71,8 +73,11 @@ class PluginBrowser:
             self.log.error(f"Plugin {name} not installed, skipping uninstallation")
         self.log.info(f"Installing {name} (Version: {version})")
         async with ClientSession() as client:
+            ssl_ctx = ssl.create_default_context()
+            ssl_ctx.load_cert_chain(certfile=certifi.where())
+
             self.log.debug(f"Fetching {artifact}")
-            res = await client.get(artifact)
+            res = await client.get(artifact, ssl=ssl_ctx)
             if res.status == 200:
                 self.log.debug("Got 200. Reading...")
                 data = await res.read()

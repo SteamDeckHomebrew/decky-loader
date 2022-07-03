@@ -2,7 +2,6 @@ from logging import DEBUG, INFO, basicConfig, getLogger
 from os import getenv
 
 from aiohttp import ClientSession
-import certifi
 
 CONFIG = {
     "plugin_path": getenv("PLUGIN_PATH", "/home/deck/homebrew/plugins"),
@@ -96,6 +95,4 @@ class PluginManager:
         return run_app(self.web_app, host=CONFIG["server_host"], port=CONFIG["server_port"], loop=self.loop, access_log=None)
 
 if __name__ == "__main__":
-    print(f"Certificate at {certifi.where()}")
-
     PluginManager().run()

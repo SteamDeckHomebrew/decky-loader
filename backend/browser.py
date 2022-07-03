@@ -73,8 +73,7 @@ class PluginBrowser:
             self.log.error(f"Plugin {name} not installed, skipping uninstallation")
         self.log.info(f"Installing {name} (Version: {version})")
         async with ClientSession() as client:
-            ssl_ctx = ssl.create_default_context()
-            ssl_ctx.load_cert_chain(certfile=certifi.where())
+            ssl_ctx = ssl.create_default_context(cafile=certifi.where())
 
             self.log.debug(f"Fetching {artifact}")
             res = await client.get(artifact, ssl=ssl_ctx)

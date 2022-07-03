@@ -13,6 +13,8 @@ from subprocess import Popen
 
 import json
 
+import helpers
+
 class PluginInstallContext:
     def __init__(self, artifact, name, version, hash) -> None:
         self.artifact = artifact
@@ -72,7 +74,7 @@ class PluginBrowser:
         self.log.info(f"Installing {name} (Version: {version})")
         async with ClientSession() as client:
             self.log.debug(f"Fetching {artifact}")
-            res = await client.get(artifact)
+            res = await client.get(artifact, ssl=helpers.get_ssl_context())
             if res.status == 200:
                 self.log.debug("Got 200. Reading...")
                 data = await res.read()

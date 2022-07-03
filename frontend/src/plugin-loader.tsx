@@ -91,7 +91,7 @@ class PluginLoader extends Logger {
         }}
       >
         <div className={staticClasses.Title} style={{ flexDirection: 'column' }}>
-          Uninstall {name}?b
+          Uninstall {name}?
         </div>
       </ModalRoot>,
     );

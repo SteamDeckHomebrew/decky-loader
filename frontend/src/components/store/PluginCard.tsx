@@ -125,7 +125,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
                     padding: '5px',
                     marginRight: '10px',
                     borderRadius: '5px',
-                    background: tag == 'root' ? '#842029' : tag == 'legacy' ? '#EDE841' : '#ACB2C947',
+                    background: tag == 'root' ? '#842029' : '#ACB2C947',
                   }}
                 >
                   {tag == 'root' ? 'Requires root' : tag}
@@ -137,7 +137,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
                     padding: '5px',
                     marginRight: '10px',
                     borderRadius: '5px',
-                    background: '#ACB2C947',
+                    background: '#EDE841',
                   }}
                 >
                   legacy

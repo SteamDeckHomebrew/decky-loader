@@ -13,8 +13,11 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugi
 6. Make sure you have a password set with the "passwd" command in terminal to install it ([YouTube Guide](https://www.youtube.com/watch?v=1vOMYGj22rQ)).
 7. Open a terminal and paste the following command into it: 
     - For users:
-        - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_release.sh | sh`
-    - For plugin developers:
+        - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/legacy/dist/install_release.sh | sh`
+    - For the latest pre-release,
+        - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_prerelease.sh | sh`
+    - For testers/plugin developers:
+        - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_prerelease.sh | sh`
         - [Wiki Link](https://deckbrew.xyz/en/loader-dev/development)
 7. Done! Reboot back into Gaming mode and enjoy your plugins!
 

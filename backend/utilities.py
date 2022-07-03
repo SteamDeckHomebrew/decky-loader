@@ -4,7 +4,7 @@ from json.decoder import JSONDecodeError
 from aiohttp import ClientSession, web
 
 from injector import inject_to_tab
-
+import helpers
 
 class Utilities:
     def __init__(self, context) -> None:
@@ -48,7 +48,7 @@ class Utilities:
 
     async def http_request(self, method="", url="", **kwargs):
         async with ClientSession() as web:
-            async with web.request(method, url, **kwargs) as res:
+            async with web.request(method, url, ssl=helpers.get_ssl_context(), **kwargs) as res:
                 return {
                     "status": res.status,
                     "headers": dict(res.headers),

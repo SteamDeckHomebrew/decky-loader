@@ -1,8 +1,11 @@
 import { DialogButton, staticClasses } from 'decky-frontend-lib';
+import { VFC } from 'react';
 import { FaTrash } from 'react-icons/fa';
 
+import { useDeckyState } from '../../DeckyState';
+
 export default function PluginList() {
-  const plugins = window.DeckyPluginLoader?.getPlugins();
+  const { plugins } = useDeckyState();
 
   if (plugins.length === 0) {
     return (
@@ -14,7 +17,7 @@ export default function PluginList() {
 
   return (
     <ul style={{ listStyleType: 'none' }}>
-      {window.DeckyPluginLoader?.getPlugins().map(({ name }) => (
+      {plugins.map(({ name }) => (
         <li style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
           <span>{name}</span>
           <div className={staticClasses.Title} style={{ marginLeft: 'auto', boxShadow: 'none' }}>

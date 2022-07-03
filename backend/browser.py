@@ -46,9 +46,9 @@ class PluginBrowser:
         for folder in listdir(self.plugin_path):
             with open(path.join(self.plugin_path, folder, 'plugin.json'), 'r') as f:
                 plugin = json.load(f)
-            
+
             if plugin['name'] == name:
-                return path.join(self.plugin_path, folder)       
+                return path.join(self.plugin_path, folder)
 
     async def uninstall_plugin(self, name):
         tab = await get_tab("SP")

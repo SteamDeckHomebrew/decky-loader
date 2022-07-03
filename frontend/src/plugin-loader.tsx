@@ -1,4 +1,4 @@
-import { ModalRoot, QuickAccessTab, showModal, staticClasses } from 'decky-frontend-lib';
+import { ModalRoot, QuickAccessTab, Router, showModal, staticClasses } from 'decky-frontend-lib';
 import { FaPlug } from 'react-icons/fa';
 
 import { DeckyState, DeckyStateContextProvider } from './components/DeckyState';
@@ -58,6 +58,7 @@ class PluginLoader extends Logger {
       <ModalRoot
         onOK={() => {
           this.callServerMethod('confirm_plugin_install', { request_id });
+          setTimeout(() => Router.OpenQuickAccessMenu(QuickAccessTab.Decky), 1000);
         }}
         onCancel={() => {
           this.callServerMethod('cancel_plugin_install', { request_id });

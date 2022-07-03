@@ -1,5 +1,4 @@
 import { DialogButton, staticClasses } from 'decky-frontend-lib';
-import { VFC } from 'react';
 import { FaTrash } from 'react-icons/fa';
 
 import { useDeckyState } from '../../DeckyState';

@@ -134,6 +134,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               {isLegacyPlugin(plugin) && (
                 <span
                   style={{
+                    color: '#232120',
                     padding: '5px',
                     marginRight: '10px',
                     borderRadius: '5px',

@@ -110,7 +110,7 @@ jobs:
       uses: mathieudutour/github-tag-action@v6.0
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        append_to_pre_release_tag: pre
+        append_to_pre_release_tag: '-pre'
 
     - name: Release 📦
       uses: softprops/action-gh-release@v1

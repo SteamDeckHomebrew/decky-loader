@@ -2,7 +2,7 @@
 
 [ "$UID" -eq 0 ] || exec sudo "$0" "$@"
 
-echo "Installing Steam Deck Plugin Loader release..."
+echo "Installing Steam Deck Plugin Loader pre-release..."
 
 HOMEBREW_FOLDER=/home/deck/homebrew
 
@@ -12,7 +12,7 @@ sudo -u deck mkdir -p ${HOMEBREW_FOLDER}/services
 sudo -u deck mkdir -p ${HOMEBREW_FOLDER}/plugins
 
 # Download latest release and install it
-DOWNLOADURL="$(curl -s 'https://api.github.com/repos/SteamDeckHomebrew/PluginLoader/releases' | jq -r "first(.[] | select(.prerelease == "true"))" | jq -r ".assets[].browser_download_url")"
+DOWNLOADURL="$(curl -s 'https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases' | jq -r "first(.[] | select(.prerelease == "true"))" | jq -r ".assets[].browser_download_url")"
 # printf "DOWNLOADURL=$DOWNLOADURL\n"
 curl -L $DOWNLOADURL --output ${HOMEBREW_FOLDER}/services/PluginLoader
 chmod +x ${HOMEBREW_FOLDER}/services/PluginLoader

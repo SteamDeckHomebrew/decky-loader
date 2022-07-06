@@ -149,7 +149,9 @@ class PluginLoader extends Logger {
   public uninstallPlugin(name: string) {
     showModal(
       <ModalRoot
-        onOK={() => this.callServerMethod('uninstall_plugin', { name })}
+        onOK={async () => {
+          await this.callServerMethod('uninstall_plugin', { name });
+        }}
         onCancel={() => {
           // do nothing
         }}

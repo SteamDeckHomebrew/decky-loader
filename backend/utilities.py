@@ -14,6 +14,7 @@ class Utilities:
             "http_request": self.http_request,
             "cancel_plugin_install": self.cancel_plugin_install,
             "confirm_plugin_install": self.confirm_plugin_install,
+            "uninstall_plugin": self.uninstall_plugin,
             "execute_in_tab": self.execute_in_tab,
             "inject_css_into_tab": self.inject_css_into_tab,
             "remove_css_from_tab": self.remove_css_from_tab
@@ -45,6 +46,9 @@ class Utilities:
 
     def cancel_plugin_install(self, request_id):
         return self.context.plugin_browser.cancel_plugin_install(request_id)
+
+    async def uninstall_plugin(self, name):
+        return await self.context.plugin_browser.uninstall_plugin(name)
 
     async def http_request(self, method="", url="", **kwargs):
         async with ClientSession() as web:

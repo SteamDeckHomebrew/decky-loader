@@ -30,7 +30,6 @@ class PluginBrowser:
 
         server_instance.add_routes([
             web.post("/browser/install_plugin", self.install_plugin),
-            web.post("/browser/uninstall_plugin", self.uninstall_plugin)
         ])
 
     def _unzip_to_plugin_dir(self, zip, name, hash):

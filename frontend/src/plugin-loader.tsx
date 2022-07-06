@@ -79,12 +79,7 @@ class PluginLoader extends Logger {
     showModal(
       <ModalRoot
         onOK={async () => {
-          const formData = new FormData();
-          formData.append('name', name);
-          await fetch('http://localhost:1337/browser/uninstall_plugin', {
-            method: 'POST',
-            body: formData,
-          });
+          await this.callServerMethod('uninstall_plugin', { name });
         }}
         onCancel={() => {
           // do nothing

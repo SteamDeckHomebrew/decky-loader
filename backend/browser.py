@@ -15,6 +15,7 @@ import json
 
 import helpers
 
+
 class PluginInstallContext:
     def __init__(self, artifact, name, version, hash) -> None:
         self.artifact = artifact
@@ -22,15 +23,12 @@ class PluginInstallContext:
         self.version = version
         self.hash = hash
 
+
 class PluginBrowser:
-    def __init__(self, plugin_path, server_instance) -> None:
+    def __init__(self, plugin_path) -> None:
         self.log = getLogger("browser")
         self.plugin_path = plugin_path
         self.install_requests = {}
-
-        server_instance.add_routes([
-            web.post("/browser/install_plugin", self.install_plugin),
-        ])
 
     def _unzip_to_plugin_dir(self, zip, name, hash):
         zip_hash = sha256(zip.getbuffer()).hexdigest()
@@ -44,10 +42,10 @@ class PluginBrowser:
 
     def find_plugin_folder(self, name):
         for folder in listdir(self.plugin_path):
-            with open(path.join(self.plugin_path, folder, 'plugin.json'), 'r') as f:
+            with open(path.join(self.plugin_path, folder, "plugin.json"), "r") as f:
                 plugin = json.load(f)
 
-            if plugin['name'] == name:
+            if plugin["name"] == name:
                 return path.join(self.plugin_path, folder)
 
     async def uninstall_plugin(self, name):
@@ -66,7 +64,7 @@ class PluginBrowser:
         return web.Response(text="Requested plugin uninstall")
 
     async def _install(self, artifact, name, version, hash):
-        try: 
+        try:
             await self.uninstall_plugin(name)
         except:
             self.log.error(f"Plugin {name} not installed, skipping uninstallation")
@@ -82,34 +80,33 @@ class PluginBrowser:
                 with ProcessPoolExecutor() as executor:
                     self.log.debug("Unzipping...")
                     ret = await get_event_loop().run_in_executor(
-                        executor,
-                        self._unzip_to_plugin_dir,
-                        res_zip,
-                        name,
-                        hash
+                        executor, self._unzip_to_plugin_dir, res_zip, name, hash
                     )
                     if ret:
                         self.log.info(f"Installed {name} (Version: {version})")
                     else:
-                        self.log.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
+                        self.log.fatal(
+                            f"SHA-256 Mismatch!!!! {name} (Version: {version})"
+                        )
             else:
                 self.log.fatal(f"Could not fetch from URL. {await res.text()}")
 
-    async def install_plugin(self, request):
-        data = await request.post()
-        get_event_loop().create_task(self.request_plugin_install(data.get("artifact", ""), data.get("name", "No name"), data.get("version", "dev"), data.get("hash", False)))
-        return web.Response(text="Requested plugin install")
-
     async def request_plugin_install(self, artifact, name, version, hash):
         request_id = str(time())
-        self.install_requests[request_id] = PluginInstallContext(artifact, name, version, hash)
+        self.install_requests[request_id] = PluginInstallContext(
+            artifact, name, version, hash
+        )
         tab = await get_tab("SP")
         await tab.open_websocket()
-        await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}')")
-    
+        await tab.evaluate_js(
+            f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}')"
+        )
+
     async def confirm_plugin_install(self, request_id):
         request = self.install_requests.pop(request_id)
-        await self._install(request.artifact, request.name, request.version, request.hash)
+        await self._install(
+            request.artifact, request.name, request.version, request.hash
+        )
 
     def cancel_plugin_install(self, request_id):
         self.install_requests.pop(request_id)

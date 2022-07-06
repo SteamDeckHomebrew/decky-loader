@@ -28,37 +28,28 @@ export interface LegacyStorePlugin {
 }
 
 export async function installFromURL(url: string) {
-  const formData = new FormData();
   const splitURL = url.split('/');
-  formData.append('name', splitURL[splitURL.length - 1].replace('.zip', ''));
-  formData.append('artifact', url);
-  await fetch('http://localhost:1337/browser/install_plugin', {
-    method: 'POST',
-    body: formData,
+  await window.DeckyPluginLoader.callServerMethod('install_plugin', {
+    name: splitURL[splitURL.length - 1].replace('.zip', ''),
+    artifact: url,
   });
 }
 
 export async function requestLegacyPluginInstall(plugin: LegacyStorePlugin, selectedVer: string) {
-  const formData = new FormData();
-  formData.append('name', plugin.artifact);
-  formData.append('artifact', `https://github.com/${plugin.artifact}/archive/refs/tags/${selectedVer}.zip`);
-  formData.append('version', selectedVer);
-  formData.append('hash', plugin.versions[selectedVer]);
-  await fetch('http://localhost:1337/browser/install_plugin', {
-    method: 'POST',
-    body: formData,
+  await window.DeckyPluginLoader.callServerMethod('install_plugin', {
+    name: plugin.artifact,
+    artifact: `https://github.com/${plugin.artifact}/archive/refs/tags/${selectedVer}.zip`,
+    version: selectedVer,
+    hash: plugin.versions[selectedVer],
   });
 }
 
 export async function requestPluginInstall(plugin: StorePlugin, selectedVer: StorePluginVersion) {
-  const formData = new FormData();
-  formData.append('name', plugin.name);
-  formData.append('artifact', `https://cdn.tzatzikiweeb.moe/file/steam-deck-homebrew/versions/${selectedVer.hash}.zip`);
-  formData.append('version', selectedVer.name);
-  formData.append('hash', selectedVer.hash);
-  await fetch('http://localhost:1337/browser/install_plugin', {
-    method: 'POST',
-    body: formData,
+  await window.DeckyPluginLoader.callServerMethod('install_plugin', {
+    name: plugin.name,
+    artifact: `https://cdn.tzatzikiweeb.moe/file/steam-deck-homebrew/versions/${selectedVer.hash}.zip`,
+    version: selectedVer.name,
+    hash: selectedVer.hash,
   });
 }
 

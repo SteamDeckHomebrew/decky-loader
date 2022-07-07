@@ -1,6 +1,6 @@
 export interface Plugin {
-  name: any;
-  content: any;
-  icon: any;
+  name: string;
+  icon: JSX.Element;
+  content?: JSX.Element;
   onDismount?(): void;
 }

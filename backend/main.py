@@ -36,10 +36,28 @@ CONFIG = {
     "server_host": getenv("SERVER_HOST", "127.0.0.1"),
     "server_port": int(getenv("SERVER_PORT", "1337")),
     "live_reload": getenv("LIVE_RELOAD", "1") == "1",
-    "log_level": {"CRITICAL": 50, "ERROR": 40, "WARNING": 30, "INFO": 20, "DEBUG": 10}[getenv("LOG_LEVEL", "INFO")]
+    "log_level": {"CRITICAL": 50, "ERROR": 40, "WARNING": 30, "INFO": 20, "DEBUG": 10}[
+        getenv("LOG_LEVEL", "INFO")
+    ],
 }
 
-basicConfig(level=CONFIG["log_level"], format="[%(module)s][%(levelname)s]: %(message)s")
+basicConfig(
+    level=CONFIG["log_level"], format="[%(module)s][%(levelname)s]: %(message)s"
+)
+
+from asyncio import get_event_loop, sleep
+from json import dumps, loads
+from os import path
+from subprocess import Popen
+
+import aiohttp_cors
+from aiohttp.web import Application, run_app, static
+from aiohttp_jinja2 import setup as jinja_setup
+
+from browser import PluginBrowser
+from injector import inject_to_tab, tab_has_global_var
+from loader import Loader
+from utilities import Utilities
 
 logger = getLogger("Main")
 
@@ -54,17 +72,6 @@ class PluginManager:
     def __init__(self) -> None:
         self.loop = get_event_loop()
         self.web_app = Application()
-        self.web_app.middlewares.append(csrf_middleware)
-        self.cors = aiohttp_cors.setup(self.web_app, defaults={
-            "https://steamloopback.host": aiohttp_cors.ResourceOptions(
-                expose_headers="*",
-                allow_headers="*",
-                allow_credentials=True
-            )
-        })
-        self.plugin_loader = Loader(self.web_app, CONFIG["plugin_path"], self.loop, CONFIG["live_reload"])
-        self.plugin_browser = PluginBrowser(CONFIG["plugin_path"], self.web_app, self.plugin_loader.plugins)
-        self.settings = SettingsManager("loader", path.join(HOMEBREW_PATH, "settings"))
 
         self.utilities = Utilities(self)
         self.updater = Updater(self)
@@ -80,9 +87,7 @@ class PluginManager:
         self.web_app.add_routes([get("/auth/token", self.get_auth_token)])
 
         for route in list(self.web_app.router.routes()):
-             self.cors.add(route)
-        self.web_app.add_routes([static("/static", path.join(path.dirname(__file__), "static"))])
-        self.web_app.add_routes([static("/legacy", path.join(path.dirname(__file__), "legacy"))])
+
 
     def exception_handler(self, loop, context):
         if context["message"] == "Unclosed connection":
@@ -110,14 +115,25 @@ class PluginManager:
         await sleep(2)
         await self.inject_javascript()
         while True:
-            await sleep(5)
-            if not await tab_has_global_var("SP", "deckyHasLoaded"):
-                logger.info("Plugin loader isn't present in Steam anymore, reinjecting...")
+            await sleep(1)
+            if not await tab_has_global_var("SP", "DeckyPluginLoader"):
+                logger.info(
+                    "Plugin loader isn't present in Steam anymore, reinjecting..."
+                )
                 await self.inject_javascript()
 
     async def inject_javascript(self, request=None):
         try:
-            await inject_to_tab("SP", "try{window.deckyHasLoaded = true;(async()=>{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js')})();}catch(e){console.error(e)}", True)
+            await inject_to_tab(
+                "SP",
+                "try{"
+                + open(
+                    path.join(path.dirname(__file__), "./static/plugin-loader.iife.js"),
+                    "r",
+                ).read()
+                + "}catch(e){console.error(e)}",
+                True,
+            )
         except:
             logger.info("Failed to inject JavaScript into tab")
             pass

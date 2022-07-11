@@ -80,21 +80,26 @@ class PluginBrowser:
                 with ProcessPoolExecutor() as executor:
                     self.log.debug("Unzipping...")
                     ret = await get_event_loop().run_in_executor(
-                        executor, self._unzip_to_plugin_dir, res_zip, name, hash
+                        executor,
+                        self._unzip_to_plugin_dir,
+                        res_zip,
+                        name,
+                        hash
                     )
                     if ret:
                         self.log.info(f"Installed {name} (Version: {version})")
                     else:
-                        self.log.fatal(
-                            f"SHA-256 Mismatch!!!! {name} (Version: {version})"
-                        )
+                        self.log.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
             else:
                 self.log.fatal(f"Could not fetch from URL. {await res.text()}")
 
     async def request_plugin_install(self, artifact, name, version, hash):
         request_id = str(time())
         self.install_requests[request_id] = PluginInstallContext(
-            artifact, name, version, hash
+            artifact,
+            name,
+            version,
+            hash
         )
         tab = await get_tab("SP")
         await tab.open_websocket()
@@ -105,7 +110,10 @@ class PluginBrowser:
     async def confirm_plugin_install(self, request_id):
         request = self.install_requests.pop(request_id)
         await self._install(
-            request.artifact, request.name, request.version, request.hash
+            request.artifact,
+            request.name,
+            request.version,
+            request.hash
         )
 
     def cancel_plugin_install(self, request_id):

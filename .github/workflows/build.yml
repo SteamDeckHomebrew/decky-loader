@@ -2,52 +2,121 @@ name: Builder
 
 on:
   push:
-    branches: [ "*" ]
   pull_request:
-    branches: [ "*" ]
+  schedule:
+    - cron: '0 13 * * *' # run at 1 PM UTC
+  workflow_dispatch:
+    inputs:
+      release:
+        type: choice
+        description: Release the asset
+        default: 'none'
+        options:
+          - none
+          - prerelease
+          - release
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
-
-    name: Packager
+    name: Build PluginLoader
     runs-on: ubuntu-latest
 
     steps:
-    - name: 🧰 Checkout
+    - name: Checkout 🧰
       uses: actions/checkout@v3
 
-    - name: 💎 Set up NodeJS 17
+    - name: Set up NodeJS 17 💎
       uses: actions/setup-node@v3
       with:
         node-version: 17
       
-    - name: 🐍 Set up Python 3.10
+    - name: Set up Python 3.10 🐍
       uses: actions/setup-python@v3
       with:
         python-version: "3.10"
         
-    - name: ⬇️ Install Python dependencies
+    - name: Install Python dependencies ⬇️
       run: |
         python -m pip install --upgrade pip
         pip install pyinstaller
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        [ -f requirements.txt ] && pip install -r requirements.txt
 
-    - name: ⬇️ Install NodeJS dependencies
+    - name: Install NodeJS dependencies ⬇️
       run: |
         cd frontend
         npm i
         npm run build
 
-    - name: 🛠️ Build
-      run: |
-        pyinstaller --noconfirm --onefile --name "PluginLoader" --add-data ./backend/static:/static --add-data ./backend/legacy:/legacy ./backend/*.py
+    - name: Build 🛠️
+      run: pyinstaller --noconfirm --onefile --name "PluginLoader" --add-data ./backend/static:/static --add-data ./backend/legacy:/legacy ./backend/*.py
         
-    - name: ⬆️ Upload package
-      uses: actions/upload-artifact@v2
+    - name: Upload package artifact ⬆️
+      uses: actions/upload-artifact@v3
       with:
-        name: Plugin Loader
-        path: |
-          ./dist/PluginLoader
+        name: PluginLoader
+        path: ./dist/PluginLoader
+
+  release:
+    name: Release the package
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release == 'release' }}
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout 🧰
+      uses: actions/checkout@v3
+
+    - name: Fetch package artifact ⬇️
+      uses: actions/download-artifact@v3
+      with:
+        name: PluginLoader
+        path: dist
+
+    - name: Bump version and push tag ⏫
+      id: tag_version
+      uses: mathieudutour/github-tag-action@v6.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Release 📦
+      uses: softprops/action-gh-release@v1
+      with:
+        name: Release ${{ steps.tag_version.outputs.new_tag }}
+        tag_name: ${{ steps.tag_version.outputs.new_tag }}
+        files: ./dist/PluginLoader
+        generate_release_notes: true
+
+  nightly:
+    name: Release the nightly version of the package
+    if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.event.inputs.release == 'prerelease') }}
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout 🧰
+      uses: actions/checkout@v3
+
+    - name: Fetch package artifact ⬇️
+      uses: actions/download-artifact@v3
+      with:
+        name: PluginLoader
+        path: dist
+
+    - name: Bump version and push tag ⏫
+      id: tag_version
+      uses: mathieudutour/github-tag-action@v6.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        append_to_pre_release_tag: '-pre'
+
+    - name: Release 📦
+      uses: softprops/action-gh-release@v1
+      with:
+        name: Nightly ${{ steps.tag_version.outputs.new_tag }}
+        tag_name: ${{ steps.tag_version.outputs.new_tag }}
+        files: ./dist/PluginLoader
+        prerelease: true
+        generate_release_notes: true

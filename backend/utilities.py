@@ -23,9 +23,9 @@ class Utilities:
         }
 
         if context:
-            context.web_app.add_routes(
-                [web.post("/methods/{method_name}", self._handle_server_method_call)]
-            )
+            context.web_app.add_routes([
+                web.post("/methods/{method_name}", self._handle_server_method_call)
+            ])
 
     async def _handle_server_method_call(self, request):
         method_name = request.match_info["method_name"]
@@ -43,11 +43,12 @@ class Utilities:
             res["success"] = False
         return web.json_response(res)
 
-    async def install_plugin(
-        self, artifact="", name="No name", version="dev", hash=False
-    ):
+    async def install_plugin(self, artifact="", name="No name", version="dev", hash=False):
         return await self.context.plugin_browser.request_plugin_install(
-            artifact=artifact, name=name, version=version, hash=hash
+            artifact=artifact,
+            name=name,
+            version=version,
+            hash=hash
         )
 
     async def confirm_plugin_install(self, request_id):
@@ -61,9 +62,7 @@ class Utilities:
 
     async def http_request(self, method="", url="", **kwargs):
         async with ClientSession() as web:
-            async with web.request(
-                method, url, ssl=helpers.get_ssl_context(), **kwargs
-            ) as res:
+            async with web.request(method, url, ssl=helpers.get_ssl_context(), **kwargs) as res:
                 return {
                     "status": res.status,
                     "headers": dict(res.headers),
@@ -77,11 +76,20 @@ class Utilities:
         try:
             result = await inject_to_tab(tab, code, run_async)
             if "exceptionDetails" in result["result"]:
-                return {"success": False, "result": result["result"]}
+                return {
+                    "success": False,
+                    "result": result["result"]
+                }
 
-            return {"success": True, "result": result["result"]["result"].get("value")}
+            return {
+                "success": True,
+                "result": result["result"]["result"].get("value")
+            }
         except Exception as e:
-            return {"success": False, "result": e}
+            return {
+              "success": False,
+              "result": e
+            }
 
     async def inject_css_into_tab(self, tab, style):
         try:
@@ -89,42 +97,55 @@ class Utilities:
 
             result = await inject_to_tab(
                 tab,
-                f"""
-                (function() {{
+                f"""(function() {{
                     const style = document.createElement('style');
                     style.id = "{css_id}";
                     document.head.append(style);
                     style.textContent = `{style}`;
-                }})()
-                """,
+                }})()""",
                 False,
             )
 
             if "exceptionDetails" in result["result"]:
-                return {"success": False, "result": result["result"]}
+                return {
+                    "success": False,
+                    "result": result["result"]
+                }
 
-            return {"success": True, "result": css_id}
+            return {
+                "success": True,
+                "result": css_id
+            }
         except Exception as e:
-            return {"success": False, "result": e}
+            return {
+                "success": False,
+                "result": e
+            }
 
     async def remove_css_from_tab(self, tab, css_id):
         try:
             result = await inject_to_tab(
                 tab,
-                f"""
-                (function() {{
+                f"""(function() {{
                     let style = document.getElementById("{css_id}");
 
                     if (style.nodeName.toLowerCase() == 'style')
                         style.parentNode.removeChild(style);
-                }})()
-                """,
+                }})()""",
                 False,
             )
 
             if "exceptionDetails" in result["result"]:
-                return {"success": False, "result": result}
+                return {
+                    "success": False,
+                    "result": result
+                }
 
-            return {"success": True}
+            return {
+                "success": True
+            }
         except Exception as e:
-            return {"success": False, "result": e}
+            return {
+                "success": False,
+                "result": e
+            }

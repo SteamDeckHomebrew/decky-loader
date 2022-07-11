@@ -91,27 +91,36 @@ class PluginBrowser:
                 data = await res.read()
                 logger.debug(f"Read {len(data)} bytes")
                 res_zip = BytesIO(data)
-                with ProcessPoolExecutor() as executor:
-                    logger.debug("Unzipping...")
-                    ret = self._unzip_to_plugin_dir(res_zip, name, hash)
-                    if ret:
-                        logger.info(f"Installed {name} (Version: {version})")
-                        await inject_to_tab("SP", "window.syncDeckyPlugins()")
-                    else:
-                        logger.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
+                logger.debug("Unzipping...")
+                ret = self._unzip_to_plugin_dir(res_zip, name, hash)
+                if ret:
+                    logger.info(f"Installed {name} (Version: {version})")
+                    await inject_to_tab("SP", "window.syncDeckyPlugins()")
+                else:
+                    self.log.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
             else:
                 logger.fatal(f"Could not fetch from URL. {await res.text()}")
 
     async def request_plugin_install(self, artifact, name, version, hash):
         request_id = str(time())
-        self.install_requests[request_id] = PluginInstallContext(artifact, name, version, hash)
+        self.install_requests[request_id] = PluginInstallContext(
+            artifact,
+            name,
+            version,
+            hash
+        )
         tab = await get_tab("SP")
         await tab.open_websocket()
         await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}')")
 
     async def confirm_plugin_install(self, request_id):
         request = self.install_requests.pop(request_id)
-        await self._install(request.artifact, request.name, request.version, request.hash)
+        await self._install(
+            request.artifact,
+            request.name,
+            request.version,
+            request.hash
+        )
 
     def cancel_plugin_install(self, request_id):
         self.install_requests.pop(request_id)

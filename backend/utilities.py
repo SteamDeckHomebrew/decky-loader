@@ -81,10 +81,6 @@ class Utilities:
         try:
             result = await inject_to_tab(tab, code, run_async)
             if "exceptionDetails" in result["result"]:
-                return {
-                    "success": False,
-                    "result": result["result"]
-                }
 
             return {
                 "success": True,
@@ -92,8 +88,8 @@ class Utilities:
             }
         except Exception as e:
             return {
-                "success": False,
-                "result": e
+              "success": False,
+              "result": e
             }
 
     async def inject_css_into_tab(self, tab, style):

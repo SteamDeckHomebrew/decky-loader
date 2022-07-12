@@ -78,7 +78,7 @@ class PluginManager:
                 allow_headers="*"
             )
         })
-        self.plugin_loader = Loader(self.web_app, CONFIG["plugin_path"], self.loop, CONFIG["live_reload"])        self.plugin_browser = PluginBrowser(CONFIG["plugin_path"])
+        self.plugin_loader = Loader(self.web_app, CONFIG["plugin_path"], self.loop, CONFIG["live_reload"])
         self.plugin_browser = PluginBrowser(CONFIG["plugin_path"])
         self.utilities = Utilities(self)
         self.updater = Updater(self)

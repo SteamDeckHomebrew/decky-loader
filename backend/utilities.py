@@ -19,7 +19,7 @@ class Utilities:
             "uninstall_plugin": self.uninstall_plugin,
             "execute_in_tab": self.execute_in_tab,
             "inject_css_into_tab": self.inject_css_into_tab,
-            "remove_css_from_tab": self.remove_css_from_tab,
+            "remove_css_from_tab": self.remove_css_from_tab
         }
 
         if context:

@@ -108,22 +108,62 @@ jobs:
     - name: Bump version ⏫
       id: tag_version
       uses: mathieudutour/github-tag-action@v6.0
+      if: ${{ github.event_name == 'workflow_dispatch' }}
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         dry_run: true
 
     - name: Push tag ⏫
       uses: rickstaa/action-create-tag@v1.3.2
-      if: ${{ steps.tag_version.outputs.new_tag !== undefined }}
+      if: ${{ steps.tag_version.outputs.new_tag !== undefined && github.event_name == 'workflow_dispatch' }}
       with:
         tag: ${{ steps.tag_version.outputs.new_tag }}-pre
         message: Nightly ${{ steps.tag_version.outputs.new_tag }}
 
     - name: Release 📦
       uses: softprops/action-gh-release@v1
+      if: ${{ github.event_name == 'workflow_dispatch' }}
       with:
         name: Nightly ${{ steps.tag_version.outputs.new_tag }}
         tag_name: ${{ steps.tag_version.outputs.new_tag }}-pre
+        files: ./dist/PluginLoader
+        prerelease: true
+        generate_release_notes: true
+
+    - name: Get latest release tag
+      id: latest_tag
+      if: ${{ github.event_name == 'schedule' }}
+      uses: WyriHaximus/github-action-get-previous-tag@v1
+
+    - name: Bump prerelease
+      id: bump
+      if: ${{ github.event_name == 'schedule' }}
+      run: |
+        tag="${{ steps.latest_tag.outputs.tag }}"
+        prerelease_regex="^(v*[0-9]+\.[0-9]+\.[0-9])-([0-9])$"
+        if [[ $tag ~= $prerelease_regex ]]; then
+          version=$BASH_REMATCH[1]
+          prerelease=$BASH_REMATCH[2]
+          prerelease=$(($prerelease+1))
+          echo ::set-output new_tag="$version-$prerelease"
+        else
+          version=$tag
+          echo ::set-output new_tag="$version-1"
+        fi
+
+    - name: Push tag ⏫
+      uses: rickstaa/action-create-tag@v1.3.2
+      if: ${{ github.event_name == 'schedule' }}
+      with:
+        tag: ${{ steps.bump.outputs.new_tag }}
+        message: Nightly ${{ steps.bump.outputs.new_tag }}
+
+    - name: Release 📦
+      uses: softprops/action-gh-release@v1
+      if: ${{ github.event_name == 'schedule' }}
+      with:
+        name: Nightly ${{ steps.bump.outputs.new_tag }}
+        tag_name: ${{ steps.bump.outputs.new_tag }}
         files: ./dist/PluginLoader
         prerelease: true
         generate_release_notes: true

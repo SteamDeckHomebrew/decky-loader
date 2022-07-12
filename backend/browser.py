@@ -95,26 +95,14 @@ class PluginBrowser:
 
     async def request_plugin_install(self, artifact, name, version, hash):
         request_id = str(time())
-        self.install_requests[request_id] = PluginInstallContext(
-            artifact,
-            name,
-            version,
-            hash
-        )
+        self.install_requests[request_id] = PluginInstallContext(artifact, name, version, hash)
         tab = await get_tab("SP")
         await tab.open_websocket()
-        await tab.evaluate_js(
-            f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}')"
-        )
+        await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}')")
 
     async def confirm_plugin_install(self, request_id):
         request = self.install_requests.pop(request_id)
-        await self._install(
-            request.artifact,
-            request.name,
-            request.version,
-            request.hash
-        )
+        await self._install(request.artifact, request.name, request.version, request.hash)
 
     def cancel_plugin_install(self, request_id):
         self.install_requests.pop(request_id)

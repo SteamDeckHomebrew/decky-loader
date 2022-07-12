@@ -72,7 +72,14 @@ class PluginManager:
     def __init__(self) -> None:
         self.loop = get_event_loop()
         self.web_app = Application()
-
+        self.cors = aiohttp_cors.setup(self.web_app, defaults={
+            "https://steamloopback.host": aiohttp_cors.ResourceOptions(
+                expose_headers="*",
+                allow_headers="*"
+            )
+        })
+        self.plugin_loader = Loader(self.web_app, CONFIG["plugin_path"], self.loop, CONFIG["live_reload"])        self.plugin_browser = PluginBrowser(CONFIG["plugin_path"])
+        self.plugin_browser = PluginBrowser(CONFIG["plugin_path"])
         self.utilities = Utilities(self)
         self.updater = Updater(self)
 
@@ -124,16 +131,7 @@ class PluginManager:
 
     async def inject_javascript(self, request=None):
         try:
-            await inject_to_tab(
-                "SP",
-                "try{"
-                + open(
-                    path.join(path.dirname(__file__), "./static/plugin-loader.iife.js"),
-                    "r",
-                ).read()
-                + "}catch(e){console.error(e)}",
-                True,
-            )
+            await inject_to_tab("SP", "try{" + open(path.join(path.dirname(__file__), "static/plugin-loader.iife.js"), "r").read() + "}catch(e){console.error(e)}", True)
         except:
             logger.info("Failed to inject JavaScript into tab")
             pass

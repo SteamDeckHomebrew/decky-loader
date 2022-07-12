@@ -66,7 +66,7 @@ class Utilities:
                 return {
                     "status": res.status,
                     "headers": dict(res.headers),
-                    "body": await res.text(),
+                    "body": await res.text()
                 }
 
     async def ping(self, **kwargs):

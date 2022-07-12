@@ -131,7 +131,7 @@ class PluginManager:
 
     async def inject_javascript(self, request=None):
         try:
-            await inject_to_tab("SP", "try{" + open(path.join(path.dirname(__file__), "static/plugin-loader.iife.js"), "r").read() + "}catch(e){console.error(e)}", True)
+            await inject_to_tab("SP", "try{" + open(path.join(path.dirname(__file__), "static", "plugin-loader.iife.js"), "r").read() + "}catch(e){console.error(e)}", True)
         except:
             logger.info("Failed to inject JavaScript into tab")
             pass

@@ -130,26 +130,12 @@ jobs:
         prerelease: true
         generate_release_notes: true
 
-    - name: Get latest release tag
-      id: latest_tag
-      if: ${{ github.event_name == 'schedule' }}
-      uses: WyriHaximus/github-action-get-previous-tag@v1
-
     - name: Bump prerelease
       id: bump
       if: ${{ github.event_name == 'schedule' }}
       run: |
-        tag="${{ steps.latest_tag.outputs.tag }}"
-        prerelease_regex="^(v*[0-9]+\.[0-9]+\.[0-9])-([0-9])$"
-        if [[ $tag ~= $prerelease_regex ]]; then
-          version=$BASH_REMATCH[1]
-          prerelease=$BASH_REMATCH[2]
-          prerelease=$(($prerelease+1))
-          echo ::set-output new_tag="$version-$prerelease"
-        else
-          version=$tag
-          echo ::set-output new_tag="$version-1"
-        fi
+        git_hash=$(git rev-parse --short "$GITHUB_SHA")
+        echo ::set-output new_tag="nightly-$git_hash"
 
     - name: Push tag ⏫
       uses: rickstaa/action-create-tag@v1.3.2

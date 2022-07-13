@@ -115,7 +115,7 @@ jobs:
 
     - name: Push tag ⏫
       uses: rickstaa/action-create-tag@v1.3.2
-      if: ${{ steps.tag_version.outputs.new_tag !== undefined && github.event_name == 'workflow_dispatch' }}
+      if: ${{ steps.tag_version.outputs.new_tag != undefined && github.event_name == 'workflow_dispatch' }}
       with:
         tag: ${{ steps.tag_version.outputs.new_tag }}-pre
         message: Nightly ${{ steps.tag_version.outputs.new_tag }}

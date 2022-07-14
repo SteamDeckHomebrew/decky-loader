@@ -111,31 +111,3 @@ class Updater:
         call(["systemctl", "daemon-reload"])
         call(["systemctl", "restart", "plugin_loader"])
         exit(0)
-    
-    # async def http_request(self, method="", url="", **kwargs):
-    #     async with ClientSession() as web:
-    #         async with web.request(method, url, ssl=helpers.get_ssl_context(), **kwargs) as res:
-    #             return {
-    #                 "status": res.status,
-    #                 "headers": dict(res.headers),
-    #                 "body": await res.text()
-    #             }
-
-    # async def execute_in_tab(self, tab, run_async, code):
-    #     try:
-    #         result = await inject_to_tab(tab, code, run_async)
-    #         if "exceptionDetails" in result["result"]:
-    #             return {
-    #                 "success": False,
-    #                 "result": result["result"]
-    #             }
-
-    #         return {
-    #             "success": True,
-    #             "result" : result["result"]["result"].get("value")
-    #         }
-    #     except Exception as e:
-    #         return {
-    #             "success": False,
-    #             "result": e
-    #         }

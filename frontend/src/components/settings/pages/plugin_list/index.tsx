@@ -1,7 +1,7 @@
 import { DialogButton, staticClasses } from 'decky-frontend-lib';
 import { FaTrash } from 'react-icons/fa';
 
-import { useDeckyState } from '../../DeckyState';
+import { useDeckyState } from '../../../DeckyState';
 
 export default function PluginList() {
   const { plugins } = useDeckyState();

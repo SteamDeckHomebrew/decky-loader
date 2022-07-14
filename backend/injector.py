@@ -33,8 +33,10 @@ class Tab:
             return (await self.websocket.receive_json()) if receive else None
         raise RuntimeError("Websocket not opened")
 
-    async def evaluate_js(self, js, run_async=False):
-        await self.open_websocket()
+    async def evaluate_js(self, js, run_async=False, manage_socket=True):
+        if manage_socket:
+            await self.open_websocket()
+
         res = await self._send_devtools_cmd({
             "id": 1,
             "method": "Runtime.evaluate",
@@ -45,7 +47,8 @@ class Tab:
             }
         })
 
-        await self.client.close()
+        if manage_socket:
+            await self.client.close()
         return res
 
     async def get_steam_resource(self, url):
@@ -72,7 +75,7 @@ async def get_tabs():
             r = await res.json()
             return [Tab(i) for i in r]
         else:
-            raise Exception(f"/json did not return 200. {await r.text()}")
+            raise Exception(f"/json did not return 200. {await res.text()}")
 
 async def get_tab(tab_name):
     tabs = await get_tabs()

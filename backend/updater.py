@@ -22,7 +22,8 @@ class Updater:
         self.updater_methods = {
             "get_version": self.get_version,
             "do_update": self.do_update,
-            "do_restart": self.do_restart
+            "do_restart": self.do_restart,
+            "check_for_updates": self.check_for_updates
         }
         self.remoteVer = None
         try:
@@ -63,14 +64,18 @@ class Updater:
         else:
             return {"current": "unknown", "updatable": False}
 
+    async def check_for_updates(self):
+        async with ClientSession() as web:
+            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases", ssl=helpers.get_ssl_context()) as res:
+                remoteVersions = await res.json()
+                self.remoteVer = next(filter(lambda ver: ver["prerelease"] and ver["tag_name"].startswith("v") and ver["tag_name"].endswith("-pre"), remoteVersions), None)
+                logger.info("Updated remote version information")
+        return await self.get_version()
+
     async def version_reloader(self):
         while True:
             try:
-                async with ClientSession() as web:
-                    async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases", ssl=helpers.get_ssl_context()) as res:
-                        remoteVersions = await res.json()
-                        self.remoteVer = next(filter(lambda ver: ver["prerelease"] and ver["tag_name"].startswith("v") and ver["tag_name"].endswith("-pre"), remoteVersions), None)
-                        logger.info("Updated remote version information")
+                await self.check_for_updates()
             except:
                 pass
             await sleep(60 * 60) # 1 hour

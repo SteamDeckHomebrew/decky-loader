@@ -24,6 +24,7 @@ export default function UpdaterSettings() {
   const [versionInfo, setVersionInfo] = useState<VerInfo | null>(null);
   const [updateProgress, setUpdateProgress] = useState<number>(-1);
   const [reloading, setReloading] = useState<boolean>(false);
+  const [checkingForUpdates, setCheckingForUpdates] = useState<boolean>(false);
   useEffect(() => {
     (async () => {
       const res = (await callUpdaterMethod('get_version')) as { result: VerInfo };
@@ -51,25 +52,36 @@ export default function UpdaterSettings() {
     >
       {updateProgress == -1 ? (
         <DialogButton
-          disabled={
-            !versionInfo?.updatable || !versionInfo?.remote || versionInfo.remote.tag_name == versionInfo.current
+          disabled={!versionInfo?.updatable || !versionInfo?.remote || checkingForUpdates}
+          onClick={
+            versionInfo?.remote?.tag_name == versionInfo?.current
+              ? async () => {
+                  setCheckingForUpdates(true);
+                  const res = (await callUpdaterMethod('check_for_updates')) as { result: VerInfo };
+                  setVersionInfo(res.result);
+                  setCheckingForUpdates(false);
+                }
+              : async () => {
+                  window.DeckyUpdater = {
+                    updateProgress: (i) => {
+                      setUpdateProgress(i);
+                    },
+                    finish: async () => {
+                      setUpdateProgress(0);
+                      setReloading(true);
+                      await finishUpdate();
+                    },
+                  };
+                  setUpdateProgress(0);
+                  callUpdaterMethod('do_update');
+                }
           }
-          onClick={async () => {
-            window.DeckyUpdater = {
-              updateProgress: (i) => {
-                setUpdateProgress(i);
-              },
-              finish: async () => {
-                setUpdateProgress(0);
-                setReloading(true);
-                await finishUpdate();
-              },
-            };
-            setUpdateProgress(0);
-            callUpdaterMethod('do_update');
-          }}
         >
-          Update
+          {checkingForUpdates
+            ? 'Checking'
+            : versionInfo?.remote?.tag_name == versionInfo?.current
+            ? 'Check For Updates'
+            : 'Install Update'}
         </DialogButton>
       ) : (
         <ProgressBarWithInfo

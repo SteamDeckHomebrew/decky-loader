@@ -52,9 +52,9 @@ export default function UpdaterSettings() {
     >
       {updateProgress == -1 ? (
         <DialogButton
-          disabled={!versionInfo?.updatable || !versionInfo?.remote || checkingForUpdates}
+          disabled={!versionInfo?.updatable || checkingForUpdates}
           onClick={
-            versionInfo?.remote?.tag_name == versionInfo?.current
+            !versionInfo?.remote || versionInfo?.remote?.tag_name == versionInfo?.current
               ? async () => {
                   setCheckingForUpdates(true);
                   const res = (await callUpdaterMethod('check_for_updates')) as { result: VerInfo };
@@ -79,7 +79,7 @@ export default function UpdaterSettings() {
         >
           {checkingForUpdates
             ? 'Checking'
-            : versionInfo?.remote?.tag_name == versionInfo?.current
+            : !versionInfo?.remote || versionInfo?.remote?.tag_name == versionInfo?.current
             ? 'Check For Updates'
             : 'Install Update'}
         </DialogButton>
@@ -88,7 +88,6 @@ export default function UpdaterSettings() {
           layout="inline"
           bottomSeparator={false}
           nProgress={updateProgress}
-          nTransitionSec={0.01}
           indeterminate={reloading}
           sOperationText={reloading ? 'Reloading' : 'Updating'}
         />

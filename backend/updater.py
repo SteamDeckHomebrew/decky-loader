@@ -59,7 +59,7 @@ class Updater:
             return {
                 "current": self.localVer,
                 "remote": self.remoteVer,
-                "updatable": self.remoteVer != None
+                "updatable": self.localVer != None
             }
         else:
             return {"current": "unknown", "updatable": False}
@@ -103,8 +103,7 @@ class Updater:
                         raw += len(c)
                         new_progress = round((raw / total) * 100)
                         if progress != new_progress:
-                            if new_progress - progress>= 2:
-                                self.context.loop.create_task(tab.evaluate_js(f"window.DeckyUpdater.updateProgress({progress})", False, False))
+                            self.context.loop.create_task(tab.evaluate_js(f"window.DeckyUpdater.updateProgress({new_progress})", False, False, False))
                             progress = new_progress
 
                 with open(path.join(getcwd(), ".loader.version"), "w") as out:
@@ -119,4 +118,3 @@ class Updater:
     async def do_restart(self):
         call(["systemctl", "daemon-reload"])
         call(["systemctl", "restart", "plugin_loader"])
-        exit(0)

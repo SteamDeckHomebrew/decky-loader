@@ -33,7 +33,7 @@ class Tab:
             return (await self.websocket.receive_json()) if receive else None
         raise RuntimeError("Websocket not opened")
 
-    async def evaluate_js(self, js, run_async=False, manage_socket=True):
+    async def evaluate_js(self, js, run_async=False, manage_socket=True, get_result=True):
         if manage_socket:
             await self.open_websocket()
 
@@ -45,7 +45,7 @@ class Tab:
                 "userGesture": True,
                 "awaitPromise": run_async
             }
-        })
+        }, get_result)
 
         if manage_socket:
             await self.client.close()

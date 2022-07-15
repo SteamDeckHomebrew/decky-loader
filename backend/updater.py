@@ -73,6 +73,7 @@ class Updater:
         return await self.get_version()
 
     async def version_reloader(self):
+        await sleep(30)
         while True:
             try:
                 await self.check_for_updates()

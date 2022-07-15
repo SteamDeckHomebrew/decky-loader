@@ -91,8 +91,10 @@ class Updater:
         async with ClientSession() as web:
             async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
                 total = int(res.headers.get('content-length', 0))
-
-                remove(path.join(getcwd(), "PluginLoader"))
+                try:
+                    remove(path.join(getcwd(), "PluginLoader"))
+                except:
+                    pass
                 with open(path.join(getcwd(), "PluginLoader"), "wb") as out:
                     progress = 0
                     raw = 0

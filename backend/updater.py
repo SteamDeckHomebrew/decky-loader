@@ -8,7 +8,7 @@ from aiohttp import ClientSession, web
 
 from injector import inject_to_tab, get_tab
 
-from os import getcwd, path
+from os import getcwd, path, remove
 
 from subprocess import call
 
@@ -92,6 +92,7 @@ class Updater:
             async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
                 total = int(res.headers.get('content-length', 0))
 
+                remove(path.join(getcwd(), "PluginLoader"))
                 with open(path.join(getcwd(), "PluginLoader"), "wb") as out:
                     progress = 0
                     raw = 0

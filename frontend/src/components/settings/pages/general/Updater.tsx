@@ -1,4 +1,4 @@
-import { DialogButton, Field, ProgressBarWithInfo, Spinner, sleep } from 'decky-frontend-lib';
+import { DialogButton, Field, ProgressBarWithInfo, Spinner } from 'decky-frontend-lib';
 import { useEffect, useState } from 'react';
 import { FaArrowDown } from 'react-icons/fa';
 

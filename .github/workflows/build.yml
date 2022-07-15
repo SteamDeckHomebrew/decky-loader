@@ -3,8 +3,8 @@ name: Builder
 on:
   push:
   pull_request:
-  schedule:
-    - cron: '0 13 * * *' # run at 1 PM UTC
+  # schedule:
+  #   - cron: '0 13 * * *' # run at 1 PM UTC
   workflow_dispatch:
     inputs:
       release:
@@ -116,55 +116,47 @@ jobs:
     - name: Prepare tag ⚙️
       id: ready_tag
       run: |
-        shopt -s extglob
-        echo ::set-output name=${${{ steps.old_tag.outputs.tag }}#"-pre"}
-
-    - name: Bump version ⏫
-      id: tag_version
-      uses: anothrNick/github-tag-action@1.39.0
-      if: ${{ github.event_name == 'workflow_dispatch' }}
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        WITH_V: true
-        INITIAL_VERSION: ${{ steps.ready_tag.outputs.name }}
+        export VERSION=${{ steps.old_tag.outputs.tag }}
+        export COMMIT=$(git log -1 --pretty=format:%h)
+        echo ::set-output name=tag_name::$(sed -r 's/-pre(.*)?$//' <<< $VERSION)-$COMMIT-pre
 
     - name: Push tag 📤
       uses: rickstaa/action-create-tag@v1.3.2
-      if: ${{ steps.tag_version.outputs.new_tag && github.event_name == 'workflow_dispatch' }}
+      if: ${{ steps.ready_tag.outputs.tag_name && github.event_name == 'workflow_dispatch' }}
       with:
-        tag: ${{ steps.tag_version.outputs.new_tag }}-pre
-        message: Nightly ${{ steps.tag_version.outputs.new_tag }}
+        tag: ${{ steps.ready_tag.outputs.tag_name }}
+        message: Nightly ${{ steps.ready_tag.outputs.tag_name }}
 
     - name: Release 📦
       uses: softprops/action-gh-release@v1
       if: ${{ github.event_name == 'workflow_dispatch' }}
       with:
-        name: Nightly ${{ steps.tag_version.outputs.new_tag }}
-        tag_name: ${{ steps.tag_version.outputs.new_tag }}-pre
+        name: Prerelease ${{ steps.ready_tag.outputs.tag_name }}
+        tag_name: ${{ steps.ready_tag.outputs.tag_name }}
         files: ./dist/PluginLoader
         prerelease: true
         generate_release_notes: true
 
-    - name: Bump prerelease ⏫
-      id: bump
-      if: ${{ github.event_name == 'schedule' }}
-      run: |
-        git_hash=$(git rev-parse --short "$GITHUB_SHA")
-        echo ::set-output new_tag="nightly-$git_hash"
+    # - name: Bump prerelease ⏫
+    #   id: bump
+    #   if: ${{ github.event_name == 'schedule' }}
+    #   run: |
+    #     git_hash=$(git rev-parse --short "$GITHUB_SHA")
+    #     echo ::set-output new_tag="nightly-$git_hash"
 
-    - name: Push tag 📤
-      uses: rickstaa/action-create-tag@v1.3.2
-      if: ${{ github.event_name == 'schedule' }}
-      with:
-        tag: ${{ steps.bump.outputs.new_tag }}
-        message: Nightly ${{ steps.bump.outputs.new_tag }}
+    # - name: Push tag 📤
+    #   uses: rickstaa/action-create-tag@v1.3.2
+    #   if: ${{ github.event_name == 'schedule' }}
+    #   with:
+    #     tag: ${{ steps.bump.outputs.new_tag }}
+    #     message: Nightly ${{ steps.bump.outputs.new_tag }}
 
-    - name: Release 📦
-      uses: softprops/action-gh-release@v1
-      if: ${{ github.event_name == 'schedule' }}
-      with:
-        name: Nightly ${{ steps.bump.outputs.new_tag }}
-        tag_name: ${{ steps.bump.outputs.new_tag }}
-        files: ./dist/PluginLoader
-        prerelease: true
-        generate_release_notes: true
+    # - name: Release 📦
+    #   uses: softprops/action-gh-release@v1
+    #   if: ${{ github.event_name == 'schedule' }}
+    #   with:
+    #     name: Nightly ${{ steps.bump.outputs.new_tag }}
+    #     tag_name: ${{ steps.bump.outputs.new_tag }}
+    #     files: ./dist/PluginLoader
+    #     prerelease: true
+    #     generate_release_notes: true

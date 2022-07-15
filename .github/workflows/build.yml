@@ -116,7 +116,7 @@ jobs:
     - name: Prepare tag ⚙️
       id: ready_tag
       run: |
-        echo ::set-output name=${${{ jobs.old_tag.outputs.tag }}#"-pre"}
+        echo ::set-output name=${${{ steps.old_tag.outputs.tag }}#"-pre"}
 
     - name: Bump version ⏫
       id: tag_version
@@ -125,7 +125,7 @@ jobs:
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: true
-        INITIAL_VERSION: ${{ jobs.ready_tag.outputs.name }}
+        INITIAL_VERSION: ${{ steps.ready_tag.outputs.name }}
 
     - name: Push tag 📤
       uses: rickstaa/action-create-tag@v1.3.2

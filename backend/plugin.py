@@ -78,12 +78,17 @@ class PluginWrapper:
 
     async def _open_socket_if_not_exists(self):
         if not self.reader:
-            while True:
+            retries = 0
+            while retries < 10:
                 try:
                     self.reader, self.writer = await open_unix_connection(self.socket_addr)
-                    break
+                    return True
                 except:
-                    await sleep(0)
+                    await sleep(2)
+                    retries += 1
+            return False
+        else:
+            return True
 
     def start(self):
         if self.passive:
@@ -95,21 +100,21 @@ class PluginWrapper:
         if self.passive:
             return
         async def _(self):
-            await self._open_socket_if_not_exists()
-            self.writer.write((dumps({"stop": True})+"\n").encode("utf-8"))
-            await self.writer.drain()
-            self.writer.close()
+            if await self._open_socket_if_not_exists():
+                self.writer.write((dumps({"stop": True})+"\n").encode("utf-8"))
+                await self.writer.drain()
+                self.writer.close()
         get_event_loop().create_task(_(self))
 
     async def execute_method(self, method_name, kwargs):
         if self.passive:
             raise RuntimeError("This plugin is passive (aka does not implement main.py)")
         async with self.method_call_lock:
-            await self._open_socket_if_not_exists()
-            self.writer.write(
-                (dumps({"method": method_name, "args": kwargs})+"\n").encode("utf-8"))
-            await self.writer.drain()
-            res = loads((await self.reader.readline()).decode("utf-8"))
-            if not res["success"]:
-                raise Exception(res["res"])
-            return res["res"]
+            if await self._open_socket_if_not_exists():
+                self.writer.write(
+                    (dumps({"method": method_name, "args": kwargs})+"\n").encode("utf-8"))
+                await self.writer.drain()
+                res = loads((await self.reader.readline()).decode("utf-8"))
+                if not res["success"]:
+                    raise Exception(res["res"])
+                return res["res"]

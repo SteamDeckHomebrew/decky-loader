@@ -12,11 +12,10 @@ sudo -u deck mkdir -p ${HOMEBREW_FOLDER}/services
 sudo -u deck mkdir -p ${HOMEBREW_FOLDER}/plugins
 
 # Download latest release and install it
-RELEASES="$(curl -s 'https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases')"
-RELEASE="$($RELEASES | jq -r "first(.[] | select(.prerelease == "true"))")"
-VERSION="$($RELEASE | jq -r ".tag_name")"
-DOWNLOADURL="$($RELEASE | jq -r ".assets[].browser_download_url")"
-# printf "DOWNLOADURL=$DOWNLOADURL\n"
+RELEASE="$(curl -s 'https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases' | jq -r "first(.[] | select(.prerelease == "true"))")"
+VERSION="$(jq -r ".tag_name" <<< $RELEASE)"
+DOWNLOADURL="$(jq -r ".assets[].browser_download_url" <<< $RELEASE)"
+
 curl -L $DOWNLOADURL --output ${HOMEBREW_FOLDER}/services/PluginLoader
 chmod +x ${HOMEBREW_FOLDER}/services/PluginLoader
 echo $VERSION > ${HOMEBREW_FOLDER}/services/.loader.version

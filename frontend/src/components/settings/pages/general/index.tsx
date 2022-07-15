@@ -2,7 +2,8 @@ import { DialogButton, Field, TextField } from 'decky-frontend-lib';
 import { useState } from 'react';
 import { FaShapes } from 'react-icons/fa';
 
-import { installFromURL } from '../../store/Store';
+import { installFromURL } from '../../../store/Store';
+import UpdaterSettings from './Updater';
 
 export default function GeneralSettings() {
   const [pluginURL, setPluginURL] = useState('');
@@ -18,12 +19,15 @@ export default function GeneralSettings() {
           onChange={(e) => setChecked(e)}
         />
       </Field> */}
+      <UpdaterSettings />
       <Field
         label="Manual plugin install"
         description={<TextField label={'URL'} value={pluginURL} onChange={(e) => setPluginURL(e?.target.value)} />}
         icon={<FaShapes style={{ display: 'block' }} />}
       >
-        <DialogButton onClick={() => installFromURL(pluginURL)}>Install</DialogButton>
+        <DialogButton disabled={pluginURL.length == 0} onClick={() => installFromURL(pluginURL)}>
+          Install
+        </DialogButton>
       </Field>
     </div>
   );

@@ -1,8 +1,10 @@
 import PluginLoader from './plugin-loader';
+import { DeckyUpdater } from './updater';
 
 declare global {
   interface Window {
     DeckyPluginLoader: PluginLoader;
+    DeckyUpdater?: DeckyUpdater;
     importDeckyPlugin: Function;
     syncDeckyPlugins: Function;
   }

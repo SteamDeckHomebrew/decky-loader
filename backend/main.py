@@ -27,6 +27,7 @@ from browser import PluginBrowser
 from injector import inject_to_tab, tab_has_global_var
 from loader import Loader
 from utilities import Utilities
+from updater import Updater
 
 logger = getLogger("Main")
 
@@ -47,6 +48,7 @@ class PluginManager:
         self.plugin_loader = Loader(self.web_app, CONFIG["plugin_path"], self.loop, CONFIG["live_reload"])
         self.plugin_browser = PluginBrowser(CONFIG["plugin_path"], self.web_app)
         self.utilities = Utilities(self)
+        self.updater = Updater(self)
 
         jinja_setup(self.web_app)
         self.web_app.on_startup.append(self.inject_javascript)

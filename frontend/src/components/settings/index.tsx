@@ -1,7 +1,7 @@
 import { SidebarNavigation } from 'decky-frontend-lib';
 
-import GeneralSettings from './pages/GeneralSettings';
-import PluginList from './pages/PluginList';
+import GeneralSettings from './pages/general';
+import PluginList from './pages/plugin_list';
 
 export default function SettingsPage() {
   return (

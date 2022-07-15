@@ -118,7 +118,7 @@ jobs:
       run: |
         export VERSION=${{ steps.old_tag.outputs.tag }}
         export COMMIT=$(git log -1 --pretty=format:%h)
-        echo ::set-output name=tag_name::$(sed -r 's/-pre(.*)?$//' <<< $VERSION)-$COMMIT-pre
+        echo ::set-output name=tag_name::$(sed -r 's/(-.*)?-pre$//' <<< $VERSION)-$COMMIT-pre
 
     - name: Push tag 📤
       uses: rickstaa/action-create-tag@v1.3.2

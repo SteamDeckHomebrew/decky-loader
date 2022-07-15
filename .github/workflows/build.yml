@@ -116,7 +116,7 @@ jobs:
     - name: Prepare tag ⚙️
       id: ready_tag
       run: |
-        echo ::set-output name=${${{ steps.old_tag.outputs.tag }}#"-pre"}
+        echo ::set-output name=${${{ steps.old_tag.outputs.tag }}"-pre"}
 
     - name: Bump version ⏫
       id: tag_version

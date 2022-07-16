@@ -6,14 +6,17 @@ from aiohttp import ClientSession, web
 from injector import inject_to_tab
 import helpers
 
+
 class Utilities:
     def __init__(self, context) -> None:
         self.context = context
         self.util_methods = {
             "ping": self.ping,
             "http_request": self.http_request,
+            "install_plugin": self.install_plugin,
             "cancel_plugin_install": self.cancel_plugin_install,
             "confirm_plugin_install": self.confirm_plugin_install,
+            "uninstall_plugin": self.uninstall_plugin,
             "execute_in_tab": self.execute_in_tab,
             "inject_css_into_tab": self.inject_css_into_tab,
             "remove_css_from_tab": self.remove_css_from_tab
@@ -40,11 +43,22 @@ class Utilities:
             res["success"] = False
         return web.json_response(res)
 
+    async def install_plugin(self, artifact="", name="No name", version="dev", hash=False):
+        return await self.context.plugin_browser.request_plugin_install(
+            artifact=artifact,
+            name=name,
+            version=version,
+            hash=hash
+        )
+
     async def confirm_plugin_install(self, request_id):
         return await self.context.plugin_browser.confirm_plugin_install(request_id)
 
     def cancel_plugin_install(self, request_id):
         return self.context.plugin_browser.cancel_plugin_install(request_id)
+
+    async def uninstall_plugin(self, name):
+        return await self.context.plugin_browser.uninstall_plugin(name)
 
     async def http_request(self, method="", url="", **kwargs):
         async with ClientSession() as web:
@@ -69,7 +83,7 @@ class Utilities:
 
             return {
                 "success": True,
-                "result" : result["result"]["result"].get("value")
+                "result": result["result"]["result"].get("value")
             }
         except Exception as e:
             return {
@@ -81,15 +95,16 @@ class Utilities:
         try:
             css_id = str(uuid.uuid4())
 
-            result = await inject_to_tab(tab,
-                f"""
-                (function() {{
+            result = await inject_to_tab(
+                tab,
+                f"""(function() {{
                     const style = document.createElement('style');
                     style.id = "{css_id}";
                     document.head.append(style);
                     style.textContent = `{style}`;
-                }})()
-                """, False)
+                }})()""",
+                False,
+            )
 
             if "exceptionDetails" in result["result"]:
                 return {
@@ -99,7 +114,7 @@ class Utilities:
 
             return {
                 "success": True,
-                "result" : css_id
+                "result": css_id
             }
         except Exception as e:
             return {
@@ -109,15 +124,16 @@ class Utilities:
 
     async def remove_css_from_tab(self, tab, css_id):
         try:
-            result = await inject_to_tab(tab,
-                f"""
-                (function() {{
+            result = await inject_to_tab(
+                tab,
+                f"""(function() {{
                     let style = document.getElementById("{css_id}");
 
                     if (style.nodeName.toLowerCase() == 'style')
                         style.parentNode.removeChild(style);
-                }})()
-                """, False)
+                }})()""",
+                False,
+            )
 
             if "exceptionDetails" in result["result"]:
                 return {

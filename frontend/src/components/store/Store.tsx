@@ -56,7 +56,7 @@ export function requestLegacyPluginInstall(plugin: LegacyStorePlugin, selectedVe
         // do nothing
       }}
     >
-      <div className={staticClasses.Title} style={{ flexDirection: 'column' }}>
+      <div className={staticClasses.Title} style={{ flexDirection: 'column', boxShadow: 'unset' }}>
         Using legacy plugins
       </div>
       You are currently installing a <b>legacy</b> plugin. Legacy plugins are no longer supported and may have issues.

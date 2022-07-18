@@ -97,6 +97,16 @@ class PluginLoader extends Logger {
     );
   }
 
+  public async refreshPlugins() {
+    this.log('Refreshing plugin list');
+    this.dismountAll();
+    for (const plugin of this.plugins) {
+      this.unloadPlugin(plugin.name);
+    }
+    await this.callServerMethod('refresh_plugins');
+    this.deckyState.setPlugins(this.plugins);
+  }
+
   public dismountAll() {
     for (const plugin of this.plugins) {
       this.log(`Dismounting ${plugin.name}`);

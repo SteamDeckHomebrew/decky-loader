@@ -61,7 +61,7 @@ class PluginBrowser:
                 name = data.get("name")
             await tab.evaluate_js(f"DeckyPluginLoader.unloadPlugin('{name}')")
             rmtree(self.find_plugin_folder(name))
-        except FileNotFoundError:
+        except (FileNotFoundError, TypeError):
             self.log.warning(f"Plugin {name} not installed, skipping uninstallation")
 
         return web.Response(text="Requested plugin uninstall")

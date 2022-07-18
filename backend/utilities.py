@@ -16,7 +16,8 @@ class Utilities:
             "confirm_plugin_install": self.confirm_plugin_install,
             "execute_in_tab": self.execute_in_tab,
             "inject_css_into_tab": self.inject_css_into_tab,
-            "remove_css_from_tab": self.remove_css_from_tab
+            "remove_css_from_tab": self.remove_css_from_tab,
+            "refresh_plugins": self.refresh_plugins
         }
 
         if context:
@@ -133,3 +134,8 @@ class Utilities:
                 "success": False,
                 "result": e
             }
+
+    async def refresh_plugins(self):
+        self.context.plugin_loader.plugins = {}
+        await self.context.plugin_loader.import_plugins()
+        await self.context.inject_to_tab("SP", "window.syncDeckyPlugins();")

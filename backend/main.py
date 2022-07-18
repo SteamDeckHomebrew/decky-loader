@@ -16,10 +16,14 @@ basicConfig(level=CONFIG["log_level"], format="[%(module)s][%(levelname)s]: %(me
 
 from asyncio import get_event_loop, sleep
 from json import dumps, loads
-from os import path
-from subprocess import call
+from os import path, listdir
+from subprocess import Popen
+from pathlib import Path
+from watchdog.events import FileSystemEventHandler
+from watchdog.utils import UnsupportedLibc
 
 import aiohttp_cors
+from asyncio import Queue
 from aiohttp.web import Application, run_app, static
 from aiohttp_jinja2 import setup as jinja_setup
 
@@ -29,6 +33,11 @@ from loader import Loader
 from utilities import Utilities
 from updater import Updater
 
+try:
+    from watchdog.observers.inotify import InotifyObserver as Observer
+except UnsupportedLibc:
+    from watchdog.observers.fsevents import FSEventsObserver as Observer
+
 logger = getLogger("Main")
 
 async def chown_plugin_dir(_):
@@ -36,6 +45,28 @@ async def chown_plugin_dir(_):
     code_chmod = call(["chmod", "-R", "555", CONFIG["plugin_path"]])
     if code_chown != 0 or code_chmod != 0:
         logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {code_chmod})")
+
+class FolderChangeHandler(FileSystemEventHandler):
+    def __init__(self, queue, plugins_folder) -> None:
+        super().__init__()
+        self.logger = getLogger("plugins-watcher")
+        self.plugins_folder = plugins_folder
+        self.queue = queue
+
+    def maybe_reload(self, src_path):
+        plugin_dir = Path(src_path).resolve().parts[-1]
+        if Path(self.plugins_folder, plugin_dir, "plugin.json").exists():
+            self.queue.put_nowait((path.join(self.plugins_folder, plugin_dir, "main.py"), plugin_dir, True))
+
+    def on_any_event(self, event):
+        if not event.is_directory:
+            return
+
+        self.logger.debug(f"plugin change {event.event_type}: {event.src_path}")
+        self.maybe_reload(event.src_path)
+
+        if event.event_type == "EVENT_TYPE_MOVED":
+            self.maybe_reload(event.dest_path)
 
 class PluginManager:
     def __init__(self) -> None:
@@ -49,6 +80,13 @@ class PluginManager:
         self.plugin_browser = PluginBrowser(CONFIG["plugin_path"], self.web_app)
         self.utilities = Utilities(self)
         self.updater = Updater(self)
+
+        if CONFIG["live_reload"]:
+            self.reload_queue = Queue()
+            self.observer = Observer()
+            self.observer.schedule(FolderChangeHandler(self.reload_queue, CONFIG["plugin_path"]), CONFIG["plugin_path"])
+            self.observer.start()
+            self.loop.create_task(self.handle_reloads())
 
         jinja_setup(self.web_app)
         self.web_app.on_startup.append(self.inject_javascript)
@@ -80,6 +118,12 @@ class PluginManager:
         await self.wait_for_server()
         self.plugin_loader.import_plugins()
         #await inject_to_tab("SP", "window.syncDeckyPlugins();")
+
+    async def handle_reloads(self):
+        while True:
+            args = await self.reload_queue.get()
+            self.plugin_loader.import_plugin(*args)
+            await inject_to_tab("SP", "window.DeckyPluginLoader.refreshPlugins();")
 
     async def loader_reinjector(self):
         while True:

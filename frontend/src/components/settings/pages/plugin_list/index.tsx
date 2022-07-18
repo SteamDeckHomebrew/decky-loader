@@ -30,7 +30,6 @@ export default function PluginList() {
   }
 
   return (
-    </ul>
     <div>
       <DialogButton
         style={{

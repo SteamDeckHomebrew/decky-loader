@@ -17,7 +17,7 @@ basicConfig(level=CONFIG["log_level"], format="[%(module)s][%(levelname)s]: %(me
 from asyncio import get_event_loop, sleep
 from json import dumps, loads
 from os import path, listdir
-from subprocess import Popen
+from subprocess import call
 from pathlib import Path
 from watchdog.events import FileSystemEventHandler
 from watchdog.utils import UnsupportedLibc

@@ -75,7 +75,7 @@ class PluginLoader extends Logger {
     );
   }
 
-  public uninstall_plugin(name: string) {
+  public uninstallPlugin(name: string) {
     showModal(
       <ModalRoot
         onOK={async () => {

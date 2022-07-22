@@ -22,7 +22,7 @@ export default function PluginList() {
           <div className={staticClasses.Title} style={{ marginLeft: 'auto', boxShadow: 'none' }}>
             <DialogButton
               style={{ height: '40px', width: '40px', padding: '10px 12px' }}
-              onClick={() => window.DeckyPluginLoader.uninstall_plugin(name)}
+              onClick={() => window.DeckyPluginLoader.uninstallPlugin(name)}
             >
               <FaTrash />
             </DialogButton>

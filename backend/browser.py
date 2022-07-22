@@ -45,20 +45,24 @@ class PluginBrowser:
 
     def find_plugin_folder(self, name):
         for folder in listdir(self.plugin_path):
-            with open(path.join(self.plugin_path, folder, 'plugin.json'), 'r') as f:
-                plugin = json.load(f)
+            try:
+                with open(path.join(self.plugin_path, folder, 'plugin.json'), 'r') as f:
+                    plugin = json.load(f)
 
-            if plugin['name'] == name:
-                return path.join(self.plugin_path, folder)
+                if plugin['name'] == name:
+                    return path.join(self.plugin_path, folder)
+            except:
+                self.log.info("skipping " + folder)
 
     async def uninstall_plugin(self, name):
         tab = await get_tab("SP")
-        await tab.open_websocket()
 
         try:
             if type(name) != str:
                 data = await name.post()
-                name = data.get("name")
+                name = data.get("name", "undefined")
+            self.log.info("uninstalling " + name)
+            self.log.info(" at dir " + self.find_plugin_folder(name))
             await tab.evaluate_js(f"DeckyPluginLoader.unloadPlugin('{name}')")
             rmtree(self.find_plugin_folder(name))
         except FileNotFoundError:

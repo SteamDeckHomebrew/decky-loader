@@ -52,7 +52,7 @@ class PluginBrowser:
                 if plugin['name'] == name:
                     return path.join(self.plugin_path, folder)
             except:
-                self.log.info("skipping " + folder)
+                self.log.debug("skipping " + folder)
 
     async def uninstall_plugin(self, name):
         tab = await get_tab("SP")

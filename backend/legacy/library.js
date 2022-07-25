@@ -8,18 +8,17 @@ window.addEventListener("message", function(evt) {
 }, false);
 
 async function call_server_method(method_name, arg_object={}) {
-    let id = `${uuidv4()}`;
-    console.debug(JSON.stringify({
-        "id": id,
-        "method": method_name,
-        "args": arg_object
-    }));
-    return new Promise((resolve, reject) => {
-        method_call_ev_target.addEventListener(`${id}`, function (event) {
-            if (event.data.success) resolve(event.data.result);
-            else reject(event.data.result);
-        });
+    const response = await fetch(`http://127.0.0.1:1337/methods/${method_name}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(arg_object),
     });
+
+    const dta = await response.json();
+    if (!dta.success) throw dta.result;
+    return dta.result;
 }
 
 // Source: https://stackoverflow.com/a/2117523 Thanks!
@@ -41,11 +40,19 @@ async function fetch_nocors(url, request={}) {
 async function call_plugin_method(method_name, arg_object={}) {
     if (plugin_name == undefined) 
         throw new Error("Plugin methods can only be called from inside plugins (duh)");
-    return await call_server_method("plugin_method", {
-        'plugin_name': plugin_name,
-        'method_name': method_name,
-        'args': arg_object
+    const response = await fetch(`http://127.0.0.1:1337/plugins/${plugin_name}/methods/${method_name}`, {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            args: arg_object,
+        }),
     });
+
+    const dta = await response.json();
+    if (!dta.success) throw dta.result;
+    return dta.result;
 }
 
 async function execute_in_tab(tab, run_async, code) {

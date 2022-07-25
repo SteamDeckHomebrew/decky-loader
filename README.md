@@ -2,30 +2,33 @@
 
 ![steamuserimages-a akamaihd](https://user-images.githubusercontent.com/10835354/161068262-ca723dc5-6795-417a-80f6-d8c1f9d03e93.jpg)
 
+Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugin Loader, documentation + tools for plugin development and more.
+
 ## Installation
 1. Go into the Steam Deck Settings
 2. Under System -> System Settings toggle `Enable Developer Mode`
 3. Scroll the sidebar all the way down and click on `Developer`
 4. Under Miscellaneous, enable `CEF Remote Debugging`
 5. Click on the `STEAM` button and select `Power` -> `Switch to Desktop`
-6. Open a terminal and paste the following command into it: 
+6. Make sure you have a password set with the "passwd" command in terminal to install it ([YouTube Guide](https://www.youtube.com/watch?v=1vOMYGj22rQ)).
+7. Open a terminal and paste the following command into it: 
     - For users:
-        - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_release.sh | sh`
-    - For developers:
-        ~~- `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_nightly.sh | sh`~~
-        Nightly releases are currently broken.
-8. Done! Reboot back into Gaming mode and enjoy your plugins!
+        - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/legacy/dist/install_release.sh | sh`
+    - For the latest pre-release,
+        - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_prerelease.sh | sh`
+    - For testers/plugin developers:
+        - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_prerelease.sh | sh`
+        - [Wiki Link](https://deckbrew.xyz/en/loader-dev/development)
+7. Done! Reboot back into Gaming mode and enjoy your plugins!
 
-### Install Plugins
+### Install/Uninstall Plugins
+- Using the shopping bag button in the top right corner, you can go to the offical ["Plugin Store"](https://plugins.deckbrew.xyz/)
 - Simply copy the plugin's folder into `~/homebrew/plugins`
+- Use the settings menu to uninstall plugins, this will not remove any files made in different directories by plugins.
 
 ### Uninstall
 - Open a terminal and paste the following command into it:
-    - For both users and developers:
-        - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/uninstall.sh | sh`
-
-### Developing plugins
-- There is no complete plugin development documentation yet. However a good starting point is the [Plugin Template](https://github.com/SteamDeckHomebrew/Plugin-Template) repository
+  - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/uninstall.sh | sh`
 
 ## Features
 - Clean injecting and loading of one or more plugins
@@ -34,9 +37,16 @@
 - Allows plugins to define python functions and run them from javascript.
 - Allows plugins to make fetch calls, bypassing cors completely.
 
-## Caveats
+## Developing plugins
+- There is no complete plugin development documentation yet. However a good starting point is the [Plugin Template](https://github.com/SteamDeckHomebrew/decky-plugin-template) repository.
 
-- You can only interact with the Plugin Menu via touchscreen.
+## [Contribution](https://deckbrew.xyz/en/loader-dev/development)
+- Please consult the [Wiki](https://deckbrew.xyz/en/loader-dev/development) for installing development versions of PluginLoader.
+  - This is also useful for Plugin Developers looking to target new but unreleased versions of PluginLoader.
+- [Here's how to get the Steam Deck UI on your enviroment of choice.](https://youtu.be/1IAbZte8e7E?t=112)
+    - (The video shows Windows usage but unless you're using Arch WSL/cygwin this script is unsupported on Windows.)
+
+Source control and deploying plugins are left to each respective contributor for the cloned repos in order to keep depedencies up to date.
 
 ## Credit
 

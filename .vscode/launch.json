@@ -2,13 +2,25 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug",
+            "name": "Run (Remote)",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/plugin_loader/main.py",
-            "preLaunchTask": "Stop Service",
             "console": "integratedTerminal",
-            "justMyCode": true
+            "preLaunchTask": "remoterun",
+            "cwd": "",
+            "program": "",      
+        },
+        {
+            "name": "Run (Local)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/backend/main.py",
+            "cwd": "${workspaceFolder}/backend",
+            "console": "integratedTerminal",
+            "env": {
+                "PLUGIN_PATH": "${workspaceFolder}/plugins"
+            },
+            "preLaunchTask": "localrun"
         }
     ]
 }

@@ -1,8 +1,9 @@
-import { ModalRoot, QuickAccessTab, Router, showModal, sleep, staticClasses } from 'decky-frontend-lib';
+import { ModalRoot, QuickAccessTab, showModal, staticClasses } from 'decky-frontend-lib';
 import { FaPlug } from 'react-icons/fa';
 
 import { DeckyState, DeckyStateContextProvider } from './components/DeckyState';
 import LegacyPlugin from './components/LegacyPlugin';
+import PluginInstallModal from './components/modals/PluginInstallModal';
 import PluginView from './components/PluginView';
 import SettingsPage from './components/settings';
 import StorePage from './components/store/Store';
@@ -55,23 +56,13 @@ class PluginLoader extends Logger {
 
   public addPluginInstallPrompt(artifact: string, version: string, request_id: string, hash: string) {
     showModal(
-      <ModalRoot
-        onOK={async () => {
-          await this.callServerMethod('confirm_plugin_install', { request_id });
-          Router.NavigateBackOrOpenMenu();
-          await sleep(250);
-          setTimeout(() => Router.OpenQuickAccessMenu(QuickAccessTab.Decky), 1000);
-        }}
-        onCancel={() => {
-          this.callServerMethod('cancel_plugin_install', { request_id });
-        }}
-      >
-        <div className={staticClasses.Title} style={{ flexDirection: 'column' }}>
-          {hash == 'False' ? <h3 style={{ color: 'red' }}>!!!!NO HASH PROVIDED!!!!</h3> : null}
-          Install {artifact}
-          {version ? ' version ' + version : null}?
-        </div>
-      </ModalRoot>,
+      <PluginInstallModal
+        artifact={artifact}
+        version={version}
+        hash={hash}
+        onOK={() => this.callServerMethod('confirm_plugin_install', { request_id })}
+        onCancel={() => this.callServerMethod('cancel_plugin_install', { request_id })}
+      />,
     );
   }
 
@@ -95,6 +86,10 @@ class PluginLoader extends Logger {
         </div>
       </ModalRoot>,
     );
+  }
+
+  public hasPlugin(name: string) {
+    return Boolean(this.plugins.find((plugin) => plugin.name == name));
   }
 
   public dismountAll() {

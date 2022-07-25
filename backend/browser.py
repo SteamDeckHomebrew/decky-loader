@@ -10,6 +10,7 @@ from asyncio import get_event_loop
 from time import time
 from hashlib import sha256
 from subprocess import Popen
+from injector import inject_to_tab
 
 import json
 
@@ -23,9 +24,10 @@ class PluginInstallContext:
         self.hash = hash
 
 class PluginBrowser:
-    def __init__(self, plugin_path, server_instance) -> None:
+    def __init__(self, plugin_path, server_instance, plugins) -> None:
         self.log = getLogger("browser")
         self.plugin_path = plugin_path
+        self.plugins = plugins
         self.install_requests = {}
 
         server_instance.add_routes([
@@ -64,6 +66,9 @@ class PluginBrowser:
             self.log.info("uninstalling " + name)
             self.log.info(" at dir " + self.find_plugin_folder(name))
             await tab.evaluate_js(f"DeckyPluginLoader.unloadPlugin('{name}')")
+            if self.plugins[name]:
+                self.plugins[name].stop()
+                self.plugins.pop(name, None)
             rmtree(self.find_plugin_folder(name))
         except FileNotFoundError:
             self.log.warning(f"Plugin {name} not installed, skipping uninstallation")
@@ -95,6 +100,7 @@ class PluginBrowser:
                     )
                     if ret:
                         self.log.info(f"Installed {name} (Version: {version})")
+                        await inject_to_tab("SP", "window.syncDeckyPlugins()")
                     else:
                         self.log.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
             else:

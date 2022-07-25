@@ -16,8 +16,7 @@ class Utilities:
             "confirm_plugin_install": self.confirm_plugin_install,
             "execute_in_tab": self.execute_in_tab,
             "inject_css_into_tab": self.inject_css_into_tab,
-            "remove_css_from_tab": self.remove_css_from_tab,
-            "open_plugin_store": self.open_plugin_store
+            "remove_css_from_tab": self.remove_css_from_tab
         }
 
         if context:
@@ -134,16 +133,3 @@ class Utilities:
                 "success": False,
                 "result": e
             }
-
-    async def open_plugin_store(self):
-        await inject_to_tab("SP", """
-        (function() {
-            wpRequire = webpackJsonp.push([[], { get_require: (mod, _exports, wpRequire) => mod.exports = wpRequire }, [["get_require"]]]);
-            const all = () => Object.keys(wpRequire.c).map((x) => wpRequire.c[x].exports).filter((x) => x);
-            router = all().map(m => {
-            if (typeof m !== "object") return undefined;
-            for (let prop in m) { if (m[prop]?.Navigate) return m[prop]}
-            }).find(x => x)
-            router.NavigateToExternalWeb("http://127.0.0.1:1337/browser/redirect")
-        })();
-        """)

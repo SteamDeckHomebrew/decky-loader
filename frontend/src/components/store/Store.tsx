@@ -38,7 +38,7 @@ export async function installFromURL(url: string) {
 export function requestLegacyPluginInstall(plugin: LegacyStorePlugin, selectedVer: string) {
   showModal(
     <ModalRoot
-      onOK={() => {
+      onOK={async () => {
         await window.DeckyPluginLoader.callServerMethod('install_plugin', {
           name: plugin.artifact,
           artifact: `https://github.com/${plugin.artifact}/archive/refs/tags/${selectedVer}.zip`,

@@ -48,7 +48,7 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugi
 
 ### Getting Started
 
-1. Clone the repository using the latest commit to main before staring your PR.
+1. Clone the repository using the latest commit to main before starting your PR.
 2. In your clone of the repository run these commands:
    1. ``pnpm i``
    2. ``pnpm run build``

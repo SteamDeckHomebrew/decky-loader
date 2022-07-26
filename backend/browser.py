@@ -10,6 +10,7 @@ from asyncio import get_event_loop
 from time import time
 from hashlib import sha256
 from subprocess import Popen
+from injector import inject_to_tab
 
 import json
 
@@ -25,9 +26,10 @@ class PluginInstallContext:
 
 
 class PluginBrowser:
-    def __init__(self, plugin_path) -> None:
+    def __init__(self, plugin_path, plugins) -> None:
         self.log = getLogger("browser")
         self.plugin_path = plugin_path
+        self.plugins = plugins
         self.install_requests = {}
 
     def _unzip_to_plugin_dir(self, zip, name, hash):
@@ -42,21 +44,28 @@ class PluginBrowser:
 
     def find_plugin_folder(self, name):
         for folder in listdir(self.plugin_path):
-            with open(path.join(self.plugin_path, folder, "plugin.json"), "r") as f:
-                plugin = json.load(f)
+            try:
+                with open(path.join(self.plugin_path, folder, 'plugin.json'), 'r') as f:
+                    plugin = json.load(f)
 
-            if plugin["name"] == name:
-                return path.join(self.plugin_path, folder)
+                if plugin['name'] == name:
+                    return path.join(self.plugin_path, folder)
+            except:
+                self.log.debug(f"skipping {folder}")
 
     async def uninstall_plugin(self, name):
         tab = await get_tab("SP")
-        await tab.open_websocket()
 
         try:
             if type(name) != str:
                 data = await name.post()
-                name = data.get("name")
+                name = data.get("name", "undefined")
+            self.log.info("uninstalling " + name)
+            self.log.info(" at dir " + self.find_plugin_folder(name))
             await tab.evaluate_js(f"DeckyPluginLoader.unloadPlugin('{name}')")
+            if self.plugins[name]:
+                self.plugins[name].stop()
+                self.plugins.pop(name, None)
             rmtree(self.find_plugin_folder(name))
         except FileNotFoundError:
             self.log.warning(f"Plugin {name} not installed, skipping uninstallation")
@@ -88,6 +97,7 @@ class PluginBrowser:
                     )
                     if ret:
                         self.log.info(f"Installed {name} (Version: {version})")
+                        await inject_to_tab("SP", "window.syncDeckyPlugins()")
                     else:
                         self.log.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
             else:

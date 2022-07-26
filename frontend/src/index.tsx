@@ -1,8 +1,10 @@
 import PluginLoader from './plugin-loader';
+import { DeckyUpdater } from './updater';
 
 declare global {
   interface Window {
     DeckyPluginLoader: PluginLoader;
+    DeckyUpdater?: DeckyUpdater;
     importDeckyPlugin: Function;
     syncDeckyPlugins: Function;
   }
@@ -19,7 +21,7 @@ window.importDeckyPlugin = function (name: string) {
 window.syncDeckyPlugins = async function () {
   const plugins = await (await fetch('http://127.0.0.1:1337/plugins')).json();
   for (const plugin of plugins) {
-    window.DeckyPluginLoader?.importPlugin(plugin);
+    if (!window.DeckyPluginLoader.hasPlugin(plugin)) window.DeckyPluginLoader?.importPlugin(plugin);
   }
 };
 

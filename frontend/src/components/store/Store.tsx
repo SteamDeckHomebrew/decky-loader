@@ -1,4 +1,4 @@
-import { SteamSpinner } from 'decky-frontend-lib';
+import { ModalRoot, SteamSpinner, showModal, staticClasses } from 'decky-frontend-lib';
 import { FC, useEffect, useState } from 'react';
 
 import PluginCard from './PluginCard';
@@ -35,13 +35,29 @@ export async function installFromURL(url: string) {
   });
 }
 
-export async function requestLegacyPluginInstall(plugin: LegacyStorePlugin, selectedVer: string) {
-  await window.DeckyPluginLoader.callServerMethod('install_plugin', {
-    name: plugin.artifact,
-    artifact: `https://github.com/${plugin.artifact}/archive/refs/tags/${selectedVer}.zip`,
-    version: selectedVer,
-    hash: plugin.versions[selectedVer],
-  });
+export function requestLegacyPluginInstall(plugin: LegacyStorePlugin, selectedVer: string) {
+  showModal(
+    <ModalRoot
+      onOK={() => {
+        await window.DeckyPluginLoader.callServerMethod('install_plugin', {
+          name: plugin.artifact,
+          artifact: `https://github.com/${plugin.artifact}/archive/refs/tags/${selectedVer}.zip`,
+          version: selectedVer,
+          hash: plugin.versions[selectedVer],
+        });
+      }}
+      onCancel={() => {
+        // do nothing
+      }}
+    >
+      <div className={staticClasses.Title} style={{ flexDirection: 'column', boxShadow: 'unset' }}>
+        Using legacy plugins
+      </div>
+      You are currently installing a <b>legacy</b> plugin. Legacy plugins are no longer supported and may have issues.
+      Legacy plugins do not support gamepad input. To interact with a legacy plugin, you will need to use the
+      touchscreen.
+    </ModalRoot>,
+  );
 }
 
 export async function requestPluginInstall(plugin: StorePlugin, selectedVer: StorePluginVersion) {

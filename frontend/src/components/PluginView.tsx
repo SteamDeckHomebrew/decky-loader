@@ -12,16 +12,18 @@ const PluginView: VFC = () => {
 
   return (
     <PanelSection>
-      {plugins.map(({ name, icon }) => (
-        <PanelSectionRow key={name}>
-          <ButtonItem layout="below" onClick={() => setActivePlugin(name)}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <div>{icon}</div>
-              <div>{name}</div>
-            </div>
-          </ButtonItem>
-        </PanelSectionRow>
-      ))}
+      {plugins
+        .filter((p) => p.content)
+        .map(({ name, icon }) => (
+          <PanelSectionRow key={name}>
+            <ButtonItem layout="below" onClick={() => setActivePlugin(name)}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div>{icon}</div>
+                <div>{name}</div>
+              </div>
+            </ButtonItem>
+          </PanelSectionRow>
+        ))}
     </PanelSection>
   );
 };

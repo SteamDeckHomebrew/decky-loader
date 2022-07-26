@@ -17,7 +17,7 @@ basicConfig(level=CONFIG["log_level"], format="[%(module)s][%(levelname)s]: %(me
 from asyncio import get_event_loop, sleep
 from json import dumps, loads
 from os import path
-from subprocess import Popen
+from subprocess import call
 
 import aiohttp_cors
 from aiohttp.web import Application, run_app, static
@@ -27,13 +27,16 @@ from browser import PluginBrowser
 from injector import inject_to_tab, tab_has_global_var
 from loader import Loader
 from utilities import Utilities
+from updater import Updater
 
 logger = getLogger("Main")
 
 
 async def chown_plugin_dir(_):
-    Popen(["chown", "-R", "deck:deck", CONFIG["plugin_path"]])
-    Popen(["chmod", "-R", "555", CONFIG["plugin_path"]])
+    code_chown = call(["chown", "-R", "deck:deck", CONFIG["plugin_path"]])
+    code_chmod = call(["chmod", "-R", "555", CONFIG["plugin_path"]])
+    if code_chown != 0 or code_chmod != 0:
+        logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {code_chmod})")
 
 
 class PluginManager:
@@ -47,8 +50,9 @@ class PluginManager:
             )
         })
         self.plugin_loader = Loader(self.web_app, CONFIG["plugin_path"], self.loop, CONFIG["live_reload"])
-        self.plugin_browser = PluginBrowser(CONFIG["plugin_path"])
+        self.plugin_browser = PluginBrowser(CONFIG["plugin_path"], self.plugin_loader.plugins)
         self.utilities = Utilities(self)
+        self.updater = Updater(self)
 
         jinja_setup(self.web_app)
         self.web_app.on_startup.append(self.inject_javascript)

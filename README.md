@@ -46,6 +46,22 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugi
 - [Here's how to get the Steam Deck UI on your enviroment of choice.](https://youtu.be/1IAbZte8e7E?t=112)
     - (The video shows Windows usage but unless you're using Arch WSL/cygwin this script is unsupported on Windows.)
 
+### Getting Started
+
+1. Clone the repository using the latest commit to main before starting your PR.
+2. In your clone of the repository run these commands:
+   1. ``pnpm i``
+   2. ``pnpm run build``
+3. If you are modifying the UI, these will need to be run before deploying the changes to your Deck.
+4. Use the vscode tasks or ``deck.sh`` script to deploy your changes to your Deck to test them.
+5. You will be testing your changes with the python script version, so you will need to build, deploy and reload each time.
+
+Note: If you are recieveing build errors due to an out of date library, you should run this command inside of your repository:
+
+```bash
+pnpm update decky-frontend-lib --latest
+```
+
 Source control and deploying plugins are left to each respective contributor for the cloned repos in order to keep depedencies up to date.
 
 ## Credit

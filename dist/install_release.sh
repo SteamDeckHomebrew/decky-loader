@@ -4,8 +4,8 @@
 
 echo "Installing Steam Deck Plugin Loader release..."
 
-USERDIR="$(getent passwd $SUDO_USER | cut -d: -f6)"
-HOMEBREW_FOLDER="${USERDIR}/homebrew"
+USER_DIR="$(getent passwd $SUDO_USER | cut -d: -f6)"
+HOMEBREW_FOLDER="${USER_DIR}/homebrew"
 
 # Create folder structure
 rm -rf "${HOMEBREW_FOLDER}/services"
@@ -29,9 +29,9 @@ Description=SteamDeck Plugin Loader
 Type=simple
 User=root
 Restart=always
-ExecStart=${USERDIR}/homebrew/services/PluginLoader
-WorkingDirectory=${USERDIR}/homebrew/services
-Environment=PLUGIN_PATH=${USERDIR}/homebrew/plugins
+ExecStart=${HOMEBREW_FOLDER}/services/PluginLoader
+WorkingDirectory=${HOMEBREW_FOLDER}/services
+Environment=PLUGIN_PATH=${HOMEBREW_FOLDER}/plugins
 [Install]
 WantedBy=multi-user.target
 EOM

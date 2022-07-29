@@ -41,7 +41,16 @@ class PluginBrowser:
             return False
         zip_file = ZipFile(zip)
         zip_file.extractall(self.plugin_path)
-        USER = getenv("USER")
+        USER = None
+        cmd = "who | awk '{print $1}' | sort | head -1"
+            while USER == None:
+                USER_LIST = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell=True)
+                for get_first in USER_LIST.stdout:
+                    name = get_first.decode().strip()
+                    if name is not None:
+                        USER = name
+                        break
+                time.sleep(1)
         GROUP = check_output(["id", "-g", "-n", USER]).decode().strip()
         Popen(["chown", "-R", USER+":"+GROUP, self.plugin_path])
         Popen(["chmod", "-R", "555", self.plugin_path])

@@ -33,7 +33,16 @@ from updater import Updater
 logger = getLogger("Main")
 
 async def chown_plugin_dir(_):
-    USER = getenv("USER")
+    USER = None
+    cmd = "who | awk '{print $1}' | sort | head -1"
+        while USER == None:
+            USER_LIST = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell=True)
+            for get_first in USER_LIST.stdout:
+                name = get_first.decode().strip()
+                if name is not None:
+                    USER = name
+                    break
+            time.sleep(1)
     GROUP = check_output(["id", "-g", "-n", USER]).decode().strip()
     code_chown = call(["chown", "-R", USER+":"+GROUP, CONFIG["plugin_path"]])
     code_chmod = call(["chmod", "-R", "555", CONFIG["plugin_path"]])

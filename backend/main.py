@@ -17,8 +17,8 @@ basicConfig(level=CONFIG["log_level"], format="[%(module)s][%(levelname)s]: %(me
 
 from asyncio import get_event_loop, sleep
 from json import dumps, loads
-from os import path, getegid
-from subprocess import call
+from os import path
+from subprocess import call, check_output
 
 import aiohttp_cors
 from aiohttp.web import Application, run_app, static
@@ -33,8 +33,9 @@ from updater import Updater
 logger = getLogger("Main")
 
 async def chown_plugin_dir(_):
-    chowner = getenv("USER")+":"+str(getegid())
-    code_chown = call(["chown", "-R", chowner, CONFIG["plugin_path"]])
+    USER = getenv("USER")
+    GROUP = check_output(["id", "-g", "-n", USER]).decode().strip()
+    code_chown = call(["chown", "-R", USER+":"+GROUP, CONFIG["plugin_path"]])
     code_chmod = call(["chmod", "-R", "555", CONFIG["plugin_path"]])
     if code_chown != 0 or code_chmod != 0:
         logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {code_chmod})")
@@ -48,7 +49,7 @@ class PluginManager:
                 allow_headers="*")
         })
         self.plugin_loader = Loader(self.web_app, CONFIG["plugin_path"], self.loop, CONFIG["live_reload"])
-        self.plugin_browser = PluginBrowser(CONFIG["plugin_path"], self.web_app)
+        self.plugin_browser = PluginBrowser(CONFIG["plugin_path"], self.web_app, self.plugin_loader.plugins)
         self.utilities = Utilities(self)
         self.updater = Updater(self)
 

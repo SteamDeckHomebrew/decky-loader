@@ -1,6 +1,6 @@
 from injector import get_tab
 from logging import getLogger
-from os import path, rename, listdir, getegid
+from os import path, rename, listdir
 from shutil import rmtree
 from aiohttp import ClientSession, web
 from io import BytesIO
@@ -9,7 +9,8 @@ from concurrent.futures import ProcessPoolExecutor
 from asyncio import get_event_loop
 from time import time
 from hashlib import sha256
-from subprocess import Popen
+from subprocess import Popen, check_output
+from injector import inject_to_tab
 
 import json
 
@@ -23,9 +24,10 @@ class PluginInstallContext:
         self.hash = hash
 
 class PluginBrowser:
-    def __init__(self, plugin_path, server_instance) -> None:
+    def __init__(self, plugin_path, server_instance, plugins) -> None:
         self.log = getLogger("browser")
         self.plugin_path = plugin_path
+        self.plugins = plugins
         self.install_requests = {}
 
         server_instance.add_routes([
@@ -39,8 +41,9 @@ class PluginBrowser:
             return False
         zip_file = ZipFile(zip)
         zip_file.extractall(self.plugin_path)
-        chowner = getenv('USER')+":"+str(getegid())
-        Popen(["chown", "-R", chowner, self.plugin_path])
+        USER = getenv("USER")
+        GROUP = check_output(["id", "-g", "-n", USER]).decode().strip()
+        Popen(["chown", "-R", USER+":"+GROUP, self.plugin_path])
         Popen(["chmod", "-R", "555", self.plugin_path])
         return True
 
@@ -65,6 +68,9 @@ class PluginBrowser:
             self.log.info("uninstalling " + name)
             self.log.info(" at dir " + self.find_plugin_folder(name))
             await tab.evaluate_js(f"DeckyPluginLoader.unloadPlugin('{name}')")
+            if self.plugins[name]:
+                self.plugins[name].stop()
+                self.plugins.pop(name, None)
             rmtree(self.find_plugin_folder(name))
         except FileNotFoundError:
             self.log.warning(f"Plugin {name} not installed, skipping uninstallation")
@@ -96,6 +102,7 @@ class PluginBrowser:
                     )
                     if ret:
                         self.log.info(f"Installed {name} (Version: {version})")
+                        await inject_to_tab("SP", "window.syncDeckyPlugins()")
                     else:
                         self.log.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
             else:

@@ -4,12 +4,13 @@
 
 echo "Installing Steam Deck Plugin Loader pre-release..."
 
-HOMEBREW_FOLDER=/home/deck/homebrew
+USER_DIR="$(getent passwd $SUDO_USER | cut -d: -f6)"
+HOMEBREW_FOLDER="${USER_DIR}/homebrew"
 
 # # Create folder structure
 rm -rf ${HOMEBREW_FOLDER}/services
-sudo -u deck mkdir -p ${HOMEBREW_FOLDER}/services
-sudo -u deck mkdir -p ${HOMEBREW_FOLDER}/plugins
+sudo -u $SUDO_USER mkdir -p "${HOMEBREW_FOLDER}/services"
+sudo -u $SUDO_USER mkdir -p "${HOMEBREW_FOLDER}/plugins"
 
 # Download latest release and install it
 RELEASE=$(curl -s 'https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases' | jq -r "first(.[] | select(.prerelease == "true"))")

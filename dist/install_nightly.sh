@@ -4,12 +4,13 @@
 
 echo "Installing Steam Deck Plugin Loader nightly..."
 
-HOMEBREW_FOLDER=/home/deck/homebrew
+USER_DIR="$(getent passwd $SUDO_USER | cut -d: -f6)"
+HOMEBREW_FOLDER="${USER_DIR}/homebrew"
 
 # Create folder structure
 rm -rf ${HOMEBREW_FOLDER}/services
-sudo -u deck mkdir -p ${HOMEBREW_FOLDER}/services
-sudo -u deck mkdir -p ${HOMEBREW_FOLDER}/plugins
+sudo -u $SUDO_USER mkdir -p "${HOMEBREW_FOLDER}/services"
+sudo -u $SUDO_USER mkdir -p "${HOMEBREW_FOLDER}/plugins"
 
 # Download latest nightly build and install it
 rm -rf /tmp/plugin_loader
@@ -22,7 +23,7 @@ chmod +x ${HOMEBREW_FOLDER}/services/PluginLoader
 
 systemctl --user stop plugin_loader 2> /dev/null
 systemctl --user disable plugin_loader 2> /dev/null
-rm -f /home/deck/.config/systemd/user/plugin_loader.service
+rm -f ${USER_DIR}/.config/systemd/user/plugin_loader.service
 
 systemctl stop plugin_loader 2> /dev/null
 systemctl disable plugin_loader 2> /dev/null
@@ -37,10 +38,9 @@ Type=simple
 User=root
 Restart=always
 
-ExecStart=/home/deck/homebrew/services/PluginLoader
-WorkingDirectory=/home/deck/homebrew/services
-
-Environment=PLUGIN_PATH=/home/deck/homebrew/plugins
+ExecStart=${HOMEBREW_FOLDER}/services/PluginLoader
+WorkingDirectory=${HOMEBREW_FOLDER}/services
+Environment=PLUGIN_PATH=${HOMEBREW_FOLDER}/plugins
 
 [Install]
 WantedBy=multi-user.target

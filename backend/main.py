@@ -3,8 +3,9 @@ from os import getenv
 
 from aiohttp import ClientSession
 
+HOME_PATH = "/home/"+getenv("USER")
 CONFIG = {
-    "plugin_path": getenv("PLUGIN_PATH", "/home/deck/homebrew/plugins"),
+    "plugin_path": getenv("PLUGIN_PATH", HOME_PATH+"/homebrew/plugins"),
     "chown_plugin_path": getenv("CHOWN_PLUGIN_PATH", "1") == "1",
     "server_host": getenv("SERVER_HOST", "127.0.0.1"),
     "server_port": int(getenv("SERVER_PORT", "1337")),
@@ -16,7 +17,7 @@ basicConfig(level=CONFIG["log_level"], format="[%(module)s][%(levelname)s]: %(me
 
 from asyncio import get_event_loop, sleep
 from json import dumps, loads
-from os import path
+from os import path, getegid
 from subprocess import call
 
 import aiohttp_cors
@@ -32,7 +33,8 @@ from updater import Updater
 logger = getLogger("Main")
 
 async def chown_plugin_dir(_):
-    code_chown = call(["chown", "-R", "deck:deck", CONFIG["plugin_path"]])
+    chowner = getenv("USER")+":"+str(getegid())
+    code_chown = call(["chown", "-R", chowner, CONFIG["plugin_path"]])
     code_chmod = call(["chmod", "-R", "555", CONFIG["plugin_path"]])
     if code_chown != 0 or code_chmod != 0:
         logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {code_chmod})")

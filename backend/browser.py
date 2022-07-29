@@ -1,6 +1,6 @@
 from injector import get_tab
 from logging import getLogger
-from os import path, rename, listdir
+from os import path, rename, listdir, getegid
 from shutil import rmtree
 from aiohttp import ClientSession, web
 from io import BytesIO
@@ -39,7 +39,8 @@ class PluginBrowser:
             return False
         zip_file = ZipFile(zip)
         zip_file.extractall(self.plugin_path)
-        Popen(["chown", "-R", "deck:deck", self.plugin_path])
+        chowner = getenv('USER')+":"+str(getegid())
+        Popen(["chown", "-R", chowner, self.plugin_path])
         Popen(["chmod", "-R", "555", self.plugin_path])
         return True
 

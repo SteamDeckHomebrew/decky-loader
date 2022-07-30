@@ -18,7 +18,7 @@ basicConfig(level=CONFIG["log_level"], format="[%(module)s][%(levelname)s]: %(me
 from asyncio import get_event_loop, sleep
 from json import dumps, loads
 from os import path
-from subprocess import call, check_output
+from subprocess import call, check_output, PIPE, Popen
 
 import aiohttp_cors
 from aiohttp.web import Application, run_app, static
@@ -35,14 +35,19 @@ logger = getLogger("Main")
 async def chown_plugin_dir(_):
     USER = None
     cmd = "who | awk '{print $1}' | sort | head -1"
+    # Get the user by checking for the first logged in user. As this is run
+    # by systemd at startup the process is likely to start before the user
+    # logs in, so we will wait here until they are available. Note that
+    # other methods such as getenv wont work as there was no $SUDO_USER to
+    # start the systemd service.
     while USER == None:
-        USER_LIST = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell=True)
+        USER_LIST = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True)
         for get_first in USER_LIST.stdout:
             name = get_first.decode().strip()
             if name is not None:
                 USER = name
                 break
-        time.sleep(1)
+        await sleep(1)
     GROUP = check_output(["id", "-g", "-n", USER]).decode().strip()
     code_chown = call(["chown", "-R", USER+":"+GROUP, CONFIG["plugin_path"]])
     code_chmod = call(["chmod", "-R", "555", CONFIG["plugin_path"]])

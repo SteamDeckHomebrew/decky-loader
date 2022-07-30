@@ -7,9 +7,9 @@ from io import BytesIO
 from zipfile import ZipFile
 from concurrent.futures import ProcessPoolExecutor
 from asyncio import get_event_loop
-from time import time
+from time import time, sleep
 from hashlib import sha256
-from subprocess import Popen, check_output
+from subprocess import Popen, check_output, PIPE
 from injector import inject_to_tab
 
 import json
@@ -41,16 +41,22 @@ class PluginBrowser:
             return False
         zip_file = ZipFile(zip)
         zip_file.extractall(self.plugin_path)
+
         USER = None
         cmd = "who | awk '{print $1}' | sort | head -1"
+        # Get the user by checking for the first logged in user. As this is run
+        # by systemd at startup the process is likely to start before the user
+        # logs in, so we will wait here until they are available. Note that
+        # other methods such as getenv wont work as there was no $SUDO_USER to
+        # start the systemd service.
         while USER == None:
-            USER_LIST = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell=True)
+            USER_LIST = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True)
             for get_first in USER_LIST.stdout:
                 name = get_first.decode().strip()
                 if name is not None:
                     USER = name
                     break
-            time.sleep(1)
+            sleep(1)
         GROUP = check_output(["id", "-g", "-n", USER]).decode().strip()
         Popen(["chown", "-R", USER+":"+GROUP, self.plugin_path])
         Popen(["chmod", "-R", "555", self.plugin_path])

@@ -43,8 +43,8 @@ class PluginBrowser:
             return False
         zip_file = ZipFile(zip)
         zip_file.extractall(self.plugin_path)
-        code_chown = call(["chown", "-R", get_user()+":"+get_user_group(), self.plugin_path)
-        code_chmod = call(["chmod", "-R", "555", self.plugin_path)
+        code_chown = call(["chown", "-R", get_user()+":"+get_user_group(), self.plugin_path])
+        code_chmod = call(["chmod", "-R", "555", self.plugin_path])
         if code_chown != 0 or code_chmod != 0:
             logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {code_chmod})")
             return False

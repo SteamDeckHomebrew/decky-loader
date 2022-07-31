@@ -1,9 +1,27 @@
-from logging import DEBUG, INFO, basicConfig, getLogger
-from os import getenv
+# Full imports
+import aiohttp_cors
 
+# Partial imports
 from aiohttp import ClientSession
+from aiohttp.web import Application, run_app, static
+from aiohttp_jinja2 import setup as jinja_setup
+from asyncio import get_event_loop, sleep
+from json import dumps, loads
+from logging import DEBUG, INFO, basicConfig, getLogger
+from os import getenv, path
+from subprocess import call
 
-HOME_PATH = "/home/"+getenv("USER")
+# local modules
+from browser import PluginBrowser
+from helpers import get_user, get_user_group
+from injector import inject_to_tab, tab_has_global_var
+from loader import Loader
+from updater import Updater
+from utilities import Utilities
+
+USER = get_user()
+GROUP = get_user_group()
+HOME_PATH = "/home/"+USER
 CONFIG = {
     "plugin_path": getenv("PLUGIN_PATH", HOME_PATH+"/homebrew/plugins"),
     "chown_plugin_path": getenv("CHOWN_PLUGIN_PATH", "1") == "1",
@@ -15,40 +33,9 @@ CONFIG = {
 
 basicConfig(level=CONFIG["log_level"], format="[%(module)s][%(levelname)s]: %(message)s")
 
-from asyncio import get_event_loop, sleep
-from json import dumps, loads
-from os import path
-from subprocess import call, check_output, PIPE, Popen
-
-import aiohttp_cors
-from aiohttp.web import Application, run_app, static
-from aiohttp_jinja2 import setup as jinja_setup
-
-from browser import PluginBrowser
-from injector import inject_to_tab, tab_has_global_var
-from loader import Loader
-from utilities import Utilities
-from updater import Updater
-
 logger = getLogger("Main")
 
 async def chown_plugin_dir(_):
-    USER = None
-    cmd = "who | awk '{print $1}' | sort | head -1"
-    # Get the user by checking for the first logged in user. As this is run
-    # by systemd at startup the process is likely to start before the user
-    # logs in, so we will wait here until they are available. Note that
-    # other methods such as getenv wont work as there was no $SUDO_USER to
-    # start the systemd service.
-    while USER == None:
-        USER_LIST = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True)
-        for get_first in USER_LIST.stdout:
-            name = get_first.decode().strip()
-            if name is not None:
-                USER = name
-                break
-        await sleep(1)
-    GROUP = check_output(["id", "-g", "-n", USER]).decode().strip()
     code_chown = call(["chown", "-R", USER+":"+GROUP, CONFIG["plugin_path"]])
     code_chmod = call(["chmod", "-R", "555", CONFIG["plugin_path"]])
     if code_chown != 0 or code_chmod != 0:

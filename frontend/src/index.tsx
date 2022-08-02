@@ -7,6 +7,7 @@ declare global {
     DeckyUpdater?: DeckyUpdater;
     importDeckyPlugin: Function;
     syncDeckyPlugins: Function;
+    deckyHasLoaded: boolean;
   }
 }
 
@@ -26,3 +27,5 @@ window.syncDeckyPlugins = async function () {
 };
 
 setTimeout(() => window.syncDeckyPlugins(), 5000);
+
+window.deckyHasLoaded = true;

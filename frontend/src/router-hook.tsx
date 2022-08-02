@@ -1,10 +1,11 @@
 import { afterPatch, findModuleChild, unpatch } from 'decky-frontend-lib';
 import { ReactElement, createElement, memo } from 'react';
-import type { Route } from 'react-router';
+import type { Route, RouteProps } from 'react-router';
 
 import {
   DeckyRouterState,
   DeckyRouterStateContextProvider,
+  RoutePatch,
   RouterEntry,
   useDeckyRouterState,
 } from './components/DeckyRouterState';
@@ -38,19 +39,16 @@ class RouterHook extends Logger {
     });
 
     let Route: new () => Route;
+    // Used to store the new replicated routes we create to allow routes to be unpatched.
+    let toReplace = new Map<string, Route>();
     const DeckyWrapper = ({ children }: { children: ReactElement }) => {
-      const { routes } = useDeckyRouterState();
+      const { routes, routePatches } = useDeckyRouterState();
 
-      let routerIndex = children.props.children[0].props.children.length;
-      if (
-        !children.props.children[0].props.children[routerIndex - 1]?.length ||
-        children.props.children[0].props.children[routerIndex - 1]?.length !== routes.size
-      ) {
-        if (
-          children.props.children[0].props.children[routerIndex - 1]?.length &&
-          children.props.children[0].props.children[routerIndex - 1].length !== routes.size
-        )
-          routerIndex--;
+      const routeList = children.props.children[0].props.children;
+
+      let routerIndex = routeList.length;
+      if (!routeList[routerIndex - 1]?.length || routeList[routerIndex - 1]?.length !== routes.size) {
+        if (routeList[routerIndex - 1]?.length && routeList[routerIndex - 1].length !== routes.size) routerIndex--;
         const newRouterArray: ReactElement[] = [];
         routes.forEach(({ component, props }, path) => {
           newRouterArray.push(
@@ -59,8 +57,26 @@ class RouterHook extends Logger {
             </Route>,
           );
         });
-        children.props.children[0].props.children[routerIndex] = newRouterArray;
+        routeList[routerIndex] = newRouterArray;
       }
+      routeList.forEach((route: Route, index: number) => {
+        const replaced = toReplace.get(route?.props?.path as string);
+        if (replaced) {
+          routeList[index] = replaced;
+          toReplace.delete(route?.props?.path as string);
+        }
+        if (route?.props?.path && routePatches.has(route.props.path as string)) {
+          toReplace.set(
+            route?.props?.path as string,
+            // @ts-ignore
+            createElement(routeList[index].type, routeList[index].props, routeList[index].props.children),
+          );
+          routePatches.get(route.props.path as string)?.forEach((patch) => {
+            routeList[index].props = patch(routeList[index].props);
+          });
+        }
+      });
+      this.debug('Rerendered routes list');
       return children;
     };
 
@@ -95,6 +111,14 @@ class RouterHook extends Logger {
 
   addRoute(path: string, component: RouterEntry['component'], props: RouterEntry['props'] = {}) {
     this.routerState.addRoute(path, component, props);
+  }
+
+  addPatch(path: string, patch: RoutePatch) {
+    return this.routerState.addPatch(path, patch);
+  }
+
+  removePatch(path: string, patch: RoutePatch) {
+    this.routerState.removePatch(path, patch);
   }
 
   removeRoute(path: string) {

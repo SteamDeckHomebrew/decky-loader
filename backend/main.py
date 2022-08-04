@@ -13,12 +13,18 @@ from subprocess import call
 
 # local modules
 from browser import PluginBrowser
-from helpers import get_user, get_user_group
+from helpers import get_user, get_user_group, set_user, set_user_group
 from injector import inject_to_tab, tab_has_global_var
 from loader import Loader
 from updater import Updater
 from utilities import Utilities
 
+# Ensure USER and GROUP vars are set first.
+# TODO: This isn't the best way to do this but supports the current
+# implementation. All the config load and environment setting eventually be
+# moved into init or a config/loader method.
+set_user()
+set_user_group()
 USER = get_user()
 GROUP = get_user_group()
 HOME_PATH = "/home/"+USER

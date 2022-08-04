@@ -5,6 +5,7 @@ from aiohttp import ClientSession, web
 
 from injector import inject_to_tab
 import helpers
+import subprocess
 
 class Utilities:
     def __init__(self, context) -> None:
@@ -16,7 +17,10 @@ class Utilities:
             "confirm_plugin_install": self.confirm_plugin_install,
             "execute_in_tab": self.execute_in_tab,
             "inject_css_into_tab": self.inject_css_into_tab,
-            "remove_css_from_tab": self.remove_css_from_tab
+            "remove_css_from_tab": self.remove_css_from_tab,
+            "allow_remote_debugging": self.allow_remote_debugging,
+            "disallow_remote_debugging": self.disallow_remote_debugging,
+            "remote_debugging_allowed": self.remote_debugging_allowed
         }
 
         if context:
@@ -133,3 +137,15 @@ class Utilities:
                 "success": False,
                 "result": e
             }
+
+
+    async def remote_debugging_allowed(self):
+        return await helpers.is_systemd_unit_enabled(helpers.REMOTE_DEBUGGER_UNIT) or await helpers.is_systemd_unit_active(helpers.REMOTE_DEBUGGER_UNIT)
+
+    async def allow_remote_debugging(self):
+        await helpers.enable_systemd_unit(helpers.REMOTE_DEBUGGER_UNIT, True)
+        return True
+
+    async def disallow_remote_debugging(self):
+        await helpers.disable_systemd_unit(helpers.REMOTE_DEBUGGER_UNIT, True)
+        return True

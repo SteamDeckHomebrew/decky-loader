@@ -1,10 +1,14 @@
 import certifi
 import ssl
 import uuid
+import subprocess
 
 from aiohttp.web import middleware, Response
 from subprocess import check_output
 from time import sleep
+
+
+REMOTE_DEBUGGER_UNIT = "steam-web-debug-portforward.service"
 
 # global vars
 csrf_token = str(uuid.uuid4())
@@ -60,3 +64,27 @@ def get_user_group() -> str:
     if group == None:
         raise ValueError("helpers.get_user_group method called before group variable was set. Run helpers.set_user_group first.")
     return group
+
+async def is_systemd_unit_enabled(unit_name: str) -> bool:
+    res = subprocess.run(["systemctl", "is-enabled", unit_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    return res.returncode == 0
+
+async def is_systemd_unit_active(unit_name: str) -> bool:
+    res = subprocess.run(["systemctl", "is-active", unit_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    return res.returncode == 0
+
+async def disable_systemd_unit(unit_name: str, stop: bool = False) -> subprocess.CompletedProcess:
+    cmd = ["systemctl", "disable", unit_name]
+
+    if stop:
+        cmd.insert(2, "--now")
+
+    return subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+async def enable_systemd_unit(unit_name: str, stop: bool = False) -> subprocess.CompletedProcess:
+    cmd = ["systemctl", "enable", unit_name]
+
+    if stop:
+        cmd.insert(2, "--now")
+
+    return subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

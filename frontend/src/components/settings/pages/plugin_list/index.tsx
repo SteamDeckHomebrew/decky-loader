@@ -1,5 +1,5 @@
-import { DialogButton, staticClasses } from 'decky-frontend-lib';
-import { FaRedo, FaTrash } from 'react-icons/fa';
+import { DialogButton, Menu, MenuItem, showContextMenu, staticClasses } from 'decky-frontend-lib';
+import { FaEllipsisH } from 'react-icons/fa';
 
 import { useDeckyState } from '../../../DeckyState';
 
@@ -22,15 +22,17 @@ export default function PluginList() {
           <div className={staticClasses.Title} style={{ marginLeft: 'auto', boxShadow: 'none' }}>
             <DialogButton
               style={{ height: '40px', width: '40px', padding: '10px 12px' }}
-              onClick={() => window.DeckyPluginLoader.importPlugin(name)}
+              onClick={(e: MouseEvent) =>
+                showContextMenu(
+                  <Menu label="Plugin Actions">
+                    <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(name)}>Reload</MenuItem>
+                    <MenuItem onSelected={() => window.DeckyPluginLoader.uninstallPlugin(name)}>Uninstall</MenuItem>
+                  </Menu>,
+                  e.currentTarget ?? window,
+                )
+              }
             >
-              <FaRedo />
-            </DialogButton>
-            <DialogButton
-              style={{ height: '40px', width: '40px', padding: '10px 12px' }}
-              onClick={() => window.DeckyPluginLoader.uninstallPlugin(name)}
-            >
-              <FaTrash />
+              <FaEllipsisH />
             </DialogButton>
           </div>
         </li>

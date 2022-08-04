@@ -1,5 +1,5 @@
 import { DialogButton, staticClasses } from 'decky-frontend-lib';
-import { FaTrash } from 'react-icons/fa';
+import { FaRedo, FaTrash } from 'react-icons/fa';
 
 import { useDeckyState } from '../../../DeckyState';
 
@@ -20,6 +20,12 @@ export default function PluginList() {
         <li style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
           <span>{name}</span>
           <div className={staticClasses.Title} style={{ marginLeft: 'auto', boxShadow: 'none' }}>
+            <DialogButton
+              style={{ height: '40px', width: '40px', padding: '10px 12px' }}
+              onClick={() => window.DeckyPluginLoader.importPlugin(name)}
+            >
+              <FaRedo />
+            </DialogButton>
             <DialogButton
               style={{ height: '40px', width: '40px', padding: '10px 12px' }}
               onClick={() => window.DeckyPluginLoader.uninstallPlugin(name)}

@@ -8,10 +8,13 @@ window.addEventListener("message", function(evt) {
 }, false);
 
 async function call_server_method(method_name, arg_object={}) {
+    const token = await fetch("http://127.0.0.1:1337/auth/token").then(r => r.text());
     const response = await fetch(`http://127.0.0.1:1337/methods/${method_name}`, {
       method: 'POST',
+      credentials: "include",
       headers: {
         'Content-Type': 'application/json',
+        Authentication: token
       },
       body: JSON.stringify(arg_object),
     });
@@ -40,10 +43,13 @@ async function fetch_nocors(url, request={}) {
 async function call_plugin_method(method_name, arg_object={}) {
     if (plugin_name == undefined) 
         throw new Error("Plugin methods can only be called from inside plugins (duh)");
+    const token = await fetch("http://127.0.0.1:1337/auth/token").then(r => r.text());
     const response = await fetch(`http://127.0.0.1:1337/plugins/${plugin_name}/methods/${method_name}`, {
         method: 'POST',
+        credentials: "include",
         headers: {
-        'Content-Type': 'application/json',
+            'Content-Type': 'application/json',
+            Authentication: token
         },
         body: JSON.stringify({
             args: arg_object,

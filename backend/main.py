@@ -20,12 +20,13 @@ from os import path
 from subprocess import call
 
 import aiohttp_cors
-from aiohttp.web import Application, run_app, static
+from aiohttp.web import Application, run_app, static, get, Response
 from aiohttp_jinja2 import setup as jinja_setup
 
 from browser import PluginBrowser
 from injector import inject_to_tab, tab_has_global_var
 from loader import Loader
+from helpers import csrf_middleware, get_csrf_token
 from utilities import Utilities
 from updater import Updater
 
@@ -41,9 +42,10 @@ class PluginManager:
     def __init__(self) -> None:
         self.loop = get_event_loop()
         self.web_app = Application()
+        self.web_app.middlewares.append(csrf_middleware)
         self.cors = aiohttp_cors.setup(self.web_app, defaults={
           "https://steamloopback.host": aiohttp_cors.ResourceOptions(expose_headers="*",
-                allow_headers="*")
+                allow_headers="*", allow_credentials=True)
         })
         self.plugin_loader = Loader(self.web_app, CONFIG["plugin_path"], self.loop, CONFIG["live_reload"])
         self.plugin_browser = PluginBrowser(CONFIG["plugin_path"], self.web_app, self.plugin_loader.plugins)
@@ -57,6 +59,8 @@ class PluginManager:
         self.loop.create_task(self.loader_reinjector())
         self.loop.create_task(self.load_plugins())
         self.loop.set_exception_handler(self.exception_handler)
+        self.web_app.add_routes([get("/auth/token", self.get_auth_token)])
+
         for route in list(self.web_app.router.routes()):
           self.cors.add(route)
         self.web_app.add_routes([static("/static", path.join(path.dirname(__file__), 'static'))])
@@ -66,6 +70,9 @@ class PluginManager:
         if context["message"] == "Unclosed connection":
             return
         loop.default_exception_handler(context)
+
+    async def get_auth_token(self, request):
+        return Response(text=get_csrf_token())
 
     async def wait_for_server(self):
         async with ClientSession() as web:

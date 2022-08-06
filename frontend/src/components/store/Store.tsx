@@ -98,10 +98,6 @@ const StorePage: FC<{}> = () => {
     (async () => {
       const res = await fetch('https://beta.deckbrew.xyz/plugins', {
         method: 'GET',
-        credentials: 'include',
-        headers: {
-          Authentication: window.deckyAuthToken,
-        },
       }).then((r) => r.json());
       console.log(res);
       setData(res.filter((x: StorePlugin) => x.name !== 'Example Plugin'));
@@ -109,10 +105,6 @@ const StorePage: FC<{}> = () => {
     (async () => {
       const res = await fetch('https://plugins.deckbrew.xyz/get_plugins', {
         method: 'GET',
-        credentials: 'include',
-        headers: {
-          Authentication: window.deckyAuthToken,
-        },
       }).then((r) => r.json());
       console.log(res);
       setLegacyData(res);

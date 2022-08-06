@@ -8,6 +8,16 @@ export const log = (name: string, ...args: any[]) => {
   );
 };
 
+export const debug = (name: string, ...args: any[]) => {
+  console.debug(
+    `%c Decky %c ${name} %c`,
+    'background: #16a085; color: black;',
+    'background: #1abc9c; color: black;',
+    'color: blue;',
+    ...args,
+  );
+};
+
 export const error = (name: string, ...args: any[]) => {
   console.log(
     `%c Decky %c ${name} %c`,
@@ -28,7 +38,7 @@ class Logger {
   }
 
   debug(...args: any[]) {
-    log(this.name, ...args);
+    debug(this.name, ...args);
   }
 }
 

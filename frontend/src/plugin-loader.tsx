@@ -75,6 +75,10 @@ class PluginLoader extends Logger {
           await fetch('http://localhost:1337/browser/uninstall_plugin', {
             method: 'POST',
             body: formData,
+            credentials: 'include',
+            headers: {
+              Authentication: window.deckyAuthToken,
+            },
           });
         }}
         onCancel={() => {
@@ -144,7 +148,12 @@ class PluginLoader extends Logger {
   }
 
   private async importReactPlugin(name: string) {
-    let res = await fetch(`http://127.0.0.1:1337/plugins/${name}/frontend_bundle`);
+    let res = await fetch(`http://127.0.0.1:1337/plugins/${name}/frontend_bundle`, {
+      credentials: 'include',
+      headers: {
+        Authentication: window.deckyAuthToken,
+      },
+    });
     if (res.ok) {
       let plugin = await eval(await res.text())(this.createPluginAPI(name));
       this.plugins.push({
@@ -166,8 +175,10 @@ class PluginLoader extends Logger {
   async callServerMethod(methodName: string, args = {}) {
     const response = await fetch(`http://127.0.0.1:1337/methods/${methodName}`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        Authentication: window.deckyAuthToken,
       },
       body: JSON.stringify(args),
     });
@@ -182,8 +193,10 @@ class PluginLoader extends Logger {
       async callPluginMethod(methodName: string, args = {}) {
         const response = await fetch(`http://127.0.0.1:1337/plugins/${pluginName}/methods/${methodName}`, {
           method: 'POST',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
+            Authentication: window.deckyAuthToken,
           },
           body: JSON.stringify({
             args,

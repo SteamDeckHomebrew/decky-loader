@@ -1,20 +1,22 @@
-from injector import get_tab
+# Full imports
+import json
+
+# Partial imports
+from aiohttp import ClientSession, web
+from asyncio import get_event_loop
+from concurrent.futures import ProcessPoolExecutor
+from hashlib import sha256
+from io import BytesIO
 from logging import getLogger
 from os import path, rename, listdir
 from shutil import rmtree
-from aiohttp import ClientSession, web
-from io import BytesIO
-from zipfile import ZipFile
-from concurrent.futures import ProcessPoolExecutor
-from asyncio import get_event_loop
+from subprocess import call
 from time import time
-from hashlib import sha256
-from subprocess import Popen
-from injector import inject_to_tab
+from zipfile import ZipFile
 
-import json
-
-import helpers
+# Local modules
+from helpers import get_ssl_context, get_user, get_user_group
+from injector import get_tab, inject_to_tab
 
 class PluginInstallContext:
     def __init__(self, artifact, name, version, hash) -> None:
@@ -41,8 +43,11 @@ class PluginBrowser:
             return False
         zip_file = ZipFile(zip)
         zip_file.extractall(self.plugin_path)
-        Popen(["chown", "-R", "deck:deck", self.plugin_path])
-        Popen(["chmod", "-R", "555", self.plugin_path])
+        code_chown = call(["chown", "-R", get_user()+":"+get_user_group(), self.plugin_path])
+        code_chmod = call(["chmod", "-R", "555", self.plugin_path])
+        if code_chown != 0 or code_chmod != 0:
+            logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {code_chmod})")
+            return False
         return True
 
     def find_plugin_folder(self, name):
@@ -83,7 +88,7 @@ class PluginBrowser:
         self.log.info(f"Installing {name} (Version: {version})")
         async with ClientSession() as client:
             self.log.debug(f"Fetching {artifact}")
-            res = await client.get(artifact, ssl=helpers.get_ssl_context())
+            res = await client.get(artifact, ssl=get_ssl_context())
             if res.status == 200:
                 self.log.debug("Got 200. Reading...")
                 data = await res.read()

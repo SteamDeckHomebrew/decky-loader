@@ -1,10 +1,35 @@
-from logging import DEBUG, INFO, basicConfig, getLogger
-from os import getenv
+# Full imports
+import aiohttp_cors
 
+# Partial imports
 from aiohttp import ClientSession
+from aiohttp.web import Application, run_app, static, get, Response
+from aiohttp_jinja2 import setup as jinja_setup
+from asyncio import get_event_loop, sleep
+from json import dumps, loads
+from logging import DEBUG, INFO, basicConfig, getLogger
+from os import getenv, path
+from subprocess import call
 
+# local modules
+from browser import PluginBrowser
+from helpers import csrf_middleware, get_csrf_token, get_user, get_user_group, set_user, set_user_group
+from injector import inject_to_tab, tab_has_global_var
+from loader import Loader
+from updater import Updater
+from utilities import Utilities
+
+# Ensure USER and GROUP vars are set first.
+# TODO: This isn't the best way to do this but supports the current
+# implementation. All the config load and environment setting eventually be
+# moved into init or a config/loader method.
+set_user()
+set_user_group()
+USER = get_user()
+GROUP = get_user_group()
+HOME_PATH = "/home/"+USER
 CONFIG = {
-    "plugin_path": getenv("PLUGIN_PATH", "/home/deck/homebrew/plugins"),
+    "plugin_path": getenv("PLUGIN_PATH", HOME_PATH+"/homebrew/plugins"),
     "chown_plugin_path": getenv("CHOWN_PLUGIN_PATH", "1") == "1",
     "server_host": getenv("SERVER_HOST", "127.0.0.1"),
     "server_port": int(getenv("SERVER_PORT", "1337")),
@@ -14,26 +39,10 @@ CONFIG = {
 
 basicConfig(level=CONFIG["log_level"], format="[%(module)s][%(levelname)s]: %(message)s")
 
-from asyncio import get_event_loop, sleep
-from json import dumps, loads
-from os import path
-from subprocess import call
-
-import aiohttp_cors
-from aiohttp.web import Application, run_app, static, get, Response
-from aiohttp_jinja2 import setup as jinja_setup
-
-from browser import PluginBrowser
-from injector import inject_to_tab, tab_has_global_var
-from loader import Loader
-from helpers import csrf_middleware, get_csrf_token
-from utilities import Utilities
-from updater import Updater
-
 logger = getLogger("Main")
 
 async def chown_plugin_dir(_):
-    code_chown = call(["chown", "-R", "deck:deck", CONFIG["plugin_path"]])
+    code_chown = call(["chown", "-R", USER+":"+GROUP, CONFIG["plugin_path"]])
     code_chmod = call(["chmod", "-R", "555", CONFIG["plugin_path"]])
     if code_chown != 0 or code_chmod != 0:
         logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {code_chmod})")

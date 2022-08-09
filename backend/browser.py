@@ -97,13 +97,7 @@ class PluginBrowser:
                 res_zip = BytesIO(data)
                 with ProcessPoolExecutor() as executor:
                     logger.debug("Unzipping...")
-                    ret = await get_event_loop().run_in_executor(
-                        executor,
-                        self._unzip_to_plugin_dir,
-                        res_zip,
-                        name,
-                        hash
-                    )
+                    ret = self._unzip_to_plugin_dir(res_zip, name, hash)
                     if ret:
                         logger.info(f"Installed {name} (Version: {version})")
                         await inject_to_tab("SP", "window.syncDeckyPlugins()")

@@ -65,26 +65,16 @@ def get_user_group() -> str:
         raise ValueError("helpers.get_user_group method called before group variable was set. Run helpers.set_user_group first.")
     return group
 
-async def is_systemd_unit_enabled(unit_name: str) -> bool:
-    res = subprocess.run(["systemctl", "is-enabled", unit_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    return res.returncode == 0
-
 async def is_systemd_unit_active(unit_name: str) -> bool:
     res = subprocess.run(["systemctl", "is-active", unit_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     return res.returncode == 0
 
-async def disable_systemd_unit(unit_name: str, stop: bool = False) -> subprocess.CompletedProcess:
-    cmd = ["systemctl", "disable", unit_name]
-
-    if stop:
-        cmd.insert(2, "--now")
+async def stop_systemd_unit(unit_name: str) -> subprocess.CompletedProcess:
+    cmd = ["systemctl", "stop", unit_name]
 
     return subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-async def enable_systemd_unit(unit_name: str, stop: bool = False) -> subprocess.CompletedProcess:
-    cmd = ["systemctl", "enable", unit_name]
-
-    if stop:
-        cmd.insert(2, "--now")
+async def start_systemd_unit(unit_name: str) -> subprocess.CompletedProcess:
+    cmd = ["systemctl", "start", unit_name]
 
     return subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

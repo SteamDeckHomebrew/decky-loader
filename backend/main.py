@@ -13,7 +13,7 @@ from subprocess import call
 
 # local modules
 from browser import PluginBrowser
-from helpers import csrf_middleware, get_csrf_token, get_user, get_user_group, set_user, set_user_group, disable_systemd_unit, REMOTE_DEBUGGER_UNIT
+from helpers import csrf_middleware, get_csrf_token, get_user, get_user_group, set_user, set_user_group, stop_systemd_unit, REMOTE_DEBUGGER_UNIT
 from injector import inject_to_tab, tab_has_global_var
 from loader import Loader
 from updater import Updater
@@ -67,7 +67,7 @@ class PluginManager:
             self.web_app.on_startup.append(chown_plugin_dir)
         self.loop.create_task(self.loader_reinjector())
         self.loop.create_task(self.load_plugins())
-        self.loop.create_task(disable_systemd_unit(REMOTE_DEBUGGER_UNIT, True))
+        self.loop.create_task(stop_systemd_unit(REMOTE_DEBUGGER_UNIT))
         self.loop.set_exception_handler(self.exception_handler)
         self.web_app.add_routes([get("/auth/token", self.get_auth_token)])
 

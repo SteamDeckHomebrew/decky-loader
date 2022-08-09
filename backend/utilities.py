@@ -140,12 +140,12 @@ class Utilities:
 
 
     async def remote_debugging_allowed(self):
-        return await helpers.is_systemd_unit_enabled(helpers.REMOTE_DEBUGGER_UNIT) or await helpers.is_systemd_unit_active(helpers.REMOTE_DEBUGGER_UNIT)
+        return await helpers.is_systemd_unit_active(helpers.REMOTE_DEBUGGER_UNIT)
 
     async def allow_remote_debugging(self):
-        await helpers.enable_systemd_unit(helpers.REMOTE_DEBUGGER_UNIT, True)
+        await helpers.start_systemd_unit(helpers.REMOTE_DEBUGGER_UNIT)
         return True
 
     async def disallow_remote_debugging(self):
-        await helpers.disable_systemd_unit(helpers.REMOTE_DEBUGGER_UNIT, True)
+        await helpers.stop_systemd_unit(helpers.REMOTE_DEBUGGER_UNIT)
         return True

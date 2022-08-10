@@ -2,23 +2,7 @@ import { DialogButton, Field, ProgressBarWithInfo, Spinner } from 'decky-fronten
 import { useEffect, useState } from 'react';
 import { FaArrowDown } from 'react-icons/fa';
 
-import { callUpdaterMethod, finishUpdate } from '../../../../updater';
-
-interface VerInfo {
-  current: string;
-  remote: {
-    assets: {
-      browser_download_url: string;
-      created_at: string;
-    }[];
-    name: string;
-    body: string;
-    prerelease: boolean;
-    published_at: string;
-    tag_name: string;
-  } | null;
-  updatable: boolean;
-}
+import { VerInfo, callUpdaterMethod, finishUpdate } from '../../../../updater';
 
 export default function UpdaterSettings() {
   const [versionInfo, setVersionInfo] = useState<VerInfo | null>(null);

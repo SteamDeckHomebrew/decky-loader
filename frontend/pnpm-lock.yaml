@@ -9,7 +9,7 @@ specifiers:
   '@types/react': 16.14.0
   '@types/react-router': 5.1.18
   '@types/webpack': ^5.28.0
-  decky-frontend-lib: ^1.2.4
+  decky-frontend-lib: ^1.5.0
   husky: ^8.0.1
   import-sort-style-module: ^6.0.0
   inquirer: ^8.2.4
@@ -23,7 +23,7 @@ specifiers:
   typescript: ^4.7.4
 
 dependencies:
-  decky-frontend-lib: 1.2.4
+  decky-frontend-lib: 1.5.0
   react-icons: 4.4.0_react@16.14.0
 
 devDependencies:
@@ -806,8 +806,8 @@ packages:
       ms: 2.1.2
     dev: true
 
-  /decky-frontend-lib/1.2.4:
-    resolution: {integrity: sha512-r3mLEey9KUkF68geJVSjNlOz/Fg4vpMKUzoutSceyd8o/J5l+QR+Vf0b3gwK3UN9Sp4Pj4XQ1eB82+/W0ApsFg==}
+  /decky-frontend-lib/1.5.0:
+    resolution: {integrity: sha512-BT/txV7Q1NJfbnT99jt0OdUE2Qv4Gm1jhrevctx84D+pp7TfpCYau+Khnq2B9agEQQo7CWh5hOJW/SX5n2dKnQ==}
     dev: false
 
   /deepmerge/4.2.2:

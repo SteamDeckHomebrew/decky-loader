@@ -1,3 +1,5 @@
+import { sleep } from 'decky-frontend-lib';
+
 import PluginLoader from './plugin-loader';
 import { DeckyUpdater } from './updater';
 
@@ -12,6 +14,7 @@ declare global {
   }
 }
 (async () => {
+  await sleep(1000);
   window.deckyAuthToken = await fetch('http://127.0.0.1:1337/auth/token').then((r) => r.text());
 
   window.DeckyPluginLoader?.dismountAll();

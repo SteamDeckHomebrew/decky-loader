@@ -117,10 +117,10 @@ jobs:
       id: ready_tag
       run: |
         export VERSION=${{ steps.old_tag.outputs.tag }}
-        export SEMVER=$(sed -r 's/(-.*)?-pre$//' <<< $VERSION)
+        # export SEMVER=$(sed -r 's/(-.*)?-pre$//' <<< $VERSION)
         echo "VERS: $VERSION"
-        echo "TO SEMVER: $SEMVER"
-        OUT=$(semver bump prerel "$SEMVER")-pre
+        # echo "TO SEMVER: $SEMVER"
+        OUT=$(semver bump prerel "$VERSION")
         echo "OUT: $OUT"
         echo ::set-output name=tag_name::$(sed -r 's/(-.*)?-pre$//' <<< $VERSION)-pre
 
@@ -129,7 +129,7 @@ jobs:
       if: ${{ steps.ready_tag.outputs.tag_name && github.event_name == 'workflow_dispatch' }}
       with:
         tag: ${{ steps.ready_tag.outputs.tag_name }}
-        message: Nightly ${{ steps.ready_tag.outputs.tag_name }}
+        message: Pre-release ${{ steps.ready_tag.outputs.tag_name }}
 
     # - name: Release 📦
     #   uses: softprops/action-gh-release@v1

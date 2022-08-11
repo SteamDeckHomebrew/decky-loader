@@ -6,21 +6,45 @@ export interface RouterEntry {
   component: ComponentType;
 }
 
+export type RoutePatch = (route: RouteProps) => RouteProps;
+
 interface PublicDeckyRouterState {
   routes: Map<string, RouterEntry>;
+  routePatches: Map<string, Set<RoutePatch>>;
 }
 
 export class DeckyRouterState {
   private _routes = new Map<string, RouterEntry>();
+  private _routePatches = new Map<string, Set<RoutePatch>>();
 
   public eventBus = new EventTarget();
 
   publicState(): PublicDeckyRouterState {
-    return { routes: this._routes };
+    return { routes: this._routes, routePatches: this._routePatches };
   }
 
   addRoute(path: string, component: RouterEntry['component'], props: RouterEntry['props'] = {}) {
     this._routes.set(path, { props, component });
+    this.notifyUpdate();
+  }
+
+  addPatch(path: string, patch: RoutePatch) {
+    let patchList = this._routePatches.get(path);
+    if (!patchList) {
+      patchList = new Set();
+      this._routePatches.set(path, patchList);
+    }
+    patchList.add(patch);
+    this.notifyUpdate();
+    return patch;
+  }
+
+  removePatch(path: string, patch: RoutePatch) {
+    const patchList = this._routePatches.get(path);
+    patchList?.delete(patch);
+    if (patchList?.size == 0) {
+      this._routePatches.delete(path);
+    }
     this.notifyUpdate();
   }
 
@@ -36,6 +60,8 @@ export class DeckyRouterState {
 
 interface DeckyRouterStateContext extends PublicDeckyRouterState {
   addRoute(path: string, component: RouterEntry['component'], props: RouterEntry['props']): void;
+  addPatch(path: string, patch: RoutePatch): RoutePatch;
+  removePatch(path: string, patch: RoutePatch): void;
   removeRoute(path: string): void;
 }
 
@@ -62,12 +88,15 @@ export const DeckyRouterStateContextProvider: FC<Props> = ({ children, deckyRout
     return () => deckyRouterState.eventBus.removeEventListener('update', onUpdate);
   }, []);
 
-  const addRoute = (path: string, component: RouterEntry['component'], props: RouterEntry['props'] = {}) =>
-    deckyRouterState.addRoute(path, component, props);
-  const removeRoute = (path: string) => deckyRouterState.removeRoute(path);
+  const addRoute = deckyRouterState.addRoute.bind(deckyRouterState);
+  const addPatch = deckyRouterState.addPatch.bind(deckyRouterState);
+  const removePatch = deckyRouterState.removePatch.bind(deckyRouterState);
+  const removeRoute = deckyRouterState.removeRoute.bind(deckyRouterState);
 
   return (
-    <DeckyRouterStateContext.Provider value={{ ...publicDeckyRouterState, addRoute, removeRoute }}>
+    <DeckyRouterStateContext.Provider
+      value={{ ...publicDeckyRouterState, addRoute, addPatch, removePatch, removeRoute }}
+    >
       {children}
     </DeckyRouterStateContext.Provider>
   );

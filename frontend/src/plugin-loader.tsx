@@ -12,6 +12,8 @@ import Logger from './logger';
 import { Plugin } from './plugin';
 import RouterHook from './router-hook';
 import TabsHook from './tabs-hook';
+import Toaster from './toaster';
+import { VerInfo, callUpdaterMethod } from './updater';
 
 declare global {
   interface Window {}
@@ -22,6 +24,7 @@ class PluginLoader extends Logger {
   private tabsHook: TabsHook = new TabsHook();
   // private windowHook: WindowHook = new WindowHook();
   private routerHook: RouterHook = new RouterHook();
+  private toaster: Toaster = new Toaster();
   private deckyState: DeckyState = new DeckyState();
 
   private reloadLock: boolean = false;
@@ -52,6 +55,16 @@ class PluginLoader extends Logger {
         </DeckyStateContextProvider>
       );
     });
+  }
+
+  public async notifyUpdates() {
+    const versionInfo = (await callUpdaterMethod('get_version')).result as VerInfo;
+    if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
+      this.toaster.toast({
+        title: 'Decky',
+        body: `Update to ${versionInfo?.remote?.tag_name} availiable!`,
+      });
+    }
   }
 
   public addPluginInstallPrompt(artifact: string, version: string, request_id: string, hash: string) {
@@ -139,7 +152,12 @@ class PluginLoader extends Logger {
   }
 
   private async importReactPlugin(name: string) {
-    let res = await fetch(`http://127.0.0.1:1337/plugins/${name}/frontend_bundle`);
+    let res = await fetch(`http://127.0.0.1:1337/plugins/${name}/frontend_bundle`, {
+      credentials: 'include',
+      headers: {
+        Authentication: window.deckyAuthToken,
+      },
+    });
     if (res.ok) {
       let plugin = await eval(await res.text())(this.createPluginAPI(name));
       this.plugins.push({
@@ -161,8 +179,10 @@ class PluginLoader extends Logger {
   async callServerMethod(methodName: string, args = {}) {
     const response = await fetch(`http://127.0.0.1:1337/methods/${methodName}`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        Authentication: window.deckyAuthToken,
       },
       body: JSON.stringify(args),
     });
@@ -173,12 +193,15 @@ class PluginLoader extends Logger {
   createPluginAPI(pluginName: string) {
     return {
       routerHook: this.routerHook,
+      toaster: this.toaster,
       callServerMethod: this.callServerMethod,
       async callPluginMethod(methodName: string, args = {}) {
         const response = await fetch(`http://127.0.0.1:1337/plugins/${pluginName}/methods/${methodName}`, {
           method: 'POST',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
+            Authentication: window.deckyAuthToken,
           },
           body: JSON.stringify({
             args,

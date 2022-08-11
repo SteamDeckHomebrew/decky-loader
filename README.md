@@ -11,14 +11,14 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugi
 4. Under Miscellaneous, enable `CEF Remote Debugging`
 5. Click on the `STEAM` button and select `Power` -> `Switch to Desktop`
 6. Make sure you have a password set with the "passwd" command in terminal to install it ([YouTube Guide](https://www.youtube.com/watch?v=1vOMYGj22rQ)).
-7. Open a terminal and paste the following command into it: 
-    - For users:
-        - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/legacy/dist/install_release.sh | sh`
-    - For the latest pre-release,
-        - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_prerelease.sh | sh`
+7. Open a terminal and paste the following command into it:
+    - For the latest pre-release:
+        - `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_prerelease.sh | sh`
     - For testers/plugin developers:
-        - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/install_prerelease.sh | sh`
+        - `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_prerelease.sh | sh`
         - [Wiki Link](https://deckbrew.xyz/en/loader-dev/development)
+    - For the legacy version (unsupported):
+        - `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/legacy/dist/install_release.sh | sh`
 7. Done! Reboot back into Gaming mode and enjoy your plugins!
 
 ### Install/Uninstall Plugins
@@ -28,7 +28,7 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugi
 
 ### Uninstall
 - Open a terminal and paste the following command into it:
-  - `curl -L https://github.com/SteamDeckHomebrew/PluginLoader/raw/main/dist/uninstall.sh | sh`
+  - `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/uninstall.sh | sh`
 
 ## Features
 - Clean injecting and loading of one or more plugins

@@ -1,20 +1,24 @@
-from injector import get_tab
+# Full imports
+import json
+
+# Partial imports
+from aiohttp import ClientSession, web
+from asyncio import get_event_loop
+from concurrent.futures import ProcessPoolExecutor
+from hashlib import sha256
+from io import BytesIO
 from logging import getLogger
 from os import path, rename, listdir
 from shutil import rmtree
-from aiohttp import ClientSession, web
-from io import BytesIO
-from zipfile import ZipFile
-from concurrent.futures import ProcessPoolExecutor
-from asyncio import get_event_loop
+from subprocess import call
 from time import time
-from hashlib import sha256
-from subprocess import Popen
-from injector import inject_to_tab
+from zipfile import ZipFile
 
-import json
+# Local modules
+from helpers import get_ssl_context, get_user, get_user_group
+from injector import get_tab, inject_to_tab
 
-import helpers
+logger = getLogger("Browser")
 
 
 class PluginInstallContext:
@@ -27,7 +31,6 @@ class PluginInstallContext:
 
 class PluginBrowser:
     def __init__(self, plugin_path, plugins) -> None:
-        self.log = getLogger("browser")
         self.plugin_path = plugin_path
         self.plugins = plugins
         self.install_requests = {}
@@ -38,8 +41,11 @@ class PluginBrowser:
             return False
         zip_file = ZipFile(zip)
         zip_file.extractall(self.plugin_path)
-        Popen(["chown", "-R", "deck:deck", self.plugin_path])
-        Popen(["chmod", "-R", "555", self.plugin_path])
+        code_chown = call(["chown", "-R", get_user()+":"+get_user_group(), self.plugin_path])
+        code_chmod = call(["chmod", "-R", "555", self.plugin_path])
+        if code_chown != 0 or code_chmod != 0:
+            logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {code_chmod})")
+            return False
         return True
 
     def find_plugin_folder(self, name):
@@ -51,7 +57,7 @@ class PluginBrowser:
                 if plugin['name'] == name:
                     return path.join(self.plugin_path, folder)
             except:
-                self.log.debug(f"skipping {folder}")
+                logger.debug(f"skipping {folder}")
 
     async def uninstall_plugin(self, name):
         tab = await get_tab("SP")
@@ -60,15 +66,15 @@ class PluginBrowser:
             if type(name) != str:
                 data = await name.post()
                 name = data.get("name", "undefined")
-            self.log.info("uninstalling " + name)
-            self.log.info(" at dir " + self.find_plugin_folder(name))
+            logger.info("uninstalling " + name)
+            logger.info(" at dir " + self.find_plugin_folder(name))
             await tab.evaluate_js(f"DeckyPluginLoader.unloadPlugin('{name}')")
             if self.plugins[name]:
                 self.plugins[name].stop()
                 self.plugins.pop(name, None)
             rmtree(self.find_plugin_folder(name))
         except FileNotFoundError:
-            self.log.warning(f"Plugin {name} not installed, skipping uninstallation")
+            logger.warning(f"Plugin {name} not installed, skipping uninstallation")
 
         return web.Response(text="Requested plugin uninstall")
 
@@ -76,32 +82,26 @@ class PluginBrowser:
         try:
             await self.uninstall_plugin(name)
         except:
-            self.log.error(f"Plugin {name} not installed, skipping uninstallation")
-        self.log.info(f"Installing {name} (Version: {version})")
+            logger.error(f"Plugin {name} not installed, skipping uninstallation")
+        logger.info(f"Installing {name} (Version: {version})")
         async with ClientSession() as client:
-            self.log.debug(f"Fetching {artifact}")
-            res = await client.get(artifact, ssl=helpers.get_ssl_context())
+            logger.debug(f"Fetching {artifact}")
+            res = await client.get(artifact, ssl=get_ssl_context())
             if res.status == 200:
-                self.log.debug("Got 200. Reading...")
+                logger.debug("Got 200. Reading...")
                 data = await res.read()
-                self.log.debug(f"Read {len(data)} bytes")
+                logger.debug(f"Read {len(data)} bytes")
                 res_zip = BytesIO(data)
                 with ProcessPoolExecutor() as executor:
-                    self.log.debug("Unzipping...")
-                    ret = await get_event_loop().run_in_executor(
-                        executor,
-                        self._unzip_to_plugin_dir,
-                        res_zip,
-                        name,
-                        hash
-                    )
+                    logger.debug("Unzipping...")
+                    ret = self._unzip_to_plugin_dir(res_zip, name, hash)
                     if ret:
-                        self.log.info(f"Installed {name} (Version: {version})")
+                        logger.info(f"Installed {name} (Version: {version})")
                         await inject_to_tab("SP", "window.syncDeckyPlugins()")
                     else:
-                        self.log.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
+                        logger.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
             else:
-                self.log.fatal(f"Could not fetch from URL. {await res.text()}")
+                logger.fatal(f"Could not fetch from URL. {await res.text()}")
 
     async def request_plugin_install(self, artifact, name, version, hash):
         request_id = str(time())

@@ -110,12 +110,12 @@ class TabsHook extends Logger {
   }
 
   add(tab: Tab) {
-    this.log('Adding tab', tab.id, 'to render array');
+    this.debug('Adding tab', tab.id, 'to render array');
     this.tabs.push(tab);
   }
 
   removeById(id: number) {
-    this.log('Removing tab', id);
+    this.debug('Removing tab', id);
     this.tabs = this.tabs.filter((tab) => tab.id !== id);
   }
 

@@ -118,10 +118,10 @@ jobs:
       run: |
         export VERSION=${{ steps.old_tag.outputs.tag }}
         export SEMVER=$(sed -r 's/(-.*)?-pre$//' <<< $VERSION)
-        # check if original tag is release, if so we add "-pre" to the end
-        # [[ "$VERSION" =~ "pre" ]] && $APPENDPRE="true"
+        echo "VERS: $VERSION"
+        echo "TO SEMVER: $SEMVER"
         OUT=$(semver bump prerel "$SEMVER")-pre
-        # [[ "$APPENDPRE" == "true" ]] && "$OUT"="$OUT"-pre
+        echo "OUT: $OUT"
         echo ::set-output name=tag_name::$(sed -r 's/(-.*)?-pre$//' <<< $VERSION)-pre
 
     - name: Push tag 📤

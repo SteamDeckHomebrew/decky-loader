@@ -103,7 +103,7 @@ class TabsHook extends Logger {
   }
 
   deinit() {
-    unpatch(this.cNode.stateNode, 'render');
+    if (this.cNode) unpatch(this.cNode.stateNode, 'render');
     if (this.qAPTree) this.qAPTree.type = this.quickAccess;
     if (this.rendererTree) this.rendererTree.type = this.tabRenderer;
     if (this.cNode) this.cNode.stateNode.forceUpdate();

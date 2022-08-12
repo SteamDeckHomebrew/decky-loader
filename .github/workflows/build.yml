@@ -120,7 +120,7 @@ jobs:
         echo "VERS: $VERSION"
         OUT=$(semver bump prerel "$VERSION")
         echo "OUT: $OUT"
-        echo ::set-output name=tag_name::$OUT
+        echo ::set-output name=tag_name::v$OUT
 
     - name: Push tag 📤
       uses: rickstaa/action-create-tag@v1.3.2

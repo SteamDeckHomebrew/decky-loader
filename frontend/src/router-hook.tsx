@@ -60,7 +60,6 @@ class RouterHook extends Logger {
         routeList[routerIndex] = newRouterArray;
       }
       routeList.forEach((route: Route, index: number) => {
-        console.log(route);
         const replaced = toReplace.get(route?.props?.path as string);
         if (replaced) {
           routeList[index].props.children = replaced;

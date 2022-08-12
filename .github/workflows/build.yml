@@ -129,15 +129,15 @@ jobs:
         tag: ${{ steps.ready_tag.outputs.tag_name }}
         message: Pre-release ${{ steps.ready_tag.outputs.tag_name }}
 
-    # - name: Release 📦
-    #   uses: softprops/action-gh-release@v1
-    #   if: ${{ github.event_name == 'workflow_dispatch' }}
-    #   with:
-    #     name: Prerelease ${{ steps.ready_tag.outputs.tag_name }}
-    #     tag_name: ${{ steps.ready_tag.outputs.tag_name }}
-    #     files: ./dist/PluginLoader
-    #     prerelease: true
-    #     generate_release_notes: true
+    - name: Release 📦
+      uses: softprops/action-gh-release@v1
+      if: ${{ github.event_name == 'workflow_dispatch' }}
+      with:
+        name: Prerelease ${{ steps.ready_tag.outputs.tag_name }}
+        tag_name: ${{ steps.ready_tag.outputs.tag_name }}
+        files: ./dist/PluginLoader
+        prerelease: true
+        generate_release_notes: true
 
   # nightly:
   #   name: Release the nightly version of the package

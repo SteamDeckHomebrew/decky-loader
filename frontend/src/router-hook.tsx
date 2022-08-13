@@ -1,6 +1,6 @@
 import { afterPatch, findModuleChild, unpatch } from 'decky-frontend-lib';
-import React, { ReactElement, cloneElement, createElement, memo } from 'react';
-import type { Route, RouteProps } from 'react-router';
+import { ReactElement, ReactNode, cloneElement, createElement, memo } from 'react';
+import type { Route } from 'react-router';
 
 import {
   DeckyRouterState,

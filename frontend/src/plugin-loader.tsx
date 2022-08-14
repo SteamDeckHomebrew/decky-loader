@@ -12,6 +12,8 @@ import Logger from './logger';
 import { Plugin } from './plugin';
 import RouterHook from './router-hook';
 import TabsHook from './tabs-hook';
+import Toaster from './toaster';
+import { VerInfo, callUpdaterMethod } from './updater';
 
 declare global {
   interface Window {}
@@ -22,6 +24,7 @@ class PluginLoader extends Logger {
   private tabsHook: TabsHook = new TabsHook();
   // private windowHook: WindowHook = new WindowHook();
   private routerHook: RouterHook = new RouterHook();
+  private toaster: Toaster = new Toaster();
   private deckyState: DeckyState = new DeckyState();
 
   private reloadLock: boolean = false;
@@ -52,6 +55,16 @@ class PluginLoader extends Logger {
         </DeckyStateContextProvider>
       );
     });
+  }
+
+  public async notifyUpdates() {
+    const versionInfo = (await callUpdaterMethod('get_version')).result as VerInfo;
+    if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
+      this.toaster.toast({
+        title: 'Decky',
+        body: `Update to ${versionInfo?.remote?.tag_name} availiable!`,
+      });
+    }
   }
 
   public addPluginInstallPrompt(artifact: string, version: string, request_id: string, hash: string) {
@@ -189,6 +202,7 @@ class PluginLoader extends Logger {
   createPluginAPI(pluginName: string) {
     return {
       routerHook: this.routerHook,
+      toaster: this.toaster,
       callServerMethod: this.callServerMethod,
       async callPluginMethod(methodName: string, args = {}) {
         const response = await fetch(`http://127.0.0.1:1337/plugins/${pluginName}/methods/${methodName}`, {

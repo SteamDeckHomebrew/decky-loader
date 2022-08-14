@@ -80,7 +80,6 @@ export const DeckyRouterStateContextProvider: FC<Props> = ({ children, deckyRout
 
   useEffect(() => {
     function onUpdate() {
-      console.log('test', deckyRouterState.publicState());
       setPublicDeckyRouterState({ ...deckyRouterState.publicState() });
     }
 

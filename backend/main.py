@@ -62,7 +62,6 @@ class PluginManager:
         self.updater = Updater(self)
 
         jinja_setup(self.web_app)
-        self.web_app.on_startup.append(self.inject_javascript)
         if CONFIG["chown_plugin_path"] == True:
             self.web_app.on_startup.append(chown_plugin_dir)
         self.loop.create_task(self.loader_reinjector())
@@ -99,6 +98,7 @@ class PluginManager:
         #await inject_to_tab("SP", "window.syncDeckyPlugins();")
 
     async def loader_reinjector(self):
+        await sleep(5)
         while True:
             await sleep(5)
             if not await tab_has_global_var("SP", "deckyHasLoaded"):

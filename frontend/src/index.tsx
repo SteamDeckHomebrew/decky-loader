@@ -12,6 +12,7 @@ declare global {
   }
 }
 (async () => {
+  window.deckyHasLoaded = true;
   window.deckyAuthToken = await fetch('http://127.0.0.1:1337/auth/token').then((r) => r.text());
 
   window.DeckyPluginLoader?.dismountAll();
@@ -35,6 +36,4 @@ declare global {
   };
 
   setTimeout(() => window.syncDeckyPlugins(), 5000);
-
-  window.deckyHasLoaded = true;
 })();

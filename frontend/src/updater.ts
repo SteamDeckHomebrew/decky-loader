@@ -11,6 +11,22 @@ export interface DeckyUpdater {
   finish: () => void;
 }
 
+export interface VerInfo {
+  current: string;
+  remote: {
+    assets: {
+      browser_download_url: string;
+      created_at: string;
+    }[];
+    name: string;
+    body: string;
+    prerelease: boolean;
+    published_at: string;
+    tag_name: string;
+  } | null;
+  updatable: boolean;
+}
+
 export async function callUpdaterMethod(methodName: string, args = {}) {
   const response = await fetch(`http://127.0.0.1:1337/updater/${methodName}`, {
     method: 'POST',

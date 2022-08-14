@@ -1,5 +1,3 @@
-import { sleep } from 'decky-frontend-lib';
-
 import PluginLoader from './plugin-loader';
 import { DeckyUpdater } from './updater';
 

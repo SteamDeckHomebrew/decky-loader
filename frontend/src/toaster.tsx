@@ -84,9 +84,9 @@ class Toaster extends Logger {
   }
 
   deinit() {
-    unpatch(this.instanceRet, 'type');
-    delete this.node.stateNode.render;
-    this.node.stateNode.forceUpdate();
+    this.instanceRet && unpatch(this.instanceRet, 'type');
+    this.node && delete this.node.stateNode.render;
+    this.node && this.node.stateNode.forceUpdate();
   }
 }
 

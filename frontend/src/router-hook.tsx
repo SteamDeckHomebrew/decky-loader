@@ -1,6 +1,6 @@
 import { afterPatch, findModuleChild, unpatch } from 'decky-frontend-lib';
-import { ReactElement, createElement, memo } from 'react';
-import type { Route, RouteProps } from 'react-router';
+import { ReactElement, ReactNode, cloneElement, createElement, memo } from 'react';
+import type { Route } from 'react-router';
 
 import {
   DeckyRouterState,
@@ -40,7 +40,7 @@ class RouterHook extends Logger {
 
     let Route: new () => Route;
     // Used to store the new replicated routes we create to allow routes to be unpatched.
-    let toReplace = new Map<string, Route>();
+    let toReplace = new Map<string, ReactNode>();
     const DeckyWrapper = ({ children }: { children: ReactElement }) => {
       const { routes, routePatches } = useDeckyRouterState();
 
@@ -62,17 +62,24 @@ class RouterHook extends Logger {
       routeList.forEach((route: Route, index: number) => {
         const replaced = toReplace.get(route?.props?.path as string);
         if (replaced) {
-          routeList[index] = replaced;
+          routeList[index].props.children = replaced;
           toReplace.delete(route?.props?.path as string);
         }
         if (route?.props?.path && routePatches.has(route.props.path as string)) {
           toReplace.set(
             route?.props?.path as string,
             // @ts-ignore
-            createElement(routeList[index].type, routeList[index].props, routeList[index].props.children),
+            routeList[index].props.children,
           );
           routePatches.get(route.props.path as string)?.forEach((patch) => {
-            routeList[index].props = patch(routeList[index].props);
+            const oType = routeList[index].props.children.type;
+            routeList[index].props.children = patch({
+              ...routeList[index].props,
+              children: {
+                ...cloneElement(routeList[index].props.children),
+                type: (props) => createElement(oType, props),
+              },
+            }).children;
           });
         }
       });

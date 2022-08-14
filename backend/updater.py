@@ -68,7 +68,7 @@ class Updater:
         async with ClientSession() as web:
             async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases", ssl=helpers.get_ssl_context()) as res:
                 remoteVersions = await res.json()
-                self.remoteVer = next(filter(lambda ver: ver["prerelease"] and ver["tag_name"].startswith("v") and ver["tag_name"].endswith("-pre"), remoteVersions), None)
+                self.remoteVer = next(filter(lambda ver: ver["prerelease"] and ver["tag_name"].startswith("v") and ver["tag_name"].find("-pre"), remoteVersions), None)
                 logger.info("Updated remote version information")
                 tab = await get_tab("SP")
                 await tab.evaluate_js(f"window.DeckyPluginLoader.notifyUpdates()", False, True, False)

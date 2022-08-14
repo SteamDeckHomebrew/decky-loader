@@ -102,6 +102,7 @@ class PluginManager:
         # await inject_to_tab("SP", "window.syncDeckyPlugins();")
 
     async def loader_reinjector(self):
+        await sleep(5)
         while True:
             await sleep(5)
             if not await tab_has_global_var("SP", "deckyHasLoaded"):

@@ -1,6 +1,7 @@
 import certifi
 import ssl
 import uuid
+import re
 
 from aiohttp.web import middleware, Response
 from subprocess import check_output
@@ -12,6 +13,8 @@ ssl_ctx = ssl.create_default_context(cafile=certifi.where())
 user = None
 group = None
 
+assets_regex = re.compile("^/plugins/.*/assets/.*")
+
 def get_ssl_context():
     return ssl_ctx
 
@@ -20,7 +23,7 @@ def get_csrf_token():
 
 @middleware
 async def csrf_middleware(request, handler):
-    if str(request.method) == "OPTIONS" or request.headers.get('Authentication') == csrf_token or str(request.rel_url) == "/auth/token" or str(request.rel_url).startswith("/plugins/load_main/") or str(request.rel_url).startswith("/static/") or str(request.rel_url).startswith("/legacy/") or str(request.rel_url).startswith("/steam_resource/"):
+    if str(request.method) == "OPTIONS" or request.headers.get('Authentication') == csrf_token or str(request.rel_url) == "/auth/token" or str(request.rel_url).startswith("/plugins/load_main/") or str(request.rel_url).startswith("/static/") or str(request.rel_url).startswith("/legacy/") or str(request.rel_url).startswith("/steam_resource/") or assets_regex.match(str(request.rel_url)):
         return await handler(request)
     return Response(text='Forbidden', status='403')
 

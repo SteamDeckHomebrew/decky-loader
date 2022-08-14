@@ -15,7 +15,6 @@ declare global {
 }
 (async () => {
   window.deckyHasLoaded = true;
-  await sleep(1000);
   window.deckyAuthToken = await fetch('http://127.0.0.1:1337/auth/token').then((r) => r.text());
 
   window.DeckyPluginLoader?.dismountAll();

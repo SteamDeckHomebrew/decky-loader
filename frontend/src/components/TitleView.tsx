@@ -7,7 +7,6 @@ import { useDeckyState } from './DeckyState';
 const titleStyles: CSSProperties = {
   display: 'flex',
   paddingTop: '3px',
-  paddingBottom: '14px',
   paddingRight: '16px',
   boxShadow: 'unset',
 };

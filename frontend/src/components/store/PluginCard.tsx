@@ -6,6 +6,7 @@ import {
   Router,
   SingleDropdownOption,
   SuspensefulImage,
+  joinClassNames,
   staticClasses,
 } from 'decky-frontend-lib';
 import { FC, useRef, useState } from 'react';
@@ -21,10 +22,6 @@ import {
 interface PluginCardProps {
   plugin: StorePlugin | LegacyStorePlugin;
 }
-
-const classNames = (...classes: string[]) => {
-  return classes.join(' ');
-};
 
 function isLegacyPlugin(plugin: LegacyStorePlugin | StorePlugin): plugin is LegacyStorePlugin {
   return 'artifact' in plugin;
@@ -44,7 +41,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
     >
       {/* TODO: abstract this messy focus hackiness into a custom component in lib */}
       <Focusable
-        // className="Panel Focusable"
+        className="deckyStoreCard"
         ref={containerRef}
         onActivate={(_: CustomEvent) => {
           buttonRef.current!.focus();
@@ -68,15 +65,17 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
           boxSizing: 'border-box',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div className="deckyStoreCardHeader" style={{ display: 'flex', alignItems: 'center' }}>
           <a
             style={{ fontSize: '18pt', padding: '10px' }}
-            className={classNames(staticClasses.Text)}
+            className={joinClassNames(staticClasses.Text)}
             // onClick={() => Router.NavigateToExternalWeb('https://github.com/' + plugin.artifact)}
           >
             {isLegacyPlugin(plugin) ? (
-              <div>
-                <span style={{ color: 'grey' }}>{plugin.artifact.split('/')[0]}/</span>
+              <div className="deckyStoreCardNameContainer">
+                <span className="deckyStoreCardLegacyRepoOwner" style={{ color: 'grey' }}>
+                  {plugin.artifact.split('/')[0]}/
+                </span>
                 {plugin.artifact.split('/')[1]}
               </div>
             ) : (
@@ -89,8 +88,10 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
             display: 'flex',
             flexDirection: 'row',
           }}
+          className="deckyStoreCardBody"
         >
           <SuspensefulImage
+            className="deckyStoreCardImage"
             suspenseWidth="256px"
             style={{
               width: 'auto',
@@ -113,14 +114,16 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               display: 'flex',
               flexDirection: 'column',
             }}
+            className="deckyStoreCardInfo"
           >
-            <p className={classNames(staticClasses.PanelSectionRow)}>
+            <p className={joinClassNames(staticClasses.PanelSectionRow)}>
               <span>Author: {plugin.author}</span>
             </p>
-            <p className={classNames(staticClasses.PanelSectionRow)}>
+            <p className={joinClassNames('deckyStoreCardTagsContainer', staticClasses.PanelSectionRow)}>
               <span>Tags:</span>
               {plugin.tags.map((tag: string) => (
                 <span
+                  className="deckyStoreCardTag"
                   style={{
                     padding: '5px',
                     marginRight: '10px',
@@ -133,6 +136,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               ))}
               {isLegacyPlugin(plugin) && (
                 <span
+                  className="deckyStoreCardTag deckyStoreCardLegacyTag"
                   style={{
                     color: '#232120',
                     padding: '5px',
@@ -148,6 +152,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
           </div>
         </div>
         <div
+          className="deckyStoreCardActionsContainer"
           style={{
             width: '100%',
             alignSelf: 'flex-end',
@@ -156,6 +161,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
           }}
         >
           <Focusable
+            className="deckyStoreCardActions"
             style={{
               display: 'flex',
               flexDirection: 'row',
@@ -163,11 +169,13 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
             }}
           >
             <div
+              className="deckyStoreCardInstallButtonContainer"
               style={{
                 flex: '1',
               }}
             >
               <DialogButton
+                className="deckyStoreCardInstallButton"
                 ref={buttonRef}
                 onClick={() =>
                   isLegacyPlugin(plugin)
@@ -179,6 +187,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               </DialogButton>
             </div>
             <div
+              className="deckyStoreCardVersionDropdownContainer"
               style={{
                 flex: '0.2',
               }}

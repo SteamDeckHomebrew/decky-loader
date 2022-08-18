@@ -30,12 +30,12 @@ if (!window.webpackJsonp || window.webpackJsonp.deckyShimmed) {
       if (mod[1].get_require) return { c: v4Cache };
     },
   };
+  CommonUIModule.__deckyButtonItemShim = forwardRef((props: any, ref: any) => {
+    // tricks the old filter into working
+    const dummy = `childrenContainerWidth:"min"`;
+    return <ButtonItem ref={ref} _shim={dummy} {...props} />;
+  });
 }
-CommonUIModule.__deckyButtonItemShim = forwardRef((props: any, ref: any) => {
-  // tricks the old filter into working
-  const dummy = `childrenContainerWidth:"min"`;
-  return <ButtonItem ref={ref} _shim={dummy} {...props} />;
-});
 
 (async () => {
   window.deckyHasLoaded = true;

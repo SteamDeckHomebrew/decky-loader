@@ -35,7 +35,7 @@ class Toaster extends Logger {
     while (true) {
       instance = findInReactTree(
         (document.getElementById('root') as any)._reactRootContainer._internalRoot.current,
-        (x) => x?.memoizedProps?.className?.startsWith('toastmanager_ToastPlaceholder'),
+        (x) => x?.memoizedProps?.className?.startsWith?.('toastmanager_ToastPlaceholder'),
       );
       if (instance) break;
       this.debug('finding instance');

@@ -1,4 +1,4 @@
-import { Field, ToggleField } from 'decky-frontend-lib';
+import { Field, Toggle } from 'decky-frontend-lib';
 import { useEffect, useState } from 'react';
 import { FaBug } from 'react-icons/fa';
 
@@ -21,8 +21,8 @@ export default function RemoteDebuggingSettings() {
       }
       icon={<FaBug style={{ display: 'block' }} />}
     >
-      <ToggleField
-        checked={allowRemoteDebugging}
+      <Toggle
+        value={allowRemoteDebugging}
         onChange={(toggleValue) => {
           setAllowRemoteDebugging(toggleValue);
           if (toggleValue) window.DeckyPluginLoader.callServerMethod('allow_remote_debugging');

@@ -15,16 +15,13 @@ import {
   LegacyStorePlugin,
   StorePlugin,
   StorePluginVersion,
+  isLegacyPlugin,
   requestLegacyPluginInstall,
   requestPluginInstall,
-} from './Store';
+} from '../../store';
 
 interface PluginCardProps {
   plugin: StorePlugin | LegacyStorePlugin;
-}
-
-function isLegacyPlugin(plugin: LegacyStorePlugin | StorePlugin): plugin is LegacyStorePlugin {
-  return 'artifact' in plugin;
 }
 
 const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
@@ -119,13 +116,16 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
             <p className={joinClassNames(staticClasses.PanelSectionRow)}>
               <span>Author: {plugin.author}</span>
             </p>
-            <p className={joinClassNames('deckyStoreCardTagsContainer', staticClasses.PanelSectionRow)} style={{
+            <p
+              className={joinClassNames('deckyStoreCardTagsContainer', staticClasses.PanelSectionRow)}
+              style={{
                 padding: '0 16px',
                 display: 'flex',
                 flexWrap: 'wrap',
                 gap: '5px 10px',
-              }}>
-              <span style={{padding: '5px 0'}}>Tags:</span>
+              }}
+            >
+              <span style={{ padding: '5px 0' }}>Tags:</span>
               {plugin.tags.map((tag: string) => (
                 <span
                   className="deckyStoreCardTag"
@@ -183,7 +183,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
                 onClick={() =>
                   isLegacyPlugin(plugin)
                     ? requestLegacyPluginInstall(plugin, Object.keys(plugin.versions)[selectedOption])
-                    : requestPluginInstall(plugin, plugin.versions[selectedOption])
+                    : requestPluginInstall(plugin.name, plugin.versions[selectedOption])
                 }
               >
                 Install

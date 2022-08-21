@@ -9,9 +9,10 @@ import {
 import { VFC } from 'react';
 
 import { useDeckyState } from './DeckyState';
+import NotificationBadge from './NotificationBadge';
 
 const PluginView: VFC = () => {
-  const { plugins, activePlugin, setActivePlugin } = useDeckyState();
+  const { plugins, updates, activePlugin, setActivePlugin } = useDeckyState();
 
   if (activePlugin) {
     return (
@@ -23,7 +24,6 @@ const PluginView: VFC = () => {
       </div>
     );
   }
-
   return (
     <div className={joinClassNames(staticClasses.TabGroupPanel, scrollClasses.ScrollPanel, scrollClasses.ScrollY)}>
       <PanelSection>
@@ -35,6 +35,7 @@ const PluginView: VFC = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <div>{icon}</div>
                   <div>{name}</div>
+                  <NotificationBadge show={updates?.has(name)} style={{ top: '-5px', right: '-5px' }} />
                 </div>
               </ButtonItem>
             </PanelSectionRow>

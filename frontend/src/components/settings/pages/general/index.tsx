@@ -2,7 +2,7 @@ import { DialogButton, Field, TextField } from 'decky-frontend-lib';
 import { useState } from 'react';
 import { FaShapes } from 'react-icons/fa';
 
-import { installFromURL } from '../../../store/Store';
+import { installFromURL } from '../../../../store';
 import RemoteDebuggingSettings from './RemoteDebugging';
 import UpdaterSettings from './Updater';
 

@@ -1,20 +1,30 @@
 import { FC, createContext, useContext, useEffect, useState } from 'react';
 
 import { Plugin } from '../plugin';
+import { PluginUpdateMapping } from '../store';
 
 interface PublicDeckyState {
   plugins: Plugin[];
   activePlugin: Plugin | null;
+  updates: PluginUpdateMapping | null;
+  hasLoaderUpdate?: boolean;
 }
 
 export class DeckyState {
   private _plugins: Plugin[] = [];
   private _activePlugin: Plugin | null = null;
+  private _updates: PluginUpdateMapping | null = null;
+  private _hasLoaderUpdate: boolean = false;
 
   public eventBus = new EventTarget();
 
   publicState(): PublicDeckyState {
-    return { plugins: this._plugins, activePlugin: this._activePlugin };
+    return {
+      plugins: this._plugins,
+      activePlugin: this._activePlugin,
+      updates: this._updates,
+      hasLoaderUpdate: this._hasLoaderUpdate,
+    };
   }
 
   setPlugins(plugins: Plugin[]) {
@@ -29,6 +39,16 @@ export class DeckyState {
 
   closeActivePlugin() {
     this._activePlugin = null;
+    this.notifyUpdate();
+  }
+
+  setUpdates(updates: PluginUpdateMapping) {
+    this._updates = updates;
+    this.notifyUpdate();
+  }
+
+  setHasLoaderUpdate(hasUpdate: boolean) {
+    this._hasLoaderUpdate = hasUpdate;
     this.notifyUpdate();
   }
 

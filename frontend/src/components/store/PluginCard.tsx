@@ -15,16 +15,13 @@ import {
   LegacyStorePlugin,
   StorePlugin,
   StorePluginVersion,
+  isLegacyPlugin,
   requestLegacyPluginInstall,
   requestPluginInstall,
-} from './Store';
+} from '../../store';
 
 interface PluginCardProps {
   plugin: StorePlugin | LegacyStorePlugin;
-}
-
-function isLegacyPlugin(plugin: LegacyStorePlugin | StorePlugin): plugin is LegacyStorePlugin {
-  return 'artifact' in plugin;
 }
 
 const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
@@ -186,7 +183,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
                 onClick={() =>
                   isLegacyPlugin(plugin)
                     ? requestLegacyPluginInstall(plugin, Object.keys(plugin.versions)[selectedOption])
-                    : requestPluginInstall(plugin, plugin.versions[selectedOption])
+                    : requestPluginInstall(plugin.name, plugin.versions[selectedOption])
                 }
               >
                 Install

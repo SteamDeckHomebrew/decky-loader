@@ -1,9 +1,10 @@
-import { ModalRoot, QuickAccessTab, showModal, staticClasses } from 'decky-frontend-lib';
+import { ModalRoot, QuickAccessTab, Router, showModal, sleep, staticClasses } from 'decky-frontend-lib';
 import { FaPlug } from 'react-icons/fa';
 
-import { DeckyState, DeckyStateContextProvider } from './components/DeckyState';
+import { DeckyState, DeckyStateContextProvider, useDeckyState } from './components/DeckyState';
 import LegacyPlugin from './components/LegacyPlugin';
 import PluginInstallModal from './components/modals/PluginInstallModal';
+import NotificationBadge from './components/NotificationBadge';
 import PluginView from './components/PluginView';
 import SettingsPage from './components/settings';
 import StorePage from './components/store/Store';
@@ -11,6 +12,7 @@ import TitleView from './components/TitleView';
 import Logger from './logger';
 import { Plugin } from './plugin';
 import RouterHook from './router-hook';
+import { checkForUpdates } from './store';
 import TabsHook from './tabs-hook';
 import Toaster from './toaster';
 import { VerInfo, callUpdaterMethod } from './updater';
@@ -29,11 +31,16 @@ class PluginLoader extends Logger {
 
   private reloadLock: boolean = false;
   // stores a list of plugin names which requested to be reloaded
-  private pluginReloadQueue: string[] = [];
+  private pluginReloadQueue: { name: string; version?: string }[] = [];
 
   constructor() {
     super(PluginLoader.name);
     this.log('Initialized');
+
+    const TabIcon = () => {
+      const { updates, hasLoaderUpdate } = useDeckyState();
+      return <NotificationBadge show={(updates && updates.size > 0) || hasLoaderUpdate} />;
+    };
 
     this.tabsHook.add({
       id: QuickAccessTab.Decky,
@@ -44,7 +51,14 @@ class PluginLoader extends Logger {
           <PluginView />
         </DeckyStateContextProvider>
       ),
-      icon: <FaPlug />,
+      icon: (
+        <DeckyStateContextProvider deckyState={this.deckyState}>
+          <>
+            <FaPlug />
+            <TabIcon />
+          </>
+        </DeckyStateContextProvider>
+      ),
     });
 
     this.routerHook.addRoute('/decky/store', () => <StorePage />);
@@ -62,7 +76,28 @@ class PluginLoader extends Logger {
     if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
       this.toaster.toast({
         title: 'Decky',
-        body: `Update to ${versionInfo?.remote?.tag_name} availiable!`,
+        body: `Update to ${versionInfo?.remote?.tag_name} available!`,
+        onClick: () => Router.Navigate('/decky/settings'),
+      });
+      this.deckyState.setHasLoaderUpdate(true);
+    }
+    await sleep(7000);
+    await this.notifyPluginUpdates();
+  }
+
+  public async checkPluginUpdates() {
+    const updates = await checkForUpdates(this.plugins);
+    this.deckyState.setUpdates(updates);
+    return updates;
+  }
+
+  public async notifyPluginUpdates() {
+    const updates = await this.checkPluginUpdates();
+    if (updates?.size > 0) {
+      this.toaster.toast({
+        title: 'Decky',
+        body: `Updates available for ${updates.size} plugin${updates.size > 1 ? 's' : ''}!`,
+        onClick: () => Router.Navigate('/decky/settings/plugins'),
       });
     }
   }
@@ -128,10 +163,10 @@ class PluginLoader extends Logger {
     this.deckyState.setPlugins(this.plugins);
   }
 
-  public async importPlugin(name: string) {
+  public async importPlugin(name: string, version?: string | undefined) {
     if (this.reloadLock) {
       this.log('Reload currently in progress, adding to queue', name);
-      this.pluginReloadQueue.push(name);
+      this.pluginReloadQueue.push({ name, version: version });
       return;
     }
 
@@ -144,7 +179,7 @@ class PluginLoader extends Logger {
       if (name.startsWith('$LEGACY_')) {
         await this.importLegacyPlugin(name.replace('$LEGACY_', ''));
       } else {
-        await this.importReactPlugin(name);
+        await this.importReactPlugin(name, version);
       }
 
       this.deckyState.setPlugins(this.plugins);
@@ -155,12 +190,12 @@ class PluginLoader extends Logger {
       this.reloadLock = false;
       const nextPlugin = this.pluginReloadQueue.shift();
       if (nextPlugin) {
-        this.importPlugin(nextPlugin);
+        this.importPlugin(nextPlugin.name, nextPlugin.version);
       }
     }
   }
 
-  private async importReactPlugin(name: string) {
+  private async importReactPlugin(name: string, version?: string) {
     let res = await fetch(`http://127.0.0.1:1337/plugins/${name}/frontend_bundle`, {
       credentials: 'include',
       headers: {
@@ -172,6 +207,7 @@ class PluginLoader extends Logger {
       this.plugins.push({
         ...plugin,
         name: name,
+        version: version,
       });
     } else throw new Error(`${name} frontend_bundle not OK`);
   }

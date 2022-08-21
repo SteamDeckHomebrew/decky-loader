@@ -225,7 +225,7 @@ class PluginLoader extends Logger {
     const res = await window.DeckyPluginLoader.callServerMethod('uninstall_decky', { keepConfig });
     this.toaster.toast({
       title: 'Decky',
-      body: res.success ? 'Uninstalled successfully!' : 'Uninstall failed',
+      body: res.success ? 'Uninstalled successfully!' : 'Uninstallation failed',
       critical: !res.success,
     });
   }

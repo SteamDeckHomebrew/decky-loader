@@ -185,7 +185,16 @@ class PluginLoader extends Logger {
     });
   }
 
-  async callServerMethod(methodName: string, args = {}) {
+  async _uninstallDecky(keepConfig: boolean) {
+    const res = await window.DeckyPluginLoader.callServerMethod('uninstall_decky', { keepConfig });
+    this.toaster.toast({
+      title: 'Decky',
+      body: res.success ? 'Uninstalled successfully!' : 'Uninstall failed',
+      critical: !res.success,
+    });
+  }
+
+  async callServerMethod(methodName: string, args = {}): Promise<{ res: string; success: boolean }> {
     const response = await fetch(`http://127.0.0.1:1337/methods/${methodName}`, {
       method: 'POST',
       credentials: 'include',

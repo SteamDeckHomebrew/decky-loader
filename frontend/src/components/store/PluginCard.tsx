@@ -119,13 +119,16 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
             <p className={joinClassNames(staticClasses.PanelSectionRow)}>
               <span>Author: {plugin.author}</span>
             </p>
-            <p className={joinClassNames('deckyStoreCardTagsContainer', staticClasses.PanelSectionRow)} style={{
+            <p
+              className={joinClassNames('deckyStoreCardTagsContainer', staticClasses.PanelSectionRow)}
+              style={{
                 padding: '0 16px',
                 display: 'flex',
                 flexWrap: 'wrap',
                 gap: '5px 10px',
-              }}>
-              <span style={{padding: '5px 0'}}>Tags:</span>
+              }}
+            >
+              <span style={{ padding: '5px 0' }}>Tags:</span>
               {plugin.tags.map((tag: string) => (
                 <span
                   className="deckyStoreCardTag"

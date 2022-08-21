@@ -4,6 +4,7 @@ import { FaShapes } from 'react-icons/fa';
 
 import { installFromURL } from '../../../store/Store';
 import RemoteDebuggingSettings from './RemoteDebugging';
+import UninstallSettings from './Uninstall';
 import UpdaterSettings from './Updater';
 
 export default function GeneralSettings() {
@@ -31,6 +32,7 @@ export default function GeneralSettings() {
           Install
         </DialogButton>
       </Field>
+      <UninstallSettings />
     </div>
   );
 }

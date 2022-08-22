@@ -83,6 +83,7 @@ class PluginManager:
              self.cors.add(route)
         self.web_app.add_routes([static("/static", path.join(path.dirname(__file__), "static"))])
         self.web_app.add_routes([static("/legacy", path.join(path.dirname(__file__), "legacy"))])
+
     def exception_handler(self, loop, context):
         if context["message"] == "Unclosed connection":
             return

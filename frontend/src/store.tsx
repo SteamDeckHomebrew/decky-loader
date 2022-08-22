@@ -75,7 +75,7 @@ export function requestLegacyPluginInstall(plugin: LegacyStorePlugin, selectedVe
 }
 
 export async function requestPluginInstall(plugin: string, selectedVer: StorePluginVersion) {
-  window.DeckyPluginLoader.callServerMethod('install_plugin', {
+  await window.DeckyPluginLoader.callServerMethod('install_plugin', {
     name: plugin,
     artifact: `https://cdn.tzatzikiweeb.moe/file/steam-deck-homebrew/versions/${selectedVer.hash}.zip`,
     version: selectedVer.name,

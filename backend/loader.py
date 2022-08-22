@@ -88,7 +88,7 @@ class Loader:
 
     async def get_plugins(self, request):
         plugins = list(self.plugins.values())
-        return web.json_response([str(i) if not i.legacy else "$LEGACY_"+str(i) for i in plugins])
+        return web.json_response([{"name": str(i) if not i.legacy else "$LEGACY_"+str(i), "version": i.version} for i in plugins])
 
     def handle_frontend_assets(self, request):
         plugin = self.plugins[request.match_info["plugin_name"]]
@@ -116,13 +116,13 @@ class Loader:
                 self.logger.info(f"Plugin {plugin.name} is passive")
             self.plugins[plugin.name] = plugin.start()
             self.logger.info(f"Loaded {plugin.name}")
-            self.loop.create_task(self.dispatch_plugin(plugin.name if not plugin.legacy else "$LEGACY_" + plugin.name))
+            self.loop.create_task(self.dispatch_plugin(plugin.name if not plugin.legacy else "$LEGACY_" + plugin.name, plugin.version))
         except Exception as e:
             self.logger.error(f"Could not load {file}. {e}")
             print_exc()
 
-    async def dispatch_plugin(self, name):
-        await inject_to_tab("SP", f"window.importDeckyPlugin('{name}')")
+    async def dispatch_plugin(self, name, version):
+        await inject_to_tab("SP", f"window.importDeckyPlugin('{name}', '{version}')")
 
     def import_plugins(self):
         self.logger.info(f"import plugins from {self.plugin_path}")

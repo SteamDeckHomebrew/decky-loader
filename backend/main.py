@@ -13,7 +13,7 @@ from subprocess import call
 
 # local modules
 from browser import PluginBrowser
-from helpers import csrf_middleware, get_csrf_token, get_user, get_user_group, set_user, set_user_group
+from helpers import csrf_middleware, get_csrf_token, get_user, get_user_group, set_user, set_user_group, stop_systemd_unit, REMOTE_DEBUGGER_UNIT
 from injector import inject_to_tab, tab_has_global_var
 from loader import Loader
 from updater import Updater
@@ -28,8 +28,9 @@ set_user_group()
 USER = get_user()
 GROUP = get_user_group()
 HOME_PATH = "/home/"+USER
+HOMEBREW_PATH = HOME_PATH+"/homebrew"
 CONFIG = {
-    "plugin_path": getenv("PLUGIN_PATH", HOME_PATH+"/homebrew/plugins"),
+    "plugin_path": getenv("PLUGIN_PATH", HOMEBREW_PATH+"/plugins"),
     "chown_plugin_path": getenv("CHOWN_PLUGIN_PATH", "1") == "1",
     "server_host": getenv("SERVER_HOST", "127.0.0.1"),
     "server_port": int(getenv("SERVER_PORT", "1337")),
@@ -48,6 +49,8 @@ async def chown_plugin_dir(_):
     if code_chown != 0 or code_chmod != 0:
         logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {code_chmod})")
 
+def remote_debugging_allowed():
+    return path.exists(HOMEBREW_PATH + "/allow_remote_debugging")
 
 class PluginManager:
     def __init__(self) -> None:
@@ -71,6 +74,8 @@ class PluginManager:
             self.web_app.on_startup.append(chown_plugin_dir)
         self.loop.create_task(self.loader_reinjector())
         self.loop.create_task(self.load_plugins())
+        if not remote_debugging_allowed():
+            self.loop.create_task(stop_systemd_unit(REMOTE_DEBUGGER_UNIT))
         self.loop.set_exception_handler(self.exception_handler)
         self.web_app.add_routes([get("/auth/token", self.get_auth_token)])
 
@@ -111,7 +116,7 @@ class PluginManager:
 
     async def inject_javascript(self, request=None):
         try:
-            await inject_to_tab("SP", "try{" + open(path.join(path.dirname(__file__), "static", "plugin-loader.iife.js"), "r").read() + "}catch(e){console.error(e)}", True)
+            await inject_to_tab("SP", "try{window.deckyHasLoaded = true;(async()=>{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};" + open(path.join(path.dirname(__file__), "./static/plugin-loader.iife.js"), "r").read() + "})();}catch(e){console.error(e)}", True)
         except:
             logger.info("Failed to inject JavaScript into tab")
             pass

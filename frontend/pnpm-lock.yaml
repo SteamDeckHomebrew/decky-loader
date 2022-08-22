@@ -9,7 +9,7 @@ specifiers:
   '@types/react': 16.14.0
   '@types/react-router': 5.1.18
   '@types/webpack': ^5.28.0
-  decky-frontend-lib: ^1.6.2
+  decky-frontend-lib: ^1.7.5
   husky: ^8.0.1
   import-sort-style-module: ^6.0.0
   inquirer: ^8.2.4
@@ -23,7 +23,7 @@ specifiers:
   typescript: ^4.7.4
 
 dependencies:
-  decky-frontend-lib: 1.6.2
+  decky-frontend-lib: 1.7.5
   react-icons: 4.4.0_react@16.14.0
 
 devDependencies:
@@ -806,8 +806,8 @@ packages:
       ms: 2.1.2
     dev: true
 
-  /decky-frontend-lib/1.6.2:
-    resolution: {integrity: sha512-O34rHg6BWYP99jxlosAl0hUfo+SmOyjN+TtcyutdIjvPkg/FgHwahTd+SMujTpZemV31c4JX8hdGnN/Z7tjL9g==}
+  /decky-frontend-lib/1.7.5:
+    resolution: {integrity: sha512-1OX/Ix9W76gF0NJjfm0k/01LYPmC2k/k+k/qqH8JJPlPHh5+W5P8ZG2T8m5wKsqoP7jx2W3k7RNZBh9vAqFoFw==}
     dependencies:
       minimist: 1.2.6
     dev: false
@@ -1254,10 +1254,6 @@ packages:
     dependencies:
       brace-expansion: 1.1.11
     dev: true
-
-  /minimist/1.2.6:
-    resolution: {integrity: sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==}
-    dev: false
 
   /ms/2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}

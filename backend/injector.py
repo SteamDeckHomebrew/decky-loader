@@ -5,6 +5,7 @@ from logging import debug, getLogger
 from traceback import format_exc
 
 from aiohttp import ClientSession
+from aiohttp.client_exceptions import ClientConnectorError
 
 BASE_ADDRESS = "http://localhost:8080"
 
@@ -65,11 +66,13 @@ async def get_tabs():
         while True:
             try:
                 res = await web.get(f"{BASE_ADDRESS}/json")
-                break
-            except:
+            except ClientConnectorError:
+                logger.debug("ClientConnectorError excepted.")
                 logger.debug("Steam isn't available yet. Wait for a moment...")
                 logger.debug(format_exc())
                 await sleep(5)
+            else:
+                break
 
         if res.status == 200:
             r = await res.json()

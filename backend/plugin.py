@@ -21,7 +21,13 @@ class PluginWrapper:
         self.socket_addr = f"/tmp/plugin_socket_{time()}"
         self.method_call_lock = Lock()
 
+        self.version = None
+
         json = load(open(path.join(plugin_path, plugin_directory, "plugin.json"), "r"))
+        if path.isfile(path.join(plugin_path, plugin_directory, "package.json")):
+            package_json = load(open(path.join(plugin_path, plugin_directory, "package.json"), "r"))
+            self.version = package_json["version"]
+
 
         self.legacy = False
         self.main_view_html = json["main_view_html"] if "main_view_html" in json else ""

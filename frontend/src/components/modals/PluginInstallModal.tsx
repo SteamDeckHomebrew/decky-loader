@@ -20,9 +20,7 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({ artifact, version, ha
       onOK={async () => {
         setLoading(true);
         await onOK();
-        Router.NavigateBackOrOpenMenu();
-        await sleep(250);
-        setTimeout(() => Router.OpenQuickAccessMenu(QuickAccessTab.Decky), 1000);
+        setTimeout(() => Router.OpenQuickAccessMenu(QuickAccessTab.Decky), 250);
       }}
       onCancel={async () => {
         await onCancel();

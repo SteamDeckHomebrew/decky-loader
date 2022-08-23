@@ -61,11 +61,7 @@ class PluginBrowser:
 
     async def uninstall_plugin(self, name):
         tab = await get_tab("SP")
-
         try:
-            if type(name) != str:
-                data = await name.post()
-                name = data.get("name", "undefined")
             logger.info("uninstalling " + name)
             logger.info(" at dir " + self.find_plugin_folder(name))
             await tab.evaluate_js(f"DeckyPluginLoader.unloadPlugin('{name}')")

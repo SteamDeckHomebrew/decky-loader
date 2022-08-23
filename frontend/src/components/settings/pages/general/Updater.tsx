@@ -9,6 +9,8 @@ export default function UpdaterSettings() {
   const [updateProgress, setUpdateProgress] = useState<number>(-1);
   const [reloading, setReloading] = useState<boolean>(false);
   const [checkingForUpdates, setCheckingForUpdates] = useState<boolean>(false);
+  const [loaderUpdating, setLoaderUpdating] = useState<boolean>(false);
+
   useEffect(() => {
     (async () => {
       const res = (await callUpdaterMethod('get_version')) as { result: VerInfo };
@@ -36,7 +38,7 @@ export default function UpdaterSettings() {
     >
       {updateProgress == -1 ? (
         <DialogButton
-          disabled={!versionInfo?.updatable || checkingForUpdates}
+          disabled={!versionInfo?.updatable || checkingForUpdates || loaderUpdating}
           onClick={
             !versionInfo?.remote || versionInfo?.remote?.tag_name == versionInfo?.current
               ? async () => {
@@ -49,10 +51,12 @@ export default function UpdaterSettings() {
                   window.DeckyUpdater = {
                     updateProgress: (i) => {
                       setUpdateProgress(i);
+                      setLoaderUpdating(true);
                     },
                     finish: async () => {
                       setUpdateProgress(0);
                       setReloading(true);
+                      setLoaderUpdating(false);
                       await finishUpdate();
                     },
                   };

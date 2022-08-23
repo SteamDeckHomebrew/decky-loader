@@ -8,6 +8,7 @@ interface PublicDeckyState {
   activePlugin: Plugin | null;
   updates: PluginUpdateMapping | null;
   hasLoaderUpdate?: boolean;
+  isLoaderUpdating: boolean;
 }
 
 export class DeckyState {
@@ -15,6 +16,7 @@ export class DeckyState {
   private _activePlugin: Plugin | null = null;
   private _updates: PluginUpdateMapping | null = null;
   private _hasLoaderUpdate: boolean = false;
+  private _isLoaderUpdating: boolean = false;
 
   public eventBus = new EventTarget();
 
@@ -24,6 +26,7 @@ export class DeckyState {
       activePlugin: this._activePlugin,
       updates: this._updates,
       hasLoaderUpdate: this._hasLoaderUpdate,
+      isLoaderUpdating: this._isLoaderUpdating,
     };
   }
 
@@ -49,6 +52,11 @@ export class DeckyState {
 
   setHasLoaderUpdate(hasUpdate: boolean) {
     this._hasLoaderUpdate = hasUpdate;
+    this.notifyUpdate();
+  }
+
+  setIsLoaderUpdating(isUpdating: boolean) {
+    this._isLoaderUpdating = isUpdating;
     this.notifyUpdate();
   }
 

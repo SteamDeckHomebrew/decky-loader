@@ -66,6 +66,7 @@ export class DeckyState {
 }
 
 interface DeckyStateContext extends PublicDeckyState {
+  setIsLoaderUpdating(hasUpdate: boolean): void;
   setActivePlugin(name: string): void;
   closeActivePlugin(): void;
 }
@@ -91,11 +92,14 @@ export const DeckyStateContextProvider: FC<Props> = ({ children, deckyState }) =
     return () => deckyState.eventBus.removeEventListener('update', onUpdate);
   }, []);
 
+  const setIsLoaderUpdating = (hasUpdate: boolean) => deckyState.setIsLoaderUpdating(hasUpdate);
   const setActivePlugin = (name: string) => deckyState.setActivePlugin(name);
   const closeActivePlugin = () => deckyState.closeActivePlugin();
 
   return (
-    <DeckyStateContext.Provider value={{ ...publicDeckyState, setActivePlugin, closeActivePlugin }}>
+    <DeckyStateContext.Provider
+      value={{ ...publicDeckyState, setIsLoaderUpdating, setActivePlugin, closeActivePlugin }}
+    >
       {children}
     </DeckyStateContext.Provider>
   );

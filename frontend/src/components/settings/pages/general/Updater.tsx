@@ -3,13 +3,14 @@ import { useEffect, useState } from 'react';
 import { FaArrowDown } from 'react-icons/fa';
 
 import { VerInfo, callUpdaterMethod, finishUpdate } from '../../../../updater';
+import { useDeckyState } from '../../../DeckyState';
 
 export default function UpdaterSettings() {
   const [versionInfo, setVersionInfo] = useState<VerInfo | null>(null);
+  const [checkingForUpdates, setCheckingForUpdates] = useState<boolean>(false);
+  const { isLoaderUpdating, setIsLoaderUpdating } = useDeckyState();
   const [updateProgress, setUpdateProgress] = useState<number>(-1);
   const [reloading, setReloading] = useState<boolean>(false);
-  const [checkingForUpdates, setCheckingForUpdates] = useState<boolean>(false);
-  const [loaderUpdating, setLoaderUpdating] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -38,7 +39,7 @@ export default function UpdaterSettings() {
     >
       {updateProgress == -1 ? (
         <DialogButton
-          disabled={!versionInfo?.updatable || checkingForUpdates || loaderUpdating}
+          disabled={!versionInfo?.updatable || checkingForUpdates || isLoaderUpdating}
           onClick={
             !versionInfo?.remote || versionInfo?.remote?.tag_name == versionInfo?.current
               ? async () => {
@@ -51,12 +52,12 @@ export default function UpdaterSettings() {
                   window.DeckyUpdater = {
                     updateProgress: (i) => {
                       setUpdateProgress(i);
-                      setLoaderUpdating(true);
+                      setIsLoaderUpdating(true);
                     },
                     finish: async () => {
                       setUpdateProgress(0);
                       setReloading(true);
-                      setLoaderUpdating(false);
+                      setIsLoaderUpdating(false);
                       await finishUpdate();
                     },
                   };

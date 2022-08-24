@@ -37,9 +37,9 @@ export default function UpdaterSettings() {
         )
       }
     >
-      {updateProgress == -1 ? (
+      {updateProgress == -1 && !isLoaderUpdating ? (
         <DialogButton
-          disabled={!versionInfo?.updatable || checkingForUpdates || isLoaderUpdating}
+          disabled={!versionInfo?.updatable || checkingForUpdates}
           onClick={
             !versionInfo?.remote || versionInfo?.remote?.tag_name == versionInfo?.current
               ? async () => {
@@ -57,7 +57,6 @@ export default function UpdaterSettings() {
                     finish: async () => {
                       setUpdateProgress(0);
                       setReloading(true);
-                      setIsLoaderUpdating(false);
                       await finishUpdate();
                     },
                   };

@@ -6,9 +6,10 @@ import { VerInfo, callUpdaterMethod, finishUpdate } from '../../../../updater';
 import { useDeckyState } from '../../../DeckyState';
 
 export default function UpdaterSettings() {
+  const { isLoaderUpdating, setIsLoaderUpdating } = useDeckyState();
+
   const [versionInfo, setVersionInfo] = useState<VerInfo | null>(null);
   const [checkingForUpdates, setCheckingForUpdates] = useState<boolean>(false);
-  const { isLoaderUpdating, setIsLoaderUpdating } = useDeckyState();
   const [updateProgress, setUpdateProgress] = useState<number>(-1);
   const [reloading, setReloading] = useState<boolean>(false);
 

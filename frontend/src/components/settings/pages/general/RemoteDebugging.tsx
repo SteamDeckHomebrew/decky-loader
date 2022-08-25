@@ -1,15 +1,10 @@
 import { Field, Toggle } from 'decky-frontend-lib';
-import { useEffect, useState } from 'react';
 import { FaBug } from 'react-icons/fa';
 
+import { useSetting } from '../../../../utils/hooks/useSetting';
+
 export default function RemoteDebuggingSettings() {
-  const [allowRemoteDebugging, setAllowRemoteDebugging] = useState<boolean>(false);
-  useEffect(() => {
-    (async () => {
-      const res = (await window.DeckyPluginLoader.callServerMethod('remote_debugging_allowed')) as { result: boolean };
-      setAllowRemoteDebugging(res.result);
-    })();
-  }, []);
+  const [allowRemoteDebugging, setAllowRemoteDebugging] = useSetting<boolean>('cef_forward', false);
 
   return (
     <Field
@@ -22,7 +17,7 @@ export default function RemoteDebuggingSettings() {
       icon={<FaBug style={{ display: 'block' }} />}
     >
       <Toggle
-        value={allowRemoteDebugging}
+        value={allowRemoteDebugging || false}
         onChange={(toggleValue) => {
           setAllowRemoteDebugging(toggleValue);
           if (toggleValue) window.DeckyPluginLoader.callServerMethod('allow_remote_debugging');

@@ -19,6 +19,20 @@ export default function UpdaterSettings() {
     })();
   }, []);
 
+  useEffect(() => {
+    window.DeckyUpdater = {
+      updateProgress: (i) => {
+        setUpdateProgress(i);
+        setIsLoaderUpdating(true);
+      },
+      finish: async () => {
+        setUpdateProgress(0);
+        setReloading(true);
+        await finishUpdate();
+      },
+    };
+  }, []);
+
   return (
     <Field
       label="Updates"
@@ -49,17 +63,6 @@ export default function UpdaterSettings() {
                   setCheckingForUpdates(false);
                 }
               : async () => {
-                  window.DeckyUpdater = {
-                    updateProgress: (i) => {
-                      setUpdateProgress(i);
-                      setIsLoaderUpdating(true);
-                    },
-                    finish: async () => {
-                      setUpdateProgress(0);
-                      setReloading(true);
-                      await finishUpdate();
-                    },
-                  };
                   setUpdateProgress(0);
                   callUpdaterMethod('do_update');
                 }

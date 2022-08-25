@@ -146,6 +146,9 @@ class Utilities:
     async def get_setting(self, key, default):
         return self.context.settings.getSetting(key, default)
 
+    async def set_setting(self, key, value):
+        return self.context.settings.setSetting(key, value)
+
     async def uninstall_decky(keepConfig=True) -> None:
         username: str = helpers.get_user()
         user_dir = Path(f"~{username}").expanduser()
@@ -169,9 +172,6 @@ class Utilities:
                 shutil.rmtree(homebrew_dir / "services")
             else:
                 shutil.rmtree(homebrew_dir)
-
-    async def set_setting(self, key, value):
-        return self.context.settings.setSetting(key, value)
 
     async def remote_debugging_allowed(self):
         return await helpers.is_systemd_unit_active(helpers.REMOTE_DEBUGGER_UNIT)

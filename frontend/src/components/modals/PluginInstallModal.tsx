@@ -1,4 +1,4 @@
-import { ModalRoot, QuickAccessTab, Router, Spinner, sleep, staticClasses } from 'decky-frontend-lib';
+import { ModalRoot, QuickAccessTab, Router, Spinner, staticClasses } from 'decky-frontend-lib';
 import { FC, useState } from 'react';
 
 interface PluginInstallModalProps {

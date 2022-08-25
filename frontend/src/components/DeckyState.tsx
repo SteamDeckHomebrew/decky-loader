@@ -8,6 +8,7 @@ interface PublicDeckyState {
   activePlugin: Plugin | null;
   updates: PluginUpdateMapping | null;
   hasLoaderUpdate?: boolean;
+  isLoaderUpdating: boolean;
 }
 
 export class DeckyState {
@@ -15,6 +16,7 @@ export class DeckyState {
   private _activePlugin: Plugin | null = null;
   private _updates: PluginUpdateMapping | null = null;
   private _hasLoaderUpdate: boolean = false;
+  private _isLoaderUpdating: boolean = false;
 
   public eventBus = new EventTarget();
 
@@ -24,6 +26,7 @@ export class DeckyState {
       activePlugin: this._activePlugin,
       updates: this._updates,
       hasLoaderUpdate: this._hasLoaderUpdate,
+      isLoaderUpdating: this._isLoaderUpdating,
     };
   }
 
@@ -52,12 +55,18 @@ export class DeckyState {
     this.notifyUpdate();
   }
 
+  setIsLoaderUpdating(isUpdating: boolean) {
+    this._isLoaderUpdating = isUpdating;
+    this.notifyUpdate();
+  }
+
   private notifyUpdate() {
     this.eventBus.dispatchEvent(new Event('update'));
   }
 }
 
 interface DeckyStateContext extends PublicDeckyState {
+  setIsLoaderUpdating(hasUpdate: boolean): void;
   setActivePlugin(name: string): void;
   closeActivePlugin(): void;
 }
@@ -83,11 +92,14 @@ export const DeckyStateContextProvider: FC<Props> = ({ children, deckyState }) =
     return () => deckyState.eventBus.removeEventListener('update', onUpdate);
   }, []);
 
+  const setIsLoaderUpdating = (hasUpdate: boolean) => deckyState.setIsLoaderUpdating(hasUpdate);
   const setActivePlugin = (name: string) => deckyState.setActivePlugin(name);
   const closeActivePlugin = () => deckyState.closeActivePlugin();
 
   return (
-    <DeckyStateContext.Provider value={{ ...publicDeckyState, setActivePlugin, closeActivePlugin }}>
+    <DeckyStateContext.Provider
+      value={{ ...publicDeckyState, setIsLoaderUpdating, setActivePlugin, closeActivePlugin }}
+    >
       {children}
     </DeckyStateContext.Provider>
   );

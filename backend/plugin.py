@@ -5,7 +5,7 @@ from asyncio import (Lock, get_event_loop, new_event_loop,
 from concurrent.futures import ProcessPoolExecutor
 from importlib.util import module_from_spec, spec_from_file_location
 from json import dumps, load, loads
-from os import path, setuid
+from os import path, setgid, setuid
 from signal import SIGINT, signal
 from sys import exit
 from time import time
@@ -49,6 +49,7 @@ class PluginWrapper:
         set_event_loop(new_event_loop())
         if self.passive:
             return
+        setgid(0 if "root" in self.flags else 1000)
         setuid(0 if "root" in self.flags else 1000)
         spec = spec_from_file_location("_", self.file)
         module = module_from_spec(spec)

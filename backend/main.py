@@ -18,6 +18,7 @@ from injector import inject_to_tab, tab_has_global_var
 from loader import Loader
 from updater import Updater
 from utilities import Utilities
+from settings import SettingsManager
 
 # Ensure USER and GROUP vars are set first.
 # TODO: This isn't the best way to do this but supports the current
@@ -49,9 +50,6 @@ async def chown_plugin_dir(_):
     if code_chown != 0 or code_chmod != 0:
         logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {code_chmod})")
 
-def remote_debugging_allowed():
-    return path.exists(HOMEBREW_PATH + "/allow_remote_debugging")
-
 class PluginManager:
     def __init__(self) -> None:
         self.loop = get_event_loop()
@@ -65,7 +63,9 @@ class PluginManager:
             )
         })
         self.plugin_loader = Loader(self.web_app, CONFIG["plugin_path"], self.loop, CONFIG["live_reload"])
-        self.plugin_browser = PluginBrowser(CONFIG["plugin_path"], self.plugin_loader.plugins)
+        self.plugin_browser = PluginBrowser(CONFIG["plugin_path"], self.web_app, self.plugin_loader.plugins)
+        self.settings = SettingsManager("loader", path.join(HOMEBREW_PATH, "settings"))
+
         self.utilities = Utilities(self)
         self.updater = Updater(self)
 
@@ -74,7 +74,7 @@ class PluginManager:
             self.web_app.on_startup.append(chown_plugin_dir)
         self.loop.create_task(self.loader_reinjector())
         self.loop.create_task(self.load_plugins())
-        if not remote_debugging_allowed():
+        if not self.settings.getSetting("cef_forward", False):
             self.loop.create_task(stop_systemd_unit(REMOTE_DEBUGGER_UNIT))
         self.loop.set_exception_handler(self.exception_handler)
         self.web_app.add_routes([get("/auth/token", self.get_auth_token)])

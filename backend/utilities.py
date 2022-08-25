@@ -23,7 +23,9 @@ class Utilities:
             "allow_remote_debugging": self.allow_remote_debugging,
             "disallow_remote_debugging": self.disallow_remote_debugging,
             "remote_debugging_allowed": self.remote_debugging_allowed,
-            "uninstall_decky": self.uninstall_decky
+            "uninstall_decky": self.uninstall_decky,
+            "set_setting": self.set_setting,
+            "get_setting": self.get_setting
         }
 
         if context:
@@ -141,6 +143,8 @@ class Utilities:
                 "result": e
             }
 
+    async def get_setting(self, key, default):
+        return self.context.settings.getSetting(key, default)
 
     async def uninstall_decky(keepConfig=True) -> None:
         username: str = helpers.get_user()
@@ -166,6 +170,8 @@ class Utilities:
             else:
                 shutil.rmtree(homebrew_dir)
 
+    async def set_setting(self, key, value):
+        return self.context.settings.setSetting(key, value)
 
     async def remote_debugging_allowed(self):
         return await helpers.is_systemd_unit_active(helpers.REMOTE_DEBUGGER_UNIT)

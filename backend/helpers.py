@@ -83,9 +83,9 @@ async def disable_systemd_unit(unit_name: str, now: bool = True) -> subprocess.C
 async def stop_systemd_unit(unit_name: str) -> subprocess.CompletedProcess:
     cmd = ["systemctl", "stop", unit_name]
 
-    return subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    return subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 async def start_systemd_unit(unit_name: str) -> subprocess.CompletedProcess:
     cmd = ["systemctl", "start", unit_name]
 
-    return subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    return subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)

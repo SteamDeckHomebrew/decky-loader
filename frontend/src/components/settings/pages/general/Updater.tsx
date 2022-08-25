@@ -3,17 +3,35 @@ import { useEffect, useState } from 'react';
 import { FaArrowDown } from 'react-icons/fa';
 
 import { VerInfo, callUpdaterMethod, finishUpdate } from '../../../../updater';
+import { useDeckyState } from '../../../DeckyState';
 
 export default function UpdaterSettings() {
+  const { isLoaderUpdating, setIsLoaderUpdating } = useDeckyState();
+
   const [versionInfo, setVersionInfo] = useState<VerInfo | null>(null);
+  const [checkingForUpdates, setCheckingForUpdates] = useState<boolean>(false);
   const [updateProgress, setUpdateProgress] = useState<number>(-1);
   const [reloading, setReloading] = useState<boolean>(false);
-  const [checkingForUpdates, setCheckingForUpdates] = useState<boolean>(false);
+
   useEffect(() => {
     (async () => {
       const res = (await callUpdaterMethod('get_version')) as { result: VerInfo };
       setVersionInfo(res.result);
     })();
+  }, []);
+
+  useEffect(() => {
+    window.DeckyUpdater = {
+      updateProgress: (i) => {
+        setUpdateProgress(i);
+        setIsLoaderUpdating(true);
+      },
+      finish: async () => {
+        setUpdateProgress(0);
+        setReloading(true);
+        await finishUpdate();
+      },
+    };
   }, []);
 
   return (
@@ -34,7 +52,7 @@ export default function UpdaterSettings() {
         )
       }
     >
-      {updateProgress == -1 ? (
+      {updateProgress == -1 && !isLoaderUpdating ? (
         <DialogButton
           disabled={!versionInfo?.updatable || checkingForUpdates}
           onClick={
@@ -46,16 +64,6 @@ export default function UpdaterSettings() {
                   setCheckingForUpdates(false);
                 }
               : async () => {
-                  window.DeckyUpdater = {
-                    updateProgress: (i) => {
-                      setUpdateProgress(i);
-                    },
-                    finish: async () => {
-                      setUpdateProgress(0);
-                      setReloading(true);
-                      await finishUpdate();
-                    },
-                  };
                   setUpdateProgress(0);
                   callUpdaterMethod('do_update');
                 }

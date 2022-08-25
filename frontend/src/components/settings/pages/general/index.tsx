@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { FaShapes } from 'react-icons/fa';
 
 import { installFromURL } from '../../../../store';
+// import BranchSelect from './BranchSelect';
 import RemoteDebuggingSettings from './RemoteDebugging';
 import UninstallSettings from './Uninstall';
 import UpdaterSettings from './Updater';
@@ -22,6 +23,7 @@ export default function GeneralSettings() {
         />
       </Field> */}
       <UpdaterSettings />
+      {/* <BranchSelect /> */}
       <RemoteDebuggingSettings />
       <Field
         label="Manual plugin install"

@@ -8,7 +8,6 @@ const titleStyles: CSSProperties = {
   display: 'flex',
   paddingTop: '3px',
   paddingRight: '16px',
-  boxShadow: 'unset',
 };
 
 const TitleView: VFC = () => {

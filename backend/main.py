@@ -42,25 +42,11 @@ CONFIG = {
 }
 
 basicConfig(
-    level=CONFIG["log_level"], format="[%(module)s][%(levelname)s]: %(message)s"
+    level=CONFIG["log_level"],
+    format="[%(module)s][%(levelname)s]: %(message)s"
 )
 
-from asyncio import get_event_loop, sleep
-from json import dumps, loads
-from os import path
-from subprocess import Popen
-
-import aiohttp_cors
-from aiohttp.web import Application, run_app, static
-from aiohttp_jinja2 import setup as jinja_setup
-
-from browser import PluginBrowser
-from injector import inject_to_tab, tab_has_global_var
-from loader import Loader
-from utilities import Utilities
-
 logger = getLogger("Main")
-
 
 async def chown_plugin_dir(_):
     code_chown = call(["chown", "-R", USER+":"+GROUP, CONFIG["plugin_path"]])
@@ -72,14 +58,17 @@ class PluginManager:
     def __init__(self) -> None:
         self.loop = get_event_loop()
         self.web_app = Application()
+        self.web_app.middlewares.append(csrf_middleware)
         self.cors = aiohttp_cors.setup(self.web_app, defaults={
             "https://steamloopback.host": aiohttp_cors.ResourceOptions(
                 expose_headers="*",
-                allow_headers="*"
+                allow_headers="*",
+                allow_credentials=True
             )
         })
         self.plugin_loader = Loader(self.web_app, CONFIG["plugin_path"], self.loop, CONFIG["live_reload"])
-        self.plugin_browser = PluginBrowser(CONFIG["plugin_path"])
+        self.plugin_browser = PluginBrowser(CONFIG["plugin_path"], self.plugin_loader.plugins)
+        self.settings = SettingsManager("loader", path.join(HOMEBREW_PATH, "settings"))
         self.utilities = Utilities(self)
         self.updater = Updater(self)
 
@@ -94,7 +83,9 @@ class PluginManager:
         self.web_app.add_routes([get("/auth/token", self.get_auth_token)])
 
         for route in list(self.web_app.router.routes()):
-
+            self.cors.add(route)
+        self.web_app.add_routes([static("/static", path.join(path.dirname(__file__), 'static'))])
+        self.web_app.add_routes([static("/legacy", path.join(path.dirname(__file__), 'legacy'))])
 
     def exception_handler(self, loop, context):
         if context["message"] == "Unclosed connection":
@@ -122,11 +113,9 @@ class PluginManager:
         await sleep(2)
         await self.inject_javascript()
         while True:
-            await sleep(1)
-            if not await tab_has_global_var("SP", "DeckyPluginLoader"):
-                logger.info(
-                    "Plugin loader isn't present in Steam anymore, reinjecting..."
-                )
+            await sleep(5)
+            if not await tab_has_global_var("SP", "deckyHasLoaded"):
+                logger.info("Plugin loader isn't present in Steam anymore, reinjecting...")
                 await self.inject_javascript()
 
     async def inject_javascript(self, request=None):
@@ -138,7 +127,6 @@ class PluginManager:
 
     def run(self):
         return run_app(self.web_app, host=CONFIG["server_host"], port=CONFIG["server_port"], loop=self.loop, access_log=None)
-
 
 if __name__ == "__main__":
     PluginManager().run()

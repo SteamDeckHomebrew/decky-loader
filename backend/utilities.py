@@ -81,6 +81,10 @@ class Utilities:
         try:
             result = await inject_to_tab(tab, code, run_async)
             if "exceptionDetails" in result["result"]:
+                return {
+                    "success": False,
+                    "result": result["result"]
+                }
 
             return {
                 "success": True,
@@ -96,16 +100,15 @@ class Utilities:
         try:
             css_id = str(uuid.uuid4())
 
-            result = await inject_to_tab(
-                tab,
-                f"""(function() {{
+            result = await inject_to_tab(tab,
+                f"""
+                (function() {{
                     const style = document.createElement('style');
                     style.id = "{css_id}";
                     document.head.append(style);
                     style.textContent = `{style}`;
-                }})()""",
-                False,
-            )
+                }})()
+                """, False)
 
             if "exceptionDetails" in result["result"]:
                 return {
@@ -125,16 +128,15 @@ class Utilities:
 
     async def remove_css_from_tab(self, tab, css_id):
         try:
-            result = await inject_to_tab(
-                tab,
-                f"""(function() {{
+            result = await inject_to_tab(tab,
+                f"""
+                (function() {{
                     let style = document.getElementById("{css_id}");
 
                     if (style.nodeName.toLowerCase() == 'style')
                         style.parentNode.removeChild(style);
-                }})()""",
-                False,
-            )
+                }})()
+                """, False)
 
             if "exceptionDetails" in result["result"]:
                 return {

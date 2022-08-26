@@ -20,14 +20,12 @@ from injector import get_tab, inject_to_tab
 
 logger = getLogger("Browser")
 
-
 class PluginInstallContext:
     def __init__(self, artifact, name, version, hash) -> None:
         self.artifact = artifact
         self.name = name
         self.version = version
         self.hash = hash
-
 
 class PluginBrowser:
     def __init__(self, plugin_path, plugins) -> None:

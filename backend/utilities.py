@@ -22,7 +22,6 @@ class Utilities:
             "remove_css_from_tab": self.remove_css_from_tab,
             "allow_remote_debugging": self.allow_remote_debugging,
             "disallow_remote_debugging": self.disallow_remote_debugging,
-            "remote_debugging_allowed": self.remote_debugging_allowed,
             "uninstall_decky": self.uninstall_decky,
             "set_setting": self.set_setting,
             "get_setting": self.get_setting
@@ -172,9 +171,6 @@ class Utilities:
                 shutil.rmtree(homebrew_dir / "services")
             else:
                 shutil.rmtree(homebrew_dir)
-
-    async def remote_debugging_allowed(self):
-        return await helpers.is_systemd_unit_active(helpers.REMOTE_DEBUGGER_UNIT)
 
     async def allow_remote_debugging(self):
         await helpers.start_systemd_unit(helpers.REMOTE_DEBUGGER_UNIT)

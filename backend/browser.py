@@ -35,6 +35,11 @@ class PluginBrowser:
         self.plugins = plugins
         self.install_requests = {}
 
+        server_instance.add_routes([
+            web.post("/browser/install_plugin", self.install_plugin),
+            web.post("/browser/uninstall_plugin", self.uninstall_plugin)
+        ])
+
     def _unzip_to_plugin_dir(self, zip, name, hash):
         zip_hash = sha256(zip.getbuffer()).hexdigest()
         if hash and (zip_hash != hash):
@@ -86,14 +91,13 @@ class PluginBrowser:
                 data = await res.read()
                 logger.debug(f"Read {len(data)} bytes")
                 res_zip = BytesIO(data)
-                with ProcessPoolExecutor() as executor:
-                    logger.debug("Unzipping...")
-                    ret = self._unzip_to_plugin_dir(res_zip, name, hash)
-                    if ret:
-                        logger.info(f"Installed {name} (Version: {version})")
-                        await inject_to_tab("SP", "window.syncDeckyPlugins()")
-                    else:
-                        logger.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
+                logger.debug("Unzipping...")
+                ret = self._unzip_to_plugin_dir(res_zip, name, hash)
+                if ret:
+                    logger.info(f"Installed {name} (Version: {version})")
+                    await inject_to_tab("SP", "window.syncDeckyPlugins()")
+                else:
+                    self.log.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
             else:
                 logger.fatal(f"Could not fetch from URL. {await res.text()}")
 

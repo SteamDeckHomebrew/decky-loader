@@ -1,4 +1,4 @@
-from asyncio import Queue
+from asyncio import Queue, sleep
 from json.decoder import JSONDecodeError
 from logging import getLogger
 from os import listdir, path
@@ -75,10 +75,11 @@ class Loader:
             self.loop.create_task(self.handle_reloads())
 
         server_instance.add_routes([
+            web.get("/frontend/{path:.*}", self.handle_frontend_assets),
             web.get("/plugins", self.get_plugins),
             web.get("/plugins/{plugin_name}/frontend_bundle", self.handle_frontend_bundle),
             web.post("/plugins/{plugin_name}/methods/{method_name}", self.handle_plugin_method_call),
-            web.get("/plugins/{plugin_name}/assets/{path:.*}", self.handle_frontend_assets),
+            web.get("/plugins/{plugin_name}/assets/{path:.*}", self.handle_plugin_frontend_assets),
 
             # The following is legacy plugin code.
             web.get("/plugins/load_main/{name}", self.load_plugin_main_view),
@@ -86,15 +87,20 @@ class Loader:
             web.get("/steam_resource/{path:.+}", self.get_steam_resource)
         ])
 
+    async def handle_frontend_assets(self, request):
+        file = path.join(path.dirname(__file__), "static", request.match_info["path"])
+
+        return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
+
     async def get_plugins(self, request):
         plugins = list(self.plugins.values())
         return web.json_response([{"name": str(i) if not i.legacy else "$LEGACY_"+str(i), "version": i.version} for i in plugins])
 
-    def handle_frontend_assets(self, request):
+    def handle_plugin_frontend_assets(self, request):
         plugin = self.plugins[request.match_info["plugin_name"]]
         file = path.join(self.plugin_path, plugin.plugin_directory, "dist/assets", request.match_info["path"])
 
-        return web.FileResponse(file)
+        return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
 
     def handle_frontend_bundle(self, request):
         plugin = self.plugins[request.match_info["plugin_name"]]

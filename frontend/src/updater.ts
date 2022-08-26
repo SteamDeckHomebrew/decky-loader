@@ -11,19 +11,22 @@ export interface DeckyUpdater {
   finish: () => void;
 }
 
+export interface RemoteVerInfo {
+  assets: {
+    browser_download_url: string;
+    created_at: string;
+  }[];
+  name: string;
+  body: string;
+  prerelease: boolean;
+  published_at: string;
+  tag_name: string;
+}
+
 export interface VerInfo {
   current: string;
-  remote: {
-    assets: {
-      browser_download_url: string;
-      created_at: string;
-    }[];
-    name: string;
-    body: string;
-    prerelease: boolean;
-    published_at: string;
-    tag_name: string;
-  } | null;
+  remote: RemoteVerInfo | null;
+  all: RemoteVerInfo[] | null;
   updatable: boolean;
 }
 

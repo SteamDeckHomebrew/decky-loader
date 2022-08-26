@@ -1,6 +1,7 @@
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import externalGlobals from "rollup-plugin-external-globals";
 import replace from '@rollup/plugin-replace';
 import typescript from '@rollup/plugin-typescript';
 import { defineConfig } from 'rollup';
@@ -10,6 +11,14 @@ export default defineConfig({
   plugins: [
     commonjs(),
     nodeResolve(),
+    externalGlobals({
+      react: 'SP_REACT',
+      'react-dom': 'SP_REACTDOM',
+      // hack to shut up react-markdown
+      'process': '{cwd: () => {}}',
+      'path': '{dirname: () => {}, join: () => {}, basename: () => {}, extname: () => {}}',
+      'url': '{fileURLToPath: (f) => f}'
+    }),
     typescript(),
     json(),
     replace({
@@ -17,13 +26,12 @@ export default defineConfig({
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),
   ],
-  external: ["react", "react-dom"],
+  preserveEntrySignatures: false,
   output: {
-    file: '../backend/static/plugin-loader.iife.js',
-    globals: {
-      react: 'SP_REACT',
-      'react-dom': 'SP_REACTDOM',
-    },
-    format: 'iife',
-  },
+    dir: '../backend/static',
+    format: 'esm',
+    chunkFileNames: (chunkInfo) => {
+      return 'chunk-[hash].js'
+    }
+  }
 });

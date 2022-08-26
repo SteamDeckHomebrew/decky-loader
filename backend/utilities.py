@@ -148,7 +148,7 @@ class Utilities:
     async def set_setting(self, key, value):
         return self.context.settings.setSetting(key, value)
 
-    async def uninstall_decky(keepConfig=True) -> None:
+    async def uninstall_decky(keepPlugins=True) -> None:
         username: str = helpers.get_user()
         user_dir = Path(f"~{username}").expanduser()
         homebrew_dir = user_dir / "homebrew"
@@ -167,7 +167,7 @@ class Utilities:
             # Remove temporary folder if it exists from the install process
             shutil.rmtree("/tmp/plugin_loader")
 
-            if keepConfig:
+            if keepPlugins:
                 shutil.rmtree(homebrew_dir / "services")
             else:
                 shutil.rmtree(homebrew_dir)

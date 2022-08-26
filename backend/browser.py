@@ -33,11 +33,6 @@ class PluginBrowser:
         self.plugins = plugins
         self.install_requests = {}
 
-        server_instance.add_routes([
-            web.post("/browser/install_plugin", self.install_plugin),
-            web.post("/browser/uninstall_plugin", self.uninstall_plugin)
-        ])
-
     def _unzip_to_plugin_dir(self, zip, name, hash):
         zip_hash = sha256(zip.getbuffer()).hexdigest()
         if hash and (zip_hash != hash):

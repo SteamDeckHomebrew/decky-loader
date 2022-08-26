@@ -17,46 +17,38 @@ function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | n
   return (
     <Focusable onCancelButton={closeModal}>
       <Carousel
-        fnItemRenderer={(id: number, ...args: any[]) => {
-          console.log(args, versionInfo);
-          return (
-            <Focusable
-              onActivate={() => {}}
-              style={{
-                marginTop: '40px',
-                height: 'calc( 100% - 40px )',
-                overflowY: 'scroll',
-                display: 'flex',
-                justifyContent: 'center',
-                margin: '40px',
-              }}
-            >
-              <div>
-                <h1>{versionInfo?.all?.[id]?.name}</h1>
-                {versionInfo?.all?.[id]?.body ? (
-                  <Suspense fallback={<Spinner style={{ width: '24', height: '24' }} />}>
-                    <MarkdownRenderer>{versionInfo.all[id].body}</MarkdownRenderer>
-                  </Suspense>
-                ) : (
-                  'no patch notes for this version'
-                )}
-              </div>
-            </Focusable>
-          );
-        }}
-        fnGetId={(id) => {
-          return id;
-        }}
+        fnItemRenderer={(id: number) => (
+          <Focusable
+            onActivate={() => {}}
+            style={{
+              marginTop: '40px',
+              height: 'calc( 100% - 40px )',
+              overflowY: 'scroll',
+              display: 'flex',
+              justifyContent: 'center',
+              margin: '40px',
+            }}
+          >
+            <div>
+              <h1>{versionInfo?.all?.[id]?.name}</h1>
+              {versionInfo?.all?.[id]?.body ? (
+                <Suspense fallback={<Spinner style={{ width: '24', height: '24' }} />}>
+                  <MarkdownRenderer>{versionInfo.all[id].body}</MarkdownRenderer>
+                </Suspense>
+              ) : (
+                'no patch notes for this version'
+              )}
+            </div>
+          </Focusable>
+        )}
+        fnGetId={(id) => id}
         nNumItems={versionInfo?.all?.length}
         nHeight={window.innerHeight - 150}
         nItemHeight={window.innerHeight - 200}
         nItemMarginX={0}
         initialColumn={0}
         autoFocus={true}
-        fnGetColumnWidth={(...args: any[]) => {
-          console.log('cw', args);
-          return window.innerWidth;
-        }}
+        fnGetColumnWidth={() => window.innerWidth}
       />
     </Focusable>
   );
@@ -98,8 +90,8 @@ export default function UpdaterSettings() {
   return (
     <>
       <Field
-        onOptionsActionDescription="Patch Notes"
-        onOptionsButton={showPatchNotes}
+        onOptionsActionDescription={versionInfo?.all ? 'Patch Notes' : undefined}
+        onOptionsButton={versionInfo?.all ? showPatchNotes : undefined}
         label="Updates"
         description={
           versionInfo && (

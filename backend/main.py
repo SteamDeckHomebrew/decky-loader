@@ -117,7 +117,7 @@ class PluginManager:
 
     async def inject_javascript(self, request=None):
         try:
-            await inject_to_tab("SP", "try{window.deckyHasLoaded = true;(async()=>{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};" + open(path.join(path.dirname(__file__), "./static/plugin-loader.iife.js"), "r").read() + "})();}catch(e){console.error(e)}", True)
+            await inject_to_tab("SP", "try{window.deckyHasLoaded = true;(async()=>{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js')})();}catch(e){console.error(e)}", True)
         except:
             logger.info("Failed to inject JavaScript into tab")
             pass

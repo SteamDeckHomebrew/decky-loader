@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
     "module": "ESNext",
     "target": "ES2020",
     "jsx": "react",

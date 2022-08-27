@@ -28,15 +28,10 @@ class PluginInstallContext:
         self.hash = hash
 
 class PluginBrowser:
-    def __init__(self, plugin_path, server_instance, plugins) -> None:
+    def __init__(self, plugin_path, plugins) -> None:
         self.plugin_path = plugin_path
         self.plugins = plugins
         self.install_requests = {}
-
-        server_instance.add_routes([
-            web.post("/browser/install_plugin", self.install_plugin),
-            web.post("/browser/uninstall_plugin", self.uninstall_plugin)
-        ])
 
     def _unzip_to_plugin_dir(self, zip, name, hash):
         zip_hash = sha256(zip.getbuffer()).hexdigest()
@@ -64,25 +59,19 @@ class PluginBrowser:
 
     async def uninstall_plugin(self, name):
         tab = await get_tab("SP")
-
         try:
-            if type(name) != str:
-                data = await name.post()
-                name = data.get("name", "undefined")
             logger.info("uninstalling " + name)
             logger.info(" at dir " + self.find_plugin_folder(name))
             await tab.evaluate_js(f"DeckyPluginLoader.unloadPlugin('{name}')")
             if self.plugins[name]:
                 self.plugins[name].stop()
-                self.plugins.pop(name, None)
+                self.plugins.remove(name)
             rmtree(self.find_plugin_folder(name))
         except FileNotFoundError:
             logger.warning(f"Plugin {name} not installed, skipping uninstallation")
 
-        return web.Response(text="Requested plugin uninstall")
-
     async def _install(self, artifact, name, version, hash):
-        try: 
+        try:
             await self.uninstall_plugin(name)
         except:
             logger.error(f"Plugin {name} not installed, skipping uninstallation")
@@ -95,21 +84,15 @@ class PluginBrowser:
                 data = await res.read()
                 logger.debug(f"Read {len(data)} bytes")
                 res_zip = BytesIO(data)
-                with ProcessPoolExecutor() as executor:
-                    logger.debug("Unzipping...")
-                    ret = self._unzip_to_plugin_dir(res_zip, name, hash)
-                    if ret:
-                        logger.info(f"Installed {name} (Version: {version})")
-                        await inject_to_tab("SP", "window.syncDeckyPlugins()")
-                    else:
-                        logger.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
+                logger.debug("Unzipping...")
+                ret = self._unzip_to_plugin_dir(res_zip, name, hash)
+                if ret:
+                    logger.info(f"Installed {name} (Version: {version})")
+                    await inject_to_tab("SP", "window.syncDeckyPlugins()")
+                else:
+                    self.log.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
             else:
                 logger.fatal(f"Could not fetch from URL. {await res.text()}")
-
-    async def install_plugin(self, request):
-        data = await request.post()
-        get_event_loop().create_task(self.request_plugin_install(data.get("artifact", ""), data.get("name", "No name"), data.get("version", "dev"), data.get("hash", False)))
-        return web.Response(text="Requested plugin install")
 
     async def request_plugin_install(self, artifact, name, version, hash):
         request_id = str(time())
@@ -117,7 +100,7 @@ class PluginBrowser:
         tab = await get_tab("SP")
         await tab.open_websocket()
         await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}')")
-    
+
     async def confirm_plugin_install(self, request_id):
         request = self.install_requests.pop(request_id)
         await self._install(request.artifact, request.name, request.version, request.hash)

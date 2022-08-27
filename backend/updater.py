@@ -26,6 +26,7 @@ class Updater:
             "check_for_updates": self.check_for_updates
         }
         self.remoteVer = None
+        self.allRemoteVers = None
         try:
             with open(path.join(getcwd(), ".loader.version"), 'r') as version_file:
                 self.localVer = version_file.readline().replace("\n", "")
@@ -59,15 +60,17 @@ class Updater:
             return {
                 "current": self.localVer,
                 "remote": self.remoteVer,
+                "all": self.allRemoteVers,
                 "updatable": self.localVer != None
             }
         else:
-            return {"current": "unknown", "remote": self.remoteVer, "updatable": False}
+            return {"current": "unknown", "remote": self.remoteVer, "all": self.allRemoteVers, "updatable": False}
 
     async def check_for_updates(self):
         async with ClientSession() as web:
             async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases", ssl=helpers.get_ssl_context()) as res:
                 remoteVersions = await res.json()
+                self.allRemoteVers = remoteVersions
                 self.remoteVer = next(filter(lambda ver: ver["prerelease"] and ver["tag_name"].startswith("v") and ver["tag_name"].find("-pre"), remoteVersions), None)
                 logger.info("Updated remote version information")
                 tab = await get_tab("SP")

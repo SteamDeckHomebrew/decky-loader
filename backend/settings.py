@@ -29,9 +29,7 @@ class SettingsManager:
             dump(self.settings, file, indent=4)
 
     def getSetting(self, key, default):
-        if key in self.settings:
-            return self.settings[key]
-        return default
+        return self.settings.get(key, default)
 
     def setSetting(self, key, value):
         self.settings[key] = value

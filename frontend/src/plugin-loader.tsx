@@ -1,4 +1,5 @@
-import { ModalRoot, QuickAccessTab, Router, showModal, sleep, staticClasses } from 'decky-frontend-lib';
+import { ModalRoot, QuickAccessTab, Router, SteamSpinner, showModal, sleep, staticClasses } from 'decky-frontend-lib';
+import { Suspense, lazy } from 'react';
 import { FaPlug } from 'react-icons/fa';
 
 import { DeckyState, DeckyStateContextProvider, useDeckyState } from './components/DeckyState';
@@ -6,8 +7,6 @@ import LegacyPlugin from './components/LegacyPlugin';
 import PluginInstallModal from './components/modals/PluginInstallModal';
 import NotificationBadge from './components/NotificationBadge';
 import PluginView from './components/PluginView';
-import SettingsPage from './components/settings';
-import StorePage from './components/store/Store';
 import TitleView from './components/TitleView';
 import Logger from './logger';
 import { Plugin } from './plugin';
@@ -61,11 +60,44 @@ class PluginLoader extends Logger {
       ),
     });
 
-    this.routerHook.addRoute('/decky/store', () => <StorePage />);
+    const StorePage = lazy(() => import('./components/store/Store'));
+    const SettingsPage = lazy(() => import('./components/settings'));
+
+    this.routerHook.addRoute('/decky/store', () => (
+      <Suspense
+        fallback={
+          <div
+            style={{
+              marginTop: '40px',
+              height: 'calc( 100% - 40px )',
+              overflowY: 'scroll',
+            }}
+          >
+            <SteamSpinner />
+          </div>
+        }
+      >
+        <StorePage />
+      </Suspense>
+    ));
     this.routerHook.addRoute('/decky/settings', () => {
       return (
         <DeckyStateContextProvider deckyState={this.deckyState}>
-          <SettingsPage />
+          <Suspense
+            fallback={
+              <div
+                style={{
+                  marginTop: '40px',
+                  height: 'calc( 100% - 40px )',
+                  overflowY: 'scroll',
+                }}
+              >
+                <SteamSpinner />
+              </div>
+            }
+          >
+            <SettingsPage />
+          </Suspense>
         </DeckyStateContextProvider>
       );
     });
@@ -118,16 +150,7 @@ class PluginLoader extends Logger {
     showModal(
       <ModalRoot
         onOK={async () => {
-          const formData = new FormData();
-          formData.append('name', name);
-          await fetch('http://localhost:1337/browser/uninstall_plugin', {
-            method: 'POST',
-            body: formData,
-            credentials: 'include',
-            headers: {
-              Authentication: window.deckyAuthToken,
-            },
-          });
+          await this.callServerMethod('uninstall_plugin', { name });
         }}
         onCancel={() => {
           // do nothing

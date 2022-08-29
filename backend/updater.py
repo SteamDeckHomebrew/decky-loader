@@ -88,7 +88,7 @@ class Updater:
                 logger.debug("determining release type to find, branch is %i" % selectedBranch)
                 if selectedBranch == 0:
                     logger.debug("release type: release")
-                    self.remoteVer = next(filter(lambda ver: ver["release"] and ver["tag_name"].startswith("v") and ver["tag_name"], remoteVersions), None)
+                    self.remoteVer = next(filter(lambda ver: ver["tag_name"].startswith("v") and not ver["prerelease"] and ver["tag_name"], remoteVersions), None)
                 elif selectedBranch == 1:
                     logger.debug("release type: pre-release")
                     self.remoteVer = next(filter(lambda ver: ver["prerelease"] and ver["tag_name"].startswith("v") and ver["tag_name"].find("-pre"), remoteVersions), None)

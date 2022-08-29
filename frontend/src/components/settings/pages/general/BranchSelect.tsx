@@ -13,6 +13,8 @@ const BranchSelect: FunctionComponent<{}> = () => {
   const [selectedBranch, setSelectedBranch] = useSetting<UpdateBranch>('branch', UpdateBranch.Prerelease);
 
   return (
+    // Returns numerical values from 0 to 2 (with current branch setup as of 8/28/22)
+    // 0 being stable, 1 being pre-release and 2 being nightly
     <Field label="Update Channel">
       <Dropdown
         rgOptions={Object.values(UpdateBranch)

@@ -1,6 +1,7 @@
 import { Dropdown, Field } from 'decky-frontend-lib';
 import { FunctionComponent } from 'react';
 
+import { callUpdaterMethod } from '../../../../updater';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 
 enum UpdateBranch {
@@ -26,6 +27,7 @@ const BranchSelect: FunctionComponent<{}> = () => {
         selectedOption={selectedBranch}
         onChange={(newVal) => {
           setSelectedBranch(newVal.data);
+          callUpdaterMethod('check_for_updates');
         }}
       />
     </Field>

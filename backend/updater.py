@@ -1,6 +1,6 @@
-from ensurepip import version
 import uuid
 from asyncio import sleep
+from ensurepip import version
 from json.decoder import JSONDecodeError
 from logging import getLogger
 from os import getcwd, path, remove

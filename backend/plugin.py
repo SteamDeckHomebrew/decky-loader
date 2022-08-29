@@ -1,7 +1,7 @@
 import multiprocessing
 from asyncio import (Lock, get_event_loop, new_event_loop,
                      open_unix_connection, set_event_loop, sleep,
-                     start_unix_server)
+                     start_unix_server, IncompleteReadError, LimitOverrunError)
 from concurrent.futures import ProcessPoolExecutor
 from importlib.util import module_from_spec, spec_from_file_location
 from json import dumps, load, loads
@@ -66,7 +66,19 @@ class PluginWrapper:
 
     async def _listen_for_method_call(self, reader, writer):
         while True:
-            data = loads((await reader.readline()).decode("utf-8"))
+            line = bytearray()
+            while True:
+                try:
+                    line.extend(await reader.readuntil())
+                except LimitOverrunError:
+                    line.extend(await reader.read(reader._limit))
+                    continue
+                except IncompleteReadError as err:
+                    line.extend(err.partial)
+                    break
+                else:
+                    break
+            data = loads(line.decode("utf-8"))
             if "stop" in data:
                 get_event_loop().stop()
                 while get_event_loop().is_running():
@@ -121,7 +133,19 @@ class PluginWrapper:
                 self.writer.write(
                     (dumps({"method": method_name, "args": kwargs})+"\n").encode("utf-8"))
                 await self.writer.drain()
-                res = loads((await self.reader.readline()).decode("utf-8"))
+                line = bytearray()
+                while True:
+                    try:
+                        line.extend(await self.reader.readuntil())
+                    except LimitOverrunError:
+                        line.extend(await self.reader.read(self.reader._limit))
+                        continue
+                    except IncompleteReadError as err:
+                        line.extend(err.partial)
+                        break
+                    else:
+                        break
+                res = loads(line.decode("utf-8"))
                 if not res["success"]:
                     raise Exception(res["res"])
                 return res["res"]

@@ -63,21 +63,6 @@ class Updater:
             res["success"] = False
         return web.json_response(res)
 
-    async def _handle_release_filtering(self, branch: int) :
-        logger.debug("determining release type to find, branch is %i" % branch)
-        if branch == 0:
-            logger.debug("release type: release")
-            return lambda ver: ver["release"] and ver["tag_name"].startswith("v") and ver["tag_name"]
-        elif branch == 1:
-            logger.debug("release type: pre-release")
-            return lambda ver: ver["prerelease"] and ver["tag_name"].startswith("v") and ver["tag_name"].find("-pre")
-        elif branch == 2:
-            logger.debug("release type: nightly")
-            return lambda ver: ver["prerelease"] and ver["tag_name"].startswith("v") and ver["tag_name"].find("nightly")
-        else:
-            logger.error("release type: NOT FOUND")
-            raise ValueError("no valid branch found")
-
     async def get_branch(self, manager: SettingsManager):
         logger.debug("current branch: %i" % manager.getSetting("branch", -1))
         return manager.getSetting("branch", -1)
@@ -96,16 +81,25 @@ class Updater:
     async def check_for_updates(self):
         logger.debug("checking for updates")
         selectedBranch = await self.get_branch(self.context.settings)
-        versionFilterLambda = await self._handle_release_filtering(selectedBranch)
         async with ClientSession() as web:
             async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases", ssl=helpers.get_ssl_context()) as res:
                 remoteVersions = await res.json()
                 self.allRemoteVers = remoteVersions
-                # issue occurs after this line
-                self.remoteVer = next(filter(versionFilterLambda), None)
-                logger.debug("Remote Version: %s" % self.remoteVer)
-                # self.remoteVer = next(versionFilter, None)
+                logger.debug("determining release type to find, branch is %i" % selectedBranch)
+                if selectedBranch == 0:
+                    logger.debug("release type: release")
+                    self.remoteVer = next(filter(lambda ver: ver["release"] and ver["tag_name"].startswith("v") and ver["tag_name"], remoteVersions), None)
+                elif selectedBranch == 1:
+                    logger.debug("release type: pre-release")
+                    self.remoteVer = next(filter(lambda ver: ver["prerelease"] and ver["tag_name"].startswith("v") and ver["tag_name"].find("-pre"), remoteVersions), None)
+                elif selectedBranch == 2:
+                    logger.debug("release type: nightly")
+                    self.remoteVer = next(filter(lambda ver: ver["prerelease"] and ver["tag_name"].startswith("v") and ver["tag_name"].find("nightly"), remoteVersions), None)
+                else:
+                    logger.error("release type: NOT FOUND")
+                    raise ValueError("no valid branch found")
                 # doesn't make it to this line below or farther
+                logger.debug("Remote Version: %s" % self.remoteVer)
                 logger.info("Updated remote version information")
                 tab = await get_tab("SP")
                 await tab.evaluate_js(f"window.DeckyPluginLoader.notifyUpdates()", False, True, False)

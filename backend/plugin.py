@@ -12,6 +12,8 @@ from time import time
 
 multiprocessing.set_start_method("fork")
 
+BUFFER_LIMIT = 2 ** 20  # 1 MiB
+
 class PluginWrapper:
     def __init__(self, file, plugin_directory, plugin_path) -> None:
         self.file = file
@@ -62,7 +64,7 @@ class PluginWrapper:
         get_event_loop().run_forever()
 
     async def _setup_socket(self):
-        self.socket = await start_unix_server(self._listen_for_method_call, path=self.socket_addr)
+        self.socket = await start_unix_server(self._listen_for_method_call, path=self.socket_addr, limit=BUFFER_LIMIT)
 
     async def _listen_for_method_call(self, reader, writer):
         while True:
@@ -100,7 +102,7 @@ class PluginWrapper:
             retries = 0
             while retries < 10:
                 try:
-                    self.reader, self.writer = await open_unix_connection(self.socket_addr)
+                    self.reader, self.writer = await open_unix_connection(self.socket_addr, limit=BUFFER_LIMIT)
                     return True
                 except:
                     await sleep(2)

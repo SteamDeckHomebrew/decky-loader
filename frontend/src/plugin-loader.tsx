@@ -52,10 +52,8 @@ class PluginLoader extends Logger {
       ),
       icon: (
         <DeckyStateContextProvider deckyState={this.deckyState}>
-          <>
-            <FaPlug />
-            <TabIcon />
-          </>
+          <FaPlug />
+          <TabIcon />
         </DeckyStateContextProvider>
       ),
     });

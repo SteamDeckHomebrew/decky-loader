@@ -64,13 +64,6 @@ export default function UpdaterSettings() {
   const [reloading, setReloading] = useState<boolean>(false);
 
   useEffect(() => {
-    (async () => {
-      const res = (await callUpdaterMethod('get_version')) as { result: VerInfo };
-      setVersionInfo(res.result);
-    })();
-  }, []);
-
-  useEffect(() => {
     window.DeckyUpdater = {
       updateProgress: (i) => {
         setUpdateProgress(i);

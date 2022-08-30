@@ -56,8 +56,9 @@ function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | n
 
 export default function UpdaterSettings() {
   const { isLoaderUpdating, setIsLoaderUpdating } = useDeckyState();
+  const { versionInfo: versionInfo, setVersionInfo } = useDeckyState();
 
-  const [versionInfo, setVersionInfo] = useState<VerInfo | null>(null);
+  // const [versionInfo, setVersionInfo] = useState<VerInfo | null>(null);
   const [checkingForUpdates, setCheckingForUpdates] = useState<boolean>(false);
   const [updateProgress, setUpdateProgress] = useState<number>(-1);
   const [reloading, setReloading] = useState<boolean>(false);

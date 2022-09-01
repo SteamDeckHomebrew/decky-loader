@@ -7,7 +7,7 @@ import { useSetting } from '../../../../utils/hooks/useSetting';
 enum UpdateBranch {
   Stable,
   Prerelease,
-  Nightly,
+  // Nightly,
 }
 
 const BranchSelect: FunctionComponent<{}> = () => {
@@ -29,6 +29,9 @@ const BranchSelect: FunctionComponent<{}> = () => {
           setSelectedBranch(newVal.data);
           callUpdaterMethod('check_for_updates');
           console.log('switching branches!');
+        }}
+        onMenuOpened={() => {
+          callUpdaterMethod('check_for_updates');
         }}
       />
     </Field>

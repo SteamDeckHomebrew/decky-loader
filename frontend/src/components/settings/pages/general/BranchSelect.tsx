@@ -25,13 +25,10 @@ const BranchSelect: FunctionComponent<{}> = () => {
             data: UpdateBranch[branch],
           }))}
         selectedOption={selectedBranch}
-        onChange={(newVal) => {
-          setSelectedBranch(newVal.data);
+        onChange={async (newVal) => {
+          await setSelectedBranch(newVal.data);
           callUpdaterMethod('check_for_updates');
           console.log('switching branches!');
-        }}
-        onMenuOpened={() => {
-          callUpdaterMethod('check_for_updates');
         }}
       />
     </Field>

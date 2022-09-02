@@ -255,13 +255,26 @@ class PluginLoader extends Logger {
     this.unloadAll();
     const res = await this.callServerMethod('uninstall_decky', { keepPlugins });
     console.log('uninstall done from frontend');
-    this.toaster.toast({
-      title: 'Decky',
-      body: res.success ? 'Uninstalled successfully!' : 'Uninstallation failed',
-      critical: !res.success,
-    });
-    await new Promise((resolve) => setTimeout(resolve, 5e3));
-    location.reload(); // lol
+
+    const title = (
+      <div className={staticClasses.Title} style={{ flexDirection: 'column', boxShadow: 'unset' }}>
+        Notification
+      </div>
+    );
+    showModal(
+      res.success ? (
+        <ModalRoot onOK={() => location.reload()} onCancel={() => {}}>
+          {title}
+          The uninstall was successful. We'll now reload to make sure everything has been removed correctly. Click
+          <b>OK</b> to proceed.
+        </ModalRoot>
+      ) : (
+        <ModalRoot onOK={() => this._uninstallDecky(keepPlugins)} onCancel={() => {}}>
+          {title}
+          The uninstallation failed. Click <b>OK</b> to retry.
+        </ModalRoot>
+      ),
+    );
   }
 
   async callServerMethod(methodName: string, args = {}): Promise<{ res: string; success: boolean }> {

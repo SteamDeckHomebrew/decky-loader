@@ -174,6 +174,12 @@ class PluginLoader extends Logger {
     }
   }
 
+  public unloadAll() {
+    this.dismountAll();
+    this.plugins = [];
+    this.deckyState.setPlugins(this.plugins);
+  }
+
   public deinit() {
     this.routerHook.removeRoute('/decky/store');
     this.routerHook.removeRoute('/decky/settings');
@@ -246,7 +252,7 @@ class PluginLoader extends Logger {
 
   async _uninstallDecky(keepPlugins: boolean) {
     console.log('uninstall call from frontend');
-    this.dismountAll();
+    this.unloadAll();
     const res = await this.callServerMethod('uninstall_decky', { keepPlugins });
     console.log('uninstall done from frontend');
     this.toaster.toast({

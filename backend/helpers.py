@@ -74,7 +74,7 @@ async def is_systemd_unit_active(unit_name: str) -> bool:
     res = subprocess.run(["systemctl", "is-active", unit_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     return res.returncode == 0
 
-async def disable_systemd_unit(unit_name: str, now: bool = True) -> subprocess.CompletedProcess:
+async def disable_systemd_unit(unit_name: str, now: bool = False) -> subprocess.CompletedProcess:
     cmd = ["systemctl", "disable", "--now", unit_name]
     if not now:
         cmd.remove("--now")

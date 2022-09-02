@@ -4,7 +4,6 @@ import subprocess
 
 import uuid
 import logging
-from aiohttp.web import middleware, Response
 from subprocess import check_output
 from time import sleep
 

@@ -40,7 +40,7 @@ if (!window.webpackJsonp || window.webpackJsonp.deckyShimmed) {
 (async () => {
   window.deckyAuthToken = await fetch('http://127.0.0.1:1337/auth/token').then((r) => r.text());
 
-  window.DeckyPluginLoader?.dismountAll();
+  window.DeckyPluginLoader?.unloadAll();
   window.DeckyPluginLoader?.deinit();
 
   window.DeckyPluginLoader = new PluginLoader();

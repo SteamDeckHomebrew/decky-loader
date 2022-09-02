@@ -1,3 +1,4 @@
+import logging
 import uuid
 import shutil
 import contextlib
@@ -177,13 +178,16 @@ class Utilities:
             helpers.disable_systemd_unit(helpers.PLUGIN_LOADER_UNIT)
             for path in possible_unit_paths:
                 path.unlink(missing_ok=True)
+                logging.debug(f"Removing path: {path}")
 
             # Remove temporary folder if it exists from the install process
             shutil.rmtree("/tmp/plugin_loader")
 
             if keepPlugins:
+                logging.debug(f"Removing {homebrew_dir / 'services'} (keep plugins)")
                 shutil.rmtree(homebrew_dir / "services")
             else:
+                logging.debug(f"Removing {homebrew_dir} (no keep plugins)")
                 shutil.rmtree(homebrew_dir)
 
     async def allow_remote_debugging(self):

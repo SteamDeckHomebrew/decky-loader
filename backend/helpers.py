@@ -3,6 +3,7 @@ import ssl
 import uuid
 import re
 import subprocess
+import logging
 
 from aiohttp.web import middleware, Response
 from subprocess import check_output
@@ -78,6 +79,8 @@ async def disable_systemd_unit(unit_name: str, now: bool = False) -> subprocess.
     cmd = ["systemctl", "disable", "--now", unit_name]
     if not now:
         cmd.remove("--now")
+
+    logging.debug(f"Removing systemd unit (term: {now})")
 
     return subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 

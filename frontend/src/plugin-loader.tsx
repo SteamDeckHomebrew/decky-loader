@@ -246,7 +246,8 @@ class PluginLoader extends Logger {
 
   async _uninstallDecky(keepPlugins: boolean) {
     console.log('uninstall call from frontend');
-    const res = await window.DeckyPluginLoader.callServerMethod('uninstall_decky', { keepPlugins });
+    this.dismountAll();
+    const res = await this.callServerMethod('uninstall_decky', { keepPlugins });
     console.log('uninstall done from frontend');
     this.toaster.toast({
       title: 'Decky',

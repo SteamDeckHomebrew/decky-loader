@@ -253,8 +253,6 @@ class PluginLoader extends Logger {
   async _uninstallDecky(keepPlugins: boolean) {
     console.log('uninstall call from frontend');
     this.unloadAll();
-    // this.tabsHook.deinit();
-    // this.routerHook.deinit();
     const res = await this.callServerMethod('uninstall_decky', { keepPlugins });
     console.log('uninstall done from frontend');
     this.toaster.toast({
@@ -262,8 +260,8 @@ class PluginLoader extends Logger {
       body: res.success ? 'Uninstalled successfully!' : 'Uninstallation failed',
       critical: !res.success,
     });
-    // this.toaster.deinit();
-    // this.deinit();
+    await new Promise((resolve) => setTimeout(resolve, 5e3));
+    location.reload(); // lol
   }
 
   async callServerMethod(methodName: string, args = {}): Promise<{ res: string; success: boolean }> {

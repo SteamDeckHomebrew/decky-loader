@@ -10,9 +10,8 @@ interface SetSettingArgs<T> {
   value: T;
 }
 
-export function useSetting<T>(key: string, def: T): [value: T | null, setValue: (value: T) => void] {
+export function useSetting<T>(key: string, def: T): [value: T | null, setValue: (value: T) => Promise<void>] {
   const [value, setValue] = useState(def);
-  const [ready, setReady] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -20,20 +19,18 @@ export function useSetting<T>(key: string, def: T): [value: T | null, setValue: 
         key,
         default: def,
       } as GetSettingArgs<T>)) as { result: T };
-      setReady(true);
       setValue(res.result);
     })();
   }, []);
 
-  useEffect(() => {
-    if (ready)
-      (async () => {
-        await window.DeckyPluginLoader.callServerMethod('set_setting', {
-          key,
-          value,
-        } as SetSettingArgs<T>);
-      })();
-  }, [value]);
-
-  return [value, setValue];
+  return [
+    value,
+    async (val: T) => {
+      setValue(val);
+      await window.DeckyPluginLoader.callServerMethod('set_setting', {
+        key,
+        value: val,
+      } as SetSettingArgs<T>);
+    },
+  ];
 }

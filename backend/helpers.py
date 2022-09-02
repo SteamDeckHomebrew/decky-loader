@@ -1,14 +1,15 @@
-import certifi
-import ssl
-import uuid
 import re
+import ssl
 import subprocess
-import logging
 
+import uuid
+import logging
 from aiohttp.web import middleware, Response
 from subprocess import check_output
 from time import sleep
 
+import certifi
+from aiohttp.web import Response, middleware
 
 REMOTE_DEBUGGER_UNIT = "steam-web-debug-portforward.service"
 PLUGIN_LOADER_UNIT = "plugin_loader.service"
@@ -70,6 +71,21 @@ def get_user_group() -> str:
     if group == None:
         raise ValueError("helpers.get_user_group method called before group variable was set. Run helpers.set_user_group first.")
     return group
+
+# Get the default home path unless a user is specified
+def get_home_path(username = None) -> str:
+    if username == None:
+        raise ValueError("Username not defined, no home path can be found.")
+    else:
+        return str("/home/"+username)
+
+# Get the default homebrew path unless a user is specified
+def get_homebrew_path(home_path = None) -> str:
+    if home_path == None:
+        raise ValueError("Home path not defined, homebrew dir cannot be determined.")
+    else:
+        return str(home_path+"/homebrew")
+    # return str(home_path+"/homebrew")
 
 async def is_systemd_unit_active(unit_name: str) -> bool:
     res = subprocess.run(["systemctl", "is-active", unit_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

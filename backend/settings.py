@@ -1,8 +1,16 @@
-from os import path, mkdir
-from json import load, dump
+import imp
+from json import dump, load
+from os import mkdir, path
+
+from helpers import get_home_path, get_homebrew_path, get_user, set_user
+
 
 class SettingsManager:
-    def __init__(self, name, settings_directory) -> None:
+    def __init__(self, name, settings_directory = None) -> None:
+        set_user()
+        USER = get_user()
+        if settings_directory == None:
+            settings_directory = get_homebrew_path(get_home_path(USER))
         self.path = path.join(settings_directory, name + ".json")
 
         if not path.exists(settings_directory):

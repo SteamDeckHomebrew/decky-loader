@@ -9,6 +9,7 @@ from aiohttp import ClientSession, web
 
 from injector import inject_to_tab
 import helpers
+import subprocess
 
 
 class Utilities:
@@ -26,9 +27,9 @@ class Utilities:
             "remove_css_from_tab": self.remove_css_from_tab,
             "allow_remote_debugging": self.allow_remote_debugging,
             "disallow_remote_debugging": self.disallow_remote_debugging,
-            "uninstall_decky": self.uninstall_decky,
             "set_setting": self.set_setting,
-            "get_setting": self.get_setting
+            "get_setting": self.get_setting,
+            "uninstall_decky": self.uninstall_decky
         }
 
         if context:

@@ -1,4 +1,13 @@
-import { ModalRoot, QuickAccessTab, Router, SteamSpinner, showModal, sleep, staticClasses } from 'decky-frontend-lib';
+import {
+  ModalRoot,
+  QuickAccessTab,
+  Router,
+  ServerResponse,
+  SteamSpinner,
+  showModal,
+  sleep,
+  staticClasses,
+} from 'decky-frontend-lib';
 import { Suspense, lazy } from 'react';
 import { FaPlug } from 'react-icons/fa';
 
@@ -276,7 +285,7 @@ class PluginLoader extends Logger {
     );
   }
 
-  async callServerMethod(methodName: string, args = {}): Promise<{ res: string; success: boolean }> {
+  async callServerMethod(methodName: string, args = {}): Promise<ServerResponse> {
     const response = await fetch(`http://127.0.0.1:1337/methods/${methodName}`, {
       method: 'POST',
       credentials: 'include',

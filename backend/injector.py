@@ -69,7 +69,7 @@ async def get_tabs():
             except ClientConnectorError:
                 logger.debug("ClientConnectorError excepted.")
                 logger.debug("Steam isn't available yet. Wait for a moment...")
-                logger.debug(format_exc())
+                logger.error(format_exc())
                 await sleep(5)
             else:
                 break

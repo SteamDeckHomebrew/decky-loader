@@ -52,10 +52,8 @@ class PluginLoader extends Logger {
       ),
       icon: (
         <DeckyStateContextProvider deckyState={this.deckyState}>
-          <>
-            <FaPlug />
-            <TabIcon />
-          </>
+          <FaPlug />
+          <TabIcon />
         </DeckyStateContextProvider>
       ),
     });
@@ -105,6 +103,7 @@ class PluginLoader extends Logger {
 
   public async notifyUpdates() {
     const versionInfo = (await callUpdaterMethod('get_version')).result as VerInfo;
+    this.deckyState.setVersionInfo(versionInfo);
     if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
       this.toaster.toast({
         title: 'Decky',

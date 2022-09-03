@@ -1,24 +1,27 @@
 # Full imports
-import aiohttp_cors
-
-# Partial imports
-from aiohttp import ClientSession
-from aiohttp.web import Application, run_app, static, get, Response
-from aiohttp_jinja2 import setup as jinja_setup
 from asyncio import get_event_loop, sleep
 from json import dumps, loads
 from logging import DEBUG, INFO, basicConfig, getLogger
 from os import getenv, path
 from subprocess import call
 
+import aiohttp_cors
+# Partial imports
+from aiohttp import ClientSession
+from aiohttp.web import Application, Response, get, run_app, static
+from aiohttp_jinja2 import setup as jinja_setup
+
 # local modules
 from browser import PluginBrowser
-from helpers import csrf_middleware, get_csrf_token, get_user, get_user_group, set_user, set_user_group, stop_systemd_unit, REMOTE_DEBUGGER_UNIT
+from helpers import (REMOTE_DEBUGGER_UNIT, csrf_middleware, get_csrf_token,
+                     get_home_path, get_homebrew_path, get_user,
+                     get_user_group, set_user, set_user_group,
+                     stop_systemd_unit)
 from injector import inject_to_tab, tab_has_global_var
 from loader import Loader
+from settings import SettingsManager
 from updater import Updater
 from utilities import Utilities
-from settings import SettingsManager
 
 # Ensure USER and GROUP vars are set first.
 # TODO: This isn't the best way to do this but supports the current

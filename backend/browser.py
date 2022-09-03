@@ -62,13 +62,18 @@ class PluginBrowser:
         try:
             logger.info("uninstalling " + name)
             logger.info(" at dir " + self.find_plugin_folder(name))
+            logger.debug("unloading %s" % str(name))
             await tab.evaluate_js(f"DeckyPluginLoader.unloadPlugin('{name}')")
             if self.plugins[name]:
                 self.plugins[name].stop()
-                self.plugins.remove(name)
+                del self.plugins[name]
+            logger.debug("removing files %s" % str(name))
             rmtree(self.find_plugin_folder(name))
         except FileNotFoundError:
             logger.warning(f"Plugin {name} not installed, skipping uninstallation")
+        except Exception as e:
+            logger.error(f"Plugin {name} in {self.find_plugin_folder(name)} was not uninstalled")
+            logger.error(f"Error at %s", exc_info=e)
 
     async def _install(self, artifact, name, version, hash):
         try:

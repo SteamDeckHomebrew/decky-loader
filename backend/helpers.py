@@ -1,9 +1,8 @@
 import re
 import ssl
 import subprocess
-
-import uuid
 import logging
+import uuid
 from subprocess import check_output
 from time import sleep
 

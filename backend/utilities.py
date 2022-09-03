@@ -1,4 +1,5 @@
 import logging
+import os
 import uuid
 import shutil
 import contextlib
@@ -172,6 +173,11 @@ class Utilities:
             user_dir / ".config" / "systemd" / "user" / helpers.PLUGIN_LOADER_UNIT,
             Path("/etc") / "systemd" / "system" / helpers.PLUGIN_LOADER_UNIT
         ]
+        dirs_to_delete = [
+            "/tmp/plugin_loader",
+            homebrew_dir / "services",
+            homebrew_dir / "settings"
+        ]
 
         # https://stackoverflow.com/a/27045091
         with contextlib.suppress(FileNotFoundError):
@@ -181,15 +187,21 @@ class Utilities:
                 path.unlink(missing_ok=True)
                 logging.debug(f"Removing path: {path}")
 
-            # Remove temporary folder if it exists from the install process
-            shutil.rmtree("/tmp/plugin_loader")
+            for directory in dirs_to_delete:
+                shutil.rmtree(directory)
 
-            if keepPlugins:
-                logging.debug(f"Removing {homebrew_dir / 'services'} (keep plugins)")
-                shutil.rmtree(homebrew_dir / "services")
-            else:
+            if not keepPlugins:
                 logging.debug(f"Removing {homebrew_dir} (no keep plugins)")
-                shutil.rmtree(homebrew_dir)
+                shutil.rmtree(homebrew_dir / "plugins")
+                # delete directory if empty
+                try:
+                    homebrew_dir.rmdir()
+                except OSError as e:
+                    # errno 39 is the "Directory not empty" error,
+                    # so if it's any other error we raise it
+                    if e.errno != 39:
+                        raise e
+
 
     async def allow_remote_debugging(self):
         await helpers.start_systemd_unit(helpers.REMOTE_DEBUGGER_UNIT)

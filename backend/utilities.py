@@ -164,7 +164,7 @@ class Utilities:
     async def set_setting(self, key, value):
         return self.context.settings.setSetting(key, value)
 
-    async def uninstall_decky(keepPlugins=True) -> None:
+    async def uninstall_decky(self, keepPlugins=True) -> None:
         username: str = helpers.get_user()
         user_dir = Path(f"~{username}").expanduser()
         homebrew_dir = user_dir / "homebrew"

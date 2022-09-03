@@ -273,13 +273,13 @@ class PluginLoader extends Logger {
       res.success ? (
         <ModalRoot onOK={() => location.reload()} onCancel={() => {}}>
           {title}
-          The uninstall was successful. We'll now reload to make sure everything has been removed correctly. Click
+          The uninstall was successful. We'll now reload to make sure everything has been removed correctly. Click{' '}
           <b>Confirm</b> to proceed.
         </ModalRoot>
       ) : (
         <ModalRoot onOK={() => this._uninstallDecky(keepPlugins)} onCancel={() => {}}>
           {title}
-          The uninstallation failed. Click <b>Confirm</b> to retry.
+          The uninstall failed. Click <b>Confirm</b> to retry.
         </ModalRoot>
       ),
     );

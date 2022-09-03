@@ -181,7 +181,7 @@ class Utilities:
         # https://stackoverflow.com/a/27045091
         with contextlib.suppress(FileNotFoundError):
             # Disable and remove services
-            helpers.disable_systemd_unit(helpers.PLUGIN_LOADER_UNIT)
+            await helpers.disable_systemd_unit(helpers.PLUGIN_LOADER_UNIT)
             for path in possible_unit_paths:
                 path.unlink(missing_ok=True)
                 logging.debug(f"Removing path: {path}")

@@ -1,5 +1,4 @@
 import logging
-import os
 import uuid
 import shutil
 import contextlib

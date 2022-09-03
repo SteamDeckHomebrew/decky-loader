@@ -285,7 +285,7 @@ class PluginLoader extends Logger {
     );
   }
 
-  async callServerMethod(methodName: string, args = {}): Promise<ServerResponse> {
+  async callServerMethod(methodName: string, args = {}): Promise<ServerResponse<any>> {
     const response = await fetch(`http://127.0.0.1:1337/methods/${methodName}`, {
       method: 'POST',
       credentials: 'include',

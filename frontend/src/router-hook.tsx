@@ -1,4 +1,4 @@
-import { afterPatch, findModuleChild, unpatch } from 'decky-frontend-lib';
+import { Patch, afterPatch, findModuleChild } from 'decky-frontend-lib';
 import { ReactElement, ReactNode, cloneElement, createElement, memo } from 'react';
 import type { Route } from 'react-router';
 
@@ -22,6 +22,8 @@ class RouterHook extends Logger {
   private memoizedRouter: any;
   private gamepadWrapper: any;
   private routerState: DeckyRouterState = new DeckyRouterState();
+  private wrapperPatch: Patch;
+  private routerPatch?: Patch;
 
   constructor() {
     super('RouterHook');
@@ -87,7 +89,7 @@ class RouterHook extends Logger {
       return children;
     };
 
-    afterPatch(this.gamepadWrapper, 'render', (_: any, ret: any) => {
+    this.wrapperPatch = afterPatch(this.gamepadWrapper, 'render', (_: any, ret: any) => {
       if (ret?.props?.children?.props?.children?.length == 5) {
         if (
           ret.props.children.props.children[2]?.props?.children?.[0]?.type?.type
@@ -96,7 +98,7 @@ class RouterHook extends Logger {
         ) {
           if (!this.router) {
             this.router = ret.props.children.props.children[2]?.props?.children?.[0]?.type;
-            afterPatch(this.router, 'type', (_: any, ret: any) => {
+            this.routerPatch = afterPatch(this.router, 'type', (_: any, ret: any) => {
               if (!Route)
                 Route = ret.props.children[0].props.children.find((x: any) => x.props.path == '/createaccount').type;
               const returnVal = (
@@ -133,8 +135,8 @@ class RouterHook extends Logger {
   }
 
   deinit() {
-    unpatch(this.gamepadWrapper, 'render');
-    this.router && unpatch(this.router, 'type');
+    this.wrapperPatch.unpatch();
+    this.routerPatch?.unpatch();
   }
 }
 

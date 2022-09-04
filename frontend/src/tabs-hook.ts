@@ -1,4 +1,4 @@
-import { QuickAccessTab, afterPatch, sleep, unpatch } from 'decky-frontend-lib';
+import { Patch, QuickAccessTab, afterPatch, sleep } from 'decky-frontend-lib';
 import { memo } from 'react';
 
 import Logger from './logger';
@@ -35,6 +35,8 @@ class TabsHook extends Logger {
   private qAPTree: any;
   private rendererTree: any;
 
+  private cNodePatch?: Patch;
+
   constructor() {
     super('TabsHook');
 
@@ -60,7 +62,7 @@ class TabsHook extends Logger {
       }
       let newQA: any;
       let newQATabRenderer: any;
-      afterPatch(scrollRoot.stateNode, 'render', (_: any, ret: any) => {
+      this.cNodePatch = afterPatch(scrollRoot.stateNode, 'render', (_: any, ret: any) => {
         if (!this.quickAccess && ret.props.children.props.children[4]) {
           this.quickAccess = ret?.props?.children?.props?.children[4].type;
           newQA = (...args: any) => {
@@ -103,7 +105,7 @@ class TabsHook extends Logger {
   }
 
   deinit() {
-    if (this.cNode) unpatch(this.cNode.stateNode, 'render');
+    this.cNodePatch?.unpatch();
     if (this.qAPTree) this.qAPTree.type = this.quickAccess;
     if (this.rendererTree) this.rendererTree.type = this.tabRenderer;
     if (this.cNode) this.cNode.stateNode.forceUpdate();

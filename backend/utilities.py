@@ -178,10 +178,10 @@ class Utilities:
             homebrew_dir / "settings"
         ]
 
+        helpers.disable_systemd_unit(helpers.PLUGIN_LOADER_UNIT)
+
         # https://stackoverflow.com/a/27045091
         with contextlib.suppress(FileNotFoundError):
-            # Disable and remove services
-            await helpers.disable_systemd_unit(helpers.PLUGIN_LOADER_UNIT)
             for path in possible_unit_paths:
                 path.unlink(missing_ok=True)
                 logging.debug(f"Removing path: {path}")
@@ -201,11 +201,13 @@ class Utilities:
                     if e.errno != 39:
                         raise e
 
+            helpers.stop_systemd_unit(helpers.PLUGIN_LOADER_UNIT)
+
 
     async def allow_remote_debugging(self):
-        await helpers.start_systemd_unit(helpers.REMOTE_DEBUGGER_UNIT)
+        helpers.start_systemd_unit(helpers.REMOTE_DEBUGGER_UNIT)
         return True
 
     async def disallow_remote_debugging(self):
-        await helpers.stop_systemd_unit(helpers.REMOTE_DEBUGGER_UNIT)
+        helpers.stop_systemd_unit(helpers.REMOTE_DEBUGGER_UNIT)
         return True

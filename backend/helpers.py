@@ -85,25 +85,21 @@ def get_homebrew_path(home_path = None) -> str:
         return str(home_path+"/homebrew")
     # return str(home_path+"/homebrew")
 
-async def is_systemd_unit_active(unit_name: str) -> bool:
+def is_systemd_unit_active(unit_name: str) -> bool:
     res = subprocess.run(["systemctl", "is-active", unit_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     return res.returncode == 0
 
-async def disable_systemd_unit(unit_name: str, now: bool = False) -> subprocess.CompletedProcess:
-    cmd = ["systemctl", "disable", "--now", unit_name]
-    if not now:
-        cmd.remove("--now")
-
-    logging.debug(f"Removing systemd unit (term: {now})")
+def disable_systemd_unit(unit_name: str) -> subprocess.CompletedProcess:
+    cmd = ["systemctl", "disable", unit_name]
 
     return subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-async def stop_systemd_unit(unit_name: str) -> subprocess.CompletedProcess:
+def stop_systemd_unit(unit_name: str) -> subprocess.CompletedProcess:
     cmd = ["systemctl", "stop", unit_name]
 
     return subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-async def start_systemd_unit(unit_name: str) -> subprocess.CompletedProcess:
+def start_systemd_unit(unit_name: str) -> subprocess.CompletedProcess:
     cmd = ["systemctl", "start", unit_name]
 
     return subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)

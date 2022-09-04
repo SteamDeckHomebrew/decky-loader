@@ -9,7 +9,7 @@ specifiers:
   '@types/react': 16.14.0
   '@types/react-router': 5.1.18
   '@types/webpack': ^5.28.0
-  decky-frontend-lib: ^1.8.2
+  decky-frontend-lib: ^2.0.0
   husky: ^8.0.1
   import-sort-style-module: ^6.0.0
   inquirer: ^8.2.4
@@ -27,7 +27,7 @@ specifiers:
   typescript: ^4.7.4
 
 dependencies:
-  decky-frontend-lib: 1.8.2
+  decky-frontend-lib: 2.0.0
   react-icons: 4.4.0_react@16.14.0
   react-markdown: 8.0.3_vshvapmxg47tngu7tvrsqpq55u
   remark-gfm: 3.0.1
@@ -875,8 +875,8 @@ packages:
     dependencies:
       ms: 2.1.2
 
-  /decky-frontend-lib/1.8.2:
-    resolution: {integrity: sha512-SwGoUBpKd8OM3kovItW+oCpevDiDXFu0UaUh1vyD4BYG0s+4uQBdeevWLhyJHk0402pAUDrOL8022jpana5dnA==}
+  /decky-frontend-lib/2.0.0:
+    resolution: {integrity: sha512-H7+JpKHlClECVpo+MCEwej7R9wDWk9M2uMSyTvuhTfLZe3RThsxWCiqY640Cjh/zIW2A7GyVRd4SjLtn6Isdeg==}
     dependencies:
       minimist: 1.2.6
     dev: false

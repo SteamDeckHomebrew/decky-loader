@@ -136,9 +136,14 @@ jobs:
         echo "VERS: $VERSION"
         if [[ "$VERSION" =~ "-pre" ]]; then
           OUT=$(semver bump release "$VERSION")
+          if [[ "${{github.event.inputs.bump}}" != "none" ]]; then
+            OUT=$(semver bump ${{github.event.inputs.bump}} "$OUT")
+          fi
         elif [[ ! "$VERSION" =~ "-pre" ]]; then
           if [[ "${{github.event.inputs.bump}}" != "none" ]]; then
             OUT=$(semver bump ${{github.event.inputs.bump}} "$VERSION")
+          else
+            OUT=$(semver bump patch "$VERSION")
           fi
         fi
         echo "OUT: v$OUT"
@@ -195,12 +200,10 @@ jobs:
         export VERSION=${{ steps.latest_release.outputs.release }}
         echo "VERS: $VERSION"
         if [[ ! "$VERSION" =~ "-pre" ]]; then
-          OUT=$(semver bump minor "$VERSION")
           OUT="$OUT-pre"
-        elif [[ "$VERSION" =~ "-pre" ]]; then
-          if [[ "${{github.event.inputs.bump}}" != "none" ]]; then
-            OUT=$(semver bump ${{github.event.inputs.bump}} "$OUT")
-          fi
+        fi
+        if [[ "${{github.event.inputs.bump}}" != "none" ]]; then
+            OUT=$(semver bump ${{github.event.inputs.bump}} "$VERSION")
         fi
         OUT=$(semver bump prerel "$OUT")
         echo "OUT: v$OUT"

@@ -210,14 +210,18 @@ jobs:
         if [[ "${{github.event.inputs.bump}}" != "none" ]]; then
             OUT=$(semver bump release "$VERSION")
             printf "OUT: ${OUT}\n"
-            OUT=$(semver bump ${{github.event.inputs.bump}} "$VERSION")
+            OUT=$(semver bump ${{github.event.inputs.bump}} "$OUT")
             printf "OUT: ${OUT}\n"
         fi
         if [[ ! "$OUT" =~ "-pre" ]]; then
-          OUT="$OUT-pre"
+          OUT="${OUT}-pre"
           printf "OUT: ${OUT}\n"
         fi
-        OUT=$(semver bump prerel "$OUT")
+        if [[ "$OUT" == "" ]]; then
+          OUT=$(semver bump prerel "$VERSION")
+        else
+          OUT=$(semver bump prerel "$OUT")
+        fi
         echo "OUT: v$OUT"
         echo ::set-output name=tag_name::v$OUT
 

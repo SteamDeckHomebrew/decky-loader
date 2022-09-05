@@ -15,6 +15,15 @@ on:
           - none
           - prerelease
           - release
+      bump:
+        type: choice
+        description: Semver to bump
+        default: 'none'
+        options:
+          - none
+          - patch
+          - minor
+          - major
 
 permissions:
   contents: write
@@ -66,29 +75,90 @@ jobs:
       with:
         path: ./dist/PluginLoader
 
+  # release:
+  #   name: Release the package
+  #   if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release == 'release' }}
+  #   needs: build
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - name: Checkout 🧰
+  #     uses: actions/checkout@v3
+
+  #   - name: Fetch package artifact ⬇️
+  #     uses: actions/download-artifact@v3
+  #     with:
+  #       name: PluginLoader
+  #       path: dist
+
+  #   - name: Release 📦
+  #     uses: softprops/action-gh-release@v1
+  #     if: ${{ !env.ACT }}
+  #     with:
+  #       name: Release ${{ steps.tag_version.outputs.new_tag }}
+  #       tag_name: ${{ steps.tag_version.outputs.new_tag }}
+  #       files: ./dist/PluginLoader
+  #       generate_release_notes: true
+
   release:
-    name: Release the package
+    name: Release stable version of the package
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release == 'release' }}
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout 🧰
-      uses: actions/checkout@v3
+    - name: Install semver-tool asdf
+      uses: asdf-vm/actions/install@v1
+      with:
+        tool_versions: |
+          semver 3.3.0
 
     - name: Fetch package artifact ⬇️
       uses: actions/download-artifact@v3
+      if: ${{ !env.ACT }}
       with:
         name: PluginLoader
         path: dist
 
+    - name: Get latest release
+      uses: rez0n/actions-github-release@main
+      id: latest_release
+      env:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        # repository: "SteamDeckHomebrew/decky-loader"
+        repository: "TrainDoctor/decky-loader"
+        type: "nodraft"
+
+    - name: Prepare tag ⚙️
+      id: ready_tag
+      run: |
+        export VERSION=${{ steps.latest_release.outputs.release }}
+        echo "VERS: $VERSION"
+        if [[ "$VERSION" =~ "-pre" ]]; then
+          OUT=$(semver bump release "$VERSION")
+        elif [[ ! "$VERSION" =~ "-pre" ]]; then
+          if [[ "${{github.event.inputs.bump}}" != "none" ]]; then
+            OUT=$(semver bump ${{github.event.inputs.bump}} "$VERSION")
+          fi
+        fi
+        echo "OUT: v$OUT"
+        echo ::set-output name=tag_name::v$OUT
+
+    - name: Push tag 📤
+      uses: rickstaa/action-create-tag@v1.3.2
+      if: ${{ steps.ready_tag.outputs.tag_name && github.event_name == 'workflow_dispatch' && !env.ACT }}
+      with:
+        tag: ${{ steps.ready_tag.outputs.tag_name }}
+        message: Pre-release ${{ steps.ready_tag.outputs.tag_name }}
+
     - name: Release 📦
       uses: softprops/action-gh-release@v1
-      if: ${{ !env.ACT }}
+      if: ${{ github.event_name == 'workflow_dispatch' && !env.ACT  }}
       with:
-        name: Release ${{ steps.tag_version.outputs.new_tag }}
-        tag_name: ${{ steps.tag_version.outputs.new_tag }}
+        name: Prerelease ${{ steps.ready_tag.outputs.tag_name }}
+        tag_name: ${{ steps.ready_tag.outputs.tag_name }}
         files: ./dist/PluginLoader
+        prerelease: false
         generate_release_notes: true
 
   prerelease:
@@ -104,30 +174,36 @@ jobs:
         tool_versions: |
           semver 3.3.0
 
-    - name: Checkout 🧰
-      uses: actions/checkout@v3
-
     - name: Fetch package artifact ⬇️
       uses: actions/download-artifact@v3
+      if: ${{ !env.ACT }}
       with:
         name: PluginLoader
         path: dist
 
-    - name: Get tag 🏷️
-      id: old_tag
-      uses: rafarlopes/get-latest-pre-release-tag-action@v1
+    - name: Get latest release
+      uses: rez0n/actions-github-release@main
+      id: latest_release
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        repository: 'decky-loader'
+        token: ${{ secrets.GITHUB_TOKEN }}
+        repository: "SteamDeckHomebrew/decky-loader"
+        type: "nodraft"
 
     - name: Prepare tag ⚙️
       id: ready_tag
       run: |
-        export VERSION=${{ steps.old_tag.outputs.tag }}
+        export VERSION=${{ steps.latest_release.outputs.release }}
         echo "VERS: $VERSION"
-        OUT=$(semver bump prerel "$VERSION")
-        echo "OUT: $OUT"
+        if [[ ! "$VERSION" =~ "-pre" ]]; then
+          OUT=$(semver bump minor "$VERSION")
+          OUT="$OUT-pre"
+        elif [[ "$VERSION" =~ "-pre" ]]; then
+          if [[ "${{github.event.inputs.bump}}" != "none" ]]; then
+            OUT=$(semver bump ${{github.event.inputs.bump}} "$OUT")
+          fi
+        fi
+        OUT=$(semver bump prerel "$OUT")
+        echo "OUT: v$OUT"
         echo ::set-output name=tag_name::v$OUT
 
     - name: Push tag 📤

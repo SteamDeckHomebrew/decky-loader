@@ -1,4 +1,5 @@
 import { Patch, ToastData, afterPatch, findInReactTree, findModuleChild, sleep } from 'decky-frontend-lib';
+import { ReactNode } from 'react';
 
 import Toast from './components/Toast';
 import Logger from './logger';
@@ -43,13 +44,26 @@ class Toaster extends Logger {
     }
 
     this.node = instance.return.return;
+    let toast: any;
+    let renderedToast: ReactNode = null;
     this.node.stateNode.render = (...args: any[]) => {
       const ret = this.node.stateNode.__proto__.render.call(this.node.stateNode, ...args);
       if (ret) {
         this.instanceRetPatch = afterPatch(ret, 'type', (_: any, ret: any) => {
-          if (ret?.props?.children[1]?.children?.props?.notification?.decky) {
-            const toast = ret.props.children[1].children.props.notification;
-            ret.props.children[1].children.type = () => <Toast toast={toast} />;
+          if (ret?.props?.children[1]?.children?.props) {
+            const currentToast = ret.props.children[1].children.props.notification;
+            if (currentToast?.decky) {
+              if (currentToast == toast) {
+                ret.props.children[1].children = renderedToast;
+              } else {
+                toast = currentToast;
+                renderedToast = <Toast toast={toast} />;
+                ret.props.children[1].children = renderedToast;
+              }
+            } else {
+              toast = null;
+              renderedToast = null;
+            }
           }
           return ret;
         });

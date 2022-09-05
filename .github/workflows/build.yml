@@ -34,6 +34,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Print input
+      run : |
+        echo "release: ${{ github.event.inputs.release }}\n"
+        echo "bump: ${{ github.event.inputs.bump }}\n"
+
     - name: Checkout 🧰
       uses: actions/checkout@v3
 
@@ -209,7 +214,7 @@ jobs:
         export VERSION=${{ steps.latest_release.outputs.release }}
         echo "VERS: $VERSION"
         OUT="notsemver"
-        if [[ "${{github.event.inputs.bump}}" != "none" ]]; then
+        if [[ ! ${{ github.event.inputs.bump }} == "none" ]]; then
             printf "bumping by release then by selected\n"
             OUT=$(semver bump release "$VERSION")
             printf "OUT: ${OUT}\n"

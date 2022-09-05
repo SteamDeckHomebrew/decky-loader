@@ -1,5 +1,5 @@
-import { ToastData, findModule, joinClassNames } from 'decky-frontend-lib';
-import { FunctionComponent } from 'react';
+import { ToastData, findModule, findModuleChild, joinClassNames } from 'decky-frontend-lib';
+import { FunctionComponent, useEffect } from 'react';
 
 interface ToastProps {
   toast: {
@@ -28,7 +28,21 @@ const templateClasses = findModule((mod) => {
   return false;
 });
 
+const useComposition = findModuleChild((m: any) => {
+  if (typeof m !== 'object') return false;
+  for (let prop in m) {
+    if (m[prop]?.toString()?.includes('.Get().ChangeMinimumCompositionStateRequest')) return m[prop];
+  }
+  return false;
+});
+
 const Toast: FunctionComponent<ToastProps> = ({ toast }) => {
+  const composition = useComposition(2); // 2: overlay
+  useEffect(() => {
+    return () => {
+      composition.releaseComposition();
+    };
+  }, []);
   return (
     <div
       style={{ '--toast-duration': `${toast.nToastDurationMS}ms` } as React.CSSProperties}

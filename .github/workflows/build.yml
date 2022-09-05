@@ -54,9 +54,16 @@ jobs:
       run: pyinstaller --noconfirm --onefile --name "PluginLoader" --add-data ./backend/static:/static --add-data ./backend/legacy:/legacy ./backend/*.py
         
     - name: Upload package artifact ⬆️
+      if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v3
       with:
         name: PluginLoader
+        path: ./dist/PluginLoader
+
+    - name: Download package artifact locally
+      if: ${{ env.ACT }}
+      uses: actions/upload-artifact@v3
+      with:
         path: ./dist/PluginLoader
 
   release:
@@ -77,6 +84,7 @@ jobs:
 
     - name: Release 📦
       uses: softprops/action-gh-release@v1
+      if: ${{ !env.ACT }}
       with:
         name: Release ${{ steps.tag_version.outputs.new_tag }}
         tag_name: ${{ steps.tag_version.outputs.new_tag }}
@@ -90,6 +98,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Install semver-tool asdf
+      uses: asdf-vm/actions/install@v1
+      with:
+        tool_versions: |
+          semver 3.3.0
+
     - name: Checkout 🧰
       uses: actions/checkout@v3
 
@@ -98,13 +112,7 @@ jobs:
       with:
         name: PluginLoader
         path: dist
-    
-    - name: Install semver-tool asdf
-      uses: asdf-vm/actions/install@v1
-      with:
-        tool_versions: |
-          semver 3.3.0
-    
+
     - name: Get tag 🏷️
       id: old_tag
       uses: rafarlopes/get-latest-pre-release-tag-action@v1
@@ -124,89 +132,17 @@ jobs:
 
     - name: Push tag 📤
       uses: rickstaa/action-create-tag@v1.3.2
-      if: ${{ steps.ready_tag.outputs.tag_name && github.event_name == 'workflow_dispatch' }}
+      if: ${{ steps.ready_tag.outputs.tag_name && github.event_name == 'workflow_dispatch' && !env.ACT }}
       with:
         tag: ${{ steps.ready_tag.outputs.tag_name }}
         message: Pre-release ${{ steps.ready_tag.outputs.tag_name }}
 
     - name: Release 📦
       uses: softprops/action-gh-release@v1
-      if: ${{ github.event_name == 'workflow_dispatch' }}
+      if: ${{ github.event_name == 'workflow_dispatch' && !env.ACT  }}
       with:
         name: Prerelease ${{ steps.ready_tag.outputs.tag_name }}
         tag_name: ${{ steps.ready_tag.outputs.tag_name }}
         files: ./dist/PluginLoader
         prerelease: true
         generate_release_notes: true
-
-  # nightly:
-  #   name: Release the nightly version of the package
-  #   if: ${{ github.event_name == 'schedule' }}
-  #   needs: build
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #   - name: Checkout 🧰
-  #     uses: actions/checkout@v3
-
-  #   - name: Fetch package artifact ⬇️
-  #     uses: actions/download-artifact@v3
-  #     with:
-  #       name: PluginLoader
-  #       path: dist
-    
-  #   - name: Get tag 🏷️
-  #     id: old_tag
-  #     uses: rafarlopes/get-latest-pre-release-tag-action@v1
-  #     env:
-  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #     with:
-  #       repository: 'decky-loader'
-    
-  #   - name: Prepare tag ⚙️
-  #     id: ready_tag
-  #     run: |
-  #       export VERSION=${{ steps.old_tag.outputs.tag }}
-  #       export COMMIT=$(git log -1 --pretty=format:%h)
-  #       echo ::set-output name=tag_name::$(sed -r 's/(-.*)?-pre$//' <<< $VERSION)-$COMMIT-nightly
-
-  #   - name: Push tag 📤
-  #     uses: rickstaa/action-create-tag@v1.3.2
-  #     if: ${{ steps.ready_tag.outputs.tag_name && github.event_name == 'workflow_dispatch' }}
-  #     with:
-  #       tag: ${{ steps.ready_tag.outputs.tag_name }}
-  #       message: Nightly ${{ steps.ready_tag.outputs.tag_name }}
-
-  #   - name: Release 📦
-  #     uses: softprops/action-gh-release@v1
-  #     if: ${{ github.event_name == 'workflow_dispatch' }}
-  #     with:
-  #       name: Prerelease ${{ steps.ready_tag.outputs.tag_name }}
-  #       tag_name: ${{ steps.ready_tag.outputs.tag_name }}
-  #       files: ./dist/PluginLoader
-  #       prerelease: true
-  #       generate_release_notes: true
-
-    # - name: Bump prerelease ⏫
-    #   id: bump
-    #   if: ${{ github.event_name == 'schedule' }}
-    #   run: |
-    #     git_hash=$(git rev-parse --short "$GITHUB_SHA")
-    #     echo ::set-output new_tag="nightly-$git_hash"
-
-    # - name: Push tag 📤
-    #   uses: rickstaa/action-create-tag@v1.3.2
-    #   if: ${{ github.event_name == 'schedule' }}
-    #   with:
-    #     tag: ${{ steps.bump.outputs.new_tag }}
-    #     message: Nightly ${{ steps.bump.outputs.new_tag }}
-
-    # - name: Release 📦
-    #   uses: softprops/action-gh-release@v1
-    #   if: ${{ github.event_name == 'schedule' }}
-    #   with:
-    #     name: Nightly ${{ steps.bump.outputs.new_tag }}
-    #     tag_name: ${{ steps.bump.outputs.new_tag }}
-    #     files: ./dist/PluginLoader
-    #     prerelease: true
-    #     generate_release_notes: true

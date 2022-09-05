@@ -160,3 +160,5 @@ backend/static
 
 # plugins folder for local launches
 plugins/*
+act/.directory
+act/artifacts/*

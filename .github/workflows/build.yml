@@ -134,6 +134,7 @@ jobs:
       run: |
         export VERSION=${{ steps.latest_release.outputs.release }}
         echo "VERS: $VERSION"
+        OUT="notsemver"
         if [[ "$VERSION" =~ "-pre" ]]; then
           printf "is prerelease, bumping release\n"
           OUT=$(semver bump release "$VERSION")
@@ -207,13 +208,16 @@ jobs:
       run: |
         export VERSION=${{ steps.latest_release.outputs.release }}
         echo "VERS: $VERSION"
+        OUT="notsemver"
         if [[ "${{github.event.inputs.bump}}" != "none" ]]; then
+            printf "bumping by release then by selected\n"
             OUT=$(semver bump release "$VERSION")
             printf "OUT: ${OUT}\n"
             OUT=$(semver bump ${{github.event.inputs.bump}} "$OUT")
             printf "OUT: ${OUT}\n"
         fi
         if [[ ! "$OUT" =~ "-pre" ]]; then
+          printf "appending -pre to new prerelease\n"
           OUT="${OUT}-pre"
           printf "OUT: ${OUT}\n"
         fi

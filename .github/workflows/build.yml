@@ -135,18 +135,26 @@ jobs:
         export VERSION=${{ steps.latest_release.outputs.release }}
         echo "VERS: $VERSION"
         if [[ "$VERSION" =~ "-pre" ]]; then
+          printf "is prerelease, bumping release\n"
           OUT=$(semver bump release "$VERSION")
+          printf "OUT: ${OUT}\n"
           if [[ "${{github.event.inputs.bump}}" != "none" ]]; then
             OUT=$(semver bump ${{github.event.inputs.bump}} "$OUT")
+            printf "OUT: ${OUT}\n"
           fi
         elif [[ ! "$VERSION" =~ "-pre" ]]; then
+          printf "is a release, bumping as selected\n"
           if [[ "${{github.event.inputs.bump}}" != "none" ]]; then
             OUT=$(semver bump ${{github.event.inputs.bump}} "$VERSION")
+            printf "OUT: ${OUT}\n"
           else
+            printf "none bump selected, but cannot have identical tag\n"
+            printf "bumping patch\n"
             OUT=$(semver bump patch "$VERSION")
+            printf "OUT: ${OUT}\n"
           fi
         fi
-        echo "OUT: v$OUT"
+        echo "vOUT: v$OUT"
         echo ::set-output name=tag_name::v$OUT
 
     - name: Push tag 📤
@@ -199,11 +207,15 @@ jobs:
       run: |
         export VERSION=${{ steps.latest_release.outputs.release }}
         echo "VERS: $VERSION"
-        if [[ ! "$VERSION" =~ "-pre" ]]; then
-          OUT="$OUT-pre"
-        fi
         if [[ "${{github.event.inputs.bump}}" != "none" ]]; then
+            OUT=$(semver bump release "$VERSION")
+            printf "OUT: ${OUT}\n"
             OUT=$(semver bump ${{github.event.inputs.bump}} "$VERSION")
+            printf "OUT: ${OUT}\n"
+        fi
+        if [[ ! "$OUT" =~ "-pre" ]]; then
+          OUT="$OUT-pre"
+          printf "OUT: ${OUT}\n"
         fi
         OUT=$(semver bump prerel "$OUT")
         echo "OUT: v$OUT"

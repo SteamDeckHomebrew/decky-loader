@@ -79,7 +79,6 @@ class Toaster extends Logger {
       return;
     window.NotificationStore.m_rgNotificationToasts.push(toastData);
     window.NotificationStore.DispatchNextToast();
-    window.NotificationStore.m_rgNotificationToasts.pop();
   }
 
   deinit() {

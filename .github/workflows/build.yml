@@ -147,8 +147,17 @@ jobs:
       run: |
         export VERSION=${{ steps.old_tag.outputs.tag }}
         echo "VERS: $VERSION"
-        OUT=$(semver bump prerel "$VERSION")
-        echo "OUT: $OUT"
+        OUT=""
+        if [[ ! "$VERSION" =~ "-pre" ]]; then
+          printf "is release, bumping  minor version and prerel\n"
+          OUT=$(semver bump minor "$VERSION")
+          OUT="$OUT-pre"
+          OUT=$(semver bump prerel "$OUT")
+          printf "OUT: ${OUT}\n"
+        elif [[ "$VERSION" =~ "-pre" ]]; then
+          printf "is a prerelease, bumping prerel\n"
+          OUT=$(semver bump prerel "$VERSION")
+        fi
         echo ::set-output name=tag_name::v$OUT
 
     - name: Push tag 📤

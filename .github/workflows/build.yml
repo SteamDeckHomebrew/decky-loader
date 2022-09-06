@@ -159,14 +159,14 @@ jobs:
       uses: rez0n/actions-github-release@main
       id: latest_release
       env:
-        # token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         repository: "SteamDeckHomebrew/decky-loader"
         type: "nodraft"
 
     - name: Prepare tag ⚙️
       id: ready_tag
       run: |
-        export VERSION="2.0.5"
+        export VERSION=${{ steps.latest_release.outputs.release }}
         echo "VERS: $VERSION"
         OUT=""
         if [[ ! "$VERSION" =~ "-pre" ]]; then

@@ -97,29 +97,50 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
 
-    steps:
+    steps:    
+    # - name: Configure semver plugin
+    #   run: |
+    #     asdf global semver 3.3.0
+
+    # - name: Test semver
+    #   uses: asdf-vm/actions/plugin-test@v1
+    #   with:
+    #     command: semver --version
+
+    - name: Checkout 🧰
+      uses: actions/checkout@v3
+
     - name: Install semver-tool asdf
       uses: asdf-vm/actions/install@v1
       with:
         tool_versions: |
           semver 3.3.0
 
-    - name: Checkout 🧰
-      uses: actions/checkout@v3
-
     - name: Fetch package artifact ⬇️
       uses: actions/download-artifact@v3
+      if: ${{ !env.ACT }}
       with:
         name: PluginLoader
         path: dist
 
-    - name: Get tag 🏷️
-      id: old_tag
-      uses: rafarlopes/get-latest-pre-release-tag-action@v1
+    - name: Get latest release
+      uses: rez0n/actions-github-release@main
+      id: latest_release
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        repository: 'decky-loader'
+        token: ${{ secrets.GITHUB_TOKEN }}
+        repository: "SteamDeckHomebrew/decky-loader"
+        type: "nodraft"
+
+    - name: Prepare tag ⚙️
+      id: ready_tag
+      run: |
+        export VERSION=${{ steps.latest_release.outputs.release }}
+        echo "VERS: $VERSION"
+        OUT=""
+        OUT=$(semver bump prerel "$VERSION")
+        printf "OUT: ${OUT}\n"
+        echo "vOUT: v$OUT"
+        echo ::set-output name=tag_name::v$OUT
 
     - name: Prepare tag ⚙️
       id: ready_tag

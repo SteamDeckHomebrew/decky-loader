@@ -1,6 +1,6 @@
 # Plugin Loader [![Chat](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://discord.gg/ZU74G2NJzk)
 
-![steamuserimages-a akamaihd](https://user-images.githubusercontent.com/10835354/161068262-ca723dc5-6795-417a-80f6-d8c1f9d03e93.jpg)
+![Decky](https://media.discordapp.net/attachments/966017112244125756/1012466063893610506/main.jpg)
 
 Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugin Loader, documentation + tools for plugin development and more.
 

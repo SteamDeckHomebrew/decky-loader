@@ -1,4 +1,4 @@
-import { ModalRoot, showModal, staticClasses } from 'decky-frontend-lib';
+import { ConfirmModal, showModal, staticClasses } from 'decky-frontend-lib';
 
 import { Plugin } from './plugin';
 
@@ -51,7 +51,7 @@ export async function installFromURL(url: string) {
 
 export function requestLegacyPluginInstall(plugin: LegacyStorePlugin, selectedVer: string) {
   showModal(
-    <ModalRoot
+    <ConfirmModal
       onOK={() => {
         window.DeckyPluginLoader.callServerMethod('install_plugin', {
           name: plugin.artifact,
@@ -70,7 +70,7 @@ export function requestLegacyPluginInstall(plugin: LegacyStorePlugin, selectedVe
       You are currently installing a <b>legacy</b> plugin. Legacy plugins are no longer supported and may have issues.
       Legacy plugins do not support gamepad input. To interact with a legacy plugin, you will need to use the
       touchscreen.
-    </ModalRoot>,
+    </ConfirmModal>,
   );
 }
 

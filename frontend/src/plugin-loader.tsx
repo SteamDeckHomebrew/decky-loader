@@ -1,13 +1,15 @@
-import { ModalRoot, QuickAccessTab, Router, SteamSpinner, showModal, sleep, staticClasses } from 'decky-frontend-lib';
-import { Suspense, lazy } from 'react';
+import { ConfirmModal, ModalRoot, QuickAccessTab, Router, showModal, sleep, staticClasses } from 'decky-frontend-lib';
+import { lazy } from 'react';
 import { FaPlug } from 'react-icons/fa';
 
 import { DeckyState, DeckyStateContextProvider, useDeckyState } from './components/DeckyState';
 import LegacyPlugin from './components/LegacyPlugin';
+import { deinitFilepickerPatches, initFilepickerPatches } from './components/modals/filepicker/patches';
 import PluginInstallModal from './components/modals/PluginInstallModal';
 import NotificationBadge from './components/NotificationBadge';
 import PluginView from './components/PluginView';
 import TitleView from './components/TitleView';
+import WithSuspense from './components/WithSuspense';
 import Logger from './logger';
 import { Plugin } from './plugin';
 import RouterHook from './router-hook';
@@ -15,6 +17,11 @@ import { checkForUpdates } from './store';
 import TabsHook from './tabs-hook';
 import Toaster from './toaster';
 import { VerInfo, callUpdaterMethod } from './updater';
+
+const StorePage = lazy(() => import('./components/store/Store'));
+const SettingsPage = lazy(() => import('./components/settings'));
+
+const FilePicker = lazy(() => import('./components/modals/filepicker'));
 
 declare global {
   interface Window {}
@@ -58,47 +65,22 @@ class PluginLoader extends Logger {
       ),
     });
 
-    const StorePage = lazy(() => import('./components/store/Store'));
-    const SettingsPage = lazy(() => import('./components/settings'));
-
     this.routerHook.addRoute('/decky/store', () => (
-      <Suspense
-        fallback={
-          <div
-            style={{
-              marginTop: '40px',
-              height: 'calc( 100% - 40px )',
-              overflowY: 'scroll',
-            }}
-          >
-            <SteamSpinner />
-          </div>
-        }
-      >
+      <WithSuspense>
         <StorePage />
-      </Suspense>
+      </WithSuspense>
     ));
     this.routerHook.addRoute('/decky/settings', () => {
       return (
         <DeckyStateContextProvider deckyState={this.deckyState}>
-          <Suspense
-            fallback={
-              <div
-                style={{
-                  marginTop: '40px',
-                  height: 'calc( 100% - 40px )',
-                  overflowY: 'scroll',
-                }}
-              >
-                <SteamSpinner />
-              </div>
-            }
-          >
+          <WithSuspense>
             <SettingsPage />
-          </Suspense>
+          </WithSuspense>
         </DeckyStateContextProvider>
       );
     });
+
+    initFilepickerPatches();
   }
 
   public async notifyUpdates() {
@@ -147,7 +129,7 @@ class PluginLoader extends Logger {
 
   public uninstallPlugin(name: string) {
     showModal(
-      <ModalRoot
+      <ConfirmModal
         onOK={async () => {
           await this.callServerMethod('uninstall_plugin', { name });
         }}
@@ -158,7 +140,7 @@ class PluginLoader extends Logger {
         <div className={staticClasses.Title} style={{ flexDirection: 'column' }}>
           Uninstall {name}?
         </div>
-      </ModalRoot>,
+      </ConfirmModal>,
     );
   }
 
@@ -176,6 +158,7 @@ class PluginLoader extends Logger {
   public deinit() {
     this.routerHook.removeRoute('/decky/store');
     this.routerHook.removeRoute('/decky/settings');
+    deinitFilepickerPatches();
   }
 
   public unloadPlugin(name: string) {
@@ -257,11 +240,41 @@ class PluginLoader extends Logger {
     return response.json();
   }
 
+  openFilePicker(
+    startPath: string,
+    includeFiles?: boolean,
+    regex?: RegExp,
+  ): Promise<{ path: string; realpath: string }> {
+    return new Promise((resolve, reject) => {
+      const Content = ({ closeModal }: { closeModal?: () => void }) => (
+        // Purposely outside of the FilePicker component as lazy-loaded ModalRoots don't focus correctly
+        <ModalRoot
+          onCancel={() => {
+            reject('User canceled');
+            closeModal?.();
+          }}
+        >
+          <WithSuspense>
+            <FilePicker
+              startPath={startPath}
+              includeFiles={includeFiles}
+              regex={regex}
+              onSubmit={resolve}
+              closeModal={closeModal}
+            />
+          </WithSuspense>
+        </ModalRoot>
+      );
+      showModal(<Content />);
+    });
+  }
+
   createPluginAPI(pluginName: string) {
     return {
       routerHook: this.routerHook,
       toaster: this.toaster,
       callServerMethod: this.callServerMethod,
+      openFilePicker: this.openFilePicker,
       async callPluginMethod(methodName: string, args = {}) {
         const response = await fetch(`http://127.0.0.1:1337/plugins/${pluginName}/methods/${methodName}`, {
           method: 'POST',

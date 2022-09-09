@@ -19,7 +19,7 @@ export const debug = (name: string, ...args: any[]) => {
 };
 
 export const error = (name: string, ...args: any[]) => {
-  console.log(
+  console.error(
     `%c Decky %c ${name} %c`,
     'background: #16a085; color: black;',
     'background: #FF0000;',
@@ -39,6 +39,10 @@ class Logger {
 
   debug(...args: any[]) {
     debug(this.name, ...args);
+  }
+
+  error(...args: any[]) {
+    error(this.name, ...args);
   }
 }
 

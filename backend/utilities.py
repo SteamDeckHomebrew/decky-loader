@@ -1,4 +1,5 @@
 import uuid
+import os
 from json.decoder import JSONDecodeError
 
 from aiohttp import ClientSession, web
@@ -24,7 +25,8 @@ class Utilities:
             "allow_remote_debugging": self.allow_remote_debugging,
             "disallow_remote_debugging": self.disallow_remote_debugging,
             "set_setting": self.set_setting,
-            "get_setting": self.get_setting
+            "get_setting": self.get_setting,
+            "filepicker_ls": self.filepicker_ls
         }
 
         if context:
@@ -166,3 +168,29 @@ class Utilities:
     async def disallow_remote_debugging(self):
         await helpers.stop_systemd_unit(helpers.REMOTE_DEBUGGER_UNIT)
         return True
+
+    async def filepicker_ls(self, path, include_files=True):
+        # def sorter(file): # Modification time
+        #     if os.path.isdir(os.path.join(path, file)) or os.path.isfile(os.path.join(path, file)):
+        #         return os.path.getmtime(os.path.join(path, file))
+        #     return 0
+        # file_names = sorted(os.listdir(path), key=sorter, reverse=True) # TODO provide more sort options
+        file_names = sorted(os.listdir(path)) # Alphabetical
+
+        files = []
+
+        for file in file_names:
+            full_path = os.path.join(path, file)
+            is_dir = os.path.isdir(full_path)
+
+            if is_dir or include_files:
+                files.append({
+                    "isdir": is_dir,
+                    "name": file,
+                    "realpath": os.path.realpath(full_path)
+                })
+
+        return {
+            "realpath": os.path.realpath(path),
+            "files": files
+        }

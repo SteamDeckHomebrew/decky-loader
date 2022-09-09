@@ -17,6 +17,7 @@
     "@rollup/plugin-replace": "^4.0.0",
     "@rollup/plugin-typescript": "^8.3.3",
     "@types/react": "16.14.0",
+    "@types/react-file-icon": "^1.0.1",
     "@types/react-router": "5.1.18",
     "@types/webpack": "^5.28.0",
     "husky": "^8.0.1",
@@ -27,6 +28,7 @@
     "react": "16.14.0",
     "react-dom": "16.14.0",
     "rollup": "^2.76.0",
+    "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-external-globals": "^0.6.1",
     "rollup-plugin-polyfill-node": "^0.10.2",
     "tslib": "^2.4.0",
@@ -39,7 +41,8 @@
     }
   },
   "dependencies": {
-    "decky-frontend-lib": "^2.0.0",
+    "decky-frontend-lib": "^3.0.0",
+    "react-file-icon": "^1.2.0",
     "react-icons": "^4.4.0",
     "react-markdown": "^8.0.3",
     "remark-gfm": "^3.0.1"

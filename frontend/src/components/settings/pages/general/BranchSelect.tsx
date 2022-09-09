@@ -1,8 +1,11 @@
 import { Dropdown, Field } from 'decky-frontend-lib';
 import { FunctionComponent } from 'react';
 
+import Logger from '../../../../logger';
 import { callUpdaterMethod } from '../../../../updater';
 import { useSetting } from '../../../../utils/hooks/useSetting';
+
+const logger = new Logger('BranchSelect');
 
 enum UpdateBranch {
   Stable,
@@ -28,7 +31,7 @@ const BranchSelect: FunctionComponent<{}> = () => {
         onChange={async (newVal) => {
           await setSelectedBranch(newVal.data);
           callUpdaterMethod('check_for_updates');
-          console.log('switching branches!');
+          logger.log('switching branches!');
         }}
       />
     </Field>

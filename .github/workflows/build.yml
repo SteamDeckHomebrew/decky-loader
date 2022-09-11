@@ -93,7 +93,7 @@ jobs:
       uses: rez0n/actions-github-release@main
       id: latest_release
       env:
-        # token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         repository: "SteamDeckHomebrew/decky-loader"
         type: "nodraft"
 

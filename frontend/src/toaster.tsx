@@ -15,6 +15,7 @@ class Toaster extends Logger {
   private instanceRetPatch?: Patch;
   private node: any;
   private settingsModule: any;
+  private ready: boolean = false;
 
   constructor() {
     super('Toaster');
@@ -72,9 +73,13 @@ class Toaster extends Logger {
     };
     this.node.stateNode.forceUpdate();
     this.log('Initialized');
+    this.ready = true;
   }
 
-  toast(toast: ToastData) {
+  async toast(toast: ToastData) {
+    while (!this.ready) {
+      await sleep(100);
+    }
     const settings = this.settingsModule.settings;
     let toastData = {
       nNotificationID: window.NotificationStore.m_nNextTestNotificationID++,

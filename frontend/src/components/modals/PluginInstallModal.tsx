@@ -1,4 +1,4 @@
-import { ModalRoot, QuickAccessTab, Router, Spinner, staticClasses } from 'decky-frontend-lib';
+import { ConfirmModal, QuickAccessTab, Router, Spinner, staticClasses } from 'decky-frontend-lib';
 import { FC, useState } from 'react';
 
 interface PluginInstallModalProps {
@@ -14,7 +14,7 @@ interface PluginInstallModalProps {
 const PluginInstallModal: FC<PluginInstallModalProps> = ({ artifact, version, hash, onOK, onCancel, closeModal }) => {
   const [loading, setLoading] = useState<boolean>(false);
   return (
-    <ModalRoot
+    <ConfirmModal
       bOKDisabled={loading}
       closeModal={closeModal}
       onOK={async () => {
@@ -34,7 +34,7 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({ artifact, version, ha
           {!loading && '?'}
         </div>
       </div>
-    </ModalRoot>
+    </ConfirmModal>
   );
 };
 

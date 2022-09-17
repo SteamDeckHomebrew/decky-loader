@@ -20,7 +20,7 @@ class Updater:
         self.settings = self.context.settings
         # Exposes updater methods to frontend
         self.updater_methods = {
-            "get_branch": self.get_branch,
+            "get_branch": self._get_branch,
             "get_version": self.get_version,
             "do_update": self.do_update,
             "do_restart": self.do_restart,
@@ -62,10 +62,13 @@ class Updater:
             res["result"] = str(e)
             res["success"] = False
         return web.json_response(res)
-
-    async def get_branch(self, manager: SettingsManager):
+    
+    def get_branch(self, manager: SettingsManager):
         logger.debug("current branch: %i" % manager.getSetting("branch", -1))
         return manager.getSetting("branch", -1)
+
+    async def _get_branch(self, manager: SettingsManager):
+        return self.get_branch(manager)
 
     async def get_version(self):
         if self.localVer:
@@ -80,7 +83,7 @@ class Updater:
 
     async def check_for_updates(self):
         logger.debug("checking for updates")
-        selectedBranch = await self.get_branch(self.context.settings)
+        selectedBranch = self.get_branch(self.context.settings)
         async with ClientSession() as web:
             async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases", ssl=helpers.get_ssl_context()) as res:
                 remoteVersions = await res.json()

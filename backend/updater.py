@@ -64,8 +64,8 @@ class Updater:
         return web.json_response(res)
 
     def get_branch(self, manager: SettingsManager):
-        logger.debug("current branch: %i" % manager.getSetting("branch", -1))
-        return manager.getSetting("branch", -1)
+        logger.debug("current branch: %i" % manager.getSetting("branch", 0))
+        return manager.getSetting("branch", 0)
 
     async def _get_branch(self, manager: SettingsManager):
         return self.get_branch(manager)

@@ -62,7 +62,7 @@ class Updater:
             res["result"] = str(e)
             res["success"] = False
         return web.json_response(res)
-    
+
     def get_branch(self, manager: SettingsManager):
         logger.debug("current branch: %i" % manager.getSetting("branch", -1))
         return manager.getSetting("branch", -1)

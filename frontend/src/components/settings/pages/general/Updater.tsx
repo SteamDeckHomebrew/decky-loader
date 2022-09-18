@@ -1,4 +1,13 @@
-import { Carousel, DialogButton, Field, Focusable, ProgressBarWithInfo, Spinner, showModal } from 'decky-frontend-lib';
+import {
+  Carousel,
+  DialogButton,
+  Field,
+  FocusRing,
+  Focusable,
+  ProgressBarWithInfo,
+  Spinner,
+  showModal,
+} from 'decky-frontend-lib';
 import { useCallback } from 'react';
 import { Suspense, lazy } from 'react';
 import { useEffect, useState } from 'react';
@@ -14,39 +23,41 @@ const MarkdownRenderer = lazy(() => import('../../../Markdown'));
 function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | null; closeModal?: () => {} }) {
   return (
     <Focusable onCancelButton={closeModal}>
-      <Carousel
-        fnItemRenderer={(id: number) => (
-          <Focusable
-            style={{
-              marginTop: '40px',
-              height: 'calc( 100% - 40px )',
-              overflowY: 'scroll',
-              display: 'flex',
-              justifyContent: 'center',
-              margin: '40px',
-            }}
-          >
-            <div>
-              <h1>{versionInfo?.all?.[id]?.name}</h1>
-              {versionInfo?.all?.[id]?.body ? (
-                <WithSuspense>
-                  <MarkdownRenderer onDismiss={closeModal}>{versionInfo.all[id].body}</MarkdownRenderer>
-                </WithSuspense>
-              ) : (
-                'no patch notes for this version'
-              )}
-            </div>
-          </Focusable>
-        )}
-        fnGetId={(id) => id}
-        nNumItems={versionInfo?.all?.length}
-        nHeight={window.innerHeight - 40}
-        nItemHeight={window.innerHeight - 40}
-        nItemMarginX={0}
-        initialColumn={0}
-        autoFocus={true}
-        fnGetColumnWidth={() => window.innerWidth}
-      />
+      <FocusRing>
+        <Carousel
+          fnItemRenderer={(id: number) => (
+            <Focusable
+              style={{
+                marginTop: '40px',
+                height: 'calc( 100% - 40px )',
+                overflowY: 'scroll',
+                display: 'flex',
+                justifyContent: 'center',
+                margin: '40px',
+              }}
+            >
+              <div>
+                <h1>{versionInfo?.all?.[id]?.name}</h1>
+                {versionInfo?.all?.[id]?.body ? (
+                  <WithSuspense>
+                    <MarkdownRenderer onDismiss={closeModal}>{versionInfo.all[id].body}</MarkdownRenderer>
+                  </WithSuspense>
+                ) : (
+                  'no patch notes for this version'
+                )}
+              </div>
+            </Focusable>
+          )}
+          fnGetId={(id) => id}
+          nNumItems={versionInfo?.all?.length}
+          nHeight={window.innerHeight - 40}
+          nItemHeight={window.innerHeight - 40}
+          nItemMarginX={0}
+          initialColumn={0}
+          autoFocus={true}
+          fnGetColumnWidth={() => window.innerWidth}
+        />
+      </FocusRing>
     </Focusable>
   );
 }
@@ -123,7 +134,7 @@ export default function UpdaterSettings() {
         ) : (
           <ProgressBarWithInfo
             layout="inline"
-            bottomSeparator={false}
+            bottomSeparator="none"
             nProgress={updateProgress}
             indeterminate={reloading}
             sOperationText={reloading ? 'Reloading' : 'Updating'}

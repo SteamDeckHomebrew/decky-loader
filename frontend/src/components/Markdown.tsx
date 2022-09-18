@@ -15,7 +15,6 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
         components={{
           div: (nodeProps) => <Focusable {...nodeProps.node.properties}>{nodeProps.children}</Focusable>,
           a: (nodeProps) => {
-            console.log(nodeProps.node, nodeProps);
             const aRef = useRef<HTMLAnchorElement>(null);
             return (
               // TODO fix focus ring

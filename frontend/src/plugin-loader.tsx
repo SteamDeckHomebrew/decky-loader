@@ -43,7 +43,7 @@ class PluginLoader extends Logger {
     super(PluginLoader.name);
     this.log('Initialized');
 
-    const TabIcon = () => {
+    const TabBadge = () => {
       const { updates, hasLoaderUpdate } = useDeckyState();
       return <NotificationBadge show={(updates && updates.size > 0) || hasLoaderUpdate} />;
     };
@@ -60,7 +60,7 @@ class PluginLoader extends Logger {
       icon: (
         <DeckyStateContextProvider deckyState={this.deckyState}>
           <FaPlug />
-          <TabIcon />
+          <TabBadge />
         </DeckyStateContextProvider>
       ),
     });
@@ -216,7 +216,8 @@ class PluginLoader extends Logger {
       },
     });
     if (res.ok) {
-      let plugin = await eval(await res.text())(this.createPluginAPI(name));
+      let plugin_export = await eval(await res.text());
+      let plugin = plugin_export(this.createPluginAPI(name));
       this.plugins.push({
         ...plugin,
         name: name,

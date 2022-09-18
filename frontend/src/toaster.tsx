@@ -26,13 +26,6 @@ class Toaster extends Logger {
   }
 
   async init() {
-    this.settingsModule = findModuleChild((m) => {
-      if (typeof m !== 'object') return undefined;
-      for (let prop in m) {
-        if (typeof m[prop]?.settings?.bDisableToastsInGame !== 'undefined') return m[prop];
-      }
-    });
-
     let instance: any;
     while (true) {
       instance = findInReactTree(
@@ -72,6 +65,12 @@ class Toaster extends Logger {
       return ret;
     };
     this.node.stateNode.forceUpdate();
+    this.settingsModule = findModuleChild((m) => {
+      if (typeof m !== 'object') return undefined;
+      for (let prop in m) {
+        if (typeof m[prop]?.settings?.bDisableToastsInGame !== 'undefined') return m[prop];
+      }
+    });
     this.log('Initialized');
     this.ready = true;
   }

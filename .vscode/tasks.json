@@ -89,17 +89,6 @@
             "command": "rsync -azp --delete --rsh='ssh -p ${config:deckport} ${config:deckkey}' --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='requirements.txt' --exclude='backend/__pycache__/' --exclude='.gitignore' . deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader",
             "problemMatcher": []
         },
-        {
-            "label": "deployall",
-            "dependsOrder": "sequence",
-            "group": "none",
-            "dependsOn": [
-                "createfolders",
-                "dependencies",
-                "deploy"
-            ],
-            "problemMatcher": []
-        },
         // RUN
         {
             "label": "runpydeck",
@@ -126,12 +115,12 @@
             "group": "none",
             "dependsOn": [
                 "buildall",
-                "deployall",
+                "deploy",
             ],
             "problemMatcher": []
         },
         {
-            "label": "allinone",
+            "label": "updateandrun",
             "detail": "Build, deploy and run",
             "dependsOrder": "sequence",
             "group": {
@@ -140,7 +129,24 @@
             },
             "dependsOn": [
                 "buildall",
-                "deployall",
+                "deploy",
+                "runpydeck"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "allinone",
+            "detail": "Build, install dependencies, deploy and run",
+            "dependsOrder": "sequence",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "dependsOn": [
+                "buildall",
+                "createfolders",
+                "dependencies",
+                "deploy",
                 "runpydeck"
             ],
             "problemMatcher": []

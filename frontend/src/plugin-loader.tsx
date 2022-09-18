@@ -66,14 +66,14 @@ class PluginLoader extends Logger {
     });
 
     this.routerHook.addRoute('/decky/store', () => (
-      <WithSuspense>
+      <WithSuspense route={true}>
         <StorePage />
       </WithSuspense>
     ));
     this.routerHook.addRoute('/decky/settings', () => {
       return (
         <DeckyStateContextProvider deckyState={this.deckyState}>
-          <WithSuspense>
+          <WithSuspense route={true}>
             <SettingsPage />
           </WithSuspense>
         </DeckyStateContextProvider>
@@ -81,11 +81,19 @@ class PluginLoader extends Logger {
     });
 
     initFilepickerPatches();
+
+    this.updateVersion();
+  }
+
+  public async updateVersion() {
+    const versionInfo = (await callUpdaterMethod('get_version')).result as VerInfo;
+    this.deckyState.setVersionInfo(versionInfo);
+
+    return versionInfo;
   }
 
   public async notifyUpdates() {
-    const versionInfo = (await callUpdaterMethod('get_version')).result as VerInfo;
-    this.deckyState.setVersionInfo(versionInfo);
+    const versionInfo = await this.updateVersion();
     if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
       this.toaster.toast({
         title: 'Decky',

@@ -1,8 +1,9 @@
-import { SteamSpinner } from 'decky-frontend-lib';
+import { Focusable, SteamSpinner } from 'decky-frontend-lib';
 import { FunctionComponent, ReactElement, ReactNode, Suspense } from 'react';
 
 interface WithSuspenseProps {
   children: ReactNode;
+  route?: boolean;
 }
 
 // Nice little wrapper around Suspense so we don't have to duplicate the styles and code for the loading spinner
@@ -13,15 +14,20 @@ const WithSuspense: FunctionComponent<WithSuspenseProps> = (props) => {
   return (
     <Suspense
       fallback={
-        <div
+        <Focusable
+          // needed to enable focus ring so that the focus properly resets on load
+          onActivate={() => {}}
           style={{
-            marginTop: '40px',
-            height: 'calc( 100% - 40px )',
             overflowY: 'scroll',
+            backgroundColor: 'transparent',
+            ...(props.route && {
+              marginTop: '40px',
+              height: 'calc( 100% - 40px )',
+            }),
           }}
         >
           <SteamSpinner />
-        </div>
+        </Focusable>
       }
     >
       {props.children}

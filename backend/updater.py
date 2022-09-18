@@ -29,17 +29,17 @@ class Updater:
         self.remoteVer = None
         self.allRemoteVers = None
         try:
-            self.currentBranch = self.get_branch(self.context.settings)
-            if int(self.currentBranch) == -1:
-                raise ValueError("get_branch could not determine branch!")
-        except:
-            self.currentBranch = 0
-            logger.error("Current branch could not be determined, defaulting to \"Stable\"")
-        try:
+            logger.info(getcwd())
             with open(path.join(getcwd(), ".loader.version"), 'r') as version_file:
                 self.localVer = version_file.readline().replace("\n", "")
         except:
             self.localVer = False
+
+        try:
+            self.currentBranch = self.get_branch(self.context.settings)
+        except:
+            self.currentBranch = 0
+            logger.error("Current branch could not be determined, defaulting to \"Stable\"")
 
         if context:
             context.web_app.add_routes([
@@ -64,8 +64,17 @@ class Updater:
         return web.json_response(res)
 
     def get_branch(self, manager: SettingsManager):
-        logger.debug("current branch: %i" % manager.getSetting("branch", 0))
-        return manager.getSetting("branch", 0)
+        ver = manager.getSetting("branch", -1)
+        logger.debug("current branch: %i" % ver)
+        if ver == -1:
+            logger.info("Current branch is not set, determining branch from version...")
+            if self.localVer.startswith("v") and self.localVer.find("-pre"):
+                logger.info("Current version determined to be pre-release")
+                return 1
+            else:
+                logger.info("Current version determined to be stable")
+                return 0
+        return ver
 
     async def _get_branch(self, manager: SettingsManager):
         return self.get_branch(manager)

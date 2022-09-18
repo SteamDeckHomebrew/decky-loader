@@ -107,7 +107,7 @@
             "type": "shell",
             "group": "none",
             "dependsOn" : ["checkforsettings"],
-            "command": "ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'export PLUGIN_PATH=${config:deckdir}/homebrew/dev/plugins; export CHOWN_PLUGIN_PATH=0; echo '${config:deckpass}' | sudo -SE python3 ${config:deckdir}/homebrew/dev/pluginloader/backend/main.py'",
+            "command": "ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'export PLUGIN_PATH=${config:deckdir}/homebrew/dev/plugins; export CHOWN_PLUGIN_PATH=0; cd ${config:deckdir}/homebrew/services; echo '${config:deckpass}' | sudo -SE python3 ${config:deckdir}/homebrew/dev/pluginloader/backend/main.py'",
             "problemMatcher": []
         },
         {

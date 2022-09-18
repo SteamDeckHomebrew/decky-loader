@@ -7,11 +7,9 @@ import { FaArrowDown } from 'react-icons/fa';
 import { VerInfo, callUpdaterMethod, finishUpdate } from '../../../../updater';
 import { useDeckyState } from '../../../DeckyState';
 import InlinePatchNotes from '../../../patchnotes/InlinePatchNotes';
+import WithSuspense from '../../../WithSuspense';
 
 const MarkdownRenderer = lazy(() => import('../../../Markdown'));
-
-// import ReactMarkdown from 'react-markdown'
-// import remarkGfm from 'remark-gfm'
 
 function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | null; closeModal?: () => {} }) {
   return (
@@ -19,7 +17,6 @@ function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | n
       <Carousel
         fnItemRenderer={(id: number) => (
           <Focusable
-            onActivate={() => {}}
             style={{
               marginTop: '40px',
               height: 'calc( 100% - 40px )',
@@ -32,9 +29,9 @@ function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | n
             <div>
               <h1>{versionInfo?.all?.[id]?.name}</h1>
               {versionInfo?.all?.[id]?.body ? (
-                <Suspense fallback={<Spinner style={{ width: '24', height: '24' }} />}>
-                  <MarkdownRenderer>{versionInfo.all[id].body}</MarkdownRenderer>
-                </Suspense>
+                <WithSuspense>
+                  <MarkdownRenderer onDismiss={closeModal}>{versionInfo.all[id].body}</MarkdownRenderer>
+                </WithSuspense>
               ) : (
                 'no patch notes for this version'
               )}
@@ -43,8 +40,8 @@ function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | n
         )}
         fnGetId={(id) => id}
         nNumItems={versionInfo?.all?.length}
-        nHeight={window.innerHeight - 150}
-        nItemHeight={window.innerHeight - 200}
+        nHeight={window.innerHeight - 40}
+        nItemHeight={window.innerHeight - 40}
         nItemMarginX={0}
         initialColumn={0}
         autoFocus={true}

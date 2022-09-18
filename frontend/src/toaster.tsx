@@ -68,7 +68,7 @@ class Toaster extends Logger {
     this.settingsModule = findModuleChild((m) => {
       if (typeof m !== 'object') return undefined;
       for (let prop in m) {
-        if (typeof m[prop]?.settings?.bDisableToastsInGame !== 'undefined') return m[prop];
+        if (typeof m[prop]?.settings && m[prop]?.communityPreferences) return m[prop];
       }
     });
     this.log('Initialized');
@@ -79,7 +79,7 @@ class Toaster extends Logger {
     while (!this.ready) {
       await sleep(100);
     }
-    const settings = this.settingsModule.settings;
+    const settings = this.settingsModule?.settings;
     let toastData = {
       nNotificationID: window.NotificationStore.m_nNextTestNotificationID++,
       rtCreated: Date.now(),
@@ -91,8 +91,8 @@ class Toaster extends Logger {
     // @ts-ignore
     toastData.data.appid = () => 0;
     if (
-      (settings.bDisableAllToasts && !toast.critical) ||
-      (settings.bDisableToastsInGame && !toast.critical && window.NotificationStore.BIsUserInGame())
+      (settings?.bDisableAllToasts && !toast.critical) ||
+      (settings?.bDisableToastsInGame && !toast.critical && window.NotificationStore.BIsUserInGame())
     )
       return;
     window.NotificationStore.m_rgNotificationToasts.push(toastData);

@@ -28,9 +28,10 @@ class PluginInstallContext:
         self.hash = hash
 
 class PluginBrowser:
-    def __init__(self, plugin_path, plugins) -> None:
+    def __init__(self, plugin_path, plugins, loader) -> None:
         self.plugin_path = plugin_path
         self.plugins = plugins
+        self.loader = loader
         self.install_requests = {}
 
     def _unzip_to_plugin_dir(self, zip, name, hash):
@@ -58,6 +59,8 @@ class PluginBrowser:
                 logger.debug(f"skipping {folder}")
 
     async def uninstall_plugin(self, name):
+        if self.loader.watcher:
+            self.loader.watcher.disabled = True
         tab = await get_tab("SP")
         try:
             logger.info("uninstalling " + name)
@@ -74,8 +77,12 @@ class PluginBrowser:
         except Exception as e:
             logger.error(f"Plugin {name} in {self.find_plugin_folder(name)} was not uninstalled")
             logger.error(f"Error at %s", exc_info=e)
+        if self.loader.watcher:
+            self.loader.watcher.disabled = False
 
     async def _install(self, artifact, name, version, hash):
+        if self.loader.watcher:
+            self.loader.watcher.disabled = True
         try:
             await self.uninstall_plugin(name)
         except:
@@ -93,11 +100,15 @@ class PluginBrowser:
                 ret = self._unzip_to_plugin_dir(res_zip, name, hash)
                 if ret:
                     logger.info(f"Installed {name} (Version: {version})")
-                    await inject_to_tab("SP", "window.syncDeckyPlugins()")
+                    plugin_dir = self.find_plugin_folder(name)
+                    self.loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_dir)
+                    # await inject_to_tab("SP", "window.syncDeckyPlugins()")
                 else:
                     self.log.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
             else:
                 logger.fatal(f"Could not fetch from URL. {await res.text()}")
+        if self.loader.watcher:
+            self.loader.watcher.disabled = False
 
     async def request_plugin_install(self, artifact, name, version, hash):
         request_id = str(time())

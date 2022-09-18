@@ -25,8 +25,11 @@ class FileChangeHandler(RegexMatchingEventHandler):
         self.logger = getLogger("file-watcher")
         self.plugin_path = plugin_path
         self.queue = queue
+        self.disabled = False
 
     def maybe_reload(self, src_path):
+        if self.disabled:
+            return
         plugin_dir = Path(path.relpath(src_path, self.plugin_path)).parts[0]
         if exists(path.join(self.plugin_path, plugin_dir, "plugin.json")):
             self.queue.put_nowait((path.join(self.plugin_path, plugin_dir, "main.py"), plugin_dir, True))
@@ -66,11 +69,13 @@ class Loader:
         self.plugin_path = plugin_path
         self.logger.info(f"plugin_path: {self.plugin_path}")
         self.plugins = {}
+        self.watcher = None
 
         if live_reload:
             self.reload_queue = Queue()
             self.observer = Observer()
-            self.observer.schedule(FileChangeHandler(self.reload_queue, plugin_path), self.plugin_path, recursive=True)
+            self.watcher = FileChangeHandler(self.reload_queue, plugin_path)
+            self.observer.schedule(self.watcher, self.plugin_path, recursive=True)
             self.observer.start()
             self.loop.create_task(self.handle_reloads())
 

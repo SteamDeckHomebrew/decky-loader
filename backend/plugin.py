@@ -5,6 +5,8 @@ from asyncio import (Lock, get_event_loop, new_event_loop,
 from concurrent.futures import ProcessPoolExecutor
 from importlib.util import module_from_spec, spec_from_file_location
 from json import dumps, load, loads
+from logging import getLogger
+from traceback import format_exc
 from os import path, setgid, setuid
 from signal import SIGINT, signal
 from sys import exit
@@ -40,28 +42,34 @@ class PluginWrapper:
         self.author = json["author"]
         self.flags = json["flags"]
 
+        self.log = getLogger("plugin")
+
         self.passive = not path.isfile(self.file)
 
     def __str__(self) -> str:
         return self.name
 
     def _init(self):
-        signal(SIGINT, lambda s, f: exit(0))
+        try:
+            signal(SIGINT, lambda s, f: exit(0))
 
-        set_event_loop(new_event_loop())
-        if self.passive:
-            return
-        setgid(0 if "root" in self.flags else 1000)
-        setuid(0 if "root" in self.flags else 1000)
-        spec = spec_from_file_location("_", self.file)
-        module = module_from_spec(spec)
-        spec.loader.exec_module(module)
-        self.Plugin = module.Plugin
+            set_event_loop(new_event_loop())
+            if self.passive:
+                return
+            setgid(0 if "root" in self.flags else 1000)
+            setuid(0 if "root" in self.flags else 1000)
+            spec = spec_from_file_location("_", self.file)
+            module = module_from_spec(spec)
+            spec.loader.exec_module(module)
+            self.Plugin = module.Plugin
 
-        if hasattr(self.Plugin, "_main"):
-            get_event_loop().create_task(self.Plugin._main(self.Plugin))
-        get_event_loop().create_task(self._setup_socket())
-        get_event_loop().run_forever()
+            if hasattr(self.Plugin, "_main"):
+                get_event_loop().create_task(self.Plugin._main(self.Plugin))
+            get_event_loop().create_task(self._setup_socket())
+            get_event_loop().run_forever()
+        except:
+            self.log.error("Failed to start " + self.name + "!\n" + format_exc())
+            exit(0)
 
     async def _setup_socket(self):
         self.socket = await start_unix_server(self._listen_for_method_call, path=self.socket_addr, limit=BUFFER_LIMIT)

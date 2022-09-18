@@ -3,7 +3,7 @@ import json
 
 # Partial imports
 from aiohttp import ClientSession, web
-from asyncio import get_event_loop
+from asyncio import get_event_loop, sleep
 from concurrent.futures import ProcessPoolExecutor
 from hashlib import sha256
 from io import BytesIO
@@ -40,8 +40,9 @@ class PluginBrowser:
             return False
         zip_file = ZipFile(zip)
         zip_file.extractall(self.plugin_path)
-        code_chown = call(["chown", "-R", get_user()+":"+get_user_group(), self.plugin_path])
-        code_chmod = call(["chmod", "-R", "555", self.plugin_path])
+        plugin_dir = self.find_plugin_folder(name)
+        code_chown = call(["chown", "-R", get_user()+":"+get_user_group(), plugin_dir])
+        code_chmod = call(["chmod", "-R", "555", plugin_dir])
         if code_chown != 0 or code_chmod != 0:
             logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {code_chmod})")
             return False
@@ -101,14 +102,18 @@ class PluginBrowser:
                 if ret:
                     logger.info(f"Installed {name} (Version: {version})")
                     plugin_dir = self.find_plugin_folder(name)
+                    if name in self.loader.plugins:
+                        self.loader.plugins[name].stop()
+                        self.loader.plugins.pop(name, None)
+                    await sleep(1)
                     self.loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_dir)
                     # await inject_to_tab("SP", "window.syncDeckyPlugins()")
                 else:
                     self.log.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
+                if self.loader.watcher:
+                    self.loader.watcher.disabled = False
             else:
                 logger.fatal(f"Could not fetch from URL. {await res.text()}")
-        if self.loader.watcher:
-            self.loader.watcher.disabled = False
 
     async def request_plugin_install(self, artifact, name, version, hash):
         request_id = str(time())

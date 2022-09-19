@@ -8,14 +8,14 @@ from concurrent.futures import ProcessPoolExecutor
 from hashlib import sha256
 from io import BytesIO
 from logging import getLogger
-from os import path, rename, listdir
+from os import R_OK, W_OK, path, rename, listdir, access, mkdir
 from shutil import rmtree
 from subprocess import call
 from time import time
 from zipfile import ZipFile
 
 # Local modules
-from helpers import get_ssl_context, get_user, get_user_group
+from helpers import get_ssl_context, get_user, get_user_group, download_remote_binary_to_path
 from injector import get_tab, inject_to_tab
 
 logger = getLogger("Browser")
@@ -47,6 +47,49 @@ class PluginBrowser:
             logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {code_chmod})")
             return False
         return True
+    
+    async def _download_remote_binaries_for_plugin_with_name(self, plugin_name):
+        rv = False
+        try:
+            pluginBasePath = path.join(self.plugin_path, plugin_name)
+            packageJsonPath = path.join(pluginBasePath, 'package.json')
+            pluginBinPath = path.join(pluginBasePath, 'bin')
+
+            if access(packageJsonPath, R_OK):
+                with open(packageJsonPath, 'r') as f:
+                    packageJson = json.load(f)
+                    if len(packageJson["remote_binary"]) > 0:
+                        # create bin directory if needed.
+                        rc=call(["chmod", "-R", "777", pluginBasePath])
+                        if access(pluginBasePath, W_OK):
+                            
+                            if not path.exists(pluginBinPath):
+                                mkdir(pluginBinPath)
+                            
+                            if not access(pluginBinPath, W_OK):
+                                rc=call(["chmod", "-R", "777", pluginBinPath])
+
+                        rv = True
+                        for remoteBinary in packageJson["remote_binary"]:
+                            # Required Fields. If any Remote Binary is missing these fail the install.
+                            binName = remoteBinary["name"]
+                            binURL = remoteBinary["url"]
+                            binHash = remoteBinary["sha256hash"]
+                            if not await download_remote_binary_to_path(binURL, binHash, path.join(pluginBinPath, binName)):
+                                rv = False
+                                raise Exception(f"Error Downloading Remote Binary {binName}@{binURL} with hash {binHash} to {path.join(pluginBinPath, binName)}")
+
+                        code_chown = call(["chown", "-R", get_user()+":"+get_user_group(), self.plugin_path])
+                        rc=call(["chmod", "-R", "555", pluginBasePath])
+                    else:
+                        rv = True
+                        logger.debug(f"No Remote Binaries to Download")
+                
+        except Exception as e:
+            rv = False
+            logger.debug(str(e))
+
+        return rv
 
     def find_plugin_folder(self, name):
         for folder in listdir(self.plugin_path):
@@ -100,14 +143,18 @@ class PluginBrowser:
                 logger.debug("Unzipping...")
                 ret = self._unzip_to_plugin_dir(res_zip, name, hash)
                 if ret:
-                    logger.info(f"Installed {name} (Version: {version})")
-                    plugin_dir = self.find_plugin_folder(name)
-                    if name in self.loader.plugins:
-                        self.loader.plugins[name].stop()
-                        self.loader.plugins.pop(name, None)
-                    await sleep(1)
-                    self.loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_dir)
-                    # await inject_to_tab("SP", "window.syncDeckyPlugins()")
+                    ret = await self._download_remote_binaries_for_plugin_with_name(name)
+                    if ret:
+                        logger.info(f"Installed {name} (Version: {version})")
+                        plugin_dir = self.find_plugin_folder(name)
+                        if name in self.loader.plugins:
+                            self.loader.plugins[name].stop()
+                            self.loader.plugins.pop(name, None)
+                        await sleep(1)
+                        self.loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_dir)
+                        # await inject_to_tab("SP", "window.syncDeckyPlugins()")
+                    else:
+                        logger.fatal(f"Failed Downloading Remote Binaries")
                 else:
                     self.log.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
                 if self.loader.watcher:

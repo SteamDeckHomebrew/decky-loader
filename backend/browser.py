@@ -138,7 +138,13 @@ class PluginBrowser:
                     ret = await self._download_remote_binaries_for_plugin_with_name(name)
                     if ret:
                         logger.info(f"Installed {name} (Version: {version})")
-                        await inject_to_tab("SP", "window.syncDeckyPlugins()")
+                        plugin_dir = self.find_plugin_folder(name)
+                        if name in self.loader.plugins:
+                            self.loader.plugins[name].stop()
+                            self.loader.plugins.pop(name, None)
+                        await sleep(1)
+                        self.loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_dir)
+                        # await inject_to_tab("SP", "window.syncDeckyPlugins()")
                     else:
                         logger.fatal(f"Failed Downloading Remote Binaries")
                 else:

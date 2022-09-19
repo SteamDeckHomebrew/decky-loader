@@ -48,10 +48,9 @@ class PluginBrowser:
             return False
         return True
     
-    async def _download_remote_binaries_for_plugin_with_name(self, plugin_name):
+    async def _download_remote_binaries_for_plugin_with_name(self, pluginBasePath):
         rv = False
         try:
-            pluginBasePath = path.join(self.plugin_path, plugin_name)
             packageJsonPath = path.join(pluginBasePath, 'package.json')
             pluginBinPath = path.join(pluginBasePath, 'bin')
 
@@ -143,10 +142,10 @@ class PluginBrowser:
                 logger.debug("Unzipping...")
                 ret = self._unzip_to_plugin_dir(res_zip, name, hash)
                 if ret:
-                    ret = await self._download_remote_binaries_for_plugin_with_name(name)
+                    plugin_dir = self.find_plugin_folder(name)
+                    ret = await self._download_remote_binaries_for_plugin_with_name(plugin_dir)
                     if ret:
                         logger.info(f"Installed {name} (Version: {version})")
-                        plugin_dir = self.find_plugin_folder(name)
                         if name in self.loader.plugins:
                             self.loader.plugins[name].stop()
                             self.loader.plugins.pop(name, None)

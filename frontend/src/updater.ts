@@ -1,5 +1,3 @@
-import { sleep } from 'decky-frontend-lib';
-
 export enum Branches {
   Release,
   Prerelease,
@@ -46,6 +44,4 @@ export async function callUpdaterMethod(methodName: string, args = {}) {
 
 export async function finishUpdate() {
   callUpdaterMethod('do_restart');
-  await sleep(3000);
-  location.reload();
 }

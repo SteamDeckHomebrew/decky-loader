@@ -4,6 +4,7 @@ from json import dumps, loads
 from logging import DEBUG, INFO, basicConfig, getLogger
 from os import getenv, path
 from subprocess import call
+from traceback import format_exc
 
 import aiohttp_cors
 # Partial imports
@@ -70,7 +71,7 @@ class PluginManager:
             )
         })
         self.plugin_loader = Loader(self.web_app, CONFIG["plugin_path"], self.loop, CONFIG["live_reload"])
-        self.plugin_browser = PluginBrowser(CONFIG["plugin_path"], self.plugin_loader.plugins)
+        self.plugin_browser = PluginBrowser(CONFIG["plugin_path"], self.plugin_loader.plugins, self.plugin_loader)
         self.settings = SettingsManager("loader", path.join(HOMEBREW_PATH, "settings"))
         self.utilities = Utilities(self)
         self.updater = Updater(self)
@@ -123,9 +124,9 @@ class PluginManager:
 
     async def inject_javascript(self, request=None):
         try:
-            await inject_to_tab("SP", "try{window.deckyHasLoaded = true;(async()=>{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js')})();}catch(e){console.error(e)}", True)
+            await inject_to_tab("SP", "try{if (window.deckyHasLoaded) location.reload();window.deckyHasLoaded = true;(async()=>{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js')})();}catch(e){console.error(e)}", True)
         except:
-            logger.info("Failed to inject JavaScript into tab")
+            logger.info("Failed to inject JavaScript into tab\n" + format_exc())
             pass
 
     def run(self):

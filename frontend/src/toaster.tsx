@@ -15,6 +15,7 @@ class Toaster extends Logger {
   private instanceRetPatch?: Patch;
   private node: any;
   private settingsModule: any;
+  private ready: boolean = false;
 
   constructor() {
     super('Toaster');
@@ -25,13 +26,6 @@ class Toaster extends Logger {
   }
 
   async init() {
-    this.settingsModule = findModuleChild((m) => {
-      if (typeof m !== 'object') return undefined;
-      for (let prop in m) {
-        if (typeof m[prop]?.settings?.bDisableToastsInGame !== 'undefined') return m[prop];
-      }
-    });
-
     let instance: any;
     while (true) {
       instance = findInReactTree(
@@ -71,11 +65,21 @@ class Toaster extends Logger {
       return ret;
     };
     this.node.stateNode.forceUpdate();
+    this.settingsModule = findModuleChild((m) => {
+      if (typeof m !== 'object') return undefined;
+      for (let prop in m) {
+        if (typeof m[prop]?.settings && m[prop]?.communityPreferences) return m[prop];
+      }
+    });
     this.log('Initialized');
+    this.ready = true;
   }
 
-  toast(toast: ToastData) {
-    const settings = this.settingsModule.settings;
+  async toast(toast: ToastData) {
+    while (!this.ready) {
+      await sleep(100);
+    }
+    const settings = this.settingsModule?.settings;
     let toastData = {
       nNotificationID: window.NotificationStore.m_nNextTestNotificationID++,
       rtCreated: Date.now(),
@@ -87,8 +91,8 @@ class Toaster extends Logger {
     // @ts-ignore
     toastData.data.appid = () => 0;
     if (
-      (settings.bDisableAllToasts && !toast.critical) ||
-      (settings.bDisableToastsInGame && !toast.critical && window.NotificationStore.BIsUserInGame())
+      (settings?.bDisableAllToasts && !toast.critical) ||
+      (settings?.bDisableToastsInGame && !toast.critical && window.NotificationStore.BIsUserInGame())
     )
       return;
     window.NotificationStore.m_rgNotificationToasts.push(toastData);

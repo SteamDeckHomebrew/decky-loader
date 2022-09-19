@@ -89,17 +89,6 @@
             "command": "rsync -azp --delete --rsh='ssh -p ${config:deckport} ${config:deckkey}' --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='requirements.txt' --exclude='backend/__pycache__/' --exclude='.gitignore' . deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader",
             "problemMatcher": []
         },
-        {
-            "label": "deployall",
-            "dependsOrder": "sequence",
-            "group": "none",
-            "dependsOn": [
-                "createfolders",
-                "dependencies",
-                "deploy"
-            ],
-            "problemMatcher": []
-        },
         // RUN
         {
             "label": "runpydeck",
@@ -107,7 +96,7 @@
             "type": "shell",
             "group": "none",
             "dependsOn" : ["checkforsettings"],
-            "command": "ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'export PLUGIN_PATH=${config:deckdir}/homebrew/dev/plugins; export CHOWN_PLUGIN_PATH=0; echo '${config:deckpass}' | sudo -SE python3 ${config:deckdir}/homebrew/dev/pluginloader/backend/main.py'",
+            "command": "ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'export PLUGIN_PATH=${config:deckdir}/homebrew/dev/plugins; export CHOWN_PLUGIN_PATH=0; export LOG_LEVEL=DEBUG; cd ${config:deckdir}/homebrew/services; echo '${config:deckpass}' | sudo -SE python3 ${config:deckdir}/homebrew/dev/pluginloader/backend/main.py'",
             "problemMatcher": []
         },
         {
@@ -126,12 +115,12 @@
             "group": "none",
             "dependsOn": [
                 "buildall",
-                "deployall",
+                "deploy",
             ],
             "problemMatcher": []
         },
         {
-            "label": "allinone",
+            "label": "updateandrun",
             "detail": "Build, deploy and run",
             "dependsOrder": "sequence",
             "group": {
@@ -140,7 +129,24 @@
             },
             "dependsOn": [
                 "buildall",
-                "deployall",
+                "deploy",
+                "runpydeck"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "allinone",
+            "detail": "Build, install dependencies, deploy and run",
+            "dependsOrder": "sequence",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "dependsOn": [
+                "buildall",
+                "createfolders",
+                "dependencies",
+                "deploy",
                 "runpydeck"
             ],
             "problemMatcher": []

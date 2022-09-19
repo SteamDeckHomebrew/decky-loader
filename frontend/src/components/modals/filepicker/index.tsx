@@ -86,7 +86,8 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
           onClick={() => {
             const newPathArr = path.split('/');
             newPathArr.pop();
-            const newPath = newPathArr.join('/');
+            let newPath = newPathArr.join('/');
+            if (newPath == '') newPath = '/';
             setPath(newPath);
           }}
         >
@@ -113,7 +114,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
                 <DialogButton
                   style={{ borderRadius: 'unset', margin: '0', padding: '10px' }}
                   onClick={() => {
-                    const fullPath = `${path}/${file.name}`;
+                    const fullPath = `${path}${path.endsWith('/') ? '' : '/'}${file.name}`;
                     if (file.isdir) setPath(fullPath);
                     else {
                       onSubmit({ path: fullPath, realpath: file.realpath });

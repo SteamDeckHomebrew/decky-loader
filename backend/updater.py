@@ -20,7 +20,7 @@ class Updater:
         self.settings = self.context.settings
         # Exposes updater methods to frontend
         self.updater_methods = {
-            "get_branch": self.get_branch,
+            "get_branch": self._get_branch,
             "get_version": self.get_version,
             "do_update": self.do_update,
             "do_restart": self.do_restart,
@@ -29,17 +29,17 @@ class Updater:
         self.remoteVer = None
         self.allRemoteVers = None
         try:
-            self.currentBranch = self.get_branch(self.context.settings)
-            if int(self.currentBranch) == -1:
-                raise ValueError("get_branch could not determine branch!")
-        except:
-            self.currentBranch = 0
-            logger.error("Current branch could not be determined, defaulting to \"Stable\"")
-        try:
+            logger.info(getcwd())
             with open(path.join(getcwd(), ".loader.version"), 'r') as version_file:
                 self.localVer = version_file.readline().replace("\n", "")
         except:
             self.localVer = False
+
+        try:
+            self.currentBranch = self.get_branch(self.context.settings)
+        except:
+            self.currentBranch = 0
+            logger.error("Current branch could not be determined, defaulting to \"Stable\"")
 
         if context:
             context.web_app.add_routes([
@@ -63,9 +63,21 @@ class Updater:
             res["success"] = False
         return web.json_response(res)
 
-    async def get_branch(self, manager: SettingsManager):
-        logger.debug("current branch: %i" % manager.getSetting("branch", -1))
-        return manager.getSetting("branch", -1)
+    def get_branch(self, manager: SettingsManager):
+        ver = manager.getSetting("branch", -1)
+        logger.debug("current branch: %i" % ver)
+        if ver == -1:
+            logger.info("Current branch is not set, determining branch from version...")
+            if self.localVer.startswith("v") and self.localVer.find("-pre"):
+                logger.info("Current version determined to be pre-release")
+                return 1
+            else:
+                logger.info("Current version determined to be stable")
+                return 0
+        return ver
+
+    async def _get_branch(self, manager: SettingsManager):
+        return self.get_branch(manager)
 
     async def get_version(self):
         if self.localVer:
@@ -80,7 +92,7 @@ class Updater:
 
     async def check_for_updates(self):
         logger.debug("checking for updates")
-        selectedBranch = await self.get_branch(self.context.settings)
+        selectedBranch = self.get_branch(self.context.settings)
         async with ClientSession() as web:
             async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases", ssl=helpers.get_ssl_context()) as res:
                 remoteVersions = await res.json()

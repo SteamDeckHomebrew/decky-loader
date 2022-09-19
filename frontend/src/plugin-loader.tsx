@@ -43,7 +43,7 @@ class PluginLoader extends Logger {
     super(PluginLoader.name);
     this.log('Initialized');
 
-    const TabIcon = () => {
+    const TabBadge = () => {
       const { updates, hasLoaderUpdate } = useDeckyState();
       return <NotificationBadge show={(updates && updates.size > 0) || hasLoaderUpdate} />;
     };
@@ -60,20 +60,20 @@ class PluginLoader extends Logger {
       icon: (
         <DeckyStateContextProvider deckyState={this.deckyState}>
           <FaPlug />
-          <TabIcon />
+          <TabBadge />
         </DeckyStateContextProvider>
       ),
     });
 
     this.routerHook.addRoute('/decky/store', () => (
-      <WithSuspense>
+      <WithSuspense route={true}>
         <StorePage />
       </WithSuspense>
     ));
     this.routerHook.addRoute('/decky/settings', () => {
       return (
         <DeckyStateContextProvider deckyState={this.deckyState}>
-          <WithSuspense>
+          <WithSuspense route={true}>
             <SettingsPage />
           </WithSuspense>
         </DeckyStateContextProvider>
@@ -81,11 +81,19 @@ class PluginLoader extends Logger {
     });
 
     initFilepickerPatches();
+
+    this.updateVersion();
+  }
+
+  public async updateVersion() {
+    const versionInfo = (await callUpdaterMethod('get_version')).result as VerInfo;
+    this.deckyState.setVersionInfo(versionInfo);
+
+    return versionInfo;
   }
 
   public async notifyUpdates() {
-    const versionInfo = (await callUpdaterMethod('get_version')).result as VerInfo;
-    this.deckyState.setVersionInfo(versionInfo);
+    const versionInfo = await this.updateVersion();
     if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
       this.toaster.toast({
         title: 'Decky',
@@ -208,7 +216,8 @@ class PluginLoader extends Logger {
       },
     });
     if (res.ok) {
-      let plugin = await eval(await res.text())(this.createPluginAPI(name));
+      let plugin_export = await eval(await res.text());
+      let plugin = plugin_export(this.createPluginAPI(name));
       this.plugins.push({
         ...plugin,
         name: name,

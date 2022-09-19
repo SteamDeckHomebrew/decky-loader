@@ -3,7 +3,7 @@ import json
 
 # Partial imports
 from aiohttp import ClientSession, web
-from asyncio import get_event_loop
+from asyncio import get_event_loop, sleep
 from concurrent.futures import ProcessPoolExecutor
 from hashlib import sha256
 from io import BytesIO
@@ -28,9 +28,10 @@ class PluginInstallContext:
         self.hash = hash
 
 class PluginBrowser:
-    def __init__(self, plugin_path, plugins) -> None:
+    def __init__(self, plugin_path, plugins, loader) -> None:
         self.plugin_path = plugin_path
         self.plugins = plugins
+        self.loader = loader
         self.install_requests = {}
 
     def _unzip_to_plugin_dir(self, zip, name, hash):
@@ -39,8 +40,9 @@ class PluginBrowser:
             return False
         zip_file = ZipFile(zip)
         zip_file.extractall(self.plugin_path)
-        code_chown = call(["chown", "-R", get_user()+":"+get_user_group(), self.plugin_path])
-        code_chmod = call(["chmod", "-R", "555", self.plugin_path])
+        plugin_dir = self.find_plugin_folder(name)
+        code_chown = call(["chown", "-R", get_user()+":"+get_user_group(), plugin_dir])
+        code_chmod = call(["chmod", "-R", "555", plugin_dir])
         if code_chown != 0 or code_chmod != 0:
             logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {code_chmod})")
             return False
@@ -101,6 +103,8 @@ class PluginBrowser:
                 logger.debug(f"skipping {folder}")
 
     async def uninstall_plugin(self, name):
+        if self.loader.watcher:
+            self.loader.watcher.disabled = True
         tab = await get_tab("SP")
         try:
             logger.info("uninstalling " + name)
@@ -117,8 +121,12 @@ class PluginBrowser:
         except Exception as e:
             logger.error(f"Plugin {name} in {self.find_plugin_folder(name)} was not uninstalled")
             logger.error(f"Error at %s", exc_info=e)
+        if self.loader.watcher:
+            self.loader.watcher.disabled = False
 
     async def _install(self, artifact, name, version, hash):
+        if self.loader.watcher:
+            self.loader.watcher.disabled = True
         try:
             await self.uninstall_plugin(name)
         except:
@@ -149,6 +157,8 @@ class PluginBrowser:
                         logger.fatal(f"Failed Downloading Remote Binaries")
                 else:
                     self.log.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
+                if self.loader.watcher:
+                    self.loader.watcher.disabled = False
             else:
                 logger.fatal(f"Could not fetch from URL. {await res.text()}")
 

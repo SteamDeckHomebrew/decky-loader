@@ -21,6 +21,7 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({ artifact, version, ha
         setLoading(true);
         await onOK();
         setTimeout(() => Router.OpenQuickAccessMenu(QuickAccessTab.Decky), 250);
+        setTimeout(() => window.DeckyPluginLoader.checkPluginUpdates(), 1000);
       }}
       onCancel={async () => {
         await onCancel();

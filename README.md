@@ -9,9 +9,10 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugi
 2. Under System -> System Settings toggle `Enable Developer Mode`
 3. Scroll the sidebar all the way down and click on `Developer`
 4. Under Miscellaneous, enable `CEF Remote Debugging`
-5. Click on the `STEAM` button and select `Power` -> `Switch to Desktop`
-6. Make sure you have a password set with the "passwd" command in terminal to install it ([YouTube Guide](https://www.youtube.com/watch?v=1vOMYGj22rQ)).
-7. Open a terminal ("Konsole" is the pre-installed terminal application) and paste the following command into it:
+5. Confirm dialog and wait for system reboot
+6. Click on the `STEAM` button and select `Power` -> `Switch to Desktop`
+7. Make sure you have a password set with the "passwd" command in terminal to install it ([YouTube Guide](https://www.youtube.com/watch?v=1vOMYGj22rQ)).
+8. Open a terminal ("Konsole" is the pre-installed terminal application) and paste the following command into it:
     - For the latest pre-release:
         - `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_prerelease.sh | sh`
     - For testers/plugin developers:
@@ -19,7 +20,7 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugi
         - [Wiki Link](https://deckbrew.xyz/en/loader-dev/development)
     - For the legacy version (unsupported):
         - `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/legacy/dist/install_release.sh | sh`
-7. Done! Reboot back into Gaming mode and enjoy your plugins!
+9. Done! Reboot back into Gaming mode and enjoy your plugins!
 
 ### Install/Uninstall Plugins
 - Using the shopping bag button in the top right corner, you can go to the offical ["Plugin Store"](https://plugins.deckbrew.xyz/)

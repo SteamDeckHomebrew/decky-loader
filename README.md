@@ -11,7 +11,7 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugi
 4. Under Miscellaneous, enable `CEF Remote Debugging`
 5. Click on the `STEAM` button and select `Power` -> `Switch to Desktop`
 6. Make sure you have a password set with the "passwd" command in terminal to install it ([YouTube Guide](https://www.youtube.com/watch?v=1vOMYGj22rQ)).
-7. Open a terminal and paste the following command into it:
+7. Open a terminal ("Konsole" is the pre-installed terminal application) and paste the following command into it:
     - For the latest pre-release:
         - `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_prerelease.sh | sh`
     - For testers/plugin developers:

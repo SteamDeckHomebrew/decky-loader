@@ -23,7 +23,7 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugi
 9. Done! Reboot back into Gaming mode and enjoy your plugins!
 
 ### Install/Uninstall Plugins
-- Using the shopping bag button in the top right corner, you can go to the offical ["Plugin Store"](https://plugins.deckbrew.xyz/)
+- Using the shopping bag button in the top right corner, you can go to the offical Plugin Store ([Web Preview](https://beta.deckbrew.xyz/)).
 - Simply copy the plugin's folder into `~/homebrew/plugins`
 - Use the settings menu to uninstall plugins, this will not remove any files made in different directories by plugins.
 

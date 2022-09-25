@@ -32,8 +32,8 @@ const PluginView: VFC = () => {
           .map(({ name, icon }) => (
             <PanelSectionRow key={name}>
               <ButtonItem layout="below" onClick={() => setActivePlugin(name)}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <div>{icon}</div>
+                <div style={{ display: 'flex', alignItems: "center", justifyContent: 'space-between' }}>
+                  {icon}
                   <div>{name}</div>
                   <NotificationBadge show={updates?.has(name)} style={{ top: '-5px', right: '-5px' }} />
                 </div>

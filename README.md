@@ -1,8 +1,8 @@
-# Plugin Loader [![Chat](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://discord.gg/ZU74G2NJzk)
+# Decky Loader [![Chat](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://discord.gg/ZU74G2NJzk)
 
 ![Decky](https://media.discordapp.net/attachments/966017112244125756/1012466063893610506/main.jpg)
 
-Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugin Loader, documentation + tools for plugin development and more.
+Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Decky Loader, documentation + tools for plugin development and more.
 
 ## Installation
 1. Go into the Steam Deck Settings
@@ -42,8 +42,8 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugi
 - There is no complete plugin development documentation yet. However a good starting point is the [Plugin Template](https://github.com/SteamDeckHomebrew/decky-plugin-template) repository.
 
 ## [Contribution](https://deckbrew.xyz/en/loader-dev/development)
-- Please consult the [Wiki](https://deckbrew.xyz/en/loader-dev/development) for installing development versions of PluginLoader.
-  - This is also useful for Plugin Developers looking to target new but unreleased versions of PluginLoader.
+- Please consult the [Wiki](https://deckbrew.xyz/en/loader-dev/development) for installing development versions of Decky Loader.
+  - This is also useful for Plugin Developers looking to target new but unreleased versions of Decky Loader.
 - [Here's how to get the Steam Deck UI on your enviroment of choice.](https://youtu.be/1IAbZte8e7E?t=112)
     - (The video shows Windows usage but unless you're using Arch WSL/cygwin this script is unsupported on Windows.)
 

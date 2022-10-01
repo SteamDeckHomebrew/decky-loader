@@ -14,7 +14,7 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Decky
 7. Make sure you have a password set with the "passwd" command in terminal to install it ([YouTube Guide](https://www.youtube.com/watch?v=1vOMYGj22rQ)).
 8. Open a terminal ("Konsole" is the pre-installed terminal application) and paste the following command into it:
     - For the latest release:
-        - `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_release.sh | sh`
+        - `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_prerelease.sh | sh`
     - For the latest pre-release:
         - `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_prerelease.sh | sh`
     - For testers/plugin developers:

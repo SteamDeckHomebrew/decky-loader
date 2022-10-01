@@ -13,13 +13,13 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Plugi
 6. Click on the `STEAM` button and select `Power` -> `Switch to Desktop`
 7. Make sure you have a password set with the "passwd" command in terminal to install it ([YouTube Guide](https://www.youtube.com/watch?v=1vOMYGj22rQ)).
 8. Open a terminal ("Konsole" is the pre-installed terminal application) and paste the following command into it:
+    - For the latest release:
+        - `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_release.sh | sh`
     - For the latest pre-release:
         - `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_prerelease.sh | sh`
     - For testers/plugin developers:
         - `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_prerelease.sh | sh`
         - [Wiki Link](https://deckbrew.xyz/en/loader-dev/development)
-    - For the legacy version (unsupported):
-        - `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/legacy/dist/install_release.sh | sh`
 9. Done! Reboot back into Gaming mode and enjoy your plugins!
 
 ### Install/Uninstall Plugins

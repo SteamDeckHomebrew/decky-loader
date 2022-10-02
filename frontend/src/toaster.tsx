@@ -1,4 +1,14 @@
-import { Patch, ToastData, afterPatch, findInReactTree, findModuleChild, sleep } from 'decky-frontend-lib';
+import {
+  Patch,
+  ToastData,
+  afterPatch,
+  callOriginal,
+  findInReactTree,
+  findModuleChild,
+  replacePatch,
+  sleep,
+  staticClasses,
+} from 'decky-frontend-lib';
 import { ReactNode } from 'react';
 
 import Toast from './components/Toast';
@@ -27,6 +37,25 @@ class Toaster extends Logger {
 
   async init() {
     let instance: any;
+    const focusManager = findModuleChild((m) => {
+      if (typeof m !== 'object') return false;
+      for (let prop in m) {
+        if (m[prop]?.prototype?.TakeFocus) return m[prop];
+      }
+      return false;
+    });
+
+    const focusWorkaroundPatch = replacePatch(focusManager.prototype, 'BFocusWithin', function () {
+      // @ts-ignore
+      console.log(this as any);
+      // @ts-ignore
+      if (this.m_node?.m_element && this.m_node?.m_element.classList.contains(staticClasses.TabGroupPanel)) {
+        console.log('got the focus hook');
+        return true;
+      }
+
+      return callOriginal;
+    });
     while (true) {
       instance = findInReactTree(
         (document.getElementById('root') as any)._reactRootContainer._internalRoot.current,
@@ -71,6 +100,7 @@ class Toaster extends Logger {
         if (typeof m[prop]?.settings && m[prop]?.communityPreferences) return m[prop];
       }
     });
+    focusWorkaroundPatch.unpatch();
     this.log('Initialized');
     this.ready = true;
   }

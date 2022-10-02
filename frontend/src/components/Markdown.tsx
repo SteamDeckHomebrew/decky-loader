@@ -24,6 +24,7 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                   aRef?.current?.click();
                   props.onDismiss?.();
                 }}
+                style={{ display: 'inline' }}
               >
                 <a ref={aRef} {...nodeProps.node.properties}>
                   {nodeProps.children}

@@ -24,7 +24,7 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Decky
 
 ### Install/Uninstall Plugins
 - Using the shopping bag button in the top right corner of the plugin menu, you can go to the offical Plugin Store ([Web Preview](https://beta.deckbrew.xyz/)).
-- Simply copy the plugin's folder into `~/homebrew/plugins`
+- Install from URL in the settings menu.
 - Use the settings menu to uninstall plugins, this will not remove any files made in different directories by plugins.
 
 ### Uninstall

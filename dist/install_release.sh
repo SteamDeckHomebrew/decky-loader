@@ -13,8 +13,13 @@ sudo -u $SUDO_USER mkdir -p "${HOMEBREW_FOLDER}/services"
 sudo -u $SUDO_USER mkdir -p "${HOMEBREW_FOLDER}/plugins"
 
 # Download latest release and install it
-curl -L https://github.com/SteamDeckHomebrew/PluginLoader/releases/latest/download/PluginLoader --output "${HOMEBREW_FOLDER}/services/PluginLoader"
-chmod +x "${HOMEBREW_FOLDER}/services/PluginLoader"
+RELEASE=$(curl -s 'https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases' | jq -r "first(.[] | select(.prerelease == "false"))")
+read VERSION DOWNLOADURL < <(echo $(jq -r '.tag_name, .assets[].browser_download_url' <<< ${RELEASE}))
+
+printf "Installing version %s...\n" "${VERSION}"
+curl -L $DOWNLOADURL --output ${HOMEBREW_FOLDER}/services/PluginLoader
+chmod +x ${HOMEBREW_FOLDER}/services/PluginLoader
+echo $VERSION > ${HOMEBREW_FOLDER}/services/.loader.version
 
 systemctl --user stop plugin_loader 2> /dev/null
 systemctl --user disable plugin_loader 2> /dev/null

@@ -1,14 +1,4 @@
-import {
-  Patch,
-  ToastData,
-  afterPatch,
-  callOriginal,
-  findInReactTree,
-  findModuleChild,
-  replacePatch,
-  sleep,
-  staticClasses,
-} from 'decky-frontend-lib';
+import { Patch, ToastData, afterPatch, findInReactTree, findModuleChild, sleep } from 'decky-frontend-lib';
 import { ReactNode } from 'react';
 
 import Toast from './components/Toast';
@@ -37,35 +27,6 @@ class Toaster extends Logger {
 
   async init() {
     let instance: any;
-    const self = this;
-    const focusManager = findModuleChild((m) => {
-      if (typeof m !== 'object') return false;
-      for (let prop in m) {
-        if (m[prop]?.prototype?.TakeFocus) return m[prop];
-      }
-      return false;
-    });
-
-    const overrideFocus = function () {
-      // @ts-ignore
-      self.debug(this.m_node.m_element);
-      // @ts-ignore
-      const classList = this.m_node?.m_element.classList;
-      if (
-        // @ts-ignore
-        (this.m_node?.m_element && classList.contains(staticClasses.TabGroupPanel)) ||
-        classList.contains('FriendsListTab') ||
-        classList.contains('FriendsTabList') ||
-        classList.contains('FriendsListAndChatsSteamDeck')
-      ) {
-        self.debug('Intercepted friends re-focus');
-        return true;
-      }
-
-      return callOriginal;
-    };
-
-    const focusWorkaroundPatch = replacePatch(focusManager.prototype, 'TakeFocus', overrideFocus);
 
     while (true) {
       instance = findInReactTree(
@@ -111,7 +72,6 @@ class Toaster extends Logger {
         if (typeof m[prop]?.settings && m[prop]?.communityPreferences) return m[prop];
       }
     });
-    focusWorkaroundPatch.unpatch();
     this.log('Initialized');
     this.ready = true;
   }

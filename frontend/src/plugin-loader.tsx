@@ -1,4 +1,16 @@
-import { ConfirmModal, ModalRoot, QuickAccessTab, Router, showModal, sleep, staticClasses } from 'decky-frontend-lib';
+import {
+  ConfirmModal,
+  ModalRoot,
+  Patch,
+  QuickAccessTab,
+  Router,
+  callOriginal,
+  findModuleChild,
+  replacePatch,
+  showModal,
+  sleep,
+  staticClasses,
+} from 'decky-frontend-lib';
 import { lazy } from 'react';
 import { FaPlug } from 'react-icons/fa';
 
@@ -38,6 +50,8 @@ class PluginLoader extends Logger {
   private reloadLock: boolean = false;
   // stores a list of plugin names which requested to be reloaded
   private pluginReloadQueue: { name: string; version?: string }[] = [];
+
+  private focusWorkaroundPatch?: Patch;
 
   constructor() {
     super(PluginLoader.name);
@@ -83,6 +97,38 @@ class PluginLoader extends Logger {
     initFilepickerPatches();
 
     this.updateVersion();
+
+    const self = this;
+
+    try {
+      // TODO remove all of this once Valve fixes the bug
+      const focusManager = findModuleChild((m) => {
+        if (typeof m !== 'object') return false;
+        for (let prop in m) {
+          if (m[prop]?.prototype?.TakeFocus) return m[prop];
+        }
+        return false;
+      });
+
+      this.focusWorkaroundPatch = replacePatch(focusManager.prototype, 'TakeFocus', function () {
+        // @ts-ignore
+        const classList = this.m_node?.m_element.classList;
+        if (
+          // @ts-ignore
+          (this.m_node?.m_element && classList.contains(staticClasses.TabGroupPanel)) ||
+          classList.contains('FriendsListTab') ||
+          classList.contains('FriendsTabList') ||
+          classList.contains('FriendsListAndChatsSteamDeck')
+        ) {
+          self.debug('Intercepted friends re-focus');
+          return true;
+        }
+
+        return callOriginal;
+      });
+    } catch (e) {
+      this.error('Friends focus patch failed', e);
+    }
   }
 
   public async updateVersion() {
@@ -167,6 +213,7 @@ class PluginLoader extends Logger {
     this.routerHook.removeRoute('/decky/store');
     this.routerHook.removeRoute('/decky/settings');
     deinitFilepickerPatches();
+    this.focusWorkaroundPatch?.unpatch();
   }
 
   public unloadPlugin(name: string) {

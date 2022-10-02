@@ -46,15 +46,27 @@ class Toaster extends Logger {
       return false;
     });
 
-    const focusWorkaroundPatch = replacePatch(focusManager.prototype, 'BFocusWithin', function () {
+    const overrideFocus = function () {
       // @ts-ignore
-      if (this.m_node?.m_element && this.m_node?.m_element.classList.contains(staticClasses.TabGroupPanel)) {
+      self.debug(this.m_node.m_element);
+      // @ts-ignore
+      const classList = this.m_node?.m_element.classList;
+      if (
+        // @ts-ignore
+        (this.m_node?.m_element && classList.contains(staticClasses.TabGroupPanel)) ||
+        classList.contains('FriendsListTab') ||
+        classList.contains('FriendsTabList') ||
+        classList.contains('FriendsListAndChatsSteamDeck')
+      ) {
         self.debug('Intercepted friends re-focus');
         return true;
       }
 
       return callOriginal;
-    });
+    };
+
+    const focusWorkaroundPatch = replacePatch(focusManager.prototype, 'TakeFocus', overrideFocus);
+
     while (true) {
       instance = findInReactTree(
         (document.getElementById('root') as any)._reactRootContainer._internalRoot.current,

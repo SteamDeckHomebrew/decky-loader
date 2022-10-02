@@ -37,6 +37,7 @@ class Toaster extends Logger {
 
   async init() {
     let instance: any;
+    const self = this;
     const focusManager = findModuleChild((m) => {
       if (typeof m !== 'object') return false;
       for (let prop in m) {
@@ -47,10 +48,8 @@ class Toaster extends Logger {
 
     const focusWorkaroundPatch = replacePatch(focusManager.prototype, 'BFocusWithin', function () {
       // @ts-ignore
-      console.log(this as any);
-      // @ts-ignore
       if (this.m_node?.m_element && this.m_node?.m_element.classList.contains(staticClasses.TabGroupPanel)) {
-        console.log('got the focus hook');
+        self.debug('Intercepted friends re-focus');
         return true;
       }
 

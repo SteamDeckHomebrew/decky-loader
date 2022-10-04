@@ -62,7 +62,7 @@ class TabsHook extends Logger {
     }
     (async () => {
       scrollRoot = await findScrollRoot(tree, 0);
-      while (scrollRoot == null) {
+      while (!scrollRoot) {
         await sleep(5000);
         scrollRoot = await findScrollRoot(tree, 0);
       }

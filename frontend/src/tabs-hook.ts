@@ -47,18 +47,24 @@ class TabsHook extends Logger {
     const self = this;
     const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
     let scrollRoot: any;
-    let currentNode = tree;
+    async function findScrollRoot(currentNode: any, iters: number): Promise<any> {
+      if (iters >= 30) {
+        return null;
+      }
+      currentNode = currentNode?.child;
+      if (currentNode?.type?.prototype?.RemoveSmartScrollContainer) return currentNode;
+      if (!currentNode) return null;
+      if (currentNode.sibling) {
+        let node = await findScrollRoot(currentNode.sibling, iters++);
+        if (node !== null) return node;
+      }
+      return findScrollRoot(currentNode, iters++);
+    }
     (async () => {
-      let iters = 0;
-      while (!scrollRoot) {
-        iters++;
-        currentNode = currentNode?.child;
-        if (iters >= 30 || !currentNode) {
-          iters = 0;
-          currentNode = tree;
-          await sleep(5000);
-        }
-        if (currentNode?.type?.prototype?.RemoveSmartScrollContainer) scrollRoot = currentNode;
+      scrollRoot = await findScrollRoot(tree, 0);
+      while (scrollRoot == null) {
+        await sleep(5000);
+        scrollRoot = await findScrollRoot(tree, 0);
       }
       let newQA: any;
       let newQATabRenderer: any;
@@ -72,7 +78,7 @@ class TabsHook extends Logger {
                 this.tabRenderer = ret.props.children[1].children.type;
                 newQATabRenderer = (...args: any) => {
                   const oFilter = Array.prototype.filter;
-                  Array.prototype.filter = function (...args: any[]) {
+                  Array.prototype.filter = function(...args: any[]) {
                     if (isTabsArray(this)) {
                       self.render(this);
                     }

@@ -58,7 +58,7 @@ class TabsHook extends Logger {
         let node = await findScrollRoot(currentNode.sibling, iters++);
         if (node !== null) return node;
       }
-      return findScrollRoot(currentNode, iters++);
+      return await findScrollRoot(currentNode, iters++);
     }
     (async () => {
       scrollRoot = await findScrollRoot(tree, 0);

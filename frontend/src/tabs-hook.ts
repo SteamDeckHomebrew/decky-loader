@@ -47,18 +47,25 @@ class TabsHook extends Logger {
     const self = this;
     const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
     let scrollRoot: any;
-    let currentNode = tree;
+    async function findScrollRoot(currentNode: any, iters: number): Promise<any> {
+      if (iters >= 30) {
+        await sleep(5000);
+        return await findScrollRoot(tree, 0);
+      }
+      currentNode = currentNode?.child;
+      if (currentNode?.type?.prototype?.RemoveSmartScrollContainer) return currentNode;
+      if (!currentNode) return null;
+      if (currentNode.sibling) {
+        let node = await findScrollRoot(currentNode.sibling, iters++);
+        if (node !== null) return node;
+      }
+      return await findScrollRoot(currentNode, iters++);
+    }
     (async () => {
-      let iters = 0;
-      while (!scrollRoot) {
-        iters++;
-        currentNode = currentNode?.child;
-        if (iters >= 30 || !currentNode) {
-          iters = 0;
-          currentNode = tree;
-          await sleep(5000);
-        }
-        if (currentNode?.type?.prototype?.RemoveSmartScrollContainer) scrollRoot = currentNode;
+      scrollRoot = await findScrollRoot(tree, 0);
+      if (!scrollRoot) {
+        this.error('Failed to find scroll root node!');
+        return;
       }
       let newQA: any;
       let newQATabRenderer: any;

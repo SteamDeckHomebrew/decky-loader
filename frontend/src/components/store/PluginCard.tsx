@@ -117,7 +117,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               <span>Author: {plugin.author}</span>
             </p>
             <p className={joinClassNames(staticClasses.PanelSectionRow)}>
-              <span>Description: {plugin.description}</span>
+              <span>{plugin.description}</span>
             </p>
             <p
               className={joinClassNames('deckyStoreCardTagsContainer', staticClasses.PanelSectionRow)}

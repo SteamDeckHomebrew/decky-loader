@@ -116,7 +116,15 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
             <p className={joinClassNames(staticClasses.PanelSectionRow)} style={{ marginTop: '0px' }}>
               <span>Author: {plugin.author}</span>
             </p>
-            <p className={joinClassNames(staticClasses.PanelSectionRow)} style={{ marginLeft: '16px', marginTop: '0px', marginBottom: '0px', marginRight: '16px' }}>
+            <p
+              className={joinClassNames(staticClasses.PanelSectionRow)}
+              style={{
+                marginLeft: '16px',
+                marginTop: '0px',
+                marginBottom: '0px',
+                marginRight: '16px'
+              }}
+            >
               <span style={{ paddingLeft: '0px' }}>{plugin.description}</span>
             </p>
             <p

@@ -12,6 +12,7 @@ Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Decky
 5. Confirm dialog and wait for system reboot
 6. Click on the `STEAM` button and select `Power` -> `Switch to Desktop`
 7. Make sure you have a password set with the "passwd" command in terminal to install it ([YouTube Guide](https://www.youtube.com/watch?v=1vOMYGj22rQ)).
+    - It will look like the password isn't typing properly. That's normal, it's a security feature (Similar to `***` when typing passwords online)
 8. Open a terminal ("Konsole" is the pre-installed terminal application) and paste the following command into it:
     - For the latest release:
         - `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_release.sh | sh`

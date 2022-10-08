@@ -49,23 +49,29 @@ class TabsHook extends Logger {
     let scrollRoot: any;
     async function findScrollRoot(currentNode: any, iters: number): Promise<any> {
       if (iters >= 30) {
-        await sleep(5000);
-        return await findScrollRoot(tree, 0);
+        self.error(
+          'Scroll root was not found before hitting the recursion limit, a developer will need to increase the limit.',
+        );
+        return null;
       }
       currentNode = currentNode?.child;
-      if (currentNode?.type?.prototype?.RemoveSmartScrollContainer) return currentNode;
+      if (currentNode?.type?.prototype?.RemoveSmartScrollContainer) {
+        self.log(`Scroll root was found in ${iters} recursion cycles`);
+        return currentNode;
+      }
       if (!currentNode) return null;
       if (currentNode.sibling) {
-        let node = await findScrollRoot(currentNode.sibling, iters++);
+        let node = await findScrollRoot(currentNode.sibling, iters + 1);
         if (node !== null) return node;
       }
-      return await findScrollRoot(currentNode, iters++);
+      return await findScrollRoot(currentNode, iters + 1);
     }
     (async () => {
       scrollRoot = await findScrollRoot(tree, 0);
-      if (!scrollRoot) {
-        this.error('Failed to find scroll root node!');
-        return;
+      while (!scrollRoot) {
+        this.log('Failed to find scroll root node, reattempting in 5 seconds');
+        await sleep(5000);
+        scrollRoot = await findScrollRoot(tree, 0);
       }
       let newQA: any;
       let newQATabRenderer: any;

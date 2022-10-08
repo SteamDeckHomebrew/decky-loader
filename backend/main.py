@@ -1,9 +1,13 @@
+# Change PyInstaller files permissions
+import sys
+from subprocess import call
+if "_MEIPASS" in sys:
+    call(['chmod', '-R', '755', sys._MEIPASS])
 # Full imports
 from asyncio import get_event_loop, sleep
 from json import dumps, loads
 from logging import DEBUG, INFO, basicConfig, getLogger
-from os import getenv, path
-from subprocess import call
+from os import getenv, chmod
 from traceback import format_exc
 
 import aiohttp_cors

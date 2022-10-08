@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { getSetting, setSetting } from '../settings';
 
-export function useSetting<T>(key: string, def: T): [value: T | null, setValue: (value: T) => Promise<void>] {
+export function useSetting<T>(key: string, def: T): [value: T, setValue: (value: T) => Promise<void>] {
   const [value, setValue] = useState(def);
 
   useEffect(() => {

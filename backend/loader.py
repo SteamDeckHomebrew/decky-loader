@@ -25,7 +25,7 @@ class FileChangeHandler(RegexMatchingEventHandler):
         self.logger = getLogger("file-watcher")
         self.plugin_path = plugin_path
         self.queue = queue
-        self.disabled = False
+        self.disabled = True
 
     def maybe_reload(self, src_path):
         if self.disabled:
@@ -70,6 +70,7 @@ class Loader:
         self.logger.info(f"plugin_path: {self.plugin_path}")
         self.plugins = {}
         self.watcher = None
+        self.live_reload = live_reload
 
         if live_reload:
             self.reload_queue = Queue()
@@ -78,6 +79,7 @@ class Loader:
             self.observer.schedule(self.watcher, self.plugin_path, recursive=True)
             self.observer.start()
             self.loop.create_task(self.handle_reloads())
+            self.loop.create_task(self.enable_reload_wait())
 
         server_instance.add_routes([
             web.get("/frontend/{path:.*}", self.handle_frontend_assets),
@@ -91,6 +93,12 @@ class Loader:
             web.get("/plugins/plugin_resource/{name}/{path:.+}", self.handle_sub_route),
             web.get("/steam_resource/{path:.+}", self.get_steam_resource)
         ])
+
+    async def enable_reload_wait(self):
+        if self.live_reload:
+            await sleep(10)
+            self.logger.info("Hot reload enabled")
+            self.watcher.disabled = False
 
     async def handle_frontend_assets(self, request):
         file = path.join(path.dirname(__file__), "static", request.match_info["path"])

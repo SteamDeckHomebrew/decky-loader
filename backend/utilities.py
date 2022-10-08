@@ -1,10 +1,13 @@
 import uuid
 import os
 from json.decoder import JSONDecodeError
+from traceback import format_exc
 
+from asyncio import sleep, start_server, gather, open_connection
 from aiohttp import ClientSession, web
 
-from injector import inject_to_tab
+from logging import getLogger
+from injector import inject_to_tab, get_tab
 import helpers
 import subprocess
 
@@ -26,8 +29,16 @@ class Utilities:
             "disallow_remote_debugging": self.disallow_remote_debugging,
             "set_setting": self.set_setting,
             "get_setting": self.get_setting,
-            "filepicker_ls": self.filepicker_ls
+            "filepicker_ls": self.filepicker_ls,
+            "disable_rdt": self.disable_rdt,
+            "enable_rdt": self.enable_rdt
         }
+
+        self.logger = getLogger("Utilities")
+
+        self.rdt_proxy_server = None
+        self.rdt_script_id = None
+        self.rdt_proxy_task = None
 
         if context:
             context.web_app.add_routes([
@@ -194,3 +205,61 @@ class Utilities:
             "realpath": os.path.realpath(path),
             "files": files
         }
+
+    # Based on https://stackoverflow.com/a/46422554/13174603
+    def start_rdt_proxy(self, ip, port):
+        async def pipe(reader, writer):
+            try:
+                while not reader.at_eof():
+                    writer.write(await reader.read(2048))
+            finally:
+                writer.close()
+        async def handle_client(local_reader, local_writer):
+            try:
+                remote_reader, remote_writer = await open_connection(
+                    ip, port)
+                pipe1 = pipe(local_reader, remote_writer)
+                pipe2 = pipe(remote_reader, local_writer)
+                await gather(pipe1, pipe2)
+            finally:
+                local_writer.close()
+
+        self.rdt_proxy_server = start_server(handle_client, "127.0.0.1", port)
+        self.rdt_proxy_task = self.context.loop.create_task(self.rdt_proxy_server)
+
+    def stop_rdt_proxy(self):
+        if self.rdt_proxy_server:
+            self.rdt_proxy_server.close()
+            self.rdt_proxy_task.cancel()
+
+    async def enable_rdt(self):
+        # TODO un-hardcode port
+        try:
+            self.stop_rdt_proxy()
+            ip = self.context.settings.getSetting("developer.rdt.ip", None)
+
+            if ip != None:
+                self.logger.info("Connecting to React DevTools at " + ip)
+                async with ClientSession() as web:
+                    async with web.request("GET", "http://" + ip + ":8097", ssl=helpers.get_ssl_context()) as res:
+                        if res.status != 200:
+                            self.logger.error("Failed to connect to React DevTools at " + ip)
+                            return False
+                        self.start_rdt_proxy(ip, 8097)
+                        script = "if(!window.deckyHasConnectedRDT){window.deckyHasConnectedRDT=true;\n" + await res.text() + "\n}"
+                        self.logger.info("Connected to React DevTools, loading script")
+                        tab = await get_tab("SP")
+                        # RDT needs to load before React itself to work.
+                        result = await tab.reload_and_evaluate(script)
+                        self.logger.info(result)
+                        
+        except Exception:
+            self.logger.error("Failed to connect to React DevTools")
+            self.logger.error(format_exc())
+
+    async def disable_rdt(self):
+        self.logger.info("Disabling React DevTools")
+        tab = await get_tab("SP")
+        self.rdt_script_id = None
+        await tab.evaluate_js("location.reload();", False, True, False)
+        self.logger.info("React DevTools disabled")

@@ -1,4 +1,5 @@
-import { findModuleChild } from 'decky-frontend-lib';
+import { findModuleChild, sleep } from 'decky-frontend-lib';
+import { FaReact } from 'react-icons/fa';
 
 import Logger from './logger';
 import { getSetting } from './utils/settings';
@@ -30,8 +31,24 @@ export function setShowValveInternal(show: boolean) {
   }
 }
 
+export async function setShouldConnectToReactDevTools(enable: boolean) {
+  window.DeckyPluginLoader.toaster.toast({
+    title: (enable ? 'Enabling' : 'Disabling') + ' React DevTools',
+    body: 'Reloading in 5 seconds',
+    icon: <FaReact />,
+  });
+  await sleep(5000);
+  return enable
+    ? window.DeckyPluginLoader.callServerMethod('enable_rdt')
+    : window.DeckyPluginLoader.callServerMethod('disable_rdt');
+}
+
 export async function startup() {
   const isValveInternalEnabled = await getSetting('developer.valve_internal', false);
+  const isRDTEnabled = await getSetting('developer.rdt.enabled', false);
 
   if (isValveInternalEnabled) setShowValveInternal(isValveInternalEnabled);
+
+  if ((isRDTEnabled && !window.deckyHasConnectedRDT) || (!isRDTEnabled && window.deckyHasConnectedRDT))
+    setShouldConnectToReactDevTools(isRDTEnabled);
 }

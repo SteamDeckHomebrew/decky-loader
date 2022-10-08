@@ -1,6 +1,3 @@
-import { ButtonItem, CommonUIModule, webpackCache } from 'decky-frontend-lib';
-import { forwardRef } from 'react';
-
 import PluginLoader from './plugin-loader';
 import { DeckyUpdater } from './updater';
 
@@ -11,8 +8,8 @@ declare global {
     importDeckyPlugin: Function;
     syncDeckyPlugins: Function;
     deckyHasLoaded: boolean;
+    deckyHasConnectedRDT?: boolean;
     deckyAuthToken: string;
-    webpackJsonp: any;
   }
 }
 

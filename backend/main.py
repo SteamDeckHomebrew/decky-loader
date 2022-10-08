@@ -1,7 +1,7 @@
 # Change PyInstaller files permissions
 import sys
 from subprocess import call
-if "_MEIPASS" in sys:
+if hasattr(sys, '_MEIPASS'):
     call(['chmod', '-R', '755', sys._MEIPASS])
 # Full imports
 from asyncio import get_event_loop, sleep

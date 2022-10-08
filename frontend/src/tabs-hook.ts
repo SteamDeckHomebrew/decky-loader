@@ -72,7 +72,6 @@ class TabsHook extends Logger {
         this.log('Failed to find scroll root node, reattempting in 5 seconds');
         await sleep(5000);
         scrollRoot = await findScrollRoot(tree, 0);
-        return;
       }
       let newQA: any;
       let newQATabRenderer: any;

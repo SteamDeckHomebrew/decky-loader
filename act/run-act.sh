@@ -1,6 +1,7 @@
 #!/bin/bash
 
 type=$1
+# bump=$2
 
 oldartifactsdir="old"
 

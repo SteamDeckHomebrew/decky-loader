@@ -15,6 +15,15 @@ on:
           - none
           - prerelease
           - release
+      bump:
+        type: choice
+        description: Semver to bump
+        default: 'none'
+        options:
+          - none
+          - patch
+          - minor
+          - major
 
 permissions:
   contents: write
@@ -25,6 +34,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Print input
+      run : |
+        echo "release: ${{ github.event.inputs.release }}\n"
+        echo "bump: ${{ github.event.inputs.bump }}\n"
+
     - name: Checkout 🧰
       uses: actions/checkout@v3
 
@@ -106,11 +120,26 @@ jobs:
         if [[ "$VERSION" =~ "-pre" ]]; then
           printf "is prerelease, bumping to release\n"
           OUT=$(semver bump release "$VERSION")
-          printf "OUT: ${OUT}\n"
+          printf "OUT: ${OUT}\n"\
+          printf "bumping by selected type.\n"
+          if [[ "${{github.event.inputs.bump}}" != "none" ]]; then
+            OUT=$(semver bump ${{github.event.inputs.bump}} "$OUT")
+            printf "OUT: ${OUT}\n"
+          else
+            printf "no type selected, defaulting to patch.\n"
+            OUT=$(semver bump patch "$OUT")
+            printf "OUT: ${OUT}\n"
+          fi
         elif [[ ! "$VERSION" =~ "-pre" ]]; then
-          printf "previous tag is a release, bumping by a patch\n"
-          OUT=$(semver bump patch "$VERSION")
-          printf "OUT: ${OUT}\n" 
+          printf "previous tag is a release, bumping by selected type.\n"
+          if [[ "${{github.event.inputs.bump}}" != "none" ]]; then
+            OUT=$(semver bump ${{github.event.inputs.bump}} "$VERSION")
+            printf "OUT: ${OUT}\n"
+          else
+            printf "previous tag is a release, but no bump selected. Defaulting to a patch bump.\n"
+            OUT=$(semver bump patch "$VERSION")
+            printf "OUT: ${OUT}\n"
+          fi
         fi
         echo "vOUT: v$OUT"
         echo ::set-output name=tag_name::v$OUT
@@ -138,7 +167,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
 
-    steps:    
+    steps:
     - name: Checkout 🧰
       uses: actions/checkout@v3
 
@@ -170,16 +199,34 @@ jobs:
         echo "VERS: $VERSION"
         OUT=""
         if [[ ! "$VERSION" =~ "-pre" ]]; then
-          printf "is release, bumping  minor version and prerel\n"
-          OUT=$(semver bump patch "$VERSION")
+          printf "pre-release from release, bumping by selected type and prerel\n"
+          if [[ ! ${{ github.event.inputs.bump }} == "none" ]]; then
+            OUT=$(semver bump ${{github.event.inputs.bump}} "$VERSION")
+            printf "OUT: ${OUT}\n"
+          else
+            printf "type not selected, defaulting to patch\n"
+            OUT=$(semver bump patch "$VERSION")
+            printf "OUT: ${OUT}\n"
+          fi
           OUT="$OUT-pre"
           OUT=$(semver bump prerel "$OUT")
           printf "OUT: ${OUT}\n"
         elif [[ "$VERSION" =~ "-pre" ]]; then
-          printf "is a prerelease, bumping prerel\n"
-          OUT=$(semver bump prerel "$VERSION")
-          printf "OUT: ${OUT}\n"
+          printf "pre-release to pre-release, bumping by selected type and or prerel version\n"
+          if [[ ! ${{ github.event.inputs.bump }} == "none" ]]; then
+            OUT=$(semver bump ${{github.event.inputs.bump}} "$VERSION")
+            printf "OUT: ${OUT}\n"
+            printf "bumping prerel\n"
+            OUT=$(semver bump prerel "$OUT")
+            printf "OUT: ${OUT}\n"
+          else
+            printf "type not selected, defaulting to new pre-release only\n"
+            printf "bumping prerel\n"
+            OUT=$(semver bump prerel "$VERSION")
+            printf "OUT: ${OUT}\n"
+          fi
         fi
+        printf "vOUT: v${OUT}\n"
         echo ::set-output name=tag_name::v$OUT
 
     - name: Push tag 📤

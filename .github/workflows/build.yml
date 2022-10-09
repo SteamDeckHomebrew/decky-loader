@@ -222,7 +222,8 @@ jobs:
           else
             printf "type not selected, defaulting to new pre-release only\n"
             printf "bumping prerel\n"
-            OUT=$(semver bump prerel "$VERSION")
+            OUT="$VERSION-pre"
+            OUT=$(semver bump prerel "$OUT")
             printf "OUT: ${OUT}\n"
           fi
         fi

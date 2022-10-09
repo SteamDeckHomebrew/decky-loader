@@ -216,6 +216,8 @@ jobs:
           if [[ ! ${{ github.event.inputs.bump }} == "none" ]]; then
             OUT=$(semver bump ${{github.event.inputs.bump}} "$VERSION")
             printf "OUT: ${OUT}\n"
+            OUT="$OUT-pre"
+            printf "OUT: ${OUT}\n"
             printf "bumping prerel\n"
             OUT=$(semver bump prerel "$OUT")
             printf "OUT: ${OUT}\n"
@@ -223,6 +225,7 @@ jobs:
             printf "type not selected, defaulting to new pre-release only\n"
             printf "bumping prerel\n"
             OUT="$VERSION-pre"
+            printf "OUT: ${OUT}\n"
             OUT=$(semver bump prerel "$OUT")
             printf "OUT: ${OUT}\n"
           fi

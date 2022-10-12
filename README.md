@@ -27,8 +27,13 @@ For more information about Decky Loader as well as documentation and development
 1. Navigate to the System menu and scroll to the System Settings. Toggle "Enable Developer Mode" so it is enabled.
 1. Navigate to the Developer menu and scroll to Miscellaneous. Toggle "CEF Remote Debugging" so it is enabled.
 1. Select "Restart Now" to apply your changes.
+1. Prepare a mouse and keyboard if possible.
+   - Keyboards and mice can be connected to the Steam Deck via USB-C or Bluetooth.
+   - Many Bluetooth keyboard and mouse apps are available for iOS and Android.
+   - The Steam Link app is available on [Windows](https://media.steampowered.com/steamlink/windows/latest/SteamLink.zip), [macOS](https://apps.apple.com/us/app/steam-link/id1246969117), and [Linux](https://flathub.org/apps/details/com.valvesoftware.SteamLink). It works well as a remote desktop substitute.
+   - If you have no other options, use the right trackpad as a mouse and press <img src="./docs/images/steam.svg" height=16>+<img src="./docs/images/x.svg" height=16> to open the on-screen keyboard as needed.
 1. Press the <img src="./docs/images/steam.svg" height=16> button and open the Power menu.
-1. Select "Switch to Desktop". A keyboard and mouse or using the [Steam Link app](https://steamcommunity.com/app/353380/discussions/8/3105764348181505385/) is recommended for the following steps.
+1. Select "Switch to Desktop".
 1. Open the Konsole app and set a password using the command `passwd`. ([YouTube Guide](https://www.youtube.com/watch?v=1vOMYGj22rQ))
    - It will look like the password isn't typing properly. That is normal, it's a security feature similar to seeing "\*\*\*" when typing passwords online.
 1. Choose the version of Decky Loader you want to install and paste the following command into the Konsole app.

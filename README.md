@@ -31,7 +31,7 @@ For more information about Decky Loader as well as documentation and development
 
 ## 💾 Installation
 
-1. Press the <img src="./docs/images/steam.svg" height=16> button and open the Settings menu.
+1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Settings menu.
 1. Navigate to the System menu and scroll to the System Settings. Toggle "Enable Developer Mode" so it is enabled.
 1. Navigate to the Developer menu and scroll to Miscellaneous. Toggle "CEF Remote Debugging" so it is enabled.
 1. Select "Restart Now" to apply your changes.
@@ -39,8 +39,8 @@ For more information about Decky Loader as well as documentation and development
    - Keyboards and mice can be connected to the Steam Deck via USB-C or Bluetooth.
    - Many Bluetooth keyboard and mouse apps are available for iOS and Android.
    - The Steam Link app is available on [Windows](https://media.steampowered.com/steamlink/windows/latest/SteamLink.zip), [macOS](https://apps.apple.com/us/app/steam-link/id1246969117), and [Linux](https://flathub.org/apps/details/com.valvesoftware.SteamLink). It works well as a remote desktop substitute.
-   - If you have no other options, use the right trackpad as a mouse and press <img src="./docs/images/steam.svg" height=16>+<img src="./docs/images/x.svg" height=16> to open the on-screen keyboard as needed.
-1. Press the <img src="./docs/images/steam.svg" height=16> button and open the Power menu.
+   - If you have no other options, use the right trackpad as a mouse and press <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16>+<img src="./docs/images/light/x.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/x.svg#gh-light-mode-only" height=16> to open the on-screen keyboard as needed.
+1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Power menu.
 1. Select "Switch to Desktop".
 1. Open the Konsole app and set a password using the command `passwd`. ([YouTube Guide](https://www.youtube.com/watch?v=1vOMYGj22rQ))
    - It will look like the password isn't typing properly. That is normal, it's a security feature similar to seeing "\*\*\*" when typing passwords online.
@@ -59,18 +59,18 @@ Now that you have Decky Loader installed, you can start using plugins. Each plug
 
 ### 📦 Plugins
 
-1. Press the QUICK ACCESS button and navigate to the PLUG icon. This is the Decky menu used for interacting with plugins and the loader itself.
-1. Select the MARKET icon to open the Plugins Browser. This is where you can find and install plugins.
+1. Press the <img src="./docs/images/light/qam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/qam.svg#gh-light-mode-only" height=16> button and navigate to the <img src="./docs/images/light/plug.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/plug.svg#gh-light-mode-only" height=16> icon. This is the Decky menu used for interacting with plugins and the loader itself.
+1. Select the <img src="./docs/images/light/store.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/store.svg#gh-light-mode-only" height=16> icon to open the Plugins Browser. This is where you can find and install plugins.
    - You can also install from URL in the Settings menu. We do not recommend installing plugins from untrusted sources.
 1. To install a plugin, select the "Install" button on the plugin you want. You can also select a version from a dropdown menu, but this is not recommended.
-1. To update, uninstall, and reload plugins, navigate to the Decky menu and select the GEAR icon.
+1. To update, uninstall, and reload plugins, navigate to the Decky menu and select the <img src="./docs/images/light/gear.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/gear.svg#gh-light-mode-only" height=16> icon.
    - Keep in mind that uninstalling a plugin will only remove its plugin files, not any other files it may have created.
 
 ### 👋 Uninstallation
 
 We're sorry to see you go! If you are considering uninstalling because you are having issues, please consider [opening an issue](https://github.com/SteamDeckHomebrew/decky-loader/issues) or [joining our Discord](https://discord.gg/ZU74G2NJzk) so we can help you and other users.
 
-1. Press the <img src="./docs/images/steam.svg" height=16> button and open the Power menu.
+1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Power menu.
 1. Select "Switch to Desktop".
 1. Open the Konsole app and run `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/uninstall.sh | sh`.
 

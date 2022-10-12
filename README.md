@@ -21,6 +21,14 @@ Decky Loader is a homebrew plugin launcher for the Steam Deck. It can be used to
 
 For more information about Decky Loader as well as documentation and development tools, please visit [our wiki](https://deckbrew.xyz).
 
+### 🎨 Features
+
+🧹 Clean injecting and loading of multiple plugins.  
+🔒 Stays installed between system updates and reboots.  
+🔗 Allows two-way communication between plugins and the loader.  
+🐍 Supports Python functions run from TypeScript React.  
+🌐 Allows plugins to make fetch calls that bypass CORS completely.
+
 ## 💾 Installation
 
 1. Press the <img src="./docs/images/steam.svg" height=16> button and open the Settings menu.
@@ -45,54 +53,53 @@ For more information about Decky Loader as well as documentation and development
      `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_prerelease.sh | sh`
 1. Open the Return to Gaming Mode shortcut on your desktop.
 
-### Install/Uninstall Plugins
+## 🚀 Getting Started
 
-- Using the shopping bag button in the top right corner of the plugin menu, you can go to the offical Plugin Store ([Web Preview](https://beta.deckbrew.xyz/)).
-- Install from URL in the settings menu.
-- Use the settings menu to uninstall plugins, this will not remove any files made in different directories by plugins.
+Now that you have Decky Loader installed, you can start using plugins. Each plugin is maintained by a different developer and has its own uses, but most follow a general structure outlined below. If you decide Decky Loader isn't for you, we have also included instructions on how to uninstall it.
 
-### Uninstall
+### 📦 Plugins
 
-- Open a terminal and paste the following command into it:
-  - `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/uninstall.sh | sh`
+1. Press the QUICK ACCESS button and navigate to the PLUG icon. This is the Decky menu used for interacting with plugins and the loader itself.
+1. Select the MARKET icon to open the Plugins Browser. This is where you can find and install plugins.
+   - You can also install from URL in the Settings menu. We do not recommend installing plugins from untrusted sources.
+1. To install a plugin, select the "Install" button on the plugin you want. You can also select a version from a dropdown menu, but this is not recommended.
+1. To update, uninstall, and reload plugins, navigate to the Decky menu and select the GEAR icon.
+   - Keep in mind that uninstalling a plugin will only remove its plugin files, not any other files it may have created.
 
-## Features
+### 👋 Uninstallation
 
-- Clean injecting and loading of one or more plugins
-- Persistent. It doesn't need to be reinstalled after every system update
-- Allows 2-way communication between the plugins and the loader.
-- Allows plugins to define python functions and run them from javascript.
-- Allows plugins to make fetch calls, bypassing cors completely.
+We're sorry to see you go! If you are considering uninstalling because you are having issues, please consider [opening an issue](https://github.com/SteamDeckHomebrew/decky-loader/issues) or [joining our Discord](https://discord.gg/ZU74G2NJzk) so we can help you and other users.
 
-## Developing plugins
+1. Press the <img src="./docs/images/steam.svg" height=16> button and open the Power menu.
+1. Select "Switch to Desktop".
+1. Open the Konsole app and run `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/uninstall.sh | sh`.
 
-- There is no complete plugin development documentation yet. However a good starting point is the [Plugin Template](https://github.com/SteamDeckHomebrew/decky-plugin-template) repository.
+### 🛠️ Plugin Development
 
-## [Contribution](https://deckbrew.xyz/en/loader-dev/development)
+There is no complete plugin development documentation yet. However a good starting point is the [plugin template repository](https://github.com/SteamDeckHomebrew/decky-plugin-template). Consider [joining our Discord](https://discord.gg/ZU74G2NJzk) if you have any questions.
 
-- Please consult the [Wiki](https://deckbrew.xyz/en/loader-dev/development) for installing development versions of Decky Loader.
-  - This is also useful for Plugin Developers looking to target new but unreleased versions of Decky Loader.
-- [Here's how to get the Steam Deck UI on your enviroment of choice.](https://youtu.be/1IAbZte8e7E?t=112)
-  - (The video shows Windows usage but unless you're using Arch WSL/cygwin this script is unsupported on Windows.)
+### 🤝 Contributing
 
-### Getting Started
+Please consult [the wiki page regarding development](https://deckbrew.xyz/en/loader-dev/development) for more information on installing development versions of Decky Loader. You can also install the Steam Deck UI on a Windows or Linux computer for testing by following [this YouTube guide](https://youtu.be/1IAbZte8e7E?t=112).
 
 1. Clone the repository using the latest commit to main before starting your PR.
-2. In your clone of the repository run these commands:
-   1. `pnpm i`
-   2. `pnpm run build`
-3. If you are modifying the UI, these will need to be run before deploying the changes to your Deck.
-4. Use the vscode tasks or `deck.sh` script to deploy your changes to your Deck to test them.
-5. You will be testing your changes with the python script version, so you will need to build, deploy and reload each time.
+1. In your clone of the repository, run these commands.
+   ```bash
+   pnpm i
+   pnpm run build
+   ```
+1. If you are modifying the UI, these commands will need to be run before deploying the changes to your Steam Deck.
+1. Use the VS Code tasks or `deck.sh` script to deploy your changes to your Steam Deck to test them.
+1. You will be testing your changes with the Python script version. You will need to build, deploy, and reload each time.
 
-Note: If you are recieveing build errors due to an out of date library, you should run this command inside of your repository:
+⚠️ If you are recieving build errors due to an out of date library, you should run this command inside of your repository.
 
 ```bash
 pnpm update decky-frontend-lib --latest
 ```
 
-Source control and deploying plugins are left to each respective contributor for the cloned repos in order to keep depedencies up to date.
+Source control and deploying plugins are left to each respective contributor for the cloned repos in order to keep dependencies up to date.
 
-## Credit
+## 📜 Credits
 
-The original idea for the concept is based on the work of [marios8543's steamdeck-ui-inject](https://github.com/marios8543/steamdeck-ui-inject) project.
+The original idea for the plugin loader concept is based on the work of [marios8543's Steam Deck UI Inject project](https://github.com/marios8543/steamdeck-ui-inject).

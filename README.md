@@ -53,6 +53,14 @@ For more information about Decky Loader as well as documentation and development
      `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_prerelease.sh | sh`
 1. Open the Return to Gaming Mode shortcut on your desktop.
 
+### 👋 Uninstallation
+
+We're sorry to see you go! If you are considering uninstalling because you are having issues, please consider [opening an issue](https://github.com/SteamDeckHomebrew/decky-loader/issues) or [joining our Discord](https://discord.gg/ZU74G2NJzk) so we can help you and other users.
+
+1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Power menu.
+1. Select "Switch to Desktop".
+1. Open the Konsole app and run `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/uninstall.sh | sh`.
+
 ## 🚀 Getting Started
 
 Now that you have Decky Loader installed, you can start using plugins. Each plugin is maintained by a different developer and has its own uses, but most follow a general structure outlined below. If you decide Decky Loader isn't for you, we have also included instructions on how to uninstall it.
@@ -65,14 +73,6 @@ Now that you have Decky Loader installed, you can start using plugins. Each plug
 1. To install a plugin, select the "Install" button on the plugin you want. You can also select a version from a dropdown menu, but this is not recommended.
 1. To update, uninstall, and reload plugins, navigate to the Decky menu and select the <img src="./docs/images/light/gear.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/gear.svg#gh-light-mode-only" height=16> icon.
    - Keep in mind that uninstalling a plugin will only remove its plugin files, not any other files it may have created.
-
-### 👋 Uninstallation
-
-We're sorry to see you go! If you are considering uninstalling because you are having issues, please consider [opening an issue](https://github.com/SteamDeckHomebrew/decky-loader/issues) or [joining our Discord](https://discord.gg/ZU74G2NJzk) so we can help you and other users.
-
-1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Power menu.
-1. Select "Switch to Desktop".
-1. Open the Konsole app and run `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/uninstall.sh | sh`.
 
 ### 🛠️ Plugin Development
 

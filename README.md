@@ -33,6 +33,7 @@ For more information about Decky Loader as well as documentation and development
 
 - Crankshaft is incompatible with Decky Loader. If you are using Crankshaft, please uninstall it before installing Decky Loader.
 - Syncthing may use port 8080 on Steam Deck, which Decky Loader needs to function. If you are using Syncthing as a service, please change its port to something else.
+- If you are using any software that uses port 1337, please change its port to something else or uninstall it.
 
 ## 💾 Installation
 

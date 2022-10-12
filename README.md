@@ -11,10 +11,15 @@
   <a href="https://github.com/SteamDeckHomebrew/decky-loader/blob/main/LICENSE"><img src="https://img.shields.io/github/license/SteamDeckHomebrew/decky-loader" /></a>
   <a href="https://discord.gg/ZU74G2NJzk"><img src="https://img.shields.io/discord/960281551428522045?color=%235865F2&label=discord" /></a>
   <br>
+  <br>
   <img src="https://media.discordapp.net/attachments/966017112244125756/1012466063893610506/main.jpg" alt="Decky screenshot" width="80%">
 </p>
 
-Keep an eye on the [Wiki](https://deckbrew.xyz) for more information about Decky Loader, documentation + tools for plugin development and more.
+## 📖 About
+
+Decky Loader is a homebrew plugin launcher for the Steam Deck. It can be used to [stylize your menus](https://github.com/suchmememanyskill/SDH-CssLoader), [change system sounds](https://github.com/EMERALD0874/SDH-AudioLoader), [adjust your screen saturation](https://github.com/libvibrant/vibrantDeck), [change additional system settings](https://github.com/NGnius/PowerTools), and [more](https://beta.deckbrew.xyz/).
+
+For more information about Decky Loader as well as documentation and development tools, please visit [our wiki](https://deckbrew.xyz).
 
 ## Installation
 

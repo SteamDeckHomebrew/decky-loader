@@ -42,8 +42,8 @@ For more information about Decky Loader as well as documentation and development
    - If you have no other options, use the right trackpad as a mouse and press <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16>+<img src="./docs/images/light/x.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/x.svg#gh-light-mode-only" height=16> to open the on-screen keyboard as needed.
 1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Power menu.
 1. Select "Switch to Desktop".
-1. Open the Konsole app and set a password using the command `passwd`. ([YouTube Guide](https://www.youtube.com/watch?v=1vOMYGj22rQ))
-   - It will look like the password isn't typing properly. That is normal, it's a security feature similar to seeing "\*\*\*" when typing passwords online.
+1. Open the Konsole app and prepare to set a password using the command `passwd`. ([YouTube Guide](https://www.youtube.com/watch?v=1vOMYGj22rQ))
+1. You will be prompted to create a password. Your text will not be visible. After you press enter, you will need to type your password again to confirm.
 1. Choose the version of Decky Loader you want to install and paste the following command into the Konsole app.
    - **Latest Release**  
      Intended for most users. This is the latest stable version of Decky Loader.  
@@ -55,7 +55,7 @@ For more information about Decky Loader as well as documentation and development
 
 ### 👋 Uninstallation
 
-We're sorry to see you go! If you are considering uninstalling because you are having issues, please consider [opening an issue](https://github.com/SteamDeckHomebrew/decky-loader/issues) or [joining our Discord](https://discord.gg/ZU74G2NJzk) so we can help you and other users.
+We are sorry to see you go! If you are considering uninstalling because you are having issues, please consider [opening an issue](https://github.com/SteamDeckHomebrew/decky-loader/issues) or [joining our Discord](https://discord.gg/ZU74G2NJzk) so we can help you and other users.
 
 1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Power menu.
 1. Select "Switch to Desktop".
@@ -63,7 +63,7 @@ We're sorry to see you go! If you are considering uninstalling because you are h
 
 ## 🚀 Getting Started
 
-Now that you have Decky Loader installed, you can start using plugins. Each plugin is maintained by a different developer and has its own uses, but most follow a general structure outlined below. If you decide Decky Loader isn't for you, we have also included instructions on how to uninstall it.
+Now that you have Decky Loader installed, you can start using plugins. Each plugin is maintained by a different developer and has its own uses, but most follow a general structure outlined below.
 
 ### 📦 Plugins
 

@@ -42,7 +42,7 @@ For more information about Decky Loader as well as documentation and development
    - If you have no other options, use the right trackpad as a mouse and press <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16>+<img src="./docs/images/light/x.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/x.svg#gh-light-mode-only" height=16> to open the on-screen keyboard as needed.
 1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Power menu.
 1. Select "Switch to Desktop".
-1. Open the Konsole app and prepare to set a password using the command `passwd`. ([YouTube Guide](https://www.youtube.com/watch?v=1vOMYGj22rQ))
+1. Open the Konsole app and enter the command `passwd`. You can skip this step if you have already created a sudo password using this command. ([YouTube Guide](https://www.youtube.com/watch?v=1vOMYGj22rQ))
 1. You will be prompted to create a password. Your text will not be visible. After you press enter, you will need to type your password again to confirm.
 1. Choose the version of Decky Loader you want to install and paste the following command into the Konsole app.
    - **Latest Release**  

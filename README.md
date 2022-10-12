@@ -29,6 +29,11 @@ For more information about Decky Loader as well as documentation and development
 🐍 Supports Python functions run from TypeScript React.  
 🌐 Allows plugins to make fetch calls that bypass CORS completely.
 
+### 🤔 Common Issues
+
+- Crankshaft is incompatible with Decky Loader. If you are using Crankshaft, please uninstall it before installing Decky Loader.
+- Syncthing may use port 8080 on Steam Deck, which Decky Loader needs to function. If you are using Syncthing as a service, please change its port to something else.
+
 ## 💾 Installation
 
 1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Settings menu.

@@ -21,25 +21,24 @@ Decky Loader is a homebrew plugin launcher for the Steam Deck. It can be used to
 
 For more information about Decky Loader as well as documentation and development tools, please visit [our wiki](https://deckbrew.xyz).
 
-## Installation
+## 💾 Installation
 
-1. Go into the Steam Deck Settings
-2. Under System -> System Settings toggle `Enable Developer Mode`
-3. Scroll the sidebar all the way down and click on `Developer`
-4. Under Miscellaneous, enable `CEF Remote Debugging`
-5. Confirm dialog and wait for system reboot
-6. Click on the `STEAM` button and select `Power` -> `Switch to Desktop`
-7. Make sure you have a password set with the "passwd" command in terminal to install it ([YouTube Guide](https://www.youtube.com/watch?v=1vOMYGj22rQ)).
-   - It will look like the password isn't typing properly. That's normal, it's a security feature (Similar to `***` when typing passwords online)
-8. Open a terminal ("Konsole" is the pre-installed terminal application) and paste the following command into it:
-   - For the latest release (recommended for all users):
-     - `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_release.sh | sh`
-   - For the latest pre-release (testing releases, unlikely to be fully stable):
-     - `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_prerelease.sh | sh`
-   - For testers/plugin developers:
-     - `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_prerelease.sh | sh`
-     - [Wiki Link](https://deckbrew.xyz/en/loader-dev/development)
-9. Done! Reboot back into Gaming mode and enjoy your plugins!
+1. Press the <img src="./docs/images/steam.svg" height=16> button and open the Settings menu.
+1. Navigate to the System menu and scroll to the System Settings. Toggle "Enable Developer Mode" so it is enabled.
+1. Navigate to the Developer menu and scroll to Miscellaneous. Toggle "CEF Remote Debugging" so it is enabled.
+1. Select "Restart Now" to apply your changes.
+1. Press the <img src="./docs/images/steam.svg" height=16> button and open the Power menu.
+1. Select "Switch to Desktop". A keyboard and mouse or using the [Steam Link app](https://steamcommunity.com/app/353380/discussions/8/3105764348181505385/) is recommended for the following steps.
+1. Open the Konsole app and set a password using the command `passwd`. ([YouTube Guide](https://www.youtube.com/watch?v=1vOMYGj22rQ))
+   - It will look like the password isn't typing properly. That is normal, it's a security feature similar to seeing "\*\*\*" when typing passwords online.
+1. Choose the version of Decky Loader you want to install and paste the following command into the Konsole app.
+   - **Latest Release**  
+     Intended for most users. This is the latest stable version of Decky Loader.  
+     `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_release.sh | sh`
+   - **Latest Pre-Release**  
+     Intended for plugin developers. Pre-releases are unlikely to be fully stable but contain the latest changes. For more information on plugin development, please consult [the wiki page](https://deckbrew.xyz/en/loader-dev/development).  
+     `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_prerelease.sh | sh`
+1. Open the Return to Gaming Mode shortcut on your desktop.
 
 ### Install/Uninstall Plugins
 

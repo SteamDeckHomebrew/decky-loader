@@ -91,6 +91,15 @@ class Tab:
             "method": "Debugger.enable"
         }, True)
 
+        await self._send_devtools_cmd({
+            "method": "Runtime.evaluate",
+            "params": {
+                "expression": "location.reload();",
+                "userGesture": True,
+                "awaitPromise": False
+            }
+        }, False)
+
         breakpoint_res = await self._send_devtools_cmd({
             "method": "Debugger.setInstrumentationBreakpoint",
             "params": {
@@ -99,15 +108,11 @@ class Tab:
         }, True)
 
         logger.info(breakpoint_res)
-
-        await self._send_devtools_cmd({
-            "method": "Page.reload"
-        }, True)
-
+        
         # Page finishes loading when breakpoint hits
 
-        for x in range(3):
-            # this works around 1/2 of the time, so just send it 3 times.
+        for x in range(20):
+            # this works around 1/5 of the time, so just send it 8 times.
             # the js accounts for being injected multiple times allowing only one instance to run at a time anyway
             await self._send_devtools_cmd({
                 "method": "Runtime.evaluate",
@@ -123,11 +128,12 @@ class Tab:
             "params": {
                 "breakpointId": breakpoint_res["result"]["breakpointId"]
             }
-        }, True)
+        }, False)
 
-        await self._send_devtools_cmd({
-            "method": "Debugger.resume"
-        }, True)
+        for x in range(4):
+            await self._send_devtools_cmd({
+                "method": "Debugger.resume"
+            }, False)
 
         await self._send_devtools_cmd({
             "method": "Debugger.disable"

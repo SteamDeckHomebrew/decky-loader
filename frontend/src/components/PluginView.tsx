@@ -10,9 +10,16 @@ import { VFC } from 'react';
 
 import { useDeckyState } from './DeckyState';
 import NotificationBadge from './NotificationBadge';
+import { useQuickAccessVisible } from './QuickAccessVisibleState';
 
 const PluginView: VFC = () => {
   const { plugins, updates, activePlugin, setActivePlugin } = useDeckyState();
+  const visible = useQuickAccessVisible();
+
+  if (!visible) {
+    console.log('invisible');
+    return null;
+  }
 
   if (activePlugin) {
     return (

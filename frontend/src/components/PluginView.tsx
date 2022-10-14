@@ -1,5 +1,6 @@
 import {
   ButtonItem,
+  Focusable,
   PanelSection,
   PanelSectionRow,
   joinClassNames,
@@ -13,22 +14,22 @@ import NotificationBadge from './NotificationBadge';
 import { useQuickAccessVisible } from './QuickAccessVisibleState';
 
 const PluginView: VFC = () => {
-  const { plugins, updates, activePlugin, setActivePlugin } = useDeckyState();
+  const { plugins, updates, activePlugin, setActivePlugin, closeActivePlugin } = useDeckyState();
   const visible = useQuickAccessVisible();
 
   if (!visible) {
-    console.log('invisible');
     return null;
   }
 
   if (activePlugin) {
     return (
-      <div
+      <Focusable
         className={joinClassNames(staticClasses.TabGroupPanel, scrollClasses.ScrollPanel, scrollClasses.ScrollY)}
         style={{ height: '100%' }}
+        onCancelButton={closeActivePlugin}
       >
         {activePlugin.content}
-      </div>
+      </Focusable>
     );
   }
   return (

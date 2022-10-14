@@ -10,6 +10,7 @@ declare global {
     deckyHasLoaded: boolean;
     deckyHasConnectedRDT?: boolean;
     deckyAuthToken: string;
+    DFL?: any;
   }
 }
 

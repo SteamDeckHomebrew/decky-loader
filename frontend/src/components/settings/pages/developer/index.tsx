@@ -9,7 +9,7 @@ export default function DeveloperSettings() {
   const [enableValveInternal, setEnableValveInternal] = useSetting<boolean>('developer.valve_internal', false);
   const [reactDevtoolsEnabled, setReactDevtoolsEnabled] = useSetting<boolean>('developer.rdt.enabled', false);
   const [reactDevtoolsIP, setReactDevtoolsIP] = useSetting<string>('developer.rdt.ip', '');
-  const textRef = useRef<HTMLInputElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
 
   return (
     <>
@@ -30,33 +30,30 @@ export default function DeveloperSettings() {
             setShowValveInternal(toggleValue);
           }}
         />
-      </Field>
-      <Field
-        label="Enable React DevTools"
-        description={
-          <>
-            <span style={{ whiteSpace: 'pre-line' }}>
-              Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set the
-              IP address before enabling.
-            </span>
-            <TextField
-              ref={textRef}
-              label={'IP'}
-              value={reactDevtoolsIP}
-              onChange={(e) => setReactDevtoolsIP(e?.target.value)}
-            />
-          </>
+      </Field>{' '}
+      <Focusable
+        onOKButton={
+          reactDevtoolsIP == ''
+            ? () => {
+                (textRef.current?.childNodes[0] as HTMLInputElement)?.focus();
+              }
+            : undefined
         }
-        icon={<FaReact style={{ display: 'block' }} />}
       >
-        <Focusable
-          onOKButton={
-            reactDevtoolsIP == ''
-              ? () => {
-                  textRef.current?.focus();
-                }
-              : undefined
+        <Field
+          label="Enable React DevTools"
+          description={
+            <>
+              <span style={{ whiteSpace: 'pre-line' }}>
+                Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set
+                the IP address before enabling.
+              </span>
+              <div ref={textRef}>
+                <TextField label={'IP'} value={reactDevtoolsIP} onChange={(e) => setReactDevtoolsIP(e?.target.value)} />
+              </div>
+            </>
           }
+          icon={<FaReact style={{ display: 'block' }} />}
         >
           <Toggle
             value={reactDevtoolsEnabled}
@@ -66,8 +63,8 @@ export default function DeveloperSettings() {
               setShouldConnectToReactDevTools(toggleValue);
             }}
           />
-        </Focusable>
-      </Field>
+        </Field>
+      </Focusable>
     </>
   );
 }

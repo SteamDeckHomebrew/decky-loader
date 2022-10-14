@@ -1,4 +1,5 @@
-import { Field, TextField, Toggle } from 'decky-frontend-lib';
+import { Field, Focusable, TextField, Toggle } from 'decky-frontend-lib';
+import { useRef } from 'react';
 import { FaReact, FaSteamSymbol } from 'react-icons/fa';
 
 import { setShouldConnectToReactDevTools, setShowValveInternal } from '../../../../developer';
@@ -8,6 +9,7 @@ export default function DeveloperSettings() {
   const [enableValveInternal, setEnableValveInternal] = useSetting<boolean>('developer.valve_internal', false);
   const [reactDevtoolsEnabled, setReactDevtoolsEnabled] = useSetting<boolean>('developer.rdt.enabled', false);
   const [reactDevtoolsIP, setReactDevtoolsIP] = useSetting<string>('developer.rdt.ip', '');
+  const textRef = useRef<HTMLInputElement>(null);
 
   return (
     <>
@@ -37,19 +39,34 @@ export default function DeveloperSettings() {
               Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set the
               IP address before enabling.
             </span>
-            <TextField label={'IP'} value={reactDevtoolsIP} onChange={(e) => setReactDevtoolsIP(e?.target.value)} />
+            <TextField
+              ref={textRef}
+              label={'IP'}
+              value={reactDevtoolsIP}
+              onChange={(e) => setReactDevtoolsIP(e?.target.value)}
+            />
           </>
         }
         icon={<FaReact style={{ display: 'block' }} />}
       >
-        <Toggle
-          value={reactDevtoolsEnabled}
-          disabled={reactDevtoolsIP == ''}
-          onChange={(toggleValue) => {
-            setReactDevtoolsEnabled(toggleValue);
-            setShouldConnectToReactDevTools(toggleValue);
-          }}
-        />
+        <Focusable
+          onOKButton={
+            reactDevtoolsIP == ''
+              ? () => {
+                  textRef.current?.focus();
+                }
+              : undefined
+          }
+        >
+          <Toggle
+            value={reactDevtoolsEnabled}
+            disabled={reactDevtoolsIP == ''}
+            onChange={(toggleValue) => {
+              setReactDevtoolsEnabled(toggleValue);
+              setShouldConnectToReactDevTools(toggleValue);
+            }}
+          />
+        </Focusable>
       </Field>
     </>
   );

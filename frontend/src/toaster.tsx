@@ -38,34 +38,23 @@ class Toaster extends Logger {
       await sleep(2000);
     }
 
-    this.node = instance.return.return;
+    this.node = instance.sibling.child;
     let toast: any;
     let renderedToast: ReactNode = null;
-    this.node.stateNode.render = (...args: any[]) => {
-      const ret = this.node.stateNode.__proto__.render.call(this.node.stateNode, ...args);
-      if (ret) {
-        this.instanceRetPatch = afterPatch(ret, 'type', (_: any, ret: any) => {
-          if (ret?.props?.children[1]?.children?.props) {
-            const currentToast = ret.props.children[1].children.props.notification;
-            if (currentToast?.decky) {
-              if (currentToast == toast) {
-                ret.props.children[1].children = renderedToast;
-              } else {
-                toast = currentToast;
-                renderedToast = <Toast toast={toast} />;
-                ret.props.children[1].children = renderedToast;
-              }
-            } else {
-              toast = null;
-              renderedToast = null;
-            }
-          }
-          return ret;
-        });
+    afterPatch(this.node, 'type', (args: any[], ret: any) => {
+      const currentToast = args[0].notification;
+      if (currentToast?.decky) {
+        if (currentToast !== toast) {
+          toast = currentToast;
+          renderedToast = <Toast toast={toast} />;
+        }
+        ret.props.children = renderedToast;
+      } else {
+        toast = null;
+        renderedToast = null;
       }
       return ret;
-    };
-    this.node.stateNode.forceUpdate();
+    });
     this.settingsModule = findModuleChild((m) => {
       if (typeof m !== 'object') return undefined;
       for (let prop in m) {

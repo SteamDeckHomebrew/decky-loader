@@ -32,6 +32,20 @@ export default function DeveloperSettings() {
         />
       </Field>{' '}
       <Focusable
+        onTouchEnd={
+          reactDevtoolsIP == ''
+            ? () => {
+                (textRef.current?.childNodes[0] as HTMLInputElement)?.focus();
+              }
+            : undefined
+        }
+        onClick={
+          reactDevtoolsIP == ''
+            ? () => {
+                (textRef.current?.childNodes[0] as HTMLInputElement)?.focus();
+              }
+            : undefined
+        }
         onOKButton={
           reactDevtoolsIP == ''
             ? () => {

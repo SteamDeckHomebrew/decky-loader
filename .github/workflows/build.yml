@@ -62,7 +62,7 @@ jobs:
       working-directory: ./frontend
       run: |
         npm i -g pnpm
-        pnpm ci --frozen-lockfile
+        pnpm i --frozen-lockfile
 
     - name: Build JS Frontend 🛠️
       working-directory: ./frontend

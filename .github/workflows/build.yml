@@ -59,10 +59,10 @@ jobs:
         [ -f requirements.txt ] && pip install -r requirements.txt
 
     - name: Install JS dependencies ⬇️
-      run:
-        cd frontend
+      working-directory: ./frontend
+      run: |
         npm i -g pnpm
-        pnpm ci
+        pnpm ci --frozen-lockfile
 
     - name: Build JS Frontend 🛠️
       working-directory: ./frontend

@@ -26,7 +26,7 @@ const PluginView: VFC = () => {
           className={joinClassNames(staticClasses.TabGroupPanel, scrollClasses.ScrollPanel, scrollClasses.ScrollY)}
           style={{ height: '100%' }}
         >
-          {visible && activePlugin.content}
+          {(visible || activePlugin.alwaysRender) && activePlugin.content}
         </div>
       </Focusable>
     );

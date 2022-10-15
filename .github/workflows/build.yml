@@ -60,9 +60,10 @@ jobs:
 
     - name: Install JS dependencies ⬇️
       uses: pnpm/action-setup@v2.2.3
-      run_install: |
-        - cwd: ./frontend
-          args: [--frozen-lockfile]
+      with:
+        run_install: |
+          - cwd: ./frontend
+            args: [--frozen-lockfile]
 
     - name: Build JS Frontend 🛠️
       working-directory: ./frontend

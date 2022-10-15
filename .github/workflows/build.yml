@@ -42,10 +42,10 @@ jobs:
     - name: Checkout 🧰
       uses: actions/checkout@v3
 
-    - name: Set up NodeJS 17 💎
+    - name: Set up NodeJS 18 💎
       uses: actions/setup-node@v3
       with:
-        node-version: 17
+        node-version: 18
       
     - name: Set up Python 3.10 🐍
       uses: actions/setup-python@v3

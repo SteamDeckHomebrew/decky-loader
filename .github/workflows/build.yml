@@ -46,6 +46,9 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 18
+
+    - name: Set up PNPM 💎
+      uses: pnpm/action-setup@v2.2.3
       
     - name: Set up Python 3.10 🐍
       uses: actions/setup-python@v3
@@ -61,10 +64,14 @@ jobs:
     - name: Install NodeJS dependencies ⬇️
       run: |
         cd frontend
-        npm i
-        npm run build
+        pnpm ci
 
-    - name: Build 🛠️
+    - name: Build JS Frontend 🛠️
+      run: |
+        cd frontend
+        pnpm run build
+
+    - name: Build Python Backend 🛠️
       run: pyinstaller --noconfirm --onefile --name "PluginLoader" --add-data ./backend/static:/static --add-data ./backend/legacy:/legacy ./backend/*.py
         
     - name: Upload package artifact ⬆️

@@ -146,7 +146,7 @@ jobs:
           fi
         fi
         echo "vOUT: v$OUT"
-        echo ::set-output name=tag_name::v$OUT
+        echo name=tag_name::v$OUT >> $GITHUB_OUTPUT
 
     - name: Push tag 📤
       uses: rickstaa/action-create-tag@v1.3.2
@@ -235,7 +235,7 @@ jobs:
           fi
         fi
         printf "vOUT: v${OUT}\n"
-        echo ::set-output name=tag_name::v$OUT
+        echo name=tag_name::v$OUT >> $GITHUB_OUTPUT
 
     - name: Push tag 📤
       uses: rickstaa/action-create-tag@v1.3.2

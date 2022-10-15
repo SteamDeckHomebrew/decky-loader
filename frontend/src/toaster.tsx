@@ -62,6 +62,10 @@ class Toaster extends Logger {
           }
           return ret;
         });
+        this.node.stateNode.shouldComponentUpdate = () => {
+          return false;
+        };
+        delete this.node.stateNode.render;
       }
       return ret;
     };
@@ -102,7 +106,7 @@ class Toaster extends Logger {
 
   deinit() {
     this.instanceRetPatch?.unpatch();
-    this.node && delete this.node.stateNode.render;
+    this.node && delete this.node.stateNode.shouldComponentUpdate;
     this.node && this.node.stateNode.forceUpdate();
   }
 }

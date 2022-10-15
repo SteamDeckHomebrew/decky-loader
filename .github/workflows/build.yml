@@ -59,8 +59,10 @@ jobs:
         [ -f requirements.txt ] && pip install -r requirements.txt
 
     - name: Install JS dependencies ⬇️
-      working-directory: ./frontend
       uses: pnpm/action-setup@v2.2.3
+      run_install: |
+        - cwd: ./frontend
+          args: [--frozen-lockfile]
 
     - name: Build JS Frontend 🛠️
       working-directory: ./frontend

@@ -32,7 +32,7 @@ const Toast: FunctionComponent<ToastProps> = ({ toast }) => {
   return (
     <div
       style={{ '--toast-duration': `${toast.nToastDurationMS}ms` } as React.CSSProperties}
-      className={toastClasses.toastEnter}
+      className={joinClassNames(toastClasses.ToastPopup, toastClasses.toastEnter)}
     >
       <div
         onClick={toast.data.onClick}

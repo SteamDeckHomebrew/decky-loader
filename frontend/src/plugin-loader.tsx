@@ -4,9 +4,6 @@ import {
   Patch,
   QuickAccessTab,
   Router,
-  callOriginal,
-  findModuleChild,
-  replacePatch,
   showModal,
   sleep,
   staticClasses,
@@ -97,38 +94,6 @@ class PluginLoader extends Logger {
     initFilepickerPatches();
 
     this.updateVersion();
-
-    const self = this;
-
-    try {
-      // TODO remove all of this once Valve fixes the bug
-      const focusManager = findModuleChild((m) => {
-        if (typeof m !== 'object') return false;
-        for (let prop in m) {
-          if (m[prop]?.prototype?.TakeFocus) return m[prop];
-        }
-        return false;
-      });
-
-      this.focusWorkaroundPatch = replacePatch(focusManager.prototype, 'TakeFocus', function () {
-        // @ts-ignore
-        const classList = this.m_node?.m_element.classList;
-        if (
-          // @ts-ignore
-          (this.m_node?.m_element && classList.contains(staticClasses.TabGroupPanel)) ||
-          classList.contains('FriendsListTab') ||
-          classList.contains('FriendsTabList') ||
-          classList.contains('FriendsListAndChatsSteamDeck')
-        ) {
-          self.debug('Intercepted friends re-focus');
-          return true;
-        }
-
-        return callOriginal;
-      });
-    } catch (e) {
-      this.error('Friends focus patch failed', e);
-    }
   }
 
   public async updateVersion() {

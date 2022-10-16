@@ -1,6 +1,3 @@
-import { ButtonItem, CommonUIModule, webpackCache } from 'decky-frontend-lib';
-import { forwardRef } from 'react';
-
 import PluginLoader from './plugin-loader';
 import { DeckyUpdater } from './updater';
 
@@ -11,30 +8,10 @@ declare global {
     importDeckyPlugin: Function;
     syncDeckyPlugins: Function;
     deckyHasLoaded: boolean;
+    deckyHasConnectedRDT?: boolean;
     deckyAuthToken: string;
-    webpackJsonp: any;
+    DFL?: any;
   }
-}
-
-// HACK to fix plugins using webpack v4 push
-
-const v4Cache = {};
-for (let m of Object.keys(webpackCache)) {
-  v4Cache[m] = { exports: webpackCache[m] };
-}
-
-if (!window.webpackJsonp || window.webpackJsonp.deckyShimmed) {
-  window.webpackJsonp = {
-    deckyShimmed: true,
-    push: (mod: any): any => {
-      if (mod[1].get_require) return { c: v4Cache };
-    },
-  };
-  CommonUIModule.__deckyButtonItemShim = forwardRef((props: any, ref: any) => {
-    // tricks the old filter into working
-    const dummy = `childrenContainerWidth:"min"`;
-    return <ButtonItem ref={ref} _shim={dummy} {...props} />;
-  });
 }
 
 (async () => {
@@ -44,6 +21,7 @@ if (!window.webpackJsonp || window.webpackJsonp.deckyShimmed) {
   window.DeckyPluginLoader?.deinit();
 
   window.DeckyPluginLoader = new PluginLoader();
+  window.DeckyPluginLoader.init();
   window.importDeckyPlugin = function (name: string, version: string) {
     window.DeckyPluginLoader?.importPlugin(name, version);
   };

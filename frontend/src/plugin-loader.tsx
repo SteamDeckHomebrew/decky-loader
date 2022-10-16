@@ -25,6 +25,7 @@ import { checkForUpdates } from './store';
 import TabsHook from './tabs-hook';
 import Toaster from './toaster';
 import { VerInfo, callUpdaterMethod } from './updater';
+import { getSetting } from './utils/settings';
 
 const StorePage = lazy(() => import('./components/store/Store'));
 const SettingsPage = lazy(() => import('./components/settings'));
@@ -40,7 +41,7 @@ class PluginLoader extends Logger {
   private tabsHook: TabsHook = new TabsHook();
   // private windowHook: WindowHook = new WindowHook();
   private routerHook: RouterHook = new RouterHook();
-  private toaster: Toaster = new Toaster();
+  public toaster: Toaster = new Toaster();
   private deckyState: DeckyState = new DeckyState();
 
   private reloadLock: boolean = false;
@@ -170,6 +171,12 @@ class PluginLoader extends Logger {
       this.log(`Dismounting ${plugin.name}`);
       plugin.onDismount?.();
     }
+  }
+
+  public init() {
+    getSetting('developer.enabled', false).then((val) => {
+      if (val) import('./developer').then((developer) => developer.startup());
+    });
   }
 
   public deinit() {

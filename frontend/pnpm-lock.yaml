@@ -943,7 +943,7 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
-      
+
   /decky-frontend-lib/3.6.0:
     resolution: {integrity: sha512-X3VbTbmW7TnBwPW0ui0xjSVoa2UsuKPwI6nFi7LY2ZzmNytCfszk+ZfJSBm2lD2fqV+btqJzr0qFnWFl+bgjEA==}
     dependencies:

@@ -38,7 +38,7 @@ class Toaster extends Logger {
       await sleep(2000);
     }
 
-    this.node = instance.sibling.child;
+    this.node = instance.return.return;
     let toast: any;
     let renderedToast: ReactNode = null;
     this.node.stateNode.render = (...args: any[]) => {
@@ -68,7 +68,7 @@ class Toaster extends Logger {
         delete this.node.stateNode.render;
       }
       return ret;
-    });
+    };
     this.settingsModule = findModuleChild((m) => {
       if (typeof m !== 'object') return undefined;
       for (let prop in m) {

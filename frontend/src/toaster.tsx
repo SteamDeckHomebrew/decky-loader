@@ -41,17 +41,31 @@ class Toaster extends Logger {
     this.node = instance.sibling.child;
     let toast: any;
     let renderedToast: ReactNode = null;
-    afterPatch(this.node, 'type', (args: any[], ret: any) => {
-      const currentToast = args[0].notification;
-      if (currentToast?.decky) {
-        if (currentToast !== toast) {
-          toast = currentToast;
-          renderedToast = <Toast toast={toast} />;
-        }
-        ret.props.children = renderedToast;
-      } else {
-        toast = null;
-        renderedToast = null;
+    this.node.stateNode.render = (...args: any[]) => {
+      const ret = this.node.stateNode.__proto__.render.call(this.node.stateNode, ...args);
+      if (ret) {
+        this.instanceRetPatch = afterPatch(ret, 'type', (_: any, ret: any) => {
+          if (ret?.props?.children[1]?.children?.props) {
+            const currentToast = ret.props.children[1].children.props.notification;
+            if (currentToast?.decky) {
+              if (currentToast == toast) {
+                ret.props.children[1].children = renderedToast;
+              } else {
+                toast = currentToast;
+                renderedToast = <Toast toast={toast} />;
+                ret.props.children[1].children = renderedToast;
+              }
+            } else {
+              toast = null;
+              renderedToast = null;
+            }
+          }
+          return ret;
+        });
+        this.node.stateNode.shouldComponentUpdate = () => {
+          return false;
+        };
+        delete this.node.stateNode.render;
       }
       return ret;
     });
@@ -91,7 +105,7 @@ class Toaster extends Logger {
 
   deinit() {
     this.instanceRetPatch?.unpatch();
-    this.node && delete this.node.stateNode.render;
+    this.node && delete this.node.stateNode.shouldComponentUpdate;
     this.node && this.node.stateNode.forceUpdate();
   }
 }

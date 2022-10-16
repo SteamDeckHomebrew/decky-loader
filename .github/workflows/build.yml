@@ -42,10 +42,10 @@ jobs:
     - name: Checkout 🧰
       uses: actions/checkout@v3
 
-    - name: Set up NodeJS 17 💎
+    - name: Set up NodeJS 18 💎
       uses: actions/setup-node@v3
       with:
-        node-version: 17
+        node-version: 18
       
     - name: Set up Python 3.10 🐍
       uses: actions/setup-python@v3
@@ -58,13 +58,17 @@ jobs:
         pip install pyinstaller
         [ -f requirements.txt ] && pip install -r requirements.txt
 
-    - name: Install NodeJS dependencies ⬇️
+    - name: Install JS dependencies ⬇️
+      working-directory: ./frontend
       run: |
-        cd frontend
-        npm i
-        npm run build
+        npm i -g pnpm
+        pnpm i --frozen-lockfile
 
-    - name: Build 🛠️
+    - name: Build JS Frontend 🛠️
+      working-directory: ./frontend
+      run: pnpm run build
+
+    - name: Build Python Backend 🛠️
       run: pyinstaller --noconfirm --onefile --name "PluginLoader" --add-data ./backend/static:/static --add-data ./backend/legacy:/legacy ./backend/*.py
         
     - name: Upload package artifact ⬆️
@@ -142,7 +146,7 @@ jobs:
           fi
         fi
         echo "vOUT: v$OUT"
-        echo ::set-output name=tag_name::v$OUT
+        echo tag_name=v$OUT >> $GITHUB_OUTPUT
 
     - name: Push tag 📤
       uses: rickstaa/action-create-tag@v1.3.2
@@ -224,14 +228,12 @@ jobs:
           else
             printf "type not selected, defaulting to new pre-release only\n"
             printf "bumping prerel\n"
-            OUT="$VERSION-pre"
-            printf "OUT: ${OUT}\n"
-            OUT=$(semver bump prerel "$OUT")
+            OUT=$(semver bump prerel "$VERSION")
             printf "OUT: ${OUT}\n"
           fi
         fi
         printf "vOUT: v${OUT}\n"
-        echo ::set-output name=tag_name::v$OUT
+        echo tag_name=v$OUT >> $GITHUB_OUTPUT
 
     - name: Push tag 📤
       uses: rickstaa/action-create-tag@v1.3.2

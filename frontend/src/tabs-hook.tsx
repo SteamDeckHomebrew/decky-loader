@@ -1,6 +1,7 @@
 import { Patch, QuickAccessTab, afterPatch, sleep } from 'decky-frontend-lib';
 import { memo } from 'react';
 
+import { QuickAccessVisibleStateProvider } from './components/QuickAccessVisibleState';
 import Logger from './logger';
 
 declare global {
@@ -83,17 +84,17 @@ class TabsHook extends Logger {
             if (ret) {
               if (!newQATabRenderer) {
                 this.tabRenderer = ret.props.children[1].children.type;
-                newQATabRenderer = (...args: any) => {
+                newQATabRenderer = (...qamArgs: any[]) => {
                   const oFilter = Array.prototype.filter;
                   Array.prototype.filter = function (...args: any[]) {
                     if (isTabsArray(this)) {
-                      self.render(this);
+                      self.render(this, qamArgs[0].visible);
                     }
                     // @ts-ignore
                     return oFilter.call(this, ...args);
                   };
                   // TODO remove array hack entirely and use this instead const tabs = ret.props.children.props.children[0].props.children[1].props.children[0].props.children[0].props.tabs
-                  const ret = this.tabRenderer(...args);
+                  const ret = this.tabRenderer(...qamArgs);
                   Array.prototype.filter = oFilter;
                   return ret;
                 };
@@ -135,13 +136,13 @@ class TabsHook extends Logger {
     this.tabs = this.tabs.filter((tab) => tab.id !== id);
   }
 
-  render(existingTabs: any[]) {
+  render(existingTabs: any[], visible: boolean) {
     for (const { title, icon, content, id } of this.tabs) {
       existingTabs.push({
         key: id,
         title,
         tab: icon,
-        panel: content,
+        panel: <QuickAccessVisibleStateProvider visible={visible}>{content}</QuickAccessVisibleStateProvider>,
       });
     }
   }

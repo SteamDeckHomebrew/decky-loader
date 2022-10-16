@@ -4,4 +4,5 @@ export interface Plugin {
   icon: JSX.Element;
   content?: JSX.Element;
   onDismount?(): void;
+  alwaysRender?: boolean;
 }

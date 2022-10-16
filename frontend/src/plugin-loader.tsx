@@ -17,7 +17,6 @@ import { deinitFilepickerPatches, initFilepickerPatches } from './components/mod
 import PluginInstallModal from './components/modals/PluginInstallModal';
 import NotificationBadge from './components/NotificationBadge';
 import PluginView from './components/PluginView';
-import TitleView from './components/TitleView';
 import WithSuspense from './components/WithSuspense';
 import Logger from './logger';
 import { Plugin } from './plugin';
@@ -65,7 +64,6 @@ class PluginLoader extends Logger {
       title: null,
       content: (
         <DeckyStateContextProvider deckyState={this.deckyState}>
-          <TitleView />
           <PluginView />
         </DeckyStateContextProvider>
       ),

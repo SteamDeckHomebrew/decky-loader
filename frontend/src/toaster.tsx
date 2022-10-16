@@ -38,7 +38,7 @@ class Toaster extends Logger {
       await sleep(2000);
     }
 
-    this.node = instance.return.return;
+    this.node = instance.sibling.child;
     let toast: any;
     let renderedToast: ReactNode = null;
     this.node.stateNode.render = (...args: any[]) => {

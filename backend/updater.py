@@ -104,14 +104,9 @@ class Updater:
                 elif selectedBranch == 1:
                     logger.debug("release type: pre-release")
                     self.remoteVer = next(filter(lambda ver: ver["prerelease"] and ver["tag_name"].startswith("v") and ver["tag_name"].find("-pre"), remoteVersions), None)
-                # elif selectedBranch == 2:
-                #     logger.debug("release type: nightly")
-                #     self.remoteVer = next(filter(lambda ver: ver["prerelease"] and ver["tag_name"].startswith("v") and ver["tag_name"].find("nightly"), remoteVersions), None)
                 else:
                     logger.error("release type: NOT FOUND")
                     raise ValueError("no valid branch found")
-                # doesn't make it to this line below or farther
-                # logger.debug("Remote Version: %s" % self.remoteVer.find("name"))
                 logger.info("Updated remote version information")
                 tab = await get_tab("SP")
                 await tab.evaluate_js(f"window.DeckyPluginLoader.notifyUpdates()", False, True, False)

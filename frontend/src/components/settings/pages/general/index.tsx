@@ -15,18 +15,8 @@ export default function GeneralSettings({
   setIsDeveloper: (val: boolean) => void;
 }) {
   const [pluginURL, setPluginURL] = useState('');
-  // const [checked, setChecked] = useState(false); // store these in some kind of State instead
   return (
     <div>
-      {/* <Field
-        label="A Toggle with an icon"
-        icon={<FaShapes style={{ display: 'block' }} />}
-      >
-        <Toggle
-          value={checked}
-          onChange={(e) => setChecked(e)}
-        />
-      </Field> */}
       <UpdaterSettings />
       <BranchSelect />
       <RemoteDebuggingSettings />

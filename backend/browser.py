@@ -133,7 +133,7 @@ class PluginBrowser:
             if not pluginFolderPath:
                 isInstalled = True
         except:
-            logger.error(f"Plugin {name} not installed.")
+            logger.error(f"Failed to determine if {name} is already installed, continuing anyway.")
         logger.info(f"Installing {name} (Version: {version})")
         async with ClientSession() as client:
             logger.debug(f"Fetching {artifact}")

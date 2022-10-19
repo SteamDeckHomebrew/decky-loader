@@ -130,7 +130,7 @@ class PluginBrowser:
             self.loader.watcher.disabled = True
         try:
             pluginFolderPath = self.find_plugin_folder(name)
-            if not pluginFolderPath :
+            if not pluginFolderPath:
                 isInstalled = True
         except:
             logger.error(f"Plugin {name} not installed.")

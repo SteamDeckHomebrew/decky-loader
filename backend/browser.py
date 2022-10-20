@@ -1,6 +1,5 @@
 # Full imports
 import json
-from tokenize import String
 
 # Partial imports
 from aiohttp import ClientSession, web
@@ -98,7 +97,7 @@ class PluginBrowser:
                     plugin = json.load(f)
 
                 if plugin['name'] == name:
-                    return String(path.join(self.plugin_path, folder))
+                    return str(path.join(self.plugin_path, folder))
             except:
                 logger.debug(f"skipping {folder}")
 

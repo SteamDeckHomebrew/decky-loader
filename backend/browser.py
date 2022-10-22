@@ -57,7 +57,7 @@ class PluginBrowser:
             if access(packageJsonPath, R_OK):
                 with open(packageJsonPath, 'r') as f:
                     packageJson = json.load(f)
-                    if len(packageJson["remote_binary"]) > 0:
+                    if "remote_binary" in packageJson and len(packageJson["remote_binary"]) > 0:
                         # create bin directory if needed.
                         rc=call(["chmod", "-R", "777", pluginBasePath])
                         if access(pluginBasePath, W_OK):

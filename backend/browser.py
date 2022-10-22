@@ -129,7 +129,7 @@ class PluginBrowser:
             self.loader.watcher.disabled = True
         try:
             pluginFolderPath = self.find_plugin_folder(name)
-            if not pluginFolderPath:
+            if pluginFolderPath:
                 isInstalled = True
         except:
             logger.error(f"Failed to determine if {name} is already installed, continuing anyway.")

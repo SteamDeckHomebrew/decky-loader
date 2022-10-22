@@ -9,7 +9,7 @@ from subprocess import call
 from aiohttp import ClientSession, web
 
 import helpers
-from injector import get_tab, inject_to_tab
+from injector import get_gamepadui_tab, inject_to_tab
 from settings import SettingsManager
 
 logger = getLogger("Updater")
@@ -108,7 +108,7 @@ class Updater:
                     logger.error("release type: NOT FOUND")
                     raise ValueError("no valid branch found")
                 logger.info("Updated remote version information")
-                tab = await get_tab("SP")
+                tab = await get_gamepadui_tab()
                 await tab.evaluate_js(f"window.DeckyPluginLoader.notifyUpdates()", False, True, False)
         return await self.get_version()
 
@@ -125,7 +125,7 @@ class Updater:
         version = self.remoteVer["tag_name"]
         download_url = self.remoteVer["assets"][0]["browser_download_url"]
 
-        tab = await get_tab("SP")
+        tab = await get_gamepadui_tab()
         await tab.open_websocket()
         async with ClientSession() as web:
             async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:

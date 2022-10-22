@@ -15,7 +15,7 @@ try:
 except UnsupportedLibc:
     from watchdog.observers.fsevents import FSEventsObserver as Observer
 
-from injector import get_tab, inject_to_tab
+from injector import get_tab, get_gamepadui_tab
 from plugin import PluginWrapper
 
 
@@ -141,7 +141,8 @@ class Loader:
             print_exc()
 
     async def dispatch_plugin(self, name, version):
-        await inject_to_tab("SP", f"window.importDeckyPlugin('{name}', '{version}')")
+        gpui_tab = await get_gamepadui_tab()
+        await gpui_tab.evaluate_js(f"window.importDeckyPlugin('{name}', '{version}')")
 
     def import_plugins(self):
         self.logger.info(f"import plugins from {self.plugin_path}")

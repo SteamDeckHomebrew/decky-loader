@@ -1,4 +1,12 @@
-import { Patch, ToastData, afterPatch, findInReactTree, findModuleChild, sleep } from 'decky-frontend-lib';
+import {
+  Patch,
+  ToastData,
+  afterPatch,
+  findInReactTree,
+  findModuleChild,
+  replacePatch,
+  sleep,
+} from 'decky-frontend-lib';
 import { ReactNode } from 'react';
 
 import Toast from './components/Toast';
@@ -41,32 +49,46 @@ class Toaster extends Logger {
     this.node = instance.return.return;
     let toast: any;
     let renderedToast: ReactNode = null;
+    console.log(instance, this.node);
     this.node.stateNode.render = (...args: any[]) => {
       const ret = this.node.stateNode.__proto__.render.call(this.node.stateNode, ...args);
-      if (ret) {
-        this.instanceRetPatch = afterPatch(ret, 'type', (_: any, ret: any) => {
-          if (ret?.props?.children[1]?.children?.props) {
-            const currentToast = ret.props.children[1].children.props.notification;
-            if (currentToast?.decky) {
-              if (currentToast == toast) {
-                ret.props.children[1].children = renderedToast;
-              } else {
-                toast = currentToast;
-                renderedToast = <Toast toast={toast} />;
-                ret.props.children[1].children = renderedToast;
-              }
-            } else {
-              toast = null;
-              renderedToast = null;
-            }
-          }
-          return ret;
-        });
-        this.node.stateNode.shouldComponentUpdate = () => {
-          return false;
-        };
-        delete this.node.stateNode.render;
-      }
+      console.log('toast', ret);
+      //   if (ret) {
+      //     this.instanceRetPatch = replacePatch(ret, 'type', (args: any) => {
+
+      // // @ts-ignore
+      // const oldEffect = window.SP_REACT.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentDispatcher.current.useEffect;
+      // // @ts-ignore
+      // window.SP_REACT.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentDispatcher.current.useEffect = (effect, deps) => {
+      //   console.log(effect, deps)
+      //   if (deps?.[1] == "notificationtoasts") {
+      //     return oldEffect(() => {effect()}, deps);
+      //   }
+      //   return oldEffect(effect, deps);
+      // }
+      //       const ret = this.instanceRetPatch?.original(...args);
+      // // @ts-ignore
+      // window.SP_REACT.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentDispatcher.current.useEffect = oldEffect;
+
+      //       console.log("toast ret", ret)
+      //       if (ret?.props?.children[1]?.children?.props) {
+      //         const currentToast = ret.props.children[1].children.props.notification;
+      //         if (currentToast?.decky) {
+      //           if (currentToast == toast) {
+      //             ret.props.children[1].children = renderedToast;
+      //           } else {
+      //             toast = currentToast;
+      //             renderedToast = <Toast toast={toast} />;
+      //             ret.props.children[1].children = renderedToast;
+      //           }
+      //         } else {
+      //           toast = null;
+      //           renderedToast = null;
+      //         }
+      //       }
+      //       return ret;
+      //     });
+      //   }
       return ret;
     };
     this.settingsModule = findModuleChild((m) => {
@@ -75,6 +97,16 @@ class Toaster extends Logger {
         if (typeof m[prop]?.settings && m[prop]?.communityPreferences) return m[prop];
       }
     });
+    // const idx = FocusNavController.m_ActiveContext.m_rgGamepadNavigationTrees.findIndex((x: any) => x.m_ID == "ToastContainer");
+    // if (idx > -1) {
+    //   FocusNavController.m_ActiveContext.m_rgGamepadNavigationTrees.splice(idx, 1)
+    // }
+
+    this.node.stateNode.forceUpdate();
+    this.node.stateNode.shouldComponentUpdate = () => {
+      return false;
+    };
+
     this.log('Initialized');
     this.ready = true;
   }

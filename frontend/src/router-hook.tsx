@@ -90,14 +90,15 @@ class RouterHook extends Logger {
     };
 
     this.wrapperPatch = afterPatch(this.gamepadWrapper, 'render', (_: any, ret: any) => {
-      if (ret?.props?.children?.props?.children?.length == 5) {
+      if (ret?.props?.children?.props?.children?.length == 5 || ret?.props?.children?.props?.children?.length == 4) {
+        const idx = ret?.props?.children?.props?.children?.length == 4 ? 1 : 2;
         if (
-          ret.props.children.props.children[2]?.props?.children?.[0]?.type?.type
+          ret.props.children.props.children[idx]?.props?.children?.[0]?.type?.type
             ?.toString()
             ?.includes('GamepadUI.Settings.Root()')
         ) {
           if (!this.router) {
-            this.router = ret.props.children.props.children[2]?.props?.children?.[0]?.type;
+            this.router = ret.props.children.props.children[idx]?.props?.children?.[0]?.type;
             this.routerPatch = afterPatch(this.router, 'type', (_: any, ret: any) => {
               if (!Route)
                 Route = ret.props.children[0].props.children.find((x: any) => x.props.path == '/createaccount').type;
@@ -111,7 +112,7 @@ class RouterHook extends Logger {
             this.memoizedRouter = memo(this.router.type);
             this.memoizedRouter.isDeckyRouter = true;
           }
-          ret.props.children.props.children[2].props.children[0].type = this.memoizedRouter;
+          ret.props.children.props.children[idx].props.children[0].type = this.memoizedRouter;
         }
       }
       return ret;

@@ -21,6 +21,7 @@ import WithSuspense from '../../../WithSuspense';
 const MarkdownRenderer = lazy(() => import('../../../Markdown'));
 
 function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | null; closeModal?: () => {} }) {
+  console.log(Carousel);
   return (
     <Focusable onCancelButton={closeModal}>
       <FocusRing>
@@ -84,7 +85,7 @@ export default function UpdaterSettings() {
   }, []);
 
   const showPatchNotes = useCallback(() => {
-    showModal(<PatchNotesModal versionInfo={versionInfo} />);
+    showModal(<PatchNotesModal versionInfo={versionInfo} />, window);
   }, [versionInfo]);
 
   return (

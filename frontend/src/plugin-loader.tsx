@@ -142,6 +142,7 @@ class PluginLoader extends Logger {
         onOK={() => this.callServerMethod('confirm_plugin_install', { request_id })}
         onCancel={() => this.callServerMethod('cancel_plugin_install', { request_id })}
       />,
+      window,
     );
   }
 
@@ -159,6 +160,7 @@ class PluginLoader extends Logger {
           Uninstall {name}?
         </div>
       </ConfirmModal>,
+      window,
     );
   }
 
@@ -291,7 +293,7 @@ class PluginLoader extends Logger {
           </WithSuspense>
         </ModalRoot>
       );
-      showModal(<Content />);
+      showModal(<Content />, window);
     });
   }
 

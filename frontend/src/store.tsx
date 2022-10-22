@@ -29,9 +29,13 @@ export interface LegacyStorePlugin {
 // name: version
 export type PluginUpdateMapping = Map<string, StorePluginVersion>;
 
-export function getPluginList(): Promise<StorePlugin[]> {
+export async function getPluginList(): Promise<StorePlugin[]> {
+  let version = await window.DeckyPluginLoader.updateVersion();
   return fetch('https://beta.deckbrew.xyz/plugins', {
     method: 'GET',
+    headers: {
+      'X-Decky-Version': version.current,
+    },
   }).then((r) => r.json());
 }
 

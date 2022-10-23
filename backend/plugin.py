@@ -71,11 +71,11 @@ class PluginWrapper:
             self.log.error("Failed to start " + self.name + "!\n" + format_exc())
             exit(0)
 
-    def _unload(self):
+    async def _unload(self):
         try:
             self.log.info("Attempting to unload " + self.name + "\n")
             if hasattr(self.Plugin, "_unload"):
-                self.Plugin._unload(self.Plugin)
+                await self.Plugin._unload(self.Plugin)
         except:
             self.log.error("Failed to unload " + self.name + "!\n" + format_exc())
             exit(0)
@@ -99,6 +99,7 @@ class PluginWrapper:
                     break
             data = loads(line.decode("utf-8"))
             if "stop" in data:
+                await self._unload()
                 get_event_loop().stop()
                 while get_event_loop().is_running():
                     await sleep(0)

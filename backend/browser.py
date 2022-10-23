@@ -57,7 +57,7 @@ class PluginBrowser:
             if access(packageJsonPath, R_OK):
                 with open(packageJsonPath, 'r') as f:
                     packageJson = json.load(f)
-                    if len(packageJson["remote_binary"]) > 0:
+                    if "remote_binary" in packageJson and len(packageJson["remote_binary"]) > 0:
                         # create bin directory if needed.
                         rc=call(["chmod", "-R", "777", pluginBasePath])
                         if access(pluginBasePath, W_OK):
@@ -97,7 +97,7 @@ class PluginBrowser:
                     plugin = json.load(f)
 
                 if plugin['name'] == name:
-                    return path.join(self.plugin_path, folder)
+                    return str(path.join(self.plugin_path, folder))
             except:
                 logger.debug(f"skipping {folder}")
 
@@ -124,12 +124,15 @@ class PluginBrowser:
             self.loader.watcher.disabled = False
 
     async def _install(self, artifact, name, version, hash):
+        isInstalled = False
         if self.loader.watcher:
             self.loader.watcher.disabled = True
         try:
-            await self.uninstall_plugin(name)
+            pluginFolderPath = self.find_plugin_folder(name)
+            if pluginFolderPath:
+                isInstalled = True
         except:
-            logger.error(f"Plugin {name} not installed, skipping uninstallation")
+            logger.error(f"Failed to determine if {name} is already installed, continuing anyway.")
         logger.info(f"Installing {name} (Version: {version})")
         async with ClientSession() as client:
             logger.debug(f"Fetching {artifact}")
@@ -139,6 +142,12 @@ class PluginBrowser:
                 data = await res.read()
                 logger.debug(f"Read {len(data)} bytes")
                 res_zip = BytesIO(data)
+                if isInstalled:
+                    try:
+                        logger.debug("Uninstalling existing plugin...")
+                        await self.uninstall_plugin(name)
+                    except:
+                        logger.error(f"Plugin {name} could not be uninstalled.")
                 logger.debug("Unzipping...")
                 ret = self._unzip_to_plugin_dir(res_zip, name, hash)
                 if ret:
@@ -151,7 +160,6 @@ class PluginBrowser:
                             self.loader.plugins.pop(name, None)
                         await sleep(1)
                         self.loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_dir)
-                        # await inject_to_tab("SP", "window.syncDeckyPlugins()")
                     else:
                         logger.fatal(f"Failed Downloading Remote Binaries")
                 else:

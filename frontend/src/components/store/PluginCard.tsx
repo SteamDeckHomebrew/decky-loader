@@ -78,10 +78,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               width: 'auto',
               height: '160px',
             }}
-            src={`https://cdn.tzatzikiweeb.moe/file/steam-deck-homebrew/artifact_images/${plugin.name.replace(
-              '/',
-              '_',
-            )}.png`}
+            src={plugin.image_url}
           />
           <div
             style={{

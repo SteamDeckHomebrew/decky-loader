@@ -1,5 +1,4 @@
 import { QuickAccessTab, quickAccessMenuClasses, sleep } from 'decky-frontend-lib';
-import { node } from 'webpack';
 
 import { QuickAccessVisibleStateProvider } from './components/QuickAccessVisibleState';
 import Logger from './logger';
@@ -41,7 +40,6 @@ class TabsHook extends Logger {
     const oFilter = (this.oFilter = Array.prototype.filter);
     Array.prototype.filter = function patchedFilter(...args: any[]) {
       if (isTabsArray(this)) {
-        console.log('FILTERING SHIT', this);
         self.render(this);
       }
       // @ts-ignore
@@ -84,7 +82,9 @@ class TabsHook extends Logger {
         while (!qAMRoot?.stateNode?.forceUpdate) {
           qAMRoot = qAMRoot.return;
         }
+        qAMRoot.stateNode.shouldComponentUpdate = () => true;
         qAMRoot.stateNode.forceUpdate();
+        delete qAMRoot.stateNode.shouldComponentUpdate;
       })();
     } catch (e) {
       this.log('Failed to rerender QAM', e);

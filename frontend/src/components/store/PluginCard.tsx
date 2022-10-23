@@ -11,17 +11,10 @@ import {
 } from 'decky-frontend-lib';
 import { FC, useRef, useState } from 'react';
 
-import {
-  LegacyStorePlugin,
-  StorePlugin,
-  StorePluginVersion,
-  isLegacyPlugin,
-  requestLegacyPluginInstall,
-  requestPluginInstall,
-} from '../../store';
+import { StorePlugin, StorePluginVersion, requestPluginInstall } from '../../store';
 
 interface PluginCardProps {
-  plugin: StorePlugin | LegacyStorePlugin;
+  plugin: StorePlugin;
 }
 
 const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
@@ -63,22 +56,13 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
         }}
       >
         <div className="deckyStoreCardHeader" style={{ display: 'flex', alignItems: 'center' }}>
-          <a
+          <div
             style={{ fontSize: '18pt', padding: '10px' }}
             className={joinClassNames(staticClasses.Text)}
             // onClick={() => Router.NavigateToExternalWeb('https://github.com/' + plugin.artifact)}
           >
-            {isLegacyPlugin(plugin) ? (
-              <div className="deckyStoreCardNameContainer">
-                <span className="deckyStoreCardLegacyRepoOwner" style={{ color: 'grey' }}>
-                  {plugin.artifact.split('/')[0]}/
-                </span>
-                {plugin.artifact.split('/')[1]}
-              </div>
-            ) : (
-              plugin.name
-            )}
-          </a>
+            {plugin.name}
+          </div>
         </div>
         <div
           style={{
@@ -94,17 +78,10 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               width: 'auto',
               height: '160px',
             }}
-            src={
-              isLegacyPlugin(plugin)
-                ? `https://cdn.tzatzikiweeb.moe/file/steam-deck-homebrew/artifact_images/${plugin.artifact.replace(
-                    '/',
-                    '_',
-                  )}.png`
-                : `https://cdn.tzatzikiweeb.moe/file/steam-deck-homebrew/artifact_images/${plugin.name.replace(
-                    '/',
-                    '_',
-                  )}.png`
-            }
+            src={`https://cdn.tzatzikiweeb.moe/file/steam-deck-homebrew/artifact_images/${plugin.name.replace(
+              '/',
+              '_',
+            )}.png`}
           />
           <div
             style={{
@@ -152,19 +129,6 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
                   {tag == 'root' ? 'Requires root' : tag}
                 </span>
               ))}
-              {isLegacyPlugin(plugin) && (
-                <span
-                  className="deckyStoreCardTag deckyStoreCardLegacyTag"
-                  style={{
-                    color: '#232120',
-                    padding: '5px',
-                    borderRadius: '5px',
-                    background: '#EDE841',
-                  }}
-                >
-                  legacy
-                </span>
-              )}
             </p>
           </div>
         </div>
@@ -194,11 +158,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               <DialogButton
                 className="deckyStoreCardInstallButton"
                 ref={buttonRef}
-                onClick={() =>
-                  isLegacyPlugin(plugin)
-                    ? requestLegacyPluginInstall(plugin, Object.keys(plugin.versions)[selectedOption])
-                    : requestPluginInstall(plugin.name, plugin.versions[selectedOption])
-                }
+                onClick={() => requestPluginInstall(plugin.name, plugin.versions[selectedOption])}
               >
                 Install
               </DialogButton>
@@ -211,15 +171,10 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
             >
               <Dropdown
                 rgOptions={
-                  (isLegacyPlugin(plugin)
-                    ? Object.keys(plugin.versions).map((v, k) => ({
-                        data: k,
-                        label: v,
-                      }))
-                    : plugin.versions.map((version: StorePluginVersion, index) => ({
-                        data: index,
-                        label: version.name,
-                      }))) as SingleDropdownOption[]
+                  plugin.versions.map((version: StorePluginVersion, index) => ({
+                    data: index,
+                    label: version.name,
+                  })) as SingleDropdownOption[]
                 }
                 strDefaultLabel={'Select a version'}
                 selectedOption={selectedOption}

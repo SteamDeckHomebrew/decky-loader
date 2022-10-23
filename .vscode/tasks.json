@@ -128,7 +128,7 @@
                 "isDefault": true
             },
             "dependsOn": [
-                "buildall",
+                "buildfrontend",
                 "deploy",
                 "runpydeck"
             ],

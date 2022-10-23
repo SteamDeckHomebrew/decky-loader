@@ -8,17 +8,15 @@ export const QuickAccessVisibleStateProvider: FC<{}> = ({ children }) => {
   const divRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState<boolean>(false);
   useEffect(() => {
-    const win: Window | void | null = divRef?.current?.ownerDocument.defaultView;
-    if (!win) return;
-    setVisible(win.document.hasFocus());
-    const onBlur = () => setVisible(false);
-    const onFocus = () => setVisible(true);
-
-    win.addEventListener('blur', onBlur);
-    win.addEventListener('focus', onFocus);
+    const doc: Document | void | null = divRef?.current?.ownerDocument;
+    if (!doc) return;
+    setVisible(doc.visibilityState == 'visible')
+    const onChange = (e: Event) => {
+      setVisible(doc.visibilityState == 'visible')
+    }
+    doc.addEventListener('visibilitychange', onChange);
     return () => {
-      win.removeEventListener('blur', onBlur);
-      win.removeEventListener('focus', onFocus);
+      doc.removeEventListener('visibilitychange', onChange);
     };
   }, [divRef]);
   console.log(visible);

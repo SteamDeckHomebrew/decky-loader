@@ -126,33 +126,33 @@ class Toaster extends Logger {
   }
 
   async toast(toast: ToastData) {
-    while (!this.ready) {
-      await sleep(100);
-    }
-    const settings = this.settingsModule?.settings;
-    let toastData = {
-      nNotificationID: window.NotificationStore.m_nNextTestNotificationID++,
-      rtCreated: Date.now(),
-      eType: 15,
-      nToastDurationMS: toast.duration || 5e3,
-      data: toast,
-      decky: true,
-    };
-    // @ts-ignore
-    toastData.data.appid = () => 0;
-    if (
-      (settings?.bDisableAllToasts && !toast.critical) ||
-      (settings?.bDisableToastsInGame && !toast.critical && window.NotificationStore.BIsUserInGame())
-    )
-      return;
-    window.NotificationStore.m_rgNotificationToasts.push(toastData);
-    window.NotificationStore.DispatchNextToast();
+    // while (!this.ready) {
+    //   await sleep(100);
+    // }
+    // const settings = this.settingsModule?.settings;
+    // let toastData = {
+    //   nNotificationID: window.NotificationStore.m_nNextTestNotificationID++,
+    //   rtCreated: Date.now(),
+    //   eType: 15,
+    //   nToastDurationMS: toast.duration || 5e3,
+    //   data: toast,
+    //   decky: true,
+    // };
+    // // @ts-ignore
+    // toastData.data.appid = () => 0;
+    // if (
+    //   (settings?.bDisableAllToasts && !toast.critical) ||
+    //   (settings?.bDisableToastsInGame && !toast.critical && window.NotificationStore.BIsUserInGame())
+    // )
+    //   return;
+    // window.NotificationStore.m_rgNotificationToasts.push(toastData);
+    // window.NotificationStore.DispatchNextToast();
   }
 
   deinit() {
-    this.instanceRetPatch?.unpatch();
-    this.node && delete this.node.stateNode.shouldComponentUpdate;
-    this.node && this.node.stateNode.forceUpdate();
+    // this.instanceRetPatch?.unpatch();
+    // this.node && delete this.node.stateNode.shouldComponentUpdate;
+    // this.node && this.node.stateNode.forceUpdate();
   }
 }
 

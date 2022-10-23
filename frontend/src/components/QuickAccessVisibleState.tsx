@@ -10,10 +10,10 @@ export const QuickAccessVisibleStateProvider: FC<{}> = ({ children }) => {
   useEffect(() => {
     const doc: Document | void | null = divRef?.current?.ownerDocument;
     if (!doc) return;
-    setVisible(doc.visibilityState == 'visible')
+    setVisible(doc.visibilityState == 'visible');
     const onChange = (e: Event) => {
-      setVisible(doc.visibilityState == 'visible')
-    }
+      setVisible(doc.visibilityState == 'visible');
+    };
     doc.addEventListener('visibilitychange', onChange);
     return () => {
       doc.removeEventListener('visibilitychange', onChange);

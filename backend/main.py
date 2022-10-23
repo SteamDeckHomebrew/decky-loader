@@ -124,13 +124,13 @@ class PluginManager:
                 try:
                     tab = await get_gamepadui_tab()
                 except client_exceptions.ClientConnectorError or client_exceptions.ServerDisconnectedError:
-                    logger.info("Couldn't connect to debugger, waiting 5 seconds.")
+                    logger.debug("Couldn't connect to debugger, waiting 5 seconds.")
                     pass
                 except ValueError:
-                    logger.info("Couldn't find GamepadUI tab, waiting 5 seconds")
+                    logger.debug("Couldn't find GamepadUI tab, waiting 5 seconds")
                     pass
                 if not tab:
-                    await sleep(10)
+                    await sleep(5)
             await tab.open_websocket()
             await tab.enable()
             await self.inject_javascript(tab, True)

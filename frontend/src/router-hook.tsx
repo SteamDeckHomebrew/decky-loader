@@ -1,7 +1,12 @@
 import { Patch, afterPatch, findModuleChild } from 'decky-frontend-lib';
-import { ReactElement, ReactNode, cloneElement, createElement, memo } from 'react';
+import { FC, ReactElement, ReactNode, cloneElement, createElement, memo } from 'react';
 import type { Route } from 'react-router';
 
+import {
+  DeckyGlobalComponentsState,
+  DeckyGlobalComponentsStateContextProvider,
+  useDeckyGlobalComponentsState,
+} from './components/DeckyGlobalComponentsState';
 import {
   DeckyRouterState,
   DeckyRouterStateContextProvider,
@@ -22,6 +27,7 @@ class RouterHook extends Logger {
   private memoizedRouter: any;
   private gamepadWrapper: any;
   private routerState: DeckyRouterState = new DeckyRouterState();
+  private globalComponentsState: DeckyGlobalComponentsState = new DeckyGlobalComponentsState();
   private wrapperPatch: Patch;
   private routerPatch?: Patch;
 
@@ -42,24 +48,26 @@ class RouterHook extends Logger {
 
     let Route: new () => Route;
     // Used to store the new replicated routes we create to allow routes to be unpatched.
-    let toReplace = new Map<string, ReactNode>();
-    const DeckyWrapper = ({ children }: { children: ReactElement }) => {
-      const { routes, routePatches } = useDeckyRouterState();
-
-      const routeList = children.props.children[0].props.children;
-
+    const processList = (
+      routeList: any[],
+      routes: Map<string, RouterEntry> | null,
+      routePatches: Map<string, Set<RoutePatch>>,
+    ) => {
+      this.debug('list', routeList);
       let routerIndex = routeList.length;
-      if (!routeList[routerIndex - 1]?.length || routeList[routerIndex - 1]?.length !== routes.size) {
-        if (routeList[routerIndex - 1]?.length && routeList[routerIndex - 1].length !== routes.size) routerIndex--;
-        const newRouterArray: ReactElement[] = [];
-        routes.forEach(({ component, props }, path) => {
-          newRouterArray.push(
-            <Route path={path} {...props}>
-              {createElement(component)}
-            </Route>,
-          );
-        });
-        routeList[routerIndex] = newRouterArray;
+      if (routes) {
+        if (!routeList[routerIndex - 1]?.length || routeList[routerIndex - 1]?.length !== routes.size) {
+          if (routeList[routerIndex - 1]?.length && routeList[routerIndex - 1].length !== routes.size) routerIndex--;
+          const newRouterArray: ReactElement[] = [];
+          routes.forEach(({ component, props }, path) => {
+            newRouterArray.push(
+              <Route path={path} {...props}>
+                {createElement(component)}
+              </Route>,
+            );
+          });
+          routeList[routerIndex] = newRouterArray;
+        }
       }
       routeList.forEach((route: Route, index: number) => {
         const replaced = toReplace.get(route?.props?.path as string);
@@ -85,8 +93,28 @@ class RouterHook extends Logger {
           });
         }
       });
+    };
+    let toReplace = new Map<string, ReactNode>();
+    const DeckyWrapper = ({ children }: { children: ReactElement }) => {
+      const { routes, routePatches } = useDeckyRouterState();
+      const mainRouteList = children.props.children[0].props.children;
+      const ingameRouteList = children.props.children[1].props.children; // /appoverlay and /apprunning
+      processList(mainRouteList, routes, routePatches);
+      processList(ingameRouteList, null, routePatches);
+
       this.debug('Rerendered routes list');
       return children;
+    };
+
+    let renderedComponents: ReactElement[] = [];
+
+    const DeckyGlobalComponentsWrapper = () => {
+      const { components } = useDeckyGlobalComponentsState();
+      if (renderedComponents.length != components.size) {
+        this.debug('Rerendering global components');
+        renderedComponents = Array.from(components.values()).map((GComponent) => <GComponent />);
+      }
+      return <>{renderedComponents}</>;
     };
 
     this.wrapperPatch = afterPatch(this.gamepadWrapper, 'render', (_: any, ret: any) => {
@@ -97,6 +125,7 @@ class RouterHook extends Logger {
             ?.toString()
             ?.includes('GamepadUI.Settings.Root()')
         ) {
+          this.log('outer', ret);
           if (!this.router) {
             this.router = ret.props.children.props.children[idx]?.props?.children?.[0]?.type;
             this.routerPatch = afterPatch(this.router, 'type', (_: any, ret: any) => {
@@ -112,6 +141,11 @@ class RouterHook extends Logger {
             this.memoizedRouter = memo(this.router.type);
             this.memoizedRouter.isDeckyRouter = true;
           }
+          ret.props.children.props.children.push(
+            <DeckyGlobalComponentsStateContextProvider deckyGlobalComponentsState={this.globalComponentsState}>
+              <DeckyGlobalComponentsWrapper />
+            </DeckyGlobalComponentsStateContextProvider>,
+          );
           ret.props.children.props.children[idx].props.children[0].type = this.memoizedRouter;
         }
       }
@@ -125,6 +159,14 @@ class RouterHook extends Logger {
 
   addPatch(path: string, patch: RoutePatch) {
     return this.routerState.addPatch(path, patch);
+  }
+
+  addGlobalComponent(name: string, component: FC) {
+    this.globalComponentsState.addComponent(name, component);
+  }
+
+  removeGlobalComponent(name: string) {
+    this.globalComponentsState.removeComponent(name);
   }
 
   removePatch(path: string, patch: RoutePatch) {

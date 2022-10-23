@@ -41,7 +41,7 @@ class PluginLoader extends Logger {
   private tabsHook: TabsHook = new TabsHook();
   // private windowHook: WindowHook = new WindowHook();
   private routerHook: RouterHook = new RouterHook();
-  public toaster: Toaster = new Toaster();
+  public toaster: Toaster = new Toaster(this.routerHook);
   private deckyState: DeckyState = new DeckyState();
 
   private reloadLock: boolean = false;

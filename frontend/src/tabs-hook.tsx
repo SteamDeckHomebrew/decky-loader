@@ -1,4 +1,5 @@
-import { QuickAccessTab } from 'decky-frontend-lib';
+import { QuickAccessTab, quickAccessMenuClasses, sleep } from 'decky-frontend-lib';
+import { node } from 'webpack';
 
 import { QuickAccessVisibleStateProvider } from './components/QuickAccessVisibleState';
 import Logger from './logger';
@@ -40,11 +41,54 @@ class TabsHook extends Logger {
     const oFilter = (this.oFilter = Array.prototype.filter);
     Array.prototype.filter = function patchedFilter(...args: any[]) {
       if (isTabsArray(this)) {
+        console.log('FILTERING SHIT', this);
         self.render(this);
       }
       // @ts-ignore
       return oFilter.call(this, ...args);
     };
+
+    try {
+      const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
+      let qAMRoot: any;
+      async function findQAMRoot(currentNode: any, iters: number): Promise<any> {
+        if (iters >= 60) {
+          // currently 44
+          return null;
+        }
+        currentNode = currentNode?.child;
+        if (
+          currentNode?.memoizedProps?.className &&
+          currentNode?.memoizedProps?.className.startsWith(quickAccessMenuClasses.ViewPlaceholder)
+        ) {
+          self.log(`QAM root was found in ${iters} recursion cycles`);
+          return currentNode;
+        }
+        if (!currentNode) return null;
+        if (currentNode.sibling) {
+          let node = await findQAMRoot(currentNode.sibling, iters + 1);
+          if (node !== null) return node;
+        }
+        return await findQAMRoot(currentNode, iters + 1);
+      }
+      (async () => {
+        qAMRoot = await findQAMRoot(tree, 0);
+        while (!qAMRoot) {
+          this.error(
+            'Failed to find QAM root node, reattempting in 5 seconds. A developer may need to increase the recursion limit.',
+          );
+          await sleep(5000);
+          qAMRoot = await findQAMRoot(tree, 0);
+        }
+
+        while (!qAMRoot?.stateNode?.forceUpdate) {
+          qAMRoot = qAMRoot.return;
+        }
+        qAMRoot.stateNode.forceUpdate();
+      })();
+    } catch (e) {
+      this.log('Failed to rerender QAM', e);
+    }
   }
 
   deinit() {

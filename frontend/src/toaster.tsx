@@ -1,8 +1,10 @@
 import { Patch, ToastData, sleep } from 'decky-frontend-lib';
-import { ReactNode } from 'react';
 
+import DeckyToaster from './components/DeckyToaster';
+import { DeckyToasterState, DeckyToasterStateContextProvider } from './components/DeckyToasterState';
 import Toast from './components/Toast';
 import Logger from './logger';
+import RouterHook from './router-hook';
 
 declare global {
   interface Window {
@@ -13,12 +15,15 @@ declare global {
 
 class Toaster extends Logger {
   private instanceRetPatch?: Patch;
+  private routerHook: RouterHook;
+  private toasterState: DeckyToasterState = new DeckyToasterState();
   private node: any;
   private settingsModule: any;
   private ready: boolean = false;
 
-  constructor() {
+  constructor(routerHook: RouterHook) {
     super('Toaster');
+    this.routerHook = routerHook;
 
     window.__TOASTER_INSTANCE?.deinit?.();
     window.__TOASTER_INSTANCE = this;
@@ -26,6 +31,11 @@ class Toaster extends Logger {
   }
 
   async init() {
+    this.routerHook.addGlobalComponent('DeckyToaster', () => (
+      <DeckyToasterStateContextProvider deckyToasterState={this.toasterState}>
+        <DeckyToaster />
+      </DeckyToasterStateContextProvider>
+    ));
     // let instance: any;
     // while (true) {
     //   instance = findInReactTree(
@@ -125,10 +135,9 @@ class Toaster extends Logger {
     // this.ready = true;
   }
 
-  async toast(toast: ToastData) {
-    // while (!this.ready) {
-    //   await sleep(100);
-    // }
+  toast(toast: ToastData) {
+    toast.duration = toast.duration || 5e3;
+    this.toasterState.addToast(toast);
     // const settings = this.settingsModule?.settings;
     // let toastData = {
     //   nNotificationID: window.NotificationStore.m_nNextTestNotificationID++,
@@ -150,9 +159,7 @@ class Toaster extends Logger {
   }
 
   deinit() {
-    // this.instanceRetPatch?.unpatch();
-    // this.node && delete this.node.stateNode.shouldComponentUpdate;
-    // this.node && this.node.stateNode.forceUpdate();
+    this.routerHook.removeGlobalComponent('DeckyToaster');
   }
 }
 

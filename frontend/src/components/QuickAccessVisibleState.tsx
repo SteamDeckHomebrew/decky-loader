@@ -19,7 +19,6 @@ export const QuickAccessVisibleStateProvider: FC<{}> = ({ children }) => {
       doc.removeEventListener('visibilitychange', onChange);
     };
   }, [divRef]);
-  console.log(visible);
   return (
     <div ref={divRef}>
       <QuickAccessVisibleState.Provider value={visible}>{children}</QuickAccessVisibleState.Provider>

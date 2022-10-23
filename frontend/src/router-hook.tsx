@@ -53,7 +53,7 @@ class RouterHook extends Logger {
       routes: Map<string, RouterEntry> | null,
       routePatches: Map<string, Set<RoutePatch>>,
     ) => {
-      this.debug('list', routeList);
+      this.debug('Route list: ', routeList);
       let routerIndex = routeList.length;
       if (routes) {
         if (!routeList[routerIndex - 1]?.length || routeList[routerIndex - 1]?.length !== routes.size) {
@@ -125,7 +125,6 @@ class RouterHook extends Logger {
             ?.toString()
             ?.includes('GamepadUI.Settings.Root()')
         ) {
-          this.log('outer', ret);
           if (!this.router) {
             this.router = ret.props.children.props.children[idx]?.props?.children?.[0]?.type;
             this.routerPatch = afterPatch(this.router, 'type', (_: any, ret: any) => {

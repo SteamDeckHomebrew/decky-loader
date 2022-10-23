@@ -14,6 +14,7 @@ export interface StorePlugin {
   author: string;
   description: string;
   tags: string[];
+  image_url: string;
 }
 
 export interface LegacyStorePlugin {

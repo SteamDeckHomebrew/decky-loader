@@ -71,6 +71,15 @@ class PluginWrapper:
             self.log.error("Failed to start " + self.name + "!\n" + format_exc())
             exit(0)
 
+    def _unload(self):
+        try:
+            self.log.info("Attempting to unload " + self.name + "\n")
+            if hasattr(self.Plugin, "_unload"):
+                self.Plugin._unload(self.Plugin)
+        except:
+            self.log.error("Failed to unload " + self.name + "!\n" + format_exc())
+            exit(0)
+
     async def _setup_socket(self):
         self.socket = await start_unix_server(self._listen_for_method_call, path=self.socket_addr, limit=BUFFER_LIMIT)
 

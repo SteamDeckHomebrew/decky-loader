@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import { FaArrowDown } from 'react-icons/fa';
 
 import { VerInfo, callUpdaterMethod, finishUpdate } from '../../../../updater';
+import { findSP } from '../../../../utils/windows';
 import { useDeckyState } from '../../../DeckyState';
 import InlinePatchNotes from '../../../patchnotes/InlinePatchNotes';
 import WithSuspense from '../../../WithSuspense';
@@ -21,6 +22,7 @@ import WithSuspense from '../../../WithSuspense';
 const MarkdownRenderer = lazy(() => import('../../../Markdown'));
 
 function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | null; closeModal?: () => {} }) {
+  const SP = findSP();
   return (
     <Focusable onCancelButton={closeModal}>
       <FocusRing>
@@ -50,12 +52,13 @@ function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | n
           )}
           fnGetId={(id) => id}
           nNumItems={versionInfo?.all?.length}
-          nHeight={window.innerHeight - 40}
-          nItemHeight={window.innerHeight - 40}
+          nHeight={SP.innerHeight - 40}
+          nItemHeight={SP.innerHeight - 40}
           nItemMarginX={0}
           initialColumn={0}
           autoFocus={true}
-          fnGetColumnWidth={() => window.innerWidth}
+          fnGetColumnWidth={() => SP.innerWidth}
+          name="Decky Updates"
         />
       </FocusRing>
     </Focusable>

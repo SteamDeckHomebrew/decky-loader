@@ -2,13 +2,10 @@ import { ToastData, findModule, joinClassNames } from 'decky-frontend-lib';
 import { FunctionComponent } from 'react';
 
 interface ToastProps {
-  toast: {
-    data: ToastData;
-    nToastDurationMS: number;
-  };
+  toast: ToastData;
 }
 
-const toastClasses = findModule((mod) => {
+export const toastClasses = findModule((mod) => {
   if (typeof mod !== 'object') return false;
 
   if (mod.ToastPlaceholder) {
@@ -30,21 +27,19 @@ const templateClasses = findModule((mod) => {
 
 const Toast: FunctionComponent<ToastProps> = ({ toast }) => {
   return (
-    <div
-      style={{ '--toast-duration': `${toast.nToastDurationMS}ms` } as React.CSSProperties}
-      className={toastClasses.toastEnter}
-    >
+    <div className={toastClasses.ToastPopup}>
       <div
-        onClick={toast.data.onClick}
-        className={joinClassNames(templateClasses.ShortTemplate, toast.data.className || '')}
+        style={{ '--toast-duration': `${toast.duration}ms` } as React.CSSProperties}
+        onClick={toast.onClick}
+        className={joinClassNames(templateClasses.ShortTemplate, toast.className || '')}
       >
-        {toast.data.logo && <div className={templateClasses.StandardLogoDimensions}>{toast.data.logo}</div>}
-        <div className={joinClassNames(templateClasses.Content, toast.data.contentClassName || '')}>
+        {toast.logo && <div className={templateClasses.StandardLogoDimensions}>{toast.logo}</div>}
+        <div className={joinClassNames(templateClasses.Content, toast.contentClassName || '')}>
           <div className={templateClasses.Header}>
-            {toast.data.icon && <div className={templateClasses.Icon}>{toast.data.icon}</div>}
-            <div className={templateClasses.Title}>{toast.data.title}</div>
+            {toast.icon && <div className={templateClasses.Icon}>{toast.icon}</div>}
+            <div className={templateClasses.Title}>{toast.title}</div>
           </div>
-          <div className={templateClasses.Body}>{toast.data.body}</div>
+          <div className={templateClasses.Body}>{toast.body}</div>
         </div>
       </div>
     </div>

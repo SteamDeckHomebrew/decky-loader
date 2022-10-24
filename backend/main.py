@@ -12,7 +12,7 @@ from traceback import format_exc
 
 import aiohttp_cors
 # Partial imports
-from aiohttp import ClientSession
+from aiohttp import ClientSession, client_exceptions
 from aiohttp.web import Application, Response, get, run_app, static
 from aiohttp_jinja2 import setup as jinja_setup
 
@@ -22,7 +22,7 @@ from helpers import (REMOTE_DEBUGGER_UNIT, csrf_middleware, get_csrf_token,
                      get_home_path, get_homebrew_path, get_user,
                      get_user_group, set_user, set_user_group,
                      stop_systemd_unit)
-from injector import inject_to_tab, tab_has_global_var
+from injector import get_gamepadui_tab, Tab, get_tabs
 from loader import Loader
 from settings import SettingsManager
 from updater import Updater
@@ -118,17 +118,49 @@ class PluginManager:
         # await inject_to_tab("SP", "window.syncDeckyPlugins();")
 
     async def loader_reinjector(self):
-        await sleep(2)
-        await self.inject_javascript()
         while True:
-            await sleep(5)
-            if not await tab_has_global_var("SP", "deckyHasLoaded"):
-                logger.info("Plugin loader isn't present in Steam anymore, reinjecting...")
-                await self.inject_javascript()
+            tab = None
+            while not tab:
+                try:
+                    tab = await get_gamepadui_tab()
+                except client_exceptions.ClientConnectorError or client_exceptions.ServerDisconnectedError:
+                    logger.debug("Couldn't connect to debugger, waiting 5 seconds.")
+                    pass
+                except ValueError:
+                    logger.debug("Couldn't find GamepadUI tab, waiting 5 seconds")
+                    pass
+                if not tab:
+                    await sleep(5)
+            await tab.open_websocket()
+            await tab.enable()
+            await self.inject_javascript(tab, True)
+            async for msg in tab.listen_for_message():
+                logger.debug("Page event: " + str(msg.get("method", None)))
+                if msg.get("method", None) == "Page.domContentEventFired":
+                    if not await tab.has_global_var("deckyHasLoaded", False):
+                        await self.inject_javascript(tab)
+                if msg.get("method", None) == "Inspector.detached":
+                    logger.info("Steam is exiting...")
+                    await tab.close_websocket()
+                    break
+        # while True:
+        #     await sleep(5)
+        #     if not await tab.has_global_var("deckyHasLoaded", False):
+        #         logger.info("Plugin loader isn't present in Steam anymore, reinjecting...")
+        #         await self.inject_javascript(tab)
 
-    async def inject_javascript(self, request=None):
+    async def inject_javascript(self, tab: Tab, first=False, request=None):
+        logger.info("Loading Decky frontend!")
         try:
-            await inject_to_tab("SP", "try{if (window.deckyHasLoaded) location.reload();window.deckyHasLoaded = true;(async()=>{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js')})();}catch(e){console.error(e)}", True)
+            if first:
+                if await tab.has_global_var("deckyHasLoaded", False):
+                    tabs = await get_tabs()
+                    for t in tabs:
+                        if t.title != "Steam" and t.title != "SP":
+                            logger.debug("Closing tab: " + getattr(t, "title", "Untitled"))
+                            await t.close()
+                            await sleep(0.5)
+            await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => location.reload(), 1000)}window.deckyHasLoaded = true;(async()=>{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js')})();}catch(e){console.error(e)}", False, False, False)
         except:
             logger.info("Failed to inject JavaScript into tab\n" + format_exc())
             pass

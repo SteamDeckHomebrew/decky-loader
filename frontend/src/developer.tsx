@@ -1,6 +1,9 @@
 import {
   ReactRouter,
   Router,
+  fakeRenderComponent,
+  findInReactTree,
+  findInTree,
   findModule,
   findModuleChild,
   gamepadDialogClasses,
@@ -71,6 +74,11 @@ export async function startup() {
   window.DFL = {
     findModuleChild,
     findModule,
+    ReactUtils: {
+      fakeRenderComponent,
+      findInReactTree,
+      findInTree,
+    },
     Router,
     ReactRouter,
     classes: {

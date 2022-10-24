@@ -1,5 +1,4 @@
-import { Patch, QuickAccessTab, afterPatch, sleep } from 'decky-frontend-lib';
-import { memo } from 'react';
+import { QuickAccessTab, quickAccessMenuClasses, sleep } from 'decky-frontend-lib';
 
 import { QuickAccessVisibleStateProvider } from './components/QuickAccessVisibleState';
 import Logger from './logger';
@@ -28,15 +27,7 @@ interface Tab {
 class TabsHook extends Logger {
   // private keys = 7;
   tabs: Tab[] = [];
-  private quickAccess: any;
-  private tabRenderer: any;
-  private memoizedQuickAccess: any;
-  private cNode: any;
-
-  private qAPTree: any;
-  private rendererTree: any;
-
-  private cNodePatch?: Patch;
+  private oFilter: (...args: any[]) => any;
 
   constructor() {
     super('TabsHook');
@@ -46,84 +37,63 @@ class TabsHook extends Logger {
     window.__TABS_HOOK_INSTANCE = this;
 
     const self = this;
-    const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
-    let scrollRoot: any;
-    async function findScrollRoot(currentNode: any, iters: number): Promise<any> {
-      if (iters >= 30) {
-        self.error(
-          'Scroll root was not found before hitting the recursion limit, a developer will need to increase the limit.',
-        );
-        return null;
+    const oFilter = (this.oFilter = Array.prototype.filter);
+    Array.prototype.filter = function patchedFilter(...args: any[]) {
+      if (isTabsArray(this)) {
+        self.render(this);
       }
-      currentNode = currentNode?.child;
-      if (currentNode?.type?.prototype?.RemoveSmartScrollContainer) {
-        self.log(`Scroll root was found in ${iters} recursion cycles`);
-        return currentNode;
-      }
-      if (!currentNode) return null;
-      if (currentNode.sibling) {
-        let node = await findScrollRoot(currentNode.sibling, iters + 1);
-        if (node !== null) return node;
-      }
-      return await findScrollRoot(currentNode, iters + 1);
-    }
-    (async () => {
-      scrollRoot = await findScrollRoot(tree, 0);
-      while (!scrollRoot) {
-        this.log('Failed to find scroll root node, reattempting in 5 seconds');
-        await sleep(5000);
-        scrollRoot = await findScrollRoot(tree, 0);
-      }
-      let newQA: any;
-      let newQATabRenderer: any;
-      this.cNodePatch = afterPatch(scrollRoot.stateNode, 'render', (_: any, ret: any) => {
-        if (!this.quickAccess && ret.props.children.props.children[4]) {
-          this.quickAccess = ret?.props?.children?.props?.children[4].type;
-          newQA = (...args: any) => {
-            const ret = this.quickAccess.type(...args);
-            if (ret) {
-              if (!newQATabRenderer) {
-                this.tabRenderer = ret.props.children[1].children.type;
-                newQATabRenderer = (...qamArgs: any[]) => {
-                  const oFilter = Array.prototype.filter;
-                  Array.prototype.filter = function (...args: any[]) {
-                    if (isTabsArray(this)) {
-                      self.render(this, qamArgs[0].visible);
-                    }
-                    // @ts-ignore
-                    return oFilter.call(this, ...args);
-                  };
-                  // TODO remove array hack entirely and use this instead const tabs = ret.props.children.props.children[0].props.children[1].props.children[0].props.children[0].props.tabs
-                  const ret = this.tabRenderer(...qamArgs);
-                  Array.prototype.filter = oFilter;
-                  return ret;
-                };
-              }
-              this.rendererTree = ret.props.children[1].children;
-              ret.props.children[1].children.type = newQATabRenderer;
-            }
-            return ret;
-          };
-          this.memoizedQuickAccess = memo(newQA);
-          this.memoizedQuickAccess.isDeckyQuickAccess = true;
+      // @ts-ignore
+      return oFilter.call(this, ...args);
+    };
+
+    if (document.title != 'SP')
+      try {
+        const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
+        let qAMRoot: any;
+        async function findQAMRoot(currentNode: any, iters: number): Promise<any> {
+          if (iters >= 60) {
+            // currently 44
+            return null;
+          }
+          currentNode = currentNode?.child;
+          if (
+            currentNode?.memoizedProps?.className &&
+            currentNode?.memoizedProps?.className.startsWith(quickAccessMenuClasses.ViewPlaceholder)
+          ) {
+            self.log(`QAM root was found in ${iters} recursion cycles`);
+            return currentNode;
+          }
+          if (!currentNode) return null;
+          if (currentNode.sibling) {
+            let node = await findQAMRoot(currentNode.sibling, iters + 1);
+            if (node !== null) return node;
+          }
+          return await findQAMRoot(currentNode, iters + 1);
         }
-        if (ret.props.children.props.children[4]) {
-          this.qAPTree = ret.props.children.props.children[4];
-          ret.props.children.props.children[4].type = this.memoizedQuickAccess;
-        }
-        return ret;
-      });
-      this.cNode = scrollRoot;
-      this.cNode.stateNode.forceUpdate();
-      this.log('Finished initial injection');
-    })();
+        (async () => {
+          qAMRoot = await findQAMRoot(tree, 0);
+          while (!qAMRoot) {
+            this.error(
+              'Failed to find QAM root node, reattempting in 5 seconds. A developer may need to increase the recursion limit.',
+            );
+            await sleep(5000);
+            qAMRoot = await findQAMRoot(tree, 0);
+          }
+
+          while (!qAMRoot?.stateNode?.forceUpdate) {
+            qAMRoot = qAMRoot.return;
+          }
+          qAMRoot.stateNode.shouldComponentUpdate = () => true;
+          qAMRoot.stateNode.forceUpdate();
+          delete qAMRoot.stateNode.shouldComponentUpdate;
+        })();
+      } catch (e) {
+        this.log('Failed to rerender QAM', e);
+      }
   }
 
   deinit() {
-    this.cNodePatch?.unpatch();
-    if (this.qAPTree) this.qAPTree.type = this.quickAccess;
-    if (this.rendererTree) this.rendererTree.type = this.tabRenderer;
-    if (this.cNode) this.cNode.stateNode.forceUpdate();
+    Array.prototype.filter = this.oFilter;
   }
 
   add(tab: Tab) {
@@ -136,13 +106,14 @@ class TabsHook extends Logger {
     this.tabs = this.tabs.filter((tab) => tab.id !== id);
   }
 
-  render(existingTabs: any[], visible: boolean) {
+  render(existingTabs: any[]) {
     for (const { title, icon, content, id } of this.tabs) {
       existingTabs.push({
         key: id,
         title,
         tab: icon,
-        panel: <QuickAccessVisibleStateProvider visible={visible}>{content}</QuickAccessVisibleStateProvider>,
+        decky: true,
+        panel: <QuickAccessVisibleStateProvider>{content}</QuickAccessVisibleStateProvider>,
       });
     }
   }

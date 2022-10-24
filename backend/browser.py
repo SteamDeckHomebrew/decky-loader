@@ -16,7 +16,7 @@ from zipfile import ZipFile
 
 # Local modules
 from helpers import get_ssl_context, get_user, get_user_group, download_remote_binary_to_path
-from injector import get_tab, inject_to_tab
+from injector import get_gamepadui_tab
 
 logger = getLogger("Browser")
 
@@ -104,7 +104,7 @@ class PluginBrowser:
     async def uninstall_plugin(self, name):
         if self.loader.watcher:
             self.loader.watcher.disabled = True
-        tab = await get_tab("SP")
+        tab = await get_gamepadui_tab()
         try:
             logger.info("uninstalling " + name)
             logger.info(" at dir " + self.find_plugin_folder(name))
@@ -172,7 +172,7 @@ class PluginBrowser:
     async def request_plugin_install(self, artifact, name, version, hash):
         request_id = str(time())
         self.install_requests[request_id] = PluginInstallContext(artifact, name, version, hash)
-        tab = await get_tab("SP")
+        tab = await get_gamepadui_tab()
         await tab.open_websocket()
         await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}')")
 

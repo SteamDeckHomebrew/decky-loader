@@ -9,7 +9,7 @@ import {
   staticClasses,
 } from 'decky-frontend-lib';
 import { lazy } from 'react';
-import { FaPlug } from 'react-icons/fa';
+import { FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
 import { DeckyState, DeckyStateContextProvider, useDeckyState } from './components/DeckyState';
 import LegacyPlugin from './components/LegacyPlugin';
@@ -235,13 +235,18 @@ class PluginLoader extends Logger {
       },
     });
     if (res.ok) {
-      let plugin_export = await eval(await res.text());
-      let plugin = plugin_export(this.createPluginAPI(name));
-      this.plugins.push({
-        ...plugin,
-        name: name,
-        version: version,
-      });
+      try {
+        let plugin_export = await eval(await res.text());
+        let plugin = plugin_export(this.createPluginAPI(name));
+        this.plugins.push({
+          ...plugin,
+          name: name,
+          version: version,
+        });
+      } catch (e) {
+        this.error('Error loading plugin ' + name, e);
+        this.toaster.toast({ title: 'Error loading ' + name, body: '' + e, icon: <FaExclamationCircle /> });
+      }
     } else throw new Error(`${name} frontend_bundle not OK`);
   }
 

@@ -261,6 +261,71 @@ class Tab:
         if manage_socket:
             await self.close_websocket()
 
+    async def has_element(self, element_name, manage_socket=True):
+        res = await self.evaluate_js(f"document.getElementById('{element_name}') != null", False, manage_socket)
+
+        if not "result" in res or not "result" in res["result"] or not "value" in res["result"]["result"]:
+            return False
+
+        return res["result"]["result"]["value"]
+
+    async def inject_css(self, style, manage_socket=True):
+        try:
+            css_id = str(uuid.uuid4())
+
+            result = await self.evaluate_js(
+                f"""
+                (function() {{
+                    const style = document.createElement('style');
+                    style.id = "{css_id}";
+                    document.head.append(style);
+                    style.textContent = `{style}`;
+                }})()
+                """, False, manage_socket)
+
+            if "exceptionDetails" in result["result"]:
+                return {
+                    "success": False,
+                    "result": result["result"]
+                }
+
+            return {
+                "success": True,
+                "result": css_id
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "result": e
+            }
+
+    async def remove_css(self, css_id, manage_socket=True):
+        try:
+            result = await self.evaluate_js(
+                f"""
+                (function() {{
+                    let style = document.getElementById("{css_id}");
+
+                    if (style.nodeName.toLowerCase() == 'style')
+                        style.parentNode.removeChild(style);
+                }})()
+                """, False, manage_socket)
+
+            if "exceptionDetails" in result["result"]:
+                return {
+                    "success": False,
+                    "result": result
+                }
+
+            return {
+                "success": True
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "result": e
+            }
+
     async def get_steam_resource(self, url):
         res = await self.evaluate_js(f'(async function test() {{ return await (await fetch("{url}")).text() }})()', True)
         return res["result"]["result"]["value"]
@@ -316,15 +381,3 @@ async def inject_to_tab(tab_name, js, run_async=False):
     tab = await get_tab(tab_name)
 
     return await tab.evaluate_js(js, run_async)
-
-async def tab_has_element(tab_name, element_name):
-    try:
-        tab = await get_tab(tab_name)
-    except ValueError:
-        return False
-    res = await tab.evaluate_js(f"document.getElementById('{element_name}') != null", False)
-
-    if not "result" in res or not "result" in res["result"] or not "value" in res["result"]["result"]:
-        return False
-
-    return res["result"]["result"]["value"]

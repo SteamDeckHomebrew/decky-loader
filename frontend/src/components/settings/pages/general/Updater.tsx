@@ -87,7 +87,7 @@ export default function UpdaterSettings() {
   }, []);
 
   const showPatchNotes = useCallback(() => {
-    showModal(<PatchNotesModal versionInfo={versionInfo} />, window);
+    showModal(<PatchNotesModal versionInfo={versionInfo} />);
   }, [versionInfo]);
 
   return (

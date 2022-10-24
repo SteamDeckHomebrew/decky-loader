@@ -30,6 +30,7 @@ class RouterHook extends Logger {
   private globalComponentsState: DeckyGlobalComponentsState = new DeckyGlobalComponentsState();
   private wrapperPatch: Patch;
   private routerPatch?: Patch;
+  public routes?: any[];
 
   constructor() {
     super('RouterHook');
@@ -52,8 +53,10 @@ class RouterHook extends Logger {
       routeList: any[],
       routes: Map<string, RouterEntry> | null,
       routePatches: Map<string, Set<RoutePatch>>,
+      save: boolean,
     ) => {
       this.debug('Route list: ', routeList);
+      if (save) this.routes = routeList;
       let routerIndex = routeList.length;
       if (routes) {
         if (!routeList[routerIndex - 1]?.length || routeList[routerIndex - 1]?.length !== routes.size) {
@@ -99,8 +102,8 @@ class RouterHook extends Logger {
       const { routes, routePatches } = useDeckyRouterState();
       const mainRouteList = children.props.children[0].props.children;
       const ingameRouteList = children.props.children[1].props.children; // /appoverlay and /apprunning
-      processList(mainRouteList, routes, routePatches);
-      processList(ingameRouteList, null, routePatches);
+      processList(mainRouteList, routes, routePatches, true);
+      processList(ingameRouteList, null, routePatches, false);
 
       this.debug('Rerendered routes list');
       return children;

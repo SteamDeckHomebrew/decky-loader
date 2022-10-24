@@ -298,6 +298,13 @@ async def get_tab(tab_name) -> Tab:
         raise ValueError(f"Tab {tab_name} not found")
     return tab
 
+async def get_tab_lambda(test) -> Tab:
+    tabs = await get_tabs()
+    tab = next((i for i in tabs if test(i)), None)
+    if not tab:
+        raise ValueError(f"Tab not found by lambda")
+    return tab
+
 async def get_gamepadui_tab() -> Tab:
     tabs = await get_tabs()
     tab = next((i for i in tabs if ("https://steamloopback.host/routes/" in i.url and (i.title == "Steam" or i.title == "SP"))), None)

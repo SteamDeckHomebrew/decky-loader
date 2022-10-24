@@ -46,49 +46,50 @@ class TabsHook extends Logger {
       return oFilter.call(this, ...args);
     };
 
-    try {
-      const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
-      let qAMRoot: any;
-      async function findQAMRoot(currentNode: any, iters: number): Promise<any> {
-        if (iters >= 60) {
-          // currently 44
-          return null;
+    if (document.title != 'SP')
+      try {
+        const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
+        let qAMRoot: any;
+        async function findQAMRoot(currentNode: any, iters: number): Promise<any> {
+          if (iters >= 60) {
+            // currently 44
+            return null;
+          }
+          currentNode = currentNode?.child;
+          if (
+            currentNode?.memoizedProps?.className &&
+            currentNode?.memoizedProps?.className.startsWith(quickAccessMenuClasses.ViewPlaceholder)
+          ) {
+            self.log(`QAM root was found in ${iters} recursion cycles`);
+            return currentNode;
+          }
+          if (!currentNode) return null;
+          if (currentNode.sibling) {
+            let node = await findQAMRoot(currentNode.sibling, iters + 1);
+            if (node !== null) return node;
+          }
+          return await findQAMRoot(currentNode, iters + 1);
         }
-        currentNode = currentNode?.child;
-        if (
-          currentNode?.memoizedProps?.className &&
-          currentNode?.memoizedProps?.className.startsWith(quickAccessMenuClasses.ViewPlaceholder)
-        ) {
-          self.log(`QAM root was found in ${iters} recursion cycles`);
-          return currentNode;
-        }
-        if (!currentNode) return null;
-        if (currentNode.sibling) {
-          let node = await findQAMRoot(currentNode.sibling, iters + 1);
-          if (node !== null) return node;
-        }
-        return await findQAMRoot(currentNode, iters + 1);
-      }
-      (async () => {
-        qAMRoot = await findQAMRoot(tree, 0);
-        while (!qAMRoot) {
-          this.error(
-            'Failed to find QAM root node, reattempting in 5 seconds. A developer may need to increase the recursion limit.',
-          );
-          await sleep(5000);
+        (async () => {
           qAMRoot = await findQAMRoot(tree, 0);
-        }
+          while (!qAMRoot) {
+            this.error(
+              'Failed to find QAM root node, reattempting in 5 seconds. A developer may need to increase the recursion limit.',
+            );
+            await sleep(5000);
+            qAMRoot = await findQAMRoot(tree, 0);
+          }
 
-        while (!qAMRoot?.stateNode?.forceUpdate) {
-          qAMRoot = qAMRoot.return;
-        }
-        qAMRoot.stateNode.shouldComponentUpdate = () => true;
-        qAMRoot.stateNode.forceUpdate();
-        delete qAMRoot.stateNode.shouldComponentUpdate;
-      })();
-    } catch (e) {
-      this.log('Failed to rerender QAM', e);
-    }
+          while (!qAMRoot?.stateNode?.forceUpdate) {
+            qAMRoot = qAMRoot.return;
+          }
+          qAMRoot.stateNode.shouldComponentUpdate = () => true;
+          qAMRoot.stateNode.forceUpdate();
+          delete qAMRoot.stateNode.shouldComponentUpdate;
+        })();
+      } catch (e) {
+        this.log('Failed to rerender QAM', e);
+      }
   }
 
   deinit() {

@@ -7,6 +7,7 @@ from typing import List
 
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientConnectorError
+import uuid
 
 BASE_ADDRESS = "http://localhost:8080"
 

@@ -1,3 +1,4 @@
+// TabsHook for versions after the Desktop merge
 import { Patch, QuickAccessTab, afterPatch, findInReactTree, sleep } from 'decky-frontend-lib';
 
 import { QuickAccessVisibleStateProvider } from './components/QuickAccessVisibleState';
@@ -29,7 +30,9 @@ class TabsHook extends Logger {
     this.log('Initialized');
     window.__TABS_HOOK_INSTANCE?.deinit?.();
     window.__TABS_HOOK_INSTANCE = this;
+  }
 
+  init() {
     const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
     let qAMRoot: any;
     const findQAMRoot = (currentNode: any, iters: number): any => {
@@ -38,7 +41,7 @@ class TabsHook extends Logger {
         return null;
       }
       if (
-        currentNode?.memoizedProps?.ModalManager &&
+        typeof currentNode?.memoizedProps?.visible == 'boolean' &&
         currentNode?.type?.toString()?.includes('QuickAccessMenuBrowserView')
       ) {
         this.log(`QAM root was found in ${iters} recursion cycles`);
@@ -72,20 +75,22 @@ class TabsHook extends Logger {
       }
       this.qAMRoot = qAMRoot;
       let patchedInnerQAM: any;
-      let root = FocusNavController.m_ActiveContext.m_rgGamepadNavigationTrees.find(
+      let root = FocusNavController?.m_ActiveContext?.m_rgGamepadNavigationTrees?.find(
         (x: any) => x.m_ID == 'root_1_',
-      ).m_context;
+      )?.m_context;
       this.qamPatch = afterPatch(qAMRoot.return, 'type', (_: any, ret: any) => {
         try {
           if (!!window.securitystore.GetActiveLockScreenProps()) {
             // Prevents lockscreen focus issues this patch causes for some reason idk.
-            try {
-              setTimeout(() => {
-                FocusNavController.OnContextActivated(root);
-                this.debug('Redirected focus on lock screen from QAM to root: ', root);
-              }, 1);
-            } catch (e) {
-              this.error('Error unfocusing QAM on lock screen', e);
+            if (root) {
+              try {
+                setTimeout(() => {
+                  FocusNavController.OnContextActivated(root);
+                  this.debug('Redirected focus on lock screen from QAM to root: ', root);
+                }, 1);
+              } catch (e) {
+                this.error('Error unfocusing QAM on lock screen', e);
+              }
             }
           }
           if (!qAMRoot?.child) {
@@ -120,7 +125,6 @@ class TabsHook extends Logger {
 
         return ret;
       });
-      qAMRoot.return.alternate.type = qAMRoot.return.type;
       this.log('Finished initial injection');
     })();
   }

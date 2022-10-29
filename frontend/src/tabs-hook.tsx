@@ -86,7 +86,6 @@ class TabsHook extends Logger {
           ) as any
         ];
       this.unsubscribeSecurity = securityMobx.observe((e: any) => {
-        this.log('lockscreen', e);
         if (e.newValue) {
           try {
             setTimeout(() => {

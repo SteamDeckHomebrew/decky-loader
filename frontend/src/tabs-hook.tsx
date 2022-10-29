@@ -99,8 +99,9 @@ class TabsHook extends Logger {
           if (SP.document.activeElement == SP.document.body) {
             SP.document.querySelector<HTMLDivElement>(`.${lockClasses.NumericButtonInput}`)?.focus();
             this.debug('Refocused inner lockscreen');
+          } else {
+            return;
           }
-          return;
         }
         const tree = FocusNavController.m_mapContexts
           .get(SP)

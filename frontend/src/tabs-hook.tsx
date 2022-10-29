@@ -3,6 +3,7 @@ import { Patch, QuickAccessTab, afterPatch, findInReactTree, sleep } from 'decky
 
 import { QuickAccessVisibleStateProvider } from './components/QuickAccessVisibleState';
 import Logger from './logger';
+import { findSP } from './utils/windows';
 
 declare global {
   interface Window {
@@ -23,6 +24,7 @@ class TabsHook extends Logger {
   tabs: Tab[] = [];
   private qAMRoot?: any;
   private qamPatch?: Patch;
+  private unsubscribeSecurity?: () => void;
 
   constructor() {
     super('TabsHook');
@@ -75,24 +77,33 @@ class TabsHook extends Logger {
       }
       this.qAMRoot = qAMRoot;
       let patchedInnerQAM: any;
-      let root = FocusNavController?.m_ActiveContext?.m_rgGamepadNavigationTrees?.find(
-        (x: any) => x.m_ID == 'root_1_',
-      )?.m_context;
+      const SP = findSP();
+      // fix dumb focus bug this causes for some reason
+      const securityMobx =
+        window.securitystore[
+          Object.getOwnPropertySymbols(window.securitystore).find(
+            (x) => x.toString() == 'Symbol(mobx administration)',
+          ) as any
+        ];
+      this.unsubscribeSecurity = securityMobx.observe((e: any) => {
+        this.log('lockscreen', e);
+        if (e.newValue) {
+          try {
+            setTimeout(() => {
+              const tree = FocusNavController.m_mapContexts
+                .get(SP)
+                .m_rgGamepadNavigationTrees.find((x: any) => x.m_ID == 'root_1_');
+              FocusNavController.OnContextActivated(tree.m_context);
+              FocusNavController.OnGamepadNavigationTreeActivated(tree);
+              this.debug('Redirected focus on lock screen from QAM to root');
+            }, 1);
+          } catch (e) {
+            this.error('Error unfocusing QAM on lock screen', e);
+          }
+        }
+      });
       this.qamPatch = afterPatch(qAMRoot.return, 'type', (_: any, ret: any) => {
         try {
-          if (!!window.securitystore.GetActiveLockScreenProps()) {
-            // Prevents lockscreen focus issues this patch causes for some reason idk.
-            if (root) {
-              try {
-                setTimeout(() => {
-                  FocusNavController.OnContextActivated(root);
-                  this.debug('Redirected focus on lock screen from QAM to root: ', root);
-                }, 1);
-              } catch (e) {
-                this.error('Error unfocusing QAM on lock screen', e);
-              }
-            }
-          }
           if (!qAMRoot?.child) {
             qAMRoot = findQAMRoot(tree, 0);
             this.qAMRoot = qAMRoot;
@@ -132,6 +143,7 @@ class TabsHook extends Logger {
   deinit() {
     this.qamPatch?.unpatch();
     this.qAMRoot.return.alternate.type = this.qAMRoot.return.type;
+    this.unsubscribeSecurity?.();
   }
 
   add(tab: Tab) {

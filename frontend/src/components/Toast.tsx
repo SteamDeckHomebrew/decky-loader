@@ -27,20 +27,18 @@ const templateClasses = findModule((mod) => {
 
 const Toast: FunctionComponent<ToastProps> = ({ toast }) => {
   return (
-    <div className={toastClasses.ToastPopup}>
-      <div
-        style={{ '--toast-duration': `${toast.duration}ms` } as React.CSSProperties}
-        onClick={toast.onClick}
-        className={joinClassNames(templateClasses.ShortTemplate, toast.className || '')}
-      >
-        {toast.logo && <div className={templateClasses.StandardLogoDimensions}>{toast.logo}</div>}
-        <div className={joinClassNames(templateClasses.Content, toast.contentClassName || '')}>
-          <div className={templateClasses.Header}>
-            {toast.icon && <div className={templateClasses.Icon}>{toast.icon}</div>}
-            <div className={templateClasses.Title}>{toast.title}</div>
-          </div>
-          <div className={templateClasses.Body}>{toast.body}</div>
+    <div
+      style={{ '--toast-duration': `${toast.duration}ms` } as React.CSSProperties}
+      onClick={toast.onClick}
+      className={joinClassNames(templateClasses.ShortTemplate, toast.className || '')}
+    >
+      {toast.logo && <div className={templateClasses.StandardLogoDimensions}>{toast.logo}</div>}
+      <div className={joinClassNames(templateClasses.Content, toast.contentClassName || '')}>
+        <div className={templateClasses.Header}>
+          {toast.icon && <div className={templateClasses.Icon}>{toast.icon}</div>}
+          <div className={templateClasses.Title}>{toast.title}</div>
         </div>
+        <div className={templateClasses.Body}>{toast.body}</div>
       </div>
     </div>
   );

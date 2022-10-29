@@ -26,8 +26,8 @@ systemctl --user disable plugin_loader 2> /dev/null
 
 systemctl stop plugin_loader 2> /dev/null
 systemctl disable plugin_loader 2> /dev/null
-rm -f /etc/systemd/system/plugin_loader.service
-cat > /etc/systemd/system/plugin_loader.service <<- EOM
+rm -f "/etc/systemd/system/plugin_loader.service"
+cat > "/etc/systemd/system/plugin_loader.service" <<- EOM
 [Unit]
 Description=SteamDeck Plugin Loader
 [Service]

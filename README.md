@@ -17,7 +17,7 @@
 
 ## 📖 About
 
-Decky Loader is a homebrew plugin launcher for the Steam Deck. It can be used to [stylize your menus](https://github.com/suchmememanyskill/SDH-CssLoader), [change system sounds](https://github.com/EMERALD0874/SDH-AudioLoader), [adjust your screen saturation](https://github.com/libvibrant/vibrantDeck), [change additional system settings](https://github.com/NGnius/PowerTools), and [more](https://beta.deckbrew.xyz/).
+Decky Loader is a homebrew plugin launcher for the Steam Deck. It can be used to [stylize your menus](https://github.com/suchmememanyskill/SDH-CssLoader), [change system sounds](https://github.com/EMERALD0874/SDH-AudioLoader), [adjust your screen saturation](https://github.com/libvibrant/vibrantDeck), [change additional system settings](https://github.com/NGnius/PowerTools), and [more](https://plugins.deckbrew.xyz/).
 
 For more information about Decky Loader as well as documentation and development tools, please visit [our wiki](https://deckbrew.xyz).
 
@@ -33,7 +33,7 @@ For more information about Decky Loader as well as documentation and development
 
 - Crankshaft is incompatible with Decky Loader. If you are using Crankshaft, please uninstall it before installing Decky Loader.
 - Syncthing may use port 8080 on Steam Deck, which Decky Loader needs to function. If you are using Syncthing as a service, please change its port to something else.
-- If you are using any software that uses port 1337, please change its port to something else or uninstall it.
+- If you are using any software that uses port 1337 or 8080, please change its port to something else or uninstall it.
 
 ## 💾 Installation
 

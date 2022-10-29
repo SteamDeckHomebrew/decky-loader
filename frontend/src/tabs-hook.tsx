@@ -1,5 +1,5 @@
 // TabsHook for versions after the Desktop merge
-import { Patch, QuickAccessTab, afterPatch, findInReactTree, sleep } from 'decky-frontend-lib';
+import { Patch, QuickAccessTab, afterPatch, findInReactTree, findModule, sleep } from 'decky-frontend-lib';
 
 import { QuickAccessVisibleStateProvider } from './components/QuickAccessVisibleState';
 import Logger from './logger';
@@ -85,20 +85,47 @@ class TabsHook extends Logger {
             (x) => x.toString() == 'Symbol(mobx administration)',
           ) as any
         ];
+      const lockClasses = findModule((mod) => {
+        if (typeof mod !== 'object') return false;
+
+        if (mod.NumericButtonInput && mod.Details) {
+          return true;
+        }
+
+        return false;
+      });
+      const refocus = () => {
+        if (FocusNavController.m_ActiveContext) {
+          if (SP.document.activeElement == SP.document.body) {
+            SP.document.querySelector<HTMLDivElement>(`.${lockClasses.NumericButtonInput}`)?.focus();
+            this.debug('Refocused inner lockscreen');
+          }
+          return;
+        }
+        const tree = FocusNavController.m_mapContexts
+          .get(SP)
+          .m_rgGamepadNavigationTrees.find((x: any) => x.m_ID == 'root_1_');
+        FocusNavController.OnContextActivated(tree.m_context);
+        FocusNavController.OnGamepadNavigationTreeActivated(tree);
+        this.debug('Redirected focus on lock screen from QAM to root');
+      };
+      let focusInt: NodeJS.Timer | undefined;
       this.unsubscribeSecurity = securityMobx.observe((e: any) => {
         if (e.newValue) {
           try {
             setTimeout(() => {
-              const tree = FocusNavController.m_mapContexts
-                .get(SP)
-                .m_rgGamepadNavigationTrees.find((x: any) => x.m_ID == 'root_1_');
-              FocusNavController.OnContextActivated(tree.m_context);
-              FocusNavController.OnGamepadNavigationTreeActivated(tree);
-              this.debug('Redirected focus on lock screen from QAM to root');
-            }, 1);
+              refocus();
+              clearInterval(focusInt);
+              focusInt = setInterval(() => {
+                refocus();
+              }, 100);
+            }, 0);
           } catch (e) {
             this.error('Error unfocusing QAM on lock screen', e);
           }
+        } else {
+          this.debug('Stopping lockscreen focus loop');
+          clearInterval(focusInt);
         }
       });
       this.qamPatch = afterPatch(qAMRoot.return, 'type', (_: any, ret: any) => {

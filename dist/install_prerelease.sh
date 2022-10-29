@@ -30,6 +30,8 @@ rm -f /etc/systemd/system/plugin_loader.service
 cat > /etc/systemd/system/plugin_loader.service <<- EOM
 [Unit]
 Description=SteamDeck Plugin Loader
+After=network-online.target
+Wants=network-online.target
 [Service]
 Type=simple
 User=root

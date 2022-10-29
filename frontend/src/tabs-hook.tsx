@@ -38,14 +38,14 @@ class TabsHook extends Logger {
         // currently 44
         return null;
       }
-      currentNode = currentNode?.child;
       if (
-        currentNode?.memoizedProps?.className &&
-        currentNode?.memoizedProps?.className.startsWith(quickAccessMenuClasses.ViewPlaceholder)
+        currentNode?.memoizedProps?.ModalManager &&
+        currentNode?.type?.toString()?.includes('QuickAccessMenuBrowserView')
       ) {
         self.log(`QAM root was found in ${iters} recursion cycles`);
         return currentNode;
       }
+      currentNode = currentNode?.child;
       if (!currentNode) return null;
       if (currentNode.sibling) {
         let node = await findQAMRoot(currentNode.sibling, iters + 1);
@@ -69,11 +69,12 @@ class TabsHook extends Logger {
         await sleep(5000);
         qAMRoot = await findQAMRoot(tree, 0);
       }
-      qAMRoot = qAMRoot?.return?.return;
+      this.log('root', qAMRoot);
       this.qAMRoot = qAMRoot;
       let patchedInnerQAM: any;
       this.qamPatch = afterPatch(qAMRoot, 'type', (_: any, ret: any) => {
         try {
+          this.log('qam inner');
           const qamTabsRenderer = findInReactTree(ret, (x) => x?.props?.onFocusNavDeactivated);
           if (patchedInnerQAM) {
             qamTabsRenderer.type = patchedInnerQAM;
@@ -91,15 +92,12 @@ class TabsHook extends Logger {
 
         return ret;
       });
-      // If you don't do this it renders every other time for some reason.
-      qAMRoot.alternate.type = qAMRoot.type;
       this.log('Finished initial injection');
     })();
   }
 
   deinit() {
     this.qamPatch?.unpatch();
-    this.qAMRoot.alternate.type = this.qAMRoot.type;
   }
 
   add(tab: Tab) {

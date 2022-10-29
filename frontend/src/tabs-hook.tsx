@@ -1,4 +1,4 @@
-import { Patch, QuickAccessTab, afterPatch, findInReactTree, quickAccessMenuClasses, sleep } from 'decky-frontend-lib';
+import { Patch, QuickAccessTab, afterPatch, findInReactTree, sleep } from 'decky-frontend-lib';
 
 import { QuickAccessVisibleStateProvider } from './components/QuickAccessVisibleState';
 import Logger from './logger';
@@ -20,7 +20,7 @@ interface Tab {
 class TabsHook extends Logger {
   // private keys = 7;
   tabs: Tab[] = [];
-  private qAMRoot: any;
+  private qAMRoot?: any;
   private qamPatch?: Patch;
 
   constructor() {
@@ -33,7 +33,7 @@ class TabsHook extends Logger {
     const self = this;
     const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
     let qAMRoot: any;
-    async function findQAMRoot(currentNode: any, iters: number): Promise<any> {
+    function findQAMRoot(currentNode: any, iters: number): Promise<any> {
       if (iters >= 60) {
         // currently 44
         return null;
@@ -48,10 +48,10 @@ class TabsHook extends Logger {
       currentNode = currentNode?.child;
       if (!currentNode) return null;
       if (currentNode.sibling) {
-        let node = await findQAMRoot(currentNode.sibling, iters + 1);
+        let node = findQAMRoot(currentNode.sibling, iters + 1);
         if (node !== null) return node;
       }
-      return await findQAMRoot(currentNode, iters + 1);
+      return findQAMRoot(currentNode, iters + 1);
     }
     (async () => {
       // QAM does not exist until lockscreen is dismissed
@@ -61,30 +61,48 @@ class TabsHook extends Logger {
         await sleep(500);
       }
       if (waited) await sleep(1000);
-      qAMRoot = await findQAMRoot(tree, 0);
+      qAMRoot = findQAMRoot(tree, 0);
       while (!qAMRoot) {
         this.error(
           'Failed to find QAM root node, reattempting in 5 seconds. A developer may need to increase the recursion limit.',
         );
         await sleep(5000);
-        qAMRoot = await findQAMRoot(tree, 0);
+        qAMRoot = findQAMRoot(tree, 0);
       }
       this.log('root', qAMRoot);
       this.qAMRoot = qAMRoot;
       let patchedInnerQAM: any;
-      this.qamPatch = afterPatch(qAMRoot, 'type', (_: any, ret: any) => {
+      this.qamPatch = afterPatch(qAMRoot.return, 'type', (_: any, ret: any) => {
         try {
-          this.log('qam inner');
-          const qamTabsRenderer = findInReactTree(ret, (x) => x?.props?.onFocusNavDeactivated);
-          if (patchedInnerQAM) {
-            qamTabsRenderer.type = patchedInnerQAM;
-          } else {
-            afterPatch(qamTabsRenderer, 'type', (innerArgs: any, ret: any) => {
-              const tabs = findInReactTree(ret, (x) => x?.props?.tabs);
-              this.render(tabs.props.tabs, innerArgs[0].visible);
+          this.log('qam outer', ret);
+          if (!qAMRoot?.child) {
+            this.log('finding qam again');
+            qAMRoot = findQAMRoot(tree, 0);
+            this.qAMRoot = qAMRoot;
+          }
+          if (qAMRoot?.child && !qAMRoot?.child?.type?.decky) {
+            this.log('repatch inner');
+            afterPatch(qAMRoot.child, 'type', (_: any, ret: any) => {
+              try {
+                this.log('qam inner', ret);
+                const qamTabsRenderer = findInReactTree(ret, (x) => x?.props?.onFocusNavDeactivated);
+                if (patchedInnerQAM) {
+                  qamTabsRenderer.type = patchedInnerQAM;
+                } else {
+                  afterPatch(qamTabsRenderer, 'type', (innerArgs: any, ret: any) => {
+                    const tabs = findInReactTree(ret, (x) => x?.props?.tabs);
+                    this.render(tabs.props.tabs, innerArgs[0].visible);
+                    return ret;
+                  });
+                  patchedInnerQAM = qamTabsRenderer.type;
+                }
+              } catch (e) {
+                this.error('Error patching QAM inner', e);
+              }
               return ret;
             });
-            patchedInnerQAM = qamTabsRenderer.type;
+            qAMRoot.child.type.decky = true;
+            qAMRoot.child.alternate.type = qAMRoot.child.type;
           }
         } catch (e) {
           this.error('Error patching QAM', e);
@@ -92,12 +110,14 @@ class TabsHook extends Logger {
 
         return ret;
       });
+      qAMRoot.return.alternate.type = qAMRoot.return.type;
       this.log('Finished initial injection');
     })();
   }
 
   deinit() {
     this.qamPatch?.unpatch();
+    this.qAMRoot.return.alternate.type = this.qAMRoot.return.type;
   }
 
   add(tab: Tab) {

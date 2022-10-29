@@ -79,7 +79,7 @@ class Toaster extends Logger {
     let innerPatched: any;
     const repatch = () => {
       if (this.node && !this.node.type.decky) {
-        this.toasterPatch = afterPatch(this.node, 'type', (args: any, ret: any) => {
+        this.toasterPatch = afterPatch(this.node, 'type', (_: any, ret: any) => {
           const inner = findInReactTree(ret.props.children, (x) => x?.props?.onDismiss);
           if (innerPatched) {
             inner.type = innerPatched;

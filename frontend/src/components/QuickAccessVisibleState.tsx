@@ -1,27 +1,16 @@
-import { FC, createContext, useContext, useEffect, useRef, useState } from 'react';
+import { FC, createContext, useContext, useState } from 'react';
 
 const QuickAccessVisibleState = createContext<boolean>(true);
 
 export const useQuickAccessVisible = () => useContext(QuickAccessVisibleState);
 
-export const QuickAccessVisibleStateProvider: FC<{}> = ({ children }) => {
-  const divRef = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState<boolean>(false);
-  useEffect(() => {
-    const doc: Document | void | null = divRef?.current?.ownerDocument;
-    if (!doc) return;
-    setVisible(doc.visibilityState == 'visible');
-    const onChange = (e: Event) => {
-      setVisible(doc.visibilityState == 'visible');
-    };
-    doc.addEventListener('visibilitychange', onChange);
-    return () => {
-      doc.removeEventListener('visibilitychange', onChange);
-    };
-  }, [divRef]);
-  return (
-    <div ref={divRef}>
-      <QuickAccessVisibleState.Provider value={visible}>{children}</QuickAccessVisibleState.Provider>
-    </div>
-  );
+export const QuickAccessVisibleStateProvider: FC<{ initial: boolean; setter: ((val: boolean) => {}[]) | never[] }> = ({
+  children,
+  initial,
+  setter,
+}) => {
+  const [visible, setVisible] = useState<boolean>(initial);
+  // hack to use an array as a "pointer" to pass the setter up the tree
+  setter[0] = setVisible;
+  return <QuickAccessVisibleState.Provider value={visible}>{children}</QuickAccessVisibleState.Provider>;
 };

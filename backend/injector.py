@@ -7,6 +7,7 @@ from typing import List
 
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientConnectorError
+from asyncio.exceptions import TimeoutError
 import uuid
 
 BASE_ADDRESS = "http://localhost:8080"
@@ -341,12 +342,15 @@ async def get_tabs() -> List[Tab]:
 
         while True:
             try:
-                res = await web.get(f"{BASE_ADDRESS}/json")
+                res = await web.get(f"{BASE_ADDRESS}/json", timeout=3)
             except ClientConnectorError:
                 logger.debug("ClientConnectorError excepted.")
                 logger.debug("Steam isn't available yet. Wait for a moment...")
                 logger.error(format_exc())
                 await sleep(5)
+            except TimeoutError:
+                logger.warn(f"The request to {BASE_ADDRESS}/json timed out")
+                await sleep(1)
             else:
                 break
 

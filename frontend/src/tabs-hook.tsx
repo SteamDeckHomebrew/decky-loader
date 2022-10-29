@@ -30,29 +30,30 @@ class TabsHook extends Logger {
     window.__TABS_HOOK_INSTANCE?.deinit?.();
     window.__TABS_HOOK_INSTANCE = this;
 
-    const self = this;
     const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
     let qAMRoot: any;
-    function findQAMRoot(currentNode: any, iters: number): any {
-      if (iters >= 60) {
-        // currently 44
+    const findQAMRoot = (currentNode: any, iters: number): any => {
+      if (iters >= 55) {
+        // currently 45
         return null;
       }
       if (
         currentNode?.memoizedProps?.ModalManager &&
         currentNode?.type?.toString()?.includes('QuickAccessMenuBrowserView')
       ) {
-        self.log(`QAM root was found in ${iters} recursion cycles`);
+        this.log(`QAM root was found in ${iters} recursion cycles`);
         return currentNode;
       }
-      currentNode = currentNode?.child;
-      if (!currentNode) return null;
+      if (currentNode.child) {
+        let node = findQAMRoot(currentNode.child, iters + 1);
+        if (node !== null) return node;
+      }
       if (currentNode.sibling) {
         let node = findQAMRoot(currentNode.sibling, iters + 1);
         if (node !== null) return node;
       }
-      return findQAMRoot(currentNode, iters + 1);
-    }
+      return null;
+    };
     (async () => {
       // QAM does not exist until lockscreen is dismissed
       await sleep(1000);
@@ -69,22 +70,31 @@ class TabsHook extends Logger {
         await sleep(5000);
         qAMRoot = findQAMRoot(tree, 0);
       }
-      this.log('root', qAMRoot);
       this.qAMRoot = qAMRoot;
       let patchedInnerQAM: any;
+      let root = FocusNavController.m_ActiveContext.m_rgGamepadNavigationTrees.find(
+        (x: any) => x.m_ID == 'root_1_',
+      ).m_context;
       this.qamPatch = afterPatch(qAMRoot.return, 'type', (_: any, ret: any) => {
         try {
-          this.log('qam outer', ret);
+          if (!!window.securitystore.GetActiveLockScreenProps()) {
+            // Prevents lockscreen focus issues this patch causes for some reason idk.
+            try {
+              setTimeout(() => {
+                FocusNavController.OnContextActivated(root);
+                this.debug('Redirected focus on lock screen from QAM to root: ', root);
+              }, 1);
+            } catch (e) {
+              this.error('Error unfocusing QAM on lock screen', e);
+            }
+          }
           if (!qAMRoot?.child) {
-            this.log('finding qam again');
             qAMRoot = findQAMRoot(tree, 0);
             this.qAMRoot = qAMRoot;
           }
           if (qAMRoot?.child && !qAMRoot?.child?.type?.decky) {
-            this.log('repatch inner');
             afterPatch(qAMRoot.child, 'type', (_: any, ret: any) => {
               try {
-                this.log('qam inner', ret);
                 const qamTabsRenderer = findInReactTree(ret, (x) => x?.props?.onFocusNavDeactivated);
                 if (patchedInnerQAM) {
                   qamTabsRenderer.type = patchedInnerQAM;

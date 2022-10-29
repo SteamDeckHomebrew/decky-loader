@@ -5,6 +5,7 @@ import { FaShapes, FaTools } from 'react-icons/fa';
 import { installFromURL } from '../../../../store';
 import BranchSelect from './BranchSelect';
 import RemoteDebuggingSettings from './RemoteDebugging';
+import StoreSelect from './StoreSelect';
 import UpdaterSettings from './Updater';
 
 export default function GeneralSettings({
@@ -15,10 +16,12 @@ export default function GeneralSettings({
   setIsDeveloper: (val: boolean) => void;
 }) {
   const [pluginURL, setPluginURL] = useState('');
+
   return (
     <div>
       <UpdaterSettings />
       <BranchSelect />
+      <StoreSelect />
       <RemoteDebuggingSettings />
       <Field
         label="Developer mode"

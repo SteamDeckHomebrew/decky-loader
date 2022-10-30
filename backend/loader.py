@@ -121,7 +121,7 @@ class Loader:
         with open(path.join(self.plugin_path, plugin.plugin_directory, "dist/index.js"), 'r') as bundle:
             return web.Response(text=bundle.read(), content_type="application/javascript")
 
-    def import_plugin(self, file, plugin_directory, refresh=False):
+    def import_plugin(self, file, plugin_directory, refresh=False, batch=False):
         try:
             plugin = PluginWrapper(file, plugin_directory, self.plugin_path)
             if plugin.name in self.plugins:
@@ -135,7 +135,8 @@ class Loader:
                 self.logger.info(f"Plugin {plugin.name} is passive")
             self.plugins[plugin.name] = plugin.start()
             self.logger.info(f"Loaded {plugin.name}")
-            self.loop.create_task(self.dispatch_plugin(plugin.name if not plugin.legacy else "$LEGACY_" + plugin.name, plugin.version))
+            if not batch:
+                self.loop.create_task(self.dispatch_plugin(plugin.name if not plugin.legacy else "$LEGACY_" + plugin.name, plugin.version))
         except Exception as e:
             self.logger.error(f"Could not load {file}. {e}")
             print_exc()
@@ -150,7 +151,7 @@ class Loader:
         directories = [i for i in listdir(self.plugin_path) if path.isdir(path.join(self.plugin_path, i)) and path.isfile(path.join(self.plugin_path, i, "plugin.json"))]
         for directory in directories:
             self.logger.info(f"found plugin: {directory}")
-            self.import_plugin(path.join(self.plugin_path, directory, "main.py"), directory)
+            self.import_plugin(path.join(self.plugin_path, directory, "main.py"), directory, False, True)
 
     async def handle_reloads(self):
         while True:

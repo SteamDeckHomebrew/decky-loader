@@ -23,6 +23,7 @@ import { Plugin } from './plugin';
 import RouterHook from './router-hook';
 import { checkForUpdates } from './store';
 import TabsHook from './tabs-hook';
+import OldTabsHook from './tabs-hook.old';
 import Toaster from './toaster';
 import { VerInfo, callUpdaterMethod } from './updater';
 import { getSetting } from './utils/settings';
@@ -38,10 +39,10 @@ declare global {
 
 class PluginLoader extends Logger {
   private plugins: Plugin[] = [];
-  private tabsHook: TabsHook = new TabsHook();
+  private tabsHook: TabsHook | OldTabsHook = document.title == 'SP' ? new OldTabsHook() : new TabsHook();
   // private windowHook: WindowHook = new WindowHook();
   private routerHook: RouterHook = new RouterHook();
-  public toaster: Toaster = new Toaster(this.routerHook);
+  public toaster: Toaster = new Toaster();
   private deckyState: DeckyState = new DeckyState();
 
   private reloadLock: boolean = false;
@@ -52,6 +53,7 @@ class PluginLoader extends Logger {
 
   constructor() {
     super(PluginLoader.name);
+    this.tabsHook.init();
     this.log('Initialized');
 
     const TabBadge = () => {

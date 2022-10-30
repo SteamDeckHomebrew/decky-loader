@@ -159,6 +159,12 @@ class Updater:
                         out.write(data)
                 except Exception as e:
                     logger.error(f"Error at %s", exc_info=e)
+                with open(path.join(getcwd(), "plugin_loader.service"), 'r') as service_file:
+                    service_data = service_file.read()
+                service_data = service_data.replace("${HOMEBREW_FOLDER}", "/home/"+helpers.get_user()+"/homebrew")
+                with open(path.join(getcwd(), "plugin_loader.service"), 'w') as service_file:
+                        service_file.write(service_data)
+                    
             logger.debug("Saved service file")
             logger.debug("Copying service file over current file.")
             shutil.copy(service_file_path, "/etc/systemd/system/plugin_loader.service")

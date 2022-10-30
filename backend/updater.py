@@ -168,6 +168,9 @@ class Updater:
             logger.debug("Saved service file")
             logger.debug("Copying service file over current file.")
             shutil.copy(service_file_path, "/etc/systemd/system/plugin_loader.service")
+            if not os.path.exists(path.join(getcwd(), ".systemd")):
+                os.mkdir(path.join(getcwd(), ".systemd"))
+            shutil.move(service_file_path, path.join(getcwd(), ".systemd")+"/plugin_loader.service")
             
             logger.debug("Downloading binary")
             async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:

@@ -195,7 +195,6 @@ class Updater:
                     out.write(version)
 
                 call(['chmod', '+x', path.join(getcwd(), "PluginLoader")])
-            
                 logger.info("Updated loader installation.")
                 await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)
                 await self.do_restart()

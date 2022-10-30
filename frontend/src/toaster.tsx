@@ -57,13 +57,6 @@ class Toaster extends Logger {
       }
       return null;
     };
-    // Toaster does not exist until lockscreen is dismissed
-    await sleep(1000);
-    let waited = !!window.securitystore.GetActiveLockScreenProps();
-    while (window.securitystore.GetActiveLockScreenProps()) {
-      await sleep(500);
-    }
-    if (waited) await sleep(1000);
     instance = findToasterRoot(tree, 0);
     while (!instance) {
       this.error(

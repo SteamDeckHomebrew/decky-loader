@@ -48,6 +48,7 @@ EOM
 
 if [[ -f "${HOMEBREW_FOLDER}/services/plugin_loader-prerelease.service" ]]; then
     printf "Grabbed latest prerelease service.\n"
+    sed -i -e "s|\${HOMEBREW_FOLDER}|${HOMEBREW_FOLDER}|" "${HOMEBREW_FOLDER}/services/plugin_loader-prerelease.service"
     cp -f "${HOMEBREW_FOLDER}/services/plugin_loader-prerelease.service" "/etc/systemd/system/plugin_loader.service"
 else
     printf "Could not curl latest prerelease systemd service, using built-in service as a backup!\n"

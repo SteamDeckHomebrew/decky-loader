@@ -79,6 +79,19 @@ class Updater:
     async def _get_branch(self, manager: SettingsManager):
         return self.get_branch(manager)
 
+    # retrieve relevant service file's url for each branch
+    def get_service_url(self):
+        branch = self.get_branch()
+        match branch:
+            case 0:
+                url = "https://raw.githubusercontent.com/SteamDeckHomebrew/decky-loader/service-updater/dist/plugin_loader-release.service"
+            case 1 | 2:
+                url = "https://raw.githubusercontent.com/SteamDeckHomebrew/decky-loader/service-updater/dist/plugin_loader-prerelease.service"
+            case _:
+                logger.error("You have an invalid branch set... Defaulting to prerelease service, please send the logs to the devs!")
+                url = "https://raw.githubusercontent.com/SteamDeckHomebrew/decky-loader/service-updater/dist/plugin_loader-prerelease.service"
+        return str(url)
+
     async def get_version(self):
         if self.localVer:
             return {
@@ -124,12 +137,14 @@ class Updater:
     async def do_update(self):
         version = self.remoteVer["tag_name"]
         download_url = self.remoteVer["assets"][0]["browser_download_url"]
+        service_url = self.get_service_url()
 
         tab = await get_gamepadui_tab()
         await tab.open_websocket()
         async with ClientSession() as web:
             async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
                 total = int(res.headers.get('content-length', 0))
+                # we need to not delete the binary until we have downloaded the new binary!
                 try:
                     remove(path.join(getcwd(), "PluginLoader"))
                 except:
@@ -149,10 +164,21 @@ class Updater:
                     out.write(version)
 
                 call(['chmod', '+x', path.join(getcwd(), "PluginLoader")])
+            
+            # download the relevant systemd service depending upon branch    
+            async with web.request("GET", service_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
+                service_file_path = path.join(getcwd(), "plugin_loader.service")
+                with open(path.join(getcwd(), "plugin_loader.service"), "w") as out:
+                    async for c in res.content.iter_chunked(512):
+                        out.write(c)
+                
+                update_service = call(["cp", "-f", service_file_path, "/etc/systemd/system/plugin_loader.service"])
+                if update_service != 0:
+                    logger.error(f"systemd service update exited with a non-zero exit code: {update_service}")
 
-                logger.info("Updated loader installation.")
-                await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)
-                await tab.client.close()
+            logger.info("Updated loader installation.")
+            await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)
+            await tab.client.close()
 
     async def do_restart(self):
         call(["systemctl", "daemon-reload"])

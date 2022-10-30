@@ -10,7 +10,7 @@ const logger = new Logger('BranchSelect');
 enum UpdateBranch {
   Stable,
   Prerelease,
-  Testing,
+  // Testing,
 }
 
 const BranchSelect: FunctionComponent<{}> = () => {

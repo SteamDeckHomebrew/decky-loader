@@ -1,7 +1,7 @@
 export enum Branches {
   Release,
   Prerelease,
-  Testing,
+  // Testing,
 }
 
 export interface DeckyUpdater {

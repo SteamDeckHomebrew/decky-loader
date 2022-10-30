@@ -1,3 +1,5 @@
+import os
+import shutil
 import uuid
 from asyncio import sleep
 from ensurepip import version
@@ -81,7 +83,8 @@ class Updater:
 
     # retrieve relevant service file's url for each branch
     def get_service_url(self):
-        branch = self.get_branch()
+        logger.debug("Getting service URL")
+        branch = self.get_branch(self.context.settings)
         match branch:
             case 0:
                 url = "https://raw.githubusercontent.com/SteamDeckHomebrew/decky-loader/service-updater/dist/plugin_loader-release.service"
@@ -135,13 +138,32 @@ class Updater:
             await sleep(60 * 60 * 6) # 6 hours
 
     async def do_update(self):
+        logger.debug("Starting update.")
         version = self.remoteVer["tag_name"]
         download_url = self.remoteVer["assets"][0]["browser_download_url"]
         service_url = self.get_service_url()
+        logger.debug("Retrieved service URL")
 
         tab = await get_gamepadui_tab()
         await tab.open_websocket()
         async with ClientSession() as web:
+            logger.debug("Downloading systemd service")
+            # download the relevant systemd service depending upon branch
+            async with web.request("GET", service_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
+                logger.debug("Downloading service file")
+                data = await res.content.read()
+                logger.debug(str(data))
+                service_file_path = path.join(getcwd(), "plugin_loader.service")
+                try:
+                    with open(path.join(getcwd(), "plugin_loader.service"), "wb") as out:
+                        out.write(data)
+                except Exception as e:
+                    logger.error(f"Error at %s", exc_info=e)
+            logger.debug("Saved service file")
+            logger.debug("Copying service file over current file.")
+            shutil.copy(service_file_path, "/etc/systemd/system/plugin_loader.service")
+            
+            logger.debug("Downloading binary")
             async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
                 total = int(res.headers.get('content-length', 0))
                 # we need to not delete the binary until we have downloaded the new binary!
@@ -165,20 +187,10 @@ class Updater:
 
                 call(['chmod', '+x', path.join(getcwd(), "PluginLoader")])
             
-            # download the relevant systemd service depending upon branch    
-            async with web.request("GET", service_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
-                service_file_path = path.join(getcwd(), "plugin_loader.service")
-                with open(path.join(getcwd(), "plugin_loader.service"), "w") as out:
-                    async for c in res.content.iter_chunked(512):
-                        out.write(c)
-                
-                update_service = call(["cp", "-f", service_file_path, "/etc/systemd/system/plugin_loader.service"])
-                if update_service != 0:
-                    logger.error(f"systemd service update exited with a non-zero exit code: {update_service}")
-
-            logger.info("Updated loader installation.")
-            await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)
-            await tab.client.close()
+                logger.info("Updated loader installation.")
+                await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)
+                await self.do_restart()
+                await tab.client.close()
 
     async def do_restart(self):
         call(["systemctl", "daemon-reload"])

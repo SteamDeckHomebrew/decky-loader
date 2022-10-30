@@ -1,0 +1,14 @@
+[Unit]
+Description=SteamDeck Plugin Loader
+After=network-online.target
+Wants=network-online.target
+[Service]
+Type=simple
+User=root
+Restart=always
+ExecStart=${HOMEBREW_FOLDER}/services/PluginLoader
+WorkingDirectory=${HOMEBREW_FOLDER}/services
+Environment=PLUGIN_PATH=${HOMEBREW_FOLDER}/plugins
+Environment=LOG_LEVEL=INFO
+[Install]
+WantedBy=multi-user.target

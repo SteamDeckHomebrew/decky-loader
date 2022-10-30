@@ -26,8 +26,10 @@ systemctl --user disable plugin_loader 2> /dev/null
 
 systemctl stop plugin_loader 2> /dev/null
 systemctl disable plugin_loader 2> /dev/null
-rm -f "/etc/systemd/system/plugin_loader.service"
-cat > "/etc/systemd/system/plugin_loader.service" <<- EOM
+
+curl -L https://raw.githubusercontent.com/SteamDeckHomebrew/decky-loader/service-updater/dist/plugin_loader-release.service  --output ${HOMEBREW_FOLDER}/services/plugin_loader-release.service
+
+cat > "${HOMEBREW_FOLDER}/services/plugin_loader-backup.service" <<- EOM
 [Unit]
 Description=SteamDeck Plugin Loader
 After=network-online.target
@@ -39,9 +41,26 @@ Restart=always
 ExecStart=${HOMEBREW_FOLDER}/services/PluginLoader
 WorkingDirectory=${HOMEBREW_FOLDER}/services
 Environment=PLUGIN_PATH=${HOMEBREW_FOLDER}/plugins
+Environment=LOG_LEVEL=INFO
 [Install]
 WantedBy=multi-user.target
 EOM
+
+if [[ -f "${HOMEBREW_FOLDER}/services/plugin_loader-release.service" ]]; then
+    printf "Grabbed latest release service.\n"
+    sed -i -e "s|\${HOMEBREW_FOLDER}|${HOMEBREW_FOLDER}|" "${HOMEBREW_FOLDER}/services/plugin_loader-release.service"
+    cp -f "${HOMEBREW_FOLDER}/services/plugin_loader-release.service" "/etc/systemd/system/plugin_loader.service"
+else
+    printf "Could not curl latest release systemd service, using built-in service as a backup!\n"
+    rm -f "/etc/systemd/system/plugin_loader.service"
+    cp "${HOMEBREW_FOLDER}/services/plugin_loader-backup.service" "/etc/systemd/system/plugin_loader.service"
+fi
+
+mkdir -p ${HOMEBREW_FOLDER}/services/.systemd
+cp ${HOMEBREW_FOLDER}/services/plugin_loader-release.service ${HOMEBREW_FOLDER}/services/.systemd/plugin_loader-release.service
+cp ${HOMEBREW_FOLDER}/services/plugin_loader-backup.service ${HOMEBREW_FOLDER}/services/.systemd/plugin_loader-backup.service
+rm ${HOMEBREW_FOLDER}/services/plugin_loader-backup.service ${HOMEBREW_FOLDER}/services/plugin_loader-release.service
+
 systemctl daemon-reload
 systemctl start plugin_loader
 systemctl enable plugin_loader

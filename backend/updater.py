@@ -1,3 +1,5 @@
+import os
+import shutil
 import uuid
 from asyncio import sleep
 from ensurepip import version
@@ -79,6 +81,20 @@ class Updater:
     async def _get_branch(self, manager: SettingsManager):
         return self.get_branch(manager)
 
+    # retrieve relevant service file's url for each branch
+    def get_service_url(self):
+        logger.debug("Getting service URL")
+        branch = self.get_branch(self.context.settings)
+        match branch:
+            case 0:
+                url = "https://raw.githubusercontent.com/SteamDeckHomebrew/decky-loader/service-updater/dist/plugin_loader-release.service"
+            case 1 | 2:
+                url = "https://raw.githubusercontent.com/SteamDeckHomebrew/decky-loader/service-updater/dist/plugin_loader-prerelease.service"
+            case _:
+                logger.error("You have an invalid branch set... Defaulting to prerelease service, please send the logs to the devs!")
+                url = "https://raw.githubusercontent.com/SteamDeckHomebrew/decky-loader/service-updater/dist/plugin_loader-prerelease.service"
+        return str(url)
+
     async def get_version(self):
         if self.localVer:
             return {
@@ -122,14 +138,44 @@ class Updater:
             await sleep(60 * 60 * 6) # 6 hours
 
     async def do_update(self):
+        logger.debug("Starting update.")
         version = self.remoteVer["tag_name"]
         download_url = self.remoteVer["assets"][0]["browser_download_url"]
+        service_url = self.get_service_url()
+        logger.debug("Retrieved service URL")
 
         tab = await get_gamepadui_tab()
         await tab.open_websocket()
         async with ClientSession() as web:
+            logger.debug("Downloading systemd service")
+            # download the relevant systemd service depending upon branch
+            async with web.request("GET", service_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
+                logger.debug("Downloading service file")
+                data = await res.content.read()
+                logger.debug(str(data))
+                service_file_path = path.join(getcwd(), "plugin_loader.service")
+                try:
+                    with open(path.join(getcwd(), "plugin_loader.service"), "wb") as out:
+                        out.write(data)
+                except Exception as e:
+                    logger.error(f"Error at %s", exc_info=e)
+                with open(path.join(getcwd(), "plugin_loader.service"), 'r') as service_file:
+                    service_data = service_file.read()
+                service_data = service_data.replace("${HOMEBREW_FOLDER}", "/home/"+helpers.get_user()+"/homebrew")
+                with open(path.join(getcwd(), "plugin_loader.service"), 'w') as service_file:
+                        service_file.write(service_data)
+                    
+            logger.debug("Saved service file")
+            logger.debug("Copying service file over current file.")
+            shutil.copy(service_file_path, "/etc/systemd/system/plugin_loader.service")
+            if not os.path.exists(path.join(getcwd(), ".systemd")):
+                os.mkdir(path.join(getcwd(), ".systemd"))
+            shutil.move(service_file_path, path.join(getcwd(), ".systemd")+"/plugin_loader.service")
+            
+            logger.debug("Downloading binary")
             async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
                 total = int(res.headers.get('content-length', 0))
+                # we need to not delete the binary until we have downloaded the new binary!
                 try:
                     remove(path.join(getcwd(), "PluginLoader"))
                 except:
@@ -149,9 +195,9 @@ class Updater:
                     out.write(version)
 
                 call(['chmod', '+x', path.join(getcwd(), "PluginLoader")])
-
                 logger.info("Updated loader installation.")
                 await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)
+                await self.do_restart()
                 await tab.client.close()
 
     async def do_restart(self):

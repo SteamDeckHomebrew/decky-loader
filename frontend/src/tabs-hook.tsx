@@ -1,10 +1,8 @@
 // TabsHook for versions after the Desktop merge
-import { Patch, QuickAccessTab, afterPatch, findInReactTree, findModule, sleep } from 'decky-frontend-lib';
-import { memo } from 'react';
+import { Patch, QuickAccessTab, afterPatch, findInReactTree, sleep } from 'decky-frontend-lib';
 
 import { QuickAccessVisibleStateProvider } from './components/QuickAccessVisibleState';
 import Logger from './logger';
-import { findSP } from './utils/windows';
 
 declare global {
   interface Window {

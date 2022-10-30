@@ -1,5 +1,4 @@
 import { Plugin } from './plugin';
-import { getSetting, setSetting } from './utils/settings';
 
 export enum Store {
   Default,

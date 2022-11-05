@@ -261,5 +261,5 @@ class Utilities:
         self.logger.info("Disabling React DevTools")
         tab = await get_gamepadui_tab()
         self.rdt_script_id = None
-        await tab.evaluate_js("location.reload();", False, True, False)
+        await tab.evaluate_js("SteamClient.User.StartRestart();", False, True, False)
         self.logger.info("React DevTools disabled")

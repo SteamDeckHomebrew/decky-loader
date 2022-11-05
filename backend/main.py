@@ -134,15 +134,20 @@ class PluginManager:
             await tab.open_websocket()
             await tab.enable()
             await self.inject_javascript(tab, True)
-            async for msg in tab.listen_for_message():
-                logger.debug("Page event: " + str(msg.get("method", None)))
-                if msg.get("method", None) == "Page.domContentEventFired":
-                    if not await tab.has_global_var("deckyHasLoaded", False):
-                        await self.inject_javascript(tab)
-                if msg.get("method", None) == "Inspector.detached":
-                    logger.info("Steam is exiting...")
-                    await tab.close_websocket()
-                    break
+            try:
+                async for msg in tab.listen_for_message():
+                    logger.debug("Page event: " + str(msg.get("method", None)))
+                    if msg.get("method", None) == "Page.domContentEventFired":
+                        if not await tab.has_global_var("deckyHasLoaded", False):
+                            await self.inject_javascript(tab)
+                    if msg.get("method", None) == "Inspector.detached":
+                        logger.info("Steam is exiting...")
+                        await tab.close_websocket()
+                        break
+            except Exception as e:
+                logger.error("Exception while reading page events " + format_exc())
+                await tab.close_websocket()
+                pass
         # while True:
         #     await sleep(5)
         #     if not await tab.has_global_var("deckyHasLoaded", False):
@@ -152,15 +157,15 @@ class PluginManager:
     async def inject_javascript(self, tab: Tab, first=False, request=None):
         logger.info("Loading Decky frontend!")
         try:
-            if first:
-                if await tab.has_global_var("deckyHasLoaded", False):
-                    tabs = await get_tabs()
-                    for t in tabs:
-                        if t.title != "Steam" and t.title != "SP":
-                            logger.debug("Closing tab: " + getattr(t, "title", "Untitled"))
-                            await t.close()
-                            await sleep(0.5)
-            await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => location.reload(), 1000)}window.deckyHasLoaded = true;(async()=>{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js')})();}catch(e){console.error(e)}", False, False, False)
+            # if first:
+            #     if await tab.has_global_var("deckyHasLoaded", False):
+            #         tabs = await get_tabs()
+            #         for t in tabs:
+            #             if t.title != "Steam" and t.title != "SP":
+            #                 logger.debug("Closing tab: " + getattr(t, "title", "Untitled"))
+            #                 await t.close()
+            #                 await sleep(0.5)
+            await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => SteamClient.User.StartRestart(), 100)}else{window.deckyHasLoaded = true;(async()=>{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js')})();}}catch(e){console.error(e)}", False, False, False)
         except:
             logger.info("Failed to inject JavaScript into tab\n" + format_exc())
             pass

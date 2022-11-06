@@ -26,47 +26,41 @@ export type PluginUpdateMapping = Map<string, StorePluginVersion>;
 
 export async function getPluginList(): Promise<StorePlugin[]> {
   let version = await window.DeckyPluginLoader.updateVersion();
-  return fetch('https://plugins.deckbrew.xyz/plugins', {
-    method: 'GET',
-    headers: {
-      'X-Decky-Version': version.current,
-    },
-  }).then((r) => r.json());
-  // let store = await getSetting<Store>('store', Store.Default);
-  // let customURL = await getSetting<string>('store-url', 'https://plugins.deckbrew.xyz/plugins');
-  // let storeURL;
-  // if (!store) {
-  //   console.log('Could not get a default store, using Default.');
-  //   await setSetting('store-url', Store.Default);
-  //   return fetch('https://plugins.deckbrew.xyz/plugins', {
-  //     method: 'GET',
-  //     headers: {
-  //       'X-Decky-Version': version.current,
-  //     },
-  //   }).then((r) => r.json());
-  // } else {
-  //   switch (+store) {
-  //     case Store.Default:
-  //       storeURL = 'https://plugins.deckbrew.xyz/plugins';
-  //       break;
-  //     case Store.Testing:
-  //       storeURL = 'https://testing.deckbrew.xyz/plugins';
-  //       break;
-  //     case Store.Custom:
-  //       storeURL = customURL;
-  //       break;
-  //     default:
-  //       console.error('Somehow you ended up without a standard URL, using the default URL.');
-  //       storeURL = 'https://plugins.deckbrew.xyz/plugins';
-  //       break;
-  //   }
-  //   return fetch(storeURL, {
-  //     method: 'GET',
-  //     headers: {
-  //       'X-Decky-Version': version.current,
-  //     },
-  //   }).then((r) => r.json());
-  // }
+  let store = await getSetting<Store>('store', Store.Default);
+  let customURL = await getSetting<string>('store-url', 'https://plugins.deckbrew.xyz/plugins');
+  let storeURL;
+  if (!store) {
+    console.log('Could not get a default store, using Default.');
+    await setSetting('store-url', Store.Default);
+    return fetch('https://plugins.deckbrew.xyz/plugins', {
+      method: 'GET',
+      headers: {
+        'X-Decky-Version': version.current,
+      },
+    }).then((r) => r.json());
+  } else {
+    switch (+store) {
+      case Store.Default:
+        storeURL = 'https://plugins.deckbrew.xyz/plugins';
+        break;
+      case Store.Testing:
+        storeURL = 'https://testing.deckbrew.xyz/plugins';
+        break;
+      case Store.Custom:
+        storeURL = customURL;
+        break;
+      default:
+        console.error('Somehow you ended up without a standard URL, using the default URL.');
+        storeURL = 'https://plugins.deckbrew.xyz/plugins';
+        break;
+    }
+    return fetch(storeURL, {
+      method: 'GET',
+      headers: {
+        'X-Decky-Version': version.current,
+      },
+    }).then((r) => r.json());
+  }
 }
 
 export async function installFromURL(url: string) {

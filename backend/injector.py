@@ -5,7 +5,7 @@ from logging import getLogger
 from traceback import format_exc
 from typing import List
 
-from aiohttp import ClientSession
+from aiohttp import ClientSession, WSMsgType
 from aiohttp.client_exceptions import ClientConnectorError
 from asyncio.exceptions import TimeoutError
 import uuid
@@ -36,6 +36,8 @@ class Tab:
 
     async def listen_for_message(self):
         async for message in self.websocket:
+            if msg.type not in (WSMsgType.CLOSED, WSMsgType.CLOSING, WSMsgType.ERROR):
+                yield msg
             data = message.json()
             yield data
 

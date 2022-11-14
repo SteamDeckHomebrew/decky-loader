@@ -36,8 +36,6 @@ class Tab:
 
     async def listen_for_message(self):
         async for message in self.websocket:
-            # if message.type not in (WSMsgType.CLOSED, WSMsgType.CLOSING, WSMsgType.ERROR):
-            #     yield message
             data = message.json()
             yield data
 

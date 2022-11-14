@@ -12,7 +12,7 @@ from traceback import format_exc
 
 import aiohttp_cors
 # Partial imports
-from aiohttp import ClientSession, client_exceptions
+from aiohttp import ClientSession, client_exceptions, WSMsgType
 from aiohttp.web import Application, Response, get, run_app, static
 from aiohttp_jinja2 import setup as jinja_setup
 

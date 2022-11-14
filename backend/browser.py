@@ -60,6 +60,9 @@ class PluginBrowser:
                     if "remote_binary" in packageJson and len(packageJson["remote_binary"]) > 0:
                         # create bin directory if needed.
                         rc=call(["chmod", "-R", "777", pluginBasePath])
+                        if rc != 0:
+                            logger.error(f"chown of plugin w/ remote binary exited with a non-zero exit code, chmod: {rc})")
+                        
                         if access(pluginBasePath, W_OK):
                             
                             if not path.exists(pluginBinPath):
@@ -67,6 +70,8 @@ class PluginBrowser:
                             
                             if not access(pluginBinPath, W_OK):
                                 rc=call(["chmod", "-R", "777", pluginBinPath])
+                                if rc != 0:
+                                    logger.error(f"chown of plugin w/ remote binary exited with a non-zero exit code, chmod: {rc})")
 
                         rv = True
                         for remoteBinary in packageJson["remote_binary"]:
@@ -80,6 +85,8 @@ class PluginBrowser:
 
                         code_chown = call(["chown", "-R", get_user()+":"+get_user_group(), self.plugin_path])
                         rc=call(["chmod", "-R", "555", pluginBasePath])
+                        if code_chown or rc != 0:
+                            logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {rc})")
                     else:
                         rv = True
                         logger.debug(f"No Remote Binaries to Download")

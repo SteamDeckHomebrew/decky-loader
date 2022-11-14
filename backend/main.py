@@ -91,6 +91,7 @@ class PluginManager:
                 chown_plugin_dir()
             self.loop.create_task(self.loader_reinjector())
             self.loop.create_task(self.load_plugins())
+            self.loop.create_task(self.reload_plugin_backends())
 
         self.web_app.on_startup.append(startup)
 
@@ -115,6 +116,13 @@ class PluginManager:
         logger.debug("Loading plugins")
         self.plugin_loader.import_plugins()
         # await inject_to_tab("SP", "window.syncDeckyPlugins();")
+
+    async def reload_plugin_backend(self, name):
+        await self.wait_for_server()
+        if name in self.loader.plugins:
+            self.loader.plugins[name].stop()
+            self.loader.plugins.pop(name, None)
+
 
     async def loader_reinjector(self):
         while True:

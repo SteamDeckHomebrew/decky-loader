@@ -5,7 +5,7 @@ from logging import getLogger
 from traceback import format_exc
 from typing import List
 
-from aiohttp import ClientSession
+from aiohttp import ClientSession, WSMsgType
 from aiohttp.client_exceptions import ClientConnectorError
 from asyncio.exceptions import TimeoutError
 import uuid

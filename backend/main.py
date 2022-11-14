@@ -12,7 +12,7 @@ from traceback import format_exc
 
 import aiohttp_cors
 # Partial imports
-from aiohttp import ClientSession, client_exceptions
+from aiohttp import ClientSession, client_exceptions, WSMsgType
 from aiohttp.web import Application, Response, get, run_app, static
 from aiohttp_jinja2 import setup as jinja_setup
 
@@ -140,8 +140,9 @@ class PluginManager:
                     if msg.get("method", None) == "Page.domContentEventFired":
                         if not await tab.has_global_var("deckyHasLoaded", False):
                             await self.inject_javascript(tab)
-                    if msg.get("method", None) == "Inspector.detached":
-                        logger.info("Steam is exiting...")
+                    if msg.get("method", None) == "Inspector.detached" or msg.get("type", None) in (WSMsgType.CLOSED, WSMsgType.ERROR):
+                        logger.info("CEF has disconnected...")
+                        logger.debug("Exit message: " + str(msg))
                         await tab.close_websocket()
                         break
             except Exception as e:

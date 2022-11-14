@@ -10,7 +10,7 @@ class SettingsManager:
         set_user()
         USER = get_user()
         if settings_directory == None:
-            settings_directory = get_homebrew_path(get_home_path(USER))
+            settings_directory = path.join(get_homebrew_path(get_home_path(USER)), "settings")
         self.path = path.join(settings_directory, name + ".json")
 
         if not path.exists(settings_directory):

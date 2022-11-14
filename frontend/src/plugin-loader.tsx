@@ -251,7 +251,10 @@ class PluginLoader extends Logger {
             <pre>
               <code>{e instanceof Error ? e.stack : e?.toString()}</code>
             </pre>
-            Please go to the <FaCog /> in Decky Loader to go to the settings menu if you need to uninstall this plugin.
+            <>
+              Please go to <FaCog style={{ display: 'inline' }} /> in Decky Loader.e settings menu if you need to
+              uninstall this plugin.
+            </>
           </>
         );
         this.plugins.push({

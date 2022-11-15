@@ -21,7 +21,7 @@ from browser import PluginBrowser
 from helpers import (REMOTE_DEBUGGER_UNIT, csrf_middleware, get_csrf_token,
                      get_home_path, get_homebrew_path, get_user,
                      get_user_group, set_user, set_user_group,
-                     stop_systemd_unit)
+                     stop_systemd_unit, start_systemd_unit)
 from injector import get_gamepadui_tab, Tab, get_tabs
 from loader import Loader
 from settings import SettingsManager
@@ -83,7 +83,9 @@ class PluginManager:
         jinja_setup(self.web_app)
 
         async def startup(_):
-            if not self.settings.getSetting("cef_forward", False):
+            if self.settings.getSetting("cef_forward", False):
+                self.loop.create_task(start_systemd_unit(REMOTE_DEBUGGER_UNIT))
+            else:
                 self.loop.create_task(stop_systemd_unit(REMOTE_DEBUGGER_UNIT))
             if CONFIG["chown_plugin_path"] == True:
                 chown_plugin_dir()

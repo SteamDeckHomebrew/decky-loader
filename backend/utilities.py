@@ -80,12 +80,12 @@ class Utilities:
 
     async def http_request(self, method="", url="", **kwargs):
         async with ClientSession() as web:
-            async with web.request(method, url, ssl=helpers.get_ssl_context(), **kwargs) as res:
-                return {
-                    "status": res.status,
-                    "headers": dict(res.headers),
-                    "body": await res.text()
-                }
+            res = await web.request(method, url, ssl=helpers.get_ssl_context(), **kwargs)
+        return {
+            "status": res.status,
+            "headers": dict(res.headers),
+            "body": await res.text()
+        }
 
     async def ping(self, **kwargs):
         return "pong"
@@ -241,17 +241,17 @@ class Utilities:
             if ip != None:
                 self.logger.info("Connecting to React DevTools at " + ip)
                 async with ClientSession() as web:
-                    async with web.request("GET", "http://" + ip + ":8097", ssl=helpers.get_ssl_context()) as res:
-                        if res.status != 200:
-                            self.logger.error("Failed to connect to React DevTools at " + ip)
-                            return False
-                        self.start_rdt_proxy(ip, 8097)
-                        script = "if(!window.deckyHasConnectedRDT){window.deckyHasConnectedRDT=true;\n" + await res.text() + "\n}"
-                        self.logger.info("Connected to React DevTools, loading script")
-                        tab = await get_gamepadui_tab()
-                        # RDT needs to load before React itself to work.
-                        result = await tab.reload_and_evaluate(script)
-                        self.logger.info(result)
+                    res = await web.request("GET", "http://" + ip + ":8097", ssl=helpers.get_ssl_context())
+                if res.status != 200:
+                    self.logger.error("Failed to connect to React DevTools at " + ip)
+                    return False
+                self.start_rdt_proxy(ip, 8097)
+                script = "if(!window.deckyHasConnectedRDT){window.deckyHasConnectedRDT=true;\n" + await res.text() + "\n}"
+                self.logger.info("Connected to React DevTools, loading script")
+                tab = await get_gamepadui_tab()
+                # RDT needs to load before React itself to work.
+                result = await tab.reload_and_evaluate(script)
+                self.logger.info(result)
                         
         except Exception:
             self.logger.error("Failed to connect to React DevTools")

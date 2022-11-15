@@ -6,7 +6,7 @@ from traceback import format_exc
 from typing import List
 
 from aiohttp import ClientSession, WSMsgType
-from aiohttp.client_exceptions import ClientConnectorError
+from aiohttp.client_exceptions import ClientConnectorError, ClientOSError
 from asyncio.exceptions import TimeoutError
 import uuid
 
@@ -364,6 +364,9 @@ async def get_tabs() -> List[Tab]:
                 logger.debug("Steam isn't available yet. Wait for a moment...")
                 na = True
             await sleep(5)
+        except ClientOSError:
+            logger.warn(f"The request to {BASE_ADDRESS}/json was reset")
+            await sleep(1)
         except TimeoutError:
             logger.warn(f"The request to {BASE_ADDRESS}/json timed out")
             await sleep(1)

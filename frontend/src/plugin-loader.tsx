@@ -249,11 +249,11 @@ class PluginLoader extends Logger {
           <>
             Error:{' '}
             <pre>
-              <code>{e instanceof Error ? e.stack : e?.toString()}</code>
+              <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
             </pre>
             <>
-              Please go to <FaCog style={{ display: 'inline' }} /> in Decky Loader.e settings menu if you need to
-              uninstall this plugin.
+              Please go to <FaCog style={{ display: 'inline' }} /> in the Decky menu if you need to uninstall this
+              plugin.
             </>
           </>
         );

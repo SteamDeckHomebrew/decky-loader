@@ -5,7 +5,12 @@ import externalGlobals from "rollup-plugin-external-globals";
 import del from 'rollup-plugin-delete'
 import replace from '@rollup/plugin-replace';
 import typescript from '@rollup/plugin-typescript';
-import { defineConfig } from 'rollup';
+import { defineConfig, handleWarning } from 'rollup';
+
+const hiddenWarnings = [
+ "THIS_IS_UNDEFINED",
+ "EVAL"
+];
 
 export default defineConfig({
   input: 'src/index.tsx',
@@ -35,5 +40,9 @@ export default defineConfig({
     chunkFileNames: (chunkInfo) => {
       return 'chunk-[hash].js'
     }
+  },
+  onwarn: function ( message ) {
+    if (hiddenWarnings.some(warning => message.code === warning)) return;
+    handleWarning(message);
   }
 });

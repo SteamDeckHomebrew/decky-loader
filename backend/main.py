@@ -4,7 +4,7 @@ from subprocess import call
 if hasattr(sys, '_MEIPASS'):
     call(['chmod', '-R', '755', sys._MEIPASS])
 # Full imports
-from asyncio import get_event_loop, sleep
+from asyncio import new_event_loop, set_event_loop, sleep
 from json import dumps, loads
 from logging import DEBUG, INFO, basicConfig, getLogger
 from os import getenv, chmod, path
@@ -12,7 +12,7 @@ from traceback import format_exc
 
 import aiohttp_cors
 # Partial imports
-from aiohttp import ClientSession, client_exceptions, WSMsgType
+from aiohttp import client_exceptions, WSMsgType
 from aiohttp.web import Application, Response, get, run_app, static
 from aiohttp_jinja2 import setup as jinja_setup
 
@@ -63,8 +63,8 @@ async def chown_plugin_dir(_):
         logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {code_chmod})")
 
 class PluginManager:
-    def __init__(self) -> None:
-        self.loop = get_event_loop()
+    def __init__(self, loop) -> None:
+        self.loop = loop
         self.web_app = Application()
         self.web_app.middlewares.append(csrf_middleware)
         self.cors = aiohttp_cors.setup(self.web_app, defaults={
@@ -81,12 +81,17 @@ class PluginManager:
         self.updater = Updater(self)
 
         jinja_setup(self.web_app)
-        if CONFIG["chown_plugin_path"] == True:
-            self.web_app.on_startup.append(chown_plugin_dir)
-        self.loop.create_task(self.loader_reinjector())
-        self.loop.create_task(self.load_plugins())
-        if not self.settings.getSetting("cef_forward", False):
-            self.loop.create_task(stop_systemd_unit(REMOTE_DEBUGGER_UNIT))
+
+        async def startup(_):
+            if not self.settings.getSetting("cef_forward", False):
+                self.loop.create_task(stop_systemd_unit(REMOTE_DEBUGGER_UNIT))
+            if CONFIG["chown_plugin_path"] == True:
+                chown_plugin_dir()
+            self.loop.create_task(self.loader_reinjector())
+            self.loop.create_task(self.load_plugins())
+
+        self.web_app.on_startup.append(startup)
+
         self.loop.set_exception_handler(self.exception_handler)
         self.web_app.add_routes([get("/auth/token", self.get_auth_token)])
 
@@ -103,31 +108,29 @@ class PluginManager:
     async def get_auth_token(self, request):
         return Response(text=get_csrf_token())
 
-    async def wait_for_server(self):
-        async with ClientSession() as web:
-            while True:
-                try:
-                    await web.get(f"http://{CONFIG['server_host']}:{CONFIG['server_port']}")
-                    return
-                except Exception as e:
-                    await sleep(0.1)
-
     async def load_plugins(self):
-        await self.wait_for_server()
+        # await self.wait_for_server()
+        logger.debug("Loading plugins")
         self.plugin_loader.import_plugins()
         # await inject_to_tab("SP", "window.syncDeckyPlugins();")
 
     async def loader_reinjector(self):
         while True:
             tab = None
+            nf = False
+            dc = False
             while not tab:
                 try:
                     tab = await get_gamepadui_tab()
                 except client_exceptions.ClientConnectorError or client_exceptions.ServerDisconnectedError:
-                    logger.debug("Couldn't connect to debugger, waiting 5 seconds.")
+                    if not dc:
+                        logger.debug("Couldn't connect to debugger, waiting...")
+                        dc = True
                     pass
                 except ValueError:
-                    logger.debug("Couldn't find GamepadUI tab, waiting 5 seconds")
+                    if not nf:
+                        logger.debug("Couldn't find GamepadUI tab, waiting...")
+                        nf = True
                     pass
                 if not tab:
                     await sleep(5)
@@ -136,15 +139,20 @@ class PluginManager:
             await self.inject_javascript(tab, True)
             try:
                 async for msg in tab.listen_for_message():
-                    logger.debug("Page event: " + str(msg.get("method", None)))
-                    if msg.get("method", None) == "Page.domContentEventFired":
-                        if not await tab.has_global_var("deckyHasLoaded", False):
-                            await self.inject_javascript(tab)
-                    if msg.get("method", None) == "Inspector.detached" or msg.get("type", None) in (WSMsgType.CLOSED, WSMsgType.ERROR):
-                        logger.info("CEF has disconnected...")
-                        logger.debug("Exit message: " + str(msg))
-                        await tab.close_websocket()
-                        break
+                    # this gets spammed a lot
+                    if msg.get("method", None) != "Page.navigatedWithinDocument":
+                        logger.debug("Page event: " + str(msg.get("method", None)))
+                        if msg.get("method", None) == "Page.domContentEventFired":
+                            if not await tab.has_global_var("deckyHasLoaded", False):
+                                await self.inject_javascript(tab)
+                        if msg.get("method", None) == "Inspector.detached":
+                            logger.info("CEF has requested that we detach.")
+                            await tab.close_websocket()
+                            break
+                # If this is a forceful disconnect the loop will just stop without any failure message. In this case, injector.py will handle this for us so we don't need to close the socket.
+                # This is because of https://github.com/aio-libs/aiohttp/blob/3ee7091b40a1bc58a8d7846e7878a77640e96996/aiohttp/client_ws.py#L321
+                logger.info("CEF has disconnected...")
+                # At this point the loop starts again and we connect to the freshly started Steam client once it is ready.
             except Exception as e:
                 logger.error("Exception while reading page events " + format_exc())
                 await tab.close_websocket()
@@ -166,7 +174,7 @@ class PluginManager:
             #                 logger.debug("Closing tab: " + getattr(t, "title", "Untitled"))
             #                 await t.close()
             #                 await sleep(0.5)
-            await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => SteamClient.User.StartRestart(), 100)}else{window.deckyHasLoaded = true;(async()=>{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js')})();}}catch(e){console.error(e)}", False, False, False)
+            await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => SteamClient.User.StartRestart(), 100)}else{window.deckyHasLoaded = true;(async()=>{try{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js')}catch(e){console.error(e)};})();}}catch(e){console.error(e)}", False, False, False)
         except:
             logger.info("Failed to inject JavaScript into tab\n" + format_exc())
             pass
@@ -175,4 +183,6 @@ class PluginManager:
         return run_app(self.web_app, host=CONFIG["server_host"], port=CONFIG["server_port"], loop=self.loop, access_log=None)
 
 if __name__ == "__main__":
-    PluginManager().run()
+    loop = new_event_loop()
+    set_event_loop(loop)
+    PluginManager(loop).run()

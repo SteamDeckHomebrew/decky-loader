@@ -14,7 +14,9 @@
             "label": "localrun",
             "type": "shell",
             "group": "none",
-            "dependsOn" : ["buildall"],
+            "dependsOn": [
+                "buildall"
+            ],
             "detail": "Check for local runs, create a plugins folder",
             "command": "mkdir -p plugins",
             "problemMatcher": []
@@ -49,14 +51,23 @@
             "problemMatcher": []
         },
         {
+            "script": "watch",
+            "type": "npm",
+            "path": "frontend",
+            "group": "build",
+            "problemMatcher": [],
+            "label": "watchfrontend",
+            "detail": "rollup -c -w",
+            "isBackground": true
+        },
+        {
             "label": "buildfrontend",
             "type": "npm",
             "group": "build",
             "detail": "rollup -c",
             "script": "build",
             "path": "frontend",
-            "problemMatcher": [],
-            
+            "problemMatcher": []
         },
         {
             "label": "buildall",
@@ -95,7 +106,9 @@
             "detail": "Run indev PluginLoader on Deck",
             "type": "shell",
             "group": "none",
-            "dependsOn" : ["checkforsettings"],
+            "dependsOn": [
+                "checkforsettings"
+            ],
             "command": "ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'export PLUGIN_PATH=${config:deckdir}/homebrew/dev/plugins; export CHOWN_PLUGIN_PATH=0; export LOG_LEVEL=DEBUG; cd ${config:deckdir}/homebrew/services; echo '${config:deckpass}' | sudo -SE python3 ${config:deckdir}/homebrew/dev/pluginloader/backend/main.py'",
             "problemMatcher": []
         },
@@ -109,13 +122,27 @@
         },
         // ALL-IN-ONES
         {
+            "label": "deployandrun",
+            "detail": "Deploy and run, skipping JS build. Useful when combined with npm:watch",
+            "dependsOrder": "sequence",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": [
+                "deploy",
+                "runpydeck"
+            ],
+            "problemMatcher": []
+        },
+        {
             "label": "updateremote",
             "detail": "Build and deploy",
             "dependsOrder": "sequence",
             "group": "none",
             "dependsOn": [
                 "buildall",
-                "deploy",
+                "deploy"
             ],
             "problemMatcher": []
         },

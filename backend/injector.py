@@ -6,7 +6,7 @@ from traceback import format_exc
 from typing import List
 
 from aiohttp import ClientSession, WSMsgType
-from aiohttp.client_exceptions import ClientConnectorError
+from aiohttp.client_exceptions import ClientConnectorError, ClientOSError
 from asyncio.exceptions import TimeoutError
 import uuid
 
@@ -32,13 +32,16 @@ class Tab:
         self.websocket = await self.client.ws_connect(self.ws_url)
 
     async def close_websocket(self):
+        await self.websocket.close()
         await self.client.close()
 
     async def listen_for_message(self):
         async for message in self.websocket:
             data = message.json()
             yield data
-
+        logger.warn(f"The Tab {self.title} socket has been disconnected while listening for messages.")
+        await self.close_websocket()
+            
     async def _send_devtools_cmd(self, dc, receive=True):
         if self.websocket:
             self.cmd_id += 1
@@ -52,20 +55,22 @@ class Tab:
         raise RuntimeError("Websocket not opened")
 
     async def evaluate_js(self, js, run_async=False, manage_socket=True, get_result=True):
-        if manage_socket:
-            await self.open_websocket()
+        try:
+            if manage_socket:
+                await self.open_websocket()
 
-        res = await self._send_devtools_cmd({
-            "method": "Runtime.evaluate",
-            "params": {
-                "expression": js,
-                "userGesture": True,
-                "awaitPromise": run_async
-            }
-        }, get_result)
+            res = await self._send_devtools_cmd({
+                "method": "Runtime.evaluate",
+                "params": {
+                    "expression": js,
+                    "userGesture": True,
+                    "awaitPromise": run_async
+                }
+            }, get_result)
 
-        if manage_socket:
-            await self.close_websocket()
+        finally:
+            if manage_socket:
+                await self.close_websocket()
         return res
 
     async def has_global_var(self, var_name, manage_socket=True):
@@ -77,15 +82,17 @@ class Tab:
         return res["result"]["result"]["value"]
 
     async def close(self, manage_socket=True):
-        if manage_socket:
-            await self.open_websocket()
+        try:
+            if manage_socket:
+                await self.open_websocket()
 
-        res = await self._send_devtools_cmd({
-            "method": "Page.close",
-        }, False)
+            res = await self._send_devtools_cmd({
+                "method": "Page.close",
+            }, False)
 
-        if manage_socket:
-            await self.close_websocket()
+        finally:
+            if manage_socket:
+                await self.close_websocket()
         return res
 
     async def enable(self):
@@ -105,78 +112,82 @@ class Tab:
         }, False)
 
     async def refresh(self):
-        if manage_socket:
-            await self.open_websocket()
+        try:
+            if manage_socket:
+                await self.open_websocket()
 
-        await self._send_devtools_cmd({
-            "method": "Page.reload",
-        }, False)
+            await self._send_devtools_cmd({
+                "method": "Page.reload",
+            }, False)
 
-        if manage_socket:
-            await self.close_websocket()
+        finally:
+            if manage_socket:
+                await self.close_websocket()
 
         return
     async def reload_and_evaluate(self, js, manage_socket=True):
         """
         Reloads the current tab, with JS to run on load via debugger
         """
-        if manage_socket:
-            await self.open_websocket()
+        try:
+            if manage_socket:
+                await self.open_websocket()
 
-        await self._send_devtools_cmd({
-            "method": "Debugger.enable"
-        }, True)
+            await self._send_devtools_cmd({
+                "method": "Debugger.enable"
+            }, True)
 
-        await self._send_devtools_cmd({
-            "method": "Runtime.evaluate",
-            "params": {
-                "expression": "location.reload();",
-                "userGesture": True,
-                "awaitPromise": False
-            }
-        }, False)
-
-        breakpoint_res = await self._send_devtools_cmd({
-            "method": "Debugger.setInstrumentationBreakpoint",
-            "params": {
-                "instrumentation": "beforeScriptExecution"
-            }
-        }, True)
-
-        logger.info(breakpoint_res)
-        
-        # Page finishes loading when breakpoint hits
-
-        for x in range(20):
-            # this works around 1/5 of the time, so just send it 8 times.
-            # the js accounts for being injected multiple times allowing only one instance to run at a time anyway
             await self._send_devtools_cmd({
                 "method": "Runtime.evaluate",
                 "params": {
-                    "expression": js,
+                    "expression": "location.reload();",
                     "userGesture": True,
                     "awaitPromise": False
                 }
             }, False)
 
-        await self._send_devtools_cmd({
-            "method": "Debugger.removeBreakpoint",
-            "params": {
-                "breakpointId": breakpoint_res["result"]["breakpointId"]
-            }
-        }, False)
+            breakpoint_res = await self._send_devtools_cmd({
+                "method": "Debugger.setInstrumentationBreakpoint",
+                "params": {
+                    "instrumentation": "beforeScriptExecution"
+                }
+            }, True)
 
-        for x in range(4):
+            logger.info(breakpoint_res)
+            
+            # Page finishes loading when breakpoint hits
+
+            for x in range(20):
+                # this works around 1/5 of the time, so just send it 8 times.
+                # the js accounts for being injected multiple times allowing only one instance to run at a time anyway
+                await self._send_devtools_cmd({
+                    "method": "Runtime.evaluate",
+                    "params": {
+                        "expression": js,
+                        "userGesture": True,
+                        "awaitPromise": False
+                    }
+                }, False)
+
             await self._send_devtools_cmd({
-                "method": "Debugger.resume"
+                "method": "Debugger.removeBreakpoint",
+                "params": {
+                    "breakpointId": breakpoint_res["result"]["breakpointId"]
+                }
             }, False)
 
-        await self._send_devtools_cmd({
-            "method": "Debugger.disable"
-        }, True)
+            for x in range(4):
+                await self._send_devtools_cmd({
+                    "method": "Debugger.resume"
+                }, False)
 
-        if manage_socket:
-            await self.close_websocket()
+            await self._send_devtools_cmd({
+                "method": "Debugger.disable"
+            }, True)
+
+        finally:
+            if manage_socket:
+                await self.close_websocket()
         return
 
     async def add_script_to_evaluate_on_new_document(self, js, add_dom_wrapper=True, manage_socket=True, get_result=True):
@@ -212,32 +223,34 @@ class Tab:
             (see remove_script_to_evaluate_on_new_document below)
             None is returned if `get_result` is False
         """
+        try:
 
-        wrappedjs = """
-        function scriptFunc() {
-            {js}
-        }
-        if (document.readyState === 'loading') {
-            addEventListener('DOMContentLoaded', () => {
-            scriptFunc();
-        });
-        } else {
-            scriptFunc();
-        }
-        """.format(js=js) if add_dom_wrapper else js
-
-        if manage_socket:
-            await self.open_websocket()
-
-        res = await self._send_devtools_cmd({
-            "method": "Page.addScriptToEvaluateOnNewDocument",
-            "params": {
-                "source": wrappedjs
+            wrappedjs = """
+            function scriptFunc() {
+                {js}
             }
-        }, get_result)
+            if (document.readyState === 'loading') {
+                addEventListener('DOMContentLoaded', () => {
+                scriptFunc();
+            });
+            } else {
+                scriptFunc();
+            }
+            """.format(js=js) if add_dom_wrapper else js
 
-        if manage_socket:
-            await self.close_websocket()
+            if manage_socket:
+                await self.open_websocket()
+
+            res = await self._send_devtools_cmd({
+                "method": "Page.addScriptToEvaluateOnNewDocument",
+                "params": {
+                    "source": wrappedjs
+                }
+            }, get_result)
+
+        finally:
+            if manage_socket:
+                await self.close_websocket()
         return res
 
     async def remove_script_to_evaluate_on_new_document(self, script_id, manage_socket=True):
@@ -250,18 +263,20 @@ class Tab:
             The identifier of the script to remove (returned from `add_script_to_evaluate_on_new_document`)
         """
 
-        if manage_socket:
-            await self.open_websocket()
+        try:
+            if manage_socket:
+                await self.open_websocket()
 
-        res = await self._send_devtools_cmd({
-            "method": "Page.removeScriptToEvaluateOnNewDocument",
-            "params": {
-                "identifier": script_id
-            }
-        }, False)
+            res = await self._send_devtools_cmd({
+                "method": "Page.removeScriptToEvaluateOnNewDocument",
+                "params": {
+                    "identifier": script_id
+                }
+            }, False)
 
-        if manage_socket:
-            await self.close_websocket()
+        finally:
+            if manage_socket:
+                await self.close_websocket()
 
     async def has_element(self, element_name, manage_socket=True):
         res = await self.evaluate_js(f"document.getElementById('{element_name}') != null", False, manage_socket)
@@ -337,28 +352,32 @@ class Tab:
 
 
 async def get_tabs() -> List[Tab]:
-    async with ClientSession() as web:
-        res = {}
+    res = {}
 
-        while True:
-            try:
+    na = False
+    while True:
+        try:
+            async with ClientSession() as web:
                 res = await web.get(f"{BASE_ADDRESS}/json", timeout=3)
-            except ClientConnectorError:
-                logger.debug("ClientConnectorError excepted.")
+        except ClientConnectorError:
+            if not na:
                 logger.debug("Steam isn't available yet. Wait for a moment...")
-                logger.error(format_exc())
-                await sleep(5)
-            except TimeoutError:
-                logger.warn(f"The request to {BASE_ADDRESS}/json timed out")
-                await sleep(1)
-            else:
-                break
-
-        if res.status == 200:
-            r = await res.json()
-            return [Tab(i) for i in r]
+                na = True
+            await sleep(5)
+        except ClientOSError:
+            logger.warn(f"The request to {BASE_ADDRESS}/json was reset")
+            await sleep(1)
+        except TimeoutError:
+            logger.warn(f"The request to {BASE_ADDRESS}/json timed out")
+            await sleep(1)
         else:
-            raise Exception(f"/json did not return 200. {await res.text()}")
+            break
+
+    if res.status == 200:
+        r = await res.json()
+        return [Tab(i) for i in r]
+    else:
+        raise Exception(f"/json did not return 200. {await res.text()}")
 
 
 async def get_tab(tab_name) -> Tab:

@@ -112,20 +112,20 @@ class Updater:
         async with ClientSession() as web:
             async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases", ssl=helpers.get_ssl_context()) as res:
                 remoteVersions = await res.json()
-                self.allRemoteVers = remoteVersions
-                logger.debug("determining release type to find, branch is %i" % selectedBranch)
-                if selectedBranch == 0:
-                    logger.debug("release type: release")
-                    self.remoteVer = next(filter(lambda ver: ver["tag_name"].startswith("v") and not ver["prerelease"] and ver["tag_name"], remoteVersions), None)
-                elif selectedBranch == 1:
-                    logger.debug("release type: pre-release")
-                    self.remoteVer = next(filter(lambda ver: ver["prerelease"] and ver["tag_name"].startswith("v") and ver["tag_name"].find("-pre"), remoteVersions), None)
-                else:
-                    logger.error("release type: NOT FOUND")
-                    raise ValueError("no valid branch found")
-                logger.info("Updated remote version information")
-                tab = await get_gamepadui_tab()
-                await tab.evaluate_js(f"window.DeckyPluginLoader.notifyUpdates()", False, True, False)
+        self.allRemoteVers = remoteVersions
+        logger.debug("determining release type to find, branch is %i" % selectedBranch)
+        if selectedBranch == 0:
+            logger.debug("release type: release")
+            self.remoteVer = next(filter(lambda ver: ver["tag_name"].startswith("v") and not ver["prerelease"] and ver["tag_name"], remoteVersions), None)
+        elif selectedBranch == 1:
+            logger.debug("release type: pre-release")
+            self.remoteVer = next(filter(lambda ver: ver["prerelease"] and ver["tag_name"].startswith("v") and ver["tag_name"].find("-pre"), remoteVersions), None)
+        else:
+            logger.error("release type: NOT FOUND")
+            raise ValueError("no valid branch found")
+        logger.info("Updated remote version information")
+        tab = await get_gamepadui_tab()
+        await tab.evaluate_js(f"window.DeckyPluginLoader.notifyUpdates()", False, True, False)
         return await self.get_version()
 
     async def version_reloader(self):
@@ -152,18 +152,18 @@ class Updater:
             async with web.request("GET", service_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
                 logger.debug("Downloading service file")
                 data = await res.content.read()
-                logger.debug(str(data))
-                service_file_path = path.join(getcwd(), "plugin_loader.service")
-                try:
-                    with open(path.join(getcwd(), "plugin_loader.service"), "wb") as out:
-                        out.write(data)
-                except Exception as e:
-                    logger.error(f"Error at %s", exc_info=e)
-                with open(path.join(getcwd(), "plugin_loader.service"), 'r') as service_file:
-                    service_data = service_file.read()
-                service_data = service_data.replace("${HOMEBREW_FOLDER}", "/home/"+helpers.get_user()+"/homebrew")
-                with open(path.join(getcwd(), "plugin_loader.service"), 'w') as service_file:
-                        service_file.write(service_data)
+            logger.debug(str(data))
+            service_file_path = path.join(getcwd(), "plugin_loader.service")
+            try:
+                with open(path.join(getcwd(), "plugin_loader.service"), "wb") as out:
+                    out.write(data)
+            except Exception as e:
+                logger.error(f"Error at %s", exc_info=e)
+            with open(path.join(getcwd(), "plugin_loader.service"), 'r') as service_file:
+                service_data = service_file.read()
+            service_data = service_data.replace("${HOMEBREW_FOLDER}", "/home/"+helpers.get_user()+"/homebrew")
+            with open(path.join(getcwd(), "plugin_loader.service"), 'w') as service_file:
+                    service_file.write(service_data)
                     
             logger.debug("Saved service file")
             logger.debug("Copying service file over current file.")
@@ -191,14 +191,14 @@ class Updater:
                             self.context.loop.create_task(tab.evaluate_js(f"window.DeckyUpdater.updateProgress({new_progress})", False, False, False))
                             progress = new_progress
 
-                with open(path.join(getcwd(), ".loader.version"), "w") as out:
-                    out.write(version)
+            with open(path.join(getcwd(), ".loader.version"), "w") as out:
+                out.write(version)
 
-                call(['chmod', '+x', path.join(getcwd(), "PluginLoader")])
-                logger.info("Updated loader installation.")
-                await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)
-                await self.do_restart()
-                await tab.client.close()
+            call(['chmod', '+x', path.join(getcwd(), "PluginLoader")])
+            logger.info("Updated loader installation.")
+            await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)
+            await self.do_restart()
+            await tab.close_websocket()
 
     async def do_restart(self):
         call(["systemctl", "daemon-reload"])

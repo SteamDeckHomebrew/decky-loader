@@ -56,7 +56,7 @@ basicConfig(
 
 logger = getLogger("Main")
 
-async def chown_plugin_dir(_):
+async def chown_plugin_dir():
     code_chown = call(["chown", "-R", USER+":"+GROUP, CONFIG["plugin_path"]])
     code_chmod = call(["chmod", "-R", "555", CONFIG["plugin_path"]])
     if code_chown != 0 or code_chmod != 0:

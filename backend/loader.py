@@ -208,7 +208,7 @@ class Loader:
         return web.Response(text=ret)
 
     async def get_steam_resource(self, request):
-        tab = await get_tab("QuickAccess")
+        tab = await get_tab("SP")
         try:
             return web.Response(text=await tab.get_steam_resource(f"https://steamloopback.host/{request.match_info['path']}"), content_type="text/html")
         except Exception as e:

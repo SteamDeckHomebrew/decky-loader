@@ -10,9 +10,9 @@ class SettingsManager:
     def __init__(self, name, settings_directory = None) -> None:
         set_user()
         USER = get_user()
+        wrong_dir = get_homebrew_path(get_home_path(USER))
         if settings_directory == None:
-            settings_directory = path_join(get_homebrew_path(get_home_path(USER)), "settings")
-            wrong_dir = get_homebrew_path(get_home_path(USER))
+            settings_directory = path.join(wrong_dir, "settings")
         
         self.path = path.join(settings_directory, name + ".json")
         
@@ -24,8 +24,8 @@ class SettingsManager:
         #Copy all old settings file in the root directory to the correct folder
         for file in listdir(wrong_dir):
             if file.endswith(".json"):
-                rename(path_join(wrong_dir,file),
-                       path_join(settings_directory, file)) 
+                rename(path.join(wrong_dir,file),
+                       path.join(settings_directory, file)) 
                 self.path = path.join(settings_directory, name + ".json")
                 
         

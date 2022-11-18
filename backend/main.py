@@ -162,7 +162,7 @@ class PluginManager:
         # while True:
         #     await sleep(5)
         #     if not await tab.has_global_var("deckyHasLoaded", False):
-        #         logger.info("Plugin loader isn't present in Steam anymore, reinjecting...")
+        #         logger.info("Plugin loader isn't present in Steam anymore, re-injecting...")
         #         await self.inject_javascript(tab)
 
     async def inject_javascript(self, tab: Tab, first=False, request=None):

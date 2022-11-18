@@ -24,6 +24,7 @@ class SettingsManager:
         #Copy all old settings file in the root directory to the correct folder
         for file in listdir(wrong_dir):
             if file.endswith(".json"):
+                chown(path.join(wrong_dir,file), USER, USER)
                 rename(path.join(wrong_dir,file),
                        path.join(settings_directory, file)) 
                 self.path = path.join(settings_directory, name + ".json")

@@ -98,7 +98,7 @@ Please consult [the wiki page regarding development](https://deckbrew.xyz/en/loa
 1. Use the VS Code tasks or `deck.sh` script to deploy your changes to your Steam Deck to test them.
 1. You will be testing your changes with the Python script version. You will need to build, deploy, and reload each time.
 
-⚠️ If you are recieving build errors due to an out of date library, you should run this command inside of your repository.
+⚠️ If you are receiving build errors due to an out of date library, you should run this command inside of your repository.
 
 ```bash
 pnpm update decky-frontend-lib --latest

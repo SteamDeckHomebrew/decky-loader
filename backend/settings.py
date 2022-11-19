@@ -1,9 +1,8 @@
-import imp, pwd
 from json import dump, load
-from os import mkdir, path, stat, listdir, rename
+from os import mkdir, path, listdir, rename
 from shutil import chown
 
-from helpers import get_home_path, get_homebrew_path, get_user, set_user
+from helpers import get_home_path, get_homebrew_path, get_user, set_user, get_user_owner
 
 
 class SettingsManager:
@@ -24,14 +23,13 @@ class SettingsManager:
         #Copy all old settings file in the root directory to the correct folder
         for file in listdir(wrong_dir):
             if file.endswith(".json"):
-                chown(path.join(wrong_dir,file), USER, USER)
                 rename(path.join(wrong_dir,file),
                        path.join(settings_directory, file)) 
                 self.path = path.join(settings_directory, name + ".json")
                 
         
         #If the owner of the settings directory is not the user, then set it as the user:
-        if pwd.getpwuid(stat(settings_directory).st_uid)[0] != USER:
+        if get_user_owner(settings_directory) != USER:
             chown(settings_directory, USER, USER)
 
         self.settings = {}

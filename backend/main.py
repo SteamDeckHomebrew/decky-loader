@@ -7,7 +7,7 @@ if hasattr(sys, '_MEIPASS'):
 from asyncio import new_event_loop, set_event_loop, sleep
 from json import dumps, loads
 from logging import DEBUG, INFO, basicConfig, getLogger
-from os import getenv, chmod, path
+from os import getenv, chmod, listdir, path
 from traceback import format_exc
 
 import aiohttp_cors
@@ -117,12 +117,16 @@ class PluginManager:
         self.plugin_loader.import_plugins()
         # await inject_to_tab("SP", "window.syncDeckyPlugins();")
 
-    async def reload_plugin_backend(self, name):
+    async def reload_plugin_backends(self, name):
         await self.wait_for_server()
-        if name in self.loader.plugins:
-            self.loader.plugins[name].stop()
-            self.loader.plugins.pop(name, None)
-
+        if name in self.plugin_loader.plugins:
+            self.plugin_loader.plugins[name].stop()
+            self.plugin_loader.plugins.pop(name, None)
+        else:
+            logger.error("Couldn't find plugin %s to reload.", str(name))
+        directories = [i for i in listdir(self.plugin_loader.plugin_path) if path.isdir(path.join(self.plugin_loader.plugin_path, i)) and path.isfile(path.join(self.plugin_loader.plugin_path, i, "plugin.json"))]
+        if name in directories:
+            Loader.import_plugin(path.join(self.plugin_loader.plugin_path, directories[name], "main.py"), directories[name], False, False)
 
     async def loader_reinjector(self):
         while True:

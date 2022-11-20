@@ -81,10 +81,11 @@ class Utilities:
     async def http_request(self, method="", url="", **kwargs):
         async with ClientSession() as web:
             res = await web.request(method, url, ssl=helpers.get_ssl_context(), **kwargs)
+            text = await res.text()
         return {
             "status": res.status,
             "headers": dict(res.headers),
-            "body": await res.text()
+            "body": text
         }
 
     async def ping(self, **kwargs):

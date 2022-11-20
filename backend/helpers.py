@@ -1,3 +1,5 @@
+import grp
+import pwd
 import re
 import ssl
 import subprocess
@@ -55,6 +57,14 @@ def get_user() -> str:
     if user == None:
         raise ValueError("helpers.get_user method called before user variable was set. Run helpers.set_user first.")
     return user
+
+#Get the user owner of the given file path.
+def get_user_owner(file_path) -> str:
+    return pwd.getpwuid(os.stat(file_path).st_uid)[0]
+
+#Get the user group of the given file path.
+def get_user_group(file_path) -> str:
+    return grp.getgrgid(os.stat(file_path).st_gid)[0]
 
 # Set the global user group. get_user must be called first
 def set_user_group() -> str:

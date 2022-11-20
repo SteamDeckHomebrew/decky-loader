@@ -124,7 +124,7 @@ class PluginManager:
             while not tab:
                 try:
                     tab = await get_gamepadui_tab()
-                except client_exceptions.ClientConnectorError or client_exceptions.ServerDisconnectedError:
+                except (client_exceptions.ClientConnectorError, client_exceptions.ServerDisconnectedError):
                     if not dc:
                         logger.debug("Couldn't connect to debugger, waiting...")
                         dc = True

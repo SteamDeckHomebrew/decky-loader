@@ -5,7 +5,7 @@ import externalGlobals from "rollup-plugin-external-globals";
 import del from 'rollup-plugin-delete'
 import replace from '@rollup/plugin-replace';
 import typescript from '@rollup/plugin-typescript';
-import { defineConfig, handleWarning } from 'rollup';
+import { defineConfig } from 'rollup';
 
 const hiddenWarnings = [
  "THIS_IS_UNDEFINED",
@@ -41,7 +41,7 @@ export default defineConfig({
       return 'chunk-[hash].js'
     }
   },
-  onwarn: function ( message ) {
+  onwarn: function ( message, handleWarning ) {
     if (hiddenWarnings.some(warning => message.code === warning)) return;
     handleWarning(message);
   }

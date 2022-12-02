@@ -7,6 +7,7 @@ import Logger from './logger';
 declare global {
   interface Window {
     __TOASTER_INSTANCE: any;
+    settingsStore: any;
     NotificationStore: any;
   }
 }
@@ -16,7 +17,6 @@ class Toaster extends Logger {
   // private toasterState: DeckyToasterState = new DeckyToasterState();
   private node: any;
   private rNode: any;
-  private settingsModule: any;
   private finishStartup?: () => void;
   private ready: Promise<void> = new Promise((res) => (this.finishStartup = res));
   private toasterPatch?: Patch;
@@ -135,7 +135,6 @@ class Toaster extends Logger {
     // toast.duration = toast.duration || 5e3;
     // this.toasterState.addToast(toast);
     await this.ready;
-    const settings = this.settingsModule?.settings;
     let toastData = {
       nNotificationID: window.NotificationStore.m_nNextTestNotificationID++,
       rtCreated: Date.now(),
@@ -147,8 +146,8 @@ class Toaster extends Logger {
     // @ts-ignore
     toastData.data.appid = () => 0;
     if (
-      (settings?.bDisableAllToasts && !toast.critical) ||
-      (settings?.bDisableToastsInGame && !toast.critical && window.NotificationStore.BIsUserInGame())
+      (window.settingsStore.settings.bDisableAllToasts && !toast.critical) ||
+      (window.settingsStore.settings.bDisableToastsInGame && !toast.critical && window.NotificationStore.BIsUserInGame())
     )
       return;
     window.NotificationStore.m_rgNotificationToasts.push(toastData);

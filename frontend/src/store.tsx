@@ -10,6 +10,7 @@ export enum Store {
 export interface StorePluginVersion {
   name: string;
   hash: string;
+  artifact: string | undefined | null;
 }
 
 export interface StorePlugin {
@@ -73,9 +74,11 @@ export async function installFromURL(url: string) {
 }
 
 export async function requestPluginInstall(plugin: string, selectedVer: StorePluginVersion) {
+  const artifactUrl =
+    selectedVer.artifact ?? `https://cdn.tzatzikiweeb.moe/file/steam-deck-homebrew/versions/${selectedVer.hash}.zip`;
   await window.DeckyPluginLoader.callServerMethod('install_plugin', {
     name: plugin,
-    artifact: `https://cdn.tzatzikiweeb.moe/file/steam-deck-homebrew/versions/${selectedVer.hash}.zip`,
+    artifact: artifactUrl,
     version: selectedVer.name,
     hash: selectedVer.hash,
   });

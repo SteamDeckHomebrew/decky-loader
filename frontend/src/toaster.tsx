@@ -1,4 +1,4 @@
-import { Patch, ToastData, afterPatch, findInReactTree, sleep } from 'decky-frontend-lib';
+import { Module, Patch, ToastData, afterPatch, findInReactTree, findModuleChild, sleep } from 'decky-frontend-lib';
 import { ReactNode } from 'react';
 
 import Toast from './components/Toast';
@@ -7,6 +7,7 @@ import Logger from './logger';
 declare global {
   interface Window {
     __TOASTER_INSTANCE: any;
+    settingsStore: any;
     NotificationStore: any;
   }
 }
@@ -16,7 +17,7 @@ class Toaster extends Logger {
   // private toasterState: DeckyToasterState = new DeckyToasterState();
   private node: any;
   private rNode: any;
-  private settingsModule: any;
+  private audioModule: any;
   private finishStartup?: () => void;
   private ready: Promise<void> = new Promise((res) => (this.finishStartup = res));
   private toasterPatch?: Patch;
@@ -127,6 +128,17 @@ class Toaster extends Logger {
     this.rNode.stateNode.forceUpdate();
     delete this.rNode.stateNode.shouldComponentUpdate;
 
+    this.audioModule = findModuleChild((m: Module) => {
+      if (typeof m !== 'object') return undefined;
+      for (let prop in m) {
+        try {
+          if (m[prop].PlayNavSound && m[prop].RegisterCallbackOnPlaySound) return m[prop];
+        } catch {
+          return undefined;
+        }
+      }
+    });
+
     this.log('Initialized');
     this.finishStartup?.();
   }
@@ -135,24 +147,31 @@ class Toaster extends Logger {
     // toast.duration = toast.duration || 5e3;
     // this.toasterState.addToast(toast);
     await this.ready;
-    const settings = this.settingsModule?.settings;
     let toastData = {
       nNotificationID: window.NotificationStore.m_nNextTestNotificationID++,
       rtCreated: Date.now(),
-      eType: 15,
+      eType: toast.eType || 11,
       nToastDurationMS: toast.duration || (toast.duration = 5e3),
       data: toast,
       decky: true,
     };
     // @ts-ignore
     toastData.data.appid = () => 0;
+    if (toast.sound === undefined) toast.sound = 6;
+    if (toast.playSound === undefined) toast.playSound = true;
+    if (toast.showToast === undefined) toast.showToast = true;
     if (
-      (settings?.bDisableAllToasts && !toast.critical) ||
-      (settings?.bDisableToastsInGame && !toast.critical && window.NotificationStore.BIsUserInGame())
+      (window.settingsStore.settings.bDisableAllToasts && !toast.critical) ||
+      (window.settingsStore.settings.bDisableToastsInGame &&
+        !toast.critical &&
+        window.NotificationStore.BIsUserInGame())
     )
       return;
-    window.NotificationStore.m_rgNotificationToasts.push(toastData);
-    window.NotificationStore.DispatchNextToast();
+    if (toast.playSound) this.audioModule?.PlayNavSound(toast.sound);
+    if (toast.showToast) {
+      window.NotificationStore.m_rgNotificationToasts.push(toastData);
+      window.NotificationStore.DispatchNextToast();
+    }
   }
 
   deinit() {

@@ -129,16 +129,15 @@ class Toaster extends Logger {
     delete this.rNode.stateNode.shouldComponentUpdate;
 
     this.audioModule = findModuleChild((m: Module) => {
-      if (typeof m !== "object") return undefined;
+      if (typeof m !== 'object') return undefined;
       for (let prop in m) {
         try {
-          if (m[prop].PlayNavSound && m[prop].RegisterCallbackOnPlaySound)
-            return m[prop];
+          if (m[prop].PlayNavSound && m[prop].RegisterCallbackOnPlaySound) return m[prop];
         } catch {
-          return undefined
+          return undefined;
         }
       }
-    })
+    });
 
     this.log('Initialized');
     this.finishStartup?.();
@@ -163,7 +162,9 @@ class Toaster extends Logger {
     if (toast.showToast === undefined) toast.showToast = true;
     if (
       (window.settingsStore.settings.bDisableAllToasts && !toast.critical) ||
-      (window.settingsStore.settings.bDisableToastsInGame && !toast.critical && window.NotificationStore.BIsUserInGame())
+      (window.settingsStore.settings.bDisableToastsInGame &&
+        !toast.critical &&
+        window.NotificationStore.BIsUserInGame())
     )
       return;
     if (toast.playSound) this.audioModule?.PlayNavSound(toast.sound);

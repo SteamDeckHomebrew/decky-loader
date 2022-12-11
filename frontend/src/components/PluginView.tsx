@@ -9,13 +9,15 @@ import {
 } from 'decky-frontend-lib';
 import { VFC } from 'react';
 
+import { useOrderedPlugins } from '../utils/hooks/useOrderedPlugins';
 import { useDeckyState } from './DeckyState';
 import NotificationBadge from './NotificationBadge';
 import { useQuickAccessVisible } from './QuickAccessVisibleState';
 import TitleView from './TitleView';
 
 const PluginView: VFC = () => {
-  const { plugins, updates, activePlugin, setActivePlugin, closeActivePlugin } = useDeckyState();
+  const { updates, activePlugin, setActivePlugin, closeActivePlugin } = useDeckyState();
+  const { orderedPlugins } = useOrderedPlugins();
   const visible = useQuickAccessVisible();
 
   if (activePlugin) {
@@ -36,7 +38,7 @@ const PluginView: VFC = () => {
       <TitleView />
       <div className={joinClassNames(staticClasses.TabGroupPanel, scrollClasses.ScrollPanel, scrollClasses.ScrollY)}>
         <PanelSection>
-          {plugins
+          {orderedPlugins
             .filter((p) => p.content)
             .map(({ name, icon }) => (
               <PanelSectionRow key={name}>

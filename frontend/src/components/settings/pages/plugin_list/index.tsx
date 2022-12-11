@@ -3,16 +3,18 @@ import { useEffect } from 'react';
 import { FaDownload, FaEllipsisH } from 'react-icons/fa';
 
 import { requestPluginInstall } from '../../../../store';
+import { useOrderedPlugins } from '../../../../utils/hooks/useOrderedPlugins';
 import { useDeckyState } from '../../../DeckyState';
 
 export default function PluginList() {
-  const { plugins, updates } = useDeckyState();
+  const { updates } = useDeckyState();
+  const { orderedPlugins, movePlugin } = useOrderedPlugins();
 
   useEffect(() => {
     window.DeckyPluginLoader.checkPluginUpdates();
   }, []);
 
-  if (plugins.length === 0) {
+  if (orderedPlugins.length === 0) {
     return (
       <div>
         <p>No plugins installed</p>
@@ -22,7 +24,7 @@ export default function PluginList() {
 
   return (
     <ul style={{ listStyleType: 'none' }}>
-      {plugins.map(({ name, version }) => {
+      {orderedPlugins.map(({ name, version }, index) => {
         const update = updates?.get(name);
         return (
           <li style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingBottom: '10px' }}>
@@ -48,6 +50,24 @@ export default function PluginList() {
                     <Menu label="Plugin Actions">
                       <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(name, version)}>
                         Reload
+                      </MenuItem>
+                      <MenuItem disabled={index == 0} onSelected={() => movePlugin(name, 'top')}>
+                        Move To Top
+                      </MenuItem>
+                      <MenuItem disabled={index == 0} onSelected={() => movePlugin(name, 'up')}>
+                        Move Up
+                      </MenuItem>
+                      <MenuItem
+                        disabled={index == orderedPlugins.length - 1}
+                        onSelected={() => movePlugin(name, 'down')}
+                      >
+                        Move Down
+                      </MenuItem>
+                      <MenuItem
+                        disabled={index == orderedPlugins.length - 1}
+                        onSelected={() => movePlugin(name, 'bottom')}
+                      >
+                        Move To Bottom
                       </MenuItem>
                       <MenuItem onSelected={() => window.DeckyPluginLoader.uninstallPlugin(name)}>Uninstall</MenuItem>
                     </Menu>,

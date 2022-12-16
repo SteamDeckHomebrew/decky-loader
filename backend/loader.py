@@ -118,7 +118,7 @@ class Loader:
     def handle_frontend_bundle(self, request):
         plugin = self.plugins[request.match_info["plugin_name"]]
 
-        with open(path.join(self.plugin_path, plugin.plugin_directory, "dist/index.js"), 'r') as bundle:
+        with open(path.join(self.plugin_path, plugin.plugin_directory, "dist/index.js"), "r", encoding="utf-8") as bundle:
             return web.Response(text=bundle.read(), content_type="application/javascript")
 
     def import_plugin(self, file, plugin_directory, refresh=False, batch=False):
@@ -186,7 +186,7 @@ class Loader:
     """
     async def load_plugin_main_view(self, request):
         plugin = self.plugins[request.match_info["name"]]
-        with open(path.join(self.plugin_path, plugin.plugin_directory, plugin.main_view_html), 'r') as template:
+        with open(path.join(self.plugin_path, plugin.plugin_directory, plugin.main_view_html), "r", encoding="utf-8") as template:
             template_data = template.read()
             ret = f"""
             <script src="/legacy/library.js"></script>
@@ -202,7 +202,7 @@ class Loader:
         self.logger.info(path)
         ret = ""
         file_path = path.join(self.plugin_path, plugin.plugin_directory, route_path)
-        with open(file_path, 'r') as resource_data:
+        with open(file_path, "r", encoding="utf-8") as resource_data:
             ret = resource_data.read()
 
         return web.Response(text=ret)

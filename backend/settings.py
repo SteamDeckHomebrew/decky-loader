@@ -35,22 +35,22 @@ class SettingsManager:
         self.settings = {}
 
         try:
-            open(self.path, "x")
+            open(self.path, "x", encoding="utf-8")
         except FileExistsError as e:
             self.read()
             pass
 
     def read(self):
         try:
-            with open(self.path, "r") as file:
+            with open(self.path, "r", encoding="utf-8") as file:
                 self.settings = load(file)
         except Exception as e:
             print(e)
             pass
 
     def commit(self):
-        with open(self.path, "w+") as file:
-            dump(self.settings, file, indent=4)
+        with open(self.path, "w+", encoding="utf-8") as file:
+            dump(self.settings, file, indent=4, ensure_ascii=False)
 
     def getSetting(self, key, default):
         return self.settings.get(key, default)

@@ -2,8 +2,8 @@ import {
   DialogButton,
   Dropdown,
   Focusable,
+  Navigation,
   QuickAccessTab,
-  Router,
   SingleDropdownOption,
   SuspensefulImage,
   joinClassNames,
@@ -38,8 +38,8 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
         }}
         onCancel={(_: CustomEvent) => {
           if (containerRef.current!.querySelectorAll('* :focus').length === 0) {
-            Router.NavigateBackOrOpenMenu();
-            setTimeout(() => Router.OpenQuickAccessMenu(QuickAccessTab.Decky), 1000);
+            Navigation.NavigateBack();
+            setTimeout(() => Navigation.OpenQuickAccessMenu(QuickAccessTab.Decky), 1000);
           } else {
             containerRef.current!.focus();
           }

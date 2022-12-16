@@ -1,4 +1,4 @@
-import { ConfirmModal, QuickAccessTab, Router, Spinner, staticClasses } from 'decky-frontend-lib';
+import { ConfirmModal, Navigation, QuickAccessTab, Spinner, staticClasses } from 'decky-frontend-lib';
 import { FC, useState } from 'react';
 
 interface PluginInstallModalProps {
@@ -20,7 +20,7 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({ artifact, version, ha
       onOK={async () => {
         setLoading(true);
         await onOK();
-        setTimeout(() => Router.OpenQuickAccessMenu(QuickAccessTab.Decky), 250);
+        setTimeout(() => Navigation.OpenQuickAccessMenu(QuickAccessTab.Decky), 250);
         setTimeout(() => window.DeckyPluginLoader.checkPluginUpdates(), 1000);
       }}
       onCancel={async () => {

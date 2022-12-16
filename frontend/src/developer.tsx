@@ -1,4 +1,5 @@
 import {
+  Navigation,
   ReactRouter,
   Router,
   fakeRenderComponent,
@@ -74,13 +75,14 @@ export async function startup() {
   window.DFL = {
     findModuleChild,
     findModule,
+    Navigation,
+    Router,
+    ReactRouter,
     ReactUtils: {
       fakeRenderComponent,
       findInReactTree,
       findInTree,
     },
-    Router,
-    ReactRouter,
     classes: {
       scrollClasses,
       staticClasses,

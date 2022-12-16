@@ -27,9 +27,9 @@ class PluginWrapper:
 
         self.version = None
 
-        json = load(open(path.join(plugin_path, plugin_directory, "plugin.json"), "r"))
+        json = load(open(path.join(plugin_path, plugin_directory, "plugin.json"), "r", encoding="utf-8"))
         if path.isfile(path.join(plugin_path, plugin_directory, "package.json")):
-            package_json = load(open(path.join(plugin_path, plugin_directory, "package.json"), "r"))
+            package_json = load(open(path.join(plugin_path, plugin_directory, "package.json"), "r", encoding="utf-8"))
             self.version = package_json["version"]
 
 
@@ -112,7 +112,7 @@ class PluginWrapper:
                 d["res"] = str(e)
                 d["success"] = False
             finally:
-                writer.write((dumps(d)+"\n").encode("utf-8"))
+                writer.write((dumps(d, ensure_ascii=False)+"\n").encode("utf-8"))
                 await writer.drain()
 
     async def _open_socket_if_not_exists(self):
@@ -140,7 +140,7 @@ class PluginWrapper:
             return
         async def _(self):
             if await self._open_socket_if_not_exists():
-                self.writer.write((dumps({"stop": True})+"\n").encode("utf-8"))
+                self.writer.write((dumps({ "stop": True }, ensure_ascii=False)+"\n").encode("utf-8"))
                 await self.writer.drain()
                 self.writer.close()
         get_event_loop().create_task(_(self))
@@ -151,7 +151,7 @@ class PluginWrapper:
         async with self.method_call_lock:
             if await self._open_socket_if_not_exists():
                 self.writer.write(
-                    (dumps({"method": method_name, "args": kwargs})+"\n").encode("utf-8"))
+                    (dumps({ "method": method_name, "args": kwargs }, ensure_ascii=False) + "\n").encode("utf-8"))
                 await self.writer.drain()
                 line = bytearray()
                 while True:

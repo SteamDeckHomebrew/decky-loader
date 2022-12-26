@@ -1,0 +1,8 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Name=Install Decky
+Exec=curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/user_install_script.sh | sh
+Icon=steamdeck-gaming-return
+Terminal=true
+Type=Application
+StartupNotify=false

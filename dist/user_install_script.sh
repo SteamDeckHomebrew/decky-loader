@@ -5,12 +5,12 @@ temp_pass_cleanup() {
 }
 
 if (( $EUID != 0 )); then # if script is not root yet
-    PASS_STATUS=$(passwd -S wumpus) ## TODO: CHANGE ME TO DECK NOT WUMPUS!!!!
+    PASS_STATUS=$(passwd -S deck)
     if [ "$PASS_STATUS" = "" ]; then
         echo "Deck user not found. Continuing anyway, as it probably just means user is on a non-steamos system."
     fi
 
-    if [ "${PASS_STATUS:7:2}" = "NP" ]; then ## TODO: CHANGE ME TO ${PASS_STATUS:5:2} # if no password is set
+    if [ "${PASS_STATUS:5:2}" = "NP" ]; then # if no password is set
         if [ ! zenity --question --text="You appear to have not set an admin password.\nDecky can still install by temporarily setting your password to 'Decky!' and continuing, then removing it when the installer finishes\nAre you okay with that?" ]; then
             echo "deck:Decky!" | sudo chpasswd
             trap temp_pass_cleanup EXIT # make sure password is removed when application closes

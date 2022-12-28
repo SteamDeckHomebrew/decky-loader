@@ -49,7 +49,7 @@ fi
 USER_DIR="$(getent passwd $USER | cut -d: -f6)"
 HOMEBREW_FOLDER="${USER_DIR}/homebrew"
 
-if [ -d "/path/to/dir" ] ; then
+if [ -d "/homebrew/" ] ; then
     BRANCH=$(zenity --list --radiolist --text "Which Branch:" --hide-header --column "Buttons" --column "Choice" --column "Info" TRUE "release" "(Recommended option)" FALSE "prerelease" "(May be unstable)" )
 else
     BRANCH=$(zenity --list --radiolist --text "Which Branch:" --hide-header --column "Buttons" --column "Choice" --column "Info" TRUE "release" "(Recommended option)" FALSE "prerelease" "(May be unstable)" FALSE "uninstall decky loader" "")
@@ -58,7 +58,7 @@ if [[ $? -eq 1 ]] || [[ $? -eq 5 ]]; then
     exit 1
 fi
 
-if [ $BRANCH = 'uninstall decky loader' ] ; then
+if [ "$BRANCH" == "uninstall decky loader" ] ; then
     (
     echo "35" ; echo "# Disabling and removing services" ;
     sudo systemctl disable --now plugin_loader.service > /dev/null

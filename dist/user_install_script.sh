@@ -12,7 +12,7 @@ if (( $EUID != 0 )); then # if script is not root yet
 
     if [ "${PASS_STATUS:5:2}" = "NP" ]; then # if no password is set
         if [ ! zenity --question --text="You appear to have not set an admin password.\nDecky can still install by temporarily setting your password to 'Decky!' and continuing, then removing it when the installer finishes\nAre you okay with that?" ]; then
-            echo "deck:Decky!" | sudo chpasswd
+            yes "Decky!" | passwd deck
             trap temp_pass_cleanup EXIT # make sure password is removed when application closes
             PASS="Decky!"
         fi

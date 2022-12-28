@@ -36,18 +36,17 @@ if (( $EUID != 0 )); then # if script is not root yet
         zenity --warning --text "You appear to not be on a deck.\nDecky should still mostly work, but expect some errors."
     fi
 
-    echo "$PASS" | sudo -S -k sh "$0" "$@"
+    # pass through user_dir, as otherwise it will think the user dir is root
+    USER_DIR="$(getent passwd $USER | cut -d: -f6)"
+    HOMEBREW_FOLDER="${USER_DIR}/homebrew"
+    echo "$PASS" | sudo -S -k "$0" "$USER_DIR" "$HOMEBREW_FOLDER"
     exit 1
 fi
 
-BRANCH=$(zenity --list --radiolist --text "Which Branch:" --hide-header --column "Buttons" --column "Choice" --column "Info" TRUE "release" "(Recommended option)" FALSE "prerelease" "(May be unstable)" )
-if [[ $? -eq 1 ]] || [[ $? -eq 5 ]]; then
-    exit 1
-fi
-
-
-USER_DIR="$(getent passwd $USER | cut -d: -f6)"
-HOMEBREW_FOLDER="${USER_DIR}/homebrew"
+#USER_DIR="$(getent passwd $USER | cut -d: -f6)"
+#HOMEBREW_FOLDER="${USER_DIR}/homebrew"
+USER_DIR=$1
+HOMEBREW_FOLDER=$2
 
 if [ -d "/homebrew/" ] ; then
     BRANCH=$(zenity --list --radiolist --text "Which Branch:" --hide-header --column "Buttons" --column "Choice" --column "Info" TRUE "release" "(Recommended option)" FALSE "prerelease" "(May be unstable)" )

@@ -11,7 +11,7 @@ if (( $EUID != 0 )); then # if script is not root yet
     fi
 
     if [ "${PASS_STATUS:5:2}" = "NP" ]; then # if no password is set
-        if ( zenity --title="Decky Installer" --question --text="You appear to have not set an admin password.\nDecky can still install by temporarily setting your password to 'Decky!' and continuing, then removing it when the installer finishes\nAre you okay with that?" ); then
+        if ( zenity --title="Decky Installer" --width=300 --height=200 --question --text="You appear to have not set an admin password.\nDecky can still install by temporarily setting your password to 'Decky!' and continuing, then removing it when the installer finishes\nAre you okay with that?" ); then
             yes "Decky!" | passwd deck
             trap temp_pass_cleanup EXIT # make sure password is removed when application closes
             PASS="Decky!"
@@ -20,20 +20,20 @@ if (( $EUID != 0 )); then # if script is not root yet
         # get password
         FINISHED="false"
         while [ "$FINISHED" != "true" ]; do
-            PASS=$(zenity --title="Decky Installer" --entry --hide-text --text="Enter your admin password")
+            PASS=$(zenity --title="Decky Installer" --width=300 --height=100 --entry --hide-text --text="Enter your admin password")
             if [[ $? -eq 1 ]] || [[ $? -eq 5 ]]; then
                 exit 1
             fi
             if ( echo "$PASS" | sudo -S -k true ); then
                 FINISHED="true"
             else
-                zenity --title="Decky Installer" --info --text "Incorrect Password"
+                zenity --title="Decky Installer" --width=150 --height=40 --info --text "Incorrect Password"
             fi
         done
     fi
 
     if ! [ $USER = "deck" ]; then
-        zenity --title="Decky Installer" --warning --text "You appear to not be on a deck.\nDecky should still mostly work, but expect some errors."
+        zenity --title="Decky Installer" --width=300 --height=100 --warning --text "You appear to not be on a deck.\nDecky should still mostly work, but you may not get full functionality."
     fi
 
     # pass through user_dir, as otherwise it will think the user dir is root
@@ -49,9 +49,9 @@ USER_DIR=$1
 HOMEBREW_FOLDER=$2
 
 if [ -d "/homebrew/" ] ; then
-    BRANCH=$(zenity --title="Decky Installer" --list --radiolist --text "Which Branch:" --hide-header --column "Buttons" --column "Choice" --column "Info" TRUE "release" "(Recommended option)" FALSE "prerelease" "(May be unstable)" )
+    BRANCH=$(zenity --title="Decky Installer" --width=300 --height=100 --list --radiolist --text "Which Branch:" --hide-header --column "Buttons" --column "Choice" --column "Info" TRUE "release" "(Recommended option)" FALSE "prerelease" "(May be unstable)" )
 else
-    BRANCH=$(zenity --title="Decky Installer" --list --radiolist --text "Which Branch:" --hide-header --column "Buttons" --column "Choice" --column "Info" TRUE "release" "(Recommended option)" FALSE "prerelease" "(May be unstable)" FALSE "uninstall decky loader" "")
+    BRANCH=$(zenity --title="Decky Installer" --width=360 --height=170 --list --radiolist --text "Which Branch:" --hide-header --column "Buttons" --column "Choice" --column "Info" TRUE "release" "(Recommended option)" FALSE "prerelease" "(May be unstable)" FALSE "uninstall decky loader" "")
 fi
 if [[ $? -eq 1 ]] || [[ $? -eq 5 ]]; then
     exit 1
@@ -73,6 +73,7 @@ if [ "$BRANCH" == "uninstall decky loader" ] ; then
     ) |
     zenity --progress \
   --title="Decky Installer" \
+   --width=300 --height=100 \
   --text="Installing..." \
   --percentage=0 \
   --no-cancel
@@ -147,11 +148,11 @@ echo "100" ; echo "# Install finished, installer can now be closed";
 ) |
 zenity --progress \
   --title="Decky Installer" \
+  --width=300 --height=100 \
   --text="Installing..." \
   --percentage=0 \
   --no-cancel # not actually sure how to make the cancel work properly, so it's just not there unless someone else can figure it out
 
 if [ "$?" = -1 ] ; then
-        zenity --error \
-          --text="Download interrupted."
+        zenity --title="Decky Installer" --width=150 --height=70 --error --text="Download interrupted."
 fi

@@ -1,7 +1,7 @@
 #!/usr/bin/env xdg-open
 [Desktop Entry]
 Name=Install Decky
-Exec=sh -c 'curl -O --output-dir /tmp/ https://raw.githubusercontent.com/PartyWumpus/decky-loader/install-script/dist/user_install_script.sh && bash /tmp/user_install_script.sh'
+Exec=sh -c 'curl -O --output-dir /tmp/ https://raw.githubusercontent.com/SteamDeckHomebrew/decky-loader/main/dist/user_install_script.sh && bash /tmp/user_install_script.sh'
 Icon=steamdeck-gaming-return
 Terminal=true
 Type=Application

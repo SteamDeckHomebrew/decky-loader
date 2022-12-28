@@ -59,16 +59,16 @@ fi
 
 if [ "$BRANCH" == "uninstall decky loader" ] ; then
     (
-    echo "35" ; echo "# Disabling and removing services" ; sleep 0.3
+    echo "35" ; echo "# Disabling and removing services" ;
     sudo systemctl disable --now plugin_loader.service > /dev/null
     sudo rm -f "${USER_DIR}/.config/systemd/user/plugin_loader.service"
     sudo rm -f "/etc/systemd/system/plugin_loader.service"
 
-    echo "70" ; echo "# Removing Temporary Files" ; sleep 0.3
+    echo "70" ; echo "# Removing Temporary Files" ;
     rm -rf "/tmp/plugin_loader"
     rm -rf "/tmp/user_install_script.sh"
 
-    echo "100" ; echo "# Cleaning services folder" ; sleep 0.3
+    echo "100" ; echo "# Cleaning services folder" ;
     sudo rm "${HOMEBREW_FOLDER}/services/PluginLoader"
     ) |
     zenity --progress \
@@ -81,13 +81,13 @@ if [ "$BRANCH" == "uninstall decky loader" ] ; then
 fi
 
 (
-echo "15" ; echo "# Creating file structure" ; sleep 0.3
+echo "15" ; echo "# Creating file structure" ;
 rm -rf "${HOMEBREW_FOLDER}/services"
 sudo mkdir -p "${HOMEBREW_FOLDER}/services"
 sudo mkdir -p "${HOMEBREW_FOLDER}/plugins"
 touch "${USER_DIR}/.steam/steam/.cef-enable-remote-debugging"
 
-echo "30" ; echo "# Finding latest $BRANCH"; sleep 0.3
+echo "30" ; echo "# Finding latest $BRANCH";
 if [ $BRANCH = 'prerelease' ] ; then
     RELEASE=$(curl -s 'https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases' | jq -r "first(.[] | select(.prerelease == "true"))")
 else
@@ -95,18 +95,18 @@ else
 fi
 read VERSION DOWNLOADURL < <(echo $(jq -r '.tag_name, .assets[].browser_download_url' <<< ${RELEASE}))
 
-echo "45" ; echo "# Installing version $VERSION" ; sleep 0.3
+echo "45" ; echo "# Installing version $VERSION" ;
 curl -L $DOWNLOADURL --output ${HOMEBREW_FOLDER}/services/PluginLoader
 chmod +x ${HOMEBREW_FOLDER}/services/PluginLoader
 echo $VERSION > ${HOMEBREW_FOLDER}/services/.loader.version
 
-echo "70" ; echo "# Kiling plugin_loader if it exists" ; sleep 0.3
+echo "70" ; echo "# Kiling plugin_loader if it exists" ;
 systemctl --user stop plugin_loader 2> /dev/null
 systemctl --user disable plugin_loader 2> /dev/null
 systemctl stop plugin_loader 2> /dev/null
 systemctl disable plugin_loader 2> /dev/null
 
-echo "85" ; echo "# Setting up systemd" ; sleep 0.3
+echo "85" ; echo "# Setting up systemd" ;
 curl -L https://raw.githubusercontent.com/SteamDeckHomebrew/decky-loader/main/dist/plugin_loader-${BRANCH}.service  --output ${HOMEBREW_FOLDER}/services/plugin_loader-${BRANCH}.service
 cat > "${HOMEBREW_FOLDER}/services/plugin_loader-backup.service" <<- EOM
 [Unit]

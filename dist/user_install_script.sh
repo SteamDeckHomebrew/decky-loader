@@ -49,6 +49,37 @@ fi
 USER_DIR="$(getent passwd $USER | cut -d: -f6)"
 HOMEBREW_FOLDER="${USER_DIR}/homebrew"
 
+if [ -d "/path/to/dir" ] ; then
+    BRANCH=$(zenity --list --radiolist --text "Which Branch:" --hide-header --column "Buttons" --column "Choice" --column "Info" TRUE "release" "(Recommended option)" FALSE "prerelease" "(May be unstable)" )
+else
+    BRANCH=$(zenity --list --radiolist --text "Which Branch:" --hide-header --column "Buttons" --column "Choice" --column "Info" TRUE "release" "(Recommended option)" FALSE "prerelease" "(May be unstable)" FALSE "uninstall decky loader" "")
+fi
+if [[ $? -eq 1 ]] || [[ $? -eq 5 ]]; then
+    exit 1
+fi
+
+if [ $BRANCH = 'uninstall decky loader' ] ; then
+    (
+    echo "35" ; echo "# Disabling and removing services" ;
+    sudo systemctl disable --now plugin_loader.service > /dev/null
+    sudo rm -f "${USER_DIR}/.config/systemd/user/plugin_loader.service"
+    sudo rm -f "/etc/systemd/system/plugin_loader.service"
+
+    echo "70" ; echo "# Removing Temporary Files" ;
+    rm -rf "/tmp/plugin_loader"
+    rm -rf "/tmp/user_install_script.sh"
+
+    echo "100" ; echo "# Cleaning services folder" ;
+    sudo rm "${HOMEBREW_FOLDER}/services/PluginLoader"
+    ) |
+    zenity --progress \
+  --title="Decky Installer" \
+  --text="Installing..." \
+  --percentage=0 \
+  --no-cancel
+  exit 1
+fi
+
 (
 echo "15" ; echo "# Creating file structure" ;
 rm -rf "${HOMEBREW_FOLDER}/services"

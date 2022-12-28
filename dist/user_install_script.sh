@@ -39,7 +39,7 @@ if (( $EUID != 0 )); then # if script is not root yet
     # pass through user_dir, as otherwise it will think the user dir is root
     USER_DIR="$(getent passwd $USER | cut -d: -f6)"
     HOMEBREW_FOLDER="${USER_DIR}/homebrew"
-    echo "$PASS" | sudo -S -k "$0" "$USER_DIR" "$HOMEBREW_FOLDER"
+    echo "$PASS" | sudo -S -k sh "$0" "$USER_DIR" "$HOMEBREW_FOLDER"
     exit 1
 fi
 

@@ -15,7 +15,7 @@ if (( $EUID != 0 )); then # if script is not root yet
             yes "Decky!" | passwd deck
             trap temp_pass_cleanup EXIT # make sure password is removed when application closes
             PASS="Decky!"
-        fi
+        else exit 1; fi
     else
         # get password
         FINISHED="false"

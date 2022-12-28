@@ -48,10 +48,11 @@ fi
 USER_DIR=$1
 HOMEBREW_FOLDER=$2
 
+# if decky is already installed, then also add an 'uninstall' prompt
 if [[ -f "${USER_DIR}/homebrew/services/PluginLoader" ]] ; then
-    BRANCH=$(zenity --title="Decky Installer" --width=300 --height=100 --list --radiolist --text "Which Branch:" --hide-header --column "Buttons" --column "Choice" --column "Info" TRUE "release" "(Recommended option)" FALSE "prerelease" "(May be unstable)" )
-else
     BRANCH=$(zenity --title="Decky Installer" --width=360 --height=170 --list --radiolist --text "Which Branch:" --hide-header --column "Buttons" --column "Choice" --column "Info" TRUE "release" "(Recommended option)" FALSE "prerelease" "(May be unstable)" FALSE "uninstall decky loader" "")
+else
+    BRANCH=$(zenity --title="Decky Installer" --width=300 --height=100 --list --radiolist --text "Which Branch:" --hide-header --column "Buttons" --column "Choice" --column "Info" TRUE "release" "(Recommended option)" FALSE "prerelease" "(May be unstable)" )
 fi
 if [[ $? -eq 1 ]] || [[ $? -eq 5 ]]; then
     exit 1

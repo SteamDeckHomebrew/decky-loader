@@ -1,7 +1,7 @@
 #!/bin/sh
 
 temp_pass_cleanup() {
-  echo $PASS | sudo passwd -d deck
+  echo $PASS | sudo -S -k passwd -d deck
 }
 
 if (( $EUID != 0 )); then # if script is not root yet

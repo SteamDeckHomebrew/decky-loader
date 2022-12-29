@@ -176,7 +176,7 @@ class PluginManager:
             #                 logger.debug("Closing tab: " + getattr(t, "title", "Untitled"))
             #                 await t.close()
             #                 await sleep(0.5)
-            await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => SteamClient.User.StartRestart(), 100)}else{window.deckyHasLoaded = true;(async()=>{try{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js')}catch(e){console.error(e)};})();}}catch(e){console.error(e)}", False, False, False)
+            await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => SteamClient.User.StartShutdown(false), 100)}else{window.deckyHasLoaded = true;(async()=>{try{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js')}catch(e){console.error(e)};})();}}catch(e){console.error(e)}", False, False, False)
         except:
             logger.info("Failed to inject JavaScript into tab\n" + format_exc())
             pass

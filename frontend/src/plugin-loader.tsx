@@ -27,6 +27,7 @@ import OldTabsHook from './tabs-hook.old';
 import Toaster from './toaster';
 import { VerInfo, callUpdaterMethod } from './updater';
 import { getSetting } from './utils/settings';
+import { File } from './components/modals/filepicker';
 
 const StorePage = lazy(() => import('./components/store/Store'));
 const SettingsPage = lazy(() => import('./components/settings'));

@@ -1,10 +1,12 @@
 #!/bin/sh
 
+# if a password was set by decky, this will run when the program closes
 temp_pass_cleanup() {
   echo $PASS | sudo -S -k passwd -d deck
 }
 
-if (( $EUID != 0 )); then # if script is not root yet
+# if the script is not root yet, get the password and rerun as root
+if (( $EUID != 0 )); then
     PASS_STATUS=$(passwd -S deck)
     if [ "$PASS_STATUS" = "" ]; then
         echo "Deck user not found. Continuing anyway, as it probably just means user is on a non-steamos system."
@@ -36,15 +38,14 @@ if (( $EUID != 0 )); then # if script is not root yet
         zenity --title="Decky Installer" --width=300 --height=100 --warning --text "You appear to not be on a deck.\nDecky should still mostly work, but you may not get full functionality."
     fi
 
-    # pass through user_dir, as otherwise it will think the user dir is root
+    # get user dir before rerunning as root, otherwise it'll just be 'home/root'
     USER_DIR="$(getent passwd $USER | cut -d: -f6)"
     HOMEBREW_FOLDER="${USER_DIR}/homebrew"
-    echo "$PASS" | sudo -S -k sh "$0" "$USER_DIR" "$HOMEBREW_FOLDER"
+    echo "$PASS" | sudo -S -k sh "$0" "$USER_DIR" "$HOMEBREW_FOLDER" # rerun script as root
     exit 1
 fi
 
-#USER_DIR="$(getent passwd $USER | cut -d: -f6)"
-#HOMEBREW_FOLDER="${USER_DIR}/homebrew"
+# all code below should be run as root
 USER_DIR=$1
 HOMEBREW_FOLDER=$2
 
@@ -58,6 +59,7 @@ if [[ $? -eq 1 ]] || [[ $? -eq 5 ]]; then
     exit 1
 fi
 
+# uninstall if uninstall option was selected
 if [ "$BRANCH" == "uninstall decky loader" ] ; then
     (
     echo "35" ; echo "# Disabling and removing services" ;
@@ -81,6 +83,7 @@ if [ "$BRANCH" == "uninstall decky loader" ] ; then
   exit 1
 fi
 
+# otherwise install decky loader
 (
 echo "15" ; echo "# Creating file structure" ;
 rm -rf "${HOMEBREW_FOLDER}/services"
@@ -127,6 +130,7 @@ Environment=LOG_LEVEL=INFO
 WantedBy=multi-user.target
 EOM
 
+# if .service file doesn't exist for whatever reason, use backup file instead
 if [[ -f "${HOMEBREW_FOLDER}/services/plugin_loader-${BRANCH}.service" ]]; then
     printf "Grabbed latest ${BRANCH} service.\n"
     sed -i -e "s|\${HOMEBREW_FOLDER}|${HOMEBREW_FOLDER}|" "${HOMEBREW_FOLDER}/services/plugin_loader-${BRANCH}.service"

@@ -194,10 +194,14 @@ class Utilities:
         for file in file_names:
             full_path = os.path.join(path, file)
             is_dir = os.path.isdir(full_path)
+            # Windows and OSX have their own file attributes for hidden files and dirs.
+            # Only doing Linux for now cause that's all Decky supports.
+            is_hidden = file.startswith('.')
 
             if is_dir or include_files:
                 files.append({
                     "isdir": is_dir,
+                    "ishidden": is_hidden,
                     "name": file,
                     "realpath": os.path.realpath(full_path)
                 })

@@ -294,7 +294,7 @@ class PluginLoader extends Logger {
   openFilePicker(
     startPath: string,
     includeFiles?: boolean,
-    regex?: RegExp,
+    filter?: RegExp | ((file: File) => boolean)
   ): Promise<{ path: string; realpath: string }> {
     return new Promise((resolve, reject) => {
       const Content = ({ closeModal }: { closeModal?: () => void }) => (
@@ -309,7 +309,7 @@ class PluginLoader extends Logger {
             <FilePicker
               startPath={startPath}
               includeFiles={includeFiles}
-              regex={regex}
+              filter={filter}
               onSubmit={resolve}
               closeModal={closeModal}
             />

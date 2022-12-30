@@ -146,7 +146,6 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               display: 'flex',
               flexDirection: 'row',
               width: '100%',
-              padding: '0 10px',
               margin: '10px',
             }}
           >

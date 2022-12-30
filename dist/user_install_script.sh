@@ -22,7 +22,7 @@ if (( $EUID != 0 )); then
         # get password
         FINISHED="false"
         while [ "$FINISHED" != "true" ]; do
-            PASS=$(zenity --title="Decky Installer" --width=300 --height=100 --entry --hide-text --text="Enter your admin password")
+            PASS=$(zenity --title="Decky Installer" --width=300 --height=100 --entry --hide-text --text="Enter your sudo/admin password")
             if [[ $? -eq 1 ]] || [[ $? -eq 5 ]]; then
                 exit 1
             fi

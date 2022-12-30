@@ -77,7 +77,7 @@ if [ "$BRANCH" == "uninstall decky loader" ] ; then
     zenity --progress \
   --title="Decky Installer" \
    --width=300 --height=100 \
-  --text="Installing..." \
+  --text="Uninstalling..." \
   --percentage=0 \
   --no-cancel
   exit 1

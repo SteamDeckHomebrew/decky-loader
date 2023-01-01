@@ -137,7 +137,14 @@ class MenuHook extends Logger {
                   const oType = itemList[index].type;
                   itemList[index] = patch({
                     ...cloneElement(itemList[index]),
-                    type: (props) => createElement(oType, props),
+                    type: (props: any) => createElement(oType, props),
+                  });
+                });
+                itemPatches.get('*')?.forEach((patch) => {
+                  const oType = itemList[index].type;
+                  itemList[index] = patch({
+                    ...cloneElement(itemList[index]),
+                    type: (props: any) => createElement(oType, props),
                   });
                 });
               }

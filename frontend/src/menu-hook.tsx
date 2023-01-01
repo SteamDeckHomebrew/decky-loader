@@ -69,6 +69,7 @@ class MenuHook extends Logger {
       this.menuRenderer = menuRenderer;
       this.originalRenderer = menuRenderer.type;
       let toReplace = new Map<string, ReactNode>();
+      let alreadyPatched = new Map<string, { total: number; node: ReactNode }>();
 
       let patchedInnerMenu: any;
       let overlayComponentManager: any;
@@ -132,6 +133,17 @@ class MenuHook extends Logger {
                 toReplace.delete(item?.props.route as string);
               }
               if (item?.props?.route && (itemPatches.has(item.props.route as string) || itemPatches.has('*'))) {
+                if (
+                  item?.props?.route && 
+                  alreadyPatched.has(item.props.route) &&
+                  alreadyPatched.get(item.props.route)?.total ==
+                    (itemPatches.get(item.props.route)?.size || 0) + (itemPatches.get('*')?.size || 0)
+                ) {
+                  const patched = alreadyPatched.get(item.props.route);
+                  this.debug('found already patched', patched);
+                  itemList[index] = patched?.node;
+                  return;
+                }
                 toReplace.set(item?.props?.route as string, itemList[index]);
                 itemPatches.get(item.props.route as string)?.forEach((patch) => {
                   const oType = itemList[index].type;
@@ -146,6 +158,10 @@ class MenuHook extends Logger {
                     ...cloneElement(itemList[index]),
                     type: (props: any) => createElement(oType, props),
                   });
+                });
+                alreadyPatched.set(item.props.route, {
+                  total: (itemPatches.get(item.props.route)?.size || 0) + (itemPatches.get('*')?.size || 0),
+                  node: itemList[index],
                 });
               }
             });

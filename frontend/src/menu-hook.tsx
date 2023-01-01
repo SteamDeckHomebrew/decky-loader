@@ -98,7 +98,7 @@ class MenuHook extends Logger {
         if (patchedInnerMenu) {
           childArray[0].type = patchedInnerMenu;
         } else {
-          afterPatch(childArray[0], 'type', (menuArgs, ret) => {
+          afterPatch(childArray[0], 'type', (_, ret) => {
             const { itemPatches, items } = useDeckyMenuState();
 
             const itemList = ret.props.children;

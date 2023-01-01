@@ -14,13 +14,13 @@ export class DeckyGlobalComponentsState {
     return { components: this._components };
   }
 
-  addComponent(path: string, component: FC) {
-    this._components.set(path, component);
+  addComponent(name: string, component: FC) {
+    this._components.set(name, component);
     this.notifyUpdate();
   }
 
-  removeComponent(path: string) {
-    this._components.delete(path);
+  removeComponent(name: string) {
+    this._components.delete(name);
     this.notifyUpdate();
   }
 
@@ -30,8 +30,8 @@ export class DeckyGlobalComponentsState {
 }
 
 interface DeckyGlobalComponentsContext extends PublicDeckyGlobalComponentsState {
-  addComponent(path: string, component: FC): void;
-  removeComponent(path: string): void;
+  addComponent(name: string, component: FC): void;
+  removeComponent(name: string): void;
 }
 
 const DeckyGlobalComponentsContext = createContext<DeckyGlobalComponentsContext>(null as any);

@@ -131,7 +131,7 @@ class MenuHook extends Logger {
                 itemList[index] = replaced;
                 toReplace.delete(item?.props.route as string);
               }
-              if (item?.props?.route && itemPatches.has(item.props.route as string)) {
+              if (item?.props?.route && (itemPatches.has(item.props.route as string) || itemPatches.has('*'))) {
                 toReplace.set(item?.props?.route as string, itemList[index]);
                 itemPatches.get(item.props.route as string)?.forEach((patch) => {
                   const oType = itemList[index].type;

@@ -1,0 +1,54 @@
+name: Bug report
+description: File a bug/issue
+title: "[BUG] <title>"
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before submitting this request, please check:
+        - Have you checked the [common issues](https://github.com/SteamDeckHomebrew/decky-loader#-common-issues)?
+        - Have you searched to see if this bug has been reported before?
+
+  - type: textarea
+    attributes:
+      label: Bug Report Description
+      description: |
+        A clear and concise description of what the bug is. If appropriate, include screenshots or videos.
+
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Steps To Reproduce
+      description: If possible, the steps you can use to see the error, eg:
+                  1. Go to '...'
+                  2. Click on '....'
+                  3. Scroll down to '....'
+                  4. See error
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: SteamOS version
+      description: Can be found with `uname -a`
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Selected Update Channel
+      description: Stable, Beta or Preview
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Have you modified the read-only filesystem at any point?
+      description: Describe how here, if you haven't done anything you can leave this blank
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Logs
+      description: Please reboot your deck (if possible) when attempting to recreate the issue, then run ``cd ~ && journalctl -b0  -u plugin_loader.service > backendlog.txt``. This will save the log file to ``~`` aka ``/home/deck``. Please upload the file here
+    validations:
+      required: false

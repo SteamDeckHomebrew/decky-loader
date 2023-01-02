@@ -11,7 +11,7 @@ body:
       options:
         - label: I have searched existing issues
         - label: This issue is not a duplicate of an existing one
-        - label: I have checked the [common issues section in the readme file](https://github.com/SteamDeckHomebrew/decky-loader#-common-issues)?
+        - label: I have checked the [common issues section in the readme file](https://github.com/SteamDeckHomebrew/decky-loader#-common-issues)
 
   - type: textarea
     attributes:

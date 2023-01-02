@@ -3,15 +3,15 @@ description: File a bug/issue
 title: "[BUG] <title>"
 labels: [bug]
 body:
-    - type: checkboxes
-      id: low-effort-checks
-      attributes:
-          label: Please confirm
-          description: Issues without all checks may be ignored/closed.
-          options:
-              - label: I have searched existing issues
-              - label: This issue is not a duplicate of an existing one
-              - label: I have checked the [common issues section in the readme file](https://github.com/SteamDeckHomebrew/decky-loader#-common-issues)?
+  - type: checkboxes
+    id: low-effort-checks
+    attributes:
+      label: Please confirm
+      description: Issues without all checks may be ignored/closed.
+      options:
+        - label: I have searched existing issues
+        - label: This issue is not a duplicate of an existing one
+        - label: I have checked the [common issues section in the readme file](https://github.com/SteamDeckHomebrew/decky-loader#-common-issues)?
 
   - type: textarea
     attributes:

@@ -1,0 +1,71 @@
+name: Bug report
+description: File a bug/issue
+title: "[BUG] <title>"
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before submitting this bug report, please check:
+        - Have you checked the [common issues section in the readme file](https://github.com/SteamDeckHomebrew/decky-loader#-common-issues)?
+        - Have you searched to see if this bug has been reported before?
+        - Are you using the most recent version of Decky and SteamOS?
+        -
+
+  - type: textarea
+    attributes:
+      label: Bug Report Description
+      description: A clear and concise description of what the bug is and if possible, the steps you used to get to the bug. If appropriate, include screenshots or videos.
+      placeholder: |
+        When I try to use ...
+
+        Steps to reproduce the behavior:
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Expected Behaviour
+      description: A brief description of the expected behavior.
+      placeholder: It should be ...
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: SteamOS version
+      description: Can be found with `uname -a`
+      placeholder: Linux steamdeck 5.13.0-valve36-1-neptune #1 SMP PREEMPT Mon, 19 Dec 2022 23:39:41 +0000 x86_64 GNU/Linux
+    validations:
+      required: true
+
+  - type: dropdown
+    attributes:
+      label: Selected Update Channel
+      description: Which branch of Decky are you on?
+      multiple: false
+      options:
+         - Stable
+         - Prerelease
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Have you modified the read-only filesystem at any point?
+      description: Describe how here, if you haven't done anything you can leave this blank
+      placeholder: Yes, I've installed neofetch via pacman.
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Logs
+      description: Please reboot your deck (if possible) when attempting to recreate the issue, then run ``cd ~ && journalctl -b0  -u plugin_loader.service > deckylog.txt``. This will save the log file to ``~`` aka ``/home/deck``. Please upload the file here
+      placeholder: deckylog.txt
+    validations:
+      required: false

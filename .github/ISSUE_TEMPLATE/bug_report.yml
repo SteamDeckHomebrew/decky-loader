@@ -10,7 +10,6 @@ body:
         - Have you checked the [common issues section in the readme file](https://github.com/SteamDeckHomebrew/decky-loader#-common-issues)?
         - Have you searched to see if this bug has been reported before?
         - Are you using the most recent version of Decky and SteamOS?
-        -
 
   - type: textarea
     attributes:

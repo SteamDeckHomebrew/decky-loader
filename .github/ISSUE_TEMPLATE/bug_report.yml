@@ -3,13 +3,15 @@ description: File a bug/issue
 title: "[BUG] <title>"
 labels: [bug]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Before submitting this bug report, please check:
-        - Have you checked the [common issues section in the readme file](https://github.com/SteamDeckHomebrew/decky-loader#-common-issues)?
-        - Have you searched to see if this bug has been reported before?
-        - Are you using the most recent version of Decky and SteamOS?
+    - type: checkboxes
+      id: low-effort-checks
+      attributes:
+          label: Please confirm
+          description: Issues without all checks may be ignored/closed.
+          options:
+              - label: I have searched existing issues
+              - label: This issue is not a duplicate of an existing one
+              - label: I have checked the [common issues section in the readme file](https://github.com/SteamDeckHomebrew/decky-loader#-common-issues)?
 
   - type: textarea
     attributes:

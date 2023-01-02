@@ -38,7 +38,7 @@ body:
     attributes:
       label: SteamOS version
       description: Can be found with `uname -a`
-      placeholder: Linux steamdeck 5.13.0-valve36-1-neptune #1 SMP PREEMPT Mon, 19 Dec 2022 23:39:41 +0000 x86_64 GNU/Linux
+      placeholder: Linux steamdeck 5.13.0-valve36-1-neptune \#1 SMP PREEMPT Mon, 19 Dec 2022 23:39:41 +0000 x86_64 GNU/Linux
     validations:
       required: true
 

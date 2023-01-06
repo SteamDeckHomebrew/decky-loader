@@ -1,0 +1,35 @@
+name: Feature request
+description: Request a new feature (NOT A PLUGIN)
+title: "[Request] <title>"
+labels: [feature request]
+body:
+  - type: checkboxes
+    id: low-effort-checks
+    attributes:
+      label: Please confirm
+      description: Issues without all checks may be ignored/closed.
+      options:
+        - label: I have searched existing issues
+        - label: This issue is not a duplicate of an existing one
+        - label: This is not a request for a plugin
+
+  - type: textarea
+    attributes:
+      label: Feature Request Description
+      description: A clear and concise description of what the new feature. 
+      placeholder: |
+        Decky plugins should be sortable in the quick access menu
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Further Description
+      description: A further explanation of the feature. If appropriate, include screenshots or videos.
+      placeholder: |
+        This would help make the UI clearer and easier to use as there is less clutter in the QAM.
+        It would also make it faster to access plugins that are used more.
+
+        This could be implemented by adding ...
+    validations:
+      required: false

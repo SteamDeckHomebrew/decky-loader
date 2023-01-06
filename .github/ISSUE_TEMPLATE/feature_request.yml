@@ -27,6 +27,9 @@ body:
       label: Further Description
       description: A further explanation of the feature. If appropriate, include screenshots or videos.
       placeholder: |
-        Decky plugins should be sortable in the quick access menu
+        This would help make the UI clearer and easier to use as there is less clutter in the QAM.
+        It would also make it faster to access plugins that are used more.
+
+        This could be implemented by adding ...
     validations:
       required: false

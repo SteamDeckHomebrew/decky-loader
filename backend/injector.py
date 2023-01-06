@@ -396,7 +396,7 @@ async def get_tab_lambda(test) -> Tab:
 
 async def get_gamepadui_tab() -> Tab:
     tabs = await get_tabs()
-    tab = next((i for i in tabs if ("https://steamloopback.host/routes/" in i.url and (i.title == "Steam" or i.title == "SP"))), None)
+    tab = next((i for i in tabs if ("https://steamloopback.host/routes/" in i.url and (i.title == "Steam Shared Context presented by Valve™" or i.title == "Steam" or i.title == "SP"))), None)
     if not tab:
         raise ValueError(f"GamepadUI Tab not found")
     return tab

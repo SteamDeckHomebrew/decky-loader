@@ -48,7 +48,7 @@ For more information about Decky Loader as well as documentation and development
 1. Select "Switch to Desktop".
 1. Navigate to this Github page on a browser of your choice.
 1. Press the 'Download' button at the top of the page.
-1. Run the downloaded file by double clicking on it in Dolphin (the file manager).
+1. Run the downloaded file by clicking on it in Dolphin (the file manager).
 1. Either type your admin password or allow Decky to temporarily set your password to `Decky!`
 1. Choose the version of Decky Loader you want to install.
    - **Latest Release**  

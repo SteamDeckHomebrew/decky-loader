@@ -7,7 +7,6 @@ import Logger from './logger';
 declare global {
   interface Window {
     __TABS_HOOK_INSTANCE: any;
-    securitystore: any;
   }
 }
 

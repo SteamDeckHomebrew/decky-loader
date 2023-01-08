@@ -21,6 +21,7 @@ import WithSuspense from './components/WithSuspense';
 import Logger from './logger';
 import { Plugin } from './plugin';
 import RouterHook from './router-hook';
+import { deinitSteamFixes, initSteamFixes } from './steamfixes';
 import { checkForUpdates } from './store';
 import TabsHook from './tabs-hook';
 import OldTabsHook from './tabs-hook.old';
@@ -32,10 +33,6 @@ const StorePage = lazy(() => import('./components/store/Store'));
 const SettingsPage = lazy(() => import('./components/settings'));
 
 const FilePicker = lazy(() => import('./components/modals/filepicker'));
-
-declare global {
-  interface Window {}
-}
 
 class PluginLoader extends Logger {
   private plugins: Plugin[] = [];
@@ -91,6 +88,8 @@ class PluginLoader extends Logger {
         </DeckyStateContextProvider>
       );
     });
+
+    initSteamFixes();
 
     initFilepickerPatches();
 
@@ -184,6 +183,7 @@ class PluginLoader extends Logger {
   public deinit() {
     this.routerHook.removeRoute('/decky/store');
     this.routerHook.removeRoute('/decky/settings');
+    deinitSteamFixes();
     deinitFilepickerPatches();
     this.focusWorkaroundPatch?.unpatch();
   }

@@ -46,7 +46,7 @@ For more information about Decky Loader as well as documentation and development
    - If you have no other options, use the right trackpad as a mouse and press <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16>+<img src="./docs/images/light/x.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/x.svg#gh-light-mode-only" height=16> to open the on-screen keyboard as needed.
 1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Power menu.
 1. Select "Switch to Desktop".
-1. Get to this github page on a brower of your choice.
+1. Navigate to this Github page on a browser of your choice.
 1. Press the 'Download' button at the top of the page.
 1. Run the downloaded file by double clicking on it in Dolphin (the file manager).
 1. Either type your admin password or allow Decky to temporarily set your password to `Decky!`

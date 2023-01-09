@@ -140,7 +140,7 @@ class Updater:
     async def do_update(self):
         logger.debug("Starting update.")
         version = self.remoteVer["tag_name"]
-        download_url = self.remoteVer["assets"][0]["browser_download_url"]
+        download_url = next(filter(lambda asset: asset["name"] == "PluginLoader", self.remoteVer['assets']), None)["browser_download_url"]
         service_url = self.get_service_url()
         logger.debug("Retrieved service URL")
 

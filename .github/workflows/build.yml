@@ -161,9 +161,7 @@ jobs:
       with:
         name: Prerelease ${{ steps.ready_tag.outputs.tag_name }}
         tag_name: ${{ steps.ready_tag.outputs.tag_name }}
-        files: |
-          ./dist/PluginLoader
-          ${{ github.workspace }}/dist/decky_installer.desktop
+        files: ./dist/PluginLoader
         prerelease: false
         generate_release_notes: true
   
@@ -250,8 +248,6 @@ jobs:
       with:
         name: Prerelease ${{ steps.ready_tag.outputs.tag_name }}
         tag_name: ${{ steps.ready_tag.outputs.tag_name }}
-        files: |
-          ./dist/PluginLoader
-          ${{ github.workspace }}/dist/decky_installer.desktop
+        files: ./dist/PluginLoader
         prerelease: true
         generate_release_notes: true

@@ -18,3 +18,5 @@ rm -rf "/tmp/plugin_loader"
 # Cleanup services folder
 sudo rm "${HOMEBREW_FOLDER}/services/PluginLoader"
 
+# Disable CEF debugging
+sudo rm "${USER_DIR}/.steam/steam/.cef-enable-remote-debugging"

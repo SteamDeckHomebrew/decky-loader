@@ -42,7 +42,10 @@
   },
   "dependencies": {
     "decky-frontend-lib": "^3.7.14",
+    "i18next": "^22.0.6",
+    "i18next-fs-backend": "^2.0.0",
     "react-file-icon": "^1.2.0",
+    "react-i18next": "^12.0.0",
     "react-icons": "^4.4.0",
     "react-markdown": "^8.0.3",
     "remark-gfm": "^3.0.1"

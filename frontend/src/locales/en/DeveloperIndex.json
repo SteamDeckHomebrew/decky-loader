@@ -1,0 +1,7 @@
+{
+    "valve_internal_label": "Enable Valve Internal",
+    "valve_internal_desc1": "Enables the Valve internal developer menu.",
+    "valve_internal_desc2": "Do not touch anything in this menu unless you know what it does.",
+    "react_devtools_label": "Enable React DevTools",
+    "react_devtools_desc": "Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set the IP address before enabling."
+}

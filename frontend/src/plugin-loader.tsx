@@ -27,11 +27,14 @@ import OldTabsHook from './tabs-hook.old';
 import Toaster from './toaster';
 import { VerInfo, callUpdaterMethod } from './updater';
 import { getSetting } from './utils/settings';
+import { useTranslation } from 'react-i18next';
 
 const StorePage = lazy(() => import('./components/store/Store'));
 const SettingsPage = lazy(() => import('./components/settings'));
 
 const FilePicker = lazy(() => import('./components/modals/filepicker'));
+
+const { t } = useTranslation('plugin-loader');
 
 declare global {
   interface Window {}
@@ -109,7 +112,7 @@ class PluginLoader extends Logger {
     if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
       this.toaster.toast({
         title: 'Decky',
-        body: `Update to ${versionInfo?.remote?.tag_name} available!`,
+        body: t('decky_update_available', versionInfo?.remote?.tag_name),
         onClick: () => Router.Navigate('/decky/settings'),
       });
       this.deckyState.setHasLoaderUpdate(true);
@@ -129,7 +132,8 @@ class PluginLoader extends Logger {
     if (updates?.size > 0) {
       this.toaster.toast({
         title: 'Decky',
-        body: `Updates available for ${updates.size} plugin${updates.size > 1 ? 's' : ''}!`,
+        //body: `Updates available for ${updates.size} plugin${updates.size > 1 ? 's' : ''}!`,
+        body: t('plugin_update', updates.size.toString(10), {count: updates.size}),
         onClick: () => Router.Navigate('/decky/settings/plugins'),
       });
     }
@@ -158,7 +162,7 @@ class PluginLoader extends Logger {
         }}
       >
         <div className={staticClasses.Title} style={{ flexDirection: 'column' }}>
-          Uninstall {name}?
+          {t('plugin_uninstall', name)}
         </div>
       </ConfirmModal>,
     );
@@ -244,16 +248,15 @@ class PluginLoader extends Logger {
           version: version,
         });
       } catch (e) {
-        this.error('Error loading plugin ' + name, e);
+        this.error(t('plugin_load_error', name), e);
         const TheError: FC<{}> = () => (
           <>
-            Error:{' '}
+            {t("error")}:{' '}
             <pre>
               <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
             </pre>
             <>
-              Please go to <FaCog style={{ display: 'inline' }} /> in the Decky menu if you need to uninstall this
-              plugin.
+              {t('plugin_error_uninstall', <FaCog style={{ display: 'inline' }} />)}
             </>
           </>
         );
@@ -263,7 +266,7 @@ class PluginLoader extends Logger {
           content: <TheError />,
           icon: <FaExclamationCircle />,
         });
-        this.toaster.toast({ title: 'Error loading ' + name, body: '' + e, icon: <FaExclamationCircle /> });
+        this.toaster.toast({ title: t('error_loading_plugin_toast', name), body: '' + e, icon: <FaExclamationCircle /> });
       }
     } else throw new Error(`${name} frontend_bundle not OK`);
   }
@@ -301,7 +304,7 @@ class PluginLoader extends Logger {
         // Purposely outside of the FilePicker component as lazy-loaded ModalRoots don't focus correctly
         <ModalRoot
           onCancel={() => {
-            reject('User canceled');
+            reject(t('file_picker_cancel_text'));
             closeModal?.();
           }}
         >

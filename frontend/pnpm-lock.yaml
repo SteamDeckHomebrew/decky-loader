@@ -12,6 +12,8 @@ specifiers:
   '@types/webpack': ^5.28.0
   decky-frontend-lib: ^3.7.14
   husky: ^8.0.1
+  i18next: ^22.0.6
+  i18next-fs-backend: ^2.0.0
   import-sort-style-module: ^6.0.0
   inquirer: ^8.2.4
   prettier: ^2.7.1
@@ -19,6 +21,7 @@ specifiers:
   react: 16.14.0
   react-dom: 16.14.0
   react-file-icon: ^1.2.0
+  react-i18next: ^12.0.0
   react-icons: ^4.4.0
   react-markdown: ^8.0.3
   remark-gfm: ^3.0.1
@@ -31,7 +34,10 @@ specifiers:
 
 dependencies:
   decky-frontend-lib: 3.7.14
+  i18next: 22.0.6
+  i18next-fs-backend: 2.0.0
   react-file-icon: 1.2.0_wcqkhtmu7mswc6yz4uyexck3ty
+  react-i18next: 12.0.0_l5i64r2igudm3ypjcze5pllh6e
   react-icons: 4.4.0_react@16.14.0
   react-markdown: 8.0.3_vshvapmxg47tngu7tvrsqpq55u
   remark-gfm: 3.0.1
@@ -221,6 +227,13 @@ packages:
     dependencies:
       '@babel/types': 7.18.8
     dev: true
+
+  /@babel/runtime/7.20.1:
+    resolution: {integrity: sha512-mrzLkl6U9YLF8qpqI7TB82PESyEGjm/0Ly91jG575eVxMMlb8fYfOXFZIJ8XfLrJZQbm7dlKry2bJmXBUEkdFg==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.13.11
+    dev: false
 
   /@babel/template/7.18.6:
     resolution: {integrity: sha512-JoDWzPe+wgBsTTgdnIma3iHNFC7YVJoPssVBDjiHfNlyt4YcunDtcDOUmfVDfCK5MfdsaIoX9PkijPhjH3nYUw==}
@@ -1233,11 +1246,27 @@ packages:
     resolution: {integrity: sha512-Pkw+xBHuV6xFeJprJe2BBEoDV+AvQySaz3pPDRUs5PNZEMQjpXJJueqrpcHIXxnWTcAGi/UOCgVShlkY6kLoqg==}
     dev: false
 
+  /html-parse-stringify/3.0.1:
+    resolution: {integrity: sha512-KknJ50kTInJ7qIScF3jeaFRpMpE8/lfiTdzf/twXyPBLAGrLRTmkz3AdTnKeh40X8k9L2fdYwEp/42WGXIRGcg==}
+    dependencies:
+      void-elements: 3.1.0
+    dev: false
+
   /husky/8.0.1:
     resolution: {integrity: sha512-xs7/chUH/CKdOCs7Zy0Aev9e/dKOMZf3K1Az1nar3tzlv0jfqnYtu235bstsWTmXOR0EfINrPa97yy4Lz6RiKw==}
     engines: {node: '>=14'}
     hasBin: true
     dev: true
+
+  /i18next-fs-backend/2.0.0:
+    resolution: {integrity: sha512-zlwzcoUKlveoRt/SxgeP8i/6p1rxwxZ+x0w4sfCTY1zgUlhhnoxBSRX3GjVIsDJm5mky8Hpr//UX93UIknK7yQ==}
+    dev: false
+
+  /i18next/22.0.6:
+    resolution: {integrity: sha512-RlreNGoPIdDP4QG+qSA9PxZKGwlzmcozbI9ObI6+OyUa/Rp0EjZZA9ubyBjw887zVNZsC+7FI3sXX8oiTzAfig==}
+    dependencies:
+      '@babel/runtime': 7.20.1
+    dev: false
 
   /iconv-lite/0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
@@ -2107,6 +2136,26 @@ packages:
       tinycolor2: 1.4.2
     dev: false
 
+  /react-i18next/12.0.0_l5i64r2igudm3ypjcze5pllh6e:
+    resolution: {integrity: sha512-/O7N6aIEAl1FaWZBNvhdIo9itvF/MO/nRKr9pYqRc9LhuC1u21SlfwpiYQqvaeNSEW3g3qUXLREOWMt+gxrWbg==}
+    peerDependencies:
+      i18next: '>= 19.0.0'
+      react: '>= 16.8.0'
+      react-dom: '*'
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.20.1
+      html-parse-stringify: 3.0.1
+      i18next: 22.0.6
+      react: 16.14.0
+      react-dom: 16.14.0_react@16.14.0
+    dev: false
+
   /react-icons/4.4.0_react@16.14.0:
     resolution: {integrity: sha512-fSbvHeVYo/B5/L4VhB7sBA1i2tS8MkT0Hb9t2H1AVPkwGfVHLJCqyr2Py9dKMxsyM63Eng1GkdZfbWj+Fmv8Rg==}
     peerDependencies:
@@ -2165,6 +2214,10 @@ packages:
       string_decoder: 1.3.0
       util-deprecate: 1.0.2
     dev: true
+
+  /regenerator-runtime/0.13.11:
+    resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
+    dev: false
 
   /remark-gfm/3.0.1:
     resolution: {integrity: sha512-lEFDoi2PICJyNrACFOfDD3JlLkuSbOa5Wd8EPt06HUdptv8Gn0bxYTdbU/XXQ3swAPkEaGxxPN9cbnMHvVu1Ig==}
@@ -2615,6 +2668,11 @@ packages:
       is-buffer: 2.0.5
       unist-util-stringify-position: 3.0.2
       vfile-message: 3.1.2
+    dev: false
+
+  /void-elements/3.1.0:
+    resolution: {integrity: sha512-Dhxzh5HZuiHQhbvTW9AMetFfBHDMYpo23Uo9btPXgdYP+3T5S+p+jgNy7spra+veYhBP2dCSgxR/i2Y02h5/6w==}
+    engines: {node: '>=0.10.0'}
     dev: false
 
   /watchpack/2.4.0:

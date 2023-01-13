@@ -1,5 +1,6 @@
 import { DialogButton, Field, TextField, Toggle } from 'decky-frontend-lib';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaShapes, FaTools } from 'react-icons/fa';
 
 import { installFromURL } from '../../../../store';
@@ -16,6 +17,7 @@ export default function GeneralSettings({
   setIsDeveloper: (val: boolean) => void;
 }) {
   const [pluginURL, setPluginURL] = useState('');
+  const { t } = useTranslation('SettingsGeneralIndex');
 
   return (
     <div>
@@ -24,8 +26,8 @@ export default function GeneralSettings({
       <StoreSelect />
       <RemoteDebuggingSettings />
       <Field
-        label="Developer mode"
-        description={<span style={{ whiteSpace: 'pre-line' }}>Enables Decky's developer settings.</span>}
+        label={t("developer_mode_label")}
+        description={<span style={{ whiteSpace: 'pre-line' }}>{t("developer_mode_desc")}</span>}
         icon={<FaTools style={{ display: 'block' }} />}
       >
         <Toggle
@@ -36,12 +38,12 @@ export default function GeneralSettings({
         />
       </Field>
       <Field
-        label="Manual plugin install"
+        label={t("manual_plugin_label")}
         description={<TextField label={'URL'} value={pluginURL} onChange={(e) => setPluginURL(e?.target.value)} />}
         icon={<FaShapes style={{ display: 'block' }} />}
       >
         <DialogButton disabled={pluginURL.length == 0} onClick={() => installFromURL(pluginURL)}>
-          Install
+          {t("manual_plugin_install_button")}
         </DialogButton>
       </Field>
     </div>

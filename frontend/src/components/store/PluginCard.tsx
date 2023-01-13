@@ -10,12 +10,15 @@ import {
   staticClasses,
 } from 'decky-frontend-lib';
 import { FC, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { StorePlugin, StorePluginVersion, requestPluginInstall } from '../../store';
 
 interface PluginCardProps {
   plugin: StorePlugin;
 }
+
+const { t } = useTranslation('PluginCard');
 
 const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
   const [selectedOption, setSelectedOption] = useState<number>(0);
@@ -173,7 +176,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
                     label: version.name,
                   })) as SingleDropdownOption[]
                 }
-                strDefaultLabel={'Select a version'}
+                strDefaultLabel={t('select_version') as string}
                 selectedOption={selectedOption}
                 onChange={({ data }) => setSelectedOption(data)}
               />

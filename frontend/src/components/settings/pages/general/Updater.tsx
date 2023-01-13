@@ -11,6 +11,7 @@ import {
 import { useCallback } from 'react';
 import { Suspense, lazy } from 'react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaArrowDown } from 'react-icons/fa';
 
 import { VerInfo, callUpdaterMethod, finishUpdate } from '../../../../updater';
@@ -20,6 +21,7 @@ import InlinePatchNotes from '../../../patchnotes/InlinePatchNotes';
 import WithSuspense from '../../../WithSuspense';
 
 const MarkdownRenderer = lazy(() => import('../../../Markdown'));
+const { t } = useTranslation('Updater');
 
 function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | null; closeModal?: () => {} }) {
   const SP = findSP();
@@ -45,7 +47,7 @@ function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | n
                     <MarkdownRenderer onDismiss={closeModal}>{versionInfo.all[id].body}</MarkdownRenderer>
                   </WithSuspense>
                 ) : (
-                  'no patch notes for this version'
+                  t("no_patch_notes_desc")
                 )}
               </div>
             </Focusable>
@@ -58,7 +60,7 @@ function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | n
           initialColumn={0}
           autoFocus={true}
           fnGetColumnWidth={() => SP.innerWidth}
-          name="Decky Updates"
+          name={t('decky_updates') as string}
         />
       </FocusRing>
     </Focusable>
@@ -95,11 +97,11 @@ export default function UpdaterSettings() {
       <Field
         onOptionsActionDescription={versionInfo?.all ? 'Patch Notes' : undefined}
         onOptionsButton={versionInfo?.all ? showPatchNotes : undefined}
-        label="Updates"
+        label={t('updates_label')}
         description={
           versionInfo && (
-            <span style={{ whiteSpace: 'pre-line' }}>{`Current version: ${versionInfo.current}\n${
-              versionInfo.updatable ? `Latest version: ${versionInfo.remote?.tag_name}` : ''
+            <span style={{ whiteSpace: 'pre-line' }}>{`${t('updates_cur_version', versionInfo.current)}\n${
+              versionInfo.updatable ? t('updates_lat_version', versionInfo.remote?.tag_name) : ''
             }`}</span>
           )
         }
@@ -129,10 +131,10 @@ export default function UpdaterSettings() {
             }
           >
             {checkingForUpdates
-              ? 'Checking'
+              ? t('updates_checking')
               : !versionInfo?.remote || versionInfo?.remote?.tag_name == versionInfo?.current
-              ? 'Check For Updates'
-              : 'Install Update'}
+              ? t('updates_check_button')
+              : t('updates_install_button')}
           </DialogButton>
         ) : (
           <ProgressBarWithInfo
@@ -140,7 +142,7 @@ export default function UpdaterSettings() {
             bottomSeparator="none"
             nProgress={updateProgress}
             indeterminate={reloading}
-            sOperationText={reloading ? 'Reloading' : 'Updating'}
+            sOperationText={reloading ? t("updates_reloading") : t("updates_updating")}
           />
         )}
       </Field>

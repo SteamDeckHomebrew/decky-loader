@@ -1,5 +1,6 @@
 import { Dropdown, Field, TextField } from 'decky-frontend-lib';
 import { FunctionComponent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaShapes } from 'react-icons/fa';
 
 import Logger from '../../../../logger';
@@ -7,6 +8,7 @@ import { Store } from '../../../../store';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 
 const logger = new Logger('StoreSelect');
+const { t } = useTranslation('StoreSelect');
 
 const StoreSelect: FunctionComponent<{}> = () => {
   const [selectedStore, setSelectedStore] = useSetting<Store>('store', Store.Default);
@@ -16,7 +18,7 @@ const StoreSelect: FunctionComponent<{}> = () => {
   // 0 being Default, 1 being Testing and 2 being Custom
   return (
     <>
-      <Field label="Store Channel">
+      <Field label={t('store_channel_label')}>
         <Dropdown
           rgOptions={Object.values(Store)
             .filter((store) => typeof store == 'string')
@@ -33,7 +35,7 @@ const StoreSelect: FunctionComponent<{}> = () => {
       </Field>
       {selectedStore == Store.Custom && (
         <Field
-          label="Custom Store"
+          label={t('custom_store_label')}
           indentLevel={1}
           description={
             <TextField

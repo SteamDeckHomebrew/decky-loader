@@ -1,17 +1,19 @@
 import { Field, Toggle } from 'decky-frontend-lib';
+import { useTranslation } from 'react-i18next';
 import { FaBug } from 'react-icons/fa';
 
 import { useSetting } from '../../../../utils/hooks/useSetting';
 
 export default function RemoteDebuggingSettings() {
   const [allowRemoteDebugging, setAllowRemoteDebugging] = useSetting<boolean>('cef_forward', false);
+  const { t } = useTranslation('RemoteDebugging');
 
   return (
     <Field
-      label="Allow Remote CEF Debugging"
+      label={t('remote_cef_label')}
       description={
         <span style={{ whiteSpace: 'pre-line' }}>
-          Allow unauthenticated access to the CEF debugger to anyone in your network
+          {t('remote_cef_desc')}
         </span>
       }
       icon={<FaBug style={{ display: 'block' }} />}

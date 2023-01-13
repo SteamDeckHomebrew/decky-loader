@@ -1,11 +1,13 @@
 import { Dropdown, Field } from 'decky-frontend-lib';
 import { FunctionComponent } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Logger from '../../../../logger';
 import { callUpdaterMethod } from '../../../../updater';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 
 const logger = new Logger('BranchSelect');
+const { t } = useTranslation('BranchSelect');
 
 enum UpdateBranch {
   Stable,
@@ -19,7 +21,7 @@ const BranchSelect: FunctionComponent<{}> = () => {
   return (
     // Returns numerical values from 0 to 2 (with current branch setup as of 8/28/22)
     // 0 being stable, 1 being pre-release and 2 being nightly
-    <Field label="Update Channel">
+    <Field label={t('update_channel_label')}>
       <Dropdown
         rgOptions={Object.values(UpdateBranch)
           .filter((branch) => typeof branch == 'string')

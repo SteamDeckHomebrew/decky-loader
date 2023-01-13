@@ -1,5 +1,6 @@
 import { DialogButton, Focusable, Menu, MenuItem, showContextMenu } from 'decky-frontend-lib';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaDownload, FaEllipsisH } from 'react-icons/fa';
 
 import { requestPluginInstall } from '../../../../store';
@@ -7,6 +8,7 @@ import { useDeckyState } from '../../../DeckyState';
 
 export default function PluginList() {
   const { plugins, updates } = useDeckyState();
+  const { t } = useTranslation('PluginListIndex');
 
   useEffect(() => {
     window.DeckyPluginLoader.checkPluginUpdates();
@@ -15,7 +17,7 @@ export default function PluginList() {
   if (plugins.length === 0) {
     return (
       <div>
-        <p>No plugins installed</p>
+        <p>{t('list_no_plugin')}</p>
       </div>
     );
   }
@@ -36,7 +38,7 @@ export default function PluginList() {
                   onClick={() => requestPluginInstall(name, update)}
                 >
                   <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    Update to {update.name}
+                    {t('list_update_to', update.name)}
                     <FaDownload style={{ paddingLeft: '2rem' }} />
                   </div>
                 </DialogButton>
@@ -45,11 +47,11 @@ export default function PluginList() {
                 style={{ height: '40px', width: '40px', padding: '10px 12px', minWidth: '40px' }}
                 onClick={(e: MouseEvent) =>
                   showContextMenu(
-                    <Menu label="Plugin Actions">
+                    <Menu label={t('list_plug_actions_label')}>
                       <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(name, version)}>
-                        Reload
+                        {t('reload')}
                       </MenuItem>
-                      <MenuItem onSelected={() => window.DeckyPluginLoader.uninstallPlugin(name)}>Uninstall</MenuItem>
+                      <MenuItem onSelected={() => window.DeckyPluginLoader.uninstallPlugin(name)}>{t('uninstall')}</MenuItem>
                     </Menu>,
                     e.currentTarget ?? window,
                   )

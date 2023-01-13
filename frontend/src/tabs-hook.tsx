@@ -7,7 +7,6 @@ import Logger from './logger';
 declare global {
   interface Window {
     __TABS_HOOK_INSTANCE: any;
-    securitystore: any;
   }
 }
 
@@ -23,7 +22,6 @@ class TabsHook extends Logger {
   tabs: Tab[] = [];
   private qAMRoot?: any;
   private qamPatch?: Patch;
-  private unsubscribeSecurity?: () => void;
 
   constructor() {
     super('TabsHook');
@@ -114,7 +112,6 @@ class TabsHook extends Logger {
   deinit() {
     this.qamPatch?.unpatch();
     this.qAMRoot.return.alternate.type = this.qAMRoot.return.type;
-    this.unsubscribeSecurity?.();
   }
 
   add(tab: Tab) {

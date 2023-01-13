@@ -55,7 +55,7 @@ class PluginBrowser:
             pluginBinPath = path.join(pluginBasePath, 'bin')
 
             if access(packageJsonPath, R_OK):
-                with open(packageJsonPath, 'r') as f:
+                with open(packageJsonPath, "r", encoding="utf-8") as f:
                     packageJson = json.load(f)
                     if "remote_binary" in packageJson and len(packageJson["remote_binary"]) > 0:
                         # create bin directory if needed.
@@ -93,7 +93,7 @@ class PluginBrowser:
     def find_plugin_folder(self, name):
         for folder in listdir(self.plugin_path):
             try:
-                with open(path.join(self.plugin_path, folder, 'plugin.json'), 'r') as f:
+                with open(path.join(self.plugin_path, folder, 'plugin.json'), "r", encoding="utf-8") as f:
                     plugin = json.load(f)
 
                 if plugin['name'] == name:

@@ -11,10 +11,12 @@ HOMEBREW_FOLDER="${USER_DIR}/homebrew"
 rm -rf "${HOMEBREW_FOLDER}/services"
 sudo -u $SUDO_USER mkdir -p "${HOMEBREW_FOLDER}/services"
 sudo -u $SUDO_USER mkdir -p "${HOMEBREW_FOLDER}/plugins"
+touch "${USER_DIR}/.steam/steam/.cef-enable-remote-debugging"
 
 # Download latest release and install it
 RELEASE=$(curl -s 'https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases' | jq -r "first(.[] | select(.prerelease == "true"))")
-read VERSION DOWNLOADURL < <(echo $(jq -r '.tag_name, .assets[].browser_download_url' <<< ${RELEASE}))
+VERSION=$(jq -r '.tag_name' <<< ${RELEASE} )
+DOWNLOADURL=$(jq -r '.assets[].browser_download_url | select(endswith("PluginLoader"))' <<< ${RELEASE})
 
 printf "Installing version %s...\n" "${VERSION}"
 curl -L $DOWNLOADURL --output ${HOMEBREW_FOLDER}/services/PluginLoader
@@ -40,6 +42,7 @@ User=root
 Restart=always
 ExecStart=${HOMEBREW_FOLDER}/services/PluginLoader
 WorkingDirectory=${HOMEBREW_FOLDER}/services
+KillSignal=SIGKILL
 Environment=PLUGIN_PATH=${HOMEBREW_FOLDER}/plugins
 Environment=LOG_LEVEL=DEBUG
 [Install]

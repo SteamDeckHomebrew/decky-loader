@@ -1,6 +1,7 @@
 import 'i18n.ts';
 
 import {
+  Navigation,
   ReactRouter,
   Router,
   fakeRenderComponent,
@@ -28,13 +29,20 @@ const logger = new Logger('DeveloperMode');
 
 let removeSettingsObserver: () => void = () => {};
 
-export function setShowValveInternal(show: boolean) {
-  const settingsMod = findModuleChild((m) => {
-    if (typeof m !== 'object') return undefined;
-    for (let prop in m) {
-      if (typeof m[prop]?.settings?.bIsValveEmail !== 'undefined') return m[prop];
+export async function setShowValveInternal(show: boolean) {
+  let settingsMod: any;
+  while (!settingsMod) {
+    settingsMod = findModuleChild((m) => {
+      if (typeof m !== 'object') return undefined;
+      for (let prop in m) {
+        if (typeof m[prop]?.settings?.bIsValveEmail !== 'undefined') return m[prop];
+      }
+    });
+    if (!settingsMod) {
+      logger.debug('[ValveInternal] waiting for settingsMod');
+      await sleep(1000);
     }
-  });
+  }
 
   if (show) {
     removeSettingsObserver = settingsMod[
@@ -76,13 +84,14 @@ export async function startup() {
   window.DFL = {
     findModuleChild,
     findModule,
+    Navigation,
+    Router,
+    ReactRouter,
     ReactUtils: {
       fakeRenderComponent,
       findInReactTree,
       findInTree,
     },
-    Router,
-    ReactRouter,
     classes: {
       scrollClasses,
       staticClasses,

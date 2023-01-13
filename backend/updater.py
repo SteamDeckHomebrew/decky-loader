@@ -32,7 +32,7 @@ class Updater:
         self.allRemoteVers = None
         try:
             logger.info(getcwd())
-            with open(path.join(getcwd(), ".loader.version"), 'r') as version_file:
+            with open(path.join(getcwd(), ".loader.version"), "r", encoding="utf-8") as version_file:
                 self.localVer = version_file.readline().replace("\n", "")
         except:
             self.localVer = False
@@ -159,10 +159,10 @@ class Updater:
                     out.write(data)
             except Exception as e:
                 logger.error(f"Error at %s", exc_info=e)
-            with open(path.join(getcwd(), "plugin_loader.service"), 'r') as service_file:
+            with open(path.join(getcwd(), "plugin_loader.service"), "r", encoding="utf-8") as service_file:
                 service_data = service_file.read()
             service_data = service_data.replace("${HOMEBREW_FOLDER}", "/home/"+helpers.get_user()+"/homebrew")
-            with open(path.join(getcwd(), "plugin_loader.service"), 'w') as service_file:
+            with open(path.join(getcwd(), "plugin_loader.service"), "w", encoding="utf-8") as service_file:
                     service_file.write(service_data)
                     
             logger.debug("Saved service file")
@@ -191,7 +191,7 @@ class Updater:
                             self.context.loop.create_task(tab.evaluate_js(f"window.DeckyUpdater.updateProgress({new_progress})", False, False, False))
                             progress = new_progress
 
-            with open(path.join(getcwd(), ".loader.version"), "w") as out:
+            with open(path.join(getcwd(), ".loader.version"), "w", encoding="utf-8") as out:
                 out.write(version)
 
             call(['chmod', '+x', path.join(getcwd(), "PluginLoader")])

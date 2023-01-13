@@ -2,6 +2,8 @@
   <a name="logo" href="https://deckbrew.xyz/"><img src="https://deckbrew.xyz/logo.png" alt="Deckbrew logo" width="200"></a>
   <br>
   Decky Loader
+  <br>
+  <a name="logo" href="https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/decky_installer.desktop"><img src="./docs/images/download_button.png"  alt="Download decky" width="350"></a>
 </h1>
 
 <p align="center">
@@ -36,11 +38,7 @@ For more information about Decky Loader as well as documentation and development
 - If you are using any software that uses port 1337 or 8080, please change its port to something else or uninstall it.
 
 ## 💾 Installation
-
-1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Settings menu.
-1. Navigate to the System menu and scroll to the System Settings. Toggle "Enable Developer Mode" so it is enabled.
-1. Navigate to the Developer menu and scroll to Miscellaneous. Toggle "CEF Remote Debugging" so it is enabled.
-1. Select "Restart Now" to apply your changes.
+- This installation can be done without an admin/sudo password set.
 1. Prepare a mouse and keyboard if possible.
    - Keyboards and mice can be connected to the Steam Deck via USB-C or Bluetooth.
    - Many Bluetooth keyboard and mouse apps are available for iOS and Android.
@@ -48,16 +46,18 @@ For more information about Decky Loader as well as documentation and development
    - If you have no other options, use the right trackpad as a mouse and press <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16>+<img src="./docs/images/light/x.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/x.svg#gh-light-mode-only" height=16> to open the on-screen keyboard as needed.
 1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Power menu.
 1. Select "Switch to Desktop".
-1. Open the Konsole app and enter the command `passwd`. You can skip this step if you have already created a sudo password using this command. ([YouTube Guide](https://www.youtube.com/watch?v=1vOMYGj22rQ))
-1. You will be prompted to create a password. Your text will not be visible. After you press enter, you will need to type your password again to confirm.
-1. Choose the version of Decky Loader you want to install and paste the following command into the Konsole app.
+1. Navigate to this Github page on a browser of your choice.
+1. Press the 'Download' button at the top of the page.
+1. Run the downloaded file by clicking on it in Dolphin (the file manager).
+1. Either type your admin password or allow Decky to temporarily set your password to `Decky!`
+1. Choose the version of Decky Loader you want to install.
    - **Latest Release**  
      Intended for most users. This is the latest stable version of Decky Loader.  
-     `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_release.sh | sh`
    - **Latest Pre-Release**  
-     Intended for plugin developers. Pre-releases are unlikely to be fully stable but contain the latest changes. For more information on plugin development, please consult [the wiki page](https://deckbrew.xyz/en/loader-dev/development).  
-     `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_prerelease.sh | sh`
+     Intended for plugin developers. Pre-releases are unlikely to be fully stable but contain the latest changes. For more information on plugin development, please consult [the wiki page](https://deckbrew.xyz/en/loader-dev/development).
 1. Open the Return to Gaming Mode shortcut on your desktop.
+
+- There is also a fast install for those who can use Konsole. Run `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_release.sh | sh` and type your password when prompted.
 
 ### 👋 Uninstallation
 
@@ -65,7 +65,8 @@ We are sorry to see you go! If you are considering uninstalling because you are 
 
 1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Power menu.
 1. Select "Switch to Desktop".
-1. Open the Konsole app and run `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/uninstall.sh | sh`.
+1. Run the installer file again, and select `uninstall decky loader` 
+- There is also a fast uninstall for those who can use Konsole. Run `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/uninstall.sh | sh` and type your password when prompted.
 
 ## 🚀 Getting Started
 

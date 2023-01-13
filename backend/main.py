@@ -168,15 +168,15 @@ class PluginManager:
     async def inject_javascript(self, tab: Tab, first=False, request=None):
         logger.info("Loading Decky frontend!")
         try:
-            # if first:
-            #     if await tab.has_global_var("deckyHasLoaded", False):
-            #         tabs = await get_tabs()
-            #         for t in tabs:
-            #             if t.title != "Steam" and t.title != "SP":
-            #                 logger.debug("Closing tab: " + getattr(t, "title", "Untitled"))
-            #                 await t.close()
-            #                 await sleep(0.5)
-            await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => SteamClient.User.StartRestart(), 100)}else{window.deckyHasLoaded = true;(async()=>{try{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js')}catch(e){console.error(e)};})();}}catch(e){console.error(e)}", False, False, False)
+            if first:
+                if await tab.has_global_var("deckyHasLoaded", False):
+                    tabs = await get_tabs()
+                    for t in tabs:
+                        if not t.title or (t.title != "Steam" and t.title != "SP"):
+                            logger.debug("Closing tab: " + getattr(t, "title", "Untitled"))
+                            await t.close()
+                            await sleep(0.5)
+            await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => location.reload(), 100)}else{window.deckyHasLoaded = true;(async()=>{try{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js')}catch(e){console.error(e)};})();}}catch(e){console.error(e)}", False, False, False)
         except:
             logger.info("Failed to inject JavaScript into tab\n" + format_exc())
             pass

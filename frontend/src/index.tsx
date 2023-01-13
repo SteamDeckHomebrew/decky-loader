@@ -1,4 +1,4 @@
-import i18next from './i18n';
+import './i18n';
 
 import PluginLoader from './plugin-loader';
 import { DeckyUpdater } from './updater';

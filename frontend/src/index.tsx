@@ -1,6 +1,7 @@
+import 'i18n.ts';
+
 import PluginLoader from './plugin-loader';
 import { DeckyUpdater } from './updater';
-import "i18n.ts";
 
 declare global {
   interface Window {

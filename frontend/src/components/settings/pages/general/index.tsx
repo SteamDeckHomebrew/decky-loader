@@ -26,8 +26,8 @@ export default function GeneralSettings({
       <StoreSelect />
       <RemoteDebuggingSettings />
       <Field
-        label={t("developer_mode_label")}
-        description={<span style={{ whiteSpace: 'pre-line' }}>{t("developer_mode_desc")}</span>}
+        label={t('developer_mode_label')}
+        description={<span style={{ whiteSpace: 'pre-line' }}>{t('developer_mode_desc')}</span>}
         icon={<FaTools style={{ display: 'block' }} />}
       >
         <Toggle
@@ -38,12 +38,12 @@ export default function GeneralSettings({
         />
       </Field>
       <Field
-        label={t("manual_plugin_label")}
+        label={t('manual_plugin_label')}
         description={<TextField label={'URL'} value={pluginURL} onChange={(e) => setPluginURL(e?.target.value)} />}
         icon={<FaShapes style={{ display: 'block' }} />}
       >
         <DialogButton disabled={pluginURL.length == 0} onClick={() => installFromURL(pluginURL)}>
-          {t("manual_plugin_install_button")}
+          {t('manual_plugin_install_button')}
         </DialogButton>
       </Field>
     </div>

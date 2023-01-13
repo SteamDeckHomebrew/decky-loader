@@ -51,7 +51,9 @@ export default function PluginList() {
                       <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(name, version)}>
                         {t('reload')}
                       </MenuItem>
-                      <MenuItem onSelected={() => window.DeckyPluginLoader.uninstallPlugin(name)}>{t('uninstall')}</MenuItem>
+                      <MenuItem onSelected={() => window.DeckyPluginLoader.uninstallPlugin(name)}>
+                        {t('uninstall')}
+                      </MenuItem>
                     </Menu>,
                     e.currentTarget ?? window,
                   )

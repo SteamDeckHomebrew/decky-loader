@@ -47,7 +47,7 @@ function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | n
                     <MarkdownRenderer onDismiss={closeModal}>{versionInfo.all[id].body}</MarkdownRenderer>
                   </WithSuspense>
                 ) : (
-                  t("no_patch_notes_desc")
+                  t('no_patch_notes_desc')
                 )}
               </div>
             </Focusable>
@@ -142,7 +142,7 @@ export default function UpdaterSettings() {
             bottomSeparator="none"
             nProgress={updateProgress}
             indeterminate={reloading}
-            sOperationText={reloading ? t("updates_reloading") : t("updates_updating")}
+            sOperationText={reloading ? t('updates_reloading') : t('updates_updating')}
           />
         )}
       </Field>

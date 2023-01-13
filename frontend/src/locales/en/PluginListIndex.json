@@ -1,5 +1,5 @@
 {
-    "list_no_plugin": "No plugins installed!",
-    "list_update_to": "Update to {{name}}",
-    "list_plug_actions_label": "Plugin Actions"
+  "list_no_plugin": "No plugins installed!",
+  "list_update_to": "Update to {{name}}",
+  "list_plug_actions_label": "Plugin Actions"
 }

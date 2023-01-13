@@ -9,6 +9,7 @@ import {
   staticClasses,
 } from 'decky-frontend-lib';
 import { FC, lazy } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaCog, FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
 import { DeckyState, DeckyStateContextProvider, useDeckyState } from './components/DeckyState';
@@ -27,7 +28,6 @@ import OldTabsHook from './tabs-hook.old';
 import Toaster from './toaster';
 import { VerInfo, callUpdaterMethod } from './updater';
 import { getSetting } from './utils/settings';
-import { useTranslation } from 'react-i18next';
 
 const StorePage = lazy(() => import('./components/store/Store'));
 const SettingsPage = lazy(() => import('./components/settings'));
@@ -133,7 +133,7 @@ class PluginLoader extends Logger {
       this.toaster.toast({
         title: 'Decky',
         //body: `Updates available for ${updates.size} plugin${updates.size > 1 ? 's' : ''}!`,
-        body: t('plugin_update', updates.size.toString(10), {count: updates.size}),
+        body: t('plugin_update', updates.size.toString(10), { count: updates.size }),
         onClick: () => Router.Navigate('/decky/settings/plugins'),
       });
     }
@@ -251,13 +251,11 @@ class PluginLoader extends Logger {
         this.error(t('plugin_load_error', name), e);
         const TheError: FC<{}> = () => (
           <>
-            {t("error")}:{' '}
+            {t('error')}:{' '}
             <pre>
               <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
             </pre>
-            <>
-              {t('plugin_error_uninstall', <FaCog style={{ display: 'inline' }} />)}
-            </>
+            <>{t('plugin_error_uninstall', <FaCog style={{ display: 'inline' }} />)}</>
           </>
         );
         this.plugins.push({
@@ -266,7 +264,11 @@ class PluginLoader extends Logger {
           content: <TheError />,
           icon: <FaExclamationCircle />,
         });
-        this.toaster.toast({ title: t('error_loading_plugin_toast', name), body: '' + e, icon: <FaExclamationCircle /> });
+        this.toaster.toast({
+          title: t('error_loading_plugin_toast', name),
+          body: '' + e,
+          icon: <FaExclamationCircle />,
+        });
       }
     } else throw new Error(`${name} frontend_bundle not OK`);
   }

@@ -1,3 +1,5 @@
+import 'i18n.ts';
+
 import {
   ReactRouter,
   Router,
@@ -21,8 +23,6 @@ import { FaReact } from 'react-icons/fa';
 
 import Logger from './logger';
 import { getSetting } from './utils/settings';
-
-import "i18n.ts";
 
 const logger = new Logger('DeveloperMode');
 

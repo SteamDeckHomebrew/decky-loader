@@ -19,8 +19,7 @@ export default function DeveloperSettings() {
         label={t('label_valve_internal')}
         description={
           <span style={{ whiteSpace: 'pre-line' }}>
-            {t('valve_internal_desc1')}{' '}
-            <span style={{ color: 'red' }}>{t('valve_internal_desc2')}</span>
+            {t('valve_internal_desc1')} <span style={{ color: 'red' }}>{t('valve_internal_desc2')}</span>
           </span>
         }
         icon={<FaSteamSymbol style={{ display: 'block' }} />}
@@ -60,9 +59,7 @@ export default function DeveloperSettings() {
           label={t('react_devtools_label')}
           description={
             <>
-              <span style={{ whiteSpace: 'pre-line' }}>
-                {t('react_devtools_desc')}
-              </span>
+              <span style={{ whiteSpace: 'pre-line' }}>{t('react_devtools_desc')}</span>
               <div ref={textRef}>
                 <TextField label={'IP'} value={reactDevtoolsIP} onChange={(e) => setReactDevtoolsIP(e?.target.value)} />
               </div>

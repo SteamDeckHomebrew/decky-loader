@@ -1,5 +1,3 @@
-import 'i18n.ts';
-
 import {
   Navigation,
   ReactRouter,

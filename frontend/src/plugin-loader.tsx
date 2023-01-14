@@ -1,13 +1,4 @@
-import {
-  ConfirmModal,
-  ModalRoot,
-  Patch,
-  QuickAccessTab,
-  Router,
-  showModal,
-  sleep,
-  staticClasses,
-} from 'decky-frontend-lib';
+import { ConfirmModal, ModalRoot, QuickAccessTab, Router, showModal, sleep, staticClasses } from 'decky-frontend-lib';
 import { FC, lazy } from 'react';
 import { FaCog, FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
@@ -19,6 +10,7 @@ import NotificationBadge from './components/NotificationBadge';
 import PluginView from './components/PluginView';
 import WithSuspense from './components/WithSuspense';
 import Logger from './logger';
+import MenuHook from './menu-hook';
 import { Plugin } from './plugin';
 import RouterHook from './router-hook';
 import { deinitSteamFixes, initSteamFixes } from './steamfixes';
@@ -37,6 +29,7 @@ const FilePicker = lazy(() => import('./components/modals/filepicker'));
 class PluginLoader extends Logger {
   private plugins: Plugin[] = [];
   private tabsHook: TabsHook | OldTabsHook = document.title == 'SP' ? new OldTabsHook() : new TabsHook();
+  private menuHook: MenuHook = new MenuHook();
   // private windowHook: WindowHook = new WindowHook();
   private routerHook: RouterHook = new RouterHook();
   public toaster: Toaster = new Toaster();
@@ -46,11 +39,10 @@ class PluginLoader extends Logger {
   // stores a list of plugin names which requested to be reloaded
   private pluginReloadQueue: { name: string; version?: string }[] = [];
 
-  private focusWorkaroundPatch?: Patch;
-
   constructor() {
     super(PluginLoader.name);
     this.tabsHook.init();
+    this.menuHook.init();
     this.log('Initialized');
 
     const TabBadge = () => {
@@ -185,7 +177,6 @@ class PluginLoader extends Logger {
     this.routerHook.removeRoute('/decky/settings');
     deinitSteamFixes();
     deinitFilepickerPatches();
-    this.focusWorkaroundPatch?.unpatch();
   }
 
   public unloadPlugin(name: string) {
@@ -322,6 +313,7 @@ class PluginLoader extends Logger {
 
   createPluginAPI(pluginName: string) {
     return {
+      menuHook: this.menuHook,
       routerHook: this.routerHook,
       toaster: this.toaster,
       callServerMethod: this.callServerMethod,

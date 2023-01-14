@@ -120,6 +120,8 @@ class RouterHook extends Logger {
       return <>{renderedComponents}</>;
     };
 
+    let globalComponents: any;
+
     this.wrapperPatch = afterPatch(this.gamepadWrapper, 'render', (_: any, ret: any) => {
       if (ret?.props?.children?.props?.children?.length == 5 || ret?.props?.children?.props?.children?.length == 4) {
         const idx = ret?.props?.children?.props?.children?.length == 4 ? 1 : 2;
@@ -143,11 +145,17 @@ class RouterHook extends Logger {
             this.memoizedRouter = memo(this.router.type);
             this.memoizedRouter.isDeckyRouter = true;
           }
-          ret.props.children.props.children.push(
-            <DeckyGlobalComponentsStateContextProvider deckyGlobalComponentsState={this.globalComponentsState}>
-              <DeckyGlobalComponentsWrapper />
-            </DeckyGlobalComponentsStateContextProvider>,
-          );
+
+          if (!globalComponents) {
+            globalComponents = (
+              <DeckyGlobalComponentsStateContextProvider deckyGlobalComponentsState={this.globalComponentsState}>
+                <DeckyGlobalComponentsWrapper />
+              </DeckyGlobalComponentsStateContextProvider>
+            );
+          }
+
+          ret.props.children.props.children.push(globalComponents);
+
           ret.props.children.props.children[idx].props.children[0].type = this.memoizedRouter;
         }
       }

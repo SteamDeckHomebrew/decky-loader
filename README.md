@@ -43,8 +43,8 @@ For more information about Decky Loader as well as documentation and development
    - Keyboards and mice can be connected to the Steam Deck via USB-C or Bluetooth.
    - Many Bluetooth keyboard and mouse apps are available for iOS and Android.
    - The Steam Link app is available on [Windows](https://media.steampowered.com/steamlink/windows/latest/SteamLink.zip), [macOS](https://apps.apple.com/us/app/steam-link/id1246969117), and [Linux](https://flathub.org/apps/details/com.valvesoftware.SteamLink). It works well as a remote desktop substitute.
-   - If you have no other options, use the right trackpad as a mouse and press <picture><source media="(prefers-color-scheme: dark)" type="image/svg+xml" srcset="./docs/images/light/steam.svg" height=16><source media="(prefers-color-scheme: light)" type="image/svg+xml" srcset="./docs/images/dark/steam.svg" height=16><img alt="(STEAM)" src="./docs/images/dark/steam.svg"></picture>+<img src="./docs/images/light/x.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/x.svg#gh-light-mode-only" height=16> to open the on-screen keyboard as needed.
-1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Power menu.
+   - If you have no other options, use the right trackpad as a mouse and press <picture><source media="(prefers-color-scheme: dark)" type="image/svg+xml" srcset="./docs/images/light/steam.svg" height=16><source media="(prefers-color-scheme: light)" type="image/svg+xml" srcset="./docs/images/light/steam.svg" height=16><img alt="(STEAM)" src="./docs/images/dark/steam.svg"></picture>+<picture><source media="(prefers-color-scheme: dark)" type="image/svg+xml" srcset="./docs/images/light/x.svg" height=16><source media="(prefers-color-scheme: light)" type="image/svg+xml" srcset="./docs/images/light/x.svg" height=16><img alt="(X)" src="./docs/images/dark/x.svg"></picture> to open the on-screen keyboard as needed.
+1. Press the <picture><source media="(prefers-color-scheme: dark)" type="image/svg+xml" srcset="./docs/images/light/steam.svg" height=16><source media="(prefers-color-scheme: light)" type="image/svg+xml" srcset="./docs/images/light/steam.svg" height=16><img alt="(STEAM)" src="./docs/images/dark/steam.svg"></picture> button and open the Power menu.
 1. Select "Switch to Desktop".
 1. Navigate to this Github page on a browser of your choice.
 1. Press the 'Download' button at the top of the page.
@@ -57,16 +57,13 @@ For more information about Decky Loader as well as documentation and development
      Intended for plugin developers. Pre-releases are unlikely to be fully stable but contain the latest changes. For more information on plugin development, please consult [the wiki page](https://deckbrew.xyz/en/loader-dev/development).
 1. Open the Return to Gaming Mode shortcut on your desktop.
 
-![Termux Logo](./docs/images/dark/steam.svg#gh-dark-mode-only)
-![Termux Logo](./docs/images/light/steam.svg#gh-light-mode-only)
-
 - There is also a fast install for those who can use Konsole. Run `curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/install_release.sh | sh` and type your password when prompted.
 
 ### 👋 Uninstallation
 
 We are sorry to see you go! If you are considering uninstalling because you are having issues, please consider [opening an issue](https://github.com/SteamDeckHomebrew/decky-loader/issues) or [joining our Discord](https://discord.gg/ZU74G2NJzk) so we can help you and other users.
 
-1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Power menu.
+1. Press the <picture><source media="(prefers-color-scheme: dark)" type="image/svg+xml" srcset="./docs/images/light/steam.svg" height=16><source media="(prefers-color-scheme: light)" type="image/svg+xml" srcset="./docs/images/light/steam.svg" height=16><img alt="(STEAM)" src="./docs/images/dark/steam.svg"></picture> button and open the Power menu.
 1. Select "Switch to Desktop".
 1. Run the installer file again, and select `uninstall decky loader` 
 - There is also a fast uninstall for those who can use Konsole. Run `curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/uninstall.sh | sh` and type your password when prompted.
@@ -77,11 +74,11 @@ Now that you have Decky Loader installed, you can start using plugins. Each plug
 
 ### 📦 Plugins
 
-1. Press the <img src="./docs/images/light/qam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/qam.svg#gh-light-mode-only" height=16> button and navigate to the <img src="./docs/images/light/plug.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/plug.svg#gh-light-mode-only" height=16> icon. This is the Decky menu used for interacting with plugins and the loader itself.
-1. Select the <img src="./docs/images/light/store.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/store.svg#gh-light-mode-only" height=16> icon to open the Plugins Browser. This is where you can find and install plugins.
+1. Press the <picture><source media="(prefers-color-scheme: dark)" type="image/svg+xml" srcset="./docs/images/light/qam.svg" height=16><source media="(prefers-color-scheme: light)" type="image/svg+xml" srcset="./docs/images/light/qam.svg" height=16><img alt="(...)" src="./docs/images/dark/qam.svg"></picture> button and navigate to the <picture><source media="(prefers-color-scheme: dark)" type="image/svg+xml" srcset="./docs/images/light/plug.svg" height=16><source media="(prefers-color-scheme: light)" type="image/svg+xml" srcset="./docs/images/light/plug.svg" height=16><img alt="plug" src="./docs/images/dark/plug.svg"></picture> icon. This is the Decky menu used for interacting with plugins and the loader itself.
+1. Select the <picture><source media="(prefers-color-scheme: dark)" type="image/svg+xml" srcset="./docs/images/light/store.svg" height=16><source media="(prefers-color-scheme: light)" type="image/svg+xml" srcset="./docs/images/light/store.svg" height=16><img alt="(store)" src="./docs/images/dark/store.svg"></picture> icon to open the Plugins Browser. This is where you can find and install plugins.
    - You can also install from URL in the Settings menu. We do not recommend installing plugins from untrusted sources.
 1. To install a plugin, select the "Install" button on the plugin you want. You can also select a version from a dropdown menu, but this is not recommended.
-1. To update, uninstall, and reload plugins, navigate to the Decky menu and select the <img src="./docs/images/light/gear.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/gear.svg#gh-light-mode-only" height=16> icon.
+1. To update, uninstall, and reload plugins, navigate to the Decky menu and select the <picture><source media="(prefers-color-scheme: dark)" type="image/svg+xml" srcset="./docs/images/light/gear.svg" height=16><source media="(prefers-color-scheme: light)" type="image/svg+xml" srcset="./docs/images/light/gear.svg" height=16><img alt="gear" src="./docs/images/dark/gear.svg"></picture> icon.
    - Keep in mind that uninstalling a plugin will only remove its plugin files, not any other files it may have created.
 
 ### 🛠️ Plugin Development

@@ -43,7 +43,7 @@ For more information about Decky Loader as well as documentation and development
    - Keyboards and mice can be connected to the Steam Deck via USB-C or Bluetooth.
    - Many Bluetooth keyboard and mouse apps are available for iOS and Android.
    - The Steam Link app is available on [Windows](https://media.steampowered.com/steamlink/windows/latest/SteamLink.zip), [macOS](https://apps.apple.com/us/app/steam-link/id1246969117), and [Linux](https://flathub.org/apps/details/com.valvesoftware.SteamLink). It works well as a remote desktop substitute.
-   - If you have no other options, use the right trackpad as a mouse and press <picture><source media="(prefers-color-scheme: light)" srcset="./docs/images/light/steam.svg" height=16><source media="(prefers-color-scheme: dark)" srcset="./docs/images/dark/steam.svg" height=16><img alt="(STEAM)"></picture>+<img src="./docs/images/light/x.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/x.svg#gh-light-mode-only" height=16> to open the on-screen keyboard as needed.
+   - If you have no other options, use the right trackpad as a mouse and press <picture><source media="(prefers-color-scheme: dark)" type="image/svg+xml" srcset="./docs/images/light/steam.svg" height=16><source media="(prefers-color-scheme: light)" type="image/svg+xml" srcset="./docs/images/dark/steam.svg" height=16><img alt="(STEAM)" src="./docs/images/dark/steam.svg"></picture>+<img src="./docs/images/light/x.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/x.svg#gh-light-mode-only" height=16> to open the on-screen keyboard as needed.
 1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Power menu.
 1. Select "Switch to Desktop".
 1. Navigate to this Github page on a browser of your choice.
@@ -56,6 +56,9 @@ For more information about Decky Loader as well as documentation and development
    - **Latest Pre-Release**  
      Intended for plugin developers. Pre-releases are unlikely to be fully stable but contain the latest changes. For more information on plugin development, please consult [the wiki page](https://deckbrew.xyz/en/loader-dev/development).
 1. Open the Return to Gaming Mode shortcut on your desktop.
+
+![Termux Logo](./docs/images/dark/steam.svg#gh-dark-mode-only)
+![Termux Logo](./docs/images/light/steam.svg#gh-light-mode-only)
 
 - There is also a fast install for those who can use Konsole. Run `curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/install_release.sh | sh` and type your password when prompted.
 

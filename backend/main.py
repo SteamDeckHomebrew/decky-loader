@@ -88,7 +88,7 @@ class PluginManager:
             else:
                 self.loop.create_task(stop_systemd_unit(REMOTE_DEBUGGER_UNIT))
             if CONFIG["chown_plugin_path"] == True:
-                chown_plugin_dir()
+                await chown_plugin_dir()
             self.loop.create_task(self.loader_reinjector())
             self.loop.create_task(self.load_plugins())
 

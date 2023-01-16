@@ -1,3 +1,5 @@
+import { Navigation, Router } from 'decky-frontend-lib';
+
 import PluginLoader from './plugin-loader';
 import { DeckyUpdater } from './updater';
 
@@ -12,6 +14,19 @@ declare global {
     deckyAuthToken: string;
     DFL?: any;
   }
+}
+
+try {
+  if (!Router.NavigateToAppProperties || !Router.NavigateToLibraryTab || !Router.NavigateToInvites) {
+    const shims = {
+      NavigateToAppProperties: Navigation.NavigateToAppProperties,
+      NavigateToInvites: Navigation.NavigateToInvites,
+      NavigateToLibraryTab: Navigation.NavigateToLibraryTab,
+    };
+    Object.assign(Router, shims);
+  }
+} catch (e) {
+  console.error('[DECKY]: Error initializing Navigation interface shims', e);
 }
 
 (async () => {

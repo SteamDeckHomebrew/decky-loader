@@ -25,6 +25,7 @@ declare global {
         NavigateToInvites: Navigation.NavigateToInvites,
         NavigateToLibraryTab: Navigation.NavigateToLibraryTab,
       };
+      (Router as unknown as any).deckyShim = true;
       Object.assign(Router, shims);
     }
   } catch (e) {

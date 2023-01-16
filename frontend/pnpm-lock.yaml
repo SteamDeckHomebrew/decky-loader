@@ -10,7 +10,7 @@ specifiers:
   '@types/react-file-icon': ^1.0.1
   '@types/react-router': 5.1.18
   '@types/webpack': ^5.28.0
-  decky-frontend-lib: ^3.18.4
+  decky-frontend-lib: ^3.18.8
   husky: ^8.0.1
   import-sort-style-module: ^6.0.0
   inquirer: ^8.2.4
@@ -30,7 +30,7 @@ specifiers:
   typescript: ^4.7.4
 
 dependencies:
-  decky-frontend-lib: 3.18.4
+  decky-frontend-lib: 3.18.8
   react-file-icon: 1.2.0_wcqkhtmu7mswc6yz4uyexck3ty
   react-icons: 4.4.0_react@16.14.0
   react-markdown: 8.0.3_vshvapmxg47tngu7tvrsqpq55u
@@ -944,8 +944,8 @@ packages:
     dependencies:
       ms: 2.1.2
 
-  /decky-frontend-lib/3.18.4:
-    resolution: {integrity: sha512-i3TAe3RJtT1TK0rJgW9Ek5jxMWZRCYLDvqHDylGVieUvuyI7c8X+cogz30pP4cqeGOaA1d/MxBEbhlpD3JhVvg==}
+  /decky-frontend-lib/3.18.8:
+    resolution: {integrity: sha512-tgN35XgfsAePpmlxdCXnJ/TswmDoP2Dh9Ddl49bHbZMX2GV/H+7jT532Rrs/q8D4xX1LN1qA4alZ8Rr4q61PVg==}
     dev: false
 
   /decode-named-character-reference/1.0.2:

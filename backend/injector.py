@@ -394,9 +394,12 @@ async def get_tab_lambda(test) -> Tab:
         raise ValueError(f"Tab not found by lambda")
     return tab
 
+def tab_is_gamepadui(t: Tab) -> bool:
+    return "https://steamloopback.host/routes/" in t.url and (t.title == "Steam Shared Context presented by Valve™" or t.title == "Steam" or t.title == "SP")
+
 async def get_gamepadui_tab() -> Tab:
     tabs = await get_tabs()
-    tab = next((i for i in tabs if ("https://steamloopback.host/routes/" in i.url and (i.title == "Steam Shared Context presented by Valve™" or i.title == "Steam" or i.title == "SP"))), None)
+    tab = next((i for i in tabs if tab_is_gamepadui(i)), None)
     if not tab:
         raise ValueError(f"GamepadUI Tab not found")
     return tab
@@ -405,3 +408,11 @@ async def inject_to_tab(tab_name, js, run_async=False):
     tab = await get_tab(tab_name)
 
     return await tab.evaluate_js(js, run_async)
+
+async def close_old_tabs():
+    tabs = await get_tabs()
+    for t in tabs:
+        if not t.title or (t.title != "Steam Shared Context presented by Valve™" and t.title != "Steam" and t.title != "SP"):
+            logger.debug("Closing tab: " + getattr(t, "title", "Untitled"))
+            await t.close()
+            await sleep(0.5)

@@ -1,3 +1,5 @@
+import { Navigation, Router, sleep } from 'decky-frontend-lib';
+
 import PluginLoader from './plugin-loader';
 import { DeckyUpdater } from './updater';
 
@@ -13,6 +15,22 @@ declare global {
     DFL?: any;
   }
 }
+
+(async () => {
+  try {
+    if (!Router.NavigateToAppProperties || !Router.NavigateToLibraryTab || !Router.NavigateToInvites) {
+      while (!Navigation.NavigateToAppProperties) await sleep(100);
+      const shims = {
+        NavigateToAppProperties: Navigation.NavigateToAppProperties,
+        NavigateToInvites: Navigation.NavigateToInvites,
+        NavigateToLibraryTab: Navigation.NavigateToLibraryTab,
+      };
+      Object.assign(Router, shims);
+    }
+  } catch (e) {
+    console.error('[DECKY]: Error initializing Navigation interface shims', e);
+  }
+})();
 
 (async () => {
   window.deckyAuthToken = await fetch('http://127.0.0.1:1337/auth/token').then((r) => r.text());

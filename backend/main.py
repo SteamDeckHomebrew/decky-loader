@@ -22,7 +22,7 @@ from helpers import (REMOTE_DEBUGGER_UNIT, csrf_middleware, get_csrf_token,
                      get_home_path, get_homebrew_path, get_user,
                      get_user_group, set_user, set_user_group,
                      stop_systemd_unit, start_systemd_unit)
-from injector import get_gamepadui_tab, Tab, get_tabs
+from injector import get_gamepadui_tab, Tab, get_tabs, close_old_tabs
 from loader import Loader
 from settings import SettingsManager
 from updater import Updater
@@ -170,12 +170,7 @@ class PluginManager:
         try:
             if first:
                 if await tab.has_global_var("deckyHasLoaded", False):
-                    tabs = await get_tabs()
-                    for t in tabs:
-                        if not t.title or (t.title != "Steam" and t.title != "SP"):
-                            logger.debug("Closing tab: " + getattr(t, "title", "Untitled"))
-                            await t.close()
-                            await sleep(0.5)
+                    await close_old_tabs()
             await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => location.reload(), 100)}else{window.deckyHasLoaded = true;(async()=>{try{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js')}catch(e){console.error(e)};})();}}catch(e){console.error(e)}", False, False, False)
         except:
             logger.info("Failed to inject JavaScript into tab\n" + format_exc())

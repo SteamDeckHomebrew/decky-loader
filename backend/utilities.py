@@ -7,7 +7,7 @@ from asyncio import sleep, start_server, gather, open_connection
 from aiohttp import ClientSession, web
 
 from logging import getLogger
-from injector import inject_to_tab, get_gamepadui_tab
+from injector import inject_to_tab, get_gamepadui_tab, close_old_tabs
 import helpers
 import subprocess
 
@@ -251,6 +251,7 @@ class Utilities:
                 self.logger.info("Connected to React DevTools, loading script")
                 tab = await get_gamepadui_tab()
                 # RDT needs to load before React itself to work.
+                await close_old_tabs()
                 result = await tab.reload_and_evaluate(script)
                 self.logger.info(result)
                         
@@ -262,5 +263,6 @@ class Utilities:
         self.logger.info("Disabling React DevTools")
         tab = await get_gamepadui_tab()
         self.rdt_script_id = None
-        await tab.evaluate_js("SteamClient.User.StartRestart();", False, True, False)
+        await close_old_tabs()
+        await tab.evaluate_js("location.reload();", False, True, False)
         self.logger.info("React DevTools disabled")

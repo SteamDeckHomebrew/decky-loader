@@ -233,7 +233,7 @@ class Utilities:
             self.rdt_proxy_server.close()
             self.rdt_proxy_task.cancel()
 
-    async def enable_rdt(self):
+    async def _enable_rdt(self):
         # TODO un-hardcode port
         try:
             self.stop_rdt_proxy()
@@ -243,11 +243,22 @@ class Utilities:
                 self.logger.info("Connecting to React DevTools at " + ip)
                 async with ClientSession() as web:
                     res = await web.request("GET", "http://" + ip + ":8097", ssl=helpers.get_ssl_context())
+                    script = """
+                    if (!window.deckyHasConnectedRDT) {
+                        window.deckyHasConnectedRDT = true;
+                        // This fixes the overlay when hovering over an element in RDT
+                        Object.defineProperty(window, '__REACT_DEVTOOLS_TARGET_WINDOW__', {
+                            enumerable: true,
+                            configurable: true,
+                            get: function() {
+                                return FocusNavController?.m_ActiveContext?.ActiveWindow || window;
+                            }
+                        });
+                    """ + await res.text() + "\n}"
                 if res.status != 200:
                     self.logger.error("Failed to connect to React DevTools at " + ip)
                     return False
                 self.start_rdt_proxy(ip, 8097)
-                script = "if(!window.deckyHasConnectedRDT){window.deckyHasConnectedRDT=true;\n" + await res.text() + "\n}"
                 self.logger.info("Connected to React DevTools, loading script")
                 tab = await get_gamepadui_tab()
                 # RDT needs to load before React itself to work.
@@ -258,6 +269,9 @@ class Utilities:
         except Exception:
             self.logger.error("Failed to connect to React DevTools")
             self.logger.error(format_exc())
+
+    async def enable_rdt(self):
+        self.context.loop.create_task(self._enable_rdt())
 
     async def disable_rdt(self):
         self.logger.info("Disabling React DevTools")

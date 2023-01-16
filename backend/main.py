@@ -56,11 +56,14 @@ basicConfig(
 
 logger = getLogger("Main")
 
-async def chown_plugin_dir():
+def chown_plugin_dir():
     code_chown = call(["chown", "-R", USER+":"+GROUP, CONFIG["plugin_path"]])
     code_chmod = call(["chmod", "-R", "555", CONFIG["plugin_path"]])
     if code_chown != 0 or code_chmod != 0:
         logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {code_chmod})")
+
+if CONFIG["chown_plugin_path"] == True:
+    chown_plugin_dir()
 
 class PluginManager:
     def __init__(self, loop) -> None:
@@ -87,8 +90,6 @@ class PluginManager:
                 self.loop.create_task(start_systemd_unit(REMOTE_DEBUGGER_UNIT))
             else:
                 self.loop.create_task(stop_systemd_unit(REMOTE_DEBUGGER_UNIT))
-            if CONFIG["chown_plugin_path"] == True:
-                await chown_plugin_dir()
             self.loop.create_task(self.loader_reinjector())
             self.loop.create_task(self.load_plugins())
 

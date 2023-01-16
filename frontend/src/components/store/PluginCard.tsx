@@ -68,6 +68,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
           style={{
             display: 'flex',
             flexDirection: 'row',
+            margin: '0 0 0 10px',
           }}
           className="deckyStoreCardBody"
         >
@@ -77,6 +78,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
             style={{
               width: 'auto',
               height: '160px',
+              borderRadius: '5px',
             }}
             src={plugin.image_url}
           />
@@ -144,12 +146,14 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               display: 'flex',
               flexDirection: 'row',
               width: '100%',
+              margin: '10px',
             }}
           >
             <div
               className="deckyStoreCardInstallButtonContainer"
               style={{
                 flex: '1',
+                margin: '0 10px 0 0',
               }}
             >
               <DialogButton

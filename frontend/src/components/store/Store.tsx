@@ -232,6 +232,8 @@ const AboutTab: FC<{}> = () => {
         If you would like to contribute to the Decky Plugin Store, check the SteamDeckHomebrew/decky-plugin-template
         repository on GitHub. Information on development and distribution is available in the README.
       </span>
+      <span className="deckyStoreAboutHeader">Source Code</span>
+      <span>All plugin source code is available on SteamDeckHomebrew/decky-plugin-database repository on GitHub.</span>
     </div>
   );
 };

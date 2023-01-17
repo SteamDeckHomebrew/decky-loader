@@ -94,6 +94,53 @@ const BrowseTab: FC<{ children: { data: StorePlugin[] } }> = (data) => {
                 padding: 0;
               }
             `}</style>
+      {/* This should be used once filtering is added
+
+      <PanelSectionRow>
+        <Focusable style={{ display: 'flex', maxWidth: '100%' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              width: '47.5%',
+            }}
+          >
+            <span className="DialogLabel">Sort</span>
+            <Dropdown
+              menuLabel="Sort"
+              rgOptions={sortOptions}
+              strDefaultLabel="Last Updated (Newest)"
+              selectedOption={selectedSort}
+              onChange={(e) => setSort(e.data)}
+            />
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              width: '47.5%',
+              marginLeft: 'auto',
+            }}
+          >
+            <span className="DialogLabel">Filter</span>
+            <Dropdown
+              menuLabel="Filter"
+              rgOptions={filterOptions}
+              strDefaultLabel="All"
+              selectedOption={selectedFilter}
+              onChange={(e) => setFilter(e.data)}
+            />
+          </div>
+        </Focusable>
+      </PanelSectionRow>
+      <div style={{ justifyContent: 'center', display: 'flex' }}>
+        <Focusable style={{ display: 'flex', alignItems: 'center', width: '96%' }}>
+          <div style={{ width: '100%' }}>
+            <TextField label="Search" value={searchFieldValue} onChange={(e) => setSearchValue(e.target.value)} />
+          </div>
+        </Focusable>
+      </div>
+      */}
       <PanelSectionRow>
         <Focusable style={{ display: 'flex', maxWidth: '100%' }}>
           <div
@@ -113,24 +160,6 @@ const BrowseTab: FC<{ children: { data: StorePlugin[] } }> = (data) => {
               onChange={(e) => setSort(e.data)}
             />
           </div>
-          {/* <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              minWidth: '47.5%',
-              maxWidth: '47.5%',
-              marginLeft: 'auto',
-            }}
-          >
-            <span className="DialogLabel">Filter</span>
-            <Dropdown
-              menuLabel="Filter"
-              rgOptions={filterOptions}
-              strDefaultLabel="All"
-              selectedOption={selectedFilter}
-              onChange={(e) => setFilter(e.data)}
-            />
-          </div> */}
         </Focusable>
       </PanelSectionRow>
       <div style={{ justifyContent: 'center', display: 'flex' }}>

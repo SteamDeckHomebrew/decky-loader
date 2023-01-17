@@ -159,7 +159,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       if: ${{ github.event_name == 'workflow_dispatch' && !env.ACT  }}
       with:
-        name: Prerelease ${{ steps.ready_tag.outputs.tag_name }}
+        name: Release ${{ steps.ready_tag.outputs.tag_name }}
         tag_name: ${{ steps.ready_tag.outputs.tag_name }}
         files: ./dist/PluginLoader
         prerelease: false

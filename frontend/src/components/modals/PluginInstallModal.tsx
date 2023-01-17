@@ -1,4 +1,4 @@
-import { ConfirmModal, Navigation, QuickAccessTab, Spinner, staticClasses } from 'decky-frontend-lib';
+import { ConfirmModal, Navigation, QuickAccessTab } from 'decky-frontend-lib';
 import { FC, useState } from 'react';
 
 interface PluginInstallModalProps {
@@ -26,15 +26,14 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({ artifact, version, ha
       onCancel={async () => {
         await onCancel();
       }}
+      strTitle={`Install ${artifact}`}
+      strOKButtonText={loading ? 'Installing' : 'Install'}
     >
-      <div className={staticClasses.Title} style={{ flexDirection: 'column' }}>
-        {hash == 'False' ? <h3 style={{ color: 'red' }}>!!!!NO HASH PROVIDED!!!!</h3> : null}
-        <div style={{ flexDirection: 'row' }}>
-          {loading && <Spinner style={{ width: '20px' }} />} {loading ? 'Installing' : 'Install'} {artifact}
-          {version ? ' version ' + version : null}
-          {!loading && '?'}
-        </div>
-      </div>
+      {hash == 'False' ? (
+        <h3 style={{ color: 'red' }}>!!!!NO HASH PROVIDED!!!!</h3>
+      ) : (
+        `Are you sure you want to install ${artifact} ${version}?`
+      )}
     </ConfirmModal>
   );
 };

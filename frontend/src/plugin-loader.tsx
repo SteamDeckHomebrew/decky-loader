@@ -1,13 +1,4 @@
-import {
-  ConfirmModal,
-  ModalRoot,
-  Patch,
-  QuickAccessTab,
-  Router,
-  showModal,
-  sleep,
-  staticClasses,
-} from 'decky-frontend-lib';
+import { ConfirmModal, ModalRoot, Patch, QuickAccessTab, Router, showModal, sleep } from 'decky-frontend-lib';
 import { FC, lazy } from 'react';
 import { FaCog, FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
@@ -155,10 +146,10 @@ class PluginLoader extends Logger {
         onCancel={() => {
           // do nothing
         }}
+        strTitle={`Uninstall ${name}`}
+        strOKButtonText={'Uninstall'}
       >
-        <div className={staticClasses.Title} style={{ flexDirection: 'column' }}>
-          Uninstall {name}?
-        </div>
+        Are you sure you want to uninstall {name}?
       </ConfirmModal>,
     );
   }

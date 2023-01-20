@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.1.0",
+    "@rollup/plugin-image": "^3.0.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-replace": "^4.0.0",
@@ -41,7 +42,7 @@
     }
   },
   "dependencies": {
-    "decky-frontend-lib": "^3.18.9",
+    "decky-frontend-lib": "^3.18.10",
     "react-file-icon": "^1.2.0",
     "react-icons": "^4.4.0",
     "react-markdown": "^8.0.3",

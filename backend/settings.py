@@ -2,14 +2,14 @@ from json import dump, load
 from os import mkdir, path, listdir, rename
 from shutil import chown
 
-from helpers import get_home_path, get_homebrew_path, get_user, set_user, get_user_owner
+from helpers import get_home_path, get_homebrew_path, get_user, get_user_group, get_user_owner
 
 
 class SettingsManager:
     def __init__(self, name, settings_directory = None) -> None:
-        set_user()
         USER = get_user()
-        wrong_dir = get_homebrew_path(get_home_path(USER))
+        GROUP = get_user_group()
+        wrong_dir = get_homebrew_path()
         if settings_directory == None:
             settings_directory = path.join(wrong_dir, "settings")
 
@@ -18,7 +18,7 @@ class SettingsManager:
         #Create the folder with the correct permission
         if not path.exists(settings_directory):
             mkdir(settings_directory)
-            chown(settings_directory, USER, USER)
+            chown(settings_directory, USER, GROUP)
 
         #Copy all old settings file in the root directory to the correct folder
         for file in listdir(wrong_dir):
@@ -30,7 +30,7 @@ class SettingsManager:
 
         #If the owner of the settings directory is not the user, then set it as the user:
         if get_user_owner(settings_directory) != USER:
-            chown(settings_directory, USER, USER)
+            chown(settings_directory, USER, GROUP)
 
         self.settings = {}
 

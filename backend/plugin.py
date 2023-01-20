@@ -7,10 +7,12 @@ from importlib.util import module_from_spec, spec_from_file_location
 from json import dumps, load, loads
 from logging import getLogger
 from traceback import format_exc
-from os import path, setgid, setuid
+from os import path, setgid, setuid, environ
 from signal import SIGINT, signal
 from sys import exit
 from time import time
+import helpers
+from updater import Updater
 
 multiprocessing.set_start_method("fork")
 
@@ -19,6 +21,7 @@ BUFFER_LIMIT = 2 ** 20  # 1 MiB
 class PluginWrapper:
     def __init__(self, file, plugin_directory, plugin_path) -> None:
         self.file = file
+        self.plugin_path = plugin_path
         self.plugin_directory = plugin_directory
         self.reader = None
         self.writer = None
@@ -56,8 +59,24 @@ class PluginWrapper:
             set_event_loop(new_event_loop())
             if self.passive:
                 return
-            setgid(0 if "root" in self.flags else 1000)
-            setuid(0 if "root" in self.flags else 1000)
+            setgid(0 if "root" in self.flags else helpers.get_user_group_id())
+            setuid(0 if "root" in self.flags else helpers.get_user_id())
+            # export a bunch of environment variables to help plugin developers
+            environ["HOME"] = helpers.get_home_path("root" if "root" in self.flags else helpers.get_user())
+            environ["USER"] = "root" if "root" in self.flags else helpers.get_user()
+            environ["DECKY_VERSION"] = helpers.get_loader_version()
+            environ["DECKY_USER"] = helpers.get_user()
+            environ["DECKY_HOME"] = helpers.get_homebrew_path()
+            environ["DECKY_PLUGIN_SETTINGS_DIR"] = path.join(environ["DECKY_HOME"], "settings", self.plugin_directory)
+            helpers.mkdir_as_user(environ["DECKY_PLUGIN_SETTINGS_DIR"])
+            environ["DECKY_PLUGIN_RUNTIME_DIR"] = path.join(environ["DECKY_HOME"], "data", self.plugin_directory)
+            helpers.mkdir_as_user(environ["DECKY_PLUGIN_RUNTIME_DIR"])
+            environ["DECKY_PLUGIN_LOG_DIR"] = path.join(environ["DECKY_HOME"], "logs", self.plugin_directory)
+            helpers.mkdir_as_user(environ["DECKY_PLUGIN_LOG_DIR"])
+            environ["DECKY_PLUGIN_DIR"] = path.join(self.plugin_path, self.plugin_directory)
+            environ["DECKY_PLUGIN_NAME"] = self.name
+            environ["DECKY_PLUGIN_VERSION"] = self.version
+            environ["DECKY_PLUGIN_AUTHOR"] = self.author
             spec = spec_from_file_location("_", self.file)
             module = module_from_spec(spec)
             spec.loader.exec_module(module)

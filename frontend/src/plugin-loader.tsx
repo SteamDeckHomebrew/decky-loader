@@ -335,6 +335,7 @@ class PluginLoader extends Logger {
       fetchNoCors(url: string, request: any = {}) {
         let args = { method: 'POST', headers: {} };
         const req = { ...args, ...request, url, data: request.body };
+        req?.body && delete req.body
         return this.callServerMethod('http_request', req);
       },
       executeInTab(tab: string, runAsync: boolean, code: string) {

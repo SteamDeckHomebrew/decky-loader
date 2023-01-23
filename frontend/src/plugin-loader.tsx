@@ -1,13 +1,4 @@
-import {
-  ConfirmModal,
-  ModalRoot,
-  Patch,
-  QuickAccessTab,
-  Router,
-  showModal,
-  sleep,
-  staticClasses,
-} from 'decky-frontend-lib';
+import { ConfirmModal, ModalRoot, Patch, QuickAccessTab, Router, showModal, sleep } from 'decky-frontend-lib';
 import { FC, lazy } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaCog, FaExclamationCircle, FaPlug } from 'react-icons/fa';
@@ -163,10 +154,10 @@ class PluginLoader extends Logger {
         onCancel={() => {
           // do nothing
         }}
+        strTitle={`Uninstall ${name}`}
+        strOKButtonText={'Uninstall'}
       >
-        <div className={staticClasses.Title} style={{ flexDirection: 'column' }}>
-          {t('plugin_uninstall', name)}
-        </div>
+        {t('plugin_uninstall', name)}
       </ConfirmModal>,
     );
   }
@@ -353,6 +344,7 @@ class PluginLoader extends Logger {
       fetchNoCors(url: string, request: any = {}) {
         let args = { method: 'POST', headers: {} };
         const req = { ...args, ...request, url, data: request.body };
+        req?.body && delete req.body
         return this.callServerMethod('http_request', req);
       },
       executeInTab(tab: string, runAsync: boolean, code: string) {

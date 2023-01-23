@@ -5,6 +5,7 @@ import ssl
 import subprocess
 import uuid
 import os
+import sys
 from subprocess import check_output
 from time import sleep
 from hashlib import sha256
@@ -19,8 +20,6 @@ REMOTE_DEBUGGER_UNIT = "steam-web-debug-portforward.service"
 # global vars
 csrf_token = str(uuid.uuid4())
 ssl_ctx = ssl.create_default_context(cafile=certifi.where())
-user = None
-group = None
 
 assets_regex = re.compile("^/plugins/.*/assets/.*")
 frontend_regex = re.compile("^/frontend/.*")
@@ -37,65 +36,87 @@ async def csrf_middleware(request, handler):
         return await handler(request)
     return Response(text='Forbidden', status='403')
 
-# Get the user by checking for the first logged in user. As this is run
-# by systemd at startup the process is likely to start before the user
-# logs in, so we will wait here until they are available. Note that
-# other methods such as getenv wont work as there was no $SUDO_USER to
-# start the systemd service.
+# Deprecated
 def set_user():
-    global user
-    cmd = "who | awk '{print $1}' | sort | head -1"
-    while user == None:
-        name = check_output(cmd, shell=True).decode().strip()
-        if name not in [None, '']:
-            user = name
-        sleep(0.1)
+    pass
 
-# Get the global user. get_user must be called first.
+# Get the user id hosting the plugin loader
+def get_user_id() -> int:
+    proc_path = os.path.realpath(sys.argv[0])
+    pws = sorted(pwd.getpwall(), reverse=True, key=lambda pw: len(pw.pw_dir))
+    for pw in pws:
+        if proc_path.startswith(os.path.realpath(pw.pw_dir)):
+            return pw.pw_uid
+    raise PermissionError("The plugin loader does not seem to be hosted by any known user.")
+
+# Get the user hosting the plugin loader
 def get_user() -> str:
-    global user
-    if user == None:
-        raise ValueError("helpers.get_user method called before user variable was set. Run helpers.set_user first.")
-    return user
+    return pwd.getpwuid(get_user_id()).pw_name
 
-#Get the user owner of the given file path.
+# Get the effective user id of the running process
+def get_effective_user_id() -> int:
+    return os.geteuid()
+
+# Get the effective user of the running process
+def get_effective_user() -> str:
+    return pwd.getpwuid(get_effective_user_id()).pw_name
+
+# Get the effective user group id of the running process
+def get_effective_user_group_id() -> int:
+    return os.getegid()
+
+# Get the effective user group of the running process
+def get_effective_user_group() -> str:
+    return grp.getgrgid(get_effective_user_group_id()).gr_name
+
+# Get the user owner of the given file path.
 def get_user_owner(file_path) -> str:
-    return pwd.getpwuid(os.stat(file_path).st_uid)[0]
+    return pwd.getpwuid(os.stat(file_path).st_uid).pw_name
 
-#Get the user group of the given file path.
+# Get the user group of the given file path.
 def get_user_group(file_path) -> str:
-    return grp.getgrgid(os.stat(file_path).st_gid)[0]
+    return grp.getgrgid(os.stat(file_path).st_gid).gr_name
 
-# Set the global user group. get_user must be called first
+# Deprecated
 def set_user_group() -> str:
-    global group
-    global user
-    if user == None:
-        raise ValueError("helpers.set_user_dir method called before user variable was set. Run helpers.set_user first.")
-    if group == None:
-        group = check_output(["id", "-g", "-n", user]).decode().strip()
+    return get_user_group()
 
-# Get the group of the global user. set_user_group must be called first.
+# Get the group id of the user hosting the plugin loader
+def get_user_group_id() -> int:
+    return pwd.getpwuid(get_user_id()).pw_gid
+
+# Get the group of the user hosting the plugin loader
 def get_user_group() -> str:
-    global group
-    if group == None:
-        raise ValueError("helpers.get_user_group method called before group variable was set. Run helpers.set_user_group first.")
-    return group
+    return grp.getgrgid(get_user_group_id()).gr_name
 
 # Get the default home path unless a user is specified
 def get_home_path(username = None) -> str:
     if username == None:
-        raise ValueError("Username not defined, no home path can be found.")
-    else:
-        return str("/home/"+username)
+        username = get_user()
+    return pwd.getpwnam(username).pw_dir
 
-# Get the default homebrew path unless a user is specified
+# Get the default homebrew path unless a home_path is specified
 def get_homebrew_path(home_path = None) -> str:
     if home_path == None:
-        raise ValueError("Home path not defined, homebrew dir cannot be determined.")
-    else:
-        return str(home_path+"/homebrew")
-    # return str(home_path+"/homebrew")
+        home_path = get_home_path()
+    return os.path.join(home_path, "homebrew")
+
+# Recursively create path and chown as user
+def mkdir_as_user(path):
+    path = os.path.realpath(path)
+    os.makedirs(path, exist_ok=True)
+    chown_path = get_home_path()
+    parts = os.path.relpath(path, chown_path).split(os.sep)
+    uid = get_user_id()
+    gid = get_user_group_id()
+    for p in parts:
+        chown_path = os.path.join(chown_path, p)
+        os.chown(chown_path, uid, gid)
+
+# Fetches the version of loader
+def get_loader_version() -> str:
+    with open(os.path.join(os.path.dirname(sys.argv[0]), ".loader.version"), "r", encoding="utf-8") as version_file:
+        return version_file.readline().replace("\n", "")
 
 # Download Remote Binaries to local Plugin
 async def download_remote_binary_to_path(url, binHash, path) -> bool:

@@ -1,5 +1,5 @@
 <h1 align="center">
-  <a name="logo" href="https://deckbrew.xyz/"><img src="https://deckbrew.xyz/logo.png" alt="Deckbrew logo" width="200"></a>
+  <a name="logo" href="https://deckbrew.xyz/"><img src="https://deckbrew.xyz/static/icon-45ca1f5aea376a9ad37e92db906f283e.png" alt="Deckbrew logo" width="200"></a>
   <br>
   Decky Loader
   <br>
@@ -57,7 +57,7 @@ For more information about Decky Loader as well as documentation and development
      Intended for plugin developers. Pre-releases are unlikely to be fully stable but contain the latest changes. For more information on plugin development, please consult [the wiki page](https://deckbrew.xyz/en/loader-dev/development).
 1. Open the Return to Gaming Mode shortcut on your desktop.
 
-- There is also a fast install for those who can use Konsole. Run `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_release.sh | sh` and type your password when prompted.
+- There is also a fast install for those who can use Konsole. Run `curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/install_release.sh | sh` and type your password when prompted.
 
 ### 👋 Uninstallation
 
@@ -66,7 +66,7 @@ We are sorry to see you go! If you are considering uninstalling because you are 
 1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Power menu.
 1. Select "Switch to Desktop".
 1. Run the installer file again, and select `uninstall decky loader` 
-- There is also a fast uninstall for those who can use Konsole. Run `curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/uninstall.sh | sh` and type your password when prompted.
+- There is also a fast uninstall for those who can use Konsole. Run `curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/uninstall.sh | sh` and type your password when prompted.
 
 ## 🚀 Getting Started
 

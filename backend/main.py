@@ -19,8 +19,7 @@ from aiohttp_jinja2 import setup as jinja_setup
 # local modules
 from browser import PluginBrowser
 from helpers import (REMOTE_DEBUGGER_UNIT, csrf_middleware, get_csrf_token,
-                     get_home_path, get_homebrew_path, get_user,
-                     get_user_group, set_user, set_user_group,
+                     get_home_path, get_homebrew_path, get_user, get_user_group,
                      stop_systemd_unit, start_systemd_unit)
 from injector import get_gamepadui_tab, Tab, get_tabs, close_old_tabs
 from loader import Loader
@@ -28,18 +27,11 @@ from settings import SettingsManager
 from updater import Updater
 from utilities import Utilities
 
-# Ensure USER and GROUP vars are set first.
-# TODO: This isn't the best way to do this but supports the current
-# implementation. All the config load and environment setting eventually be
-# moved into init or a config/loader method.
-set_user()
-set_user_group()
 USER = get_user()
 GROUP = get_user_group()
-HOME_PATH = "/home/"+USER
-HOMEBREW_PATH = HOME_PATH+"/homebrew"
+HOMEBREW_PATH = get_homebrew_path()
 CONFIG = {
-    "plugin_path": getenv("PLUGIN_PATH", HOMEBREW_PATH+"/plugins"),
+    "plugin_path": getenv("PLUGIN_PATH", path.join(HOMEBREW_PATH, "plugins")),
     "chown_plugin_path": getenv("CHOWN_PLUGIN_PATH", "1") == "1",
     "server_host": getenv("SERVER_HOST", "127.0.0.1"),
     "server_port": int(getenv("SERVER_PORT", "1337")),
@@ -56,11 +48,14 @@ basicConfig(
 
 logger = getLogger("Main")
 
-async def chown_plugin_dir():
+def chown_plugin_dir():
     code_chown = call(["chown", "-R", USER+":"+GROUP, CONFIG["plugin_path"]])
     code_chmod = call(["chmod", "-R", "555", CONFIG["plugin_path"]])
     if code_chown != 0 or code_chmod != 0:
         logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {code_chmod})")
+
+if CONFIG["chown_plugin_path"] == True:
+    chown_plugin_dir()
 
 class PluginManager:
     def __init__(self, loop) -> None:
@@ -87,8 +82,6 @@ class PluginManager:
                 self.loop.create_task(start_systemd_unit(REMOTE_DEBUGGER_UNIT))
             else:
                 self.loop.create_task(stop_systemd_unit(REMOTE_DEBUGGER_UNIT))
-            if CONFIG["chown_plugin_path"] == True:
-                chown_plugin_dir()
             self.loop.create_task(self.loader_reinjector())
             self.loop.create_task(self.load_plugins())
 

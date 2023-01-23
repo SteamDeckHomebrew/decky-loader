@@ -31,9 +31,7 @@ class Updater:
         self.remoteVer = None
         self.allRemoteVers = None
         try:
-            logger.info(getcwd())
-            with open(path.join(getcwd(), ".loader.version"), "r", encoding="utf-8") as version_file:
-                self.localVer = version_file.readline().replace("\n", "")
+            self.localVer = helpers.get_loader_version()
         except:
             self.localVer = False
 
@@ -161,7 +159,7 @@ class Updater:
                 logger.error(f"Error at %s", exc_info=e)
             with open(path.join(getcwd(), "plugin_loader.service"), "r", encoding="utf-8") as service_file:
                 service_data = service_file.read()
-            service_data = service_data.replace("${HOMEBREW_FOLDER}", "/home/"+helpers.get_user()+"/homebrew")
+            service_data = service_data.replace("${HOMEBREW_FOLDER}", helpers.get_homebrew_path())
             with open(path.join(getcwd(), "plugin_loader.service"), "w", encoding="utf-8") as service_file:
                     service_file.write(service_data)
                     

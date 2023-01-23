@@ -9,14 +9,14 @@ import {
   findModule,
 } from 'decky-frontend-lib';
 import { FC, useEffect, useMemo, useState } from 'react';
-
 import { useTranslation } from 'react-i18next';
-const { t } = useTranslation('Store');
 
 import logo from '../../../assets/plugin_store.png';
 import Logger from '../../logger';
 import { StorePlugin, getPluginList } from '../../store';
 import PluginCard from './PluginCard';
+
+const { t } = useTranslation('Store');
 
 const logger = new Logger('FilePicker');
 
@@ -57,13 +57,13 @@ const StorePage: FC<{}> = () => {
             }}
             tabs={[
               {
-                title: t("store_tabs_title"),
+                title: t('store_tabs_title'),
                 content: <BrowseTab children={{ data: data }} />,
                 id: 'browse',
                 renderTabAddon: () => <span className={TabCount}>{data.length}</span>,
               },
               {
-                title: t("store_tabs_about"),
+                title: t('store_tabs_about'),
                 content: <AboutTab />,
                 id: 'about',
               },
@@ -78,8 +78,8 @@ const StorePage: FC<{}> = () => {
 const BrowseTab: FC<{ children: { data: StorePlugin[] } }> = (data) => {
   const sortOptions = useMemo(
     (): DropdownOption[] => [
-      { data: 1, label: t("store_tabs_alph_desc") },
-      { data: 2, label: t("store_tabs_alph_asce") },
+      { data: 1, label: t('store_tabs_alph_desc') },
+      { data: 2, label: t('store_tabs_alph_asce') },
     ],
     [],
   );
@@ -154,11 +154,11 @@ const BrowseTab: FC<{ children: { data: StorePlugin[] } }> = (data) => {
               maxWidth: '100%',
             }}
           >
-            <span className="DialogLabel">{t("store_sort_label")}</span>
+            <span className="DialogLabel">{t('store_sort_label')}</span>
             <Dropdown
-              menuLabel={t("store_sort_label") as string}
+              menuLabel={t('store_sort_label') as string}
               rgOptions={sortOptions}
-              strDefaultLabel={t("store_sort_label_def") as string}
+              strDefaultLabel={t('store_sort_label_def') as string}
               selectedOption={selectedSort}
               onChange={(e) => setSort(e.data)}
             />
@@ -168,7 +168,11 @@ const BrowseTab: FC<{ children: { data: StorePlugin[] } }> = (data) => {
       <div style={{ justifyContent: 'center', display: 'flex' }}>
         <Focusable style={{ display: 'flex', alignItems: 'center', width: '96%' }}>
           <div style={{ width: '100%' }}>
-            <TextField label={t("store_search_label")} value={searchFieldValue} onChange={(e) => setSearchValue(e.target.value)} />
+            <TextField
+              label={t('store_search_label')}
+              value={searchFieldValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
           </div>
         </Focusable>
       </div>
@@ -219,7 +223,7 @@ const AboutTab: FC<{}> = () => {
       />
       <span className="deckyStoreAboutHeader">Testing</span>
       <span>
-        {t("store_testing_cta")}{' '}
+        {t('store_testing_cta')}{' '}
         <a
           href="https://deckbrew.xyz/testing"
           target="_blank"
@@ -230,12 +234,10 @@ const AboutTab: FC<{}> = () => {
           deckbrew.xyz/testing
         </a>
       </span>
-      <span className="deckyStoreAboutHeader">{t("store_contrib_label")}</span>
-      <span>
-        {t("store_contrib_desc")}
-      </span>
-      <span className="deckyStoreAboutHeader">{t("store_source_label")}</span>
-      <span>{t("store_source_desc")}</span>
+      <span className="deckyStoreAboutHeader">{t('store_contrib_label')}</span>
+      <span>{t('store_contrib_desc')}</span>
+      <span className="deckyStoreAboutHeader">{t('store_source_label')}</span>
+      <span>{t('store_source_desc')}</span>
     </div>
   );
 };

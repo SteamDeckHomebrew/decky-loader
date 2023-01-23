@@ -1,0 +1,7 @@
+{
+    "install_title": "Install {{artifact}}",
+    "install_desc": "Are you sure you want to install {{artifact}} {{version}}?",
+    "install_button_idle": "Install",
+    "install_button_processing": "Installing"
+
+}

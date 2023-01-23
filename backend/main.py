@@ -93,6 +93,7 @@ class PluginManager:
         for route in list(self.web_app.router.routes()):
             self.cors.add(route)
         self.web_app.add_routes([static("/static", path.join(path.dirname(__file__), 'static'))])
+        self.web_app.add_routes([static("/locales", path.join(path.dirname(__file__), 'locales'))])
         self.web_app.add_routes([static("/legacy", path.join(path.dirname(__file__), 'legacy'))])
 
     def exception_handler(self, loop, context):
@@ -101,6 +102,7 @@ class PluginManager:
         loop.default_exception_handler(context)
 
     async def get_auth_token(self, request):
+        
         return Response(text=get_csrf_token())
 
     async def load_plugins(self):

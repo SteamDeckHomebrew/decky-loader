@@ -130,9 +130,7 @@ jobs:
             OUT=$(semver bump ${{github.event.inputs.bump}} "$OUT")
             printf "OUT: ${OUT}\n"
           else
-            printf "no type selected, defaulting to patch.\n"
-            OUT=$(semver bump patch "$OUT")
-            printf "OUT: ${OUT}\n"
+            printf "no type selected, not bumping for release.\n"
           fi
         elif [[ ! "$VERSION" =~ "-pre" ]]; then
           printf "previous tag is a release, bumping by selected type.\n"

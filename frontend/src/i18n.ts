@@ -6,12 +6,13 @@ i18next
   .use(initReactI18next)
   .use(Backend)
   .init({
+    debug: true,
     backend: {
       // path where resources get loaded from, or a function
       // returning a path:
       // function(lngs, namespaces) { return customPath; }
       // the returned path will interpolate lng, ns if provided like giving a static path
-      loadPath: '/locales/{{lng}}/{{ns}}.json',
+      loadPath: '/home/deck/homebrew/locales/{{lng}}/{{ns}}.json',
 
       // path to post missing resources
       // addPath: '/locales/{{lng}}/{{ns}}.missing.json',

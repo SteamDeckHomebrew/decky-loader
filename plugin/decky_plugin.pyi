@@ -14,15 +14,13 @@ A logging facility `logger` is available which writes to the recommended locatio
 
 __version__ = '0.1.0'
 
-import os
-import subprocess
 import logging
 
 """
 Constants
 """
 
-HOME: str = os.getenv("HOME", default="")
+HOME: str
 """
 The home directory of the effective user running the process.
 Environment variable: `HOME`.
@@ -30,7 +28,7 @@ If `root` was specified in the plugin's flags it will be `/root` otherwise the u
 e.g.: `/home/deck`
 """
 
-USER: str = os.getenv("USER", default="")
+USER: str
 """
 The effective username running the process.
 Environment variable: `USER`.
@@ -38,86 +36,84 @@ It would be `root` if `root` was specified in the plugin's flags otherwise the u
 e.g.: `deck`
 """
 
-DECKY_VERSION: str = os.getenv("DECKY_VERSION", default="")
+DECKY_VERSION: str
 """
 The version of the decky loader.
 Environment variable: `DECKY_VERSION`.
 e.g.: `v2.5.0-pre1`
 """
 
-DECKY_USER: str = os.getenv("DECKY_USER", default="")
+DECKY_USER: str
 """
 The user whose home decky resides in.
 Environment variable: `DECKY_USER`.
 e.g.: `deck`
 """
 
-DECKY_USER_HOME: str = os.getenv("DECKY_USER_HOME", default="")
+DECKY_USER_HOME: str
 """
 The home of the user where decky resides in.
 Environment variable: `DECKY_USER_HOME`.
 e.g.: `/home/deck`
 """
 
-DECKY_HOME: str = os.getenv("DECKY_HOME", default="")
+DECKY_HOME: str
 """
 The root of the decky folder.
 Environment variable: `DECKY_HOME`.
 e.g.: `/home/deck/homebrew`
 """
 
-DECKY_PLUGIN_SETTINGS_DIR: str = os.getenv(
-    "DECKY_PLUGIN_SETTINGS_DIR", default="")
+DECKY_PLUGIN_SETTINGS_DIR: str
 """
 The recommended path in which to store configuration files (created automatically).
 Environment variable: `DECKY_PLUGIN_SETTINGS_DIR`.
 e.g.: `/home/deck/homebrew/settings/decky-plugin-template`
 """
 
-DECKY_PLUGIN_RUNTIME_DIR: str = os.getenv(
-    "DECKY_PLUGIN_RUNTIME_DIR", default="")
+DECKY_PLUGIN_RUNTIME_DIR: str
 """
 The recommended path in which to store runtime data (created automatically).
 Environment variable: `DECKY_PLUGIN_RUNTIME_DIR`.
 e.g.: `/home/deck/homebrew/data/decky-plugin-template`
 """
 
-DECKY_PLUGIN_LOG_DIR: str = os.getenv("DECKY_PLUGIN_LOG_DIR", default="")
+DECKY_PLUGIN_LOG_DIR: str
 """
 The recommended path in which to store persistent logs (created automatically).
 Environment variable: `DECKY_PLUGIN_LOG_DIR`.
 e.g.: `/home/deck/homebrew/logs/decky-plugin-template`
 """
 
-DECKY_PLUGIN_DIR: str = os.getenv("DECKY_PLUGIN_DIR", default="")
+DECKY_PLUGIN_DIR: str
 """
 The root of the plugin's directory.
 Environment variable: `DECKY_PLUGIN_DIR`.
 e.g.: `/home/deck/homebrew/plugins/decky-plugin-template`
 """
 
-DECKY_PLUGIN_NAME: str = os.getenv("DECKY_PLUGIN_NAME", default="")
+DECKY_PLUGIN_NAME: str
 """
 The name of the plugin as specified in the 'plugin.json'.
 Environment variable: `DECKY_PLUGIN_NAME`.
 e.g.: `Example Plugin`
 """
 
-DECKY_PLUGIN_VERSION: str = os.getenv("DECKY_PLUGIN_VERSION", default="")
+DECKY_PLUGIN_VERSION: str
 """
 The version of the plugin as specified in the 'package.json'.
 Environment variable: `DECKY_PLUGIN_VERSION`.
 e.g.: `0.0.1`
 """
 
-DECKY_PLUGIN_AUTHOR: str = os.getenv("DECKY_PLUGIN_AUTHOR", default="")
+DECKY_PLUGIN_AUTHOR: str
 """
 The author of the plugin as specified in the 'plugin.json'.
 Environment variable: `DECKY_PLUGIN_AUTHOR`.
 e.g.: `John Doe`
 """
 
-DECKY_PLUGIN_LOG: str = os.path.join(DECKY_PLUGIN_LOG_DIR, "plugin.log")
+DECKY_PLUGIN_LOG: str
 """
 The path to the plugin's main logfile.
 Environment variable: `DECKY_PLUGIN_LOG`.
@@ -137,22 +133,6 @@ def migrate_any(target_dir: str, *files_or_directories: str) -> dict[str, str]:
 
     Returns the mapping of old -> new location.
     """
-    file_map: dict[str, str] = {}
-    for f in files_or_directories:
-        if not os.path.exists(f):
-            file_map[f] = ""
-            continue
-        if os.path.isdir(f):
-            src_dir = f
-            src_file = "."
-            file_map[f] = target_dir
-        else:
-            src_dir = os.path.dirname(f)
-            src_file = os.path.basename(f)
-            file_map[f] = os.path.join(target_dir, src_file)
-        subprocess.run(["sh", "-c", "mkdir -p \"$3\"; tar -cf - -C \"$1\" \"$2\" | tar -xf - -C \"$3\" && rm -rf \"$4\"",
-                       "_", src_dir, src_file, target_dir, f])
-    return file_map
 
 
 def migrate_settings(*files_or_directories: str) -> dict[str, str]:
@@ -163,7 +143,6 @@ def migrate_settings(*files_or_directories: str) -> dict[str, str]:
 
     Returns the mapping of old -> new location.
     """
-    return migrate_any(DECKY_PLUGIN_SETTINGS_DIR, *files_or_directories)
 
 
 def migrate_runtime(*files_or_directories: str) -> dict[str, str]:
@@ -174,7 +153,6 @@ def migrate_runtime(*files_or_directories: str) -> dict[str, str]:
 
     Returns the mapping of old -> new location.
     """
-    return migrate_any(DECKY_PLUGIN_RUNTIME_DIR, *files_or_directories)
 
 
 def migrate_logs(*files_or_directories: str) -> dict[str, str]:
@@ -185,17 +163,11 @@ def migrate_logs(*files_or_directories: str) -> dict[str, str]:
 
     Returns the mapping of old -> new location.
     """
-    return migrate_any(DECKY_PLUGIN_LOG_DIR, *files_or_directories)
 
 
 """
 Logging
 """
 
-logging.basicConfig(filename=DECKY_PLUGIN_LOG,
-                    format='[%(asctime)s][%(levelname)s]: %(message)s',
-                    force=True)
-logger: logging.Logger = logging.getLogger()
+logger: logging.Logger
 """The main plugin logger writing to `DECKY_PLUGIN_LOG`."""
-
-logger.setLevel(logging.INFO)

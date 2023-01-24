@@ -6,7 +6,7 @@ i18next
   .use(Backend)
   .use(initReactI18next)
   .init({
-    backend:{
+    backend: {
       // path where resources get loaded from, or a function
       // returning a path:
       // function(lngs, namespaces) { return customPath; }
@@ -17,7 +17,7 @@ i18next
       // If allowMultiLoading is false, lngs and namespaces will have only one element each,
       // If allowMultiLoading is true, lngs and namespaces can have multiple elements
       loadPath: 'https://steamloopback.host:1337/locales/{{lng}}/{{ns}}.json',
-    
+
       // your backend server supports multiloading
       // /locales/resources.json?lng=de+en&ns=ns1+ns2
       // Adapter is needed to enable MultiLoading https://github.com/i18next/i18next-multiload-backend-adapter
@@ -31,7 +31,7 @@ i18next
       // }
       allowMultiLoading: false, // set loadPath: '/locales/resources.json?lng={{lng}}&ns={{ns}}' to adapt to multiLoading
 
-      reloadInterval: false // can be used to reload resources in a specific interval (useful in server environments)
+      reloadInterval: false, // can be used to reload resources in a specific interval (useful in server environments)
     },
     debug: true,
     fallbackLng: 'en',
@@ -40,7 +40,7 @@ i18next
     interpolation: {
       escapeValue: false,
     },
-    load: 'languageOnly'
+    load: 'languageOnly',
   });
 
 export default i18next;

@@ -16,7 +16,7 @@ i18next
       //
       // If allowMultiLoading is false, lngs and namespaces will have only one element each,
       // If allowMultiLoading is true, lngs and namespaces can have multiple elements
-      loadPath: 'http://127.0.0.1:1337/locales/{{lng}}/{{ns}}.json',
+      loadPath: 'https://steamloopback.host:1337/locales/{{lng}}/{{ns}}.json',
     
       // your backend server supports multiloading
       // /locales/resources.json?lng=de+en&ns=ns1+ns2

@@ -13,7 +13,8 @@ specifiers:
   '@types/webpack': ^5.28.0
   decky-frontend-lib: ^3.18.10
   husky: ^8.0.1
-  i18next: ^22.0.6
+  i18next: ^22.4.9
+  i18next-browser-languagedetector: ^7.0.1
   i18next-http-backend: ^2.1.1
   import-sort-style-module: ^6.0.0
   inquirer: ^8.2.4
@@ -35,10 +36,11 @@ specifiers:
 
 dependencies:
   decky-frontend-lib: 3.18.10
-  i18next: 22.0.6
+  i18next: 22.4.9
+  i18next-browser-languagedetector: 7.0.1
   i18next-http-backend: 2.1.1
   react-file-icon: 1.2.0_wcqkhtmu7mswc6yz4uyexck3ty
-  react-i18next: 12.0.0_l5i64r2igudm3ypjcze5pllh6e
+  react-i18next: 12.0.0_goxgninut6ie3oe2kpsp3ellgm
   react-icons: 4.4.0_react@16.14.0
   react-markdown: 8.0.3_vshvapmxg47tngu7tvrsqpq55u
   remark-gfm: 3.0.1
@@ -232,6 +234,13 @@ packages:
 
   /@babel/runtime/7.20.1:
     resolution: {integrity: sha512-mrzLkl6U9YLF8qpqI7TB82PESyEGjm/0Ly91jG575eVxMMlb8fYfOXFZIJ8XfLrJZQbm7dlKry2bJmXBUEkdFg==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.13.11
+    dev: false
+
+  /@babel/runtime/7.20.13:
+    resolution: {integrity: sha512-gt3PKXs0DBoL9xCvOIIZ2NEqAGZqHjAnmVbfQtB620V0uReIQutpel14KcneZuer7UioY8ALKZ7iocavvzTNFA==}
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.13.11
@@ -1297,6 +1306,12 @@ packages:
     hasBin: true
     dev: true
 
+  /i18next-browser-languagedetector/7.0.1:
+    resolution: {integrity: sha512-Pa5kFwaczXJAeHE56CHG2aWzFBMJNUNghf0Pm4SwSrEMps/PTKqW90EYWlIvhuYStf3Sn1K0vw+gH3+TLdkH1g==}
+    dependencies:
+      '@babel/runtime': 7.20.1
+    dev: false
+
   /i18next-http-backend/2.1.1:
     resolution: {integrity: sha512-jByfUCDVgQ8+/Wens7queQhYYvMcGTW/lR4IJJNEDDXnmqjLrwi8ubXKpmp76/JIWEZHffNdWqnxFJcTVGeaOw==}
     dependencies:
@@ -1305,10 +1320,10 @@ packages:
       - encoding
     dev: false
 
-  /i18next/22.0.6:
-    resolution: {integrity: sha512-RlreNGoPIdDP4QG+qSA9PxZKGwlzmcozbI9ObI6+OyUa/Rp0EjZZA9ubyBjw887zVNZsC+7FI3sXX8oiTzAfig==}
+  /i18next/22.4.9:
+    resolution: {integrity: sha512-8gWMmUz460KJDQp/ob3MNUX84cVuDRY9PLFPnV8d+Qezz/6dkjxwOaH70xjrCNDO+JrUL25iXfAIN9wUkInNZw==}
     dependencies:
-      '@babel/runtime': 7.20.1
+      '@babel/runtime': 7.20.13
     dev: false
 
   /iconv-lite/0.4.24:
@@ -2196,7 +2211,7 @@ packages:
       tinycolor2: 1.4.2
     dev: false
 
-  /react-i18next/12.0.0_l5i64r2igudm3ypjcze5pllh6e:
+  /react-i18next/12.0.0_goxgninut6ie3oe2kpsp3ellgm:
     resolution: {integrity: sha512-/O7N6aIEAl1FaWZBNvhdIo9itvF/MO/nRKr9pYqRc9LhuC1u21SlfwpiYQqvaeNSEW3g3qUXLREOWMt+gxrWbg==}
     peerDependencies:
       i18next: '>= 19.0.0'
@@ -2211,7 +2226,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.20.1
       html-parse-stringify: 3.0.1
-      i18next: 22.0.6
+      i18next: 22.4.9
       react: 16.14.0
       react-dom: 16.14.0_react@16.14.0
     dev: false

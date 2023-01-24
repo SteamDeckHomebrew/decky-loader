@@ -10,8 +10,8 @@ export default function RemoteDebuggingSettings() {
 
   return (
     <Field
-      label={t('remote_cef_label')}
-      description={<span style={{ whiteSpace: 'pre-line' }}>{t('remote_cef_desc')}</span>}
+      label={t('remote_cef.label')}
+      description={<span style={{ whiteSpace: 'pre-line' }}>{t('remote_cef.desc')}</span>}
       icon={<FaBug style={{ display: 'block' }} />}
     >
       <Toggle

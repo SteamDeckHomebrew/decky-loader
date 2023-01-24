@@ -1,6 +1,10 @@
 {
-  "developer_mode_label": "Modalità sviluppatore",
-  "developer_mode_desc": "Abilità le impostazioni di sviluppo di Decky.",
-  "manual_plugin_label": "Installazione manuale plugins",
-  "manual_plugin_install_button": "Installa"
+  "developer_mode":{
+    "label": "Modalità sviluppatore",
+    "desc": "Abilità le impostazioni di sviluppo di Decky."
+  },
+  "manual_plugin":{
+    "label": "Installazione manuale plugins",
+    "button": "Installa"
+  }
 }

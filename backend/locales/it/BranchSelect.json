@@ -1,3 +1,5 @@
 {
-  "update_channel_label": "Canale di aggiornamento"
+  "update_channel":{
+    "label": "Canale di aggiornamento"
+  }
 }

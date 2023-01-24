@@ -1,7 +1,11 @@
 {
-  "valve_internal_label": "Abilita Menu Sviluppatore",
-  "valve_internal_desc1": "Abilita il menu interno di sviluppo di Valve.",
-  "valve_internal_desc2": "Non toccare nulla in questo menu se non sai quello che fa.",
-  "react_devtools_label": "Abilita i DevTools di React",
-  "react_devtools_desc": "Abilita la connessione ad un computer che esegue i DevTools di React. Cambiando questa impostazione ricaricherà Steam. Imposta l'indirizzo IP prima di abilitarlo."
+  "valve_internal":{
+    "label": "Abilita Menu Sviluppatore",
+    "desc1": "Abilita il menu interno di sviluppo di Valve.",
+    "desc2": "Non toccare nulla in questo menu se non sai quello che fa."
+  },
+  "react_devtools":{
+    "label": "Abilita i DevTools di React",
+    "desc": "Abilita la connessione ad un computer che esegue i DevTools di React. Cambiando questa impostazione ricaricherà Steam. Imposta l'indirizzo IP prima di abilitarlo."
+  }
 }

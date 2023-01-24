@@ -2,13 +2,14 @@
   "no_patch_notes_desc": "nessuna patch notes per questa versione",
   "decky_updates": "Aggiornamenti di Decky",
 
-  "updates_label": "Aggiornamenti",
-  "updates_cur_version": "Versione attuale: {{ver}}",
-  "updates_lat_version": "Ultima versione: {{ver}}",
-
-  "updates_checking": "Controllando",
-  "updates_check_button": "Cerca aggiornamenti",
-  "updates_install_button": "Installa aggiornamento",
-  "updates_reloading": "Ricaricando",
-  "updates_updating": "Aggiornando"
+  "updates":{
+    "label": "Aggiornamenti",
+    "cur_version": "Versione attuale: {{ver}}",
+    "lat_version": "Ultima versione: {{ver}}",
+    "checking": "Controllando",
+    "check_button": "Cerca aggiornamenti",
+    "install_button": "Installa aggiornamento",
+    "reloading": "Ricaricando",
+    "updating": "Aggiornando"
+  }
 }

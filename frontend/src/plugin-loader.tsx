@@ -154,10 +154,10 @@ class PluginLoader extends Logger {
         onCancel={() => {
           // do nothing
         }}
-        strTitle={`Uninstall ${name}`}
-        strOKButtonText={'Uninstall'}
+        strTitle={t('plugin_uninstall_title', name)}
+        strOKButtonText={t('plugin_uninstall_button')}
       >
-        {t('plugin_uninstall', name)}
+        {t('plugin_uninstall_desc', name)}
       </ConfirmModal>,
     );
   }

@@ -43,8 +43,9 @@
   },
   "dependencies": {
     "decky-frontend-lib": "^3.18.10",
-    "i18next": "^22.0.6",
+    "i18next": "^22.4.9",
     "i18next-http-backend": "^2.1.1",
+    "i18next-browser-languagedetector": "^7.0.1",
     "react-file-icon": "^1.2.0",
     "react-i18next": "^12.0.0",
     "react-icons": "^4.4.0",

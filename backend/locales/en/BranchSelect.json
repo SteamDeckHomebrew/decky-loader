@@ -1,3 +1,5 @@
 {
-  "update_channel_label": "Update Channel"
+  "update_channel":{
+    "label": "Update Channel"
+  }
 }

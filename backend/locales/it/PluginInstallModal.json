@@ -1,7 +1,8 @@
 {
-    "install_title": "Installa {{artifact}}",
-    "install_desc": "Sei sicuro di voler installare {{artifact}} {{version}}?",
-    "install_button_idle": "Installa",
-    "install_button_processing": "Installando"
-
+    "install":{
+        "title": "Installa {{artifact}}",
+        "desc": "Sei sicuro di voler installare {{artifact}} {{version}}?",
+        "button_idle": "Installa",
+        "button_processing": "Installando"
+    }
 }

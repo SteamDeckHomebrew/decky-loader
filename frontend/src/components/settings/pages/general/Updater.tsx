@@ -97,11 +97,11 @@ export default function UpdaterSettings() {
       <Field
         onOptionsActionDescription={versionInfo?.all ? 'Patch Notes' : undefined}
         onOptionsButton={versionInfo?.all ? showPatchNotes : undefined}
-        label={t('updates_label')}
+        label={t('updates.label')}
         description={
           versionInfo && (
-            <span style={{ whiteSpace: 'pre-line' }}>{`${t('updates_cur_version', versionInfo.current)}\n${
-              versionInfo.updatable ? t('updates_lat_version', versionInfo.remote?.tag_name) : ''
+            <span style={{ whiteSpace: 'pre-line' }}>{`${t('updates.cur_version', { ver: versionInfo.current })}\n${
+              versionInfo.updatable ? t('updates.lat_version', { ver: versionInfo.remote?.tag_name }) : ''
             }`}</span>
           )
         }
@@ -131,10 +131,10 @@ export default function UpdaterSettings() {
             }
           >
             {checkingForUpdates
-              ? t('updates_checking')
+              ? t('updates.checking')
               : !versionInfo?.remote || versionInfo?.remote?.tag_name == versionInfo?.current
-              ? t('updates_check_button')
-              : t('updates_install_button')}
+              ? t('updates.check_button')
+              : t('updates.install_button')}
           </DialogButton>
         ) : (
           <ProgressBarWithInfo
@@ -142,7 +142,7 @@ export default function UpdaterSettings() {
             bottomSeparator="none"
             nProgress={updateProgress}
             indeterminate={reloading}
-            sOperationText={reloading ? t('updates_reloading') : t('updates_updating')}
+            sOperationText={reloading ? t('updates.reloading') : t('updates.updating')}
           />
         )}
       </Field>

@@ -1,19 +1,29 @@
 {
-    "store_tabs_title": "Naviga",
-    "store_tabs_about": "About",
+    "store_tabs":{
+        "title": "Naviga",
+        "about": "About",
 
-    "store_tabs_alph_desc": "Alfabetico (A a Z)",
-    "store_tabs_alph_asce": "Alfabetico (Z a A)",
+        "alph_desc": "Alfabetico (A a Z)",
+        "alph_asce": "Alfabetico (Z a A)"
+    },
 
-    "store_sort_label": "Ordina",
-    "store_sort_label_def": "Ultimo aggiornato (Più recente)",
-    "store_filter_label": "Filtra",
-    "store_fiter_label_def": "Tutto",
+    "store_sort":{
+        "label": "Ordina",
+        "label_def": "Ultimo aggiornato (Più recente)"
+    },
+    "store_filter":{
+        "label": "Filtra",
+        "label_def": "Tutto"
+    },
     "store_search_label": "Cerca",
 
     "store_testing_cta": "Valuta la possibilità di testare nuovi plugin per aiutare il team di Decky Loader!",
-    "store_contrib_label": "Contribuisci",
-    "store_contrib_desc": "Se desideri contribuire allo store di Decky, puoi trovare un template caricato su GitHub all'indirizzo SteamDeckHomebrew/decky-plugin-template. Informazioni riguardo sviluppo e distribuzione sono disponibili nel README.",
-    "store_source_label": "Codice Sorgente",
-    "store_source_desc": "Tutto il codice sorgente dei plugin è disponibile su GitHub all'indirizzo SteamDeckHomebrew/decky-plugin-database"
+    "store_contrib":{
+        "label": "Contribuisci",
+        "desc": "Se desideri contribuire allo store di Decky, puoi trovare un template caricato su GitHub all'indirizzo SteamDeckHomebrew/decky-plugin-template. Informazioni riguardo sviluppo e distribuzione sono disponibili nel README."
+    },
+    "store_source":{
+        "label": "Codice Sorgente",
+        "desc": "Tutto il codice sorgente dei plugin è disponibile su GitHub all'indirizzo SteamDeckHomebrew/decky-plugin-database"
+    }
 }

@@ -1,4 +1,6 @@
 {
-  "remote_cef_label": "Permetti il debug remoto di CEF",
-  "remote_cef_desc": "Permetti l'accesso non autenticato a chiunque sulla tua rete locale al debugger di CEF."
+  "remote_cef":{
+    "label": "Permetti il debug remoto di CEF",
+    "desc": "Permetti l'accesso non autenticato a chiunque sulla tua rete locale al debugger di CEF."
+  }
 }

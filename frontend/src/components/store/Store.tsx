@@ -63,7 +63,7 @@ const StorePage: FC<{}> = () => {
                 renderTabAddon: () => <span className={TabCount}>{data.length}</span>,
               },
               {
-                title: t('store_tabs_about'),
+                title: t('store_tabs.about'),
                 content: <AboutTab />,
                 id: 'about',
               },
@@ -78,8 +78,8 @@ const StorePage: FC<{}> = () => {
 const BrowseTab: FC<{ children: { data: StorePlugin[] } }> = (data) => {
   const sortOptions = useMemo(
     (): DropdownOption[] => [
-      { data: 1, label: t('store_tabs_alph_desc') },
-      { data: 2, label: t('store_tabs_alph_asce') },
+      { data: 1, label: t('store_tabs.alph_desc') },
+      { data: 2, label: t('store_tabs.alph_asce') },
     ],
     [],
   );
@@ -108,11 +108,11 @@ const BrowseTab: FC<{ children: { data: StorePlugin[] } }> = (data) => {
               width: '47.5%',
             }}
           >
-            <span className="DialogLabel">{t("store_sort_label")}</span>
+            <span className="DialogLabel">{t("store_sort.label")}</span>
             <Dropdown
-              menuLabel={t("store_sort_label") as string}
+              menuLabel={t("store_sort.label") as string}
               rgOptions={sortOptions}
-              strDefaultLabel={t("store_sort_label_def") as string}
+              strDefaultLabel={t("store_sort.label_def") as string}
               selectedOption={selectedSort}
               onChange={(e) => setSort(e.data)}
             />
@@ -125,11 +125,11 @@ const BrowseTab: FC<{ children: { data: StorePlugin[] } }> = (data) => {
               marginLeft: 'auto',
             }}
           >
-            <span className="DialogLabel">{t("store_filter_label")}</span>
+            <span className="DialogLabel">{t("store_filter.label")}</span>
             <Dropdown
-              menuLabel={t("store_filter_label")}
+              menuLabel={t("store_filter.label")}
               rgOptions={filterOptions}
-              strDefaultLabel={t("store_fiter_label_def")}
+              strDefaultLabel={t("store_filter.label_def")}
               selectedOption={selectedFilter}
               onChange={(e) => setFilter(e.data)}
             />
@@ -139,7 +139,7 @@ const BrowseTab: FC<{ children: { data: StorePlugin[] } }> = (data) => {
       <div style={{ justifyContent: 'center', display: 'flex' }}>
         <Focusable style={{ display: 'flex', alignItems: 'center', width: '96%' }}>
           <div style={{ width: '100%' }}>
-            <TextField label={t("store_search_label")} value={searchFieldValue} onChange={(e) => setSearchValue(e.target.value)} />
+            <TextField label={t("store_search.label")} value={searchFieldValue} onChange={(e) => setSearchValue(e.target.value)} />
           </div>
         </Focusable>
       </div>
@@ -154,11 +154,11 @@ const BrowseTab: FC<{ children: { data: StorePlugin[] } }> = (data) => {
               maxWidth: '100%',
             }}
           >
-            <span className="DialogLabel">{t('store_sort_label')}</span>
+            <span className="DialogLabel">{t('store_sort.label')}</span>
             <Dropdown
-              menuLabel={t('store_sort_label') as string}
+              menuLabel={t('store_sort.label') as string}
               rgOptions={sortOptions}
-              strDefaultLabel={t('store_sort_label_def') as string}
+              strDefaultLabel={t('store_sort.label_def') as string}
               selectedOption={selectedSort}
               onChange={(e) => setSort(e.data)}
             />
@@ -169,7 +169,7 @@ const BrowseTab: FC<{ children: { data: StorePlugin[] } }> = (data) => {
         <Focusable style={{ display: 'flex', alignItems: 'center', width: '96%' }}>
           <div style={{ width: '100%' }}>
             <TextField
-              label={t('store_search_label')}
+              label={t('store_search.label')}
               value={searchFieldValue}
               onChange={(e) => setSearchValue(e.target.value)}
             />
@@ -234,10 +234,10 @@ const AboutTab: FC<{}> = () => {
           deckbrew.xyz/testing
         </a>
       </span>
-      <span className="deckyStoreAboutHeader">{t('store_contrib_label')}</span>
-      <span>{t('store_contrib_desc')}</span>
-      <span className="deckyStoreAboutHeader">{t('store_source_label')}</span>
-      <span>{t('store_source_desc')}</span>
+      <span className="deckyStoreAboutHeader">{t('store_contrib.label')}</span>
+      <span>{t('store_contrib.desc')}</span>
+      <span className="deckyStoreAboutHeader">{t('store_source.label')}</span>
+      <span>{t('store_source.desc')}</span>
     </div>
   );
 };

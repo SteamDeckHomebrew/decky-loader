@@ -29,13 +29,13 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({ artifact, version, ha
       onCancel={async () => {
         await onCancel();
       }}
-      strTitle={t('install_title', artifact)}
-      strOKButtonText={loading ? t('install_button_processing') : t('install_button_idle')}
+      strTitle={t('install.title', artifact)}
+      strOKButtonText={loading ? t('install.button_processing') : t('install.button_idle')}
     >
       {hash == 'False' ? (
         <h3 style={{ color: 'red' }}>!!!!NO HASH PROVIDED!!!!</h3>
       ) : (
-        t('install_desc', artifact, version)
+        t('install.desc', artifact, version)
       )}
     </ConfirmModal>
   );

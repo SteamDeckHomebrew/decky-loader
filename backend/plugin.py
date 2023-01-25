@@ -79,9 +79,11 @@ class PluginWrapper:
             environ["DECKY_PLUGIN_VERSION"] = self.version
             environ["DECKY_PLUGIN_AUTHOR"] = self.author
             # append the loader's plugin path to the recognized python paths
-            syspath.append(path.join(path.dirname(__file__), "plugin"))
+            syspath.append(path.realpath(path.join(path.dirname(__file__), "plugin")))
             # append the plugin's `py_modules` to the recognized python paths
             syspath.append(path.join(environ["DECKY_PLUGIN_DIR"], "py_modules"))
+            # append the system and user python paths
+            syspath.extend(helpers.get_system_pythonpaths())
             spec = spec_from_file_location("_", self.file)
             module = module_from_spec(spec)
             spec.loader.exec_module(module)

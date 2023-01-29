@@ -180,6 +180,7 @@ class PluginLoader extends Logger {
   }
 
   public unloadPlugin(name: string) {
+    console.log('Plugin List: ', this.plugins);
     const plugin = this.plugins.find((plugin) => plugin.name === name || plugin.name === name.replace('$LEGACY_', ''));
     plugin?.onDismount?.();
     this.plugins = this.plugins.filter((p) => p !== plugin);

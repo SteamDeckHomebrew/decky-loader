@@ -92,7 +92,7 @@ class PluginWrapper:
 
     async def _unload(self):
         try:
-            self.log.info("Attempting to unload with plugin " + self.name + "'s \"_unload function/\"" + "\n")
+            self.log.info("Attempting to unload with plugin " + self.name + "'s \"_unload\" function.\n")
             if hasattr(self.Plugin, "_unload"):
                 await self.Plugin._unload(self.Plugin)
                 self.log.info("Unloaded " + self.name + "\n")

@@ -108,7 +108,7 @@ class PluginBrowser:
         try:
             logger.info("uninstalling " + name)
             logger.info(" at dir " + self.find_plugin_folder(name))
-            logger.debug("unloading %s" % str(name))
+            logger.debug("calling frontend unload for %s" % str(name))
             await tab.evaluate_js(f"DeckyPluginLoader.unloadPlugin('{name}')")
             if self.plugins[name]:
                 self.plugins[name].stop()

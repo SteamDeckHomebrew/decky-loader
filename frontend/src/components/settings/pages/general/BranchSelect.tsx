@@ -7,7 +7,6 @@ import { callUpdaterMethod } from '../../../../updater';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 
 const logger = new Logger('BranchSelect');
-const { t } = useTranslation('BranchSelect');
 
 enum UpdateBranch {
   Stable,
@@ -16,12 +15,13 @@ enum UpdateBranch {
 }
 
 const BranchSelect: FunctionComponent<{}> = () => {
+  const { t } = useTranslation();
   const [selectedBranch, setSelectedBranch] = useSetting<UpdateBranch>('branch', UpdateBranch.Prerelease);
 
   return (
     // Returns numerical values from 0 to 2 (with current branch setup as of 8/28/22)
     // 0 being stable, 1 being pre-release and 2 being nightly
-    <Field label={t('update_channel.label')}>
+    <Field label={t('BranchSelect.update_channel.label')}>
       <Dropdown
         rgOptions={Object.values(UpdateBranch)
           .filter((branch) => typeof branch == 'string')

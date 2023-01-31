@@ -8,17 +8,17 @@ import { Store } from '../../../../store';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 
 const logger = new Logger('StoreSelect');
-const { t } = useTranslation('StoreSelect');
 
 const StoreSelect: FunctionComponent<{}> = () => {
   const [selectedStore, setSelectedStore] = useSetting<Store>('store', Store.Default);
   const [selectedStoreURL, setSelectedStoreURL] = useSetting<string | null>('store-url', null);
+  const { t } = useTranslation();
 
   // Returns numerical values from 0 to 2 (with current branch setup as of 8/28/22)
   // 0 being Default, 1 being Testing and 2 being Custom
   return (
     <>
-      <Field label={t('store_channel_label')}>
+      <Field label={t('StoreSelect.store_channel_label')}>
         <Dropdown
           rgOptions={Object.values(Store)
             .filter((store) => typeof store == 'string')
@@ -35,7 +35,7 @@ const StoreSelect: FunctionComponent<{}> = () => {
       </Field>
       {selectedStore == Store.Custom && (
         <Field
-          label={t('custom_store_label')}
+          label={t('StoreSelect.custom_store_label')}
           indentLevel={1}
           description={
             <TextField

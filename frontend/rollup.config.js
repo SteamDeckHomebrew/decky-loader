@@ -10,12 +10,15 @@ import externalGlobals from 'rollup-plugin-external-globals';
 
 const hiddenWarnings = ['THIS_IS_UNDEFINED', 'EVAL'];
 
+
 export default defineConfig({
   input: 'src/index.tsx',
   plugins: [
     del({ targets: '../backend/static/*', force: true }),
-    commonjs(),
-    nodeResolve(),
+    commonjs({include: '../frontend/node_modules/**'}),
+    nodeResolve({
+      browser: true
+    }),
     externalGlobals({
       react: 'SP_REACT',
       'react-dom': 'SP_REACTDOM',

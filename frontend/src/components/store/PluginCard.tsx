@@ -15,11 +15,11 @@ interface PluginCardProps {
   plugin: StorePlugin;
 }
 
-const { t } = useTranslation('PluginCard');
-
 const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
   const [selectedOption, setSelectedOption] = useState<number>(0);
   const root: boolean = plugin.tags.some((tag) => tag === 'root');
+
+  const { t } = useTranslation();
 
   return (
     <div
@@ -100,7 +100,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
             plugin.description
           ) : (
             <span>
-              <i style={{ color: '#666' }}>{t('plugin_no_desc')}</i>
+              <i style={{ color: '#666' }}>{t('PluginCard.plugin_no_desc')}</i>
             </span>
           )}
         </span>
@@ -112,7 +112,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               color: '#fee75c',
             }}
           >
-            <i>{t('plugin_full_access')}</i>{' '}
+            <i>{t('PluginCard.plugin_full_access')}</i>{' '}
             <a
               className="deckyStoreCardDescriptionRootLink"
               href="https://deckbrew.xyz/root"
@@ -149,7 +149,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
                   layout="below"
                   onClick={() => requestPluginInstall(plugin.name, plugin.versions[selectedOption])}
                 >
-                  <span className="deckyStoreCardInstallText">{t('plugin_install')}</span>
+                  <span className="deckyStoreCardInstallText">{t('PluginCard.plugin_install')}</span>
                 </ButtonItem>
               </div>
               <div
@@ -166,7 +166,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
                       label: version.name,
                     })) as SingleDropdownOption[]
                   }
-                  menuLabel={t('plugin_version_label') as string}
+                  menuLabel={t('PluginCard.plugin_version_label') as string}
                   selectedOption={selectedOption}
                   onChange={({ data }) => setSelectedOption(data)}
                 />

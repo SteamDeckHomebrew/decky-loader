@@ -17,7 +17,7 @@ export default function GeneralSettings({
   setIsDeveloper: (val: boolean) => void;
 }) {
   const [pluginURL, setPluginURL] = useState('');
-  const { t } = useTranslation('SettingsGeneralIndex');
+  const { t } = useTranslation();
 
   return (
     <div>
@@ -26,8 +26,8 @@ export default function GeneralSettings({
       <StoreSelect />
       <RemoteDebuggingSettings />
       <Field
-        label={t('developer_mode.label')}
-        description={<span style={{ whiteSpace: 'pre-line' }}>{t('developer_mode.desc')}</span>}
+        label={t('SettingsGeneralIndex.developer_mode.label')}
+        description={<span style={{ whiteSpace: 'pre-line' }}>{t('SettingsGeneralIndex.developer_mode.desc')}</span>}
         icon={<FaTools style={{ display: 'block' }} />}
       >
         <Toggle
@@ -38,12 +38,12 @@ export default function GeneralSettings({
         />
       </Field>
       <Field
-        label={t('manual_plugin.label')}
+        label={t('SettingsGeneralIndex.manual_plugin.label')}
         description={<TextField label={'URL'} value={pluginURL} onChange={(e) => setPluginURL(e?.target.value)} />}
         icon={<FaShapes style={{ display: 'block' }} />}
       >
         <DialogButton disabled={pluginURL.length == 0} onClick={() => installFromURL(pluginURL)}>
-          {t('manual_plugin.button')}
+          {t('SettingsGeneralIndex.manual_plugin.button')}
         </DialogButton>
       </Field>
     </div>

@@ -26,8 +26,6 @@ const SettingsPage = lazy(() => import('./components/settings'));
 
 const FilePicker = lazy(() => import('./components/modals/filepicker'));
 
-const { t } = useTranslation('plugin-loader');
-
 declare global {
   interface Window {}
 }
@@ -103,10 +101,11 @@ class PluginLoader extends Logger {
 
   public async notifyUpdates() {
     const versionInfo = await this.updateVersion();
+    const { t } = useTranslation('PluginLoader');
     if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
       this.toaster.toast({
         title: 'Decky',
-        body: t('decky_update_available', versionInfo?.remote?.tag_name),
+        body: t('PluginLoader.decky_update_available', versionInfo?.remote?.tag_name),
         onClick: () => Router.Navigate('/decky/settings'),
       });
       this.deckyState.setHasLoaderUpdate(true);
@@ -123,11 +122,12 @@ class PluginLoader extends Logger {
 
   public async notifyPluginUpdates() {
     const updates = await this.checkPluginUpdates();
+    const { t } = useTranslation();
     if (updates?.size > 0) {
       this.toaster.toast({
         title: 'Decky',
         //body: `Updates available for ${updates.size} plugin${updates.size > 1 ? 's' : ''}!`,
-        body: t('plugin_update', updates.size.toString(10), { count: updates.size }),
+        body: t('PluginLoader.plugin_update', updates.size.toString(10), { count: updates.size }),
         onClick: () => Router.Navigate('/decky/settings/plugins'),
       });
     }
@@ -146,6 +146,7 @@ class PluginLoader extends Logger {
   }
 
   public uninstallPlugin(name: string) {
+    const { t } = useTranslation();
     showModal(
       <ConfirmModal
         onOK={async () => {
@@ -154,10 +155,10 @@ class PluginLoader extends Logger {
         onCancel={() => {
           // do nothing
         }}
-        strTitle={t('plugin_uninstall_title', name)}
-        strOKButtonText={t('plugin_uninstall_button')}
+        strTitle={t('PluginLoader.plugin_uninstall.title', name)}
+        strOKButtonText={t('PluginLoader.plugin_uninstall.button')}
       >
-        {t('plugin_uninstall_desc', name)}
+        {t('PluginLoader.plugin_uninstall.desc', name)}
       </ConfirmModal>,
     );
   }
@@ -233,6 +234,9 @@ class PluginLoader extends Logger {
         Authentication: window.deckyAuthToken,
       },
     });
+
+    const { t } = useTranslation();
+
     if (res.ok) {
       try {
         let plugin_export = await eval(await res.text());
@@ -243,14 +247,14 @@ class PluginLoader extends Logger {
           version: version,
         });
       } catch (e) {
-        this.error(t('plugin_load_error', name), e);
+        this.error(t('PluginLoader.plugin_load_error', name), e);
         const TheError: FC<{}> = () => (
           <>
             {t('error')}:{' '}
             <pre>
               <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
             </pre>
-            <>{t('plugin_error_uninstall', <FaCog style={{ display: 'inline' }} />)}</>
+            <>{t('PluginLoader.plugin_error_uninstall', <FaCog style={{ display: 'inline' }} />)}</>
           </>
         );
         this.plugins.push({
@@ -260,7 +264,7 @@ class PluginLoader extends Logger {
           icon: <FaExclamationCircle />,
         });
         this.toaster.toast({
-          title: t('error_loading_plugin_toast', name),
+          title: t('PluginLoader.error_loading_plugin.toast', name),
           body: '' + e,
           icon: <FaExclamationCircle />,
         });
@@ -296,12 +300,14 @@ class PluginLoader extends Logger {
     includeFiles?: boolean,
     regex?: RegExp,
   ): Promise<{ path: string; realpath: string }> {
+    const { t } = useTranslation();
+
     return new Promise((resolve, reject) => {
       const Content = ({ closeModal }: { closeModal?: () => void }) => (
         // Purposely outside of the FilePicker component as lazy-loaded ModalRoots don't focus correctly
         <ModalRoot
           onCancel={() => {
-            reject(t('file_picker_cancel_text'));
+            reject(t('PluginLoader.file_picker_cancel_text'));
             closeModal?.();
           }}
         >

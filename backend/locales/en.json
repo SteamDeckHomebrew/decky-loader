@@ -1,0 +1,129 @@
+{
+  "branch_select": {
+    "update_channel": {
+      "label": "Update Channel"
+    }
+  },
+  "reload": "Reload",
+  "uninstall": "Uninstall",
+  "Developer": {
+    "enabling": "Enabling",
+    "disabling": "Disabling",
+    "5secreload": "Reloading in 5 seconds"
+  },
+  "DeveloperIndex": {
+    "valve_internal": {
+      "label": "Enable Valve Internal",
+      "desc1": "Enables the Valve internal developer menu.",
+      "desc2": "Do not touch anything in this menu unless you know what it does."
+    },
+    "react_devtools": {
+      "label": "Enable React DevTools",
+      "desc": "Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set the IP address before enabling."
+    }
+  },
+  "PluginCard": {
+    "plugin_version_label": "Plugin Version",
+    "plugin_full_access": "This plugin has full access to your Steam Deck.",
+    "plugin_install": "Install",
+    "plugin_no_desc": "No description provided."
+  },
+  "PluginInstallModal": {
+    "install": {
+      "title": "Install {{artifact}}",
+      "desc": "Are you sure you want to install {{artifact}} {{version}}?",
+      "button_idle": "Install",
+      "button_processing": "Installing"
+    }
+  },
+  "PluginListIndex": {
+    "list_no_plugin": "No plugins installed!",
+    "list_update_to": "Update to {{name}}",
+    "list_plug_actions_label": "Plugin Actions"
+  },
+  "PluginLoader": {
+    "enabling": "Enabling",
+    "disabling": "Disabling",
+    "decky_update_available": "Update to {{tag_name}} available!",
+    "plugin_update_one": "Updates available for 1 plugin!",
+    "plugin_update_other": "Updates available for {{number}} plugins!",
+    "plugin_uninstall": {
+      "title": "Uninstall {{name}}",
+      "desc": "Are you sure you want to uninstall {{name}}?",
+      "button": "Uninstall"
+    },
+    "plugin_load": {
+      "plugin_load_error": "Error loading plugin {{name}}",
+      "plugin_load_error_toast": "Error loading {{name}}"
+    },
+    "error": "Error",
+    "plugin_error_uninstall": "Please go to {{-icon}} in the Decky menu if you need to uninstall this plugin.",
+    "file_picker_cancel_text": "User canceled"
+  },
+  "RemoteDebugging": {
+    "remote_cef": {
+      "label": "Allow Remote CEF Debugging",
+      "desc": "Allow unauthenticated access to the CEF debugger to anyone in your network"
+    }
+  },
+  "SettingsGeneralIndex": {
+    "developer_mode": {
+      "label": "Developer mode",
+      "desc": "Enables Decky's developer settings."
+    },
+    "manual_plugin": {
+      "label": "Manual plugin install",
+      "button": "Install"
+    }
+  },
+  "SettingsIndex": {
+    "general_title": "General",
+    "plugins_title": "Plugins",
+    "developer_title": "Developer",
+    "navbar_settings": "Decky Settings"
+  },
+  "Store": {
+    "store_tabs": {
+      "title": "Browse",
+      "about": "About",
+      "alph_desc": "Alphabetical (A to Z)",
+      "alph_asce": "Alphabetical (Z to A)"
+    },
+    "store_sort": {
+      "label": "Sort",
+      "label_def": "Last Updated (Newest)"
+    },
+    "store_filter": {
+      "label": "Filter",
+      "label_def": "All"
+    },
+    "store_search_label": "Search",
+    "store_testing_cta": "Please consider testing new plugins to help the Decky Loader team!",
+    "store_contrib": {
+      "label": "Contributing",
+      "desc": "If you would like to contribute to the Decky Plugin Store, check the SteamDeckHomebrew/decky-plugin-template repository on GitHub. Information on development and distribution is available in the README."
+    },
+    "store_source": {
+      "label": "Source Code",
+      "desc": "All plugin source code is available on SteamDeckHomebrew/decky-plugin-database repository on GitHub."
+    }
+  },
+  "StoreSelect": {
+    "store_channel_label": "Store Channel",
+    "custom_store_label": "Custom Store"
+  },
+  "Updater": {
+    "no_patch_notes_desc": "no patch notes for this version",
+    "decky_updates": "Decky Updates",
+    "updates": {
+      "label": "Updates",
+      "cur_version": "Current version: {{ver}}",
+      "lat_version": "Latest version: {{ver}}",
+      "checking": "'Checking",
+      "check_button": "Check For Updates",
+      "install_button": "Install Update",
+      "reloading": "Reloading",
+      "updating": "Updating"
+    }
+  }
+}

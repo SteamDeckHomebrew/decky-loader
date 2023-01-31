@@ -1,6 +1,0 @@
-{
-  "remote_cef":{
-    "label": "Allow Remote CEF Debugging",
-    "desc": "Allow unauthenticated access to the CEF debugger to anyone in your network"
-  }
-}

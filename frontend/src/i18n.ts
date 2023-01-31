@@ -11,12 +11,20 @@ i18n
     load: 'languageOnly',
     debug: true,
     fallbackLng: 'en',
-    lng: 'en',
+    lng: 'it',
     interpolation: {
       escapeValue: false,
     },
     backend: {
-      loadPath: 'http://127.0.0.1:1337/locales/{{lng}}/{{ns}}.json',
+      loadPath: 'http://127.0.0.1:1337/locales/{{lng}}.json',
+      requestOptions: {
+        // used for fetch
+        credentials: 'include',
+        cache: 'no-cache',
+      },
+      customHeaders: {
+        Authentication: window.deckyAuthToken,
+      },
     },
   });
 

@@ -6,12 +6,12 @@ import { useSetting } from '../../../../utils/hooks/useSetting';
 
 export default function RemoteDebuggingSettings() {
   const [allowRemoteDebugging, setAllowRemoteDebugging] = useSetting<boolean>('cef_forward', false);
-  const { t } = useTranslation('RemoteDebugging');
+  const { t } = useTranslation();
 
   return (
     <Field
-      label={t('remote_cef.label')}
-      description={<span style={{ whiteSpace: 'pre-line' }}>{t('remote_cef.desc')}</span>}
+      label={t('RemoteDebugging.remote_cef.label')}
+      description={<span style={{ whiteSpace: 'pre-line' }}>{t('RemoteDebugging.remote_cef.desc')}</span>}
       icon={<FaBug style={{ display: 'block' }} />}
     >
       <Toggle

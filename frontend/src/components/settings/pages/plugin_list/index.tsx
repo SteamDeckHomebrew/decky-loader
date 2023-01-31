@@ -8,7 +8,7 @@ import { useDeckyState } from '../../../DeckyState';
 
 export default function PluginList() {
   const { plugins, updates } = useDeckyState();
-  const { t } = useTranslation('PluginListIndex');
+  const { t } = useTranslation();
 
   useEffect(() => {
     window.DeckyPluginLoader.checkPluginUpdates();
@@ -17,7 +17,7 @@ export default function PluginList() {
   if (plugins.length === 0) {
     return (
       <div>
-        <p>{t('list_no_plugin')}</p>
+        <p>{t('PluginListIndex.list_no_plugin')}</p>
       </div>
     );
   }
@@ -38,7 +38,7 @@ export default function PluginList() {
                   onClick={() => requestPluginInstall(name, update)}
                 >
                   <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    {t('list_update_to', update.name)}
+                    {t('PluginListIndex.list_update_to', update.name)}
                     <FaDownload style={{ paddingLeft: '2rem' }} />
                   </div>
                 </DialogButton>
@@ -47,12 +47,12 @@ export default function PluginList() {
                 style={{ height: '40px', width: '40px', padding: '10px 12px', minWidth: '40px' }}
                 onClick={(e: MouseEvent) =>
                   showContextMenu(
-                    <Menu label={t('list_plug_actions_label')}>
+                    <Menu label={t('PluginListIndex.list_plug_actions_label')}>
                       <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(name, version)}>
-                        {t('reload')}
+                        {t('PluginListIndex.reload')}
                       </MenuItem>
                       <MenuItem onSelected={() => window.DeckyPluginLoader.uninstallPlugin(name)}>
-                        {t('uninstall')}
+                        {t('PluginListIndex.uninstall')}
                       </MenuItem>
                     </Menu>,
                     e.currentTarget ?? window,

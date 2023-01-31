@@ -21,10 +21,10 @@ import InlinePatchNotes from '../../../patchnotes/InlinePatchNotes';
 import WithSuspense from '../../../WithSuspense';
 
 const MarkdownRenderer = lazy(() => import('../../../Markdown'));
-const { t } = useTranslation('Updater');
 
 function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | null; closeModal?: () => {} }) {
   const SP = findSP();
+  const { t } = useTranslation();
   return (
     <Focusable onCancelButton={closeModal}>
       <FocusRing>
@@ -47,7 +47,7 @@ function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | n
                     <MarkdownRenderer onDismiss={closeModal}>{versionInfo.all[id].body}</MarkdownRenderer>
                   </WithSuspense>
                 ) : (
-                  t('no_patch_notes_desc')
+                  t('Updater.no_patch_notes_desc')
                 )}
               </div>
             </Focusable>
@@ -60,7 +60,7 @@ function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | n
           initialColumn={0}
           autoFocus={true}
           fnGetColumnWidth={() => SP.innerWidth}
-          name={t('decky_updates') as string}
+          name={t('Updater.decky_updates') as string}
         />
       </FocusRing>
     </Focusable>
@@ -73,6 +73,8 @@ export default function UpdaterSettings() {
   const [checkingForUpdates, setCheckingForUpdates] = useState<boolean>(false);
   const [updateProgress, setUpdateProgress] = useState<number>(-1);
   const [reloading, setReloading] = useState<boolean>(false);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     window.DeckyUpdater = {
@@ -97,11 +99,13 @@ export default function UpdaterSettings() {
       <Field
         onOptionsActionDescription={versionInfo?.all ? 'Patch Notes' : undefined}
         onOptionsButton={versionInfo?.all ? showPatchNotes : undefined}
-        label={t('updates.label')}
+        label={t('Updater.updates.label')}
         description={
           versionInfo && (
-            <span style={{ whiteSpace: 'pre-line' }}>{`${t('updates.cur_version', { ver: versionInfo.current })}\n${
-              versionInfo.updatable ? t('updates.lat_version', { ver: versionInfo.remote?.tag_name }) : ''
+            <span style={{ whiteSpace: 'pre-line' }}>{`${t('Updater.updates.cur_version', {
+              ver: versionInfo.current,
+            })}\n${
+              versionInfo.updatable ? t('Updater.updates.lat_version', { ver: versionInfo.remote?.tag_name }) : ''
             }`}</span>
           )
         }
@@ -131,10 +135,10 @@ export default function UpdaterSettings() {
             }
           >
             {checkingForUpdates
-              ? t('updates.checking')
+              ? t('Updater.updates.checking')
               : !versionInfo?.remote || versionInfo?.remote?.tag_name == versionInfo?.current
-              ? t('updates.check_button')
-              : t('updates.install_button')}
+              ? t('Updater.updates.check_button')
+              : t('Updater.updates.install_button')}
           </DialogButton>
         ) : (
           <ProgressBarWithInfo
@@ -142,7 +146,7 @@ export default function UpdaterSettings() {
             bottomSeparator="none"
             nProgress={updateProgress}
             indeterminate={reloading}
-            sOperationText={reloading ? t('updates.reloading') : t('updates.updating')}
+            sOperationText={reloading ? t('Updater.updates.reloading') : t('Updater.updates.updating')}
           />
         )}
       </Field>

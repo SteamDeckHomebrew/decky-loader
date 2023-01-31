@@ -9,19 +9,18 @@ import PluginList from './pages/plugin_list';
 
 const DeveloperSettings = lazy(() => import('./pages/developer'));
 
-const { t } = useTranslation('SettingsIndex');
-
 export default function SettingsPage() {
   const [isDeveloper, setIsDeveloper] = useSetting<boolean>('developer.enabled', false);
+  const { t } = useTranslation();
 
   const pages = [
     {
-      title: t('general_title'),
+      title: t('SettingsIndex.general_title'),
       content: <GeneralSettings isDeveloper={isDeveloper} setIsDeveloper={setIsDeveloper} />,
       route: '/decky/settings/general',
     },
     {
-      title: t('plugins_title'),
+      title: t('SettingsIndex.plugins_title'),
       content: <PluginList />,
       route: '/decky/settings/plugins',
     },
@@ -29,7 +28,7 @@ export default function SettingsPage() {
 
   if (isDeveloper)
     pages.push({
-      title: t('developer_title'),
+      title: t('SettingsIndex.developer_title'),
       content: (
         <WithSuspense>
           <DeveloperSettings />
@@ -38,5 +37,5 @@ export default function SettingsPage() {
       route: '/decky/settings/developer',
     });
 
-  return <SidebarNavigation title={t('settings_navbar') as string} showTitle pages={pages} />;
+  return <SidebarNavigation title={t('SettingsIndex.settings_navbar') as string} showTitle pages={pages} />;
 }

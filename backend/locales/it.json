@@ -1,6 +1,8 @@
 {
-  "update_channel": {
-    "label": "Canale di aggiornamento"
+  "BranchSelect": {
+    "update_channel": {
+      "label": "Canale di aggiornamento"
+    }
   },
   "reload": "Ricarica",
   "uninstall": "Rimuovi",

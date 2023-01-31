@@ -1,5 +1,5 @@
 {
-  "branch_select": {
+  "BranchSelect": {
     "update_channel": {
       "label": "Update Channel"
     }

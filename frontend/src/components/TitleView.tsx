@@ -30,15 +30,15 @@ const TitleView: VFC = () => {
         <div style={{ marginRight: 'auto', flex: 0.9 }}>Decky</div>
         <DialogButton
           style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
-          onClick={onSettingsClick}
-        >
-          <BsGearFill style={{ marginTop: '-4px', display: 'block' }} />
-        </DialogButton>
-        <DialogButton
-          style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
           onClick={onStoreClick}
         >
           <FaStore style={{ marginTop: '-4px', display: 'block' }} />
+        </DialogButton>
+        <DialogButton
+          style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
+          onClick={onSettingsClick}
+        >
+          <BsGearFill style={{ marginTop: '-4px', display: 'block' }} />
         </DialogButton>
       </Focusable>
     );

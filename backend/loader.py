@@ -1,5 +1,6 @@
 from asyncio import Queue, sleep
 from json.decoder import JSONDecodeError
+from json import loads
 from logging import getLogger
 from os import listdir, path
 from pathlib import Path
@@ -83,6 +84,7 @@ class Loader:
 
         server_instance.add_routes([
             web.get("/frontend/{path:.*}", self.handle_frontend_assets),
+            web.get("/locales/{path:.*}", self.handle_frontend_locales),
             web.get("/plugins", self.get_plugins),
             web.get("/plugins/{plugin_name}/frontend_bundle", self.handle_frontend_bundle),
             web.post("/plugins/{plugin_name}/methods/{method_name}", self.handle_plugin_method_call),
@@ -103,6 +105,11 @@ class Loader:
     async def handle_frontend_assets(self, request):
         file = path.join(path.dirname(__file__), "static", request.match_info["path"])
 
+        return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
+
+    async def handle_frontend_locales(self, request):
+        file = path.join(path.dirname(__file__), "locales", request.match_info["path"])
+        
         return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
 
     async def get_plugins(self, request):

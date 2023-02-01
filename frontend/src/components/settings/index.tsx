@@ -37,5 +37,5 @@ export default function SettingsPage() {
       route: '/decky/settings/developer',
     });
 
-  return <SidebarNavigation title={t('SettingsIndex.settings_navbar') as string} showTitle pages={pages} />;
+  return <SidebarNavigation title={t('SettingsIndex.navbar_settings') as string} showTitle pages={pages} />;
 }

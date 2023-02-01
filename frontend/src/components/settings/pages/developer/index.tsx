@@ -11,15 +11,16 @@ export default function DeveloperSettings() {
   const [reactDevtoolsEnabled, setReactDevtoolsEnabled] = useSetting<boolean>('developer.rdt.enabled', false);
   const [reactDevtoolsIP, setReactDevtoolsIP] = useSetting<string>('developer.rdt.ip', '');
   const textRef = useRef<HTMLDivElement>(null);
-  const { t } = useTranslation('DeveloperIndex');
+  const { t } = useTranslation();
 
   return (
     <>
       <Field
-        label={t('valve_internal.label')}
+        label={t('DeveloperIndex.valve_internal.label')}
         description={
           <span style={{ whiteSpace: 'pre-line' }}>
-            {t('valve_internal.desc1')} <span style={{ color: 'red' }}>{t('valve_internal.desc2')}</span>
+            {t('DeveloperIndex.valve_internal.desc1')}{' '}
+            <span style={{ color: 'red' }}>{t('DeveloperIndex.valve_internal.desc2')}</span>
           </span>
         }
         icon={<FaSteamSymbol style={{ display: 'block' }} />}
@@ -56,10 +57,10 @@ export default function DeveloperSettings() {
         }
       >
         <Field
-          label={t('react_devtools.label')}
+          label={t('DeveloperIndex.react_devtools.label')}
           description={
             <>
-              <span style={{ whiteSpace: 'pre-line' }}>{t('react_devtools.desc')}</span>
+              <span style={{ whiteSpace: 'pre-line' }}>{t('DeveloperIndex.react_devtools.desc')}</span>
               <div ref={textRef}>
                 <TextField label={'IP'} value={reactDevtoolsIP} onChange={(e) => setReactDevtoolsIP(e?.target.value)} />
               </div>

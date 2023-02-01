@@ -1,6 +1,8 @@
-import './i18n';
-
 import { Navigation, Router, sleep } from 'decky-frontend-lib';
+import i18n from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import Backend from 'i18next-http-backend';
+import { initReactI18next } from 'react-i18next';
 
 import PluginLoader from './plugin-loader';
 import { DeckyUpdater } from './updater';
@@ -38,9 +40,34 @@ declare global {
 (async () => {
   window.deckyAuthToken = await fetch('http://127.0.0.1:1337/auth/token').then((r) => r.text());
 
+  i18n
+    .use(Backend)
+    .use(LanguageDetector)
+    .use(initReactI18next)
+    .init({
+      load: 'languageOnly',
+      detection: {
+        order: ['querystring', 'navigator'],
+        lookupQuerystring: 'lng',
+      },
+      debug: true,
+      fallbackLng: 'en',
+      interpolation: {
+        escapeValue: false,
+      },
+      backend: {
+        loadPath: 'http://127.0.0.1:1337/locales/{{lng}}.json',
+        customHeaders: {
+          Authentication: window.deckyAuthToken,
+        },
+        requestOptions: {
+          credentials: 'include',
+        },
+      },
+    });
+
   window.DeckyPluginLoader?.dismountAll();
   window.DeckyPluginLoader?.deinit();
-
   window.DeckyPluginLoader = new PluginLoader();
   window.DeckyPluginLoader.init();
   window.importDeckyPlugin = function (name: string, version: string) {
@@ -63,3 +90,5 @@ declare global {
 
   setTimeout(() => window.syncDeckyPlugins(), 5000);
 })();
+
+export default i18n;

@@ -1,6 +1,6 @@
 import { SidebarNavigation } from 'decky-frontend-lib';
 import { lazy } from 'react';
-import { FaCode, FaStore } from 'react-icons/fa';
+import { FaCode, FaPlug } from 'react-icons/fa';
 
 import { useSetting } from '../../utils/hooks/useSetting';
 import DeckyIcon from '../DeckyIcon';
@@ -24,7 +24,7 @@ export default function SettingsPage() {
       title: 'Plugins',
       content: <PluginList />,
       route: '/decky/settings/plugins',
-      icon: <FaStore />,
+      icon: <FaPlug />,
     },
     {
       title: 'Developer',

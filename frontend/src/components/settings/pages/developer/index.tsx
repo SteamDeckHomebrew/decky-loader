@@ -1,9 +1,10 @@
-import { Field, Focusable, TextField, Toggle } from 'decky-frontend-lib';
+import { DialogBody, Field, TextField, Toggle } from 'decky-frontend-lib';
 import { useRef } from 'react';
 import { FaReact, FaSteamSymbol } from 'react-icons/fa';
 
 import { setShouldConnectToReactDevTools, setShowValveInternal } from '../../../../developer';
 import { useSetting } from '../../../../utils/hooks/useSetting';
+import RemoteDebuggingSettings from '../general/RemoteDebugging';
 
 export default function DeveloperSettings() {
   const [enableValveInternal, setEnableValveInternal] = useSetting<boolean>('developer.valve_internal', false);
@@ -12,7 +13,8 @@ export default function DeveloperSettings() {
   const textRef = useRef<HTMLDivElement>(null);
 
   return (
-    <>
+    <DialogBody>
+      <RemoteDebuggingSettings />
       <Field
         label="Enable Valve Internal"
         description={
@@ -30,55 +32,33 @@ export default function DeveloperSettings() {
             setShowValveInternal(toggleValue);
           }}
         />
-      </Field>{' '}
-      <Focusable
-        onTouchEnd={
-          reactDevtoolsIP == ''
-            ? () => {
-                (textRef.current?.childNodes[0] as HTMLInputElement)?.focus();
-              }
-            : undefined
+      </Field>
+      <Field
+        label="Enable React DevTools"
+        description={
+          <>
+            <span style={{ whiteSpace: 'pre-line' }}>
+              Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set the
+              IP address before enabling.
+            </span>
+            <br />
+            <br />
+            <div ref={textRef}>
+              <TextField label={'IP'} value={reactDevtoolsIP} onChange={(e) => setReactDevtoolsIP(e?.target.value)} />
+            </div>
+          </>
         }
-        onClick={
-          reactDevtoolsIP == ''
-            ? () => {
-                (textRef.current?.childNodes[0] as HTMLInputElement)?.focus();
-              }
-            : undefined
-        }
-        onOKButton={
-          reactDevtoolsIP == ''
-            ? () => {
-                (textRef.current?.childNodes[0] as HTMLInputElement)?.focus();
-              }
-            : undefined
-        }
+        icon={<FaReact style={{ display: 'block' }} />}
       >
-        <Field
-          label="Enable React DevTools"
-          description={
-            <>
-              <span style={{ whiteSpace: 'pre-line' }}>
-                Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set
-                the IP address before enabling.
-              </span>
-              <div ref={textRef}>
-                <TextField label={'IP'} value={reactDevtoolsIP} onChange={(e) => setReactDevtoolsIP(e?.target.value)} />
-              </div>
-            </>
-          }
-          icon={<FaReact style={{ display: 'block' }} />}
-        >
-          <Toggle
-            value={reactDevtoolsEnabled}
-            disabled={reactDevtoolsIP == ''}
-            onChange={(toggleValue) => {
-              setReactDevtoolsEnabled(toggleValue);
-              setShouldConnectToReactDevTools(toggleValue);
-            }}
-          />
-        </Field>
-      </Focusable>
-    </>
+        <Toggle
+          value={reactDevtoolsEnabled}
+          disabled={reactDevtoolsIP == ''}
+          onChange={(toggleValue) => {
+            setReactDevtoolsEnabled(toggleValue);
+            setShouldConnectToReactDevTools(toggleValue);
+          }}
+        />
+      </Field>
+    </DialogBody>
   );
 }

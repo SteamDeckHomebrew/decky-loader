@@ -3,7 +3,7 @@ import { lazy } from 'react';
 import { FaCode, FaStore } from 'react-icons/fa';
 
 import { useSetting } from '../../utils/hooks/useSetting';
-import DeckyFlat from '../DeckyIcon';
+import DeckyIcon from '../DeckyIcon';
 import WithSuspense from '../WithSuspense';
 import GeneralSettings from './pages/general';
 import PluginList from './pages/plugin_list';
@@ -18,7 +18,7 @@ export default function SettingsPage() {
       title: 'Decky',
       content: <GeneralSettings isDeveloper={isDeveloper} setIsDeveloper={setIsDeveloper} />,
       route: '/decky/settings/general',
-      icon: <DeckyFlat />,
+      icon: <DeckyIcon />,
     },
     {
       title: 'Plugins',

@@ -11,7 +11,7 @@ import {
 import { useCallback } from 'react';
 import { Suspense, lazy } from 'react';
 import { useEffect, useState } from 'react';
-import { FaArrowDown } from 'react-icons/fa';
+import { FaExclamation } from 'react-icons/fa';
 
 import { VerInfo, callUpdaterMethod, finishUpdate } from '../../../../updater';
 import { findSP } from '../../../../utils/windows';
@@ -95,21 +95,21 @@ export default function UpdaterSettings() {
       <Field
         onOptionsActionDescription={versionInfo?.all ? 'Patch Notes' : undefined}
         onOptionsButton={versionInfo?.all ? showPatchNotes : undefined}
-        label="Updates"
+        label="Decky Updates"
         description={
-          versionInfo && (
-            <span style={{ whiteSpace: 'pre-line' }}>{`Current version: ${versionInfo.current}\n${
-              versionInfo.updatable ? `Latest version: ${versionInfo.remote?.tag_name}` : ''
-            }`}</span>
+          checkingForUpdates || versionInfo?.remote?.tag_name != versionInfo?.current || !versionInfo?.remote ? (
+            ''
+          ) : (
+            <span>Up to date: running {versionInfo?.current}</span>
           )
         }
         icon={
-          !versionInfo ? (
-            <Spinner style={{ width: '1em', height: 20, display: 'block' }} />
-          ) : (
-            <FaArrowDown style={{ display: 'block' }} />
+          versionInfo?.remote &&
+          versionInfo?.remote?.tag_name != versionInfo?.current && (
+            <FaExclamation color="var(--gpColor-Yellow)" style={{ display: 'block' }} />
           )
         }
+        childrenContainerWidth={'fixed'}
       >
         {updateProgress == -1 && !isLoaderUpdating ? (
           <DialogButton
@@ -144,7 +144,7 @@ export default function UpdaterSettings() {
           />
         )}
       </Field>
-      {versionInfo?.remote && (
+      {versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current && (
         <InlinePatchNotes
           title={versionInfo?.remote.name}
           date={new Intl.RelativeTimeFormat('en-US', {

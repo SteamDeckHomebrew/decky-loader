@@ -27,7 +27,7 @@ export default function PluginList() {
         return (
           <li style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingBottom: '10px' }}>
             <span>
-              {name} {version}
+              {name} <span style={{ opacity: '50%' }}>{'(' + version + ')'}</span>
             </span>
             <Focusable style={{ marginLeft: 'auto', boxShadow: 'none', display: 'flex', justifyContent: 'right' }}>
               {update && (

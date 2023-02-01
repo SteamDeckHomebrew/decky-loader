@@ -21,7 +21,7 @@ export default function PluginList() {
   }
 
   return (
-    <ul style={{ listStyleType: 'none' }}>
+    <ul style={{ listStyleType: 'none', padding: '0' }}>
       {plugins.map(({ name, version }) => {
         const update = updates?.get(name);
         return (

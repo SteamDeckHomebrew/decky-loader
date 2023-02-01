@@ -2,6 +2,7 @@ import { ConfirmModal, ModalRoot, Patch, QuickAccessTab, Router, showModal, slee
 import { FC, lazy } from 'react';
 import { FaCog, FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
+import DeckyFlat from './components/DeckyIcon';
 import { DeckyState, DeckyStateContextProvider, useDeckyState } from './components/DeckyState';
 import LegacyPlugin from './components/LegacyPlugin';
 import { deinitFilepickerPatches, initFilepickerPatches } from './components/modals/filepicker/patches';
@@ -59,7 +60,7 @@ class PluginLoader extends Logger {
       ),
       icon: (
         <DeckyStateContextProvider deckyState={this.deckyState}>
-          <FaPlug />
+          <DeckyFlat />
           <TabBadge />
         </DeckyStateContextProvider>
       ),

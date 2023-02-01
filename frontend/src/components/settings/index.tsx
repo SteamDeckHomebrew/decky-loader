@@ -1,7 +1,9 @@
 import { SidebarNavigation } from 'decky-frontend-lib';
 import { lazy } from 'react';
+import { FaCode, FaStore } from 'react-icons/fa';
 
 import { useSetting } from '../../utils/hooks/useSetting';
+import DeckyFlat from '../DeckyIcon';
 import WithSuspense from '../WithSuspense';
 import GeneralSettings from './pages/general';
 import PluginList from './pages/plugin_list';
@@ -13,19 +15,18 @@ export default function SettingsPage() {
 
   const pages = [
     {
-      title: 'General',
+      title: 'Decky',
       content: <GeneralSettings isDeveloper={isDeveloper} setIsDeveloper={setIsDeveloper} />,
       route: '/decky/settings/general',
+      icon: <DeckyFlat />,
     },
     {
       title: 'Plugins',
       content: <PluginList />,
       route: '/decky/settings/plugins',
+      icon: <FaStore />,
     },
-  ];
-
-  if (isDeveloper)
-    pages.push({
+    {
       title: 'Developer',
       content: (
         <WithSuspense>
@@ -33,7 +34,10 @@ export default function SettingsPage() {
         </WithSuspense>
       ),
       route: '/decky/settings/developer',
-    });
+      icon: <FaCode />,
+      visible: isDeveloper,
+    },
+  ];
 
-  return <SidebarNavigation title="Decky Settings" showTitle pages={pages} />;
+  return <SidebarNavigation pages={pages} />;
 }

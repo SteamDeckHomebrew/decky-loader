@@ -101,7 +101,7 @@ class PluginLoader extends Logger {
     if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
       this.toaster.toast({
         title: 'Decky',
-        body: t('PluginLoader.decky_update_available', versionInfo?.remote?.tag_name),
+        body: t('PluginLoader.decky_update_available', {tag_name: versionInfo?.remote?.tag_name}),
         onClick: () => Router.Navigate('/decky/settings'),
       });
       this.deckyState.setHasLoaderUpdate(true);
@@ -151,10 +151,10 @@ class PluginLoader extends Logger {
         onCancel={() => {
           // do nothing
         }}
-        strTitle={t('PluginLoader.plugin_uninstall.title', name)}
+        strTitle={t('PluginLoader.plugin_uninstall.title', {name: name})}
         strOKButtonText={t('PluginLoader.plugin_uninstall.button')}
       >
-        {t('PluginLoader.plugin_uninstall.desc', name)}
+        {t('PluginLoader.plugin_uninstall.desc', {name: name})}
       </ConfirmModal>,
     );
   }
@@ -251,7 +251,7 @@ class PluginLoader extends Logger {
             <pre>
               <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
             </pre>
-            <>{t('PluginLoader.plugin_error_uninstall', <FaCog style={{ display: 'inline' }} />)}</>
+            <>{t('PluginLoader.plugin_error_uninstall', {icon: <FaCog style={{ display: 'inline' }} />})}</>
           </>
         );
         this.plugins.push({

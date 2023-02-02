@@ -35,6 +35,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2 # Check out the repository first.
+      - run: npm install --only=dev --prefix ./frontend
       - name: Run prettier (JavaScript & TypeScript)
         uses: creyD/prettier_action@v4.2
         with:

@@ -42,8 +42,6 @@
     "uninstall": "Rimuovi"
   },
   "PluginLoader": {
-    "enabling": "Abilitando",
-    "disabling": "Disabilitando",
     "decky_update_available": "Disponibile aggiornamento a {{tag_name}}!",
     "plugin_update_one": "Aggiornamento disponibile per un plugin!",
     "plugin_update_other": "Aggiornamento disponibile per {{count}} plugins!",

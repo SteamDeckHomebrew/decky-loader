@@ -42,8 +42,6 @@
     "uninstall": "Uninstall"
   },
   "PluginLoader": {
-    "enabling": "Enabling",
-    "disabling": "Disabling",
     "decky_update_available": "Update to {{tag_name}} available!",
     "plugin_update_one": "Updates available for 1 plugin!",
     "plugin_update_other": "Updates available for {{count}} plugins!",

@@ -1,6 +1,5 @@
 from asyncio import Queue, sleep
 from json.decoder import JSONDecodeError
-from json import loads
 from logging import getLogger
 from os import listdir, path
 from pathlib import Path

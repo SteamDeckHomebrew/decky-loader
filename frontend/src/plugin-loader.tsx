@@ -26,10 +26,6 @@ const SettingsPage = lazy(() => import('./components/settings'));
 
 const FilePicker = lazy(() => import('./components/modals/filepicker'));
 
-declare global {
-  interface Window {}
-}
-
 class PluginLoader extends Logger {
   private plugins: Plugin[] = [];
   private tabsHook: TabsHook | OldTabsHook = document.title == 'SP' ? new OldTabsHook() : new TabsHook();

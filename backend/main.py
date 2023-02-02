@@ -102,7 +102,6 @@ class PluginManager:
         loop.default_exception_handler(context)
 
     async def get_auth_token(self, request):
-        
         return Response(text=get_csrf_token())
 
     async def load_plugins(self):

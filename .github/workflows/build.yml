@@ -29,9 +29,31 @@ permissions:
   contents: write
 
 jobs:
+  lint:
+    name: Run linters
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2 # Check out the repository first.
+      - name: Run prettier (JavaScript & TypeScript)
+        uses: creyD/prettier_action@v4.2
+        with:
+          dry: True
+          prettier_options: --config ./frontend/.prettierrc.js --check
+
+      - name: Run ruff (Python)
+        uses: jpetrucciani/ruff-check@0.0.239
+        with:
+          path: './backend'
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+
+
   build:
     name: Build PluginLoader
     runs-on: ubuntu-20.04
+    needs: [lint]
 
     steps:
     - name: Print input

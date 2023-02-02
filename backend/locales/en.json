@@ -46,7 +46,7 @@
     "disabling": "Disabling",
     "decky_update_available": "Update to {{tag_name}} available!",
     "plugin_update_one": "Updates available for 1 plugin!",
-    "plugin_update_other": "Updates available for {{number}} plugins!",
+    "plugin_update_other": "Updates available for {{count}} plugins!",
     "plugin_uninstall": {
       "title": "Uninstall {{name}}",
       "desc": "Are you sure you want to uninstall {{name}}?",

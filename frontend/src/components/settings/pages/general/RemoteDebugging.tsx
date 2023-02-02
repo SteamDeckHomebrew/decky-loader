@@ -1,5 +1,5 @@
 import { Field, Toggle } from 'decky-frontend-lib';
-import { FaBug } from 'react-icons/fa';
+import { FaChrome } from 'react-icons/fa';
 
 import { useSetting } from '../../../../utils/hooks/useSetting';
 
@@ -11,10 +11,10 @@ export default function RemoteDebuggingSettings() {
       label="Allow Remote CEF Debugging"
       description={
         <span style={{ whiteSpace: 'pre-line' }}>
-          Allow unauthenticated access to the CEF debugger to anyone in your network
+          Allows unauthenticated access to the CEF debugger to anyone in your network.
         </span>
       }
-      icon={<FaBug style={{ display: 'block' }} />}
+      icon={<FaChrome style={{ display: 'block' }} />}
     >
       <Toggle
         value={allowRemoteDebugging || false}

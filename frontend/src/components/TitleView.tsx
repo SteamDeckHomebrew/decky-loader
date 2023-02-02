@@ -1,6 +1,7 @@
 import { DialogButton, Focusable, Router, staticClasses } from 'decky-frontend-lib';
 import { CSSProperties, VFC } from 'react';
-import { FaArrowLeft, FaCog, FaStore } from 'react-icons/fa';
+import { BsGearFill } from 'react-icons/bs';
+import { FaArrowLeft, FaStore } from 'react-icons/fa';
 
 import { useDeckyState } from './DeckyState';
 
@@ -26,18 +27,18 @@ const TitleView: VFC = () => {
   if (activePlugin === null) {
     return (
       <Focusable style={titleStyles} className={staticClasses.Title}>
-        <DialogButton
-          style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
-          onClick={onSettingsClick}
-        >
-          <FaCog style={{ marginTop: '-4px', display: 'block' }} />
-        </DialogButton>
         <div style={{ marginRight: 'auto', flex: 0.9 }}>Decky</div>
         <DialogButton
           style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
           onClick={onStoreClick}
         >
           <FaStore style={{ marginTop: '-4px', display: 'block' }} />
+        </DialogButton>
+        <DialogButton
+          style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
+          onClick={onSettingsClick}
+        >
+          <BsGearFill style={{ marginTop: '-4px', display: 'block' }} />
         </DialogButton>
       </Focusable>
     );

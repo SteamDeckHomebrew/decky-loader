@@ -19,7 +19,7 @@ const BranchSelect: FunctionComponent<{}> = () => {
   return (
     // Returns numerical values from 0 to 2 (with current branch setup as of 8/28/22)
     // 0 being stable, 1 being pre-release and 2 being nightly
-    <Field label="Update Channel">
+    <Field label="Decky Update Channel" childrenContainerWidth={'fixed'}>
       <Dropdown
         rgOptions={Object.values(UpdateBranch)
           .filter((branch) => typeof branch == 'string')

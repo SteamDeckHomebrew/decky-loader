@@ -1,10 +1,17 @@
-import { DialogButton, Field, TextField, Toggle } from 'decky-frontend-lib';
+import {
+  DialogBody,
+  DialogButton,
+  DialogControlsSection,
+  DialogControlsSectionHeader,
+  Field,
+  TextField,
+  Toggle,
+} from 'decky-frontend-lib';
 import { useState } from 'react';
-import { FaShapes, FaTools } from 'react-icons/fa';
 
 import { installFromURL } from '../../../../store';
+import { useDeckyState } from '../../../DeckyState';
 import BranchSelect from './BranchSelect';
-import RemoteDebuggingSettings from './RemoteDebugging';
 import StoreSelect from './StoreSelect';
 import UpdaterSettings from './Updater';
 
@@ -16,34 +23,44 @@ export default function GeneralSettings({
   setIsDeveloper: (val: boolean) => void;
 }) {
   const [pluginURL, setPluginURL] = useState('');
+  const { versionInfo } = useDeckyState();
 
   return (
-    <div>
-      <UpdaterSettings />
-      <BranchSelect />
-      <StoreSelect />
-      <RemoteDebuggingSettings />
-      <Field
-        label="Developer mode"
-        description={<span style={{ whiteSpace: 'pre-line' }}>Enables Decky's developer settings.</span>}
-        icon={<FaTools style={{ display: 'block' }} />}
-      >
-        <Toggle
-          value={isDeveloper}
-          onChange={(toggleValue) => {
-            setIsDeveloper(toggleValue);
-          }}
-        />
-      </Field>
-      <Field
-        label="Manual plugin install"
-        description={<TextField label={'URL'} value={pluginURL} onChange={(e) => setPluginURL(e?.target.value)} />}
-        icon={<FaShapes style={{ display: 'block' }} />}
-      >
-        <DialogButton disabled={pluginURL.length == 0} onClick={() => installFromURL(pluginURL)}>
-          Install
-        </DialogButton>
-      </Field>
-    </div>
+    <DialogBody>
+      <DialogControlsSection>
+        <DialogControlsSectionHeader>Updates</DialogControlsSectionHeader>
+        <UpdaterSettings />
+      </DialogControlsSection>
+      <DialogControlsSection>
+        <DialogControlsSectionHeader>Beta Participation</DialogControlsSectionHeader>
+        <BranchSelect />
+        <StoreSelect />
+      </DialogControlsSection>
+      <DialogControlsSection>
+        <DialogControlsSectionHeader>Other</DialogControlsSectionHeader>
+        <Field label="Enable Developer Mode">
+          <Toggle
+            value={isDeveloper}
+            onChange={(toggleValue) => {
+              setIsDeveloper(toggleValue);
+            }}
+          />
+        </Field>
+        <Field
+          label="Install plugin from URL"
+          description={<TextField label={'URL'} value={pluginURL} onChange={(e) => setPluginURL(e?.target.value)} />}
+        >
+          <DialogButton disabled={pluginURL.length == 0} onClick={() => installFromURL(pluginURL)}>
+            Install
+          </DialogButton>
+        </Field>
+      </DialogControlsSection>
+      <DialogControlsSection>
+        <DialogControlsSectionHeader>About</DialogControlsSectionHeader>
+        <Field label="Decky Version" focusable={true}>
+          <div style={{ color: 'var(--gpSystemLighterGrey)' }}>{versionInfo?.current}</div>
+        </Field>
+      </DialogControlsSection>
+    </DialogBody>
   );
 }

@@ -11,7 +11,6 @@ import {
 import { useCallback } from 'react';
 import { Suspense, lazy } from 'react';
 import { useEffect, useState } from 'react';
-
 import { useTranslation } from 'react-i18next';
 import { FaExclamation } from 'react-icons/fa';
 
@@ -105,7 +104,7 @@ export default function UpdaterSettings() {
           checkingForUpdates || versionInfo?.remote?.tag_name != versionInfo?.current || !versionInfo?.remote ? (
             ''
           ) : (
-            <span>t('Updater.updates.lat_version', { ver: versionInfo?.current }) </span>
+            <span>{t('Updater.updates.lat_version', { ver: versionInfo?.current })} </span>
           )
         }
         icon={

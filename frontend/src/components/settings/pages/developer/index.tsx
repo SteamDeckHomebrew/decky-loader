@@ -39,9 +39,7 @@ export default function DeveloperSettings() {
         label="Enable React DevTools"
         description={
           <>
-            <span style={{ whiteSpace: 'pre-line' }}>
-              {t('DeveloperIndex.react_devtools.desc')}
-            </span>
+            <span style={{ whiteSpace: 'pre-line' }}>{t('DeveloperIndex.react_devtools.desc')}</span>
             <br />
             <br />
             <div ref={textRef}>

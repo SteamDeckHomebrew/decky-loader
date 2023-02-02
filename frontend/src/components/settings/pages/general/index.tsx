@@ -8,7 +8,6 @@ import {
   Toggle,
 } from 'decky-frontend-lib';
 import { useState } from 'react';
-
 import { useTranslation } from 'react-i18next';
 
 import { installFromURL } from '../../../../store';
@@ -26,6 +25,7 @@ export default function GeneralSettings({
 }) {
   const [pluginURL, setPluginURL] = useState('');
   const { versionInfo } = useDeckyState();
+  const { t } = useTranslation();
 
   return (
     <DialogBody>

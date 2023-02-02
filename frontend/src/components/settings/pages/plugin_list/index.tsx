@@ -1,12 +1,4 @@
-import {
-  DialogBody,
-  DialogButton,
-  DialogControlsSection,
-  Focusable,
-  Menu,
-  MenuItem,
-  showContextMenu,
-} from 'decky-frontend-lib';
+import { DialogButton, Focusable, Menu, MenuItem, showContextMenu } from 'decky-frontend-lib';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaDownload, FaEllipsisH } from 'react-icons/fa';

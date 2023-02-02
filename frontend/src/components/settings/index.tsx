@@ -3,7 +3,6 @@ import { lazy } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaCode, FaPlug } from 'react-icons/fa';
 
-
 import { useSetting } from '../../utils/hooks/useSetting';
 import DeckyIcon from '../DeckyIcon';
 import WithSuspense from '../WithSuspense';

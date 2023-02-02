@@ -11,11 +11,7 @@ export default function RemoteDebuggingSettings() {
   return (
     <Field
       label={t('RemoteDebugging.remote_cef.label')}
-      description={
-        <span style={{ whiteSpace: 'pre-line' }}>
-          {t('RemoteDebugging.remote_cef.desc')}
-        </span>
-      }
+      description={<span style={{ whiteSpace: 'pre-line' }}>{t('RemoteDebugging.remote_cef.desc')}</span>}
       icon={<FaChrome style={{ display: 'block' }} />}
     >
       <Toggle

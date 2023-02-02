@@ -18,7 +18,7 @@ const StoreSelect: FunctionComponent<{}> = () => {
   // 0 being Default, 1 being Testing and 2 being Custom
   return (
     <>
-      <Field label={t('StoreSelect.store_channel_label')}>
+      <Field label={t('StoreSelect.store_channel_label')} childrenContainerWidth={'fixed'}>
         <Dropdown
           rgOptions={Object.values(Store)
             .filter((store) => typeof store == 'string')

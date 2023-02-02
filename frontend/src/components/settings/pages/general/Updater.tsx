@@ -11,8 +11,9 @@ import {
 import { useCallback } from 'react';
 import { Suspense, lazy } from 'react';
 import { useEffect, useState } from 'react';
+
 import { useTranslation } from 'react-i18next';
-import { FaArrowDown } from 'react-icons/fa';
+import { FaExclamation } from 'react-icons/fa';
 
 import { VerInfo, callUpdaterMethod, finishUpdate } from '../../../../updater';
 import { findSP } from '../../../../utils/windows';
@@ -101,21 +102,19 @@ export default function UpdaterSettings() {
         onOptionsButton={versionInfo?.all ? showPatchNotes : undefined}
         label={t('Updater.updates.label')}
         description={
-          versionInfo && (
-            <span style={{ whiteSpace: 'pre-line' }}>{`${t('Updater.updates.cur_version', {
-              ver: versionInfo.current,
-            })}\n${
-              versionInfo.updatable ? t('Updater.updates.lat_version', { ver: versionInfo.remote?.tag_name }) : ''
-            }`}</span>
+          checkingForUpdates || versionInfo?.remote?.tag_name != versionInfo?.current || !versionInfo?.remote ? (
+            ''
+          ) : (
+            <span>t('Updater.updates.lat_version', { ver: versionInfo?.current }) </span>
           )
         }
         icon={
-          !versionInfo ? (
-            <Spinner style={{ width: '1em', height: 20, display: 'block' }} />
-          ) : (
-            <FaArrowDown style={{ display: 'block' }} />
+          versionInfo?.remote &&
+          versionInfo?.remote?.tag_name != versionInfo?.current && (
+            <FaExclamation color="var(--gpColor-Yellow)" style={{ display: 'block' }} />
           )
         }
+        childrenContainerWidth={'fixed'}
       >
         {updateProgress == -1 && !isLoaderUpdating ? (
           <DialogButton
@@ -150,7 +149,7 @@ export default function UpdaterSettings() {
           />
         )}
       </Field>
-      {versionInfo?.remote && (
+      {versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current && (
         <InlinePatchNotes
           title={versionInfo?.remote.name}
           date={new Intl.RelativeTimeFormat('en-US', {

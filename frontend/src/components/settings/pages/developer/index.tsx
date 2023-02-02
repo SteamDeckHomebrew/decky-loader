@@ -1,10 +1,11 @@
-import { Field, Focusable, TextField, Toggle } from 'decky-frontend-lib';
+import { DialogBody, Field, TextField, Toggle } from 'decky-frontend-lib';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaReact, FaSteamSymbol } from 'react-icons/fa';
 
 import { setShouldConnectToReactDevTools, setShowValveInternal } from '../../../../developer';
 import { useSetting } from '../../../../utils/hooks/useSetting';
+import RemoteDebuggingSettings from '../general/RemoteDebugging';
 
 export default function DeveloperSettings() {
   const [enableValveInternal, setEnableValveInternal] = useSetting<boolean>('developer.valve_internal', false);
@@ -14,7 +15,8 @@ export default function DeveloperSettings() {
   const { t } = useTranslation();
 
   return (
-    <>
+    <DialogBody>
+      <RemoteDebuggingSettings />
       <Field
         label={t('DeveloperIndex.valve_internal.label')}
         description={
@@ -32,52 +34,32 @@ export default function DeveloperSettings() {
             setShowValveInternal(toggleValue);
           }}
         />
-      </Field>{' '}
-      <Focusable
-        onTouchEnd={
-          reactDevtoolsIP == ''
-            ? () => {
-                (textRef.current?.childNodes[0] as HTMLInputElement)?.focus();
-              }
-            : undefined
+      </Field>
+      <Field
+        label="Enable React DevTools"
+        description={
+          <>
+            <span style={{ whiteSpace: 'pre-line' }}>
+              {t('DeveloperIndex.react_devtools.desc')}
+            </span>
+            <br />
+            <br />
+            <div ref={textRef}>
+              <TextField label={'IP'} value={reactDevtoolsIP} onChange={(e) => setReactDevtoolsIP(e?.target.value)} />
+            </div>
+          </>
         }
-        onClick={
-          reactDevtoolsIP == ''
-            ? () => {
-                (textRef.current?.childNodes[0] as HTMLInputElement)?.focus();
-              }
-            : undefined
-        }
-        onOKButton={
-          reactDevtoolsIP == ''
-            ? () => {
-                (textRef.current?.childNodes[0] as HTMLInputElement)?.focus();
-              }
-            : undefined
-        }
+        icon={<FaReact style={{ display: 'block' }} />}
       >
-        <Field
-          label={t('DeveloperIndex.react_devtools.label')}
-          description={
-            <>
-              <span style={{ whiteSpace: 'pre-line' }}>{t('DeveloperIndex.react_devtools.desc')}</span>
-              <div ref={textRef}>
-                <TextField label={'IP'} value={reactDevtoolsIP} onChange={(e) => setReactDevtoolsIP(e?.target.value)} />
-              </div>
-            </>
-          }
-          icon={<FaReact style={{ display: 'block' }} />}
-        >
-          <Toggle
-            value={reactDevtoolsEnabled}
-            disabled={reactDevtoolsIP == ''}
-            onChange={(toggleValue) => {
-              setReactDevtoolsEnabled(toggleValue);
-              setShouldConnectToReactDevTools(toggleValue);
-            }}
-          />
-        </Field>
-      </Focusable>
-    </>
+        <Toggle
+          value={reactDevtoolsEnabled}
+          disabled={reactDevtoolsIP == ''}
+          onChange={(toggleValue) => {
+            setReactDevtoolsEnabled(toggleValue);
+            setShouldConnectToReactDevTools(toggleValue);
+          }}
+        />
+      </Field>
+    </DialogBody>
   );
 }

@@ -38,7 +38,7 @@ export default function PluginList() {
                   onClick={() => requestPluginInstall(name, update)}
                 >
                   <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    {t('PluginListIndex.list_update_to', update.name)}
+                    {t('PluginListIndex.list_update_to',{name: update.name})}
                     <FaDownload style={{ paddingLeft: '2rem' }} />
                   </div>
                 </DialogButton>

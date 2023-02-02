@@ -28,7 +28,7 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({ artifact, version, ha
       onCancel={async () => {
         await onCancel();
       }}
-      strTitle={t('PluginInstallModal.install.title', {artifact: artifact})}
+      strTitle={t('PluginInstallModal.install.title', { artifact: artifact })}
       strOKButtonText={
         loading ? t('PluginInstallModal.install.button_processing') : t('PluginInstallModal.install.button_idle')
       }
@@ -36,7 +36,7 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({ artifact, version, ha
       {hash == 'False' ? (
         <h3 style={{ color: 'red' }}>!!!!NO HASH PROVIDED!!!!</h3>
       ) : (
-        t('PluginInstallModal.install.desc', {artifact: artifact, version: version})
+        t('PluginInstallModal.install.desc', { artifact: artifact, version: version })
       )}
     </ConfirmModal>
   );

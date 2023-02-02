@@ -66,6 +66,16 @@
     }
   },
   "SettingsGeneralIndex": {
+    "updates":{
+      "header": "Aggiornamenti"
+    },
+    "beta":{
+      "header": "Partecipazione alla beta"
+    },
+    "about":{
+      "header": "Circa",
+      "decky_version": "Versione di Decky"
+    },
     "developer_mode": {
       "desc": "Abilità le impostazioni di sviluppo di Decky.",
       "label": "Modalità sviluppatore"
@@ -119,7 +129,7 @@
       "cur_version": "Versione attuale: {{ver}}",
       "install_button": "Installa aggiornamento",
       "label": "Aggiornamenti",
-      "lat_version": "Ultima versione: {{ver}}",
+      "lat_version": "Aggiornato. Eseguendo {{ver}}",
       "reloading": "Ricaricando",
       "updating": "Aggiornando"
     }

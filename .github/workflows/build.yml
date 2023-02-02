@@ -40,6 +40,7 @@ jobs:
         with:
           dry: True
           prettier_options: --config ./frontend/.prettierrc.js --check
+          prettier_plugins: "prettier-plugin-import-sort"
 
       - name: Run ruff (Python)
         uses: jpetrucciani/ruff-check@0.0.239

@@ -5,121 +5,120 @@
     }
   },
   "Developer": {
-    "enabling": "Enabling",
+    "5secreload": "Reloading in 5 seconds",
     "disabling": "Disabling",
-    "5secreload": "Reloading in 5 seconds"
+    "enabling": "Enabling"
   },
   "DeveloperIndex": {
-    "valve_internal": {
-      "label": "Enable Valve Internal",
-      "desc1": "Enables the Valve internal developer menu.",
-      "desc2": "Do not touch anything in this menu unless you know what it does."
-    },
     "react_devtools": {
-      "label": "Enable React DevTools",
-      "desc": "Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set the IP address before enabling."
+      "desc": "Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set the IP address before enabling.",
+      "label": "Enable React DevTools"
+    },
+    "valve_internal": {
+      "desc1": "Enables the Valve internal developer menu.",
+      "desc2": "Do not touch anything in this menu unless you know what it does.",
+      "label": "Enable Valve Internal"
     }
   },
   "PluginCard": {
-    "plugin_version_label": "Plugin Version",
     "plugin_full_access": "This plugin has full access to your Steam Deck.",
     "plugin_install": "Install",
-    "plugin_no_desc": "No description provided."
+    "plugin_no_desc": "No description provided.",
+    "plugin_version_label": "Plugin Version"
   },
   "PluginInstallModal": {
     "install": {
-      "title": "Install {{artifact}}",
-      "desc": "Are you sure you want to install {{artifact}} {{version}}?",
       "button_idle": "Install",
-      "button_processing": "Installing"
+      "button_processing": "Installing",
+      "desc": "Are you sure you want to install {{artifact}} {{version}}?",
+      "title": "Install {{artifact}}"
     }
   },
   "PluginListIndex": {
     "list_no_plugin": "No plugins installed!",
-    "list_update_to": "Update to {{name}}",
     "list_plug_actions_label": "Plugin Actions",
+    "list_update_to": "Update to {{name}}",
     "reload": "Reload",
     "uninstall": "Uninstall"
   },
   "PluginLoader": {
     "decky_update_available": "Update to {{tag_name}} available!",
-    "plugin_update_one": "Updates available for 1 plugin!",
-    "plugin_update_other": "Updates available for {{count}} plugins!",
-    "plugin_uninstall": {
-      "title": "Uninstall {{name}}",
-      "desc": "Are you sure you want to uninstall {{name}}?",
-      "button": "Uninstall"
-    },
+    "error": "Error",
+    "file_picker_cancel_text": "User canceled",
+    "plugin_error_uninstall": "Please go to {{-icon}} in the Decky menu if you need to uninstall this plugin.",
     "plugin_load_error": {
       "message": "Error loading plugin {{name}}",
       "toast": "Error loading {{name}}"
     },
-    "error": "Error",
-    "plugin_error_uninstall": "Please go to {{-icon}} in the Decky menu if you need to uninstall this plugin.",
-    "file_picker_cancel_text": "User canceled"
+    "plugin_uninstall": {
+      "button": "Uninstall",
+      "desc": "Are you sure you want to uninstall {{name}}?",
+      "title": "Uninstall {{name}}"
+    },
+    "plugin_update_one": "Updates available for 1 plugin!",
+    "plugin_update_other": "Updates available for {{count}} plugins!"
   },
   "RemoteDebugging": {
     "remote_cef": {
-      "label": "Allow Remote CEF Debugging",
-      "desc": "Allow unauthenticated access to the CEF debugger to anyone in your network"
+      "desc": "Allow unauthenticated access to the CEF debugger to anyone in your network",
+      "label": "Allow Remote CEF Debugging"
     }
   },
   "SettingsGeneralIndex": {
     "developer_mode": {
-      "label": "Developer mode",
-      "desc": "Enables Decky's developer settings."
+      "desc": "Enables Decky's developer settings.",
+      "label": "Developer mode"
     },
     "manual_plugin": {
-      "label": "Manual plugin install",
-      "button": "Install"
+      "button": "Install",
+      "label": "Manual plugin install"
     }
   },
   "SettingsIndex": {
-    "general_title": "General",
-    "plugins_title": "Plugins",
     "developer_title": "Developer",
-    "navbar_settings": "Decky Settings"
+    "general_title": "General",
+    "navbar_settings": "Decky Settings",
+    "plugins_title": "Plugins"
   },
   "Store": {
-    "store_tabs": {
-      "title": "Browse",
-      "about": "About",
-      "alph_desc": "Alphabetical (A to Z)",
-      "alph_asce": "Alphabetical (Z to A)"
+    "store_contrib": {
+      "desc": "If you would like to contribute to the Decky Plugin Store, check the SteamDeckHomebrew/decky-plugin-template repository on GitHub. Information on development and distribution is available in the README.",
+      "label": "Contributing"
     },
+    "store_search": {
+      "label": "changeme"
+    },
+    "store_search_label": "Search",
     "store_sort": {
       "label": "Sort",
       "label_def": "Last Updated (Newest)"
     },
-    "store_filter": {
-      "label": "Filter",
-      "label_def": "All"
-    },
-    "store_search_label": "Search",
-    "store_testing_cta": "Please consider testing new plugins to help the Decky Loader team!",
-    "store_contrib": {
-      "label": "Contributing",
-      "desc": "If you would like to contribute to the Decky Plugin Store, check the SteamDeckHomebrew/decky-plugin-template repository on GitHub. Information on development and distribution is available in the README."
-    },
     "store_source": {
-      "label": "Source Code",
-      "desc": "All plugin source code is available on SteamDeckHomebrew/decky-plugin-database repository on GitHub."
-    }
+      "desc": "All plugin source code is available on SteamDeckHomebrew/decky-plugin-database repository on GitHub.",
+      "label": "Source Code"
+    },
+    "store_tabs": {
+      "about": "About",
+      "alph_asce": "Alphabetical (Z to A)",
+      "alph_desc": "Alphabetical (A to Z)",
+      "title": "Browse"
+    },
+    "store_testing_cta": "Please consider testing new plugins to help the Decky Loader team!"
   },
   "StoreSelect": {
-    "store_channel_label": "Store Channel",
-    "custom_store_label": "Custom Store"
+    "custom_store_label": "Custom Store",
+    "store_channel_label": "Store Channel"
   },
   "Updater": {
-    "no_patch_notes_desc": "no patch notes for this version",
     "decky_updates": "Decky Updates",
+    "no_patch_notes_desc": "no patch notes for this version",
     "updates": {
-      "label": "Updates",
-      "cur_version": "Current version: {{ver}}",
-      "lat_version": "Latest version: {{ver}}",
-      "checking": "'Checking",
       "check_button": "Check For Updates",
+      "checking": "'Checking",
+      "cur_version": "Current version: {{ver}}",
       "install_button": "Install Update",
+      "label": "Updates",
+      "lat_version": "Latest version: {{ver}}",
       "reloading": "Reloading",
       "updating": "Updating"
     }

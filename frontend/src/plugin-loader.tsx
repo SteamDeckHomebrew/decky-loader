@@ -101,7 +101,7 @@ class PluginLoader extends Logger {
 
   public async notifyUpdates() {
     const versionInfo = await this.updateVersion();
-    const { t } = useTranslation('PluginLoader');
+    const { t } = useTranslation();
     if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
       this.toaster.toast({
         title: 'Decky',
@@ -127,7 +127,7 @@ class PluginLoader extends Logger {
       this.toaster.toast({
         title: 'Decky',
         //body: `Updates available for ${updates.size} plugin${updates.size > 1 ? 's' : ''}!`,
-        body: t('PluginLoader.plugin_update', updates.size.toString(10), { count: updates.size }),
+        body: t('PluginLoader.plugin_update', { count: updates.size }),
         onClick: () => Router.Navigate('/decky/settings/plugins'),
       });
     }
@@ -247,10 +247,10 @@ class PluginLoader extends Logger {
           version: version,
         });
       } catch (e) {
-        this.error(t('PluginLoader.plugin_load_error', name), e);
+        this.error(t('PluginLoader.plugin_load_error.message', { name: name }), e);
         const TheError: FC<{}> = () => (
           <>
-            {t('error')}:{' '}
+            {t('PluginLoader.error')}:{' '}
             <pre>
               <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
             </pre>
@@ -264,7 +264,7 @@ class PluginLoader extends Logger {
           icon: <FaExclamationCircle />,
         });
         this.toaster.toast({
-          title: t('PluginLoader.error_loading_plugin.toast', name),
+          title: t('PluginLoader.plugin_load_error.toast', { name: name }),
           body: '' + e,
           icon: <FaExclamationCircle />,
         });

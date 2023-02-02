@@ -23,6 +23,7 @@
     "@types/webpack": "^5.28.0",
     "husky": "^8.0.1",
     "eslint": "^8.33.0",
+    "i18next-parser": "^7.6.0",
     "import-sort-style-module": "^6.0.0",
     "inquirer": "^8.2.4",
     "prettier": "^2.7.1",

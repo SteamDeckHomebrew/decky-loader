@@ -10,7 +10,6 @@ import externalGlobals from 'rollup-plugin-external-globals';
 
 const hiddenWarnings = ['THIS_IS_UNDEFINED', 'EVAL'];
 
-
 export default defineConfig({
   input: 'src/index.tsx',
   plugins: [

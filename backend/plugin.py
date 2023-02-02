@@ -92,9 +92,12 @@ class PluginWrapper:
 
     async def _unload(self):
         try:
-            self.log.info("Attempting to unload " + self.name + "\n")
+            self.log.info("Attempting to unload with plugin " + self.name + "'s \"_unload\" function.\n")
             if hasattr(self.Plugin, "_unload"):
                 await self.Plugin._unload(self.Plugin)
+                self.log.info("Unloaded " + self.name + "\n")
+            else:
+                self.log.info("Could not find \"_unload\" in " + self.name + "'s main.py" + "\n")
         except:
             self.log.error("Failed to unload " + self.name + "!\n" + format_exc())
             exit(0)
@@ -118,6 +121,7 @@ class PluginWrapper:
                     break
             data = loads(line.decode("utf-8"))
             if "stop" in data:
+                self.log.info("Calling Loader unload function.")
                 await self._unload()
                 get_event_loop().stop()
                 while get_event_loop().is_running():

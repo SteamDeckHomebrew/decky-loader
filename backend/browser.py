@@ -1,5 +1,7 @@
 # Full imports
 import json
+# import pprint
+# from pprint import pformat
 
 # Partial imports
 from aiohttp import ClientSession, web
@@ -108,11 +110,18 @@ class PluginBrowser:
         try:
             logger.info("uninstalling " + name)
             logger.info(" at dir " + self.find_plugin_folder(name))
-            logger.debug("unloading %s" % str(name))
-            await tab.evaluate_js(f"DeckyPluginLoader.unloadPlugin('{name}')")
+            logger.debug("calling frontend unload for %s" % str(name))
+            res = await tab.evaluate_js(f"DeckyPluginLoader.unloadPlugin('{name}')")
+            logger.debug("result of unload from UI: %s", res)
+            # plugins_snapshot = self.plugins.copy()
+            # snapshot_string = pformat(plugins_snapshot)
+            # logger.debug("current plugins: %s", snapshot_string)
             if self.plugins[name]:
+                logger.debug("Plugin %s was found", name)
                 self.plugins[name].stop()
+                logger.debug("Plugin %s was stopped", name)
                 del self.plugins[name]
+                logger.debug("Plugin %s was removed from the dictionary", name)
             logger.debug("removing files %s" % str(name))
             rmtree(self.find_plugin_folder(name))
         except FileNotFoundError:

@@ -4,8 +4,6 @@
       "label": "Canale di aggiornamento"
     }
   },
-  "reload": "Ricarica",
-  "uninstall": "Rimuovi",
   "Developer": {
     "enabling": "Abilitando",
     "disabling": "Disabilitando",
@@ -39,7 +37,9 @@
   "PluginListIndex": {
     "list_no_plugin": "Nessun plugin installato!",
     "list_update_to": "Aggiornamento a {{name}}",
-    "list_plug_actions_label": "Operazioni sui plugins"
+    "list_plug_actions_label": "Operazioni sui plugins",
+    "reload": "Ricarica",
+    "uninstall": "Rimuovi"
   },
   "PluginLoader": {
     "enabling": "Abilitando",

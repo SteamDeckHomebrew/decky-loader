@@ -4,8 +4,6 @@
       "label": "Update Channel"
     }
   },
-  "reload": "Reload",
-  "uninstall": "Uninstall",
   "Developer": {
     "enabling": "Enabling",
     "disabling": "Disabling",
@@ -39,7 +37,9 @@
   "PluginListIndex": {
     "list_no_plugin": "No plugins installed!",
     "list_update_to": "Update to {{name}}",
-    "list_plug_actions_label": "Plugin Actions"
+    "list_plug_actions_label": "Plugin Actions",
+    "reload": "Reload",
+    "uninstall": "Uninstall"
   },
   "PluginLoader": {
     "enabling": "Enabling",

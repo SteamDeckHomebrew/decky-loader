@@ -52,9 +52,9 @@
       "desc": "Are you sure you want to uninstall {{name}}?",
       "button": "Uninstall"
     },
-    "plugin_load": {
-      "plugin_load_error": "Error loading plugin {{name}}",
-      "plugin_load_error_toast": "Error loading {{name}}"
+    "plugin_load_error": {
+      "message": "Error loading plugin {{name}}",
+      "toast": "Error loading {{name}}"
     },
     "error": "Error",
     "plugin_error_uninstall": "Please go to {{-icon}} in the Decky menu if you need to uninstall this plugin.",

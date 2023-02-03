@@ -97,11 +97,14 @@ class PluginLoader extends Logger {
 
   public async notifyUpdates() {
     const versionInfo = await this.updateVersion();
-    const { t } = useTranslation();
+    //Same, no react hook here
+    //const { t } = useTranslation();
     if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
       this.toaster.toast({
-        title: t('PluginLoader.decky_title'),
-        body: t('PluginLoader.decky_update_available', { tag_name: versionInfo?.remote?.tag_name }),
+        //title: t('PluginLoader.decky_title'),
+        title: 'Decky',
+        //body: t('PluginLoader.decky_update_available', { tag_name: versionInfo?.remote?.tag_name }),
+        body: `Update to ${versionInfo?.remote?.tag_name} available!`,
         onClick: () => Router.Navigate('/decky/settings'),
       });
       this.deckyState.setHasLoaderUpdate(true);
@@ -118,11 +121,14 @@ class PluginLoader extends Logger {
 
   public async notifyPluginUpdates() {
     const updates = await this.checkPluginUpdates();
-    const { t } = useTranslation();
+    //Same here
+    //const { t } = useTranslation();
     if (updates?.size > 0) {
       this.toaster.toast({
-        title: t('PluginLoader.decky_title'),
-        body: t('PluginLoader.plugin_update', { count: updates.size }),
+        //title: t('PluginLoader.decky_title'),
+        title: 'Decky',
+        //body: t('PluginLoader.plugin_update', { count: updates.size }),
+        body: `Updates available for ${updates.size} plugin${updates.size > 1 ? 's' : ''}!`,
         onClick: () => Router.Navigate('/decky/settings/plugins'),
       });
     }
@@ -141,8 +147,10 @@ class PluginLoader extends Logger {
   }
 
   public uninstallPlugin(name: string) {
-    const { t } = useTranslation();
-    showModal(
+    //Same as before
+    //const { t } = useTranslation();
+
+    /*showModal(
       <ConfirmModal
         onOK={async () => {
           await this.callServerMethod('uninstall_plugin', { name });
@@ -154,6 +162,20 @@ class PluginLoader extends Logger {
         strOKButtonText={t('PluginLoader.plugin_uninstall.button')}
       >
         {t('PluginLoader.plugin_uninstall.desc', { name: name })}
+      </ConfirmModal>,
+    );*/
+    showModal(
+      <ConfirmModal
+        onOK={async () => {
+          await this.callServerMethod('uninstall_plugin', { name });
+        }}
+        onCancel={() => {
+          // do nothing
+        }}
+        strTitle={`Uninstall ${name}`}
+        strOKButtonText={'Uninstall'}
+      >
+        Are you sure you want to uninstall {name}?
       </ConfirmModal>,
     );
   }
@@ -230,8 +252,8 @@ class PluginLoader extends Logger {
         Authentication: window.deckyAuthToken,
       },
     });
-
-    const { t } = useTranslation();
+    //This call fails, because we are outside of a React component (?)
+    //const { t } = useTranslation();
 
     if (res.ok) {
       try {
@@ -243,14 +265,27 @@ class PluginLoader extends Logger {
           version: version,
         });
       } catch (e) {
-        this.error(t('PluginLoader.plugin_load_error.message', { name: name }), e);
-        const TheError: FC<{}> = () => (
+        //this.error(t('PluginLoader.plugin_load_error.message', { name: name }), e);
+        this.error('Error loading plugin ' + name, e);
+        /*const TheError: FC<{}> = () => (
           <>
             {t('PluginLoader.error')}:{' '}
             <pre>
               <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
             </pre>
             <>{t('PluginLoader.plugin_error_uninstall', { icon: <FaCog style={{ display: 'inline' }} /> })}</>
+          </>
+        );*/
+        const TheError: FC<{}> = () => (
+          <>
+            Error:{' '}
+            <pre>
+              <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
+            </pre>
+            <>
+              Please go to <FaCog style={{ display: 'inline' }} /> in the Decky menu if you need to uninstall this
+              plugin.
+            </>
           </>
         );
         this.plugins.push({
@@ -260,7 +295,8 @@ class PluginLoader extends Logger {
           icon: <FaExclamationCircle />,
         });
         this.toaster.toast({
-          title: t('PluginLoader.plugin_load_error.toast', { name: name }),
+          //title: t('PluginLoader.plugin_load_error.toast', { name: name }),
+          title: 'Error loading ' + name,
           body: '' + e,
           icon: <FaExclamationCircle />,
         });

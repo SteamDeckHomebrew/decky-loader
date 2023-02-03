@@ -35,13 +35,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2 # Check out the repository first.
-      - run: npm install --only=dev --prefix ./frontend
       - name: Run prettier (JavaScript & TypeScript)
-        uses: creyD/prettier_action@v4.2
-        with:
-          dry: True
-          prettier_options: --config ./frontend/.prettierrc.js --check
-          prettier_plugins: "prettier-plugin-import-sort"
+        run: |
+          pushd frontend
+          npm install
+          npm run lint
+          popd
 
       - name: Run ruff (Python)
         uses: jpetrucciani/ruff-check@0.0.239

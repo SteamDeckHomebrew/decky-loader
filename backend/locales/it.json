@@ -63,7 +63,7 @@
   },
   "RemoteDebugging": {
     "remote_cef": {
-      "desc": "Permetti l'accesso non autenticato a chiunque sulla tua rete locale al debugger di CEF.",
+      "desc": "Permetti l'accesso non autenticato al debugger di CEF a chiunque sulla tua rete locale.",
       "label": "Permetti il debug remoto di CEF"
     }
   },
@@ -115,7 +115,7 @@
       "about": "Riguardo a",
       "alph_asce": "Alfabetico (Z a A)",
       "alph_desc": "Alfabetico (A a Z)",
-      "title": "Naviga"
+      "title": "Sfoglia"
     },
     "store_testing_cta": "Valuta la possibilità di testare nuovi plugin per aiutare il team di Decky Loader!"
   },

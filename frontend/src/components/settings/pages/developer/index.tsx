@@ -36,7 +36,7 @@ export default function DeveloperSettings() {
         />
       </Field>
       <Field
-        label="Enable React DevTools"
+        label={t('DeveloperIndex.react_devtools.label')}
         description={
           <>
             <span style={{ whiteSpace: 'pre-line' }}>{t('DeveloperIndex.react_devtools.desc')}</span>

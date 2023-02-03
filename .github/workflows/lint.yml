@@ -1,0 +1,26 @@
+name: Lint
+
+on:
+  push:
+
+jobs:
+  lint:
+    name: Run linters
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2 # Check out the repository first.
+      - name: Run prettier (JavaScript & TypeScript)
+        run: |
+          pushd frontend
+          npm install
+          npm run lint
+          popd
+
+      - name: Run ruff (Python)
+        uses: jpetrucciani/ruff-check@0.0.239
+        with:
+          path: "./backend"
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master

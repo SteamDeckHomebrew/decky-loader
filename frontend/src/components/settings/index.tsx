@@ -40,6 +40,6 @@ export default function SettingsPage() {
       visible: isDeveloper,
     },
   ];
-  
+
   return <SidebarNavigation pages={pages} />;
 }

@@ -12,6 +12,7 @@
   "DeveloperIndex": {
     "react_devtools": {
       "desc": "Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set the IP address before enabling.",
+      "ip_label": "IP",
       "label": "Enable React DevTools"
     },
     "valve_internal": {
@@ -78,7 +79,11 @@
     },
     "manual_plugin": {
       "button": "Install",
-      "label": "Manual plugin install"
+      "label": "Manual plugin install",
+      "url_label": "URL"
+    },
+    "other": {
+      "header": "Other"
     },
     "updates": {
       "header": "Updates"
@@ -114,7 +119,10 @@
     "store_testing_cta": "Please consider testing new plugins to help the Decky Loader team!"
   },
   "StoreSelect": {
-    "custom_store_label": "Custom Store",
+    "custom_store":{
+      "label": "Custom Store",
+      "url_label": "URL"
+    },
     "store_channel_label": "Store Channel"
   },
   "Updater": {

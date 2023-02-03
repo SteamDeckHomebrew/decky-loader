@@ -43,7 +43,11 @@ export default function DeveloperSettings() {
             <br />
             <br />
             <div ref={textRef}>
-              <TextField label={'IP'} value={reactDevtoolsIP} onChange={(e) => setReactDevtoolsIP(e?.target.value)} />
+              <TextField
+                label={t('DeveloperIndex.react_devtools.ip_label')}
+                value={reactDevtoolsIP}
+                onChange={(e) => setReactDevtoolsIP(e?.target.value)}
+              />
             </div>
           </>
         }

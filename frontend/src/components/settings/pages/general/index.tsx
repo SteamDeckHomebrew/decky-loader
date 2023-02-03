@@ -39,7 +39,7 @@ export default function GeneralSettings({
         <StoreSelect />
       </DialogControlsSection>
       <DialogControlsSection>
-        <DialogControlsSectionHeader>Other</DialogControlsSectionHeader>
+        <DialogControlsSectionHeader>{t('SettingsGeneralIndex.other.header')}</DialogControlsSectionHeader>
         <Field label={t('SettingsGeneralIndex.developer_mode.label')}>
           <Toggle
             value={isDeveloper}
@@ -50,7 +50,13 @@ export default function GeneralSettings({
         </Field>
         <Field
           label={t('SettingsGeneralIndex.manual_plugin.label')}
-          description={<TextField label={'URL'} value={pluginURL} onChange={(e) => setPluginURL(e?.target.value)} />}
+          description={
+            <TextField
+              label={t('SettingsGeneralIndex.manual_plugin.url_label')}
+              value={pluginURL}
+              onChange={(e) => setPluginURL(e?.target.value)}
+            />
+          }
         >
           <DialogButton disabled={pluginURL.length == 0} onClick={() => installFromURL(pluginURL)}>
             {t('SettingsGeneralIndex.manual_plugin.button')}

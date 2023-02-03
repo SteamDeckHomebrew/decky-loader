@@ -35,11 +35,11 @@ const StoreSelect: FunctionComponent<{}> = () => {
       </Field>
       {selectedStore == Store.Custom && (
         <Field
-          label={t('StoreSelect.custom_store_label')}
+          label={t('StoreSelect.custom_store.label')}
           indentLevel={1}
           description={
             <TextField
-              label={'URL'}
+              label={t('StoreSelect.custom_store.url_label')}
               value={selectedStoreURL || undefined}
               onChange={(e) => setSelectedStoreURL(e?.target.value || null)}
             />

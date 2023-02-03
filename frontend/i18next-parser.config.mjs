@@ -10,7 +10,7 @@ export default {
     defaultNamespace: 'translation',
     // Default namespace used in your i18next config
   
-    defaultValue: '',
+    defaultValue: 'MISSING',
     // Default value to give to keys with no value
     // You may also specify a function accepting the locale, namespace, key, and value as arguments
   
@@ -44,7 +44,7 @@ export default {
     lineEnding: 'auto',
     // Control the line ending. See options at https://github.com/ryanve/eol
   
-    locales: ['en', 'fr', 'de', 'es', 'it'],
+    locales: ['en', 'it'],
     // An array of the locales in your applications
   
     namespaceSeparator: false,

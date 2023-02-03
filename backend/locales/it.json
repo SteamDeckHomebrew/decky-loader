@@ -12,6 +12,7 @@
   "DeveloperIndex": {
     "react_devtools": {
       "desc": "Abilita la connessione ad un computer che esegue i DevTools di React. Cambiando questa impostazione ricaricherà Steam. Imposta l'indirizzo IP prima di abilitarlo.",
+      "ip_label": "IP",
       "label": "Abilita i DevTools di React"
     },
     "valve_internal": {
@@ -21,7 +22,7 @@
     }
   },
   "PluginCard": {
-    "plugin_full_access": "Questo pluugin ha accesso completo al tuo Steam Deck.",
+    "plugin_full_access": "Questo plugin ha accesso completo al tuo Steam Deck.",
     "plugin_install": "Installa",
     "plugin_no_desc": "Nessuna descrizione fornita.",
     "plugin_version_label": "Versione Plugin"
@@ -69,7 +70,7 @@
   "SettingsGeneralIndex": {
     "about": {
       "decky_version": "Versione di Decky",
-      "header": "Circa"
+      "header": "Riguardo a"
     },
     "beta": {
       "header": "Partecipazione alla beta"
@@ -79,7 +80,11 @@
     },
     "manual_plugin": {
       "button": "Installa",
-      "label": "Installazione manuale plugins"
+      "label": "Installazione manuale plugins",
+      "url_label": "URL"
+    },
+    "other": {
+      "header": "Altro"
     },
     "updates": {
       "header": "Aggiornamenti"
@@ -107,7 +112,7 @@
       "label": "Codice Sorgente"
     },
     "store_tabs": {
-      "about": "About",
+      "about": "Riguardo a",
       "alph_asce": "Alfabetico (Z a A)",
       "alph_desc": "Alfabetico (A a Z)",
       "title": "Naviga"
@@ -115,7 +120,10 @@
     "store_testing_cta": "Valuta la possibilità di testare nuovi plugin per aiutare il team di Decky Loader!"
   },
   "StoreSelect": {
-    "custom_store_label": "Negozio custom",
+    "custom_store":{
+      "label": "Negozio custom",
+      "url_label": "URL"
+    },
     "store_channel_label": "Canale del negozio"
   },
   "Updater": {

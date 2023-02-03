@@ -1,18 +1,55 @@
-import {
-  DialogBody,
-  DialogButton,
-  DialogControlsSection,
-  Focusable,
-  Menu,
-  MenuItem,
-  showContextMenu,
-} from 'decky-frontend-lib';
-import { useEffect } from 'react';
+import { DialogBody, DialogButton, DialogControlsSection, Menu, MenuItem, showContextMenu } from 'decky-frontend-lib';
+import { Fragment, useEffect } from 'react';
 import { FaDownload, FaEllipsisH } from 'react-icons/fa';
 
-import { requestPluginInstall } from '../../../../store';
+import { StorePluginVersion, requestPluginInstall } from '../../../../store';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 import { useDeckyState } from '../../../DeckyState';
+import { ReorderableEntry, ReorderableList } from './ReorderableList';
+
+function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
+  const data = props.entry.data;
+
+  return (
+    <Fragment>
+      {data?.update && (
+        <DialogButton
+          style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
+          onClick={() => requestPluginInstall(props.entry.label, data?.update as StorePluginVersion)}
+          onOKButton={() => requestPluginInstall(props.entry.label, data?.update as StorePluginVersion)}
+        >
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
+            Update to {data?.update?.name}
+            <FaDownload style={{ paddingLeft: '2rem' }} />
+          </div>
+        </DialogButton>
+      )}
+      <DialogButton
+        style={{ height: '40px', width: '40px', padding: '10px 12px', minWidth: '40px' }}
+        onClick={(e: MouseEvent) =>
+          showContextMenu(
+            <Menu label="Plugin Actions">
+              <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(props.entry.label, data?.version)}>
+                Reload
+              </MenuItem>
+              <MenuItem onSelected={() => window.DeckyPluginLoader.uninstallPlugin(props.entry.label)}>
+                Uninstall
+              </MenuItem>
+            </Menu>,
+            e.currentTarget ?? window,
+          )
+        }
+      >
+        <FaEllipsisH />
+      </DialogButton>
+    </Fragment>
+  );
+}
+
+type PluginData = {
+  update?: StorePluginVersion;
+  version?: string;
+};
 
 export default function PluginList() {
   const { plugins, updates } = useDeckyState();
@@ -25,6 +62,21 @@ export default function PluginList() {
     window.DeckyPluginLoader.checkPluginUpdates();
   }, []);
 
+  let entries: ReorderableEntry<PluginData>[] = [];
+
+  useEffect(() => {
+    entries = plugins.map((plugin) => {
+      return {
+        label: plugin.name,
+        data: {
+          update: updates?.get(plugin.name),
+          version: plugin.version,
+        },
+        position: pluginOrder.indexOf(plugin.name),
+      };
+    });
+  }, [plugins, updates]);
+
   if (plugins.length === 0) {
     return (
       <div>
@@ -33,56 +85,14 @@ export default function PluginList() {
     );
   }
 
+  async function onSave(entries: ReorderableEntry<PluginData>[]) {
+    await setPluginOrder(entries.map((entry) => entry.label));
+  }
+
   return (
     <DialogBody>
       <DialogControlsSection>
-        <ul style={{ listStyleType: 'none', padding: '0' }}>
-          {plugins
-            .sort((a, b) => pluginOrder.indexOf(a.name) - pluginOrder.indexOf(b.name))
-            .map(({ name, version }) => {
-              const update = updates?.get(name);
-              return (
-                <li style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingBottom: '10px' }}>
-                  <span>
-                    {name} <span style={{ opacity: '50%' }}>{'(' + version + ')'}</span>
-                  </span>
-                  <Focusable
-                    style={{ marginLeft: 'auto', boxShadow: 'none', display: 'flex', justifyContent: 'right' }}
-                  >
-                    {update && (
-                      <DialogButton
-                        style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
-                        onClick={() => requestPluginInstall(name, update)}
-                      >
-                        <div style={{ display: 'flex', flexDirection: 'row' }}>
-                          Update to {update.name}
-                          <FaDownload style={{ paddingLeft: '2rem' }} />
-                        </div>
-                      </DialogButton>
-                    )}
-                    <DialogButton
-                      style={{ height: '40px', width: '40px', padding: '10px 12px', minWidth: '40px' }}
-                      onClick={(e: MouseEvent) =>
-                        showContextMenu(
-                          <Menu label="Plugin Actions">
-                            <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(name, version)}>
-                              Reload
-                            </MenuItem>
-                            <MenuItem onSelected={() => window.DeckyPluginLoader.uninstallPlugin(name)}>
-                              Uninstall
-                            </MenuItem>
-                          </Menu>,
-                          e.currentTarget ?? window,
-                        )
-                      }
-                    >
-                      <FaEllipsisH />
-                    </DialogButton>
-                  </Focusable>
-                </li>
-              );
-            })}
-        </ul>
+        <ReorderableList<PluginData> entries={entries} onSave={onSave} interactables={PluginInteractables} />
       </DialogControlsSection>
     </DialogBody>
   );

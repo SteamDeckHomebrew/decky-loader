@@ -273,7 +273,7 @@ class PluginLoader extends Logger {
             <pre>
               <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
             </pre>
-            <>{t('PluginLoader.plugin_error_uninstall', { icon: <FaCog style={{ display: 'inline' }} /> })}</>
+            <>{t('PluginLoader.plugin_error_uninstall', { icon: "<FaCog style={{ display: 'inline' }} />" })}</>
           </>
         );*/
         const TheError: FC<{}> = () => (

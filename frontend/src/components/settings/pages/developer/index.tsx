@@ -39,7 +39,9 @@ export default function DeveloperSettings() {
         label={t('DeveloperIndex.react_devtools.label')}
         description={
           <>
-            <span style={{ whiteSpace: 'pre-line' }}>{t('DeveloperIndex.react_devtools.desc')}</span>
+            <span style={{ whiteSpace: 'pre-line' }}>
+              {t('DeveloperIndex.react_devtools.desc')}
+            </span>
             <br />
             <br />
             <div ref={textRef}>

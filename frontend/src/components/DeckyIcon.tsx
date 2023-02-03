@@ -2,7 +2,7 @@ export default function DeckyIcon() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 456" width="512" height="456">
       <g>
-        <path
+          <path
           style={{ fill: 'none' }}
           d="M154.33,72.51v49.79c11.78-0.17,23.48,2,34.42,6.39c10.93,4.39,20.89,10.91,29.28,19.18
           c8.39,8.27,15.06,18.13,19.61,29c4.55,10.87,6.89,22.54,6.89,34.32c0,11.78-2.34,23.45-6.89,34.32

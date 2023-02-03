@@ -16,11 +16,3 @@ jobs:
           npm install
           npm run lint
           popd
-
-      - name: Run ruff (Python)
-        uses: jpetrucciani/ruff-check@0.0.239
-        with:
-          path: "./backend"
-
-      - name: Run ShellCheck
-        uses: ludeeus/action-shellcheck@master

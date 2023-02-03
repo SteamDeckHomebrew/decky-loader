@@ -100,7 +100,7 @@ class PluginLoader extends Logger {
     const { t } = useTranslation();
     if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
       this.toaster.toast({
-        title: 'Decky',
+        title: t('PluginLoader.decky_title'),
         body: t('PluginLoader.decky_update_available', { tag_name: versionInfo?.remote?.tag_name }),
         onClick: () => Router.Navigate('/decky/settings'),
       });
@@ -121,8 +121,7 @@ class PluginLoader extends Logger {
     const { t } = useTranslation();
     if (updates?.size > 0) {
       this.toaster.toast({
-        title: 'Decky',
-        //body: `Updates available for ${updates.size} plugin${updates.size > 1 ? 's' : ''}!`,
+        title: t('PluginLoader.decky_title'),
         body: t('PluginLoader.plugin_update', { count: updates.size }),
         onClick: () => Router.Navigate('/decky/settings/plugins'),
       });

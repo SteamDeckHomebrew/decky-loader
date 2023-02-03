@@ -97,7 +97,7 @@ export default function UpdaterSettings() {
   return (
     <>
       <Field
-        onOptionsActionDescription={versionInfo?.all ? 'Patch Notes' : undefined}
+        onOptionsActionDescription={versionInfo?.all ? t('Updater.patch_notes_desc') : undefined}
         onOptionsButton={versionInfo?.all ? showPatchNotes : undefined}
         label={t('Updater.updates.label')}
         description={

@@ -57,7 +57,7 @@ export default function PluginList() {
                     style={{ height: '40px', width: '40px', padding: '10px 12px', minWidth: '40px' }}
                     onClick={(e: MouseEvent) =>
                       showContextMenu(
-                        <Menu label="Plugin Actions">
+                        <Menu label={t('PluginListIndex.list_plug_actions_label')}>
                           <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(name, version)}>
                             {t('PluginListIndex.reload')}
                           </MenuItem>

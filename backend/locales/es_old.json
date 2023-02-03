@@ -1,0 +1,15 @@
+{
+  "SettingsGeneralIndex": {
+    "developer_mode": {
+      "desc": ""
+    }
+  },
+  "SettingsIndex": {
+    "navbar_settings": ""
+  },
+  "Updater": {
+    "updates": {
+      "cur_version": ""
+    }
+  }
+}

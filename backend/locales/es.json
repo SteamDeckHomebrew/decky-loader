@@ -42,6 +42,7 @@
     "uninstall": ""
   },
   "PluginLoader": {
+    "decky_title": "",
     "decky_update_available": "",
     "error": "",
     "file_picker_cancel_text": "",
@@ -66,19 +67,27 @@
     }
   },
   "SettingsGeneralIndex": {
+    "about": {
+      "decky_version": "",
+      "header": ""
+    },
+    "beta": {
+      "header": ""
+    },
     "developer_mode": {
-      "desc": "",
       "label": ""
     },
     "manual_plugin": {
       "button": "",
       "label": ""
+    },
+    "updates": {
+      "header": ""
     }
   },
   "SettingsIndex": {
     "developer_title": "",
     "general_title": "",
-    "navbar_settings": "",
     "plugins_title": ""
   },
   "Store": {
@@ -112,10 +121,10 @@
   "Updater": {
     "decky_updates": "",
     "no_patch_notes_desc": "",
+    "patch_notes_desc": "",
     "updates": {
       "check_button": "",
       "checking": "",
-      "cur_version": "",
       "install_button": "",
       "label": "",
       "lat_version": "",

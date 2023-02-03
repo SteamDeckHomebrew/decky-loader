@@ -1,8 +1,21 @@
 {
+  "SettingsGeneralIndex": {
+    "developer_mode": {
+      "desc": "Enables Decky's developer settings."
+    }
+  },
+  "SettingsIndex": {
+    "navbar_settings": "Decky Settings"
+  },
   "Store": {
     "store_filter": {
       "label": "Filter",
       "label_def": "All"
+    }
+  },
+  "Updater": {
+    "updates": {
+      "cur_version": "Current version: {{ver}}"
     }
   }
 }

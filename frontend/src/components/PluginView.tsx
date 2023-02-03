@@ -9,6 +9,7 @@ import {
 } from 'decky-frontend-lib';
 import { VFC } from 'react';
 
+import { useSetting } from '../utils/hooks/useSetting';
 import { useDeckyState } from './DeckyState';
 import NotificationBadge from './NotificationBadge';
 import { useQuickAccessVisible } from './QuickAccessVisibleState';
@@ -17,6 +18,11 @@ import TitleView from './TitleView';
 const PluginView: VFC = () => {
   const { plugins, updates, activePlugin, setActivePlugin, closeActivePlugin } = useDeckyState();
   const visible = useQuickAccessVisible();
+
+  const [pluginOrder] = useSetting(
+    'pluginOrder',
+    plugins.map((plugin) => plugin.name),
+  );
 
   if (activePlugin) {
     return (
@@ -38,6 +44,7 @@ const PluginView: VFC = () => {
         <PanelSection>
           {plugins
             .filter((p) => p.content)
+            .sort((a, b) => pluginOrder.indexOf(a.name) - pluginOrder.indexOf(b.name))
             .map(({ name, icon }) => (
               <PanelSectionRow key={name}>
                 <ButtonItem layout="below" onClick={() => setActivePlugin(name)}>

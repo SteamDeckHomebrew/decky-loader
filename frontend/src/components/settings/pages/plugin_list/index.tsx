@@ -1,5 +1,13 @@
-import { DialogBody, DialogButton, DialogControlsSection, Menu, MenuItem, showContextMenu } from 'decky-frontend-lib';
-import { Fragment, useEffect } from 'react';
+import {
+  DialogBody,
+  DialogButton,
+  DialogControlsSection,
+  GamepadEvent,
+  Menu,
+  MenuItem,
+  showContextMenu,
+} from 'decky-frontend-lib';
+import { Fragment, useEffect, useState } from 'react';
 import { FaDownload, FaEllipsisH } from 'react-icons/fa';
 
 import { StorePluginVersion, requestPluginInstall } from '../../../../store';
@@ -9,6 +17,18 @@ import { ReorderableEntry, ReorderableList } from './ReorderableList';
 
 function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
   const data = props.entry.data;
+
+  const showCtxMenu = (e: MouseEvent | GamepadEvent) => {
+    showContextMenu(
+      <Menu label="Plugin Actions">
+        <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(props.entry.label, data?.version)}>
+          Reload
+        </MenuItem>
+        <MenuItem onSelected={() => window.DeckyPluginLoader.uninstallPlugin(props.entry.label)}>Uninstall</MenuItem>
+      </Menu>,
+      e.currentTarget ?? window,
+    );
+  };
 
   return (
     <Fragment>
@@ -26,19 +46,8 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
       )}
       <DialogButton
         style={{ height: '40px', width: '40px', padding: '10px 12px', minWidth: '40px' }}
-        onClick={(e: MouseEvent) =>
-          showContextMenu(
-            <Menu label="Plugin Actions">
-              <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(props.entry.label, data?.version)}>
-                Reload
-              </MenuItem>
-              <MenuItem onSelected={() => window.DeckyPluginLoader.uninstallPlugin(props.entry.label)}>
-                Uninstall
-              </MenuItem>
-            </Menu>,
-            e.currentTarget ?? window,
-          )
-        }
+        onClick={showCtxMenu}
+        onOKButton={showCtxMenu}
       >
         <FaEllipsisH />
       </DialogButton>
@@ -52,8 +61,8 @@ type PluginData = {
 };
 
 export default function PluginList() {
-  const { plugins, updates } = useDeckyState();
-  const [pluginOrder, setPluginOrder] = useSetting(
+  const { plugins, updates, pluginOrder, setPluginOrder } = useDeckyState();
+  const [_, setPluginOrderSetting] = useSetting<string[]>(
     'pluginOrder',
     plugins.map((plugin) => plugin.name),
   );
@@ -62,19 +71,21 @@ export default function PluginList() {
     window.DeckyPluginLoader.checkPluginUpdates();
   }, []);
 
-  let entries: ReorderableEntry<PluginData>[] = [];
+  const [pluginEntries, setPluginEntries] = useState<ReorderableEntry<PluginData>[]>([]);
 
   useEffect(() => {
-    entries = plugins.map((plugin) => {
-      return {
-        label: plugin.name,
-        data: {
-          update: updates?.get(plugin.name),
-          version: plugin.version,
-        },
-        position: pluginOrder.indexOf(plugin.name),
-      };
-    });
+    setPluginEntries(
+      plugins.map((plugin) => {
+        return {
+          label: plugin.name,
+          data: {
+            update: updates?.get(plugin.name),
+            version: plugin.version,
+          },
+          position: pluginOrder.indexOf(plugin.name),
+        };
+      }),
+    );
   }, [plugins, updates]);
 
   if (plugins.length === 0) {
@@ -85,14 +96,17 @@ export default function PluginList() {
     );
   }
 
-  async function onSave(entries: ReorderableEntry<PluginData>[]) {
-    await setPluginOrder(entries.map((entry) => entry.label));
+  function onSave(entries: ReorderableEntry<PluginData>[]) {
+    const newOrder = entries.map((entry) => entry.label);
+    console.log(newOrder);
+    setPluginOrder(newOrder);
+    setPluginOrderSetting(newOrder);
   }
 
   return (
     <DialogBody>
       <DialogControlsSection>
-        <ReorderableList<PluginData> entries={entries} onSave={onSave} interactables={PluginInteractables} />
+        <ReorderableList<PluginData> entries={pluginEntries} onSave={onSave} interactables={PluginInteractables} />
       </DialogControlsSection>
     </DialogBody>
   );

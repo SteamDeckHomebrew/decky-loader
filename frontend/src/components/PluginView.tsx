@@ -7,22 +7,26 @@ import {
   scrollClasses,
   staticClasses,
 } from 'decky-frontend-lib';
-import { VFC } from 'react';
+import { VFC, useEffect, useState } from 'react';
 
-import { useSetting } from '../utils/hooks/useSetting';
+import { Plugin } from '../plugin';
 import { useDeckyState } from './DeckyState';
 import NotificationBadge from './NotificationBadge';
 import { useQuickAccessVisible } from './QuickAccessVisibleState';
 import TitleView from './TitleView';
 
 const PluginView: VFC = () => {
-  const { plugins, updates, activePlugin, setActivePlugin, closeActivePlugin } = useDeckyState();
+  const { plugins, updates, activePlugin, pluginOrder, setActivePlugin, closeActivePlugin } = useDeckyState();
   const visible = useQuickAccessVisible();
 
-  const [pluginOrder] = useSetting(
-    'pluginOrder',
-    plugins.map((plugin) => plugin.name),
+  const [pluginList, setPluginList] = useState<Plugin[]>(
+    plugins.sort((a, b) => pluginOrder.indexOf(a.name) - pluginOrder.indexOf(b.name)),
   );
+
+  useEffect(() => {
+    setPluginList(plugins.sort((a, b) => pluginOrder.indexOf(a.name) - pluginOrder.indexOf(b.name)));
+    console.log('updating PluginView after changes');
+  }, [plugins, pluginOrder]);
 
   if (activePlugin) {
     return (
@@ -42,9 +46,8 @@ const PluginView: VFC = () => {
       <TitleView />
       <div className={joinClassNames(staticClasses.TabGroupPanel, scrollClasses.ScrollPanel, scrollClasses.ScrollY)}>
         <PanelSection>
-          {plugins
+          {pluginList
             .filter((p) => p.content)
-            .sort((a, b) => pluginOrder.indexOf(a.name) - pluginOrder.indexOf(b.name))
             .map(({ name, icon }) => (
               <PanelSectionRow key={name}>
                 <ButtonItem layout="below" onClick={() => setActivePlugin(name)}>

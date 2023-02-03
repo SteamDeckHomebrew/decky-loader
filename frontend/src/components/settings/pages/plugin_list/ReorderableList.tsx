@@ -1,5 +1,5 @@
 import { Field, FieldProps, Focusable, GamepadButton } from 'decky-frontend-lib';
-import { Fragment, JSXElementConstructor, ReactElement, useState } from 'react';
+import { Fragment, JSXElementConstructor, ReactElement, useEffect, useState } from 'react';
 
 export type ReorderableEntry<T> = {
   label: string;
@@ -24,6 +24,10 @@ export function ReorderableList<T>(props: ListProps<T>) {
     props.entries.sort((a: ReorderableEntry<T>, b: ReorderableEntry<T>) => a.position - b.position),
   );
   const [reorderEnabled, setReorderEnabled] = useState<boolean>(false);
+
+  useEffect(() => {
+    setEntryList(props.entries.sort((a: ReorderableEntry<T>, b: ReorderableEntry<T>) => a.position - b.position));
+  }, [props.entries]);
 
   function toggleReorderEnabled(): void {
     let newReorderValue = !reorderEnabled;
@@ -122,9 +126,9 @@ function ReorderableItem<T>(props: ListEntryProps<T>) {
   };
 
   return (
-    // @ts-ignore
     <Field
       label={props.entryData.label}
+      // @ts-ignore
       style={props.reorderEnabled ? { ...baseCssProps, background: '#678BA670' } : { ...baseCssProps }}
       {...props.fieldProps}
       focusable={!props.children}

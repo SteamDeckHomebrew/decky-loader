@@ -40,5 +40,5 @@ export default function SettingsPage() {
       visible: isDeveloper,
     },
   ];
-  return <SidebarNavigation title={t('SettingsIndex.navbar_settings') as string} pages={pages} />;
+  return <SidebarNavigation pages={pages} />;
 }

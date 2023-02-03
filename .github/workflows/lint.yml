@@ -15,4 +15,3 @@ jobs:
           pushd frontend
           npm install
           npm run lint
-          popd

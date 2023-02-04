@@ -135,7 +135,7 @@ class Tab:
             False,
         )
 
-    async def refresh(self):
+    async def refresh(self, manage_socket=False):
         try:
             if manage_socket:
                 await self.open_websocket()

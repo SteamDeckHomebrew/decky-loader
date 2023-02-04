@@ -3,13 +3,12 @@ import os
 from json.decoder import JSONDecodeError
 from traceback import format_exc
 
-from asyncio import sleep, start_server, gather, open_connection
+from asyncio import start_server, gather, open_connection
 from aiohttp import ClientSession, web
 
 from logging import getLogger
 from injector import inject_to_tab, get_gamepadui_tab, close_old_tabs
 import helpers
-import subprocess
 
 
 class Utilities:
@@ -31,7 +30,7 @@ class Utilities:
             "get_setting": self.get_setting,
             "filepicker_ls": self.filepicker_ls,
             "disable_rdt": self.disable_rdt,
-            "enable_rdt": self.enable_rdt
+            "enable_rdt": self.enable_rdt,
         }
 
         self.logger = getLogger("Utilities")
@@ -41,9 +40,9 @@ class Utilities:
         self.rdt_proxy_task = None
 
         if context:
-            context.web_app.add_routes([
-                web.post("/methods/{method_name}", self._handle_server_method_call)
-            ])
+            context.web_app.add_routes(
+                [web.post("/methods/{method_name}", self._handle_server_method_call)]
+            )
 
     async def _handle_server_method_call(self, request):
         method_name = request.match_info["method_name"]
@@ -61,12 +60,11 @@ class Utilities:
             res["success"] = False
         return web.json_response(res)
 
-    async def install_plugin(self, artifact="", name="No name", version="dev", hash=False):
+    async def install_plugin(
+        self, artifact="", name="No name", version="dev", hash=False
+    ):
         return await self.context.plugin_browser.request_plugin_install(
-            artifact=artifact,
-            name=name,
-            version=version,
-            hash=hash
+            artifact=artifact, name=name, version=version, hash=hash
         )
 
     async def confirm_plugin_install(self, request_id):
@@ -80,13 +78,11 @@ class Utilities:
 
     async def http_request(self, method="", url="", **kwargs):
         async with ClientSession() as web:
-            res = await web.request(method, url, ssl=helpers.get_ssl_context(), **kwargs)
+            res = await web.request(
+                method, url, ssl=helpers.get_ssl_context(), **kwargs
+            )
             text = await res.text()
-        return {
-            "status": res.status,
-            "headers": dict(res.headers),
-            "body": text
-        }
+        return {"status": res.status, "headers": dict(res.headers), "body": text}
 
     async def ping(self, **kwargs):
         return "pong"
@@ -95,26 +91,18 @@ class Utilities:
         try:
             result = await inject_to_tab(tab, code, run_async)
             if "exceptionDetails" in result["result"]:
-                return {
-                    "success": False,
-                    "result": result["result"]
-                }
+                return {"success": False, "result": result["result"]}
 
-            return {
-                "success": True,
-                "result": result["result"]["result"].get("value")
-            }
+            return {"success": True, "result": result["result"]["result"].get("value")}
         except Exception as e:
-            return {
-              "success": False,
-              "result": e
-            }
+            return {"success": False, "result": e}
 
     async def inject_css_into_tab(self, tab, style):
         try:
             css_id = str(uuid.uuid4())
 
-            result = await inject_to_tab(tab,
+            result = await inject_to_tab(
+                tab,
                 f"""
                 (function() {{
                     const style = document.createElement('style');
@@ -122,27 +110,21 @@ class Utilities:
                     document.head.append(style);
                     style.textContent = `{style}`;
                 }})()
-                """, False)
+                """,
+                False,
+            )
 
             if "exceptionDetails" in result["result"]:
-                return {
-                    "success": False,
-                    "result": result["result"]
-                }
+                return {"success": False, "result": result["result"]}
 
-            return {
-                "success": True,
-                "result": css_id
-            }
+            return {"success": True, "result": css_id}
         except Exception as e:
-            return {
-                "success": False,
-                "result": e
-            }
+            return {"success": False, "result": e}
 
     async def remove_css_from_tab(self, tab, css_id):
         try:
-            result = await inject_to_tab(tab,
+            result = await inject_to_tab(
+                tab,
                 f"""
                 (function() {{
                     let style = document.getElementById("{css_id}");
@@ -150,22 +132,16 @@ class Utilities:
                     if (style.nodeName.toLowerCase() == 'style')
                         style.parentNode.removeChild(style);
                 }})()
-                """, False)
+                """,
+                False,
+            )
 
             if "exceptionDetails" in result["result"]:
-                return {
-                    "success": False,
-                    "result": result
-                }
+                return {"success": False, "result": result}
 
-            return {
-                "success": True
-            }
+            return {"success": True}
         except Exception as e:
-            return {
-                "success": False,
-                "result": e
-            }
+            return {"success": False, "result": e}
 
     async def get_setting(self, key, default):
         return self.context.settings.getSetting(key, default)
@@ -187,7 +163,7 @@ class Utilities:
         #         return os.path.getmtime(os.path.join(path, file))
         #     return 0
         # file_names = sorted(os.listdir(path), key=sorter, reverse=True) # TODO provide more sort options
-        file_names = sorted(os.listdir(path)) # Alphabetical
+        file_names = sorted(os.listdir(path))  # Alphabetical
 
         files = []
 
@@ -196,16 +172,15 @@ class Utilities:
             is_dir = os.path.isdir(full_path)
 
             if is_dir or include_files:
-                files.append({
-                    "isdir": is_dir,
-                    "name": file,
-                    "realpath": os.path.realpath(full_path)
-                })
+                files.append(
+                    {
+                        "isdir": is_dir,
+                        "name": file,
+                        "realpath": os.path.realpath(full_path),
+                    }
+                )
 
-        return {
-            "realpath": os.path.realpath(path),
-            "files": files
-        }
+        return {"realpath": os.path.realpath(path), "files": files}
 
     # Based on https://stackoverflow.com/a/46422554/13174603
     def start_rdt_proxy(self, ip, port):
@@ -215,10 +190,10 @@ class Utilities:
                     writer.write(await reader.read(2048))
             finally:
                 writer.close()
+
         async def handle_client(local_reader, local_writer):
             try:
-                remote_reader, remote_writer = await open_connection(
-                    ip, port)
+                remote_reader, remote_writer = await open_connection(ip, port)
                 pipe1 = pipe(local_reader, remote_writer)
                 pipe2 = pipe(remote_reader, local_writer)
                 await gather(pipe1, pipe2)
@@ -239,11 +214,14 @@ class Utilities:
             self.stop_rdt_proxy()
             ip = self.context.settings.getSetting("developer.rdt.ip", None)
 
-            if ip != None:
+            if ip is not None:
                 self.logger.info("Connecting to React DevTools at " + ip)
                 async with ClientSession() as web:
-                    res = await web.request("GET", "http://" + ip + ":8097", ssl=helpers.get_ssl_context())
-                    script = """
+                    res = await web.request(
+                        "GET", "http://" + ip + ":8097", ssl=helpers.get_ssl_context()
+                    )
+                    script = (
+                        """
                     if (!window.deckyHasConnectedRDT) {
                         window.deckyHasConnectedRDT = true;
                         // This fixes the overlay when hovering over an element in RDT
@@ -254,7 +232,10 @@ class Utilities:
                                 return FocusNavController?.m_ActiveContext?.ActiveWindow || window;
                             }
                         });
-                    """ + await res.text() + "\n}"
+                    """
+                        + await res.text()
+                        + "\n}"
+                    )
                 if res.status != 200:
                     self.logger.error("Failed to connect to React DevTools at " + ip)
                     return False
@@ -265,7 +246,7 @@ class Utilities:
                 await close_old_tabs()
                 result = await tab.reload_and_evaluate(script)
                 self.logger.info(result)
-                        
+
         except Exception:
             self.logger.error("Failed to connect to React DevTools")
             self.logger.error(format_exc())

@@ -1,0 +1,11 @@
+[flake8]
+max-line-length = 88
+
+[tool.ruff]
+ignore = [
+    # Ignore line length check and let Black handle it
+    "E501"
+]
+
+# Assume Python 3.10.
+target-version = "py310"

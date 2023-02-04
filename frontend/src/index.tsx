@@ -50,7 +50,7 @@ declare global {
         order: ['querystring', 'navigator'],
         lookupQuerystring: 'lng',
       },
-      debug: true,
+      //debug: true,
       fallbackLng: 'en',
       interpolation: {
         escapeValue: false,

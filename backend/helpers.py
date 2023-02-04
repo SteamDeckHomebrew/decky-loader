@@ -96,11 +96,6 @@ def get_user_owner(file_path) -> str:
     return pwd.getpwuid(os.stat(file_path).st_uid).pw_name
 
 
-# Get the user group of the given file path.
-def get_user_group(file_path) -> str:
-    return grp.getgrgid(os.stat(file_path).st_gid).gr_name
-
-
 # Deprecated
 def set_user_group() -> str:
     return get_user_group()
@@ -112,8 +107,11 @@ def get_user_group_id() -> int:
 
 
 # Get the group of the user hosting the plugin loader
-def get_user_group() -> str:
-    return grp.getgrgid(get_user_group_id()).gr_name
+def get_user_group(file_path) -> str:
+    if file_path:
+        return grp.getgrgid(os.stat(file_path).st_gid).gr_name
+    else:
+        return grp.getgrgid(get_user_group_id()).gr_name
 
 
 # Get the default home path unless a user is specified

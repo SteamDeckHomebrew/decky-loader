@@ -132,7 +132,7 @@ class PluginBrowser:
 
                 if plugin["name"] == name:
                     return str(path.join(self.plugin_path, folder))
-            except:
+            except Exception:
                 logger.debug(f"skipping {folder}")
 
     async def uninstall_plugin(self, name):
@@ -174,7 +174,7 @@ class PluginBrowser:
             pluginFolderPath = self.find_plugin_folder(name)
             if pluginFolderPath:
                 isInstalled = True
-        except:
+        except Exception:
             logger.error(
                 f"Failed to determine if {name} is already installed, continuing"
                 " anyway."
@@ -192,7 +192,7 @@ class PluginBrowser:
                     try:
                         logger.debug("Uninstalling existing plugin...")
                         await self.uninstall_plugin(name)
-                    except:
+                    except Exception:
                         logger.error(f"Plugin {name} could not be uninstalled.")
                 logger.debug("Unzipping...")
                 ret = self._unzip_to_plugin_dir(res_zip, name, hash)

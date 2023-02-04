@@ -114,7 +114,7 @@ class PluginWrapper:
                 get_event_loop().create_task(self.Plugin._main(self.Plugin))
             get_event_loop().create_task(self._setup_socket())
             get_event_loop().run_forever()
-        except:
+        except Exception:
             self.log.error("Failed to start " + self.name + "!\n" + format_exc())
             exit(0)
 
@@ -132,7 +132,7 @@ class PluginWrapper:
                 self.log.info(
                     'Could not find "_unload" in ' + self.name + "'s main.py" + "\n"
                 )
-        except:
+        except Exception:
             self.log.error("Failed to unload " + self.name + "!\n" + format_exc())
             exit(0)
 
@@ -185,7 +185,7 @@ class PluginWrapper:
                         self.socket_addr, limit=BUFFER_LIMIT
                     )
                     return True
-                except:
+                except Exception:
                     await sleep(2)
                     retries += 1
             return False

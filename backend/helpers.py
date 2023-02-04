@@ -174,7 +174,7 @@ async def download_remote_binary_to_path(url, binHash, path) -> bool:
                     )
             else:
                 rv = False
-    except:
+    except Exception:
         rv = False
 
     return rv

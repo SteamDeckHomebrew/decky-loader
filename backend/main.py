@@ -199,7 +199,7 @@ class PluginManager:
                 False,
                 False,
             )
-        except:
+        except Exception:
             logger.info("Failed to inject JavaScript into tab\n" + format_exc())
             pass
 

@@ -261,18 +261,19 @@ class Tab:
 
             wrappedjs = (
                 """
-            function scriptFunc() {
+            function scriptFunc() {{
                 {js}
-            }
-            if (document.readyState === 'loading') {
-                addEventListener('DOMContentLoaded', () => {
+            }}
+            if (document.readyState === 'loading') {{
+                addEventListener('DOMContentLoaded', () => {{
                 scriptFunc();
-            });
-            } else {
+            }});
+            }} else {{
                 scriptFunc();
-            }
+            }}
             """.format(
-                    )
+                    js=js
+                )
                 if add_dom_wrapper
                 else js
             )

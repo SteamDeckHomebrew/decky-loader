@@ -45,13 +45,13 @@ declare global {
     .use(LanguageDetector)
     .use(initReactI18next)
     .init({
-      load: 'languageOnly',
+      load: 'currentOnly',
       detection: {
         order: ['querystring', 'navigator'],
         lookupQuerystring: 'lng',
       },
       //debug: true,
-      fallbackLng: 'en',
+      fallbackLng: 'en-US',
       interpolation: {
         escapeValue: false,
       },

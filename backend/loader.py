@@ -109,7 +109,7 @@ class Loader:
     async def handle_frontend_locales(self, request):
         file = path.join(path.dirname(__file__), "locales", request.match_info["path"])
         
-        return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
+        return web.FileResponse(file, headers={"Cache-Control": "no-cache", "Content-Type": "application/json"})
 
     async def get_plugins(self, request):
         plugins = list(self.plugins.values())

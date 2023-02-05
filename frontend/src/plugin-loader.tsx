@@ -24,6 +24,8 @@ import { getSetting } from './utils/settings';
 const StorePage = lazy(() => import('./components/store/Store'));
 const SettingsPage = lazy(() => import('./components/settings'));
 
+//const { t } = useTranslation();
+
 const FilePicker = lazy(() => import('./components/modals/filepicker'));
 
 class PluginLoader extends Logger {
@@ -97,8 +99,6 @@ class PluginLoader extends Logger {
 
   public async notifyUpdates() {
     const versionInfo = await this.updateVersion();
-    //Same, no react hook here
-    //const { t } = useTranslation();
     if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
       this.toaster.toast({
         //title: t('PluginLoader.decky_title'),
@@ -121,8 +121,6 @@ class PluginLoader extends Logger {
 
   public async notifyPluginUpdates() {
     const updates = await this.checkPluginUpdates();
-    //Same here
-    //const { t } = useTranslation();
     if (updates?.size > 0) {
       this.toaster.toast({
         //title: t('PluginLoader.decky_title'),
@@ -146,24 +144,7 @@ class PluginLoader extends Logger {
     );
   }
 
-  public uninstallPlugin(name: string) {
-    //Same as before
-    //const { t } = useTranslation();
-
-    /*showModal(
-      <ConfirmModal
-        onOK={async () => {
-          await this.callServerMethod('uninstall_plugin', { name });
-        }}
-        onCancel={() => {
-          // do nothing
-        }}
-        strTitle={t('PluginLoader.plugin_uninstall.title', { name: name })}
-        strOKButtonText={t('PluginLoader.plugin_uninstall.button')}
-      >
-        {t('PluginLoader.plugin_uninstall.desc', { name: name })}
-      </ConfirmModal>,
-    );*/
+  public uninstallPlugin(name: string, title: string, button_text: string, description: string) {
     showModal(
       <ConfirmModal
         onOK={async () => {
@@ -172,10 +153,10 @@ class PluginLoader extends Logger {
         onCancel={() => {
           // do nothing
         }}
-        strTitle={`Uninstall ${name}`}
-        strOKButtonText={'Uninstall'}
+        strTitle={title}
+        strOKButtonText={button_text}
       >
-        Are you sure you want to uninstall {name}?
+        {description}
       </ConfirmModal>,
     );
   }
@@ -252,8 +233,6 @@ class PluginLoader extends Logger {
         Authentication: window.deckyAuthToken,
       },
     });
-    //This call fails, because we are outside of a React component (?)
-    //const { t } = useTranslation();
 
     if (res.ok) {
       try {

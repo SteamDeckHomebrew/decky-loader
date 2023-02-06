@@ -40,11 +40,14 @@ class Toaster extends Logger {
     let instance: any;
     const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
     const findToasterRoot = (currentNode: any, iters: number): any => {
-      if (iters >= 50) {
+      if (iters >= 65) {
         // currently 40
         return null;
       }
-      if (currentNode?.memoizedProps?.className?.startsWith?.('toastmanager_ToastPlaceholder')) {
+      if (
+        currentNode?.memoizedProps?.className?.startsWith?.('toastmanager_ToastPlaceholder') ||
+        currentNode?.memoizedProps?.className?.startsWith?.('toastmanager_ToastPopup')
+      ) {
         this.log(`Toaster root was found in ${iters} recursion cycles`);
         return currentNode;
       }

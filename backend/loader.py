@@ -6,7 +6,7 @@ from pathlib import Path
 from traceback import print_exc
 
 from aiohttp import web
-from genericpath import exists
+from os.path import exists
 from watchdog.events import RegexMatchingEventHandler
 
 from watchdog.observers import Observer

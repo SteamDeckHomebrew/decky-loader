@@ -9,7 +9,7 @@ class UnixSocket:
         It's return value gets used, if not None, to write data to the socket.
         Method should be async
         '''
-        self.socket_addr = f"/tmp/plugin_socket_{time()}"
+        self.socket_addr = f"/tmp/plugin_socket_{time.time()}"
         self.on_new_message = on_new_message
         self.socket = None
         self.reader = None
@@ -33,7 +33,7 @@ class UnixSocket:
             return True
 
     async def get_socket_connection(self):
-        if not self._open_socket_if_not_exists():
+        if not await self._open_socket_if_not_exists():
             return None, None
         
         return self.reader, self.writer
@@ -102,7 +102,7 @@ class PortSocket (UnixSocket):
         It's return value gets used, if not None, to write data to the socket.
         Method should be async
         '''
-        super().__init__(self, on_new_message)
+        super().__init__(on_new_message)
         self.host = "127.0.0.1"
         self.port = random.sample(range(40000, 60000), 1)[0]
     

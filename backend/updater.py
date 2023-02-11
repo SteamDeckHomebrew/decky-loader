@@ -6,7 +6,7 @@ from ensurepip import version
 from json.decoder import JSONDecodeError
 from logging import getLogger
 from os import getcwd, path, remove
-from subprocess import call
+from localplatform import chmod, service_restart
 
 from aiohttp import ClientSession, web
 
@@ -192,12 +192,11 @@ class Updater:
             with open(path.join(getcwd(), ".loader.version"), "w", encoding="utf-8") as out:
                 out.write(version)
 
-            call(['chmod', '+x', path.join(getcwd(), "PluginLoader")])
+            chmod(path.join(getcwd(), "PluginLoader"), 777, False)
             logger.info("Updated loader installation.")
             await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)
             await self.do_restart()
             await tab.close_websocket()
 
     async def do_restart(self):
-        call(["systemctl", "daemon-reload"])
-        call(["systemctl", "restart", "plugin_loader"])
+        await service_restart("plugin_loader")

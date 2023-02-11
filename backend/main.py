@@ -1,8 +1,8 @@
 # Change PyInstaller files permissions
 import sys
-from subprocess import call
+from localplatform import chmod, chown
 if hasattr(sys, '_MEIPASS'):
-    call(['chmod', '-R', '755', sys._MEIPASS])
+    chmod(sys._MEIPASS, 755)
 # Full imports
 from asyncio import new_event_loop, set_event_loop, sleep
 from json import dumps, loads
@@ -19,16 +19,16 @@ from aiohttp_jinja2 import setup as jinja_setup
 # local modules
 from browser import PluginBrowser
 from helpers import (REMOTE_DEBUGGER_UNIT, csrf_middleware, get_csrf_token,
-                     get_home_path, get_homebrew_path, get_user, get_user_group,
-                     stop_systemd_unit, start_systemd_unit)
+                     get_homebrew_path)
+                     
 from injector import get_gamepadui_tab, Tab, get_tabs, close_old_tabs
 from loader import Loader
 from settings import SettingsManager
 from updater import Updater
 from utilities import Utilities
+from localplatform import service_stop, service_start
+from customtypes import UserType
 
-USER = get_user()
-GROUP = get_user_group()
 HOMEBREW_PATH = get_homebrew_path()
 CONFIG = {
     "plugin_path": getenv("PLUGIN_PATH", path.join(HOMEBREW_PATH, "plugins")),
@@ -49,10 +49,8 @@ basicConfig(
 logger = getLogger("Main")
 
 def chown_plugin_dir():
-    code_chown = call(["chown", "-R", USER+":"+GROUP, CONFIG["plugin_path"]])
-    code_chmod = call(["chmod", "-R", "555", CONFIG["plugin_path"]])
-    if code_chown != 0 or code_chmod != 0:
-        logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {code_chmod})")
+    if not chown(CONFIG["plugin_path"], UserType.HOST_USER) or chmod(CONFIG["plugin_path"], 555):
+        logger.error(f"chown/chmod exited with a non-zero exit code")
 
 if CONFIG["chown_plugin_path"] == True:
     chown_plugin_dir()
@@ -79,9 +77,9 @@ class PluginManager:
 
         async def startup(_):
             if self.settings.getSetting("cef_forward", False):
-                self.loop.create_task(start_systemd_unit(REMOTE_DEBUGGER_UNIT))
+                self.loop.create_task(service_start(REMOTE_DEBUGGER_UNIT))
             else:
-                self.loop.create_task(stop_systemd_unit(REMOTE_DEBUGGER_UNIT))
+                self.loop.create_task(service_stop(REMOTE_DEBUGGER_UNIT))
             self.loop.create_task(self.loader_reinjector())
             self.loop.create_task(self.load_plugins())
 

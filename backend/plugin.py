@@ -1,18 +1,19 @@
 import multiprocessing
 from asyncio import (Lock, get_event_loop, new_event_loop,
-                     open_unix_connection, set_event_loop, sleep,
-                     start_unix_server, IncompleteReadError, LimitOverrunError)
+                     set_event_loop, sleep)
 from concurrent.futures import ProcessPoolExecutor
 from importlib.util import module_from_spec, spec_from_file_location
 from json import dumps, load, loads
 from logging import getLogger
 from traceback import format_exc
-from os import path, setgid, setuid, environ
+from os import path, environ
 from signal import SIGINT, signal
 from sys import exit
 from time import time
-import helpers
 from localsocket import LocalSocket
+from localplatform import setgid, setuid, get_username, get_home_path
+from customtypes import UserType
+import helpers
 
 class PluginWrapper:
     def __init__(self, file, plugin_directory, plugin_path) -> None:
@@ -52,13 +53,19 @@ class PluginWrapper:
             set_event_loop(new_event_loop())
             if self.passive:
                 return
-            setgid(0 if "root" in self.flags else helpers.get_user_group_id())
-            setuid(0 if "root" in self.flags else helpers.get_user_id())
+            setgid(UserType.ROOT if "root" in self.flags else UserType.HOST_USER)
+            setuid(UserType.ROOT if "root" in self.flags else UserType.HOST_USER)
             # export a bunch of environment variables to help plugin developers
-            environ["HOME"] = helpers.get_home_path("root" if "root" in self.flags else helpers.get_user())
-            environ["USER"] = "root" if "root" in self.flags else helpers.get_user()
-            environ["DECKY_VERSION"] = helpers.get_loader_version()
-            environ["DECKY_USER"] = helpers.get_user()
+            environ["HOME"] = get_home_path(UserType.ROOT if "root" in self.flags else UserType.HOST_USER)
+            environ["USER"] = "root" if "root" in self.flags else get_username()
+            
+            try:
+                loader_ver = helpers.get_loader_version()
+            except:
+                loader_ver = "-1"
+
+            environ["DECKY_VERSION"] = loader_ver
+            environ["DECKY_USER"] = get_username()
             environ["DECKY_HOME"] = helpers.get_homebrew_path()
             environ["DECKY_PLUGIN_SETTINGS_DIR"] = path.join(environ["DECKY_HOME"], "settings", self.plugin_directory)
             helpers.mkdir_as_user(environ["DECKY_PLUGIN_SETTINGS_DIR"])

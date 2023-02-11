@@ -10,7 +10,7 @@ from logging import getLogger
 from injector import inject_to_tab, get_gamepadui_tab, close_old_tabs
 import helpers
 import subprocess
-
+from localplatform import service_stop, service_start
 
 class Utilities:
     def __init__(self, context) -> None:
@@ -174,11 +174,11 @@ class Utilities:
         return self.context.settings.setSetting(key, value)
 
     async def allow_remote_debugging(self):
-        await helpers.start_systemd_unit(helpers.REMOTE_DEBUGGER_UNIT)
+        await service_start(helpers.REMOTE_DEBUGGER_UNIT)
         return True
 
     async def disallow_remote_debugging(self):
-        await helpers.stop_systemd_unit(helpers.REMOTE_DEBUGGER_UNIT)
+        await service_stop(helpers.REMOTE_DEBUGGER_UNIT)
         return True
 
     async def filepicker_ls(self, path, include_files=True):

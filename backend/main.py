@@ -7,7 +7,7 @@ if hasattr(sys, '_MEIPASS'):
 from asyncio import new_event_loop, set_event_loop, sleep
 from json import dumps, loads
 from logging import DEBUG, INFO, basicConfig, getLogger
-from os import getenv, chmod, path
+from os import getenv, path
 from traceback import format_exc
 
 import aiohttp_cors

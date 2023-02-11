@@ -14,8 +14,6 @@ from time import time
 import helpers
 from localsocket import LocalSocket
 
-multiprocessing.set_start_method("fork")
-
 class PluginWrapper:
     def __init__(self, file, plugin_directory, plugin_path) -> None:
         self.file = file

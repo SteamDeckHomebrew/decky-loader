@@ -1,8 +1,15 @@
 import multiprocessing
-from asyncio import (Lock, get_event_loop, new_event_loop,
-                     open_unix_connection, set_event_loop, sleep,
-                     start_unix_server, IncompleteReadError, LimitOverrunError)
-from concurrent.futures import ProcessPoolExecutor
+from asyncio import (
+    Lock,
+    get_event_loop,
+    new_event_loop,
+    open_unix_connection,
+    set_event_loop,
+    sleep,
+    start_unix_server,
+    IncompleteReadError,
+    LimitOverrunError,
+)
 from importlib.util import module_from_spec, spec_from_file_location
 from json import dumps, load, loads
 from logging import getLogger
@@ -12,11 +19,11 @@ from signal import SIGINT, signal
 from sys import exit
 from time import time
 import helpers
-from updater import Updater
 
 multiprocessing.set_start_method("fork")
 
-BUFFER_LIMIT = 2 ** 20  # 1 MiB
+BUFFER_LIMIT = 2**20  # 1 MiB
+
 
 class PluginWrapper:
     def __init__(self, file, plugin_directory, plugin_path) -> None:
@@ -30,11 +37,22 @@ class PluginWrapper:
 
         self.version = None
 
-        json = load(open(path.join(plugin_path, plugin_directory, "plugin.json"), "r", encoding="utf-8"))
+        json = load(
+            open(
+                path.join(plugin_path, plugin_directory, "plugin.json"),
+                "r",
+                encoding="utf-8",
+            )
+        )
         if path.isfile(path.join(plugin_path, plugin_directory, "package.json")):
-            package_json = load(open(path.join(plugin_path, plugin_directory, "package.json"), "r", encoding="utf-8"))
+            package_json = load(
+                open(
+                    path.join(plugin_path, plugin_directory, "package.json"),
+                    "r",
+                    encoding="utf-8",
+                )
+            )
             self.version = package_json["version"]
-
 
         self.legacy = False
         self.main_view_html = json["main_view_html"] if "main_view_html" in json else ""
@@ -62,18 +80,28 @@ class PluginWrapper:
             setgid(0 if "root" in self.flags else helpers.get_user_group_id())
             setuid(0 if "root" in self.flags else helpers.get_user_id())
             # export a bunch of environment variables to help plugin developers
-            environ["HOME"] = helpers.get_home_path("root" if "root" in self.flags else helpers.get_user())
+            environ["HOME"] = helpers.get_home_path(
+                "root" if "root" in self.flags else helpers.get_user()
+            )
             environ["USER"] = "root" if "root" in self.flags else helpers.get_user()
             environ["DECKY_VERSION"] = helpers.get_loader_version()
             environ["DECKY_USER"] = helpers.get_user()
             environ["DECKY_HOME"] = helpers.get_homebrew_path()
-            environ["DECKY_PLUGIN_SETTINGS_DIR"] = path.join(environ["DECKY_HOME"], "settings", self.plugin_directory)
+            environ["DECKY_PLUGIN_SETTINGS_DIR"] = path.join(
+                environ["DECKY_HOME"], "settings", self.plugin_directory
+            )
             helpers.mkdir_as_user(environ["DECKY_PLUGIN_SETTINGS_DIR"])
-            environ["DECKY_PLUGIN_RUNTIME_DIR"] = path.join(environ["DECKY_HOME"], "data", self.plugin_directory)
+            environ["DECKY_PLUGIN_RUNTIME_DIR"] = path.join(
+                environ["DECKY_HOME"], "data", self.plugin_directory
+            )
             helpers.mkdir_as_user(environ["DECKY_PLUGIN_RUNTIME_DIR"])
-            environ["DECKY_PLUGIN_LOG_DIR"] = path.join(environ["DECKY_HOME"], "logs", self.plugin_directory)
+            environ["DECKY_PLUGIN_LOG_DIR"] = path.join(
+                environ["DECKY_HOME"], "logs", self.plugin_directory
+            )
             helpers.mkdir_as_user(environ["DECKY_PLUGIN_LOG_DIR"])
-            environ["DECKY_PLUGIN_DIR"] = path.join(self.plugin_path, self.plugin_directory)
+            environ["DECKY_PLUGIN_DIR"] = path.join(
+                self.plugin_path, self.plugin_directory
+            )
             environ["DECKY_PLUGIN_NAME"] = self.name
             environ["DECKY_PLUGIN_VERSION"] = self.version
             environ["DECKY_PLUGIN_AUTHOR"] = self.author
@@ -86,24 +114,32 @@ class PluginWrapper:
                 get_event_loop().create_task(self.Plugin._main(self.Plugin))
             get_event_loop().create_task(self._setup_socket())
             get_event_loop().run_forever()
-        except:
+        except Exception:
             self.log.error("Failed to start " + self.name + "!\n" + format_exc())
             exit(0)
 
     async def _unload(self):
         try:
-            self.log.info("Attempting to unload with plugin " + self.name + "'s \"_unload\" function.\n")
+            self.log.info(
+                "Attempting to unload with plugin "
+                + self.name
+                + '\'s "_unload" function.\n'
+            )
             if hasattr(self.Plugin, "_unload"):
                 await self.Plugin._unload(self.Plugin)
                 self.log.info("Unloaded " + self.name + "\n")
             else:
-                self.log.info("Could not find \"_unload\" in " + self.name + "'s main.py" + "\n")
-        except:
+                self.log.info(
+                    'Could not find "_unload" in ' + self.name + "'s main.py" + "\n"
+                )
+        except Exception:
             self.log.error("Failed to unload " + self.name + "!\n" + format_exc())
             exit(0)
 
     async def _setup_socket(self):
-        self.socket = await start_unix_server(self._listen_for_method_call, path=self.socket_addr, limit=BUFFER_LIMIT)
+        self.socket = await start_unix_server(
+            self._listen_for_method_call, path=self.socket_addr, limit=BUFFER_LIMIT
+        )
 
     async def _listen_for_method_call(self, reader, writer):
         while True:
@@ -130,12 +166,14 @@ class PluginWrapper:
                 return
             d = {"res": None, "success": True}
             try:
-                d["res"] = await getattr(self.Plugin, data["method"])(self.Plugin, **data["args"])
+                d["res"] = await getattr(self.Plugin, data["method"])(
+                    self.Plugin, **data["args"]
+                )
             except Exception as e:
                 d["res"] = str(e)
                 d["success"] = False
             finally:
-                writer.write((dumps(d, ensure_ascii=False)+"\n").encode("utf-8"))
+                writer.write((dumps(d, ensure_ascii=False) + "\n").encode("utf-8"))
                 await writer.drain()
 
     async def _open_socket_if_not_exists(self):
@@ -143,9 +181,11 @@ class PluginWrapper:
             retries = 0
             while retries < 10:
                 try:
-                    self.reader, self.writer = await open_unix_connection(self.socket_addr, limit=BUFFER_LIMIT)
+                    self.reader, self.writer = await open_unix_connection(
+                        self.socket_addr, limit=BUFFER_LIMIT
+                    )
                     return True
-                except:
+                except Exception:
                     await sleep(2)
                     retries += 1
             return False
@@ -161,20 +201,32 @@ class PluginWrapper:
     def stop(self):
         if self.passive:
             return
+
         async def _(self):
             if await self._open_socket_if_not_exists():
-                self.writer.write((dumps({ "stop": True }, ensure_ascii=False)+"\n").encode("utf-8"))
+                self.writer.write(
+                    (dumps({"stop": True}, ensure_ascii=False) + "\n").encode("utf-8")
+                )
                 await self.writer.drain()
                 self.writer.close()
+
         get_event_loop().create_task(_(self))
 
     async def execute_method(self, method_name, kwargs):
         if self.passive:
-            raise RuntimeError("This plugin is passive (aka does not implement main.py)")
+            raise RuntimeError(
+                "This plugin is passive (aka does not implement main.py)"
+            )
         async with self.method_call_lock:
             if await self._open_socket_if_not_exists():
                 self.writer.write(
-                    (dumps({ "method": method_name, "args": kwargs }, ensure_ascii=False) + "\n").encode("utf-8"))
+                    (
+                        dumps(
+                            {"method": method_name, "args": kwargs}, ensure_ascii=False
+                        )
+                        + "\n"
+                    ).encode("utf-8")
+                )
                 await self.writer.drain()
                 line = bytearray()
                 while True:

@@ -1,27 +1,35 @@
 # Change PyInstaller files permissions
 import sys
 from subprocess import call
-if hasattr(sys, '_MEIPASS'):
-    call(['chmod', '-R', '755', sys._MEIPASS])
+
+if hasattr(sys, "_MEIPASS"):
+    call(["chmod", "-R", "755", sys._MEIPASS])
 # Full imports
 from asyncio import new_event_loop, set_event_loop, sleep
-from json import dumps, loads
-from logging import DEBUG, INFO, basicConfig, getLogger
-from os import getenv, chmod, path
+from logging import basicConfig, getLogger
+from os import getenv, path
 from traceback import format_exc
 
 import aiohttp_cors
+
 # Partial imports
-from aiohttp import client_exceptions, WSMsgType
+from aiohttp import client_exceptions
 from aiohttp.web import Application, Response, get, run_app, static
 from aiohttp_jinja2 import setup as jinja_setup
 
 # local modules
 from browser import PluginBrowser
-from helpers import (REMOTE_DEBUGGER_UNIT, csrf_middleware, get_csrf_token,
-                     get_home_path, get_homebrew_path, get_user, get_user_group,
-                     stop_systemd_unit, start_systemd_unit)
-from injector import get_gamepadui_tab, Tab, get_tabs, close_old_tabs
+from helpers import (
+    REMOTE_DEBUGGER_UNIT,
+    csrf_middleware,
+    get_csrf_token,
+    get_homebrew_path,
+    get_user,
+    get_user_group,
+    stop_systemd_unit,
+    start_systemd_unit,
+)
+from injector import get_gamepadui_tab, Tab, close_old_tabs
 from loader import Loader
 from settings import SettingsManager
 from updater import Updater
@@ -42,35 +50,45 @@ CONFIG = {
 }
 
 basicConfig(
-    level=CONFIG["log_level"],
-    format="[%(module)s][%(levelname)s]: %(message)s"
+    level=CONFIG["log_level"], format="[%(module)s][%(levelname)s]: %(message)s"
 )
 
 logger = getLogger("Main")
 
+
 def chown_plugin_dir():
-    code_chown = call(["chown", "-R", USER+":"+GROUP, CONFIG["plugin_path"]])
+    code_chown = call(["chown", "-R", USER + ":" + GROUP, CONFIG["plugin_path"]])
     code_chmod = call(["chmod", "-R", "555", CONFIG["plugin_path"]])
     if code_chown != 0 or code_chmod != 0:
-        logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {code_chmod})")
+        logger.error(
+            f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod:"
+            f" {code_chmod})"
+        )
 
-if CONFIG["chown_plugin_path"] == True:
+
+if CONFIG["chown_plugin_path"] is True:
     chown_plugin_dir()
+
 
 class PluginManager:
     def __init__(self, loop) -> None:
         self.loop = loop
         self.web_app = Application()
         self.web_app.middlewares.append(csrf_middleware)
-        self.cors = aiohttp_cors.setup(self.web_app, defaults={
-            "https://steamloopback.host": aiohttp_cors.ResourceOptions(
-                expose_headers="*",
-                allow_headers="*",
-                allow_credentials=True
-            )
-        })
-        self.plugin_loader = Loader(self.web_app, CONFIG["plugin_path"], self.loop, CONFIG["live_reload"])
-        self.plugin_browser = PluginBrowser(CONFIG["plugin_path"], self.plugin_loader.plugins, self.plugin_loader)
+        self.cors = aiohttp_cors.setup(
+            self.web_app,
+            defaults={
+                "https://steamloopback.host": aiohttp_cors.ResourceOptions(
+                    expose_headers="*", allow_headers="*", allow_credentials=True
+                )
+            },
+        )
+        self.plugin_loader = Loader(
+            self.web_app, CONFIG["plugin_path"], self.loop, CONFIG["live_reload"]
+        )
+        self.plugin_browser = PluginBrowser(
+            CONFIG["plugin_path"], self.plugin_loader.plugins, self.plugin_loader
+        )
         self.settings = SettingsManager("loader", path.join(HOMEBREW_PATH, "settings"))
         self.utilities = Utilities(self)
         self.updater = Updater(self)
@@ -92,8 +110,12 @@ class PluginManager:
 
         for route in list(self.web_app.router.routes()):
             self.cors.add(route)
-        self.web_app.add_routes([static("/static", path.join(path.dirname(__file__), 'static'))])
-        self.web_app.add_routes([static("/legacy", path.join(path.dirname(__file__), 'legacy'))])
+        self.web_app.add_routes(
+            [static("/static", path.join(path.dirname(__file__), "static"))]
+        )
+        self.web_app.add_routes(
+            [static("/legacy", path.join(path.dirname(__file__), "legacy"))]
+        )
 
     def exception_handler(self, loop, context):
         if context["message"] == "Unclosed connection":
@@ -117,7 +139,10 @@ class PluginManager:
             while not tab:
                 try:
                     tab = await get_gamepadui_tab()
-                except (client_exceptions.ClientConnectorError, client_exceptions.ServerDisconnectedError):
+                except (
+                    client_exceptions.ClientConnectorError,
+                    client_exceptions.ServerDisconnectedError,
+                ):
                     if not dc:
                         logger.debug("Couldn't connect to debugger, waiting...")
                         dc = True
@@ -148,7 +173,7 @@ class PluginManager:
                 # This is because of https://github.com/aio-libs/aiohttp/blob/3ee7091b40a1bc58a8d7846e7878a77640e96996/aiohttp/client_ws.py#L321
                 logger.info("CEF has disconnected...")
                 # At this point the loop starts again and we connect to the freshly started Steam client once it is ready.
-            except Exception as e:
+            except Exception:
                 logger.error("Exception while reading page events " + format_exc())
                 await tab.close_websocket()
                 pass
@@ -164,13 +189,29 @@ class PluginManager:
             if first:
                 if await tab.has_global_var("deckyHasLoaded", False):
                     await close_old_tabs()
-            await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => location.reload(), 100)}else{window.deckyHasLoaded = true;(async()=>{try{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js')}catch(e){console.error(e)};})();}}catch(e){console.error(e)}", False, False, False)
-        except:
+            await tab.evaluate_js(
+                "try{if (window.deckyHasLoaded){setTimeout(() => location.reload(),"
+                " 100)}else{window.deckyHasLoaded ="
+                " true;(async()=>{try{while(!window.SP_REACT){await new Promise(r =>"
+                " setTimeout(r, 10))};await"
+                " import('http://localhost:1337/frontend/index.js')}catch(e){console.error(e)};})();}}catch(e){console.error(e)}",
+                False,
+                False,
+                False,
+            )
+        except Exception:
             logger.info("Failed to inject JavaScript into tab\n" + format_exc())
             pass
 
     def run(self):
-        return run_app(self.web_app, host=CONFIG["server_host"], port=CONFIG["server_port"], loop=self.loop, access_log=None)
+        return run_app(
+            self.web_app,
+            host=CONFIG["server_host"],
+            port=CONFIG["server_port"],
+            loop=self.loop,
+            access_log=None,
+        )
+
 
 if __name__ == "__main__":
     loop = new_event_loop()

@@ -15,3 +15,13 @@ jobs:
           pushd frontend
           npm install
           npm run lint
+
+      - name: Run black (Python formatting)
+        uses: lgeiger/black-action@v1.0.1
+        with:
+          args: "./backend --experimental-string-processing --config ./backend/pyproject.toml"
+
+      - name: Run ruff (Python linting)
+        uses: jpetrucciani/ruff-check@main
+        with:
+          path: "./backend"

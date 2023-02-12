@@ -125,7 +125,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: PluginLoader Win
-        path: ./dist/PluginLoader
+        path: ./dist/PluginLoader.exe
 
   release:
     name: Release stable version of the package

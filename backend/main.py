@@ -21,7 +21,7 @@ from aiohttp_jinja2 import setup as jinja_setup
 # local modules
 from browser import PluginBrowser
 from helpers import (REMOTE_DEBUGGER_UNIT, csrf_middleware, get_csrf_token,
-                     get_homebrew_path)
+                     get_homebrew_path, mkdir_as_user)
                      
 from injector import get_gamepadui_tab, Tab, get_tabs, close_old_tabs
 from loader import Loader
@@ -51,6 +51,9 @@ basicConfig(
 logger = getLogger("Main")
 
 def chown_plugin_dir():
+    if not path.exists(CONFIG["plugin_path"]): # For safety, create the folder before attempting to do anything with it
+        mkdir_as_user(CONFIG["plugin_path"])
+
     if not chown(CONFIG["plugin_path"], UserType.HOST_USER) or not chmod(CONFIG["plugin_path"], 555):
         logger.error(f"chown/chmod exited with a non-zero exit code")
 

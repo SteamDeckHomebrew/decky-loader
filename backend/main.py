@@ -9,6 +9,8 @@ from json import dumps, loads
 from logging import DEBUG, INFO, basicConfig, getLogger
 from os import getenv, path
 from traceback import format_exc
+import multiprocessing
+import platform
 
 import aiohttp_cors
 # Partial imports
@@ -49,7 +51,7 @@ basicConfig(
 logger = getLogger("Main")
 
 def chown_plugin_dir():
-    if not chown(CONFIG["plugin_path"], UserType.HOST_USER) or chmod(CONFIG["plugin_path"], 555):
+    if not chown(CONFIG["plugin_path"], UserType.HOST_USER) or not chmod(CONFIG["plugin_path"], 555):
         logger.error(f"chown/chmod exited with a non-zero exit code")
 
 if CONFIG["chown_plugin_path"] == True:
@@ -171,6 +173,9 @@ class PluginManager:
         return run_app(self.web_app, host=CONFIG["server_host"], port=CONFIG["server_port"], loop=self.loop, access_log=None)
 
 if __name__ == "__main__":
+    if platform.system() == "Windows":
+        multiprocessing.freeze_support()
+
     loop = new_event_loop()
     set_event_loop(loop)
     PluginManager(loop).run()

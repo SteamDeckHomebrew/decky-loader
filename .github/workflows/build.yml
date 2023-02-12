@@ -84,7 +84,7 @@ jobs:
       with:
         path: ./dist/PluginLoader
 
-  build:
+  build-win:
     name: Build PluginLoader for Win
     runs-on: windows-2022
 

@@ -3,15 +3,13 @@ import ssl
 import uuid
 import os
 import sys
-from subprocess import check_output
-from time import sleep
 from hashlib import sha256
 from io import BytesIO
 
 import certifi
 from aiohttp.web import Response, middleware
 from aiohttp import ClientSession
-from localplatform import get_home_path, chown
+import localplatform
 
 REMOTE_DEBUGGER_UNIT = "steam-web-debug-portforward.service"
 
@@ -36,13 +34,13 @@ async def csrf_middleware(request, handler):
 
 # Get the default homebrew path unless a home_path is specified
 def get_homebrew_path(home_path = None) -> str:
-    return os.path.join(home_path if home_path != None else get_home_path(), "homebrew")
+    return os.path.join(home_path if home_path != None else localplatform.get_home_path(), "homebrew")
 
 # Recursively create path and chown as user
 def mkdir_as_user(path):
     path = os.path.realpath(path)
     os.makedirs(path, exist_ok=True)
-    chown(path)
+    localplatform.chown(path)
 
 # Fetches the version of loader
 def get_loader_version() -> str:
@@ -72,3 +70,60 @@ async def download_remote_binary_to_path(url, binHash, path) -> bool:
         rv = False
 
     return rv
+
+# Deprecated
+def set_user():
+    pass
+
+# Deprecated
+def set_user_group() -> str:
+    return get_user_group()
+
+#########
+# Below is legacy code, provided for backwards compatibility. This will break on windows
+#########
+
+# Get the user hosting the plugin loader
+def get_user() -> str:
+    return localplatform._get_user()
+
+# Get the effective user id of the running process
+def get_effective_user_id() -> int:
+    return localplatform._get_effective_user_id()
+
+# Get the effective user of the running process
+def get_effective_user() -> str:
+    return localplatform._get_effective_user()
+
+# Get the effective user group id of the running process
+def get_effective_user_group_id() -> int:
+    return localplatform._get_effective_user_group_id()
+
+# Get the effective user group of the running process
+def get_effective_user_group() -> str:
+    return localplatform._get_effective_user_group()
+
+# Get the user owner of the given file path.
+def get_user_owner(file_path) -> str:
+    return localplatform._get_user_owner(file_path)
+
+# Get the user group of the given file path.
+def get_user_group(file_path) -> str:
+    return localplatform._get_user_group(file_path)
+
+# Get the group id of the user hosting the plugin loader
+def get_user_group_id() -> int:
+    return localplatform._get_user_group_id()
+
+# Get the group of the user hosting the plugin loader
+def get_user_group() -> str:
+    return localplatform._get_user_group()
+
+async def is_systemd_unit_active(unit_name: str) -> bool:
+    return await localplatform.service_active(unit_name)
+
+async def stop_systemd_unit(unit_name: str) -> bool:
+    return await localplatform.service_stop(unit_name)
+
+async def start_systemd_unit(unit_name: str) -> bool:
+    return await localplatform.service_start(unit_name)

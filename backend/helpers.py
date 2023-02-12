@@ -10,6 +10,7 @@ import certifi
 from aiohttp.web import Response, middleware
 from aiohttp import ClientSession
 import localplatform
+from customtypes import UserType
 
 REMOTE_DEBUGGER_UNIT = "steam-web-debug-portforward.service"
 
@@ -83,41 +84,45 @@ def set_user_group() -> str:
 # Below is legacy code, provided for backwards compatibility. This will break on windows
 #########
 
+# Get the default home path unless a user is specified
+def get_home_path(username = None) -> str:
+    return localplatform.get_home_path(UserType.ROOT if username == "root" else UserType.HOST_USER)
+
 # Get the user hosting the plugin loader
 def get_user() -> str:
-    return localplatform._get_user()
+    return localplatform.localplatform._get_user()
 
 # Get the effective user id of the running process
 def get_effective_user_id() -> int:
-    return localplatform._get_effective_user_id()
+    return localplatform.localplatform._get_effective_user_id()
 
 # Get the effective user of the running process
 def get_effective_user() -> str:
-    return localplatform._get_effective_user()
+    return localplatform.localplatform._get_effective_user()
 
 # Get the effective user group id of the running process
 def get_effective_user_group_id() -> int:
-    return localplatform._get_effective_user_group_id()
+    return localplatform.localplatform._get_effective_user_group_id()
 
 # Get the effective user group of the running process
 def get_effective_user_group() -> str:
-    return localplatform._get_effective_user_group()
+    return localplatform.localplatform._get_effective_user_group()
 
 # Get the user owner of the given file path.
 def get_user_owner(file_path) -> str:
-    return localplatform._get_user_owner(file_path)
+    return localplatform.localplatform._get_user_owner(file_path)
 
 # Get the user group of the given file path.
 def get_user_group(file_path) -> str:
-    return localplatform._get_user_group(file_path)
+    return localplatform.localplatform._get_user_group(file_path)
 
 # Get the group id of the user hosting the plugin loader
 def get_user_group_id() -> int:
-    return localplatform._get_user_group_id()
+    return localplatform.localplatform._get_user_group_id()
 
 # Get the group of the user hosting the plugin loader
 def get_user_group() -> str:
-    return localplatform._get_user_group()
+    return localplatform.localplatform._get_user_group()
 
 async def is_systemd_unit_active(unit_name: str) -> bool:
     return await localplatform.service_active(unit_name)

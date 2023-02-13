@@ -20,6 +20,7 @@ $release_info = curl -UseBasicParsing https://api.github.com/repos/suchmememanys
 
 $service_path = "$($env:USERPROFILE)\homebrew\services"
 $service_exec_path = "$($service_path)\PluginLoader.exe"
+$service_ver_path = "$($service_path)\.loader.version"
 
 If (!(Test-Path -PathType container $service_path))
 {
@@ -27,6 +28,7 @@ If (!(Test-Path -PathType container $service_path))
 }	
 
 Invoke-WebRequest -Uri $release_info.assets.browser_download_url -OutFile $service_exec_path
+echo $release_info.tag_name | Out-File -NoNewline -FilePath $service_ver_path
 
 $service_name = "Decky-Runner"
 

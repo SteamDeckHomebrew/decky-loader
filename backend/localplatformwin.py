@@ -32,4 +32,4 @@ async def service_restart(service_name : str) -> bool:
     return True # Stubbed
 
 def get_username() -> str:
-    return "Windows User" # Stubbed
+    return os.getlogin()

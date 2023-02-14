@@ -30,6 +30,26 @@ If (!(Test-Path -PathType container $service_path))
 Invoke-WebRequest -Uri $release_info.assets.browser_download_url -OutFile $service_exec_path
 echo $release_info.tag_name | Out-File -NoNewline -FilePath $service_ver_path
 
+$run_script_path = "$($service_path)\run.bat"
+$run_script_text = @"
+@echo off
+
+:loop
+
+%USERPROFILE%\homebrew\services\PluginLoader.exe > %USERPROFILE%\homebrew\log.txt 2>&1
+
+if %errorlevel% EQU 42 (
+    echo "Exited with exitcode 42, re-running"
+) else (
+    echo "Exited with non-42 exitcode, exiting"
+	exit
+)
+
+goto loop
+"@
+
+Out-File -NoNewline -InputObject $run_script_text -FilePath $run_script_path -Encoding ASCII
+
 $service_name = "Decky-Runner"
 
 if ($(Get-ScheduledTask -TaskName $service_name -ErrorAction SilentlyContinue).TaskName -eq $service_name) {
@@ -37,9 +57,9 @@ if ($(Get-ScheduledTask -TaskName $service_name -ErrorAction SilentlyContinue).T
 }
 
 $trigger = New-ScheduledTaskTrigger -AtLogOn
-$action = New-ScheduledTaskAction -Execute "cmd" -Argument "/c %USERPROFILE%\homebrew\services\PluginLoader.exe > %USERPROFILE%\homebrew\log.txt 2>&1"
+$action = New-ScheduledTaskAction -Execute "%USERPROFILE%\homebrew\services\run.bat"
 $me = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$principal = New-ScheduledTaskPrincipal -UserId $me -LogonType S4U -RunLevel Highest
+$principal = New-ScheduledTaskPrincipal -UserId $me -LogonType S4U -RunLevel Limited
 Register-ScheduledTask -Action $action -Trigger $trigger -TaskPath "Decky" -TaskName $service_name -Principal $principal
 
 Get-ScheduledTask -TaskPath "\Decky\" | Start-ScheduledTask

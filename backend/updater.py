@@ -139,11 +139,12 @@ class Updater:
     async def do_update(self):
         logger.debug("Starting update.")
         version = self.remoteVer["tag_name"]
-
         download_url = None
+        download_filename = "PluginLoader" if not ON_WINDOWS else "PluginLoader.exe"
+        download_temp_filename = download_filename + ".new"
 
         for x in self.remoteVer["assets"]:
-            if x["name"] == ("PluginLoader" if not ON_WINDOWS else "PluginLoader.exe"):
+            if x["name"] == download_filename:
                 download_url = x["browser_download_url"]
                 break
         
@@ -185,12 +186,7 @@ class Updater:
             logger.debug("Downloading binary")
             async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
                 total = int(res.headers.get('content-length', 0))
-                # we need to not delete the binary until we have downloaded the new binary!
-                try:
-                    remove(path.join(getcwd(), "PluginLoader"))
-                except:
-                    pass
-                with open(path.join(getcwd(), "PluginLoader"), "wb") as out:
+                with open(path.join(getcwd(), download_temp_filename), "wb") as out:
                     progress = 0
                     raw = 0
                     async for c in res.content.iter_chunked(512):
@@ -204,7 +200,11 @@ class Updater:
             with open(path.join(getcwd(), ".loader.version"), "w", encoding="utf-8") as out:
                 out.write(version)
 
-            chmod(path.join(getcwd(), "PluginLoader"), 777, False)
+            if not ON_WINDOWS:
+                remove(path.join(getcwd(), download_filename))
+                shutil.move(path.join(getcwd(), download_temp_filename), path.join(getcwd(), download_filename))
+                chmod(path.join(getcwd(), download_filename), 777, False)
+
             logger.info("Updated loader installation.")
             await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)
             await self.do_restart()

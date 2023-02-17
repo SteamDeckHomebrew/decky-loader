@@ -29,6 +29,9 @@ async def service_start(service_name : str) -> bool:
     return True # Stubbed
 
 async def service_restart(service_name : str) -> bool:
+    if service_name == "plugin_loader":
+        exit(42)
+
     return True # Stubbed
 
 def get_username() -> str:

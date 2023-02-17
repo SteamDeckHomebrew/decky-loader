@@ -1,4 +1,5 @@
-import platform, asyncio, time, random
+import asyncio, time, random
+from localplatform import ON_WINDOWS
 
 BUFFER_LIMIT = 2 ** 20  # 1 MiB
 
@@ -123,7 +124,7 @@ class PortSocket (UnixSocket):
         else:
             return True
 
-if platform.system() == "Windows":
+if ON_WINDOWS:
     class LocalSocket (PortSocket): 
         pass
 else:

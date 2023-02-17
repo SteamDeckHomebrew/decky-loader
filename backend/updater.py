@@ -6,7 +6,7 @@ from ensurepip import version
 from json.decoder import JSONDecodeError
 from logging import getLogger
 from os import getcwd, path, remove
-from localplatform import chmod, service_restart
+from localplatform import chmod, service_restart, ON_WINDOWS
 
 from aiohttp import ClientSession, web
 
@@ -108,7 +108,8 @@ class Updater:
         logger.debug("checking for updates")
         selectedBranch = self.get_branch(self.context.settings)
         async with ClientSession() as web:
-            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases", ssl=helpers.get_ssl_context()) as res:
+            # TODO: Change back to official repo
+            async with web.request("GET", "https://api.github.com/repos/suchmememanyskill/decky-loader/releases", ssl=helpers.get_ssl_context()) as res:
                 remoteVersions = await res.json()
         self.allRemoteVers = remoteVersions
         logger.debug("determining release type to find, branch is %i" % selectedBranch)
@@ -138,37 +139,48 @@ class Updater:
     async def do_update(self):
         logger.debug("Starting update.")
         version = self.remoteVer["tag_name"]
-        download_url = self.remoteVer["assets"][0]["browser_download_url"]
+
+        download_url = None
+
+        for x in self.remoteVer["assets"]:
+            if x["name"] == ("PluginLoader" if not ON_WINDOWS else "PluginLoader.exe"):
+                download_url = x["browser_download_url"]
+                break
+        
+        if download_url == None:
+            raise Exception("Download url not found")
+
         service_url = self.get_service_url()
         logger.debug("Retrieved service URL")
 
         tab = await get_gamepadui_tab()
         await tab.open_websocket()
         async with ClientSession() as web:
-            logger.debug("Downloading systemd service")
-            # download the relevant systemd service depending upon branch
-            async with web.request("GET", service_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
-                logger.debug("Downloading service file")
-                data = await res.content.read()
-            logger.debug(str(data))
-            service_file_path = path.join(getcwd(), "plugin_loader.service")
-            try:
-                with open(path.join(getcwd(), "plugin_loader.service"), "wb") as out:
-                    out.write(data)
-            except Exception as e:
-                logger.error(f"Error at %s", exc_info=e)
-            with open(path.join(getcwd(), "plugin_loader.service"), "r", encoding="utf-8") as service_file:
-                service_data = service_file.read()
-            service_data = service_data.replace("${HOMEBREW_FOLDER}", helpers.get_homebrew_path())
-            with open(path.join(getcwd(), "plugin_loader.service"), "w", encoding="utf-8") as service_file:
-                    service_file.write(service_data)
+            if not ON_WINDOWS:
+                logger.debug("Downloading systemd service")
+                # download the relevant systemd service depending upon branch
+                async with web.request("GET", service_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
+                    logger.debug("Downloading service file")
+                    data = await res.content.read()
+                logger.debug(str(data))
+                service_file_path = path.join(getcwd(), "plugin_loader.service")
+                try:
+                    with open(path.join(getcwd(), "plugin_loader.service"), "wb") as out:
+                        out.write(data)
+                except Exception as e:
+                    logger.error(f"Error at %s", exc_info=e)
+                with open(path.join(getcwd(), "plugin_loader.service"), "r", encoding="utf-8") as service_file:
+                    service_data = service_file.read()
+                service_data = service_data.replace("${HOMEBREW_FOLDER}", helpers.get_homebrew_path())
+                with open(path.join(getcwd(), "plugin_loader.service"), "w", encoding="utf-8") as service_file:
+                        service_file.write(service_data)
                     
-            logger.debug("Saved service file")
-            logger.debug("Copying service file over current file.")
-            shutil.copy(service_file_path, "/etc/systemd/system/plugin_loader.service")
-            if not os.path.exists(path.join(getcwd(), ".systemd")):
-                os.mkdir(path.join(getcwd(), ".systemd"))
-            shutil.move(service_file_path, path.join(getcwd(), ".systemd")+"/plugin_loader.service")
+                logger.debug("Saved service file")
+                logger.debug("Copying service file over current file.")
+                shutil.copy(service_file_path, "/etc/systemd/system/plugin_loader.service")
+                if not os.path.exists(path.join(getcwd(), ".systemd")):
+                    os.mkdir(path.join(getcwd(), ".systemd"))
+                shutil.move(service_file_path, path.join(getcwd(), ".systemd")+"/plugin_loader.service")
             
             logger.debug("Downloading binary")
             async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:

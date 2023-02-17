@@ -1,6 +1,6 @@
 # Change PyInstaller files permissions
 import sys
-from localplatform import chmod, chown
+from localplatform import chmod, chown, service_stop, service_start, ON_WINDOWS
 if hasattr(sys, '_MEIPASS'):
     chmod(sys._MEIPASS, 755)
 # Full imports
@@ -10,7 +10,6 @@ from logging import DEBUG, INFO, basicConfig, getLogger
 from os import getenv, path
 from traceback import format_exc
 import multiprocessing
-import platform
 
 import aiohttp_cors
 # Partial imports
@@ -28,7 +27,6 @@ from loader import Loader
 from settings import SettingsManager
 from updater import Updater
 from utilities import Utilities
-from localplatform import service_stop, service_start
 from customtypes import UserType
 
 HOMEBREW_PATH = get_homebrew_path()
@@ -176,7 +174,7 @@ class PluginManager:
         return run_app(self.web_app, host=CONFIG["server_host"], port=CONFIG["server_port"], loop=self.loop, access_log=None)
 
 if __name__ == "__main__":
-    if platform.system() == "Windows":
+    if ON_WINDOWS:
         multiprocessing.freeze_support()
 
     loop = new_event_loop()

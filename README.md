@@ -93,6 +93,7 @@ Please consult [the wiki page regarding development](https://deckbrew.xyz/en/loa
 1. Clone the repository using the latest commit to main before starting your PR.
 1. In your clone of the repository, run these commands.
    ```bash
+   cd frontend
    pnpm i
    pnpm run build
    ```

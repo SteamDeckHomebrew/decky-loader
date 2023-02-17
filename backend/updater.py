@@ -68,7 +68,7 @@ class Updater:
         logger.debug("current branch: %i" % ver)
         if ver == -1:
             logger.info("Current branch is not set, determining branch from version...")
-            if self.localVer.startswith("v") and self.localVer.find("-pre") != -1:
+            if self.localVer.startswith("v") and "-pre" in self.localVer:
                 logger.info("Current version determined to be pre-release")
                 return 1
             else:

@@ -1,5 +1,5 @@
 from customtypes import UserType
-import os
+import os, sys
 
 def chown(path : str,  user : UserType = UserType.HOST_USER, recursive : bool = True) -> bool:
     return True # Stubbed
@@ -30,9 +30,7 @@ async def service_start(service_name : str) -> bool:
 
 async def service_restart(service_name : str) -> bool:
     if service_name == "plugin_loader":
-        print("Attempting to exit!")
-        exit(42)
-        print("wtf")
+        sys.exit(42)
 
     return True # Stubbed
 

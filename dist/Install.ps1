@@ -48,7 +48,7 @@ if %errorlevel% EQU 42 (
 goto loop
 "@
 
-Out-File -NoNewline -InputObject $run_script_text -FilePath $run_script_path -Encoding ASCII
+Out-File -NoNewline -InputObject $run_script_text -FilePath $run_script_path -Encoding utf8
 
 $service_name = "Decky-Runner"
 

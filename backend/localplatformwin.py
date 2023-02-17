@@ -30,7 +30,9 @@ async def service_start(service_name : str) -> bool:
 
 async def service_restart(service_name : str) -> bool:
     if service_name == "plugin_loader":
+        print("Attempting to exit!")
         exit(42)
+        print("wtf")
 
     return True # Stubbed
 

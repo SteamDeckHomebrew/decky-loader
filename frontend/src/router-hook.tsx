@@ -126,7 +126,10 @@ class RouterHook extends Logger {
         if (
           ret.props.children.props.children[idx]?.props?.children?.[0]?.type?.type
             ?.toString()
-            ?.includes('GamepadUI.Settings.Root()')
+            ?.includes('GamepadUI.Settings.Root()') ||
+          ret.props.children.props.children[idx]?.props?.children?.[0]?.type?.type
+            ?.toString()
+            ?.includes('Settings.Root()')
         ) {
           if (!this.router) {
             this.router = ret.props.children.props.children[idx]?.props?.children?.[0]?.type;

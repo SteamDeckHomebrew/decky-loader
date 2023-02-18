@@ -34,14 +34,19 @@ $run_script_path = "$($service_path)\run.bat"
 $run_script_text = @"
 @echo off
 
+C:
+cd %USERPROFILE%\homebrew\services
+
 :loop
 
-%USERPROFILE%\homebrew\services\PluginLoader.exe > %USERPROFILE%\homebrew\log.txt 2>&1
+.\PluginLoader.exe > .\..\log.txt 2>&1
 
 if %errorlevel% EQU 42 (
-    echo "Exited with exitcode 42, re-running"
+    echo Exited with exitcode 42, updating!
+	del PluginLoader.exe
+	move PluginLoader.exe.new PluginLoader.exe
 ) else (
-    echo "Exited with non-42 exitcode, exiting"
+    echo Exited with non-42 exitcode, exiting
 	exit
 )
 

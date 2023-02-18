@@ -28,7 +28,7 @@ If (!(Test-Path -PathType container $service_path))
 }	
 
 Invoke-WebRequest -Uri $release_info.assets.browser_download_url -OutFile $service_exec_path
-echo $release_info.tag_name | Out-File -NoNewline -FilePath $service_ver_path
+Out-File -NoNewline -FilePath $service_ver_path -InputObject $release_info.tag_name -Encoding utf8
 
 $run_script_path = "$($service_path)\run.bat"
 $run_script_text = @"

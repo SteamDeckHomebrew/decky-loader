@@ -64,7 +64,13 @@ class PluginWrapper:
             # export a bunch of environment variables to help plugin developers
             environ["HOME"] = helpers.get_home_path("root" if "root" in self.flags else helpers.get_user())
             environ["USER"] = "root" if "root" in self.flags else helpers.get_user()
-            environ["DECKY_VERSION"] = helpers.get_loader_version()
+
+            try:
+                loader_ver = helpers.get_loader_version()
+            except:
+                loader_ver = "unknown"
+
+            environ["DECKY_VERSION"] = loader_ver
             environ["DECKY_USER"] = helpers.get_user()
             environ["DECKY_HOME"] = helpers.get_homebrew_path()
             environ["DECKY_PLUGIN_SETTINGS_DIR"] = path.join(environ["DECKY_HOME"], "settings", self.plugin_directory)

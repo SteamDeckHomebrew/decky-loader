@@ -121,6 +121,13 @@ def get_loader_version() -> str:
     except:
         return "unknown"
 
+# returns the appropriate system python paths
+def get_system_pythonpaths() -> list[str]:
+    # run as normal normal user to also include user python paths
+    proc = subprocess.run(["python3", "-c", "import sys; print(':'.join(x for x in sys.path if x))"],
+                          user=get_user_id(), env={}, capture_output=True)
+    return proc.stdout.decode().strip().split(":")
+
 # Download Remote Binaries to local Plugin
 async def download_remote_binary_to_path(url, binHash, path) -> bool:
     rv = False

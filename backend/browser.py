@@ -1,7 +1,5 @@
 # Full imports
 import json
-# import pprint
-# from pprint import pformat
 
 # Partial imports
 from aiohttp import ClientSession, web

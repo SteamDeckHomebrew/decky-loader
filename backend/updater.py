@@ -30,10 +30,7 @@ class Updater:
         }
         self.remoteVer = None
         self.allRemoteVers = None
-        try:
-            self.localVer = helpers.get_loader_version()
-        except:
-            self.localVer = False
+        self.localVer = helpers.get_loader_version()
 
         try:
             self.currentBranch = self.get_branch(self.context.settings)
@@ -68,7 +65,7 @@ class Updater:
         logger.debug("current branch: %i" % ver)
         if ver == -1:
             logger.info("Current branch is not set, determining branch from version...")
-            if self.localVer.startswith("v") and self.localVer.find("-pre"):
+            if self.localVer.startswith("v") and "-pre" in self.localVer:
                 logger.info("Current version determined to be pre-release")
                 return 1
             else:
@@ -94,15 +91,12 @@ class Updater:
         return str(url)
 
     async def get_version(self):
-        if self.localVer:
-            return {
-                "current": self.localVer,
-                "remote": self.remoteVer,
-                "all": self.allRemoteVers,
-                "updatable": self.localVer != None
-            }
-        else:
-            return {"current": "unknown", "remote": self.remoteVer, "all": self.allRemoteVers, "updatable": False}
+        return {
+            "current": self.localVer,
+            "remote": self.remoteVer,
+            "all": self.allRemoteVers,
+            "updatable": self.localVer != "unknown"
+        }
 
     async def check_for_updates(self):
         logger.debug("checking for updates")

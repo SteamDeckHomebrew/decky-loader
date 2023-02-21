@@ -115,8 +115,18 @@ def mkdir_as_user(path):
 
 # Fetches the version of loader
 def get_loader_version() -> str:
-    with open(os.path.join(os.path.dirname(sys.argv[0]), ".loader.version"), "r", encoding="utf-8") as version_file:
-        return version_file.readline().replace("\n", "")
+    try:
+        with open(os.path.join(os.getcwd(), ".loader.version"), "r", encoding="utf-8") as version_file:
+            return version_file.readline().strip()
+    except:
+        return "unknown"
+
+# returns the appropriate system python paths
+def get_system_pythonpaths() -> list[str]:
+    # run as normal normal user to also include user python paths
+    proc = subprocess.run(["python3", "-c", "import sys; print(':'.join(x for x in sys.path if x))"],
+                          user=get_user_id(), env={}, capture_output=True)
+    return proc.stdout.decode().strip().split(":")
 
 # Download Remote Binaries to local Plugin
 async def download_remote_binary_to_path(url, binHash, path) -> bool:

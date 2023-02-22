@@ -5,6 +5,8 @@ import {
   GamepadEvent,
   Menu,
   MenuItem,
+  ReorderableEntry,
+  ReorderableList,
   showContextMenu,
 } from 'decky-frontend-lib';
 import { Fragment, useEffect, useState } from 'react';
@@ -13,7 +15,6 @@ import { FaDownload, FaEllipsisH } from 'react-icons/fa';
 import { StorePluginVersion, requestPluginInstall } from '../../../../store';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 import { useDeckyState } from '../../../DeckyState';
-import { ReorderableEntry, ReorderableList } from './ReorderableList';
 
 function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
   const data = props.entry.data;

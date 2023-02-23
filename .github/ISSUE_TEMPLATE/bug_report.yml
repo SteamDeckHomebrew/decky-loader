@@ -70,4 +70,4 @@ body:
       description: Please reboot your deck (if possible) when attempting to recreate the issue, then run ``cd ~ && journalctl -b0  -u plugin_loader.service > deckylog.txt``. This will save the log file to ``~`` aka ``/home/deck``. Please upload the file here
       placeholder: deckylog.txt
     validations:
-      required: false
+      required: true

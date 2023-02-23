@@ -9,7 +9,7 @@ import {
   ReorderableList,
   showContextMenu,
 } from 'decky-frontend-lib';
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaDownload, FaEllipsisH } from 'react-icons/fa';
 
 import { StorePluginVersion, requestPluginInstall } from '../../../../store';
@@ -32,7 +32,7 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
   };
 
   return (
-    <Fragment>
+    <>
       {data?.update && (
         <DialogButton
           style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
@@ -52,7 +52,7 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
       >
         <FaEllipsisH />
       </DialogButton>
-    </Fragment>
+    </>
   );
 }
 

@@ -6,7 +6,7 @@ from ensurepip import version
 from json.decoder import JSONDecodeError
 from logging import getLogger
 from os import getcwd, path, remove
-from localplatform import chmod, service_restart, ON_WINDOWS
+from localplatform import chmod, service_restart, ON_LINUX
 
 from aiohttp import ClientSession, web
 
@@ -134,7 +134,7 @@ class Updater:
         logger.debug("Starting update.")
         version = self.remoteVer["tag_name"]
         download_url = None
-        download_filename = "PluginLoader" if not ON_WINDOWS else "PluginLoader.exe"
+        download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
         download_temp_filename = download_filename + ".new"
 
         for x in self.remoteVer["assets"]:
@@ -151,7 +151,7 @@ class Updater:
         tab = await get_gamepadui_tab()
         await tab.open_websocket()
         async with ClientSession() as web:
-            if not ON_WINDOWS:
+            if ON_LINUX:
                 logger.debug("Downloading systemd service")
                 # download the relevant systemd service depending upon branch
                 async with web.request("GET", service_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
@@ -194,7 +194,7 @@ class Updater:
             with open(path.join(getcwd(), ".loader.version"), "w", encoding="utf-8") as out:
                 out.write(version)
 
-            if not ON_WINDOWS:
+            if ON_LINUX:
                 remove(path.join(getcwd(), download_filename))
                 shutil.move(path.join(getcwd(), download_temp_filename), path.join(getcwd(), download_filename))
                 chmod(path.join(getcwd(), download_filename), 777, False)

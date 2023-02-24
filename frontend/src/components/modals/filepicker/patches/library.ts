@@ -4,13 +4,6 @@ import Logger from '../../../../logger';
 
 const logger = new Logger('LibraryPatch');
 
-declare global {
-  interface Window {
-    SteamClient: any;
-    appDetailsStore: any;
-  }
-}
-
 let patch: Patch;
 
 function rePatch() {
@@ -20,7 +13,9 @@ function rePatch() {
       const details = window.appDetailsStore.GetAppDetails(appid);
       logger.debug('game details', details);
       // strShortcutStartDir
-      const file = await window.DeckyPluginLoader.openFilePicker(details.strShortcutStartDir.replaceAll('"', ''));
+      const file = await window.DeckyPluginLoader.openFilePicker(
+        details?.strShortcutStartDir.replaceAll('"', '') || '/',
+      );
       logger.debug('user selected', file);
       window.SteamClient.Apps.SetShortcutExe(appid, JSON.stringify(file.path));
       const pathArr = file.path.split('/');

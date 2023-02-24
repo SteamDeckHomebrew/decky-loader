@@ -8,7 +8,6 @@ from traceback import print_exc
 from aiohttp import web
 from os.path import exists
 from watchdog.events import RegexMatchingEventHandler
-
 from watchdog.observers import Observer
 
 from injector import get_tab, get_gamepadui_tab

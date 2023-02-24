@@ -8,7 +8,7 @@ from logging import getLogger
 from traceback import format_exc
 from os import path, environ
 from signal import SIGINT, signal
-from sys import exit
+from sys import exit, path as syspath
 from time import time
 from localsocket import LocalSocket
 from localplatform import setgid, setuid, get_username, get_home_path
@@ -58,14 +58,9 @@ class PluginWrapper:
             # export a bunch of environment variables to help plugin developers
             environ["HOME"] = get_home_path(UserType.ROOT if "root" in self.flags else UserType.HOST_USER)
             environ["USER"] = "root" if "root" in self.flags else get_username()
-            
-            try:
-                loader_ver = helpers.get_loader_version()
-            except:
-                loader_ver = "-1"
-
-            environ["DECKY_VERSION"] = loader_ver
+            environ["DECKY_VERSION"] = helpers.get_loader_version()
             environ["DECKY_USER"] = get_username()
+            environ["DECKY_USER_HOME"] = helpers.get_home_path()
             environ["DECKY_HOME"] = helpers.get_homebrew_path()
             environ["DECKY_PLUGIN_SETTINGS_DIR"] = path.join(environ["DECKY_HOME"], "settings", self.plugin_directory)
             helpers.mkdir_as_user(environ["DECKY_PLUGIN_SETTINGS_DIR"])
@@ -77,11 +72,19 @@ class PluginWrapper:
             environ["DECKY_PLUGIN_NAME"] = self.name
             environ["DECKY_PLUGIN_VERSION"] = self.version
             environ["DECKY_PLUGIN_AUTHOR"] = self.author
+            # append the loader's plugin path to the recognized python paths
+            syspath.append(path.realpath(path.join(path.dirname(__file__), "plugin")))
+            # append the plugin's `py_modules` to the recognized python paths
+            syspath.append(path.join(environ["DECKY_PLUGIN_DIR"], "py_modules"))
+            # append the system and user python paths
+            syspath.extend(helpers.get_system_pythonpaths())
             spec = spec_from_file_location("_", self.file)
             module = module_from_spec(spec)
             spec.loader.exec_module(module)
             self.Plugin = module.Plugin
 
+            if hasattr(self.Plugin, "_migration"):
+                get_event_loop().run_until_complete(self.Plugin._migration(self.Plugin))
             if hasattr(self.Plugin, "_main"):
                 get_event_loop().create_task(self.Plugin._main(self.Plugin))
             get_event_loop().create_task(self.socket.setup_server())

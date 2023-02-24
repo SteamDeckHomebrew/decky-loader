@@ -54,10 +54,18 @@ def get_loader_version() -> str:
 
 # returns the appropriate system python paths
 def get_system_pythonpaths() -> list[str]:
-    # run as normal normal user to also include user python paths
-    proc = subprocess.run(["python3", "-c", "import sys; print(':'.join(x for x in sys.path if x))"],
-                          user=get_user_id(), env={}, capture_output=True)
-    return proc.stdout.decode().strip().split(":")
+    extra_args = {}
+
+    if localplatform.ON_LINUX:
+        # run as normal normal user to also include user python paths
+        extra_args["user"] = localplatform.localplatform._get_user_id()
+
+    try:
+        proc = subprocess.run(["python3", "-c", "import sys; print(':'.join(x for x in sys.path if x))"],
+                              env={}, capture_output=True, **extra_args)
+        return proc.stdout.decode().strip().split(":")
+    except:
+        return []
 
 # Download Remote Binaries to local Plugin
 async def download_remote_binary_to_path(url, binHash, path) -> bool:
@@ -95,9 +103,9 @@ def set_user_group() -> str:
 # Below is legacy code, provided for backwards compatibility. This will break on windows
 #########
 
-# Get the default home path unless a user is specified
-def get_home_path(username = None) -> str:
-    return localplatform.get_home_path(UserType.ROOT if username == "root" else UserType.HOST_USER)
+# Get the user id hosting the plugin loader
+def get_user_id() -> int:
+    return localplatform.localplatform._get_user_id()
 
 # Get the user hosting the plugin loader
 def get_user() -> str:
@@ -134,6 +142,10 @@ def get_user_group_id() -> int:
 # Get the group of the user hosting the plugin loader
 def get_user_group() -> str:
     return localplatform.localplatform._get_user_group()
+
+# Get the default home path unless a user is specified
+def get_home_path(username = None) -> str:
+    return localplatform.get_home_path(UserType.ROOT if username == "root" else UserType.HOST_USER)
 
 async def is_systemd_unit_active(unit_name: str) -> bool:
     return await localplatform.service_active(unit_name)

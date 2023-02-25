@@ -20,7 +20,7 @@ from aiohttp_jinja2 import setup as jinja_setup
 # local modules
 from browser import PluginBrowser
 from helpers import (REMOTE_DEBUGGER_UNIT, csrf_middleware, get_csrf_token,
-                     get_homebrew_path, mkdir_as_user)
+                     get_homebrew_path, mkdir_as_user, get_system_pythonpaths)
                      
 from injector import get_gamepadui_tab, Tab, get_tabs, close_old_tabs
 from loader import Loader
@@ -28,6 +28,12 @@ from settings import SettingsManager
 from updater import Updater
 from utilities import Utilities
 from customtypes import UserType
+
+# Append the loader's plugin path to the recognized python paths
+sys.path.append(path.join(path.dirname(__file__), "plugin"))
+
+# Append the system and user python paths
+sys.path.extend(get_system_pythonpaths())
 
 HOMEBREW_PATH = get_homebrew_path()
 CONFIG = {

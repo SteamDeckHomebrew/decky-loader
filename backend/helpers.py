@@ -67,7 +67,7 @@ def get_system_pythonpaths() -> list[str]:
     try:
         proc = subprocess.run(["python", "-c", "import sys; print('\\n'.join(x for x in sys.path if x))"],
                               capture_output=True, **extra_args)
-        return proc.stdout.decode().strip().split("\n")
+        return [x.strip() for x in proc.stdout.decode().strip().split("\n")]
     except Exception as e:
         logger.warn(f"Failed to execute get_system_pythonpaths(): {str(e)}")
         return []

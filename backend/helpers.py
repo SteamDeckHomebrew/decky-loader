@@ -65,7 +65,7 @@ def get_system_pythonpaths() -> list[str]:
         extra_args["env"] = {}
 
     try:
-        proc = subprocess.run(["python", "-c", "import sys; print('\\n'.join(x for x in sys.path if x))"],
+        proc = subprocess.run(["python3" if localplatform.ON_LINUX else "python", "-c", "import sys; print('\\n'.join(x for x in sys.path if x))"],
                               capture_output=True, **extra_args)
         return [x.strip() for x in proc.stdout.decode().strip().split("\n")]
     except Exception as e:

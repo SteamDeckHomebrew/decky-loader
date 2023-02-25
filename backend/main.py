@@ -29,12 +29,6 @@ from updater import Updater
 from utilities import Utilities
 from customtypes import UserType
 
-# Append the loader's plugin path to the recognized python paths
-sys.path.append(path.join(path.dirname(__file__), "plugin"))
-
-# Append the system and user python paths
-sys.path.extend(get_system_pythonpaths())
-
 HOMEBREW_PATH = get_homebrew_path()
 CONFIG = {
     "plugin_path": getenv("PLUGIN_PATH", path.join(HOMEBREW_PATH, "plugins")),
@@ -182,6 +176,12 @@ class PluginManager:
 if __name__ == "__main__":
     if ON_WINDOWS:
         multiprocessing.freeze_support()
+
+    # Append the loader's plugin path to the recognized python paths
+    sys.path.append(path.join(path.dirname(__file__), "plugin"))
+
+    # Append the system and user python paths
+    sys.path.extend(get_system_pythonpaths())
 
     loop = new_event_loop()
     set_event_loop(loop)

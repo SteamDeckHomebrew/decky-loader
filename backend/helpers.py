@@ -12,6 +12,7 @@ from aiohttp.web import Response, middleware
 from aiohttp import ClientSession
 import localplatform
 from customtypes import UserType
+from logging import getLogger
 
 REMOTE_DEBUGGER_UNIT = "steam-web-debug-portforward.service"
 
@@ -21,6 +22,7 @@ ssl_ctx = ssl.create_default_context(cafile=certifi.where())
 
 assets_regex = re.compile("^/plugins/.*/assets/.*")
 frontend_regex = re.compile("^/frontend/.*")
+logger = getLogger("Main")
 
 def get_ssl_context():
     return ssl_ctx
@@ -49,7 +51,8 @@ def get_loader_version() -> str:
     try:
         with open(os.path.join(os.getcwd(), ".loader.version"), "r", encoding="utf-8") as version_file:
             return version_file.readline().strip()
-    except:
+    except Exception as e:
+        logger.warn(f"Failed to execute get_loader_version(): {str(e)}")
         return "unknown"
 
 # returns the appropriate system python paths
@@ -59,12 +62,14 @@ def get_system_pythonpaths() -> list[str]:
     if localplatform.ON_LINUX:
         # run as normal normal user to also include user python paths
         extra_args["user"] = localplatform.localplatform._get_user_id()
+        extra_args["env"] = {}
 
     try:
-        proc = subprocess.run(["python3", "-c", "import sys; print(':'.join(x for x in sys.path if x))"],
-                              env={}, capture_output=True, **extra_args)
-        return proc.stdout.decode().strip().split(":")
-    except:
+        proc = subprocess.run(["python", "-c", "import sys; print('\\n'.join(x for x in sys.path if x))"],
+                              capture_output=True, **extra_args)
+        return proc.stdout.decode().strip().split("\n")
+    except Exception as e:
+        logger.warn(f"Failed to execute get_system_pythonpaths(): {str(e)}")
         return []
 
 # Download Remote Binaries to local Plugin

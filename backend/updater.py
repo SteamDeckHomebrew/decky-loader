@@ -102,8 +102,7 @@ class Updater:
         logger.debug("checking for updates")
         selectedBranch = self.get_branch(self.context.settings)
         async with ClientSession() as web:
-            # TODO: Change back to official repo
-            async with web.request("GET", "https://api.github.com/repos/suchmememanyskill/decky-loader/releases", ssl=helpers.get_ssl_context()) as res:
+            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases", ssl=helpers.get_ssl_context()) as res:
                 remoteVersions = await res.json()
         self.allRemoteVers = remoteVersions
         logger.debug("determining release type to find, branch is %i" % selectedBranch)

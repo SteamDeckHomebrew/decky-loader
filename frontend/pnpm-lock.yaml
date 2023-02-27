@@ -13,7 +13,7 @@ specifiers:
   '@types/webpack': ^5.28.0
   decky-frontend-lib: ^3.19.1
   husky: ^8.0.1
-  i18next: ^22.4.9
+  i18next: ^22.4.10
   i18next-browser-languagedetector: ^7.0.1
   i18next-http-backend: ^2.1.1
   i18next-parser: ^7.6.0
@@ -37,11 +37,11 @@ specifiers:
 
 dependencies:
   decky-frontend-lib: 3.19.1
-  i18next: 22.4.9
+  i18next: 22.4.10
   i18next-browser-languagedetector: 7.0.1
   i18next-http-backend: 2.1.1
   react-file-icon: 1.2.0_wcqkhtmu7mswc6yz4uyexck3ty
-  react-i18next: 12.1.4_goxgninut6ie3oe2kpsp3ellgm
+  react-i18next: 12.1.4_hphkt4xxb3r2cslqfk2qqtiayi
   react-icons: 4.4.0_react@16.14.0
   react-markdown: 8.0.3_vshvapmxg47tngu7tvrsqpq55u
   remark-gfm: 3.0.1
@@ -1941,7 +1941,7 @@ packages:
       esbuild: 0.17.5
       fs-extra: 11.1.0
       gulp-sort: 2.0.0
-      i18next: 22.4.9
+      i18next: 22.4.10
       js-yaml: 4.1.0
       lilconfig: 2.0.6
       rsvp: 4.8.5
@@ -1955,8 +1955,8 @@ packages:
       - supports-color
     dev: true
 
-  /i18next/22.4.9:
-    resolution: {integrity: sha512-8gWMmUz460KJDQp/ob3MNUX84cVuDRY9PLFPnV8d+Qezz/6dkjxwOaH70xjrCNDO+JrUL25iXfAIN9wUkInNZw==}
+  /i18next/22.4.10:
+    resolution: {integrity: sha512-3EqgGK6fAJRjnGgfkNSStl4mYLCjUoJID338yVyLMj5APT67HUtWoqSayZewiiC5elzMUB1VEUwcmSCoeQcNEA==}
     dependencies:
       '@babel/runtime': 7.20.13
 
@@ -3059,7 +3059,7 @@ packages:
       tinycolor2: 1.4.2
     dev: false
 
-  /react-i18next/12.1.4_goxgninut6ie3oe2kpsp3ellgm:
+  /react-i18next/12.1.4_hphkt4xxb3r2cslqfk2qqtiayi:
     resolution: {integrity: sha512-XQND7jYtgM7ht5PH3yIZljCRpAMTlH/zmngM9ZjToqa+0BR6xuu8c7QF0WIIOEjcMTB2S3iOfpN/xG/ZrAnO6g==}
     peerDependencies:
       i18next: '>= 19.0.0'
@@ -3074,7 +3074,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.20.13
       html-parse-stringify: 3.0.1
-      i18next: 22.4.9
+      i18next: 22.4.10
       react: 16.14.0
       react-dom: 16.14.0_react@16.14.0
     dev: false

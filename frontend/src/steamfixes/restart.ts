@@ -4,13 +4,6 @@ import Logger from '../logger';
 
 const logger = new Logger('RestartSteamFix');
 
-declare global {
-  interface Window {
-    SteamClient: any;
-    appDetailsStore: any;
-  }
-}
-
 let patch: Patch;
 
 function rePatch() {

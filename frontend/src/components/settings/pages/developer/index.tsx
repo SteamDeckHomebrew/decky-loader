@@ -55,7 +55,7 @@ export default function DeveloperSettings() {
       >
         <Toggle
           value={reactDevtoolsEnabled}
-          disabled={reactDevtoolsIP == ''}
+          // disabled={reactDevtoolsIP == ''}
           onChange={(toggleValue) => {
             setReactDevtoolsEnabled(toggleValue);
             setShouldConnectToReactDevTools(toggleValue);

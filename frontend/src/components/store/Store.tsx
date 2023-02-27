@@ -16,7 +16,7 @@ import Logger from '../../logger';
 import { StorePlugin, getPluginList } from '../../store';
 import PluginCard from './PluginCard';
 
-const logger = new Logger('FilePicker');
+const logger = new Logger('Store');
 
 const StorePage: FC<{}> = () => {
   const [currentTabRoute, setCurrentTabRoute] = useState<string>('browse');

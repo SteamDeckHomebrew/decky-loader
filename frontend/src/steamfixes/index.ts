@@ -7,6 +7,6 @@ export function deinitSteamFixes() {
 }
 
 export async function initSteamFixes() {
-  fixes.push(reloadFix());
+  fixes.push(await reloadFix());
   fixes.push(await restartFix());
 }

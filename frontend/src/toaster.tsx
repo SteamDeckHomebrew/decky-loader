@@ -41,7 +41,7 @@ class Toaster extends Logger {
     const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
     const findToasterRoot = (currentNode: any, iters: number): any => {
       if (iters >= 65) {
-        // currently 40
+        // currently 65
         return null;
       }
       if (

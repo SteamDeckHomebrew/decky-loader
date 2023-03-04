@@ -38,6 +38,14 @@ It would be `root` if `root` was specified in the plugin's flags otherwise the u
 e.g.: `deck`
 """
 
+USER_ID: int = int(os.getenv("USER_ID", default="-1"))
+"""
+The effective UID running the process.
+Environment variable: `USER_ID`.
+It would be `0` if `root` was specified in the plugin's flags otherwise the id of the user whose home decky resides in.
+e.g.: `1000`
+"""
+
 DECKY_VERSION: str = os.getenv("DECKY_VERSION", default="")
 """
 The version of the decky loader.
@@ -50,6 +58,13 @@ DECKY_USER: str = os.getenv("DECKY_USER", default="")
 The user whose home decky resides in.
 Environment variable: `DECKY_USER`.
 e.g.: `deck`
+"""
+
+DECKY_USER_ID: int = int(os.getenv("DECKY_USER_ID", default="-1"))
+"""
+The UID of the user whose home decky resides in.
+Environment variable: `DECKY_USER_ID`.
+e.g.: `1000`
 """
 
 DECKY_USER_HOME: str = os.getenv("DECKY_USER_HOME", default="")

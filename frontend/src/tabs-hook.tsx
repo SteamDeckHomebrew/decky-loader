@@ -35,7 +35,7 @@ class TabsHook extends Logger {
     const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
     let qAMRoot: any;
     const findQAMRoot = (currentNode: any, iters: number): any => {
-      if (iters >= 55) {
+      if (iters >= 65) {
         // currently 45
         return null;
       }

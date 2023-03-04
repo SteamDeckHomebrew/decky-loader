@@ -88,7 +88,7 @@ There is no complete plugin development documentation yet. However a good starti
 
 ### 🤝 Contributing
 
-Please consult [the wiki page regarding development](https://deckbrew.xyz/en/loader-dev/development) for more information on installing development versions of Decky Loader. You can also install the Steam Deck UI on a Windows or Linux computer for testing by following [this YouTube guide](https://youtu.be/1IAbZte8e7E?t=112).
+Please consult [the wiki page regarding development](https://wiki.deckbrew.xyz/en/loader-dev/development) for more information on installing development versions of Decky Loader. You can also install the Steam Deck UI on a Windows or Linux computer for testing by following [this YouTube guide](https://youtu.be/1IAbZte8e7E?t=112).
 
 1. Clone the repository using the latest commit to main before starting your PR.
 1. In your clone of the repository, run these commands.

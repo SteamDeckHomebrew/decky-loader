@@ -45,6 +45,7 @@ class Toaster extends Logger {
         return null;
       }
       if (
+        currentNode?.memoizedProps?.className?.startsWith?.('gamepadtoasts_GamepadToastPlaceholder') ||
         currentNode?.memoizedProps?.className?.startsWith?.('toastmanager_ToastPlaceholder') ||
         currentNode?.memoizedProps?.className?.startsWith?.('toastmanager_ToastPopup')
       ) {

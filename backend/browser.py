@@ -168,7 +168,7 @@ class PluginBrowser:
                             self.loader.plugins[name].stop()
                             self.loader.plugins.pop(name, None)
                         await sleep(1)
-                        self.loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_dir)
+                        self.loader.import_plugin(path.join(plugin_dir, "main.py"), name)
                     else:
                         logger.fatal(f"Failed Downloading Remote Binaries")
                 else:

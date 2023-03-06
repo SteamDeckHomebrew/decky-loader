@@ -6,6 +6,7 @@ import {
   Focusable,
   ProgressBarWithInfo,
   Spinner,
+  findSP,
   showModal,
 } from 'decky-frontend-lib';
 import { useCallback } from 'react';
@@ -14,7 +15,6 @@ import { useEffect, useState } from 'react';
 import { FaExclamation } from 'react-icons/fa';
 
 import { VerInfo, callUpdaterMethod, finishUpdate } from '../../../../updater';
-import { findSP } from '../../../../utils/windows';
 import { useDeckyState } from '../../../DeckyState';
 import InlinePatchNotes from '../../../patchnotes/InlinePatchNotes';
 import WithSuspense from '../../../WithSuspense';

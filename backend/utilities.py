@@ -251,7 +251,7 @@ class Utilities:
                             enumerable: true,
                             configurable: true,
                             get: function() {
-                                return FocusNavController?.m_ActiveContext?.ActiveWindow || window;
+                                return (GamepadNavTree?.m_context?.m_controller || FocusNavController)?.m_ActiveContext?.ActiveWindow || window;
                             }
                         });
                     """ + await res.text() + "\n}"

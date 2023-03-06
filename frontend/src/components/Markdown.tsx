@@ -1,4 +1,4 @@
-import { Focusable, Router } from 'decky-frontend-lib';
+import { Focusable, Navigation } from 'decky-frontend-lib';
 import { FunctionComponent, useRef } from 'react';
 import ReactMarkdown, { Options as ReactMarkdownOptions } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -22,7 +22,7 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                 onActivate={() => {}}
                 onOKButton={() => {
                   props.onDismiss?.();
-                  Router.NavigateToExternalWeb(aRef.current!.href);
+                  Navigation.NavigateToExternalWeb(aRef.current!.href);
                 }}
                 style={{ display: 'inline' }}
               >

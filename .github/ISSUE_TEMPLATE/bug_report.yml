@@ -12,6 +12,7 @@ body:
         - label: I have searched existing issues
         - label: This issue is not a duplicate of an existing one
         - label: I have checked the [common issues section in the readme file](https://github.com/SteamDeckHomebrew/decky-loader#-common-issues)
+        - label: I have attached logs to this bug report (failure to include logs will mean your issue will not be responded too).
 
   - type: textarea
     attributes:
@@ -70,4 +71,4 @@ body:
       description: Please reboot your deck (if possible) when attempting to recreate the issue, then run ``cd ~ && journalctl -b0  -u plugin_loader.service > deckylog.txt``. This will save the log file to ``~`` aka ``/home/deck``. Please upload the file here
       placeholder: deckylog.txt
     validations:
-      required: false
+      required: true

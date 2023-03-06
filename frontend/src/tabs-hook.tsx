@@ -35,7 +35,7 @@ class TabsHook extends Logger {
     const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
     let qAMRoot: any;
     const findQAMRoot = (currentNode: any, iters: number): any => {
-      if (iters >= 55) {
+      if (iters >= 65) {
         // currently 45
         return null;
       }
@@ -128,22 +128,23 @@ class TabsHook extends Logger {
     let deckyTabAmount = existingTabs.reduce((prev: any, cur: any) => (cur.decky ? prev + 1 : prev), 0);
     if (deckyTabAmount == this.tabs.length) {
       for (let tab of existingTabs) {
-        if (tab?.decky) tab.panel.props.setter[0](visible);
+        if (tab?.decky && tab?.qAMVisibilitySetter) tab?.qAMVisibilitySetter(visible);
       }
       return;
     }
     for (const { title, icon, content, id } of this.tabs) {
-      existingTabs.push({
+      const tab: any = {
         key: id,
         title,
         tab: icon,
         decky: true,
-        panel: (
-          <QuickAccessVisibleStateProvider initial={visible} setter={[]}>
-            {content}
-          </QuickAccessVisibleStateProvider>
-        ),
-      });
+      };
+      tab.panel = (
+        <QuickAccessVisibleStateProvider initial={visible} tab={tab}>
+          {content}
+        </QuickAccessVisibleStateProvider>
+      );
+      existingTabs.push(tab);
     }
   }
 }

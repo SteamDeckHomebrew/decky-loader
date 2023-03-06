@@ -1,7 +1,10 @@
 import { Navigation, Router, sleep } from 'decky-frontend-lib';
 
+import { useDeckyState } from './components/DeckyState';
+import { Plugin } from './plugin';
 import PluginLoader from './plugin-loader';
 import { DeckyUpdater } from './updater';
+import { useSetting } from './utils/hooks/useSetting';
 
 declare global {
   interface Window {
@@ -56,6 +59,15 @@ declare global {
       if (!window.DeckyPluginLoader.hasPlugin(plugin.name))
         window.DeckyPluginLoader?.importPlugin(plugin.name, plugin.version);
     }
+
+    //* Grab and set plugin order
+    const [getPluginOrderSetting, _] = useSetting<string[]>(
+      'pluginOrder',
+      plugins.map((plugin: Plugin) => plugin.name),
+    );
+    const { setPluginOrder } = useDeckyState();
+    setPluginOrder(getPluginOrderSetting);
+
     window.DeckyPluginLoader.checkPluginUpdates();
   };
 

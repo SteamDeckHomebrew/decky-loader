@@ -36,7 +36,7 @@ It would be `root` if `root` was specified in the plugin's flags otherwise the u
 e.g.: `deck`
 """
 
-USER_ID: str
+USER_ID: int
 """
 The effective UID running the process.
 Environment variable: `UID`.
@@ -58,7 +58,7 @@ Environment variable: `DECKY_USER`.
 e.g.: `deck`
 """
 
-DECKY_USER_ID: str
+DECKY_USER_ID: int
 """
 The UID of the user whose home decky resides in.
 Environment variable: `DECKY_USER_ID`.

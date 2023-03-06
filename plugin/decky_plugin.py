@@ -38,7 +38,7 @@ It would be `root` if `root` was specified in the plugin's flags otherwise the u
 e.g.: `deck`
 """
 
-USER_ID: str = str(os.getenv("USER_ID", default="-1"))
+USER_ID: int = int(os.getenv("USER_ID", default="-1"))
 """
 The effective UID running the process.
 Environment variable: `USER_ID`.
@@ -60,7 +60,7 @@ Environment variable: `DECKY_USER`.
 e.g.: `deck`
 """
 
-DECKY_USER_ID: str = str(os.getenv("DECKY_USER_ID", default="-1"))
+DECKY_USER_ID: int = int(os.getenv("DECKY_USER_ID", default="-1"))
 """
 The UID of the user whose home decky resides in.
 Environment variable: `DECKY_USER_ID`.

@@ -42,7 +42,7 @@ class PluginBrowser:
             return False
         zip_file = ZipFile(zip)
         zip_file.extractall(self.plugin_path)
-        plugin_dir = self.find_plugin_folder(name)
+        plugin_dir = path.join(self.plugin_path, self.find_plugin_folder(name))
 
         if not chown(plugin_dir) or not chmod(plugin_dir, 555):
             logger.error(f"chown/chmod exited with a non-zero exit code")
@@ -91,6 +91,7 @@ class PluginBrowser:
 
         return rv
 
+    """Return the filename (only) for the specified plugin"""
     def find_plugin_folder(self, name):
         for folder in listdir(self.plugin_path):
             try:
@@ -98,7 +99,7 @@ class PluginBrowser:
                     plugin = json.load(f)
 
                 if plugin['name'] == name:
-                    return str(path.join(self.plugin_path, folder))
+                    return folder
             except:
                 logger.debug(f"skipping {folder}")
 
@@ -106,9 +107,10 @@ class PluginBrowser:
         if self.loader.watcher:
             self.loader.watcher.disabled = True
         tab = await get_gamepadui_tab()
+        plugin_dir = path.join(self.plugin_path, self.find_plugin_folder(name))
         try:
             logger.info("uninstalling " + name)
-            logger.info(" at dir " + self.find_plugin_folder(name))
+            logger.info(" at dir " + plugin_dir)
             logger.debug("calling frontend unload for %s" % str(name))
             res = await tab.evaluate_js(f"DeckyPluginLoader.unloadPlugin('{name}')")
             logger.debug("result of unload from UI: %s", res)
@@ -122,11 +124,11 @@ class PluginBrowser:
                 del self.plugins[name]
                 logger.debug("Plugin %s was removed from the dictionary", name)
             logger.debug("removing files %s" % str(name))
-            rmtree(self.find_plugin_folder(name))
+            rmtree(plugin_dir)
         except FileNotFoundError:
             logger.warning(f"Plugin {name} not installed, skipping uninstallation")
         except Exception as e:
-            logger.error(f"Plugin {name} in {self.find_plugin_folder(name)} was not uninstalled")
+            logger.error(f"Plugin {name} in {plugin_dir} was not uninstalled")
             logger.error(f"Error at %s", exc_info=e)
         if self.loader.watcher:
             self.loader.watcher.disabled = False
@@ -159,7 +161,8 @@ class PluginBrowser:
                 logger.debug("Unzipping...")
                 ret = self._unzip_to_plugin_dir(res_zip, name, hash)
                 if ret:
-                    plugin_dir = self.find_plugin_folder(name)
+                    plugin_folder = self.find_plugin_folder(name)
+                    plugin_dir = path.join(self.plugin_path, plugin_folder)
                     ret = await self._download_remote_binaries_for_plugin_with_name(plugin_dir)
                     if ret:
                         logger.info(f"Installed {name} (Version: {version})")
@@ -167,7 +170,7 @@ class PluginBrowser:
                             self.loader.plugins[name].stop()
                             self.loader.plugins.pop(name, None)
                         await sleep(1)
-                        self.loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_dir)
+                        self.loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_folder)
                     else:
                         logger.fatal(f"Failed Downloading Remote Binaries")
                 else:

@@ -22,7 +22,25 @@ jobs:
       with:
         separator: ","
         files: |
-          plugin/plugin.pyi
+          plugin/*
+          
+    - name: Is stub changed
+      id: changed-stub
+      run: |
+        STUB_CHANGED="false"
+        PATHS=(plugin plugin/decky_plugin.pyi)
+        SHA=${{ github.sha }}
+        SHA_PREV=$(git rev-list --parents -n 1 $SHA)
+        FILES=$(git diff $SHA_PREV..$SHA --name-only -- ${PATHS[@]} | jq -Rsc 'split("\n")[:-1] | join (",")')
+        if [[ "$FILES" == *"plugin/decky_plugin.pyi"* ]]; then
+          $STUB_CHANGED="true"
+          echo "Stub has changed, pushing updated stub"
+        else
+          echo "Stub has not changed, exiting."
+          echo "has_changed=$STUB_CHANGED" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+        echo "has_changed=$STUB_CHANGED" >> $GITHUB_OUTPUT
 
     - name: Push updated stub
       if: steps.changed-stub.outputs.has_changed == true

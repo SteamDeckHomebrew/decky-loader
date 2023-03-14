@@ -175,6 +175,11 @@ class PluginManager:
 
 if __name__ == "__main__":
     if ON_WINDOWS:
+        # Fix windows/flask not recognising that .js means 'application/javascript'
+        import mimetypes
+        mimetypes.add_type('application/javascript', '.js')
+
+        # Required for multiprocessing support in frozen files
         multiprocessing.freeze_support()
 
     # Append the loader's plugin path to the recognized python paths

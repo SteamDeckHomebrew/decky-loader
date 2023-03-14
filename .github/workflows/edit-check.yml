@@ -16,13 +16,21 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       
+    - name: Get changed files
+      id: changed-files
+      uses: tj-actions/changed-files@v35.6.3
+      with:
+        separator: ","
+        files: |
+          plugin/*
+          
     - name: Is stub changed
       id: changed-stub
       run: |
         STUB_CHANGED="false"
         PATHS=(plugin plugin/decky_plugin.pyi)
         SHA=${{ github.sha }}
-        SHA_PREV=$(git rev-list --parents -n 1 $SHA)
+        SHA_PREV=HEAD^
         FILES=$(git diff $SHA_PREV..$SHA --name-only -- ${PATHS[@]} | jq -Rsc 'split("\n")[:-1] | join (",")')
         if [[ "$FILES" == *"plugin/decky_plugin.pyi"* ]]; then
           $STUB_CHANGED="true"

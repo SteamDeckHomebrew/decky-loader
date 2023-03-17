@@ -23,7 +23,7 @@
     "@types/webpack": "^5.28.0",
     "husky": "^8.0.3",
     "import-sort-style-module": "^6.0.0",
-    "inquirer": "^8.2.4",
+    "inquirer": "^9.1.4",
     "prettier": "^2.8.4",
     "prettier-plugin-import-sort": "^0.0.7",
     "react": "16.14.0",

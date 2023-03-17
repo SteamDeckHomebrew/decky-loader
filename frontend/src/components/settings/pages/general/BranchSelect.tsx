@@ -25,6 +25,7 @@ const BranchSelect: FunctionComponent<{}> = () => {
           .filter((branch) => typeof branch == 'string')
           .map((branch) => ({
             label: branch,
+            //@ts-ignore
             data: UpdateBranch[branch],
           }))}
         selectedOption={selectedBranch}

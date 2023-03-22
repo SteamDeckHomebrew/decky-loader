@@ -1,19 +1,16 @@
-import os, pwd, grp, sys
+import os, pwd, grp, sys, logging
 from subprocess import call, run, DEVNULL, PIPE, STDOUT
 from customtypes import UserType
 
+logger = logging.getLogger("localplatform")
+
 # Get the user id hosting the plugin loader
 def _get_user_id() -> int:
-    proc_path = os.path.realpath(sys.argv[0])
-    pws = sorted(pwd.getpwall(), reverse=True, key=lambda pw: len(pw.pw_dir))
-    for pw in pws:
-        if proc_path.startswith(os.path.realpath(pw.pw_dir)):
-            return pw.pw_uid
-    raise PermissionError("The plugin loader does not seem to be hosted by any known user.")
+    return pwd.getpwnam(_get_user()).pw_uid
 
 # Get the user hosting the plugin loader
 def _get_user() -> str:
-    return pwd.getpwuid(_get_user_id()).pw_name
+    return get_unprivileged_user()
 
 # Get the effective user id of the running process
 def _get_effective_user_id() -> int:
@@ -136,3 +133,60 @@ async def service_start(service_name : str) -> bool:
     cmd = ["systemctl", "start", service_name]
     res = run(cmd, stdout=PIPE, stderr=STDOUT)
     return res.returncode == 0
+
+def get_privileged_path() -> str:
+    path = os.getenv("PRIVILEGED_PATH")
+
+    if path == None:
+        path = get_unprivileged_path()
+
+    return path
+
+def _parent_dir(path : str) -> str:
+    if path == None:
+        return None
+
+    if path.endswith('/'):
+        path = path[:-1]
+    
+    return os.path.dirname(path)
+
+def get_unprivileged_path() -> str:
+    path = os.getenv("UNPRIVILEGED_PATH")
+    
+    if path == None:
+        path = _parent_dir(os.getenv("PLUGIN_PATH"))
+    
+    if path == None:
+        logger.debug("Unprivileged path is not properly configured. Making something up!")
+        # Expected path of loader binary is /home/deck/homebrew/service/PluginLoader
+        path = _parent_dir(_parent_dir(os.path.realpath(sys.argv[0])))
+
+        if not os.path.exists(path):
+            path = None
+
+    if path == None:
+        logger.warn("Unprivileged path is not properly configured. Defaulting to /home/deck/homebrew")
+        path = "/home/deck/homebrew" # We give up
+    
+    return path
+
+
+def get_unprivileged_user() -> str:
+    user = os.getenv("UNPRIVILEGED_USER")
+
+    if user == None:
+        # Lets hope we can extract it from the unprivileged dir
+        dir = os.path.realpath(get_unprivileged_path())
+
+        pws = sorted(pwd.getpwall(), reverse=True, key=lambda pw: len(pw.pw_dir))
+        for pw in pws:
+            if dir.startswith(os.path.realpath(pw.pw_dir)):
+                user = pw.pw_name
+                break
+    
+    if user == None:
+        logger.warn("Unprivileged user is not properly configured. Defaulting to 'deck'")
+        user = 'deck'
+
+    return user

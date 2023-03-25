@@ -29,10 +29,10 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({ artifact, version, ha
       strTitle={`Install ${artifact}`}
       strOKButtonText={loading ? 'Installing' : 'Install'}
     >
-      {hash == 'False' ? (
-        <h3 style={{ color: 'red' }}>!!!!NO HASH PROVIDED!!!!</h3>
-      ) : (
-        `Are you sure you want to install ${artifact} ${version}?`
+      Are you sure you want to install {artifact}
+      {version ? ` ${version}` : ''}?
+      {hash == 'False' && (
+        <span style={{ color: 'red' }}> This plugin does not have a hash, you are installing it at your own risk.</span>
       )}
     </ConfirmModal>
   );

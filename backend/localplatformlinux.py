@@ -47,10 +47,12 @@ def _get_user_group() -> str:
 def chown(path : str,  user : UserType = UserType.HOST_USER, recursive : bool = True) -> bool:
     user_str = ""
 
-    if (user == UserType.HOST_USER):
+    if user == UserType.HOST_USER:
         user_str = _get_user()+":"+_get_user_group()
-    elif (user == UserType.EFFECTIVE_USER):
+    elif user == UserType.EFFECTIVE_USER:
         user_str = _get_effective_user()+":"+_get_effective_user_group()
+    elif user == UserType.ROOT:
+        user_str = "root:root"
     else:
         raise Exception("Unknown User Type")
 

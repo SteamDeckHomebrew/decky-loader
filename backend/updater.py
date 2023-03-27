@@ -106,10 +106,10 @@ class Updater:
                 remoteVersions = await res.json()
                 if selectedBranch == 0:
                     logger.debug("release type: release")
-                    remoteVersions = filter(lambda ver: ver["tag_name"].startswith("v") and not ver["prerelease"] and not ver["tag_name"].find("-pre") > 0 and ver["tag_name"], remoteVersions)
+                    remoteVersions = list(filter(lambda ver: ver["tag_name"].startswith("v") and not ver["prerelease"] and not ver["tag_name"].find("-pre") > 0 and ver["tag_name"], remoteVersions))
                 elif selectedBranch == 1:
                     logger.debug("release type: pre-release")
-                    remoteVersions = filter(lambda ver:ver["tag_name"].startswith("v"), remoteVersions)
+                    remoteVersions = list(filter(lambda ver:ver["tag_name"].startswith("v"), remoteVersions))
                 else:
                     logger.error("release type: NOT FOUND")
                     raise ValueError("no valid branch found")

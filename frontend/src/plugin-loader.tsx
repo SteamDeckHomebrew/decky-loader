@@ -169,6 +169,12 @@ class PluginLoader extends Logger {
     getSetting('developer.enabled', false).then((val) => {
       if (val) import('./developer').then((developer) => developer.startup());
     });
+
+    //* Grab and set plugin order
+    getSetting<string[]>('pluginOrder', []).then((pluginOrder) => {
+      console.log(pluginOrder);
+      this.deckyState.setPluginOrder(pluginOrder);
+    });
   }
 
   public deinit() {

@@ -6,6 +6,7 @@ import { VerInfo } from '../updater';
 
 interface PublicDeckyState {
   plugins: Plugin[];
+  pluginOrder: string[];
   activePlugin: Plugin | null;
   updates: PluginUpdateMapping | null;
   hasLoaderUpdate?: boolean;
@@ -15,6 +16,7 @@ interface PublicDeckyState {
 
 export class DeckyState {
   private _plugins: Plugin[] = [];
+  private _pluginOrder: string[] = [];
   private _activePlugin: Plugin | null = null;
   private _updates: PluginUpdateMapping | null = null;
   private _hasLoaderUpdate: boolean = false;
@@ -26,6 +28,7 @@ export class DeckyState {
   publicState(): PublicDeckyState {
     return {
       plugins: this._plugins,
+      pluginOrder: this._pluginOrder,
       activePlugin: this._activePlugin,
       updates: this._updates,
       hasLoaderUpdate: this._hasLoaderUpdate,
@@ -41,6 +44,11 @@ export class DeckyState {
 
   setPlugins(plugins: Plugin[]) {
     this._plugins = plugins;
+    this.notifyUpdate();
+  }
+
+  setPluginOrder(pluginOrder: string[]) {
+    this._pluginOrder = pluginOrder;
     this.notifyUpdate();
   }
 
@@ -78,6 +86,7 @@ interface DeckyStateContext extends PublicDeckyState {
   setVersionInfo(versionInfo: VerInfo): void;
   setIsLoaderUpdating(hasUpdate: boolean): void;
   setActivePlugin(name: string): void;
+  setPluginOrder(pluginOrder: string[]): void;
   closeActivePlugin(): void;
 }
 
@@ -106,10 +115,18 @@ export const DeckyStateContextProvider: FC<Props> = ({ children, deckyState }) =
   const setVersionInfo = (versionInfo: VerInfo) => deckyState.setVersionInfo(versionInfo);
   const setActivePlugin = (name: string) => deckyState.setActivePlugin(name);
   const closeActivePlugin = () => deckyState.closeActivePlugin();
+  const setPluginOrder = (pluginOrder: string[]) => deckyState.setPluginOrder(pluginOrder);
 
   return (
     <DeckyStateContext.Provider
-      value={{ ...publicDeckyState, setIsLoaderUpdating, setVersionInfo, setActivePlugin, closeActivePlugin }}
+      value={{
+        ...publicDeckyState,
+        setIsLoaderUpdating,
+        setVersionInfo,
+        setActivePlugin,
+        closeActivePlugin,
+        setPluginOrder,
+      }}
     >
       {children}
     </DeckyStateContext.Provider>

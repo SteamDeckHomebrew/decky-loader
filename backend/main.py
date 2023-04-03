@@ -65,8 +65,8 @@ class PluginManager:
             )
         })
         self.plugin_loader = Loader(self.web_app, plugin_path, self.loop, get_live_reload())
-        self.plugin_browser = PluginBrowser(plugin_path, self.plugin_loader.plugins, self.plugin_loader)
         self.settings = SettingsManager("loader", path.join(get_privileged_path(), "settings"))
+        self.plugin_browser = PluginBrowser(plugin_path, self.plugin_loader.plugins, self.plugin_loader, self.settings) 
         self.utilities = Utilities(self)
         self.updater = Updater(self)
 
@@ -103,6 +103,9 @@ class PluginManager:
         logger.debug("Loading plugins")
         self.plugin_loader.import_plugins()
         # await inject_to_tab("SP", "window.syncDeckyPlugins();")
+        if self.settings.getSetting("pluginOrder", None) == None:
+          self.settings.setSetting("pluginOrder", list(self.plugin_loader.plugins.keys()))
+          logger.debug("Did not find pluginOrder setting, set it to default")
 
     async def loader_reinjector(self):
         while True:

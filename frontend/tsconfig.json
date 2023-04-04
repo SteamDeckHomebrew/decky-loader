@@ -14,6 +14,7 @@
     "noImplicitThis": true,
     "noImplicitAny": true,
     "strict": true,
+    "suppressImplicitAnyIndexErrors": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "resolveJsonModule": true

@@ -24,7 +24,6 @@ const StoreSelect: FunctionComponent<{}> = () => {
             .filter((store) => typeof store == 'string')
             .map((store) => ({
               label: store,
-              // @ts-ignore
               data: Store[store],
             }))}
           selectedOption={selectedStore}

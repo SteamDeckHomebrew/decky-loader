@@ -78,7 +78,7 @@ export default function PluginList() {
     setPluginEntries(
       plugins.map((plugin) => {
         return {
-          label: plugin.name,
+          label: `${plugin.name} - ${plugin.version}`,
           data: {
             update: updates?.get(plugin.name),
             version: plugin.version,

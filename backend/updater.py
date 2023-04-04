@@ -6,7 +6,7 @@ from ensurepip import version
 from json.decoder import JSONDecodeError
 from logging import getLogger
 from os import getcwd, path, remove
-from subprocess import call
+from localplatform import chmod, service_restart, ON_LINUX
 
 from aiohttp import ClientSession, web
 
@@ -132,47 +132,54 @@ class Updater:
     async def do_update(self):
         logger.debug("Starting update.")
         version = self.remoteVer["tag_name"]
-        download_url = self.remoteVer["assets"][0]["browser_download_url"]
+        download_url = None
+        download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
+        download_temp_filename = download_filename + ".new"
+
+        for x in self.remoteVer["assets"]:
+            if x["name"] == download_filename:
+                download_url = x["browser_download_url"]
+                break
+        
+        if download_url == None:
+            raise Exception("Download url not found")
+
         service_url = self.get_service_url()
         logger.debug("Retrieved service URL")
 
         tab = await get_gamepadui_tab()
         await tab.open_websocket()
         async with ClientSession() as web:
-            logger.debug("Downloading systemd service")
-            # download the relevant systemd service depending upon branch
-            async with web.request("GET", service_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
-                logger.debug("Downloading service file")
-                data = await res.content.read()
-            logger.debug(str(data))
-            service_file_path = path.join(getcwd(), "plugin_loader.service")
-            try:
-                with open(path.join(getcwd(), "plugin_loader.service"), "wb") as out:
-                    out.write(data)
-            except Exception as e:
-                logger.error(f"Error at %s", exc_info=e)
-            with open(path.join(getcwd(), "plugin_loader.service"), "r", encoding="utf-8") as service_file:
-                service_data = service_file.read()
-            service_data = service_data.replace("${HOMEBREW_FOLDER}", helpers.get_homebrew_path())
-            with open(path.join(getcwd(), "plugin_loader.service"), "w", encoding="utf-8") as service_file:
-                    service_file.write(service_data)
+            if ON_LINUX:
+                logger.debug("Downloading systemd service")
+                # download the relevant systemd service depending upon branch
+                async with web.request("GET", service_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
+                    logger.debug("Downloading service file")
+                    data = await res.content.read()
+                logger.debug(str(data))
+                service_file_path = path.join(getcwd(), "plugin_loader.service")
+                try:
+                    with open(path.join(getcwd(), "plugin_loader.service"), "wb") as out:
+                        out.write(data)
+                except Exception as e:
+                    logger.error(f"Error at %s", exc_info=e)
+                with open(path.join(getcwd(), "plugin_loader.service"), "r", encoding="utf-8") as service_file:
+                    service_data = service_file.read()
+                service_data = service_data.replace("${HOMEBREW_FOLDER}", helpers.get_homebrew_path())
+                with open(path.join(getcwd(), "plugin_loader.service"), "w", encoding="utf-8") as service_file:
+                        service_file.write(service_data)
                     
-            logger.debug("Saved service file")
-            logger.debug("Copying service file over current file.")
-            shutil.copy(service_file_path, "/etc/systemd/system/plugin_loader.service")
-            if not os.path.exists(path.join(getcwd(), ".systemd")):
-                os.mkdir(path.join(getcwd(), ".systemd"))
-            shutil.move(service_file_path, path.join(getcwd(), ".systemd")+"/plugin_loader.service")
+                logger.debug("Saved service file")
+                logger.debug("Copying service file over current file.")
+                shutil.copy(service_file_path, "/etc/systemd/system/plugin_loader.service")
+                if not os.path.exists(path.join(getcwd(), ".systemd")):
+                    os.mkdir(path.join(getcwd(), ".systemd"))
+                shutil.move(service_file_path, path.join(getcwd(), ".systemd")+"/plugin_loader.service")
             
             logger.debug("Downloading binary")
             async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
                 total = int(res.headers.get('content-length', 0))
-                # we need to not delete the binary until we have downloaded the new binary!
-                try:
-                    remove(path.join(getcwd(), "PluginLoader"))
-                except:
-                    pass
-                with open(path.join(getcwd(), "PluginLoader"), "wb") as out:
+                with open(path.join(getcwd(), download_temp_filename), "wb") as out:
                     progress = 0
                     raw = 0
                     async for c in res.content.iter_chunked(512):
@@ -186,12 +193,15 @@ class Updater:
             with open(path.join(getcwd(), ".loader.version"), "w", encoding="utf-8") as out:
                 out.write(version)
 
-            call(['chmod', '+x', path.join(getcwd(), "PluginLoader")])
+            if ON_LINUX:
+                remove(path.join(getcwd(), download_filename))
+                shutil.move(path.join(getcwd(), download_temp_filename), path.join(getcwd(), download_filename))
+                chmod(path.join(getcwd(), download_filename), 777, False)
+
             logger.info("Updated loader installation.")
             await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)
             await self.do_restart()
             await tab.close_websocket()
 
     async def do_restart(self):
-        call(["systemctl", "daemon-reload"])
-        call(["systemctl", "restart", "plugin_loader"])
+        await service_restart("plugin_loader")

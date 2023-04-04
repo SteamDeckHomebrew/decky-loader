@@ -24,7 +24,7 @@
     "husky": "^8.0.3",
     "i18next-parser": "^7.7.0",
     "import-sort-style-module": "^6.0.0",
-    "inquirer": "^8.2.5",
+    "inquirer": "^9.1.4",
     "prettier": "^2.8.4",
     "prettier-plugin-import-sort": "^0.0.7",
     "react": "16.14.0",

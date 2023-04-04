@@ -3,7 +3,7 @@
   <br>
   Decky Loader
   <br>
-  <a name="logo" href="https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/decky_installer.desktop"><img src="./docs/images/download_button.svg"  alt="Download decky" width="350"></a>
+  <a name="download button" href="https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/decky_installer.desktop"><img src="./docs/images/download_button.svg"  alt="Download decky" width="350px" style="padding-top: 15px;"></a>
 </h1>
 
 <p align="center">

@@ -181,30 +181,30 @@ class Utilities:
         await service_stop(helpers.REMOTE_DEBUGGER_UNIT)
         return True
 
-    async def filepicker_ls(self, path, include_files=True):
+    async def filepicker_ls(self, path, include_files : bool = True, max : int = 1000, page : int = 1):
         # def sorter(file): # Modification time
         #     if os.path.isdir(os.path.join(path, file)) or os.path.isfile(os.path.join(path, file)):
         #         return os.path.getmtime(os.path.join(path, file))
         #     return 0
         # file_names = sorted(os.listdir(path), key=sorter, reverse=True) # TODO provide more sort options
-        file_names = sorted(os.listdir(path)) # Alphabetical
 
-        files = []
+        items = list(os.scandir(path))
+        files = sorted([x for x in items if x.is_file()], key=lambda x: x.name)
+        folders = sorted([x for x in items if x.is_dir()], key=lambda x: x.name)
 
-        for file in file_names:
-            full_path = os.path.join(path, file)
-            is_dir = os.path.isdir(full_path)
-
-            if is_dir or include_files:
-                files.append({
-                    "isdir": is_dir,
-                    "name": file,
-                    "realpath": os.path.realpath(full_path)
-                })
+        def to_dict(entry : os.DirEntry[str], is_dir : bool):
+            return {
+                "isdir": is_dir,
+                "name": entry.name,
+                "realpath": os.path.realpath(entry.path)
+            }
+        
+        all = [to_dict(x, True) for x in folders] + ([to_dict(x, False) for x in files] if include_files else [])
 
         return {
             "realpath": os.path.realpath(path),
-            "files": files
+            "files": all[(page-1)*max:(page)*max],
+            "total": len(items)
         }
 
     # Based on https://stackoverflow.com/a/46422554/13174603

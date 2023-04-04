@@ -111,7 +111,7 @@ class Tab:
             "method": "Page.disable",
         }, False)
 
-    async def refresh(self):
+    async def refresh(self, manage_socket=True):
         try:
             if manage_socket:
                 await self.open_websocket()

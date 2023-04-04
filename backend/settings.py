@@ -52,7 +52,7 @@ class SettingsManager:
         with open(self.path, "w+", encoding="utf-8") as file:
             dump(self.settings, file, indent=4, ensure_ascii=False)
 
-    def getSetting(self, key, default):
+    def getSetting(self, key, default=None):
         return self.settings.get(key, default)
 
     def setSetting(self, key, value):

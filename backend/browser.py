@@ -12,12 +12,12 @@ from io import BytesIO
 from logging import getLogger
 from os import R_OK, W_OK, path, rename, listdir, access, mkdir
 from shutil import rmtree
-from subprocess import call
 from time import time
 from zipfile import ZipFile
+from localplatform import chown, chmod
 
 # Local modules
-from helpers import get_ssl_context, get_user, get_user_group, download_remote_binary_to_path
+from helpers import get_ssl_context, download_remote_binary_to_path
 from injector import get_gamepadui_tab
 
 logger = getLogger("Browser")
@@ -30,10 +30,11 @@ class PluginInstallContext:
         self.hash = hash
 
 class PluginBrowser:
-    def __init__(self, plugin_path, plugins, loader) -> None:
+    def __init__(self, plugin_path, plugins, loader, settings) -> None:
         self.plugin_path = plugin_path
         self.plugins = plugins
         self.loader = loader
+        self.settings = settings
         self.install_requests = {}
 
     def _unzip_to_plugin_dir(self, zip, name, hash):
@@ -43,10 +44,9 @@ class PluginBrowser:
         zip_file = ZipFile(zip)
         zip_file.extractall(self.plugin_path)
         plugin_dir = path.join(self.plugin_path, self.find_plugin_folder(name))
-        code_chown = call(["chown", "-R", get_user()+":"+get_user_group(), plugin_dir])
-        code_chmod = call(["chmod", "-R", "555", plugin_dir])
-        if code_chown != 0 or code_chmod != 0:
-            logger.error(f"chown/chmod exited with a non-zero exit code (chown: {code_chown}, chmod: {code_chmod})")
+
+        if not chown(plugin_dir) or not chmod(plugin_dir, 555):
+            logger.error(f"chown/chmod exited with a non-zero exit code")
             return False
         return True
     
@@ -61,14 +61,14 @@ class PluginBrowser:
                     packageJson = json.load(f)
                     if "remote_binary" in packageJson and len(packageJson["remote_binary"]) > 0:
                         # create bin directory if needed.
-                        rc=call(["chmod", "-R", "777", pluginBasePath])
+                        chmod(pluginBasePath, 777)
                         if access(pluginBasePath, W_OK):
                             
                             if not path.exists(pluginBinPath):
                                 mkdir(pluginBinPath)
                             
                             if not access(pluginBinPath, W_OK):
-                                rc=call(["chmod", "-R", "777", pluginBinPath])
+                                chmod(pluginBinPath, 777)
 
                         rv = True
                         for remoteBinary in packageJson["remote_binary"]:
@@ -80,8 +80,8 @@ class PluginBrowser:
                                 rv = False
                                 raise Exception(f"Error Downloading Remote Binary {binName}@{binURL} with hash {binHash} to {path.join(pluginBinPath, binName)}")
 
-                        code_chown = call(["chown", "-R", get_user()+":"+get_user_group(), self.plugin_path])
-                        rc=call(["chmod", "-R", "555", pluginBasePath])
+                        chown(self.plugin_path)
+                        chmod(pluginBasePath, 555)
                     else:
                         rv = True
                         logger.debug(f"No Remote Binaries to Download")
@@ -124,6 +124,10 @@ class PluginBrowser:
                 logger.debug("Plugin %s was stopped", name)
                 del self.plugins[name]
                 logger.debug("Plugin %s was removed from the dictionary", name)
+                current_plugin_order = self.settings.getSetting("pluginOrder")
+                current_plugin_order.remove(name)
+                self.settings.setSetting("pluginOrder", current_plugin_order)
+                logger.debug("Plugin %s was removed from the pluginOrder setting", name)
             logger.debug("removing files %s" % str(name))
             rmtree(plugin_dir)
         except FileNotFoundError:
@@ -171,6 +175,11 @@ class PluginBrowser:
                             self.loader.plugins[name].stop()
                             self.loader.plugins.pop(name, None)
                         await sleep(1)
+                        
+                        current_plugin_order = self.settings.getSetting("pluginOrder")
+                        current_plugin_order.append(name)
+                        self.settings.setSetting("pluginOrder", current_plugin_order)
+                        logger.debug("Plugin %s was added to the pluginOrder setting", name)
                         self.loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_folder)
                     else:
                         logger.fatal(f"Failed Downloading Remote Binaries")

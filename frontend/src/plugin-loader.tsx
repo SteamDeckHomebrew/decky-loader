@@ -24,8 +24,6 @@ import { getSetting } from './utils/settings';
 const StorePage = lazy(() => import('./components/store/Store'));
 const SettingsPage = lazy(() => import('./components/settings'));
 
-//const { t } = useTranslation();
-
 const FilePicker = lazy(() => import('./components/modals/filepicker'));
 
 class PluginLoader extends Logger {
@@ -175,6 +173,12 @@ class PluginLoader extends Logger {
   public init() {
     getSetting('developer.enabled', false).then((val) => {
       if (val) import('./developer').then((developer) => developer.startup());
+    });
+
+    //* Grab and set plugin order
+    getSetting<string[]>('pluginOrder', []).then((pluginOrder) => {
+      console.log(pluginOrder);
+      this.deckyState.setPluginOrder(pluginOrder);
     });
   }
 

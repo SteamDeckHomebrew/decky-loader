@@ -13,7 +13,6 @@ from watchdog.observers import Observer
 from injector import get_tab, get_gamepadui_tab
 from plugin import PluginWrapper
 
-
 class FileChangeHandler(RegexMatchingEventHandler):
     def __init__(self, queue, plugin_path) -> None:
         super().__init__(regexes=[r'^.*?dist\/index\.js$', r'^.*?main\.py$'])

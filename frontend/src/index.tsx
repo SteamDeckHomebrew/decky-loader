@@ -85,6 +85,7 @@ declare global {
       if (!window.DeckyPluginLoader.hasPlugin(plugin.name))
         window.DeckyPluginLoader?.importPlugin(plugin.name, plugin.version);
     }
+
     window.DeckyPluginLoader.checkPluginUpdates();
   };
 

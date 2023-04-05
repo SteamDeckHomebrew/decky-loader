@@ -188,23 +188,23 @@ class Utilities:
         #     return 0
         # file_names = sorted(os.listdir(path), key=sorter, reverse=True) # TODO provide more sort options
 
-        items = list(os.scandir(path))
-        files = sorted([x for x in items if x.is_file()], key=lambda x: x.name)
-        folders = sorted([x for x in items if x.is_dir()], key=lambda x: x.name)
+        realpath = os.path.realpath(path)
+        files, folders = [], []
 
-        def to_dict(entry : os.DirEntry[str], is_dir : bool):
-            return {
-                "isdir": is_dir,
-                "name": entry.name,
-                "realpath": os.path.realpath(entry.path)
-            }
-        
-        all = [to_dict(x, True) for x in folders] + ([to_dict(x, False) for x in files] if include_files else [])
+        for x in os.scandir(realpath):
+            if x.is_dir():
+                folders.append(x)
+            elif include_files:
+                files.append(x)
+
+        files = sorted(files, key=lambda x: x.name)
+        folders = sorted(folders, key=lambda x: x.name)
+        all = [{ "isdir": x.is_dir(), "name": x.name, "realpath": x.path } for x in folders + files]
 
         return {
-            "realpath": os.path.realpath(path),
+            "realpath": realpath,
             "files": all[(page-1)*max:(page)*max],
-            "total": len(items)
+            "total": len(all)
         }
 
     # Based on https://stackoverflow.com/a/46422554/13174603

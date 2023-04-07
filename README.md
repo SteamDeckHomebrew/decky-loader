@@ -36,13 +36,12 @@ For more information about Decky Loader as well as documentation and development
 - Crankshaft is incompatible with Decky Loader. If you are using Crankshaft, please uninstall it before installing Decky Loader.
 - Syncthing may use port 8080 on Steam Deck, which Decky Loader needs to function. If you are using Syncthing as a service, please change its port to something else.
 - If you are using any software that uses port 1337 or 8080, please change its port to something else or uninstall it.
-- If you run the installer and it just opens a file in a text editor: click the (...) button in the top right of dolphin (the file manager) then 'configure' and 'configure dolphin'. Click on the 'confirmations' tab and set 'when opening an executable file' to 'run script'.
 
 ## 💾 Installation
 - This installation can be done without an admin/sudo password set.
 1. Prepare a mouse and keyboard if possible.
    - Keyboards and mice can be connected to the Steam Deck via USB-C or Bluetooth.
-   - Many Bluetooth keyboard and mouse apps are available for iOS and Android.
+   - Many Bluetooth keyboard and mouse apps are available for iOS and Android. (KDE connect is preinstalled on the steam deck)
    - The Steam Link app is available on [Windows](https://media.steampowered.com/steamlink/windows/latest/SteamLink.zip), [macOS](https://apps.apple.com/us/app/steam-link/id1246969117), and [Linux](https://flathub.org/apps/details/com.valvesoftware.SteamLink). It works well as a remote desktop substitute.
    - If you have no other options, use the right trackpad as a mouse and press <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16>+<img src="./docs/images/light/x.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/x.svg#gh-light-mode-only" height=16> to open the on-screen keyboard as needed.
 1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Power menu.

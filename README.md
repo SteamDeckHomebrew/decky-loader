@@ -50,7 +50,7 @@ For more information about Decky Loader as well as documentation and development
 1. Navigate to this Github page on a browser of your choice.
 1. Download the [installer file](https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/decky_installer.desktop)
 1. Drag the file onto your desktop and double click it to run it.
-1. Either type your admin password or allow Decky to temporarily set your password to `Decky!` (this will be removed after the installer finishes)
+1. Either type your admin password or allow Decky to temporarily set your admin password to `Decky!` (this password will be removed after the installer finishes)
 1. Choose the version of Decky Loader you want to install.
    - **Latest Release**  
      Intended for most users. This is the latest stable version of Decky Loader.  

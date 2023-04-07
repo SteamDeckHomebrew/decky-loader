@@ -48,14 +48,14 @@ For more information about Decky Loader as well as documentation and development
 1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Power menu.
 1. Select "Switch to Desktop".
 1. Navigate to this Github page on a browser of your choice.
-1. Press the 'Download' button at the top of the page.
-1. Run the downloaded file by clicking on it in Dolphin (the file manager).
-1. Either type your admin password or allow Decky to temporarily set your password to `Decky!`
+1. Download the [installer file](https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/decky_installer.desktop)
+1. Drag the file onto your desktop and double click it to run it.
+1. Either type your admin password or allow Decky to temporarily set your password to `Decky!` (this will be removed after the installer finishes)
 1. Choose the version of Decky Loader you want to install.
    - **Latest Release**  
      Intended for most users. This is the latest stable version of Decky Loader.  
    - **Latest Pre-Release**  
-     Intended for plugin developers. Pre-releases are unlikely to be fully stable but contain the latest changes. For more information on plugin development, please consult [the wiki page](https://deckbrew.xyz/en/loader-dev/development).
+     Intended for plugin developers. Pre-releases are unlikely to be fully stable but contain the latest changes. For more information on plugin development, please consult [the wiki page](https://wiki.deckbrew.xyz/en/loader-dev/development).
 1. Open the Return to Gaming Mode shortcut on your desktop.
 
 - There is also a fast install for those who can use Konsole. Run `curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/install_release.sh | sh` and type your password when prompted.

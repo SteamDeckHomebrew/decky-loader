@@ -395,6 +395,7 @@ async def get_tab_lambda(test) -> Tab:
     return tab
 
 SHARED_CTX_NAMES = ["SharedJSContext", "Steam Shared Context presented by Valve™", "Steam", "SP"]
+DO_NOT_CLOSE_URL = "Valve Steam Gamepad/default" # Steam Big Picture Mode tab
 
 def tab_is_gamepadui(t: Tab) -> bool:
     return "https://steamloopback.host/routes/" in t.url and t.title in SHARED_CTX_NAMES
@@ -414,7 +415,7 @@ async def inject_to_tab(tab_name, js, run_async=False):
 async def close_old_tabs():
     tabs = await get_tabs()
     for t in tabs:
-        if not t.title or t.title not in SHARED_CTX_NAMES:
+        if not t.title or (t.title not in SHARED_CTX_NAMES and DO_NOT_CLOSE_URL not in t.url):
             logger.debug("Closing tab: " + getattr(t, "title", "Untitled"))
             await t.close()
             await sleep(0.5)

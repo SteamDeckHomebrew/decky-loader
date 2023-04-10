@@ -10,14 +10,23 @@ import {
   showContextMenu,
 } from 'decky-frontend-lib';
 import { useEffect, useState } from 'react';
-import { FaDownload, FaEllipsisH } from 'react-icons/fa';
+import { FaDownload, FaEllipsisH, FaRecycle } from 'react-icons/fa';
 
-import { StorePluginVersion, requestPluginInstall } from '../../../../store';
+import { StorePluginVersion, getPluginList, requestPluginInstall } from '../../../../store';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 import { useDeckyState } from '../../../DeckyState';
 
 function labelToName(pluginLabel: string, pluginVersion?: string): string {
   return pluginVersion ? pluginLabel.substring(0, pluginLabel.indexOf(` - ${pluginVersion}`)) : pluginLabel;
+}
+
+async function reinstallPlugin(pluginName: string, currentVersion?: string) {
+  const serverData = await getPluginList();
+  const remotePlugin = serverData?.find((x) => x.name == pluginName);
+  if (remotePlugin && remotePlugin.versions?.length > 0) {
+    const currentVersionData = remotePlugin.versions.find((version) => version.name == currentVersion);
+    if (currentVersionData) requestPluginInstall(pluginName, currentVersionData);
+  }
 }
 
 function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
@@ -36,7 +45,7 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
 
   return (
     <>
-      {data?.update && (
+      {data?.update ? (
         <DialogButton
           style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
           onClick={() => requestPluginInstall(pluginName, data?.update as StorePluginVersion)}
@@ -45,6 +54,17 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
           <div style={{ display: 'flex', flexDirection: 'row' }}>
             Update to {data?.update?.name}
             <FaDownload style={{ paddingLeft: '2rem' }} />
+          </div>
+        </DialogButton>
+      ) : (
+        <DialogButton
+          style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
+          onClick={() => reinstallPlugin(pluginName, data?.version)}
+          onOKButton={() => reinstallPlugin(pluginName, data?.version)}
+        >
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
+            Reinstall
+            <FaRecycle style={{ paddingLeft: '5.3rem' }} />
           </div>
         </DialogButton>
       )}

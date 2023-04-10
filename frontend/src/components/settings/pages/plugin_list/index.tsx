@@ -10,22 +10,34 @@ import {
   showContextMenu,
 } from 'decky-frontend-lib';
 import { useEffect, useState } from 'react';
-import { FaDownload, FaEllipsisH } from 'react-icons/fa';
+import { FaDownload, FaEllipsisH, FaRecycle } from 'react-icons/fa';
 
-import { StorePluginVersion, requestPluginInstall } from '../../../../store';
+import { StorePluginVersion, getPluginList, requestPluginInstall } from '../../../../store';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 import { useDeckyState } from '../../../DeckyState';
 
+function labelToName(pluginLabel: string, pluginVersion?: string): string {
+  return pluginVersion ? pluginLabel.substring(0, pluginLabel.indexOf(` - ${pluginVersion}`)) : pluginLabel;
+}
+
+async function reinstallPlugin(pluginName: string, currentVersion?: string) {
+  const serverData = await getPluginList();
+  const remotePlugin = serverData?.find((x) => x.name == pluginName);
+  if (remotePlugin && remotePlugin.versions?.length > 0) {
+    const currentVersionData = remotePlugin.versions.find((version) => version.name == currentVersion);
+    if (currentVersionData) requestPluginInstall(pluginName, currentVersionData);
+  }
+}
+
 function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
   const data = props.entry.data;
+  let pluginName = labelToName(props.entry.label, data?.version);
 
   const showCtxMenu = (e: MouseEvent | GamepadEvent) => {
     showContextMenu(
       <Menu label="Plugin Actions">
-        <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(props.entry.label, data?.version)}>
-          Reload
-        </MenuItem>
-        <MenuItem onSelected={() => window.DeckyPluginLoader.uninstallPlugin(props.entry.label)}>Uninstall</MenuItem>
+        <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(pluginName, data?.version)}>Reload</MenuItem>
+        <MenuItem onSelected={() => window.DeckyPluginLoader.uninstallPlugin(pluginName)}>Uninstall</MenuItem>
       </Menu>,
       e.currentTarget ?? window,
     );
@@ -33,15 +45,26 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
 
   return (
     <>
-      {data?.update && (
+      {data?.update ? (
         <DialogButton
           style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
-          onClick={() => requestPluginInstall(props.entry.label, data?.update as StorePluginVersion)}
-          onOKButton={() => requestPluginInstall(props.entry.label, data?.update as StorePluginVersion)}
+          onClick={() => requestPluginInstall(pluginName, data?.update as StorePluginVersion)}
+          onOKButton={() => requestPluginInstall(pluginName, data?.update as StorePluginVersion)}
         >
           <div style={{ display: 'flex', flexDirection: 'row' }}>
             Update to {data?.update?.name}
             <FaDownload style={{ paddingLeft: '2rem' }} />
+          </div>
+        </DialogButton>
+      ) : (
+        <DialogButton
+          style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
+          onClick={() => reinstallPlugin(pluginName, data?.version)}
+          onOKButton={() => reinstallPlugin(pluginName, data?.version)}
+        >
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
+            Reinstall
+            <FaRecycle style={{ paddingLeft: '5.3rem' }} />
           </div>
         </DialogButton>
       )}
@@ -78,7 +101,7 @@ export default function PluginList() {
     setPluginEntries(
       plugins.map((plugin) => {
         return {
-          label: plugin.name,
+          label: plugin.version ? `${plugin.name} - ${plugin.version}` : plugin.name,
           data: {
             update: updates?.get(plugin.name),
             version: plugin.version,
@@ -98,7 +121,7 @@ export default function PluginList() {
   }
 
   function onSave(entries: ReorderableEntry<PluginData>[]) {
-    const newOrder = entries.map((entry) => entry.label);
+    const newOrder = entries.map((entry) => labelToName(entry.label, entry?.data?.version));
     console.log(newOrder);
     setPluginOrder(newOrder);
     setPluginOrderSetting(newOrder);

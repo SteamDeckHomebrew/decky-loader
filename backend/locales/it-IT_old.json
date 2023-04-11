@@ -1,4 +1,11 @@
 {
+  "PluginLoader": {
+    "error": "Errore",
+    "plugin_error_uninstall": "Per rimuovere questo plugin vai su {{-icon}} nel menu di Decky.",
+    "plugin_load_error": {
+      "message": "Errore caricando il plugin {{name}}"
+    }
+  },
   "SettingsGeneralIndex": {
     "developer_mode": {
       "desc": "Abilità le impostazioni di sviluppo di Decky."

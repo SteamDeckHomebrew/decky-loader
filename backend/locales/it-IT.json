@@ -39,17 +39,15 @@
     "list_no_plugin": "Nessun plugin installato!",
     "list_plug_actions_label": "Operazioni sui plugins",
     "list_update_to": "Aggiornamento a {{name}}",
+    "reinstall": "Reinstalla",
     "reload": "Ricarica",
     "uninstall": "Rimuovi"
   },
   "PluginLoader": {
     "decky_title": "Decky",
     "decky_update_available": "Disponibile aggiornamento a {{tag_name}}!",
-    "error": "Errore",
     "file_picker_cancel_text": "Annullato dall'utente",
-    "plugin_error_uninstall": "Per rimuovere questo plugin vai su {{-icon}} nel menu di Decky.",
     "plugin_load_error": {
-      "message": "Errore caricando il plugin {{name}}",
       "toast": "Errore caricando {{name}}"
     },
     "plugin_uninstall": {
@@ -120,7 +118,7 @@
     "store_testing_cta": "Valuta la possibilità di testare nuovi plugin per aiutare il team di Decky Loader!"
   },
   "StoreSelect": {
-    "custom_store":{
+    "custom_store": {
       "label": "Negozio custom",
       "url_label": "URL"
     },

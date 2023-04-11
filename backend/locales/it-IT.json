@@ -61,7 +61,7 @@
   },
   "RemoteDebugging": {
     "remote_cef": {
-      "desc": "Permetti l'accesso non autenticato al debugger di CEF a chiunque sulla tua rete locale.",
+      "desc": "Permetti l'accesso non autenticato al debugger di CEF da tutti gli indirizzi sulla tua rete locale.",
       "label": "Permetti il debug remoto di CEF"
     }
   },
@@ -125,9 +125,9 @@
     "store_channel_label": "Canale del negozio"
   },
   "Updater": {
-    "decky_updates": "Aggiornamenti di Decky",
+    "decky_updates": "Aggiornamento di Decky",
     "no_patch_notes_desc": "nessuna patch notes per questa versione",
-    "patch_notes_desc": "Patch Notes",
+    "patch_notes_desc": "Cambiamenti",
     "updates": {
       "check_button": "Cerca aggiornamenti",
       "checking": "Controllando",

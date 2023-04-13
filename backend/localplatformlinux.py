@@ -51,9 +51,9 @@ def chown(path : str,  user : UserType = UserType.HOST_USER, recursive : bool = 
     user_str = ""
 
     if (user == UserType.HOST_USER):
-        user_str = _get_user()+":"+_get_user_group()
+        user_str = f"{_get_user()}:{_get_user_group()}"
     elif (user == UserType.EFFECTIVE_USER):
-        user_str = _get_effective_user()+":"+_get_effective_user_group()
+        user_str = f"{_get_effective_user()}:{_get_effective_user_group()}"
     else:
         raise Exception("Unknown User Type")
 
@@ -83,9 +83,7 @@ def get_home_path(user : UserType = UserType.HOST_USER) -> str:
         user_name = _get_user()
     elif user == UserType.EFFECTIVE_USER:
         user_name = _get_effective_user()
-    elif user == UserType.ROOT:
-        pass
-    else:
+    elif user != UserType.ROOT:
         raise Exception("Unknown User Type")
 
     return pwd.getpwnam(user_name).pw_dir
@@ -98,11 +96,9 @@ def setgid(user : UserType = UserType.HOST_USER):
 
     if user == UserType.HOST_USER:
         user_id = _get_user_group_id()
-    elif user == UserType.ROOT:
-        pass
-    else:
+    elif user != UserType.ROOT:
         raise Exception("Unknown user type")
-    
+
     os.setgid(user_id)
 
 def setuid(user : UserType = UserType.HOST_USER):
@@ -110,11 +106,9 @@ def setuid(user : UserType = UserType.HOST_USER):
 
     if user == UserType.HOST_USER:
         user_id = _get_user_id()
-    elif user == UserType.ROOT:
-        pass
-    else:
+    elif user != UserType.ROOT:
         raise Exception("Unknown user type")
-    
+
     os.setuid(user_id)
 
 async def service_active(service_name : str) -> bool:

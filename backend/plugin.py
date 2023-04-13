@@ -88,19 +88,19 @@ class PluginWrapper:
             get_event_loop().create_task(self.socket.setup_server())
             get_event_loop().run_forever()
         except:
-            self.log.error("Failed to start " + self.name + "!\n" + format_exc())
+            self.log.error(f"Failed to start {self.name}" + "!\n" + format_exc())
             exit(0)
 
     async def _unload(self):
         try:
-            self.log.info("Attempting to unload with plugin " + self.name + "'s \"_unload\" function.\n")
+            self.log.info(f"Attempting to unload with plugin {self.name}" + "'s \"_unload\" function.\n")
             if hasattr(self.Plugin, "_unload"):
                 await self.Plugin._unload(self.Plugin)
-                self.log.info("Unloaded " + self.name + "\n")
+                self.log.info(f"Unloaded {self.name}" + "\n")
             else:
                 self.log.info("Could not find \"_unload\" in " + self.name + "'s main.py" + "\n")
         except:
-            self.log.error("Failed to unload " + self.name + "!\n" + format_exc())
+            self.log.error(f"Failed to unload {self.name}" + "!\n" + format_exc())
             exit(0)
 
     async def _on_new_message(self, message : str) -> str|None:

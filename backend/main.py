@@ -53,7 +53,7 @@ def chown_plugin_dir():
         mkdir_as_user(CONFIG["plugin_path"])
 
     if not chown(CONFIG["plugin_path"], UserType.HOST_USER) or not chmod(CONFIG["plugin_path"], 555):
-        logger.error(f"chown/chmod exited with a non-zero exit code")
+        logger.error("chown/chmod exited with a non-zero exit code")
 
 if CONFIG["chown_plugin_path"] == True:
     chown_plugin_dir()
@@ -109,9 +109,9 @@ class PluginManager:
         logger.debug("Loading plugins")
         self.plugin_loader.import_plugins()
         # await inject_to_tab("SP", "window.syncDeckyPlugins();")
-        if self.settings.getSetting("pluginOrder", None) == None:
-          self.settings.setSetting("pluginOrder", list(self.plugin_loader.plugins.keys()))
-          logger.debug("Did not find pluginOrder setting, set it to default")
+        if self.settings.getSetting("pluginOrder", None) is None:
+            self.settings.setSetting("pluginOrder", list(self.plugin_loader.plugins.keys()))
+            logger.debug("Did not find pluginOrder setting, set it to default")
 
     async def loader_reinjector(self):
         while True:
@@ -125,12 +125,10 @@ class PluginManager:
                     if not dc:
                         logger.debug("Couldn't connect to debugger, waiting...")
                         dc = True
-                    pass
                 except ValueError:
                     if not nf:
                         logger.debug("Couldn't find GamepadUI tab, waiting...")
                         nf = True
-                    pass
                 if not tab:
                     await sleep(5)
             await tab.open_websocket()
@@ -153,9 +151,8 @@ class PluginManager:
                 logger.info("CEF has disconnected...")
                 # At this point the loop starts again and we connect to the freshly started Steam client once it is ready.
             except Exception as e:
-                logger.error("Exception while reading page events " + format_exc())
+                logger.error(f"Exception while reading page events {format_exc()}")
                 await tab.close_websocket()
-                pass
         # while True:
         #     await sleep(5)
         #     if not await tab.has_global_var("deckyHasLoaded", False):
@@ -171,7 +168,6 @@ class PluginManager:
             await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => location.reload(), 100)}else{window.deckyHasLoaded = true;(async()=>{try{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js')}catch(e){console.error(e)};})();}}catch(e){console.error(e)}", False, False, False)
         except:
             logger.info("Failed to inject JavaScript into tab\n" + format_exc())
-            pass
 
     def run(self):
         return run_app(self.web_app, host=CONFIG["server_host"], port=CONFIG["server_port"], loop=self.loop, access_log=None)

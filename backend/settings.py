@@ -9,10 +9,10 @@ from helpers import get_homebrew_path
 class SettingsManager:
     def __init__(self, name, settings_directory = None) -> None:
         wrong_dir = get_homebrew_path()
-        if settings_directory == None:
+        if settings_directory is None:
             settings_directory = path.join(wrong_dir, "settings")
 
-        self.path = path.join(settings_directory, name + ".json")
+        self.path = path.join(settings_directory, f"{name}.json")
 
         #Create the folder with the correct permission
         if not path.exists(settings_directory):
@@ -23,8 +23,8 @@ class SettingsManager:
         for file in listdir(wrong_dir):
             if file.endswith(".json"):
                 rename(path.join(wrong_dir,file),
-                       path.join(settings_directory, file)) 
-                self.path = path.join(settings_directory, name + ".json")
+                       path.join(settings_directory, file))
+                self.path = path.join(settings_directory, f"{name}.json")
 
 
         #If the owner of the settings directory is not the user, then set it as the user:
@@ -38,7 +38,6 @@ class SettingsManager:
             open(self.path, "x", encoding="utf-8")
         except FileExistsError as e:
             self.read()
-            pass
 
     def read(self):
         try:
@@ -46,7 +45,6 @@ class SettingsManager:
                 self.settings = load(file)
         except Exception as e:
             print(e)
-            pass
 
     def commit(self):
         with open(self.path, "w+", encoding="utf-8") as file:

@@ -101,7 +101,7 @@ class Loader:
 
     async def get_plugins(self, request):
         plugins = list(self.plugins.values())
-        return web.json_response([{"name": str(i) if not i.legacy else "$LEGACY_"+str(i), "version": i.version} for i in plugins])
+        return web.json_response([{"name": f"$LEGACY_{str(i)}" if i.legacy else str(i), "version": i.version} for i in plugins])
 
     def handle_plugin_frontend_assets(self, request):
         plugin = self.plugins[request.match_info["plugin_name"]]
@@ -119,18 +119,18 @@ class Loader:
         try:
             plugin = PluginWrapper(file, plugin_directory, self.plugin_path)
             if plugin.name in self.plugins:
-                    if not "debug" in plugin.flags and refresh:
-                        self.logger.info(f"Plugin {plugin.name} is already loaded and has requested to not be re-loaded")
-                        return
-                    else:
-                        self.plugins[plugin.name].stop()
-                        self.plugins.pop(plugin.name, None)
+                if "debug" not in plugin.flags and refresh:
+                    self.logger.info(f"Plugin {plugin.name} is already loaded and has requested to not be re-loaded")
+                    return
+                else:
+                    self.plugins[plugin.name].stop()
+                    self.plugins.pop(plugin.name, None)
             if plugin.passive:
                 self.logger.info(f"Plugin {plugin.name} is passive")
             self.plugins[plugin.name] = plugin.start()
             self.logger.info(f"Loaded {plugin.name}")
             if not batch:
-                self.loop.create_task(self.dispatch_plugin(plugin.name if not plugin.legacy else "$LEGACY_" + plugin.name, plugin.version))
+                self.loop.create_task(self.dispatch_plugin(f"$LEGACY_{plugin.name}" if plugin.legacy else plugin.name, plugin.version))
         except Exception as e:
             self.logger.error(f"Could not load {file}. {e}")
             print_exc()

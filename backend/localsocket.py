@@ -20,24 +20,23 @@ class UnixSocket:
         self.socket = await asyncio.start_unix_server(self._listen_for_method_call, path=self.socket_addr, limit=BUFFER_LIMIT)
     
     async def _open_socket_if_not_exists(self):
-        if not self.reader:
-            retries = 0
-            while retries < 10:
-                try:
-                    self.reader, self.writer = await asyncio.open_unix_connection(self.socket_addr, limit=BUFFER_LIMIT)
-                    return True
-                except:
-                    await asyncio.sleep(2)
-                    retries += 1
-            return False
-        else:
+        if self.reader:
             return True
+        retries = 0
+        while retries < 10:
+            try:
+                self.reader, self.writer = await asyncio.open_unix_connection(self.socket_addr, limit=BUFFER_LIMIT)
+                return True
+            except:
+                await asyncio.sleep(2)
+                retries += 1
+        return False
 
     async def get_socket_connection(self):
-        if not await self._open_socket_if_not_exists():
-            return None, None
-        
-        return self.reader, self.writer
+        if await self._open_socket_if_not_exists():
+            return self.reader, self.writer
+
+        return None, None
     
     async def close_socket_connection(self):
         if self.writer != None:
@@ -48,7 +47,7 @@ class UnixSocket:
     async def read_single_line(self) -> str|None:
         reader, writer = await self.get_socket_connection()
 
-        if self.reader == None:
+        if self.reader is None:
             return None
 
         return await self._read_single_line(reader)
@@ -56,7 +55,7 @@ class UnixSocket:
     async def write_single_line(self, message : str):
         reader, writer = await self.get_socket_connection()
 
-        if self.writer == None:
+        if self.writer is None:
             return;
 
         await self._write_single_line(writer, message)
@@ -111,18 +110,17 @@ class PortSocket (UnixSocket):
         self.socket = await asyncio.start_server(self._listen_for_method_call, host=self.host, port=self.port, limit=BUFFER_LIMIT)
     
     async def _open_socket_if_not_exists(self):
-        if not self.reader:
-            retries = 0
-            while retries < 10:
-                try:
-                    self.reader, self.writer = await asyncio.open_connection(host=self.host, port=self.port, limit=BUFFER_LIMIT)
-                    return True
-                except:
-                    await asyncio.sleep(2)
-                    retries += 1
-            return False
-        else:
+        if self.reader:
             return True
+        retries = 0
+        while retries < 10:
+            try:
+                self.reader, self.writer = await asyncio.open_connection(host=self.host, port=self.port, limit=BUFFER_LIMIT)
+                return True
+            except:
+                await asyncio.sleep(2)
+                retries += 1
+        return False
 
 if ON_WINDOWS:
     class LocalSocket (PortSocket): 

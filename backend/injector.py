@@ -76,7 +76,7 @@ class Tab:
     async def has_global_var(self, var_name, manage_socket=True):
         res = await self.evaluate_js(f"window['{var_name}'] !== null && window['{var_name}'] !== undefined", False, manage_socket)
 
-        if not "result" in res or not "result" in res["result"] or not "value" in res["result"]["result"]:
+        if "result" not in res or "result" not in res["result"] or "value" not in res["result"]["result"]:
             return False
 
         return res["result"]["result"]["value"]
@@ -154,10 +154,10 @@ class Tab:
             }, True)
 
             logger.info(breakpoint_res)
-            
+
             # Page finishes loading when breakpoint hits
 
-            for x in range(20):
+            for _ in range(20):
                 # this works around 1/5 of the time, so just send it 8 times.
                 # the js accounts for being injected multiple times allowing only one instance to run at a time anyway
                 await self._send_devtools_cmd({
@@ -176,7 +176,7 @@ class Tab:
                 }
             }, False)
 
-            for x in range(4):
+            for _ in range(4):
                 await self._send_devtools_cmd({
                     "method": "Debugger.resume"
                 }, False)
@@ -281,7 +281,7 @@ class Tab:
     async def has_element(self, element_name, manage_socket=True):
         res = await self.evaluate_js(f"document.getElementById('{element_name}') != null", False, manage_socket)
 
-        if not "result" in res or not "result" in res["result"] or not "value" in res["result"]["result"]:
+        if "result" not in res or "result" not in res["result"] or "value" not in res["result"]["result"]:
             return False
 
         return res["result"]["result"]["value"]
@@ -373,11 +373,10 @@ async def get_tabs() -> List[Tab]:
         else:
             break
 
-    if res.status == 200:
-        r = await res.json()
-        return [Tab(i) for i in r]
-    else:
+    if res.status != 200:
         raise Exception(f"/json did not return 200. {await res.text()}")
+    r = await res.json()
+    return [Tab(i) for i in r]
 
 
 async def get_tab(tab_name) -> Tab:

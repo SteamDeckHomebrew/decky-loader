@@ -38,7 +38,7 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
   const showCtxMenu = (e: MouseEvent | GamepadEvent) => {
     showContextMenu(
       <Menu label={t('PluginListIndex.list_plug_actions_label')}>
-        <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(props.entry.label, data?.version)}>
+        <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(pluginName, data?.version)}>
           {t('PluginListIndex.reload')}
         </MenuItem>
         <MenuItem

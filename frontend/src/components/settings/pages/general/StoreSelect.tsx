@@ -26,7 +26,7 @@ const StoreSelect: FunctionComponent<{}> = () => {
       <Field label={t('StoreSelect.store_channel.label')} childrenContainerWidth={'fixed'}>
         <Dropdown
           rgOptions={Object.values(Store)
-            .filter((store) => typeof store == 'string')
+            .filter((store) => typeof store == 'number')
             .map((store) => ({
               label: tStores[store],
               data: Store[store],

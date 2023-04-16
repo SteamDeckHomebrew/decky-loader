@@ -16,6 +16,11 @@ enum UpdateBranch {
 
 const BranchSelect: FunctionComponent<{}> = () => {
   const { t } = useTranslation();
+  var tBranches = [
+    t('BranchSelect.update_channel.stable'),
+    t('BranchSelect.update_channel.prerelease'),
+    t('BranchSelect.update_channel.testing'),
+  ];
   const [selectedBranch, setSelectedBranch] = useSetting<UpdateBranch>('branch', UpdateBranch.Prerelease);
 
   return (
@@ -26,7 +31,7 @@ const BranchSelect: FunctionComponent<{}> = () => {
         rgOptions={Object.values(UpdateBranch)
           .filter((branch) => typeof branch == 'string')
           .map((branch) => ({
-            label: branch,
+            label: tBranches[branch],
             data: UpdateBranch[branch],
           }))}
         selectedOption={selectedBranch}

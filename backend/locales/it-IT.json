@@ -1,7 +1,10 @@
 {
   "BranchSelect": {
     "update_channel": {
-      "label": "Canale di aggiornamento"
+      "label": "Canale di aggiornamento",
+      "prerelease": "Prerilascio",
+      "stable": "Stabile",
+      "testing": "In prova"
     }
   },
   "Developer": {
@@ -122,7 +125,12 @@
       "label": "Negozio custom",
       "url_label": "URL"
     },
-    "store_channel_label": "Canale del negozio"
+    "store_channel": {
+      "custom": "Personalizzato",
+      "default": "Default",
+      "label": "Canale del negozio",
+      "testing": "In prova"
+    }
   },
   "Updater": {
     "decky_updates": "Aggiornamento di Decky",

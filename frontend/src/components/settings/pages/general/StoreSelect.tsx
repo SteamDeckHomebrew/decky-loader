@@ -13,17 +13,22 @@ const StoreSelect: FunctionComponent<{}> = () => {
   const [selectedStore, setSelectedStore] = useSetting<Store>('store', Store.Default);
   const [selectedStoreURL, setSelectedStoreURL] = useSetting<string | null>('store-url', null);
   const { t } = useTranslation();
+  var tStores = [
+    t('StoreSelect.store_channel.default'),
+    t('StoreSelect.store_channel.testing'),
+    t('StoreSelect.store_channel.custom'),
+  ];
 
   // Returns numerical values from 0 to 2 (with current branch setup as of 8/28/22)
   // 0 being Default, 1 being Testing and 2 being Custom
   return (
     <>
-      <Field label={t('StoreSelect.store_channel_label')} childrenContainerWidth={'fixed'}>
+      <Field label={t('StoreSelect.store_channel.label')} childrenContainerWidth={'fixed'}>
         <Dropdown
           rgOptions={Object.values(Store)
             .filter((store) => typeof store == 'string')
             .map((store) => ({
-              label: store,
+              label: tStores[store],
               data: Store[store],
             }))}
           selectedOption={selectedStore}

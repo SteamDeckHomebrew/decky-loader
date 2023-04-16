@@ -1,7 +1,10 @@
 {
   "BranchSelect": {
     "update_channel": {
-      "label": "Update Channel"
+      "label": "Update Channel",
+      "prerelease": "Prerilascio",
+      "stable": "Stabile",
+      "testing": "MISSING"
     }
   },
   "Developer": {
@@ -121,7 +124,12 @@
       "label": "Custom Store",
       "url_label": "URL"
     },
-    "store_channel_label": "Store Channel"
+    "store_channel": {
+      "custom": "Custom",
+      "default": "Default",
+      "label": "Store Channel",
+      "testing": "Testing"
+    }
   },
   "Updater": {
     "decky_updates": "Decky Updates",

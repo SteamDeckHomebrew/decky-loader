@@ -73,7 +73,7 @@ export async function installFromURL(url: string) {
   });
 }
 
-export async function requestPluginInstall(plugin: string, selectedVer: StorePluginVersion, reinstall = false) {
+export async function requestPluginInstall(plugin: string, selectedVer: StorePluginVersion, reinstall: boolean) {
   const artifactUrl =
     selectedVer.artifact ?? `https://cdn.tzatzikiweeb.moe/file/steam-deck-homebrew/versions/${selectedVer.hash}.zip`;
   await window.DeckyPluginLoader.callServerMethod('install_plugin', {

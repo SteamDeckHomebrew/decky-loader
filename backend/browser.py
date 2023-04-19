@@ -23,12 +23,11 @@ from injector import get_gamepadui_tab
 logger = getLogger("Browser")
 
 class PluginInstallContext:
-    def __init__(self, artifact, name, version, hash, reinstall) -> None:
+    def __init__(self, artifact, name, version, hash) -> None:
         self.artifact = artifact
         self.name = name
         self.version = version
         self.hash = hash
-        self.reinstall = reinstall
 
 class PluginBrowser:
     def __init__(self, plugin_path, plugins, loader, settings) -> None:
@@ -191,12 +190,12 @@ class PluginBrowser:
             else:
                 logger.fatal(f"Could not fetch from URL. {await res.text()}")
 
-    async def request_plugin_install(self, artifact, name, version, hash, reinstall):
+    async def request_plugin_install(self, artifact, name, version, hash, install_type):
         request_id = str(time())
-        self.install_requests[request_id] = PluginInstallContext(artifact, name, version, hash, reinstall)
+        self.install_requests[request_id] = PluginInstallContext(artifact, name, version, hash)
         tab = await get_gamepadui_tab()
         await tab.open_websocket()
-        await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}', '{reinstall}')")
+        await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}', '{install_type}')")
 
     async def confirm_plugin_install(self, request_id):
         request = self.install_requests.pop(request_id)

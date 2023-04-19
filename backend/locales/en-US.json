@@ -42,15 +42,21 @@
       "button_processing": "Reinstalling",
       "desc": "Are you sure you want to reinstall {{artifact}} {{version}}?",
       "title": "Reinstall {{artifact}}"
+    },
+    "update": {
+      "button_idle": "Update",
+      "button_processing": "Updating",
+      "desc": "Are you sure you want to update {{artifact}} {{version}}?",
+      "title": "Update {{name}}"
     }
   },
   "PluginListIndex": {
-    "list_no_plugin": "No plugins installed!",
-    "list_plug_actions_label": "Plugin Actions",
-    "list_update_to": "Update to {{name}}",
+    "no_plugin": "No plugins installed!",
+    "plug_actions_label": "Plugin Actions",
     "reinstall": "Reinstall",
     "reload": "Reload",
-    "uninstall": "Uninstall"
+    "uninstall": "Uninstall",
+    "update_to": "Update to {{name}}"
   },
   "PluginLoader": {
     "decky_title": "Decky",

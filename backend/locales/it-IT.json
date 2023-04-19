@@ -42,15 +42,21 @@
       "button_processing": "Reinstallando",
       "desc": "Sei sicuro di voler reinstallare {{artifact}} {{version}}?",
       "title": "Reinstalla {{artifact}}"
+    },
+    "update": {
+      "button_idle": "Aggiorna",
+      "button_processing": "Aggiornando",
+      "desc": "Sei sicuro di voler aggiornare {{artifact}} {{version}}?",
+      "title": "Aggiorna {{artifact}}"
     }
   },
   "PluginListIndex": {
-    "list_no_plugin": "Nessun plugin installato!",
-    "list_plug_actions_label": "Operazioni sui plugins",
-    "list_update_to": "Aggiornamento a {{name}}",
+    "no_plugin": "Nessun plugin installato!",
+    "plug_actions_label": "Operazioni sui plugins",
     "reinstall": "Reinstalla",
     "reload": "Ricarica",
-    "uninstall": "Rimuovi"
+    "uninstall": "Rimuovi",
+    "update_to": "Aggiorna a {{name}}"
   },
   "PluginLoader": {
     "decky_title": "Decky",

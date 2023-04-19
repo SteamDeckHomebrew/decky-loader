@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaDownload, FaEllipsisH, FaRecycle } from 'react-icons/fa';
 
+import { InstallType } from '../../../../plugin';
 import { StorePluginVersion, getPluginList, requestPluginInstall } from '../../../../store';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 import { useDeckyState } from '../../../DeckyState';
@@ -26,7 +27,7 @@ async function reinstallPlugin(pluginName: string, currentVersion?: string) {
   const remotePlugin = serverData?.find((x) => x.name == pluginName);
   if (remotePlugin && remotePlugin.versions?.length > 0) {
     const currentVersionData = remotePlugin.versions.find((version) => version.name == currentVersion);
-    if (currentVersionData) requestPluginInstall(pluginName, currentVersionData, true);
+    if (currentVersionData) requestPluginInstall(pluginName, currentVersionData, InstallType.REINSTALL);
   }
 }
 
@@ -37,7 +38,7 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
 
   const showCtxMenu = (e: MouseEvent | GamepadEvent) => {
     showContextMenu(
-      <Menu label={t('PluginListIndex.list_plug_actions_label')}>
+      <Menu label={t('PluginListIndex.plug_actions_label')}>
         <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(pluginName, data?.version)}>
           {t('PluginListIndex.reload')}
         </MenuItem>
@@ -63,11 +64,11 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
       {data?.update ? (
         <DialogButton
           style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
-          onClick={() => requestPluginInstall(pluginName, data?.update as StorePluginVersion, false)}
-          onOKButton={() => requestPluginInstall(pluginName, data?.update as StorePluginVersion, false)}
+          onClick={() => requestPluginInstall(pluginName, data?.update as StorePluginVersion, InstallType.UPDATE)}
+          onOKButton={() => requestPluginInstall(pluginName, data?.update as StorePluginVersion, InstallType.UPDATE)}
         >
           <div style={{ display: 'flex', flexDirection: 'row' }}>
-            {t('PluginListIndex.list_update_to', { name: data?.update?.name })}
+            {t('PluginListIndex.update_to', { name: data?.update?.name })}
             <FaDownload style={{ paddingLeft: '2rem' }} />
           </div>
         </DialogButton>
@@ -131,7 +132,7 @@ export default function PluginList() {
   if (plugins.length === 0) {
     return (
       <div>
-        <p>{t('PluginListIndex.list_no_plugin')}</p>
+        <p>{t('PluginListIndex.no_plugin')}</p>
       </div>
     );
   }

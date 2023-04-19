@@ -9,6 +9,7 @@ import {
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { InstallType } from '../../plugin';
 import { StorePlugin, StorePluginVersion, requestPluginInstall } from '../../store';
 
 interface PluginCardProps {
@@ -147,7 +148,9 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
                 <ButtonItem
                   bottomSeparator="none"
                   layout="below"
-                  onClick={() => requestPluginInstall(plugin.name, plugin.versions[selectedOption], false)}
+                  onClick={() =>
+                    requestPluginInstall(plugin.name, plugin.versions[selectedOption], InstallType.INSTALL)
+                  }
                 >
                   <span className="deckyStoreCardInstallText">{t('PluginCard.plugin_install')}</span>
                 </ButtonItem>

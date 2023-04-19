@@ -2,11 +2,13 @@ import { ConfirmModal, Navigation, QuickAccessTab } from 'decky-frontend-lib';
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { InstallType } from '../../plugin';
+
 interface PluginInstallModalProps {
   artifact: string;
   version: string;
   hash: string;
-  reinstall: boolean;
+  installType: InstallType;
   onOK(): void;
   onCancel(): void;
   closeModal?(): void;
@@ -16,13 +18,37 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
   artifact,
   version,
   hash,
-  reinstall,
+  installType,
   onOK,
   onCancel,
   closeModal,
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { t } = useTranslation();
+  var tUpdateTitles = [
+    t('PluginInstallModal.install.title', { artifact: artifact }),
+    t('PluginInstallModal.reinstall.title', { artifact: artifact }),
+    t('PluginInstallModal.update.title', { artifact: artifact }),
+  ];
+
+  var tUpdateDescs = [
+    t('PluginInstallModal.install.desc', { artifact: artifact, version: version }),
+    t('PluginInstallModal.reinstall.desc', { artifact: artifact, version: version }),
+    t('PluginInstallModal.update.desc', { artifact: artifact, version: version }),
+  ];
+
+  var tUpdatesButtonIdle = [
+    t('PluginInstallModal.install.button_idle'),
+    t('PluginInstallModal.reinstall.button_idle'),
+    t('PluginInstallModal.update.button_idle'),
+  ];
+
+  var tUpdatesButtonProc = [
+    t('PluginInstallModal.install.button_processing'),
+    t('PluginInstallModal.reinstall.button_processing'),
+    t('PluginInstallModal.update.button_processing'),
+  ];
+
   return (
     <ConfirmModal
       bOKDisabled={loading}
@@ -36,38 +62,10 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
       onCancel={async () => {
         await onCancel();
       }}
-      strTitle={
-        reinstall
-          ? t('PluginInstallModal.reinstall.title', {
-              artifact: artifact,
-            })
-          : t('PluginInstallModal.install.title', {
-              artifact: artifact,
-            })
-      }
-      strOKButtonText={
-        loading
-          ? reinstall
-            ? t('PluginInstallModal.reinstall.button_processing')
-            : t('PluginInstallModal.install.button_processing')
-          : reinstall
-          ? t('PluginInstallModal.reinstall.button_idle')
-          : t('PluginInstallModal.install.button_idle')
-      }
+      strTitle={tUpdateTitles[installType]}
+      strOKButtonText={loading ? tUpdatesButtonProc[installType] : tUpdatesButtonIdle[installType]}
     >
-      {hash == 'False' ? (
-        <h3 style={{ color: 'red' }}>!!!!NO HASH PROVIDED!!!!</h3>
-      ) : reinstall ? (
-        t('PluginInstallModal.reinstall.desc', {
-          artifact: artifact,
-          version: version,
-        })
-      ) : (
-        t('PluginInstallModal.install.desc', {
-          artifact: artifact,
-          version: version,
-        })
-      )}
+      {hash == 'False' ? <h3 style={{ color: 'red' }}>!!!!NO HASH PROVIDED!!!!</h3> : tUpdateDescs[installType]}
     </ConfirmModal>
   );
 };

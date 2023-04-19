@@ -11,7 +11,7 @@ import NotificationBadge from './components/NotificationBadge';
 import PluginView from './components/PluginView';
 import WithSuspense from './components/WithSuspense';
 import Logger from './logger';
-import { Plugin } from './plugin';
+import { InstallType, Plugin } from './plugin';
 import RouterHook from './router-hook';
 import { deinitSteamFixes, initSteamFixes } from './steamfixes';
 import { checkForUpdates } from './store';
@@ -135,14 +135,14 @@ class PluginLoader extends Logger {
     version: string,
     request_id: string,
     hash: string,
-    reinstall: boolean,
+    installType: InstallType,
   ) {
     showModal(
       <PluginInstallModal
         artifact={artifact}
         version={version}
         hash={hash}
-        reinstall={reinstall}
+        installType={installType}
         onOK={() => this.callServerMethod('confirm_plugin_install', { request_id })}
         onCancel={() => this.callServerMethod('cancel_plugin_install', { request_id })}
       />,

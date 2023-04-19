@@ -130,12 +130,19 @@ class PluginLoader extends Logger {
     }
   }
 
-  public addPluginInstallPrompt(artifact: string, version: string, request_id: string, hash: string) {
+  public addPluginInstallPrompt(
+    artifact: string,
+    version: string,
+    request_id: string,
+    hash: string,
+    reinstall: boolean,
+  ) {
     showModal(
       <PluginInstallModal
         artifact={artifact}
         version={version}
         hash={hash}
+        reinstall={reinstall}
         onOK={() => this.callServerMethod('confirm_plugin_install', { request_id })}
         onCancel={() => this.callServerMethod('cancel_plugin_install', { request_id })}
       />,

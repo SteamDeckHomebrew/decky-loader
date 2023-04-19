@@ -147,7 +147,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
                 <ButtonItem
                   bottomSeparator="none"
                   layout="below"
-                  onClick={() => requestPluginInstall(plugin.name, plugin.versions[selectedOption])}
+                  onClick={() => requestPluginInstall(plugin.name, plugin.versions[selectedOption], false)}
                 >
                   <span className="deckyStoreCardInstallText">{t('PluginCard.plugin_install')}</span>
                 </ButtonItem>

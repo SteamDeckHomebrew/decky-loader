@@ -63,8 +63,8 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
       {data?.update ? (
         <DialogButton
           style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
-          onClick={() => requestPluginInstall(pluginName, data?.update as StorePluginVersion)}
-          onOKButton={() => requestPluginInstall(pluginName, data?.update as StorePluginVersion)}
+          onClick={() => requestPluginInstall(pluginName, data?.update as StorePluginVersion, false)}
+          onOKButton={() => requestPluginInstall(pluginName, data?.update as StorePluginVersion, false)}
         >
           <div style={{ display: 'flex', flexDirection: 'row' }}>
             {t('PluginListIndex.list_update_to', { name: data?.update?.name })}

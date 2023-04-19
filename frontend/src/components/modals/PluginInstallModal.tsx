@@ -2,13 +2,11 @@ import { ConfirmModal, Navigation, QuickAccessTab } from 'decky-frontend-lib';
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { InstallType } from '../../plugin';
-
 interface PluginInstallModalProps {
   artifact: string;
   version: string;
   hash: string;
-  installType: InstallType;
+  installType: number;
   onOK(): void;
   onCancel(): void;
   closeModal?(): void;

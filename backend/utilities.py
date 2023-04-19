@@ -67,7 +67,7 @@ class Utilities:
             name=name,
             version=version,
             hash=hash,
-            install_type=reinstall
+            install_type=install_type
         )
 
     async def confirm_plugin_install(self, request_id):

@@ -23,11 +23,12 @@ from injector import get_gamepadui_tab
 logger = getLogger("Browser")
 
 class PluginInstallContext:
-    def __init__(self, artifact, name, version, hash) -> None:
+    def __init__(self, artifact, name, version, hash, install_type) -> None:
         self.artifact = artifact
         self.name = name
         self.version = version
         self.hash = hash
+        self.install_type = install_type
 
 class PluginBrowser:
     def __init__(self, plugin_path, plugins, loader, settings) -> None:
@@ -192,13 +193,13 @@ class PluginBrowser:
 
     async def request_plugin_install(self, artifact, name, version, hash, install_type):
         request_id = str(time())
-        self.install_requests[request_id] = PluginInstallContext(artifact, name, version, hash)
+        self.install_requests[request_id] = PluginInstallContext(artifact, name, version, hash, install_type)
         tab = await get_gamepadui_tab()
         await tab.open_websocket()
         await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}', '{install_type}')")
 
     async def confirm_plugin_install(self, request_id):
-        request = self.install_requests.pop(request_id)
+        request = self.install_requests.pop(request_id) 
         await self._install(request.artifact, request.name, request.version, request.hash)
 
     def cancel_plugin_install(self, request_id):

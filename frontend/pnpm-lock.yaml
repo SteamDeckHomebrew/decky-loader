@@ -13,9 +13,6 @@ dependencies:
   i18next-http-backend:
     specifier: ^2.2.0
     version: 2.2.0
-  i18next-intervalplural-postprocessor:
-    specifier: ^3.0.0
-    version: 3.0.0
   react-file-icon:
     specifier: ^1.3.0
     version: 1.3.0(react-dom@16.14.0)(react@16.14.0)
@@ -1943,10 +1940,6 @@ packages:
       cross-fetch: 3.1.5
     transitivePeerDependencies:
       - encoding
-    dev: false
-
-  /i18next-intervalplural-postprocessor@3.0.0:
-    resolution: {integrity: sha512-ZJWg2Gcb0kQqVI7kygLj9wVwQHK3mzRAg94uLsdoHqss0M9n0HSPr1pThd2AttkBsJFWR26G18hnKCqcTB8shQ==}
     dev: false
 
   /i18next-parser@7.7.0:

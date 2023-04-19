@@ -36,6 +36,12 @@
       "button_processing": "Installing",
       "desc": "Are you sure you want to install {{artifact}} {{version}}?",
       "title": "Install {{artifact}}"
+    },
+    "reinstall": {
+      "button_idle": "Reinstall",
+      "button_processing": "Reinstalling",
+      "desc": "Are you sure you want to reinstall {{artifact}} {{version}}?",
+      "title": "Reinstall {{artifact}}"
     }
   },
   "PluginListIndex": {

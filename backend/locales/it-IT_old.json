@@ -1,4 +1,12 @@
 {
+  "PluginInstallModal": {
+    "install": {
+      "button_idle_zero": "Installa",
+      "button_idle_other": "Reinstalla",
+      "button_processing_zero": "Installando",
+      "button_processing_other": "Reinstallando"
+    }
+  },
   "PluginLoader": {
     "error": "Errore",
     "plugin_error_uninstall": "Per rimuovere questo plugin vai su {{-icon}} nel menu di Decky.",

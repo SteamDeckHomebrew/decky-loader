@@ -36,23 +36,34 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
       onCancel={async () => {
         await onCancel();
       }}
-      strTitle={t('PluginInstallModal.install.title_interval', {
-        postProcess: 'interval',
-        count: reinstall ? 1 : 0,
-        artifact: artifact,
-      })}
+      strTitle={
+        reinstall
+          ? t('PluginInstallModal.reinstall.title', {
+              artifact: artifact,
+            })
+          : t('PluginInstallModal.install.title', {
+              artifact: artifact,
+            })
+      }
       strOKButtonText={
         loading
-          ? t('PluginInstallModal.install.button_processing', { count: reinstall ? 1 : 0 })
-          : t('PluginInstallModal.install.button_idle', { count: reinstall ? 1 : 0 })
+          ? reinstall
+            ? t('PluginInstallModal.reinstall.button_processing')
+            : t('PluginInstallModal.install.button_processing')
+          : reinstall
+          ? t('PluginInstallModal.reinstall.button_idle')
+          : t('PluginInstallModal.install.button_idle')
       }
     >
       {hash == 'False' ? (
         <h3 style={{ color: 'red' }}>!!!!NO HASH PROVIDED!!!!</h3>
+      ) : reinstall ? (
+        t('PluginInstallModal.reinstall.desc', {
+          artifact: artifact,
+          version: version,
+        })
       ) : (
-        t('PluginInstallModal.install.desc_interval', {
-          postProcess: 'interval',
-          count: reinstall ? 1 : 0,
+        t('PluginInstallModal.install.desc', {
           artifact: artifact,
           version: version,
         })

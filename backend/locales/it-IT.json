@@ -32,14 +32,16 @@
   },
   "PluginInstallModal": {
     "install": {
-      "button_idle_zero": "Installa",
-      "button_idle_other": "Reinstalla",
-      "button_processing_zero": "Installando",
-      "button_processing_other": "Reinstallando",
+      "button_idle": "Installa",
+      "button_processing": "Installando",
       "desc": "Sei sicuro di voler installare {{artifact}} {{version}}?",
-      "title": "Installa {{artifact}}",
-      "title_interval": "(0)[Installa {{artifact}}];(1)[Reinstalla {{artifact}}];",
-      "desc_interval": "(0)[Sei sicuro di voler installare {{artifact}} {{version}}?];(1)[Sei sicuro di voler reinstallare {{artifact}} {{version}}?];"
+      "title": "Installa {{artifact}}"
+    },
+    "reinstall": {
+      "button_idle": "Reinstalla",
+      "button_processing": "Reinstallando",
+      "desc": "Sei sicuro di voler reinstallare {{artifact}} {{version}}?",
+      "title": "Reinstalla {{artifact}}"
     }
   },
   "PluginListIndex": {

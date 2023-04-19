@@ -6,13 +6,21 @@ interface PluginInstallModalProps {
   artifact: string;
   version: string;
   hash: string;
-  // reinstall: boolean;
+  reinstall: boolean;
   onOK(): void;
   onCancel(): void;
   closeModal?(): void;
 }
 
-const PluginInstallModal: FC<PluginInstallModalProps> = ({ artifact, version, hash, onOK, onCancel, closeModal }) => {
+const PluginInstallModal: FC<PluginInstallModalProps> = ({
+  artifact,
+  version,
+  hash,
+  reinstall,
+  onOK,
+  onCancel,
+  closeModal,
+}) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { t } = useTranslation();
   return (
@@ -28,15 +36,26 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({ artifact, version, ha
       onCancel={async () => {
         await onCancel();
       }}
-      strTitle={t('PluginInstallModal.install.title', { artifact: artifact })}
+      strTitle={t('PluginInstallModal.install.title_interval', {
+        postProcess: 'interval',
+        count: reinstall ? 1 : 0,
+        artifact: artifact,
+      })}
       strOKButtonText={
-        loading ? t('PluginInstallModal.install.button_processing') : t('PluginInstallModal.install.button_idle')
+        loading
+          ? t('PluginInstallModal.install.button_processing', { count: reinstall ? 1 : 0 })
+          : t('PluginInstallModal.install.button_idle', { count: reinstall ? 1 : 0 })
       }
     >
       {hash == 'False' ? (
         <h3 style={{ color: 'red' }}>!!!!NO HASH PROVIDED!!!!</h3>
       ) : (
-        t('PluginInstallModal.install.desc', { artifact: artifact, version: version })
+        t('PluginInstallModal.install.desc_interval', {
+          postProcess: 'interval',
+          count: reinstall ? 1 : 0,
+          artifact: artifact,
+          version: version,
+        })
       )}
     </ConfirmModal>
   );

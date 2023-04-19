@@ -26,7 +26,7 @@ async function reinstallPlugin(pluginName: string, currentVersion?: string) {
   const remotePlugin = serverData?.find((x) => x.name == pluginName);
   if (remotePlugin && remotePlugin.versions?.length > 0) {
     const currentVersionData = remotePlugin.versions.find((version) => version.name == currentVersion);
-    if (currentVersionData) requestPluginInstall(pluginName, currentVersionData);
+    if (currentVersionData) requestPluginInstall(pluginName, currentVersionData, true);
   }
 }
 

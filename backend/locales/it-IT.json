@@ -61,12 +61,12 @@
   "PluginLoader": {
     "decky_title": "Decky",
     "decky_update_available": "Disponibile aggiornamento a {{tag_name}}!",
-    "file_picker_cancel_text": "Annullato dall'utente",
     "error": "Errore",
+    "file_picker_cancel_text": "Annullato dall'utente",
     "plugin_error_uninstall": "Per rimuovere questo plugin vai su {{-icon}} nel menu di Decky.",
     "plugin_load_error": {
-      "toast": "Errore caricando {{name}}",
-      "message": "Errore caricando il plugin {{name}}"
+      "message": "Errore caricando il plugin {{name}}",
+      "toast": "Errore caricando {{name}}"
     },
     "plugin_uninstall": {
       "button": "Rimuovi",
@@ -92,8 +92,8 @@
       "header": "Partecipazione alla beta"
     },
     "developer_mode": {
-      "label": "Modalità sviluppatore",
-      "desc": "Abilità le impostazioni di sviluppo di Decky."
+      "desc": "Abilità le impostazioni di sviluppo di Decky.",
+      "label": "Modalità sviluppatore"
     },
     "manual_plugin": {
       "button": "Installa",
@@ -110,13 +110,17 @@
   "SettingsIndex": {
     "developer_title": "Sviluppatore",
     "general_title": "Generali",
-    "plugins_title": "Plugins",
-    "navbar_settings": "Impostazioni Decky"
+    "navbar_settings": "Impostazioni Decky",
+    "plugins_title": "Plugins"
   },
   "Store": {
     "store_contrib": {
       "desc": "Se desideri contribuire allo store di Decky, puoi trovare un template caricato su GitHub all'indirizzo SteamDeckHomebrew/decky-plugin-template. Informazioni riguardo sviluppo e distribuzione sono disponibili nel README.",
       "label": "Contribuisci"
+    },
+    "store_filter": {
+      "label": "Filtra",
+      "label_def": "Tutto"
     },
     "store_search": {
       "label": "Cerca"
@@ -134,10 +138,6 @@
       "alph_asce": "Alfabetico (Z a A)",
       "alph_desc": "Alfabetico (A a Z)",
       "title": "Sfoglia"
-    },
-    "store_filter": {
-      "label": "Filtra",
-      "label_def": "Tutto"
     },
     "store_testing_cta": "Valuta la possibilità di testare nuovi plugin per aiutare il team di Decky Loader!"
   },
@@ -160,12 +160,12 @@
     "updates": {
       "check_button": "Cerca aggiornamenti",
       "checking": "Controllando",
+      "cur_version": "Versione attuale: {{ver}}",
       "install_button": "Installa aggiornamento",
       "label": "Aggiornamenti",
       "lat_version": "Aggiornato. Eseguendo {{ver}}",
       "reloading": "Ricaricando",
-      "updating": "Aggiornando",
-      "cur_version": "Versione attuale: {{ver}}"
+      "updating": "Aggiornando"
     }
   }
 }

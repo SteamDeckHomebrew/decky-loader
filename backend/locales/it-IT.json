@@ -24,6 +24,11 @@
       "label": "Abilita Menu Sviluppatore"
     }
   },
+  "FilePickerIndex": {
+    "folder": {
+      "select": "Usa questa cartella"
+    }
+  },
   "PluginCard": {
     "plugin_full_access": "Questo plugin ha accesso completo al tuo Steam Deck.",
     "plugin_install": "Installa",

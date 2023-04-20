@@ -24,6 +24,11 @@
       "label": "Enable Valve Internal"
     }
   },
+  "FilePickerIndex": {
+    "folder": {
+      "select": "Use this folder"
+    }
+  },
   "PluginCard": {
     "plugin_full_access": "This plugin has full access to your Steam Deck.",
     "plugin_install": "Install",

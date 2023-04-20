@@ -62,8 +62,11 @@
     "decky_title": "Decky",
     "decky_update_available": "Disponibile aggiornamento a {{tag_name}}!",
     "file_picker_cancel_text": "Annullato dall'utente",
+    "error": "Errore",
+    "plugin_error_uninstall": "Per rimuovere questo plugin vai su {{-icon}} nel menu di Decky.",
     "plugin_load_error": {
-      "toast": "Errore caricando {{name}}"
+      "toast": "Errore caricando {{name}}",
+      "message": "Errore caricando il plugin {{name}}"
     },
     "plugin_uninstall": {
       "button": "Rimuovi",
@@ -89,7 +92,8 @@
       "header": "Partecipazione alla beta"
     },
     "developer_mode": {
-      "label": "Modalità sviluppatore"
+      "label": "Modalità sviluppatore",
+      "desc": "Abilità le impostazioni di sviluppo di Decky."
     },
     "manual_plugin": {
       "button": "Installa",
@@ -106,7 +110,8 @@
   "SettingsIndex": {
     "developer_title": "Sviluppatore",
     "general_title": "Generali",
-    "plugins_title": "Plugins"
+    "plugins_title": "Plugins",
+    "navbar_settings": "Impostazioni Decky"
   },
   "Store": {
     "store_contrib": {
@@ -129,6 +134,10 @@
       "alph_asce": "Alfabetico (Z a A)",
       "alph_desc": "Alfabetico (A a Z)",
       "title": "Sfoglia"
+    },
+    "store_filter": {
+      "label": "Filtra",
+      "label_def": "Tutto"
     },
     "store_testing_cta": "Valuta la possibilità di testare nuovi plugin per aiutare il team di Decky Loader!"
   },
@@ -155,7 +164,8 @@
       "label": "Aggiornamenti",
       "lat_version": "Aggiornato. Eseguendo {{ver}}",
       "reloading": "Ricaricando",
-      "updating": "Aggiornando"
+      "updating": "Aggiornando",
+      "cur_version": "Versione attuale: {{ver}}"
     }
   }
 }

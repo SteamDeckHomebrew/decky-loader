@@ -4,7 +4,7 @@ export default {
     contextSeparator: '_',
     // Key separator used in your translation keys
   
-    createOldCatalogs: true,
+    createOldCatalogs: false,
     // Save the \_old files
   
     defaultNamespace: 'translation',
@@ -17,7 +17,7 @@ export default {
     indentation: 2,
     // Indentation of the catalog files
   
-    keepRemoved: false,
+    keepRemoved: true,
     // Keep keys from the catalog that are no longer in code
   
     keySeparator: '.',
@@ -26,7 +26,6 @@ export default {
   
     // see below for more details
     lexers: {
-  
       mjs: ['JavascriptLexer'],
       js: ['JavascriptLexer'], // if you're writing jsx inside .js files, change this to JsxLexer
       ts: ['JavascriptLexer'],

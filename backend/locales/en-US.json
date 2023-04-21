@@ -2,9 +2,9 @@
   "BranchSelect": {
     "update_channel": {
       "label": "Update Channel",
-      "prerelease": "Prerilascio",
-      "stable": "Stabile",
-      "testing": "MISSING"
+      "prerelease": "Prerelease",
+      "stable": "Stable",
+      "testing": "Testing"
     }
   },
   "Developer": {

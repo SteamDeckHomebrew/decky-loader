@@ -71,7 +71,7 @@ class TPluginInstallModal extends Component<TranslationProps> {
                 case InstallType.UPDATE:
                   return <div>{t('PluginInstallModal.update.button_idle')}</div>;
                 default:
-                return null;
+                  return null;
               }
             case TranslatedPart.BUTTON_PROC:
               switch (this.props.trans_type) {

@@ -1,6 +1,7 @@
 import { ConfirmModal, Navigation, QuickAccessTab } from 'decky-frontend-lib';
 import { FC, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+
+import TPluginInstallModal, { TranslatedPart } from './TPluginInstallModal';
 
 interface PluginInstallModalProps {
   artifact: string;
@@ -22,30 +23,6 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
   closeModal,
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { t } = useTranslation();
-  var tUpdateTitles = [
-    t('PluginInstallModal.install.title', { artifact: artifact }),
-    t('PluginInstallModal.reinstall.title', { artifact: artifact }),
-    t('PluginInstallModal.update.title', { artifact: artifact }),
-  ];
-
-  var tUpdateDescs = [
-    t('PluginInstallModal.install.desc', { artifact: artifact, version: version }),
-    t('PluginInstallModal.reinstall.desc', { artifact: artifact, version: version }),
-    t('PluginInstallModal.update.desc', { artifact: artifact, version: version }),
-  ];
-
-  var tUpdatesButtonIdle = [
-    t('PluginInstallModal.install.button_idle'),
-    t('PluginInstallModal.reinstall.button_idle'),
-    t('PluginInstallModal.update.button_idle'),
-  ];
-
-  var tUpdatesButtonProc = [
-    t('PluginInstallModal.install.button_processing'),
-    t('PluginInstallModal.reinstall.button_processing'),
-    t('PluginInstallModal.update.button_processing'),
-  ];
 
   return (
     <ConfirmModal
@@ -60,10 +37,25 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
       onCancel={async () => {
         await onCancel();
       }}
-      strTitle={tUpdateTitles[installType]}
-      strOKButtonText={loading ? tUpdatesButtonProc[installType] : tUpdatesButtonIdle[installType]}
+      strTitle={<TPluginInstallModal trans_part={TranslatedPart.TITLE} trans_type={installType} artifact={artifact} />}
+      strOKButtonText={
+        loading ? (
+          <TPluginInstallModal trans_part={TranslatedPart.BUTTON_PROC} trans_type={installType} />
+        ) : (
+          <TPluginInstallModal trans_part={TranslatedPart.BUTTON_IDLE} trans_type={installType} />
+        )
+      }
     >
-      {hash == 'False' ? <h3 style={{ color: 'red' }}>!!!!NO HASH PROVIDED!!!!</h3> : tUpdateDescs[installType]}
+      {hash == 'False' ? (
+        <h3 style={{ color: 'red' }}>!!!!NO HASH PROVIDED!!!!</h3>
+      ) : (
+        <TPluginInstallModal
+          trans_part={TranslatedPart.DESC}
+          trans_type={installType}
+          artifact={artifact}
+          version={version}
+        />
+      )}
     </ConfirmModal>
   );
 };

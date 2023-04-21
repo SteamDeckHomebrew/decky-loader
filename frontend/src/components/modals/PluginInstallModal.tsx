@@ -2,8 +2,6 @@ import { ConfirmModal, Navigation, QuickAccessTab } from 'decky-frontend-lib';
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { InstallType } from '../../plugin';
-
 interface PluginInstallModalProps {
   artifact: string;
   version: string;
@@ -25,6 +23,29 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { t } = useTranslation();
+  var tUpdateTitles = [
+    t('PluginInstallModal.install.title', { artifact: artifact }),
+    t('PluginInstallModal.reinstall.title', { artifact: artifact }),
+    t('PluginInstallModal.update.title', { artifact: artifact }),
+  ];
+
+  var tUpdateDescs = [
+    t('PluginInstallModal.install.desc', { artifact: artifact, version: version }),
+    t('PluginInstallModal.reinstall.desc', { artifact: artifact, version: version }),
+    t('PluginInstallModal.update.desc', { artifact: artifact, version: version }),
+  ];
+
+  var tUpdatesButtonIdle = [
+    t('PluginInstallModal.install.button_idle'),
+    t('PluginInstallModal.reinstall.button_idle'),
+    t('PluginInstallModal.update.button_idle'),
+  ];
+
+  var tUpdatesButtonProc = [
+    t('PluginInstallModal.install.button_processing'),
+    t('PluginInstallModal.reinstall.button_processing'),
+    t('PluginInstallModal.update.button_processing'),
+  ];
 
   return (
     <ConfirmModal
@@ -39,62 +60,10 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
       onCancel={async () => {
         await onCancel();
       }}
-      strTitle={() => {
-        switch (installType) {
-          case InstallType.INSTALL:
-            return t('PluginInstallModal.install.title', { artifact: artifact });
-          case InstallType.REINSTALL:
-            return t('PluginInstallModal.reinstall.title', { artifact: artifact });
-          case InstallType.UPDATE:
-            return t('PluginInstallModal.update.title', { artifact: artifact });
-          default:
-            return '';
-        }
-      }}
-      strOKButtonText={
-        loading
-          ? () => {
-              switch (installType) {
-                case InstallType.INSTALL:
-                  return t('PluginInstallModal.install.button_processing');
-                case InstallType.REINSTALL:
-                  return t('PluginInstallModal.reinstall.button_processing');
-                case InstallType.UPDATE:
-                  return t('PluginInstallModal.update.button_processing');
-                default:
-                  return '';
-              }
-            }
-          : () => {
-              switch (installType) {
-                case InstallType.INSTALL:
-                  return t('PluginInstallModal.install.button_idle');
-                case InstallType.REINSTALL:
-                  return t('PluginInstallModal.reinstall.button_idle');
-                case InstallType.UPDATE:
-                  return t('PluginInstallModal.update.button_idle');
-                default:
-                  return '';
-              }
-            }
-      }
+      strTitle={tUpdateTitles[installType]}
+      strOKButtonText={loading ? tUpdatesButtonProc[installType] : tUpdatesButtonIdle[installType]}
     >
-      {hash == 'False' ? (
-        <h3 style={{ color: 'red' }}>!!!!NO HASH PROVIDED!!!!</h3>
-      ) : (
-        () => {
-          switch (installType) {
-            case InstallType.INSTALL:
-              return t('PluginInstallModal.install.desc', { artifact: artifact, version: version });
-            case InstallType.REINSTALL:
-              return t('PluginInstallModal.reinstall.desc', { artifact: artifact, version: version });
-            case InstallType.UPDATE:
-              return t('PluginInstallModal.update.desc', { artifact: artifact, version: version });
-            default:
-              return '';
-          }
-        }
-      )}
+      {hash == 'False' ? <h3 style={{ color: 'red' }}>!!!!NO HASH PROVIDED!!!!</h3> : tUpdateDescs[installType]}
     </ConfirmModal>
   );
 };

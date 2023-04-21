@@ -195,7 +195,7 @@ class PluginBrowser:
         self.install_requests[request_id] = PluginInstallContext(artifact, name, version, hash)
         tab = await get_gamepadui_tab()
         await tab.open_websocket()
-        await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}', '{install_type}')")
+        await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}', {install_type})")
 
     async def confirm_plugin_install(self, request_id):
         request = self.install_requests.pop(request_id) 

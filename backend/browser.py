@@ -118,7 +118,7 @@ class PluginBrowser:
             # plugins_snapshot = self.plugins.copy()
             # snapshot_string = pformat(plugins_snapshot)
             # logger.debug("current plugins: %s", snapshot_string)
-            if self.plugins[name]:
+            if name in self.plugins:
                 logger.debug("Plugin %s was found", name)
                 self.plugins[name].stop()
                 logger.debug("Plugin %s was stopped", name)

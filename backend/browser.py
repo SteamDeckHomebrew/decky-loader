@@ -198,7 +198,7 @@ class PluginBrowser:
         await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}', {install_type})")
 
     async def confirm_plugin_install(self, request_id):
-        request = self.install_requests.pop(request_id) 
+        request = self.install_requests.pop(request_id)
         await self._install(request.artifact, request.name, request.version, request.hash)
 
     def cancel_plugin_install(self, request_id):

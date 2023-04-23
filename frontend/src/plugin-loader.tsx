@@ -244,7 +244,6 @@ class PluginLoader extends Logger {
         Authentication: window.deckyAuthToken,
       },
     });
-
     if (res.ok) {
       try {
         let plugin_export = await eval(await res.text());

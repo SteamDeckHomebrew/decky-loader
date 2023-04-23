@@ -27,20 +27,25 @@ const StorePage: FC<{}> = () => {
       {`
         .deckyMarkdown p {white-space: pre-wrap}
         .deckyMarkdown code {background: #9999990f;}
+        .deckyDocsMarkdown a {text-decoration: none;}
       `}
       </style>
-      {!docs ? (
+      {!docs ?
         <div style={{ height: '100%' }}>
           <SteamSpinner />
         </div>
-      ) :
+      : (Object.keys(docs).length == 1) ?
+      <Focusable style={{padding:"calc(12px + 1.4vw) 2.8vw", paddingTop:"calc( 24px + var(--basicui-header-height, 0px) )"}} className="deckyDocsMarkdown">
+        <ReactMarkdown children={docs[Object.keys(docs)[0]]["text"]}/>
+      </Focusable>
+      :
       <SidebarNavigation
       title={plugin}
       showTitle
       pages={Object.keys(docs).map((file) => (
         {
           title: docs[file]["name"],
-          content: <div className="deckyMarkdown"><ReactMarkdown children={docs[file]["text"]}/></div>,
+          content: <div className="deckyDocsMarkdown"><ReactMarkdown children={docs[file]["text"]}/></div>,
           route: `/decky/docs/${plugin}/${file}`,
         }
       ))}

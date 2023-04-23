@@ -22,6 +22,7 @@ import { getSetting } from './utils/settings';
 
 const StorePage = lazy(() => import('./components/store/Store'));
 const SettingsPage = lazy(() => import('./components/settings'));
+const DocsPage = lazy(() => import('./components/docs'));
 
 const FilePicker = lazy(() => import('./components/modals/filepicker'));
 
@@ -79,6 +80,11 @@ class PluginLoader extends Logger {
         </DeckyStateContextProvider>
       );
     });
+    this.routerHook.addRoute('/decky/docs/:plugin', () => (
+      <WithSuspense route={true}>
+        <DocsPage />
+      </WithSuspense>
+    ));
 
     initSteamFixes();
 

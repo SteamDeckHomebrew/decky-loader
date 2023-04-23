@@ -1,7 +1,8 @@
 import { FC, useEffect, useState } from 'react';
-import { useParams, SidebarNavigation, SteamSpinner } from "decky-frontend-lib";
+import { useParams, SidebarNavigation, SteamSpinner, Focusable } from "decky-frontend-lib";
 import i18n from 'i18next';
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm';
 
 const StorePage: FC<{}> = () => {
 
@@ -25,8 +26,8 @@ const StorePage: FC<{}> = () => {
       <>
       <style>
       {`
-        .deckyMarkdown p {white-space: pre-wrap}
-        .deckyMarkdown code {background: #9999990f;}
+        .deckyDocsMarkdown p {white-space: pre-wrap}
+        .deckyDocsMarkdown code {background: #9999990f;}
         .deckyDocsMarkdown a {text-decoration: none;}
       `}
       </style>
@@ -36,7 +37,7 @@ const StorePage: FC<{}> = () => {
         </div>
       : (Object.keys(docs).length == 1) ?
       <Focusable style={{padding:"calc(12px + 1.4vw) 2.8vw", paddingTop:"calc( 24px + var(--basicui-header-height, 0px) )"}} className="deckyDocsMarkdown">
-        <ReactMarkdown children={docs[Object.keys(docs)[0]]["text"]}/>
+        <ReactMarkdown children={docs[Object.keys(docs)[0]]["text"]} remarkPlugins={[remarkGfm]}/>
       </Focusable>
       :
       <SidebarNavigation
@@ -45,7 +46,7 @@ const StorePage: FC<{}> = () => {
       pages={Object.keys(docs).map((file) => (
         {
           title: docs[file]["name"],
-          content: <div className="deckyDocsMarkdown"><ReactMarkdown children={docs[file]["text"]}/></div>,
+          content: <div className="deckyDocsMarkdown"><ReactMarkdown children={docs[file]["text"]} remarkPlugins={[remarkGfm]}/></div>,
           route: `/decky/docs/${plugin}/${file}`,
         }
       ))}
@@ -54,5 +55,6 @@ const StorePage: FC<{}> = () => {
     </>
     )
 }
+
 
 export default StorePage;

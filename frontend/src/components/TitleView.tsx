@@ -1,7 +1,7 @@
 import { DialogButton, Focusable, Router, staticClasses } from 'decky-frontend-lib';
 import { CSSProperties, VFC } from 'react';
 import { BsGearFill } from 'react-icons/bs';
-import { FaArrowLeft, FaStore } from 'react-icons/fa';
+import { FaArrowLeft, FaStore, FaInfo } from 'react-icons/fa';
 
 import { useDeckyState } from './DeckyState';
 
@@ -22,6 +22,11 @@ const TitleView: VFC = () => {
   const onStoreClick = () => {
     Router.CloseSideMenus();
     Router.Navigate('/decky/store');
+  };
+
+  const onInfoClick = () => {
+    Router.CloseSideMenus();
+    Router.Navigate(`/decky/docs/${activePlugin.name}`);
   };
 
   if (activePlugin === null) {
@@ -53,6 +58,12 @@ const TitleView: VFC = () => {
         <FaArrowLeft style={{ marginTop: '-4px', display: 'block' }} />
       </DialogButton>
       <div style={{ flex: 0.9 }}>{activePlugin.name}</div>
+      <DialogButton
+        style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
+        onClick={onInfoClick}
+      >
+        <FaInfo style={{ marginTop: '-4px', display: 'block' }} />
+      </DialogButton>
     </div>
   );
 };

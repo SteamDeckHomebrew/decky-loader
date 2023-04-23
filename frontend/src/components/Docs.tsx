@@ -50,12 +50,4 @@ const StorePage: FC<{}> = () => {
     )
 }
 
-/*
-        {
-          title: "Page 1",
-          content: <ReactMarkdown>*testing 1 2 3*</ReactMarkdown>,
-          route: `/decky/docs/${plugin}/1`,
-        },
-*/
-
 export default StorePage;

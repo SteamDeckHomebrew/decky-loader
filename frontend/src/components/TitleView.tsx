@@ -26,7 +26,7 @@ const TitleView: VFC = () => {
 
   const onInfoClick = () => {
     Router.CloseSideMenus();
-    Router.Navigate(`/decky/docs/${activePlugin.name}`);
+    Router.Navigate(`/decky/docs/${activePlugin?.name}`);
   };
 
   if (activePlugin === null) {

@@ -81,6 +81,7 @@ class Loader:
             web.get("/plugins/{plugin_name}/frontend_bundle", self.handle_frontend_bundle),
             web.post("/plugins/{plugin_name}/methods/{method_name}", self.handle_plugin_method_call),
             web.get("/plugins/{plugin_name}/assets/{path:.*}", self.handle_plugin_frontend_assets),
+            web.get("/docs/{plugin_name}/{language}", self.get_plugin_documentation),
 
             # The following is legacy plugin code.
             web.get("/plugins/load_main/{name}", self.load_plugin_main_view),
@@ -108,6 +109,78 @@ class Loader:
         file = path.join(self.plugin_path, plugin.plugin_directory, "dist/assets", request.match_info["path"])
 
         return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
+    
+def get_plugin_documentation(self, request):
+        plugin_name, language = request.match_info["plugin_name"], request.match_info["language"]
+        self.logger.info(f"Loading docs for {plugin_name}")
+        docs = {} # {"filename": {"name":"readable name", "text":"marked up file"}}
+        plugin_path = path.join(self.plugin_path, self.plugins[plugin_name].plugin_directory)
+
+        if not path.exists(path.join(plugin_path, "docs")):
+            try:
+                with open(path.join(plugin_path, "README.md")) as f:
+                    return web.json_response({"readme.md":{"name":"readme","text":f.read()}})
+            except:
+                raise Exception(f"Failed to load readme file for {plugin_name} at {plugin_path}")
+
+        fallback_config = {"default_language": "en-US", "include_readme": "False"}
+        try:
+            with open(path.join(plugin_path, "docs", "config.json")) as f:
+                config = load(f)
+        except:
+            self.logger.warning(f"unable to load config.json for {plugin_name} at {plugin_path}")
+            config = fallback_config
+
+        # find list of files for default language and use those as a base
+        if "default_language" in config:
+            base_docs_path = path.join(plugin_path, "docs", config["default_language"])
+        else:
+            base_docs_path = path.join(plugin_path, "docs", fallback_config["default_language"])
+
+        try:
+            with open(path.join(base_docs_path, "docs.json")) as f:
+                files = load(f)
+            for filename in files:
+                docs[filename] = {"name":files[filename],"fallback_path":path.join(base_docs_path, filename)}
+
+        except: # docs.json is invalid in some way, so just use all the files in the docs folder
+            self.logger.warning(f"unable to load docs.json for {plugin_name} at {base_docs_path}")
+            files = listdir(base_docs_path)
+            for filename in files:
+                        docs[filename] = {"name":filename,"fallback_path":path.join(base_docs_path, filename)}
+
+        docs_path = path.join(plugin_path, "docs", language)
+        try:
+            with open(path.join(docs_path, "docs.json")) as f:
+                files = load(f)
+            for filename in files:
+                docs[filename] = {"name":files[filename],"path":path.join(docs_path, filename)}
+
+        except: # docs.json is invalid in some way, so just use all the files in the docs folder
+            self.logger.warning(f"unable to load docs.json for {plugin_name} at {docs_path}")
+            files = listdir(docs_path)
+            for filename in files:
+                        docs[filename] = {"name":filename,"path":path.join(docs_path, filename)}
+
+        for page in docs:
+            try:
+                with open(docs[page]["path"]) as f:
+                    docs[page]["text"] = f.read()
+            except:
+                try:
+                    with open(docs[page]["fallback_path"]) as f:
+                        docs[page]["text"] = f.read()
+                except:
+                    self.logger.warning(f"unable to load {page} for {plugin_name} at {plugin_path}")
+
+        if "include_readme" in config and config["include_readme"] == "True":
+            try:
+                with open(path.join(plugin_path, "README.md")) as f:
+                    docs["README"] = {"name":"readme","text": f.read()}
+            except:
+                self.logger.warning(f"unable to load readme for {plugin_name} at {plugin_path}")
+
+        return web.json_response(docs)
 
     def handle_frontend_bundle(self, request):
         plugin = self.plugins[request.match_info["plugin_name"]]

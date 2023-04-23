@@ -22,7 +22,7 @@ import { getSetting } from './utils/settings';
 
 const StorePage = lazy(() => import('./components/store/Store'));
 const SettingsPage = lazy(() => import('./components/settings'));
-const DocsPage = lazy(() => import('./components/docs'));
+const DocsPage = lazy(() => import('./components/Docs'));
 
 const FilePicker = lazy(() => import('./components/modals/filepicker'));
 

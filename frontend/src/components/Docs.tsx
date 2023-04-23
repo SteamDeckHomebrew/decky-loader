@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown'
 const StorePage: FC<{}> = () => {
 
     const [docs, setDocs] = useState<Object | null>(null); // {"filename": {"name":"readable name", "text":"marked up file"}}
+    const { plugin } = useParams<{ plugin: string }>()
 
     useEffect(() => {
     (async () => {
@@ -19,8 +20,6 @@ const StorePage: FC<{}> = () => {
         })).json())
       })();
     }, []);
-
-    const { plugin } = useParams<{ plugin: string }>()
 
     return (
       <>

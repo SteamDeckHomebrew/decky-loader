@@ -110,7 +110,7 @@ class Loader:
 
         return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
     
-def get_plugin_documentation(self, request):
+    def get_plugin_documentation(self, request):
         plugin_name, language = request.match_info["plugin_name"], request.match_info["language"]
         self.logger.info(f"Loading docs for {plugin_name}")
         docs = {} # {"filename": {"name":"readable name", "text":"marked up file"}}

@@ -7,7 +7,6 @@ import {
   Dropdown,
   Focusable,
   Marquee,
-  ServerAPI,
   SteamSpinner,
   TextField,
   ToggleField,
@@ -22,7 +21,6 @@ import DropdownMultiselect from '../DropdownMultiselect';
 import { styleDefObj } from './iconCustomizations';
 
 export interface FilePickerProps {
-  serverApi: ServerAPI;
   startPath: string;
   includeFiles?: boolean;
   filter?: RegExp | ((file: File) => boolean);
@@ -57,58 +55,71 @@ type SortOption =
   | 'size_desc'
   | 'size_asc';
 
-function getList(
-  serverApi: ServerAPI,
-  path: string,
-  includeFiles = true,
-): Promise<{ result: FileListing | string; success: boolean }> {
-  return serverApi.callPluginMethod('filepicker_new', { path, include_files: includeFiles });
+enum ESortOption {
+  'name_desc',
+  'name_asc',
+  'modified_desc',
+  'modified_asc',
+  'created_desc',
+  'created_asc',
+  'size_desc',
+  'size_asc',
+}
+
+function getTextForSortOption(identifier: ESortOption): string {
+  const { t } = useTranslation();
+  switch (identifier) {
+    case ESortOption.name_desc:
+      return t('FilePickerIndex.filter.name_desc');
+    case ESortOption.name_asc:
+      return t('FilePickerIndex.filter.name_asce');
+    case ESortOption.modified_desc:
+      return t('FilePickerIndex.filter.modified_desc');
+    case ESortOption.modified_asc:
+      return t('FilePickerIndex.filter.modified_asce');
+    case ESortOption.created_desc:
+      return t('FilePickerIndex.filter.created_desc');
+    case ESortOption.created_asc:
+      return t('FilePickerIndex.filter.created_asce');
+    case ESortOption.size_desc:
+      return t('FilePickerIndex.filter.size_desc');
+    case ESortOption.size_asc:
+      return t('FilePickerIndex.filter.size_asce');
+  }
 }
 
 const sortOptions = [
   {
     data: 'name_desc',
-    label: () => {
-      const { t } = useTranslation();
-      return t('FilePickerIndex.filter.name_desc');
-    },
+    label: getTextForSortOption(ESortOption.name_desc),
   },
   {
     data: 'name_asc',
-    label: () => {
-      const { t } = useTranslation();
-      return t('FilePickerIndex.filter.name_asce');
-    },
+    label: getTextForSortOption(ESortOption.name_asc),
   },
   {
     data: 'modified_desc',
-    label: () => {
-      const { t } = useTranslation();
-      return t('FilePickerIndex.filter.modified_desc');
-    },
+    label: getTextForSortOption(ESortOption.modified_desc),
   },
   {
     data: 'modified_asc',
-    label: () => {
-      const { t } = useTranslation();
-      return t('FilePickerIndex.filter.modified_asce');
-    },
+    label: getTextForSortOption(ESortOption.modified_asc),
   },
   {
     data: 'created_desc',
-    label: 'Created (Newest)',
+    label: getTextForSortOption(ESortOption.created_desc),
   },
   {
     data: 'created_asc',
-    label: 'Created (Oldest)',
+    label: getTextForSortOption(ESortOption.created_asc),
   },
   {
     data: 'size_desc',
-    label: 'Size (Largest)',
+    label: getTextForSortOption(ESortOption.size_desc),
   },
   {
     data: 'size_asc',
-    label: 'Size (Smallest)',
+    label: getTextForSortOption(ESortOption.size_asc),
   },
 ];
 
@@ -118,7 +129,6 @@ const iconStyles = {
 };
 
 const FilePicker: FunctionComponent<FilePickerProps> = ({
-  serverApi,
   startPath,
   includeFiles = true,
   filter,
@@ -131,17 +141,20 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
 
   if (startPath !== '/' && startPath.endsWith('/')) startPath = startPath.substring(0, startPath.length - 1); // remove trailing path
   const [path, setPath] = useState<string>(startPath);
-  const [listing, setListing] = useState<FileListing>({ files: [], realpath: path });
+  const [listing] = useState<FileListing>({ files: [], realpath: path });
   const [files, setFiles] = useState<File[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [error] = useState<string | null>(null);
+  const [loading] = useState<boolean>(true);
   const [showHidden, setShowHidden] = useState<boolean>(defaultHidden);
   const [sort, setSort] = useState<SortOption>('name_desc');
   const [selectedFiles, setSelectedFiles] = useState<any>(validFileExtensions);
 
   const validExtsOptions = useMemo(() => {
     if (!validFileExtensions) return [];
-    return [{ label: 'All Files', value: 'all_files' }, ...validFileExtensions.map((x) => ({ label: x, value: x }))];
+    return [
+      { label: t('FilePickerIndex.files.all_files'), value: 'all_files' },
+      ...validFileExtensions.map((x) => ({ label: x, value: x })),
+    ];
   }, [validFileExtensions]);
 
   const handleExtsSelect = useCallback((val: any) => {
@@ -152,24 +165,6 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
       setSelectedFiles(val);
     }
   }, []);
-
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      const listing = await getList(serverApi, path, includeFiles);
-      if (!listing.success) {
-        setListing({ files: [], realpath: path });
-        setLoading(false);
-        setError(listing.result as string);
-        return;
-      } else {
-        setError(null);
-        setFiles((listing.result as FileListing).files);
-      }
-      setLoading(false);
-      setListing(listing.result as FileListing);
-    })();
-  }, [error, includeFiles, path, serverApi]);
 
   useEffect(() => {
     const files = [...listing.files]
@@ -206,7 +201,6 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
       .reduceRight((acc, file) => (file.isdir ? [file, ...acc] : [...acc, file]), [] as File[]);
     setFiles(files);
   }, [listing.files, filter, showHidden, sort, selectedFiles, validFileExtensions]);
-
   return (
     <>
       <DialogBody>
@@ -246,7 +240,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
           <ControlsList alignItems="center" spacing="standard">
             <ToggleField
               highlightOnFocus={false}
-              label="Show Hidden Files"
+              label={t('FilePickerIndex.files.show_hidden')}
               bottomSeparator="none"
               checked={showHidden}
               onChange={() => setShowHidden((x) => !x)}
@@ -254,7 +248,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
             <Dropdown rgOptions={sortOptions} selectedOption={sort} onChange={(x) => setSort(x.data)} />
             {validFileExtensions && (
               <DropdownMultiselect
-                label="File Type"
+                label={t('FilePickerIndex.files.file_type')}
                 items={validExtsOptions}
                 selected={selectedFiles}
                 onSelect={handleExtsSelect}

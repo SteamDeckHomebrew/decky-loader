@@ -2,9 +2,9 @@
   "BranchSelect": {
     "update_channel": {
       "label": "Update Channel",
-      "prerelease": "Prerilascio",
-      "stable": "Stabile",
-      "testing": "MISSING"
+      "prerelease": "Prerelease",
+      "stable": "Stable",
+      "testing": "Testing"
     }
   },
   "Developer": {
@@ -24,7 +24,27 @@
       "label": "Enable Valve Internal"
     }
   },
+  "DropdownMultiselect": {
+    "button": {
+      "back": "Back"
+    }
+  },
   "FilePickerIndex": {
+    "files": {
+      "all_files": "All Files",
+      "file_type": "File Type",
+      "show_hidden": "Show Hidden Files"
+    },
+    "filter": {
+      "created_asce": "Created (Oldest)",
+      "created_desc": "Created (Newest)",
+      "modified_asce": "Modified (Oldest)",
+      "modified_desc": "Modified (Newest)",
+      "name_asce": "Z-A",
+      "name_desc": "A-Z",
+      "size_asce": "Size (Smallest)",
+      "size_desc": "Size (Largest)"
+    },
     "folder": {
       "select": "Use this folder"
     }

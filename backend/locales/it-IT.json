@@ -24,7 +24,27 @@
       "label": "Abilita Menu Sviluppatore"
     }
   },
+  "DropdownMultiselect": {
+    "button": {
+      "back": "Indietro"
+    }
+  },
   "FilePickerIndex": {
+    "files": {
+      "all_files": "Tutti i file",
+      "file_type": "Tipo di file",
+      "show_hidden": "Mostra nascosti"
+    },
+    "filter": {
+      "created_asce": "Creazione (meno recente)",
+      "created_desc": "Creazione (più recente)",
+      "modified_asce": "Modifica (meno recente)",
+      "modified_desc": "Modifica (più recente)",
+      "name_asce": "Z-A",
+      "name_desc": "A-Z",
+      "size_asce": "Dimensione (più piccolo)",
+      "size_desc": "Dimensione (più grande)"
+    },
     "folder": {
       "select": "Usa questa cartella"
     }

@@ -337,7 +337,7 @@ class PluginLoader extends Logger {
             <FilePicker
               startPath={startPath}
               includeFiles={includeFiles}
-              regex={regex}
+              filter={regex}
               onSubmit={resolve}
               closeModal={closeModal}
             />

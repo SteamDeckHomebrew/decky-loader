@@ -13,10 +13,10 @@ const StoreSelect: FunctionComponent<{}> = () => {
   const [selectedStore, setSelectedStore] = useSetting<Store>('store', Store.Default);
   const [selectedStoreURL, setSelectedStoreURL] = useSetting<string | null>('store-url', null);
   const { t } = useTranslation();
-  const tBranches = [
-    t('BranchSelect.update_channel.stable'),
-    t('BranchSelect.update_channel.prerelease'),
-    t('BranchSelect.update_channel.testing'),
+  const tStores = [
+    t('StoreSelect.store_channel.default'),
+    t('StoreSelect.store_channel.testing'),
+    t('StoreSelect.store_channel.custom'),
   ];
 
   // Returns numerical values from 0 to 2 (with current branch setup as of 8/28/22)
@@ -28,7 +28,7 @@ const StoreSelect: FunctionComponent<{}> = () => {
           rgOptions={Object.values(Store)
             .filter((store) => typeof store == 'string')
             .map((store) => ({
-              label: tBranches[Store[store]],
+              label: tStores[Store[store]],
               data: Store[store],
             }))}
           selectedOption={selectedStore}

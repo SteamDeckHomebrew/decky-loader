@@ -53,7 +53,7 @@ declare global {
       //debug: true,
       fallbackLng: 'en-US',
       interpolation: {
-        escapeValue: false,
+        escapeValue: true,
       },
       backend: {
         loadPath: 'http://127.0.0.1:1337/locales/{{lng}}.json',

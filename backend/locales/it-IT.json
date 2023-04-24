@@ -67,7 +67,6 @@
     "decky_title": "Decky",
     "decky_update_available": "Disponibile aggiornamento a {{tag_name}}!",
     "error": "Errore",
-    "file_picker_cancel_text": "Annullato dall'utente",
     "plugin_error_uninstall": "Per rimuovere questo plugin vai su {{-icon}} nel menu di Decky.",
     "plugin_load_error": {
       "message": "Errore caricando il plugin {{name}}",

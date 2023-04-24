@@ -74,8 +74,8 @@
     },
     "plugin_uninstall": {
       "button": "Rimuovi",
-      "desc": "Rimuovo {{name}}?",
-      "title": "Rimozione di {{name}}"
+      "desc": "Sei sicuro di voler rimuorere {{name}}?",
+      "title": "Rimuovi {{name}}"
     },
     "plugin_update_one": "Aggiornamento disponibile per un plugin!",
     "plugin_update_many": "Aggiornamento disponibile per {{count}} plugins!",

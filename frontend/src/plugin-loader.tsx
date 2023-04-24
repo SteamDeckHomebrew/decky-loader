@@ -328,7 +328,7 @@ class PluginLoader extends Logger {
         // Purposely outside of the FilePicker component as lazy-loaded ModalRoots don't focus correctly
         <ModalRoot
           onCancel={() => {
-            reject(t('PluginLoader.file_picker_cancel_text'));
+            reject('User canceled');
             closeModal?.();
           }}
         >

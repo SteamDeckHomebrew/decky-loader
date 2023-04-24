@@ -71,8 +71,8 @@ class PluginManager:
             )
         })
         self.plugin_loader = Loader(self.web_app, CONFIG["plugin_path"], self.loop, CONFIG["live_reload"])
-        self.plugin_browser = PluginBrowser(CONFIG["plugin_path"], self.plugin_loader.plugins, self.plugin_loader)
         self.settings = SettingsManager("loader", path.join(HOMEBREW_PATH, "settings"))
+        self.plugin_browser = PluginBrowser(CONFIG["plugin_path"], self.plugin_loader.plugins, self.plugin_loader, self.settings)
         self.utilities = Utilities(self)
         self.updater = Updater(self)
 
@@ -109,6 +109,9 @@ class PluginManager:
         logger.debug("Loading plugins")
         self.plugin_loader.import_plugins()
         # await inject_to_tab("SP", "window.syncDeckyPlugins();")
+        if self.settings.getSetting("pluginOrder", None) == None:
+          self.settings.setSetting("pluginOrder", list(self.plugin_loader.plugins.keys()))
+          logger.debug("Did not find pluginOrder setting, set it to default")
 
     async def loader_reinjector(self):
         while True:

@@ -30,10 +30,11 @@ class PluginInstallContext:
         self.hash = hash
 
 class PluginBrowser:
-    def __init__(self, plugin_path, plugins, loader) -> None:
+    def __init__(self, plugin_path, plugins, loader, settings) -> None:
         self.plugin_path = plugin_path
         self.plugins = plugins
         self.loader = loader
+        self.settings = settings
         self.install_requests = {}
 
     def _unzip_to_plugin_dir(self, zip, name, hash):
@@ -117,12 +118,16 @@ class PluginBrowser:
             # plugins_snapshot = self.plugins.copy()
             # snapshot_string = pformat(plugins_snapshot)
             # logger.debug("current plugins: %s", snapshot_string)
-            if self.plugins[name]:
+            if name in self.plugins:
                 logger.debug("Plugin %s was found", name)
                 self.plugins[name].stop()
                 logger.debug("Plugin %s was stopped", name)
                 del self.plugins[name]
                 logger.debug("Plugin %s was removed from the dictionary", name)
+                current_plugin_order = self.settings.getSetting("pluginOrder")
+                current_plugin_order.remove(name)
+                self.settings.setSetting("pluginOrder", current_plugin_order)
+                logger.debug("Plugin %s was removed from the pluginOrder setting", name)
             logger.debug("removing files %s" % str(name))
             rmtree(plugin_dir)
         except FileNotFoundError:
@@ -191,6 +196,11 @@ class PluginBrowser:
                     self.loader.plugins[name].stop()
                     self.loader.plugins.pop(name, None)
                 await sleep(1)
+                
+                current_plugin_order = self.settings.getSetting("pluginOrder")
+                current_plugin_order.append(name)
+                self.settings.setSetting("pluginOrder", current_plugin_order)
+                logger.debug("Plugin %s was added to the pluginOrder setting", name)
                 self.loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_folder)
             else:
                 logger.fatal(f"Failed Downloading Remote Binaries")

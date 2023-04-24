@@ -57,7 +57,7 @@
   },
   "PluginListIndex": {
     "no_plugin": "Nessun plugin installato!",
-    "plug_actions_label": "Operazioni sui plugins",
+    "plugin_actions": "Operazioni sui plugins",
     "reinstall": "Reinstalla",
     "reload": "Ricarica",
     "uninstall": "Rimuovi",

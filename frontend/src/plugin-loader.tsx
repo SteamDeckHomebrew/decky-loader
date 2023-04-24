@@ -1,6 +1,5 @@
 import { ConfirmModal, ModalRoot, Patch, QuickAccessTab, Router, showModal, sleep } from 'decky-frontend-lib';
 import { FC, lazy } from 'react';
-import { useTranslation } from 'react-i18next';
 import { FaCog, FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
 import { DeckyState, DeckyStateContextProvider, useDeckyState } from './components/DeckyState';
@@ -321,8 +320,6 @@ class PluginLoader extends Logger {
     includeFiles?: boolean,
     regex?: RegExp,
   ): Promise<{ path: string; realpath: string }> {
-    const { t } = useTranslation();
-
     return new Promise((resolve, reject) => {
       const Content = ({ closeModal }: { closeModal?: () => void }) => (
         // Purposely outside of the FilePicker component as lazy-loaded ModalRoots don't focus correctly

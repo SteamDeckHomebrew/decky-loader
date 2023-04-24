@@ -39,7 +39,7 @@ function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | n
               }}
             >
               <div>
-                <h1>{versionInfo?.all?.[id]?.name}</h1>
+                <h1>{versionInfo?.all?.[id]?.name || 'Invalid Update Name'}</h1>
                 {versionInfo?.all?.[id]?.body ? (
                   <WithSuspense>
                     <MarkdownRenderer onDismiss={closeModal}>{versionInfo.all[id].body}</MarkdownRenderer>

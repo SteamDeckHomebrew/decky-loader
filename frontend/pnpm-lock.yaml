@@ -13,12 +13,15 @@ dependencies:
   i18next-http-backend:
     specifier: ^2.2.0
     version: 2.2.0
+  pnpm:
+    specifier: ^8.3.1
+    version: 8.3.1
   react-file-icon:
     specifier: ^1.3.0
     version: 1.3.0(react-dom@16.14.0)(react@16.14.0)
   react-i18next:
-    specifier: ^12.2.1
-    version: 12.2.1(i18next@22.4.15)(react-dom@16.14.0)(react@16.14.0)
+    specifier: ^12.2.2
+    version: 12.2.2(i18next@22.4.15)(react-dom@16.14.0)(react@16.14.0)
   react-icons:
     specifier: ^4.8.0
     version: 4.8.0(react@16.14.0)
@@ -2980,6 +2983,12 @@ packages:
     engines: {node: '>=8.6'}
     dev: true
 
+  /pnpm@8.3.1:
+    resolution: {integrity: sha512-0mT2ZAv08J3nz8xUdWhRW88GE89IWgPo/xZhb6acQXK2+aCikl7kT7Bg31ZcnJqOrwYXSed68xjLd/ZoSnBR8w==}
+    engines: {node: '>=16.14'}
+    hasBin: true
+    dev: false
+
   /prettier-plugin-import-sort@0.0.7(prettier@2.8.8):
     resolution: {integrity: sha512-O0KlUSq+lwvh+UiN3wZDT6wWkf7TNxTVv2/XXE5KqpRNbFJq3nRg2ftzBYFFO8QGpdWIrOB0uCTCtFjIxmVKQw==}
     peerDependencies:
@@ -3086,8 +3095,8 @@ packages:
       react-dom: 16.14.0(react@16.14.0)
     dev: false
 
-  /react-i18next@12.2.1(i18next@22.4.15)(react-dom@16.14.0)(react@16.14.0):
-    resolution: {integrity: sha512-gmNca0hYM+EhC1OiaAvSWsIDQVeStYObHX0xHM2GEv6Q39Mub+okwUBm2AyoivA4EYlHxoUDZ1IV5lIIiz/pEQ==}
+  /react-i18next@12.2.2(i18next@22.4.15)(react-dom@16.14.0)(react@16.14.0):
+    resolution: {integrity: sha512-KBB6buBmVKXUWNxXHdnthp+38gPyBT46hJCAIQ8rX19NFL/m2ahte2KARfIDf2tMnSAL7wwck6eDOd/9zn6aFg==}
     peerDependencies:
       i18next: '>= 19.0.0'
       react: '>= 16.8.0'

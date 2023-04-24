@@ -55,6 +55,7 @@ declare global {
       interpolation: {
         escapeValue: true,
       },
+      returnEmptyString: false,
       backend: {
         loadPath: 'http://127.0.0.1:1337/locales/{{lng}}.json',
         customHeaders: {

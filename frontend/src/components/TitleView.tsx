@@ -50,7 +50,7 @@ const TitleView: VFC = () => {
   }
 
   return (
-    <Focusable className={staticClasses.Title} style={titleStyles}>
+      <Focusable className={staticClasses.Title} style={titleStyles}>
         <DialogButton
           style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
           onClick={closeActivePlugin}

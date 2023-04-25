@@ -26,7 +26,7 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                 }}
                 style={{ display: 'inline' }}
               >
-                <a ref={aRef} {...nodeProps.node.properties}>
+                <a ref={aRef} target="_blank" {...nodeProps.node.properties}>
                   {nodeProps.children}
                 </a>
               </Focusable>

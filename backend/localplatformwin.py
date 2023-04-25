@@ -36,3 +36,18 @@ async def service_restart(service_name : str) -> bool:
 
 def get_username() -> str:
     return os.getlogin()
+
+def get_privileged_path() -> str:
+    '''On windows, privileged_path is equal to unprivileged_path'''
+    return get_unprivileged_path()
+
+def get_unprivileged_path() -> str:
+    path = os.getenv("UNPRIVILEGED_PATH")
+
+    if path == None:
+        path = os.getenv("PRIVILEGED_PATH", os.path.join(os.path.expanduser("~"), "homebrew"))
+
+    return path
+
+def get_unprivileged_user() -> str:
+    return os.getenv("UNPRIVILEGED_USER", os.getlogin())

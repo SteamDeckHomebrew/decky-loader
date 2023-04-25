@@ -1,3 +1,5 @@
+// this file was mostly (the good bits) made by davocarli#7308
+// it should probably be moved to DFL eventually
 import { VFC, useEffect, useState } from 'react';
 import { useParams, SidebarNavigation, SteamSpinner, Focusable } from "decky-frontend-lib";
 import { lazy } from 'react';

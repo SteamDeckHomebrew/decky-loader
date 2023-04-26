@@ -1,15 +1,5 @@
-import {
-  DialogBody,
-  DialogButton,
-  DialogControlsSection,
-  DialogControlsSectionHeader,
-  Field,
-  TextField,
-  Toggle,
-} from 'decky-frontend-lib';
-import { useState } from 'react';
+import { DialogBody, DialogControlsSection, DialogControlsSectionHeader, Field, Toggle } from 'decky-frontend-lib';
 
-import { installFromURL } from '../../../../store';
 import { useDeckyState } from '../../../DeckyState';
 import BranchSelect from './BranchSelect';
 import StoreSelect from './StoreSelect';
@@ -22,7 +12,6 @@ export default function GeneralSettings({
   isDeveloper: boolean;
   setIsDeveloper: (val: boolean) => void;
 }) {
-  const [pluginURL, setPluginURL] = useState('');
   const { versionInfo } = useDeckyState();
 
   return (
@@ -45,14 +34,6 @@ export default function GeneralSettings({
               setIsDeveloper(toggleValue);
             }}
           />
-        </Field>
-        <Field
-          label="Install plugin from URL"
-          description={<TextField label={'URL'} value={pluginURL} onChange={(e) => setPluginURL(e?.target.value)} />}
-        >
-          <DialogButton disabled={pluginURL.length == 0} onClick={() => installFromURL(pluginURL)}>
-            Install
-          </DialogButton>
         </Field>
       </DialogControlsSection>
       <DialogControlsSection>

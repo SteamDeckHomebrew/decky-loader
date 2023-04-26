@@ -1,6 +1,10 @@
 # Change PyInstaller files permissions
 import sys
-from localplatform import chmod, chown, service_stop, service_start, ON_WINDOWS
+from localplatform import (chmod, chown, service_stop, service_start,
+                            ON_WINDOWS, get_log_level, get_live_reload, 
+                            get_server_port, get_server_host, get_chown_plugin_path,
+                            get_unprivileged_user, get_unprivileged_path, 
+                            get_privileged_path)
 if hasattr(sys, '_MEIPASS'):
     chmod(sys._MEIPASS, 755)
 # Full imports
@@ -20,7 +24,7 @@ from aiohttp_jinja2 import setup as jinja_setup
 # local modules
 from browser import PluginBrowser
 from helpers import (REMOTE_DEBUGGER_UNIT, csrf_middleware, get_csrf_token,
-                     get_homebrew_path, mkdir_as_user, get_system_pythonpaths)
+                     mkdir_as_user, get_system_pythonpaths)
                      
 from injector import get_gamepadui_tab, Tab, get_tabs, close_old_tabs
 from loader import Loader
@@ -29,33 +33,23 @@ from updater import Updater
 from utilities import Utilities
 from customtypes import UserType
 
-HOMEBREW_PATH = get_homebrew_path()
-CONFIG = {
-    "plugin_path": getenv("PLUGIN_PATH", path.join(HOMEBREW_PATH, "plugins")),
-    "chown_plugin_path": getenv("CHOWN_PLUGIN_PATH", "1") == "1",
-    "server_host": getenv("SERVER_HOST", "127.0.0.1"),
-    "server_port": int(getenv("SERVER_PORT", "1337")),
-    "live_reload": getenv("LIVE_RELOAD", "1") == "1",
-    "log_level": {"CRITICAL": 50, "ERROR": 40, "WARNING": 30, "INFO": 20, "DEBUG": 10}[
-        getenv("LOG_LEVEL", "INFO")
-    ],
-}
 
 basicConfig(
-    level=CONFIG["log_level"],
+    level=get_log_level(),
     format="[%(module)s][%(levelname)s]: %(message)s"
 )
 
 logger = getLogger("Main")
+plugin_path = path.join(get_privileged_path(), "plugins")
 
 def chown_plugin_dir():
-    if not path.exists(CONFIG["plugin_path"]): # For safety, create the folder before attempting to do anything with it
-        mkdir_as_user(CONFIG["plugin_path"])
+    if not path.exists(plugin_path): # For safety, create the folder before attempting to do anything with it
+        mkdir_as_user(plugin_path)
 
-    if not chown(CONFIG["plugin_path"], UserType.HOST_USER) or not chmod(CONFIG["plugin_path"], 555):
+    if not chown(plugin_path, UserType.HOST_USER) or not chmod(plugin_path, 555):
         logger.error(f"chown/chmod exited with a non-zero exit code")
 
-if CONFIG["chown_plugin_path"] == True:
+if get_chown_plugin_path() == True:
     chown_plugin_dir()
 
 class PluginManager:
@@ -70,9 +64,9 @@ class PluginManager:
                 allow_credentials=True
             )
         })
-        self.plugin_loader = Loader(self.web_app, CONFIG["plugin_path"], self.loop, CONFIG["live_reload"])
-        self.settings = SettingsManager("loader", path.join(HOMEBREW_PATH, "settings"))
-        self.plugin_browser = PluginBrowser(CONFIG["plugin_path"], self.plugin_loader.plugins, self.plugin_loader, self.settings)
+        self.plugin_loader = Loader(self.web_app, plugin_path, self.loop, get_live_reload())
+        self.settings = SettingsManager("loader", path.join(get_privileged_path(), "settings"))
+        self.plugin_browser = PluginBrowser(plugin_path, self.plugin_loader.plugins, self.plugin_loader, self.settings) 
         self.utilities = Utilities(self)
         self.updater = Updater(self)
 
@@ -174,7 +168,7 @@ class PluginManager:
             pass
 
     def run(self):
-        return run_app(self.web_app, host=CONFIG["server_host"], port=CONFIG["server_port"], loop=self.loop, access_log=None)
+        return run_app(self.web_app, host=get_server_host(), port=get_server_port(), loop=self.loop, access_log=None)
 
 if __name__ == "__main__":
     if ON_WINDOWS:

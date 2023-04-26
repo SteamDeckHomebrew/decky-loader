@@ -1,5 +1,6 @@
 import { ConfirmModal, Navigation, QuickAccessTab } from 'decky-frontend-lib';
 import { FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import TPluginInstallModal, { TranslatedPart } from './TPluginInstallModal';
 
@@ -23,6 +24,7 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
   closeModal,
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   return (
     <ConfirmModal
@@ -46,16 +48,13 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
         )
       }
     >
-      {hash == 'False' ? (
-        <h3 style={{ color: 'red' }}>!!!!NO HASH PROVIDED!!!!</h3>
-      ) : (
-        <TPluginInstallModal
-          trans_part={TranslatedPart.DESC}
-          trans_type={installType}
-          artifact={artifact}
-          version={version}
-        />
-      )}
+      <TPluginInstallModal
+        trans_part={TranslatedPart.DESC}
+        trans_type={installType}
+        artifact={artifact}
+        version={version ? version : ''}
+      />
+      {hash == 'False' && <span style={{ color: 'red' }}>{t('PluginInstallModal.no_hash')}</span>}
     </ConfirmModal>
   );
 };

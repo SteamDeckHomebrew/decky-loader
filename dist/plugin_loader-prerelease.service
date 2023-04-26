@@ -9,7 +9,8 @@ Restart=always
 ExecStart=${HOMEBREW_FOLDER}/services/PluginLoader
 WorkingDirectory=${HOMEBREW_FOLDER}/services
 KillSignal=SIGKILL
-Environment=PLUGIN_PATH=${HOMEBREW_FOLDER}/plugins
+Environment=UNPRIVILEGED_PATH=${HOMEBREW_FOLDER}
+Environment=PRIVILEGED_PATH=${HOMEBREW_FOLDER}
 Environment=LOG_LEVEL=DEBUG
 [Install]
 WantedBy=multi-user.target

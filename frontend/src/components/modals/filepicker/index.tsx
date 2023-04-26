@@ -136,7 +136,15 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
                         )}
                       </div>
                     )}
-                    {file.name}
+                    <span
+                      style={{
+                        textOverflow: 'ellipsis',
+                        overflow: 'hidden',
+                        textAlign: 'left',
+                      }}
+                    >
+                      {file.name}
+                    </span>
                   </div>
                 </DialogButton>
               );

@@ -12,18 +12,6 @@
     "disabling": "Disabling",
     "enabling": "Enabling"
   },
-  "DeveloperIndex": {
-    "react_devtools": {
-      "desc": "Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set the IP address before enabling.",
-      "ip_label": "IP",
-      "label": "Enable React DevTools"
-    },
-    "valve_internal": {
-      "desc1": "Enables the Valve internal developer menu.",
-      "desc2": "Do not touch anything in this menu unless you know what it does.",
-      "label": "Enable Valve Internal"
-    }
-  },
   "FilePickerIndex": {
     "folder": {
       "select": "Use this folder"
@@ -42,6 +30,7 @@
       "desc": "Are you sure you want to install {{artifact}} {{version}}?",
       "title": "Install {{artifact}}"
     },
+    "no_hash": "This plugin does not have a hash, you are installing it at your own risk.",
     "reinstall": {
       "button_idle": "Reinstall",
       "button_processing": "Reinstalling",
@@ -86,6 +75,31 @@
       "label": "Allow Remote CEF Debugging"
     }
   },
+  "SettingsDeveloperIndex": {
+    "header_other": "Other",
+    "react_devtools": {
+      "desc": "Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set the IP address before enabling.",
+      "ip_label": "IP",
+      "label": "Enable React DevTools"
+    },
+    "third_party_plugins": {
+      "button_install": "Install",
+      "button_zip": "Browse",
+      "header": "Third-Party Plugins",
+      "label_desc": "URL",
+      "label_url": "Install Plugin from URL",
+      "label_zip": "Install Plugin from ZIP File"
+    },
+    "toast_zip": {
+      "body": "Installation failed! Only ZIP files are supported.",
+      "title": "Decky"
+    },
+    "valve_internal": {
+      "desc1": "Enables the Valve internal developer menu.",
+      "desc2": "Do not touch anything in this menu unless you know what it does.",
+      "label": "Enable Valve Internal"
+    }
+  },
   "SettingsGeneralIndex": {
     "about": {
       "decky_version": "Decky Version",
@@ -97,11 +111,6 @@
     "developer_mode": {
       "desc": "Enables Decky's developer settings.",
       "label": "Developer mode"
-    },
-    "manual_plugin": {
-      "button": "Install",
-      "label": "Manual plugin install",
-      "url_label": "URL"
     },
     "other": {
       "header": "Other"

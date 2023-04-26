@@ -1,5 +1,5 @@
 import { VFC, useEffect, useState } from 'react';
-import { useParams, SidebarNavigation, SteamSpinner, Focusable } from "decky-frontend-lib";
+import { useParams, SidebarNavigation, SteamSpinner } from "decky-frontend-lib";
 import { lazy } from 'react';
 import i18n from 'i18next';
 
@@ -8,6 +8,7 @@ const MarkdownRenderer = lazy(() => import('./Markdown'));
 
 const DocsPage: VFC<{ content: string }> = ({ content }) => {
       const ref = scrollableRef();
+
       return (
       <>
         <style>
@@ -51,9 +52,9 @@ const StorePage: VFC<{}> = () => {
           <SteamSpinner />
         </div>
       : (Object.keys(docs).length == 1) ?
-      <Focusable style={{padding:"calc(12px + 1.4vw) 2.8vw", paddingTop:"calc( 24px + var(--basicui-header-height, 0px) )"}} className="deckyDocsMarkdown">
-        <MarkdownRenderer children={docs[Object.keys(docs)[0]]["text"]} />
-      </Focusable>
+      <div style={{padding:"calc(12px + 1.4vw) 2.8vw", paddingTop:"calc( 24px + var(--basicui-header-height, 0px) )", background:"#0e141b"}}>
+        <DocsPage content={docs[Object.keys(docs)[0]]["text"]} />
+      </div>
       :
       <SidebarNavigation
       title={plugin}

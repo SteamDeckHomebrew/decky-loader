@@ -6,3 +6,9 @@ export interface Plugin {
   onDismount?(): void;
   alwaysRender?: boolean;
 }
+
+export enum InstallType {
+  INSTALL,
+  REINSTALL,
+  UPDATE,
+}

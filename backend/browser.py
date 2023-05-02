@@ -209,12 +209,12 @@ class PluginBrowser:
         if self.loader.watcher:
             self.loader.watcher.disabled = False
 
-    async def request_plugin_install(self, artifact, name, version, hash):
+    async def request_plugin_install(self, artifact, name, version, hash, install_type):
         request_id = str(time())
         self.install_requests[request_id] = PluginInstallContext(artifact, name, version, hash)
         tab = await get_gamepadui_tab()
         await tab.open_websocket()
-        await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}')")
+        await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}', {install_type})")
 
     async def confirm_plugin_install(self, request_id):
         request = self.install_requests.pop(request_id)

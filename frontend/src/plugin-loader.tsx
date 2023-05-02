@@ -98,7 +98,9 @@ class PluginLoader extends Logger {
     const versionInfo = await this.updateVersion();
     if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
       this.toaster.toast({
+        //title: t('PluginLoader.decky_title'),
         title: 'Decky',
+        //body: t('PluginLoader.decky_update_available', { tag_name: versionInfo?.remote?.tag_name }),
         body: `Update to ${versionInfo?.remote?.tag_name} available!`,
         onClick: () => Router.Navigate('/decky/settings'),
       });
@@ -118,26 +120,35 @@ class PluginLoader extends Logger {
     const updates = await this.checkPluginUpdates();
     if (updates?.size > 0) {
       this.toaster.toast({
+        //title: t('PluginLoader.decky_title'),
         title: 'Decky',
+        //body: t('PluginLoader.plugin_update', { count: updates.size }),
         body: `Updates available for ${updates.size} plugin${updates.size > 1 ? 's' : ''}!`,
         onClick: () => Router.Navigate('/decky/settings/plugins'),
       });
     }
   }
 
-  public addPluginInstallPrompt(artifact: string, version: string, request_id: string, hash: string) {
+  public addPluginInstallPrompt(
+    artifact: string,
+    version: string,
+    request_id: string,
+    hash: string,
+    install_type: number,
+  ) {
     showModal(
       <PluginInstallModal
         artifact={artifact}
         version={version}
         hash={hash}
+        installType={install_type}
         onOK={() => this.callServerMethod('confirm_plugin_install', { request_id })}
         onCancel={() => this.callServerMethod('cancel_plugin_install', { request_id })}
       />,
     );
   }
 
-  public uninstallPlugin(name: string) {
+  public uninstallPlugin(name: string, title: string, button_text: string, description: string) {
     showModal(
       <ConfirmModal
         onOK={async () => {
@@ -146,10 +157,10 @@ class PluginLoader extends Logger {
         onCancel={() => {
           // do nothing
         }}
-        strTitle={`Uninstall ${name}`}
-        strOKButtonText={'Uninstall'}
+        strTitle={title}
+        strOKButtonText={button_text}
       >
-        Are you sure you want to uninstall {name}?
+        {description}
       </ConfirmModal>,
     );
   }
@@ -242,7 +253,17 @@ class PluginLoader extends Logger {
           version: version,
         });
       } catch (e) {
+        //this.error(t('PluginLoader.plugin_load_error.message', { name: name }), e);
         this.error('Error loading plugin ' + name, e);
+        /*const TheError: FC<{}> = () => (
+          <>
+            {t('PluginLoader.error')}:{' '}
+            <pre>
+              <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
+            </pre>
+            <>{t('PluginLoader.plugin_error_uninstall', { icon: "<FaCog style={{ display: 'inline' }} />" })}</>
+          </>
+        );*/
         const TheError: FC<{}> = () => (
           <>
             Error:{' '}
@@ -261,7 +282,12 @@ class PluginLoader extends Logger {
           content: <TheError />,
           icon: <FaExclamationCircle />,
         });
-        this.toaster.toast({ title: 'Error loading ' + name, body: '' + e, icon: <FaExclamationCircle /> });
+        this.toaster.toast({
+          //title: t('PluginLoader.plugin_load_error.toast', { name: name }),
+          title: 'Error loading ' + name,
+          body: '' + e,
+          icon: <FaExclamationCircle />,
+        });
       }
     } else throw new Error(`${name} frontend_bundle not OK`);
   }

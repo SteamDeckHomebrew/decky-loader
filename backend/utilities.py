@@ -61,12 +61,13 @@ class Utilities:
             res["success"] = False
         return web.json_response(res)
 
-    async def install_plugin(self, artifact="", name="No name", version="dev", hash=False):
+    async def install_plugin(self, artifact="", name="No name", version="dev", hash=False, install_type=0):
         return await self.context.plugin_browser.request_plugin_install(
             artifact=artifact,
             name=name,
             version=version,
-            hash=hash
+            hash=hash,
+            install_type=install_type
         )
 
     async def confirm_plugin_install(self, request_id):

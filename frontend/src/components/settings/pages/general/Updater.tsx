@@ -12,6 +12,7 @@ import {
 import { useCallback } from 'react';
 import { Suspense, lazy } from 'react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaExclamation } from 'react-icons/fa';
 
 import { VerInfo, callUpdaterMethod, finishUpdate } from '../../../../updater';
@@ -23,6 +24,7 @@ const MarkdownRenderer = lazy(() => import('../../../Markdown'));
 
 function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | null; closeModal?: () => {} }) {
   const SP = findSP();
+  const { t } = useTranslation();
   return (
     <Focusable onCancelButton={closeModal}>
       <FocusRing>
@@ -45,7 +47,7 @@ function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | n
                     <MarkdownRenderer onDismiss={closeModal}>{versionInfo.all[id].body}</MarkdownRenderer>
                   </WithSuspense>
                 ) : (
-                  'no patch notes for this version'
+                  t('Updater.no_patch_notes_desc')
                 )}
               </div>
             </Focusable>
@@ -58,7 +60,7 @@ function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | n
           initialColumn={0}
           autoFocus={true}
           fnGetColumnWidth={() => SP.innerWidth}
-          name="Decky Updates"
+          name={t('Updater.decky_updates') as string}
         />
       </FocusRing>
     </Focusable>
@@ -71,6 +73,8 @@ export default function UpdaterSettings() {
   const [checkingForUpdates, setCheckingForUpdates] = useState<boolean>(false);
   const [updateProgress, setUpdateProgress] = useState<number>(-1);
   const [reloading, setReloading] = useState<boolean>(false);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     window.DeckyUpdater = {
@@ -93,14 +97,14 @@ export default function UpdaterSettings() {
   return (
     <>
       <Field
-        onOptionsActionDescription={versionInfo?.all ? 'Patch Notes' : undefined}
+        onOptionsActionDescription={versionInfo?.all ? t('Updater.patch_notes_desc') : undefined}
         onOptionsButton={versionInfo?.all ? showPatchNotes : undefined}
-        label="Decky Updates"
+        label={t('Updater.updates.label')}
         description={
           checkingForUpdates || versionInfo?.remote?.tag_name != versionInfo?.current || !versionInfo?.remote ? (
             ''
           ) : (
-            <span>Up to date: running {versionInfo?.current}</span>
+            <span>{t('Updater.updates.lat_version', { ver: versionInfo?.current })} </span>
           )
         }
         icon={
@@ -129,10 +133,10 @@ export default function UpdaterSettings() {
             }
           >
             {checkingForUpdates
-              ? 'Checking'
+              ? t('Updater.updates.checking')
               : !versionInfo?.remote || versionInfo?.remote?.tag_name == versionInfo?.current
-              ? 'Check For Updates'
-              : 'Install Update'}
+              ? t('Updater.updates.check_button')
+              : t('Updater.updates.install_button')}
           </DialogButton>
         ) : (
           <ProgressBarWithInfo
@@ -140,7 +144,7 @@ export default function UpdaterSettings() {
             bottomSeparator="none"
             nProgress={updateProgress}
             indeterminate={reloading}
-            sOperationText={reloading ? 'Reloading' : 'Updating'}
+            sOperationText={reloading ? t('Updater.updates.reloading') : t('Updater.updates.updating')}
           />
         )}
       </Field>

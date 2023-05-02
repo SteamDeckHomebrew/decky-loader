@@ -8,6 +8,7 @@ import {
   Toggle,
 } from 'decky-frontend-lib';
 import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaFileArchive, FaLink, FaReact, FaSteamSymbol } from 'react-icons/fa';
 
 import { setShouldConnectToReactDevTools, setShowValveInternal } from '../../../../developer';
@@ -24,8 +25,10 @@ const installFromZip = () => {
       installFromURL(url);
     } else {
       window.DeckyPluginLoader.toaster.toast({
+        //title: t('SettingsDeveloperIndex.toast_zip.title'),
         title: 'Decky',
-        body: `Installation failed! Only ZIP files are supported.`,
+        //body: t('SettingsDeveloperIndex.toast_zip.body'),
+        body: 'Installation failed! Only ZIP files are supported.',
         onClick: installFromZip,
       });
     }
@@ -38,33 +41,47 @@ export default function DeveloperSettings() {
   const [reactDevtoolsIP, setReactDevtoolsIP] = useSetting<string>('developer.rdt.ip', '');
   const [pluginURL, setPluginURL] = useState('');
   const textRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   return (
     <DialogBody>
       <DialogControlsSection>
-        <DialogControlsSectionHeader>Third-Party Plugins</DialogControlsSectionHeader>
-        <Field label="Install Plugin from ZIP File" icon={<FaFileArchive style={{ display: 'block' }} />}>
-          <DialogButton onClick={installFromZip}>Browse</DialogButton>
+        <DialogControlsSectionHeader>
+          {t('SettingsDeveloperIndex.third_party_plugins.header')}
+        </DialogControlsSectionHeader>
+        <Field
+          label={t('SettingsDeveloperIndex.third_party_plugins.label_zip')}
+          icon={<FaFileArchive style={{ display: 'block' }} />}
+        >
+          <DialogButton onClick={installFromZip}>
+            {t('SettingsDeveloperIndex.third_party_plugins.button_zip')}
+          </DialogButton>
         </Field>
         <Field
-          label="Install Plugin from URL"
-          description={<TextField label={'URL'} value={pluginURL} onChange={(e) => setPluginURL(e?.target.value)} />}
+          label={t('SettingsDeveloperIndex.third_party_plugins.label_url')}
+          description={
+            <TextField
+              label={t('SettingsDeveloperIndex.third_party_plugins.label_desc')}
+              value={pluginURL}
+              onChange={(e) => setPluginURL(e?.target.value)}
+            />
+          }
           icon={<FaLink style={{ display: 'block' }} />}
         >
           <DialogButton disabled={pluginURL.length == 0} onClick={() => installFromURL(pluginURL)}>
-            Install
+            {t('SettingsDeveloperIndex.third_party_plugins.button_install')}
           </DialogButton>
         </Field>
       </DialogControlsSection>
       <DialogControlsSection>
-        <DialogControlsSectionHeader>Other</DialogControlsSectionHeader>
+        <DialogControlsSectionHeader>{t('SettingsDeveloperIndex.header_other')}</DialogControlsSectionHeader>
         <RemoteDebuggingSettings />
         <Field
-          label="Enable Valve Internal"
+          label={t('SettingsDeveloperIndex.valve_internal.label')}
           description={
             <span style={{ whiteSpace: 'pre-line' }}>
-              Enables the Valve internal developer menu.{' '}
-              <span style={{ color: 'red' }}>Do not touch anything in this menu unless you know what it does.</span>
+              {t('SettingsDeveloperIndex.valve_internal.desc1')}{' '}
+              <span style={{ color: 'red' }}>{t('SettingsDeveloperIndex.valve_internal.desc2')}</span>
             </span>
           }
           icon={<FaSteamSymbol style={{ display: 'block' }} />}
@@ -78,17 +95,18 @@ export default function DeveloperSettings() {
           />
         </Field>
         <Field
-          label="Enable React DevTools"
+          label={t('SettingsDeveloperIndex.react_devtools.label')}
           description={
             <>
-              <span style={{ whiteSpace: 'pre-line' }}>
-                Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set
-                the IP address before enabling.
-              </span>
+              <span style={{ whiteSpace: 'pre-line' }}>{t('SettingsDeveloperIndex.react_devtools.desc')}</span>
               <br />
               <br />
               <div ref={textRef}>
-                <TextField label={'IP'} value={reactDevtoolsIP} onChange={(e) => setReactDevtoolsIP(e?.target.value)} />
+                <TextField
+                  label={t('SettingsDeveloperIndex.react_devtools.ip_label')}
+                  value={reactDevtoolsIP}
+                  onChange={(e) => setReactDevtoolsIP(e?.target.value)}
+                />
               </div>
             </>
           }

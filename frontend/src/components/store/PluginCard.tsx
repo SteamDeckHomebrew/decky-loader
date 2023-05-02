@@ -7,7 +7,9 @@ import {
   SuspensefulImage,
 } from 'decky-frontend-lib';
 import { FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
+import { InstallType } from '../../plugin';
 import { StorePlugin, StorePluginVersion, requestPluginInstall } from '../../store';
 
 interface PluginCardProps {
@@ -17,6 +19,8 @@ interface PluginCardProps {
 const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
   const [selectedOption, setSelectedOption] = useState<number>(0);
   const root: boolean = plugin.tags.some((tag) => tag === 'root');
+
+  const { t } = useTranslation();
 
   return (
     <div
@@ -97,7 +101,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
             plugin.description
           ) : (
             <span>
-              <i style={{ color: '#666' }}>No description provided.</i>
+              <i style={{ color: '#666' }}>{t('PluginCard.plugin_no_desc')}</i>
             </span>
           )}
         </span>
@@ -109,7 +113,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               color: '#fee75c',
             }}
           >
-            <i>This plugin has full access to your Steam Deck.</i>{' '}
+            <i>{t('PluginCard.plugin_full_access')}</i>{' '}
             <a
               className="deckyStoreCardDescriptionRootLink"
               href="https://deckbrew.xyz/root"
@@ -144,9 +148,11 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
                 <ButtonItem
                   bottomSeparator="none"
                   layout="below"
-                  onClick={() => requestPluginInstall(plugin.name, plugin.versions[selectedOption])}
+                  onClick={() =>
+                    requestPluginInstall(plugin.name, plugin.versions[selectedOption], InstallType.INSTALL)
+                  }
                 >
-                  <span className="deckyStoreCardInstallText">Install</span>
+                  <span className="deckyStoreCardInstallText">{t('PluginCard.plugin_install')}</span>
                 </ButtonItem>
               </div>
               <div
@@ -163,7 +169,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
                       label: version.name,
                     })) as SingleDropdownOption[]
                   }
-                  menuLabel="Plugin Version"
+                  menuLabel={t('PluginCard.plugin_version_label') as string}
                   selectedOption={selectedOption}
                   onChange={({ data }) => setSelectedOption(data)}
                 />

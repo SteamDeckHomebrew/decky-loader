@@ -1,4 +1,5 @@
 import { DialogBody, DialogControlsSection, DialogControlsSectionHeader, Field, Toggle } from 'decky-frontend-lib';
+import { useTranslation } from 'react-i18next';
 
 import { useDeckyState } from '../../../DeckyState';
 import BranchSelect from './BranchSelect';
@@ -13,21 +14,22 @@ export default function GeneralSettings({
   setIsDeveloper: (val: boolean) => void;
 }) {
   const { versionInfo } = useDeckyState();
+  const { t } = useTranslation();
 
   return (
     <DialogBody>
       <DialogControlsSection>
-        <DialogControlsSectionHeader>Updates</DialogControlsSectionHeader>
+        <DialogControlsSectionHeader>{t('SettingsGeneralIndex.updates.header')}</DialogControlsSectionHeader>
         <UpdaterSettings />
       </DialogControlsSection>
       <DialogControlsSection>
-        <DialogControlsSectionHeader>Beta Participation</DialogControlsSectionHeader>
+        <DialogControlsSectionHeader>{t('SettingsGeneralIndex.beta.header')}</DialogControlsSectionHeader>
         <BranchSelect />
         <StoreSelect />
       </DialogControlsSection>
       <DialogControlsSection>
-        <DialogControlsSectionHeader>Other</DialogControlsSectionHeader>
-        <Field label="Enable Developer Mode">
+        <DialogControlsSectionHeader>{t('SettingsGeneralIndex.other.header')}</DialogControlsSectionHeader>
+        <Field label={t('SettingsGeneralIndex.developer_mode.label')}>
           <Toggle
             value={isDeveloper}
             onChange={(toggleValue) => {
@@ -37,8 +39,8 @@ export default function GeneralSettings({
         </Field>
       </DialogControlsSection>
       <DialogControlsSection>
-        <DialogControlsSectionHeader>About</DialogControlsSectionHeader>
-        <Field label="Decky Version" focusable={true}>
+        <DialogControlsSectionHeader>{t('SettingsGeneralIndex.about.header')}</DialogControlsSectionHeader>
+        <Field label={t('SettingsGeneralIndex.about.decky_version')} focusable={true}>
           <div style={{ color: 'var(--gpSystemLighterGrey)' }}>{versionInfo?.current}</div>
         </Field>
       </DialogControlsSection>

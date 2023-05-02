@@ -41,6 +41,14 @@
             "command": "rsync -azp --rsh='ssh -p ${config:deckport} ${config:deckkey}' requirements.txt deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader/requirements.txt && ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'python -m ensurepip && python -m pip install --upgrade pip && python -m pip install --upgrade setuptools && python -m pip install -r ${config:deckdir}/homebrew/dev/pluginloader/requirements.txt'",
             "problemMatcher": []
         },
+        {
+            "label": "extracttext",
+            "type": "shell",
+            "group": "none",
+            "detail": "Check for new strings in the frontend source code and extract it into the corresponding json language files",
+            "command": "cd frontend && ./node_modules/.bin/i18next --config ./i18next-parser.config.mjs",
+            "problemMatcher": []
+        },
         // BUILD
         {
             "label": "pnpmsetup",

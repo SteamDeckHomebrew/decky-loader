@@ -18,6 +18,7 @@ import {
   staticClasses,
   updaterFieldClasses,
 } from 'decky-frontend-lib';
+import { useTranslation } from 'react-i18next';
 import { FaReact } from 'react-icons/fa';
 
 import Logger from './logger';
@@ -58,9 +59,11 @@ export async function setShowValveInternal(show: boolean) {
 }
 
 export async function setShouldConnectToReactDevTools(enable: boolean) {
+  const { t } = useTranslation();
+
   window.DeckyPluginLoader.toaster.toast({
-    title: (enable ? 'Enabling' : 'Disabling') + ' React DevTools',
-    body: 'Reloading in 5 seconds',
+    title: (enable ? t('Developer.enabling') : t('Developer.disabling')) + ' React DevTools',
+    body: t('Developer.5secreload'),
     icon: <FaReact />,
   });
   await sleep(5000);

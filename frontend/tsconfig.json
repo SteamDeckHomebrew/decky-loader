@@ -16,7 +16,8 @@
     "strict": true,
     "suppressImplicitAnyIndexErrors": true,
     "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "resolveJsonModule": true
   },
   "include": ["src", "index.d.ts"],
   "exclude": ["node_modules"]

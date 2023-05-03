@@ -14,7 +14,7 @@ export default defineConfig({
   input: 'src/index.tsx',
   plugins: [
     del({ targets: '../backend/static/*', force: true }),
-    commonjs({include: '../frontend/node_modules/**'}),
+    commonjs(),
     nodeResolve({
       browser: true
     }),

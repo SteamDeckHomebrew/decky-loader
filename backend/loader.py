@@ -101,9 +101,13 @@ class Loader:
         return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
 
     async def handle_frontend_locales(self, request):
-        file = path.join(path.dirname(__file__), "locales", request.match_info["path"])
-        
-        return web.FileResponse(file, headers={"Cache-Control": "no-cache", "Content-Type": "application/json"})
+        req_lang = request.match_info["path"]
+        file = path.join(path.dirname(__file__), "locales", req_lang)
+        if exists(file):
+            return web.FileResponse(file, headers={"Cache-Control": "no-cache", "Content-Type": "application/json"})
+        else:
+            self.logger.info(f"Language {req_lang} not available, returning an empty dictionary")
+            return web.json_response(data={}, headers={"Cache-Control": "no-cache"})
 
     async def get_plugins(self, request):
         plugins = list(self.plugins.values())

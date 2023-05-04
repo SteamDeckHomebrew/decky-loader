@@ -76,6 +76,11 @@
     }
   },
   "SettingsDeveloperIndex": {
+    "cef_console": {
+      "button": "Open Console",
+      "desc": "Opens the CEF Console. Only useful for debugging purposes. Stuff here is potentially dangerous and should only be used if you are a plugin dev, or are directed here by one.",
+      "label": "CEF Console"
+    },
     "header_other": "Other",
     "react_devtools": {
       "desc": "Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set the IP address before enabling.",

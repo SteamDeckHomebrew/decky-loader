@@ -4,12 +4,13 @@ import {
   DialogControlsSection,
   DialogControlsSectionHeader,
   Field,
+  Navigation,
   TextField,
   Toggle,
 } from 'decky-frontend-lib';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaFileArchive, FaLink, FaReact, FaSteamSymbol } from 'react-icons/fa';
+import { FaFileArchive, FaLink, FaReact, FaSteamSymbol, FaTerminal } from 'react-icons/fa';
 
 import { setShouldConnectToReactDevTools, setShowValveInternal } from '../../../../developer';
 import { installFromURL } from '../../../../store';
@@ -75,6 +76,15 @@ export default function DeveloperSettings() {
       </DialogControlsSection>
       <DialogControlsSection>
         <DialogControlsSectionHeader>{t('SettingsDeveloperIndex.header_other')}</DialogControlsSectionHeader>
+        <Field
+          label={t('SettingsDeveloperIndex.cef_console.label')}
+          description={<span style={{ whiteSpace: 'pre-line' }}>{t('SettingsDeveloperIndex.cef_console.desc')}</span>}
+          icon={<FaTerminal style={{ display: 'block' }} />}
+        >
+          <DialogButton onClick={() => Navigation.NavigateToExternalWeb(`localhost:8080`)}>
+            {t('SettingsDeveloperIndex.cef_console.button')}
+          </DialogButton>
+        </Field>
         <RemoteDebuggingSettings />
         <Field
           label={t('SettingsDeveloperIndex.valve_internal.label')}

@@ -77,6 +77,11 @@
     }
   },
   "SettingsDeveloperIndex": {
+    "cef_console": {
+      "button": "",
+      "desc": "",
+      "label": ""
+    },
     "header_other": "Altro",
     "react_devtools": {
       "desc": "Abilita la connessione ad un computer che esegue i DevTools di React. Cambiando questa impostazione ricaricherà Steam. Imposta l'indirizzo IP prima di abilitarlo.",

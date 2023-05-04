@@ -171,7 +171,7 @@
     "patch_notes_desc": "Patch Notes",
     "updates": {
       "check_button": "Check For Updates",
-      "checking": "'Checking",
+      "checking": "Checking",
       "cur_version": "Current version: {{ver}}",
       "install_button": "Install Update",
       "label": "Updates",

@@ -147,8 +147,8 @@
     },
     "store_tabs": {
       "about": "關於",
-      "alph_asce": "依字幕排序 (Z 到 A)",
-      "alph_desc": "依字幕排序 (A 到 Z)",
+      "alph_asce": "依字母排序 (Z 到 A)",
+      "alph_desc": "依字母排序 (A 到 Z)",
       "title": "瀏覽"
     },
     "store_testing_cta": "請考慮測試新的外掛程式來幫助 Decky Loader 團隊！"

@@ -81,7 +81,16 @@ export default function DeveloperSettings() {
           description={<span style={{ whiteSpace: 'pre-line' }}>{t('SettingsDeveloperIndex.cef_console.desc')}</span>}
           icon={<FaTerminal style={{ display: 'block' }} />}
         >
-          <DialogButton onClick={() => Navigation.NavigateToExternalWeb(`localhost:8080`)}>
+          <DialogButton onClick={async () => {
+            let res = (await window.DeckyPluginLoader.callServerMethod('get_tab_id', { "name": "SharedJSContext" }));
+            if (res.success) {
+              console.log(res.result);
+              Navigation.NavigateToExternalWeb("localhost:8080/devtools/inspector.html?ws=localhost:8080/devtools/page/"+res.result);
+            } else {
+              console.error('Unable to find ID for SharedJSContext tab ', res.result);
+              Navigation.NavigateToExternalWeb("localhost:8080");
+            }
+          }}>
             {t('SettingsDeveloperIndex.cef_console.button')}
           </DialogButton>
         </Field>

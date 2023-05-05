@@ -171,7 +171,7 @@
     "patch_notes_desc": "补丁说明",
     "updates": {
       "check_button": "检查更新",
-      "checking": "'检查中",
+      "checking": "检查中",
       "cur_version": "当前版本: {{ver}}",
       "install_button": "安装更新",
       "label": "更新",

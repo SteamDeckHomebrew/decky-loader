@@ -36,9 +36,9 @@ async def csrf_middleware(request, handler):
         return await handler(request)
     return Response(text='Forbidden', status='403')
 
-# Get the default homebrew path unless a home_path is specified
+# Get the default homebrew path unless a home_path is specified. home_path argument is deprecated
 def get_homebrew_path(home_path = None) -> str:
-    return os.path.join(home_path if home_path != None else localplatform.get_home_path(), "homebrew")
+    return localplatform.get_unprivileged_path()
 
 # Recursively create path and chown as user
 def mkdir_as_user(path):

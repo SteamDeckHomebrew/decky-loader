@@ -104,6 +104,15 @@ class Updater:
         async with ClientSession() as web:
             async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases", ssl=helpers.get_ssl_context()) as res:
                 remoteVersions = await res.json()
+                if selectedBranch == 0:
+                    logger.debug("release type: release")
+                    remoteVersions = list(filter(lambda ver: ver["tag_name"].startswith("v") and not ver["prerelease"] and not ver["tag_name"].find("-pre") > 0 and ver["tag_name"], remoteVersions))
+                elif selectedBranch == 1:
+                    logger.debug("release type: pre-release")
+                    remoteVersions = list(filter(lambda ver:ver["tag_name"].startswith("v"), remoteVersions))
+                else:
+                    logger.error("release type: NOT FOUND")
+                    raise ValueError("no valid branch found")
         self.allRemoteVers = remoteVersions
         logger.debug("determining release type to find, branch is %i" % selectedBranch)
         if selectedBranch == 0:

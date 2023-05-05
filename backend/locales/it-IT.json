@@ -12,18 +12,6 @@
     "disabling": "Disabilitando",
     "enabling": "Abilitando"
   },
-  "DeveloperIndex": {
-    "react_devtools": {
-      "desc": "Abilita la connessione ad un computer che esegue i DevTools di React. Cambiando questa impostazione ricaricherà Steam. Imposta l'indirizzo IP prima di abilitarlo.",
-      "ip_label": "IP",
-      "label": "Abilita i DevTools di React"
-    },
-    "valve_internal": {
-      "desc1": "Abilita il menu di sviluppo interno di Valve.",
-      "desc2": "Non toccare nulla in questo menu se non sai quello che fa.",
-      "label": "Abilita Menu Sviluppatore"
-    }
-  },
   "DropdownMultiselect": {
     "button": {
       "back": "Indietro"
@@ -44,9 +32,6 @@
       "name_desc": "A-Z",
       "size_asce": "Dimensione (più piccolo)",
       "size_desc": "Dimensione (più grande)"
-    },
-    "folder": {
-      "select": "Usa questa cartella"
     }
   },
   "PluginCard": {
@@ -62,6 +47,7 @@
       "desc": "Sei sicuro di voler installare {{artifact}} {{version}}?",
       "title": "Installa {{artifact}}"
     },
+    "no_hash": "Questo plugin non ha un hash associato, lo stai installando a tuo rischio e pericolo.",
     "reinstall": {
       "button_idle": "Reinstalla",
       "button_processing": "Reinstallando",
@@ -77,7 +63,7 @@
   },
   "PluginListIndex": {
     "no_plugin": "Nessun plugin installato!",
-    "plug_actions_label": "Operazioni sui plugins",
+    "plugin_actions": "Operazioni sui plugins",
     "reinstall": "Reinstalla",
     "reload": "Ricarica",
     "uninstall": "Rimuovi",
@@ -87,7 +73,6 @@
     "decky_title": "Decky",
     "decky_update_available": "Disponibile aggiornamento a {{tag_name}}!",
     "error": "Errore",
-    "file_picker_cancel_text": "Annullato dall'utente",
     "plugin_error_uninstall": "Per rimuovere questo plugin vai su {{-icon}} nel menu di Decky.",
     "plugin_load_error": {
       "message": "Errore caricando il plugin {{name}}",
@@ -95,8 +80,8 @@
     },
     "plugin_uninstall": {
       "button": "Rimuovi",
-      "desc": "Rimuovo {{name}}?",
-      "title": "Rimozione di {{name}}"
+      "desc": "Sei sicuro di voler rimuovere {{name}}?",
+      "title": "Rimuovi {{name}}"
     },
     "plugin_update_one": "Aggiornamento disponibile per un plugin!",
     "plugin_update_many": "Aggiornamento disponibile per {{count}} plugins!",
@@ -106,6 +91,31 @@
     "remote_cef": {
       "desc": "Permetti l'accesso non autenticato al debugger di CEF da tutti gli indirizzi sulla tua rete locale.",
       "label": "Permetti il debug remoto di CEF"
+    }
+  },
+  "SettingsDeveloperIndex": {
+    "header_other": "Altro",
+    "react_devtools": {
+      "desc": "Abilita la connessione ad un computer che esegue i DevTools di React. Cambiando questa impostazione ricaricherà Steam. Imposta l'indirizzo IP prima di abilitarlo.",
+      "ip_label": "IP",
+      "label": "Abilita i DevTools di React"
+    },
+    "third_party_plugins": {
+      "button_install": "Installa",
+      "button_zip": "Seleziona",
+      "header": "Plugin di terze parti",
+      "label_desc": "URL",
+      "label_url": "Installa plugin da un'indirizzo web",
+      "label_zip": "Installa plugin da un file ZIP"
+    },
+    "toast_zip": {
+      "body": "Installazione non riuscita, solo i file ZIP sono supportati!",
+      "title": "Decky"
+    },
+    "valve_internal": {
+      "desc1": "Abilita il menu di sviluppo interno di Valve.",
+      "desc2": "Non toccare nulla in questo menu se non sai quello che fa.",
+      "label": "Abilita Menu Sviluppatore"
     }
   },
   "SettingsGeneralIndex": {
@@ -119,11 +129,6 @@
     "developer_mode": {
       "desc": "Abilità le impostazioni di sviluppo di Decky.",
       "label": "Modalità sviluppatore"
-    },
-    "manual_plugin": {
-      "button": "Installa",
-      "label": "Installazione manuale dei plugins",
-      "url_label": "URL"
     },
     "other": {
       "header": "Altro"

@@ -12,18 +12,6 @@
     "disabling": "Disabling",
     "enabling": "Enabling"
   },
-  "DeveloperIndex": {
-    "react_devtools": {
-      "desc": "Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set the IP address before enabling.",
-      "ip_label": "IP",
-      "label": "Enable React DevTools"
-    },
-    "valve_internal": {
-      "desc1": "Enables the Valve internal developer menu.",
-      "desc2": "Do not touch anything in this menu unless you know what it does.",
-      "label": "Enable Valve Internal"
-    }
-  },
   "DropdownMultiselect": {
     "button": {
       "back": "Back"
@@ -46,7 +34,7 @@
       "size_desc": "Size (Largest)"
     },
     "folder": {
-      "select": "Use this folder"
+      "select": ""
     }
   },
   "PluginCard": {
@@ -62,6 +50,7 @@
       "desc": "Are you sure you want to install {{artifact}} {{version}}?",
       "title": "Install {{artifact}}"
     },
+    "no_hash": "This plugin does not have a hash, you are installing it at your own risk.",
     "reinstall": {
       "button_idle": "Reinstall",
       "button_processing": "Reinstalling",
@@ -77,7 +66,7 @@
   },
   "PluginListIndex": {
     "no_plugin": "No plugins installed!",
-    "plug_actions_label": "Plugin Actions",
+    "plugin_actions": "Plugin Actions",
     "reinstall": "Reinstall",
     "reload": "Reload",
     "uninstall": "Uninstall",
@@ -87,7 +76,6 @@
     "decky_title": "Decky",
     "decky_update_available": "Update to {{tag_name}} available!",
     "error": "Error",
-    "file_picker_cancel_text": "User canceled",
     "plugin_error_uninstall": "Please go to {{-icon}} in the Decky menu if you need to uninstall this plugin.",
     "plugin_load_error": {
       "message": "Error loading plugin {{name}}",
@@ -105,6 +93,31 @@
     "remote_cef": {
       "desc": "Allow unauthenticated access to the CEF debugger to anyone in your network",
       "label": "Allow Remote CEF Debugging"
+    }
+  },
+  "SettingsDeveloperIndex": {
+    "header_other": "Other",
+    "react_devtools": {
+      "desc": "Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set the IP address before enabling.",
+      "ip_label": "IP",
+      "label": "Enable React DevTools"
+    },
+    "third_party_plugins": {
+      "button_install": "Install",
+      "button_zip": "Browse",
+      "header": "Third-Party Plugins",
+      "label_desc": "URL",
+      "label_url": "Install Plugin from URL",
+      "label_zip": "Install Plugin from ZIP File"
+    },
+    "toast_zip": {
+      "body": "Installation failed! Only ZIP files are supported.",
+      "title": "Decky"
+    },
+    "valve_internal": {
+      "desc1": "Enables the Valve internal developer menu.",
+      "desc2": "Do not touch anything in this menu unless you know what it does.",
+      "label": "Enable Valve Internal"
     }
   },
   "SettingsGeneralIndex": {
@@ -183,7 +196,7 @@
     "patch_notes_desc": "Patch Notes",
     "updates": {
       "check_button": "Check For Updates",
-      "checking": "'Checking",
+      "checking": "Checking",
       "cur_version": "Current version: {{ver}}",
       "install_button": "Install Update",
       "label": "Updates",

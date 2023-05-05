@@ -1,5 +1,3 @@
-// i18next-parser.config.js
-
 export default {
     contextSeparator: '_',
     // Key separator used in your translation keys
@@ -10,7 +8,7 @@ export default {
     defaultNamespace: 'translation',
     // Default namespace used in your i18next config
   
-    defaultValue: 'MISSING',
+    defaultValue: '',
     // Default value to give to keys with no value
     // You may also specify a function accepting the locale, namespace, key, and value as arguments
   

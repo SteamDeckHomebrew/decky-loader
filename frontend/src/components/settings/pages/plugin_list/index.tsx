@@ -38,7 +38,7 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
 
   const showCtxMenu = (e: MouseEvent | GamepadEvent) => {
     showContextMenu(
-      <Menu label={t('PluginListIndex.plug_actions_label')}>
+      <Menu label={t('PluginListIndex.plugin_actions')}>
         <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(pluginName, data?.version)}>
           {t('PluginListIndex.reload')}
         </MenuItem>
@@ -46,9 +46,9 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
           onSelected={() =>
             window.DeckyPluginLoader.uninstallPlugin(
               pluginName,
-              t('PluginLoader.plugin_uninstall.title', { name: props.entry.label }),
+              t('PluginLoader.plugin_uninstall.title', { name: pluginName }),
               t('PluginLoader.plugin_uninstall.button'),
-              t('PluginLoader.plugin_uninstall.desc', { name: props.entry.label }),
+              t('PluginLoader.plugin_uninstall.desc', { name: pluginName }),
             )
           }
         >

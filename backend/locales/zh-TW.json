@@ -171,7 +171,7 @@
     "patch_notes_desc": "更新日誌",
     "updates": {
       "check_button": "檢查更新",
-      "checking": "'正在檢查",
+      "checking": "正在檢查",
       "cur_version": "目前版本：{{ver}}",
       "install_button": "安裝更新",
       "label": "更新",

@@ -17,8 +17,12 @@ import { FileIcon, defaultStyles } from 'react-file-icon';
 import { useTranslation } from 'react-i18next';
 import { FaArrowUp, FaFolder } from 'react-icons/fa';
 
+import Logger from '../../../logger';
 import DropdownMultiselect from '../DropdownMultiselect';
+import TFilePicker, { TranslatedPart } from './i18n/TFilePicker';
 import { styleDefObj } from './iconCustomizations';
+
+const logger = new Logger('FilePicker');
 
 export interface FilePickerProps {
   startPath: string;
@@ -35,7 +39,7 @@ export interface File {
   ishidden: boolean;
   name: string;
   realpath: string;
-  size: number;
+  size?: number;
   modified: number;
   created: number;
 }
@@ -45,83 +49,44 @@ interface FileListing {
   files: File[];
 }
 
-type SortOption =
-  | 'name_desc'
-  | 'name_asc'
-  | 'modified_desc'
-  | 'modified_asc'
-  | 'created_desc'
-  | 'created_asc'
-  | 'size_desc'
-  | 'size_asc';
-
-enum ESortOption {
-  'name_desc',
-  'name_asc',
-  'modified_desc',
-  'modified_asc',
-  'created_desc',
-  'created_asc',
-  'size_desc',
-  'size_asc',
-}
-
-function getTextForSortOption(identifier: ESortOption): string {
-  const { t } = useTranslation();
-  switch (identifier) {
-    case ESortOption.name_desc:
-      return t('FilePickerIndex.filter.name_desc');
-    case ESortOption.name_asc:
-      return t('FilePickerIndex.filter.name_asce');
-    case ESortOption.modified_desc:
-      return t('FilePickerIndex.filter.modified_desc');
-    case ESortOption.modified_asc:
-      return t('FilePickerIndex.filter.modified_asce');
-    case ESortOption.created_desc:
-      return t('FilePickerIndex.filter.created_desc');
-    case ESortOption.created_asc:
-      return t('FilePickerIndex.filter.created_asce');
-    case ESortOption.size_desc:
-      return t('FilePickerIndex.filter.size_desc');
-    case ESortOption.size_asc:
-      return t('FilePickerIndex.filter.size_asce');
-  }
-}
-
 const sortOptions = [
   {
     data: 'name_desc',
-    label: getTextForSortOption(ESortOption.name_desc),
+    label: <TFilePicker trans_part={TranslatedPart.name_desc} />,
   },
   {
     data: 'name_asc',
-    label: getTextForSortOption(ESortOption.name_asc),
+    label: <TFilePicker trans_part={TranslatedPart.name_asc} />,
   },
   {
     data: 'modified_desc',
-    label: getTextForSortOption(ESortOption.modified_desc),
+    label: <TFilePicker trans_part={TranslatedPart.modified_desc} />,
   },
   {
     data: 'modified_asc',
-    label: getTextForSortOption(ESortOption.modified_asc),
+    label: <TFilePicker trans_part={TranslatedPart.modified_asc} />,
   },
   {
     data: 'created_desc',
-    label: getTextForSortOption(ESortOption.created_desc),
+    label: <TFilePicker trans_part={TranslatedPart.created_desc} />,
   },
   {
     data: 'created_asc',
-    label: getTextForSortOption(ESortOption.created_asc),
+    label: <TFilePicker trans_part={TranslatedPart.created_asc} />,
   },
   {
     data: 'size_desc',
-    label: getTextForSortOption(ESortOption.size_desc),
+    label: <TFilePicker trans_part={TranslatedPart.size_desc} />,
   },
   {
     data: 'size_asc',
-    label: getTextForSortOption(ESortOption.size_asc),
+    label: <TFilePicker trans_part={TranslatedPart.size_asc} />,
   },
 ];
+
+function getList(path: string, includeFiles: boolean): Promise<{ result: FileListing | string; success: boolean }> {
+  return window.DeckyPluginLoader.callServerMethod('filepicker_ls', { path, include_files: includeFiles });
+}
 
 const iconStyles = {
   paddingRight: '10px',
@@ -141,12 +106,12 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
 
   if (startPath !== '/' && startPath.endsWith('/')) startPath = startPath.substring(0, startPath.length - 1); // remove trailing path
   const [path, setPath] = useState<string>(startPath);
-  const [listing] = useState<FileListing>({ files: [], realpath: path });
+  const [listing, setListing] = useState<FileListing>({ files: [], realpath: path });
   const [files, setFiles] = useState<File[]>([]);
-  const [error] = useState<string | null>(null);
-  const [loading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const [showHidden, setShowHidden] = useState<boolean>(defaultHidden);
-  const [sort, setSort] = useState<SortOption>('name_desc');
+  const [sort, setSort] = useState<TranslatedPart>(TranslatedPart.name_desc);
   const [selectedFiles, setSelectedFiles] = useState<any>(validFileExtensions);
 
   const validExtsOptions = useMemo(() => {
@@ -165,6 +130,26 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
       setSelectedFiles(val);
     }
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      const listing = await getList(path, includeFiles);
+      if (!listing.success) {
+        setListing({ files: [], realpath: path });
+        setLoading(false);
+        setError(listing.result as string);
+        logger.error(listing.result);
+        return;
+      } else {
+        setError(null);
+        setFiles((listing.result as FileListing).files);
+      }
+      setLoading(false);
+      setListing(listing.result as FileListing);
+      logger.log('reloaded', path, listing);
+    })();
+  }, [error, includeFiles, path]);
 
   useEffect(() => {
     const files = [...listing.files]
@@ -190,8 +175,8 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
       })
       // Sort files
       .sort((a, b) => {
-        const key = sort.split('_')[0];
-        const order = sort.split('_')[1];
+        const key = TranslatedPart[sort].split('_')[0];
+        const order = TranslatedPart[sort].split('_')[1];
         if (key === 'name') {
           return order === 'asc' ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name);
         }
@@ -203,7 +188,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
   }, [listing.files, filter, showHidden, sort, selectedFiles, validFileExtensions]);
   return (
     <>
-      <DialogBody>
+      <DialogBody className="deckyFilePicker">
         <DialogControlsSection>
           <Focusable flow-children="right" style={{ display: 'flex', marginBottom: '1em' }}>
             <DialogButton
@@ -301,7 +286,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
                         marginTop: '.5em',
                       }}
                     >
-                      {file.isdir ? 'Folder' : filesize(file.size, { standard: 'iec' })}
+                      {file.isdir ? t('FilePickerIndex.folder.label') : filesize(file.size, { standard: 'iec' })}
                       <span style={{ marginLeft: 'auto' }}>{new Date(file.modified * 1000).toLocaleString()}</span>
                     </div>
                   </DialogButton>

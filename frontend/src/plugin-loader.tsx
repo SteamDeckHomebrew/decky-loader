@@ -1,10 +1,10 @@
 import { ConfirmModal, ModalRoot, Patch, QuickAccessTab, Router, showModal, sleep } from 'decky-frontend-lib';
 import { FC, lazy } from 'react';
-import { useTranslation } from 'react-i18next';
 import { FaCog, FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
 import { DeckyState, DeckyStateContextProvider, useDeckyState } from './components/DeckyState';
 import LegacyPlugin from './components/LegacyPlugin';
+import { File } from './components/modals/filepicker';
 import { deinitFilepickerPatches, initFilepickerPatches } from './components/modals/filepicker/patches';
 import PluginInstallModal from './components/modals/PluginInstallModal';
 import NotificationBadge from './components/NotificationBadge';
@@ -320,16 +320,14 @@ class PluginLoader extends Logger {
   openFilePicker(
     startPath: string,
     includeFiles?: boolean,
-    regex?: RegExp,
+    filter?: RegExp | ((file: File) => boolean),
   ): Promise<{ path: string; realpath: string }> {
-    const { t } = useTranslation();
-
     return new Promise((resolve, reject) => {
       const Content = ({ closeModal }: { closeModal?: () => void }) => (
         // Purposely outside of the FilePicker component as lazy-loaded ModalRoots don't focus correctly
         <ModalRoot
           onCancel={() => {
-            reject(t('PluginLoader.file_picker_cancel_text'));
+            reject('User canceled');
             closeModal?.();
           }}
         >
@@ -337,7 +335,7 @@ class PluginLoader extends Logger {
             <FilePicker
               startPath={startPath}
               includeFiles={includeFiles}
-              filter={regex}
+              filter={filter}
               onSubmit={resolve}
               closeModal={closeModal}
             />

@@ -32,6 +32,10 @@
       "name_desc": "A-Z",
       "size_asce": "Dimensione (più piccolo)",
       "size_desc": "Dimensione (più grande)"
+    },
+    "folder": {
+      "label": "Cartella",
+      "select": "Usa questa cartella"
     }
   },
   "PluginCard": {

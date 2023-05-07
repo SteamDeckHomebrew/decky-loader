@@ -34,7 +34,8 @@
       "size_desc": "Size (Largest)"
     },
     "folder": {
-      "select": ""
+      "label": "Folder",
+      "select": "Use this folder"
     }
   },
   "PluginCard": {

@@ -55,7 +55,7 @@
   "PluginLoader": {
     "decky_title": "Decky",
     "decky_update_available": "新版本 {{tag_name}} 可用！",
-    "error": "Error",
+    "error": "错误",
     "plugin_error_uninstall": "如果你想卸载插件请点击 Decky 菜单中的 {{-icon}} 图标",
     "plugin_load_error": {
       "message": "加载插件 {{name}} 错误",
@@ -106,7 +106,7 @@
       "header": "关于"
     },
     "beta": {
-      "header": "测试版"
+      "header": "参与测试"
     },
     "developer_mode": {
       "desc": "启用 Decky 的开发者测试",

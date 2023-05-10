@@ -41,7 +41,7 @@
       "button_idle": "更新",
       "button_processing": "正在更新",
       "desc": "你确定要更新 {{artifact}} {{version}} 吗?",
-      "title": "更新 {{name}}"
+      "title": "更新 {{artifact}}"
     }
   },
   "PluginListIndex": {

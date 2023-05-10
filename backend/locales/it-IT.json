@@ -17,6 +17,12 @@
       "back": "Indietro"
     }
   },
+  "FilePickerError": {
+    "errors": {
+      "file_not_found": "Il percorso specificato non è valido. Controllalo e prova a reinserirlo di nuovo.",
+      "unknown": "È avvenuto un'errore sconosciuto. L'errore segnalato è {{raw_error}}"
+    }
+  },
   "FilePickerIndex": {
     "files": {
       "all_files": "Tutti i file",

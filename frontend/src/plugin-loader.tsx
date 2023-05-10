@@ -320,6 +320,9 @@ class PluginLoader extends Logger {
   openFilePicker(
     startPath: string,
     includeFiles?: boolean,
+    extensions?: string[],
+    showHiddenFiles?: boolean,
+    allowAllFiles?: boolean,
     filter?: RegExp | ((file: File) => boolean),
   ): Promise<{ path: string; realpath: string }> {
     return new Promise((resolve, reject) => {
@@ -336,6 +339,9 @@ class PluginLoader extends Logger {
               startPath={startPath}
               includeFiles={includeFiles}
               filter={filter}
+              validFileExtensions={extensions}
+              allowAllFiles={allowAllFiles}
+              defaultHidden={showHiddenFiles}
               onSubmit={resolve}
               closeModal={closeModal}
             />

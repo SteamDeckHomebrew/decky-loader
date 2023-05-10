@@ -17,6 +17,12 @@
       "back": "Back"
     }
   },
+  "FilePickerError": {
+    "errors": {
+      "file_not_found": "The path specified is not valid. Please check it and reenter it correctly.",
+      "unknown": "An unknown error occurred. The raw error is: {{raw_error}}"
+    }
+  },
   "FilePickerIndex": {
     "files": {
       "all_files": "All Files",

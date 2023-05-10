@@ -8,6 +8,8 @@ from aiohttp import ClientSession, web
 
 from logging import getLogger
 from injector import inject_to_tab, get_gamepadui_tab, close_old_tabs
+from pathlib import Path
+from localplatform import ON_WINDOWS
 import helpers
 import subprocess
 from localplatform import service_stop, service_start
@@ -183,36 +185,31 @@ class Utilities:
         return True
 
     async def filepicker_ls(self, path, include_files=True):
-        # def sorter(file): # Modification time
-        #     if os.path.isdir(os.path.join(path, file)) or os.path.isfile(os.path.join(path, file)):
-        #         return os.path.getmtime(os.path.join(path, file))
-        #     return 0
-        # file_names = sorted(os.listdir(path), key=sorter, reverse=True) # TODO provide more sort options
-        file_names = sorted(os.listdir(path)) # Alphabetical
+        path = Path(path).resolve()
 
         files = []
 
-        for file in file_names:
-            full_path = os.path.join(path, file)
-            is_dir = os.path.isdir(full_path)
-            file_stats = os.lstat(full_path)
-            # Windows and OSX have their own file attributes for hidden files and dirs.
-            # Only doing Linux for now cause that's all Decky supports.
-            is_hidden = file.startswith('.')
+        for file in path.iterdir():
+            is_dir = file.is_dir()
 
-            if is_dir or include_files:
+            if file.exists() and (is_dir or include_files):
+                filest = file.stat()
+                is_hidden = file.name.startswith('.')
+                if ON_WINDOWS and not is_hidden:
+                    is_hidden = bool(stat(file).st_file_attributes & FILE_ATTRIBUTE_HIDDEN)
+
                 files.append({
                     "isdir": is_dir,
                     "ishidden": is_hidden,
-                    "name": file,
-                    "realpath": os.path.realpath(full_path),
-                    "size": file_stats.st_size,
-                    "modified": file_stats.st_mtime,
-                    "created": file_stats.st_atime,
+                    "name": file.name.encode('utf-8', 'replace').decode('utf-8'),
+                    "realpath": str(file.resolve()).encode('utf-8', 'replace').decode('utf-8'),
+                    "size": filest.st_size,
+                    "modified": filest.st_mtime,
+                    "created": filest.st_ctime,
                 })
 
         return {
-            "realpath": os.path.realpath(path),
+            "realpath": str(path),
             "files": files
         }
 

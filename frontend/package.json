@@ -22,7 +22,7 @@
     "@types/react-router": "5.1.18",
     "@types/webpack": "^5.28.1",
     "husky": "^8.0.3",
-    "i18next-parser": "^7.7.0",
+    "i18next-parser": "^8.0.0",
     "import-sort-style-module": "^6.0.0",
     "inquirer": "^8.2.5",
     "prettier": "^2.8.8",

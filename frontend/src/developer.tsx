@@ -61,29 +61,4 @@ export async function startup() {
 
   if ((isRDTEnabled && !window.deckyHasConnectedRDT) || (!isRDTEnabled && window.deckyHasConnectedRDT))
     setShouldConnectToReactDevTools(isRDTEnabled);
-
-  // logger.log('Exposing decky-frontend-lib APIs as DFL');
-  // window.DFL = {
-  //   findModuleChild,
-  //   findModule,
-  //   Navigation,
-  //   Router,
-  //   ReactRouter,
-  //   ReactUtils: {
-  //     fakeRenderComponent,
-  //     findInReactTree,
-  //     findInTree,
-  //   },
-  //   classes: {
-  //     scrollClasses,
-  //     staticClasses,
-  //     playSectionClasses,
-  //     scrollPanelClasses,
-  //     updaterFieldClasses,
-  //     gamepadDialogClasses,
-  //     gamepadSliderClasses,
-  //     quickAccessMenuClasses,
-  //     quickAccessControlsClasses,
-  //   },
-  // };
 }

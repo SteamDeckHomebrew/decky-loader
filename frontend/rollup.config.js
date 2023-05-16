@@ -11,7 +11,7 @@ import externalGlobals from 'rollup-plugin-external-globals';
 const hiddenWarnings = ['THIS_IS_UNDEFINED', 'EVAL'];
 
 export default defineConfig({
-  input: 'src/index.tsx',
+  input: 'src/index.ts',
   plugins: [
     del({ targets: '../backend/static/*', force: true }),
     commonjs(),

@@ -1,23 +1,4 @@
-import {
-  Navigation,
-  ReactRouter,
-  Router,
-  fakeRenderComponent,
-  findInReactTree,
-  findInTree,
-  findModule,
-  findModuleChild,
-  gamepadDialogClasses,
-  gamepadSliderClasses,
-  playSectionClasses,
-  quickAccessControlsClasses,
-  quickAccessMenuClasses,
-  scrollClasses,
-  scrollPanelClasses,
-  sleep,
-  staticClasses,
-  updaterFieldClasses,
-} from 'decky-frontend-lib';
+import { findModuleChild, sleep } from 'decky-frontend-lib';
 import { FaReact } from 'react-icons/fa';
 
 import Logger from './logger';
@@ -77,29 +58,4 @@ export async function startup() {
 
   if ((isRDTEnabled && !window.deckyHasConnectedRDT) || (!isRDTEnabled && window.deckyHasConnectedRDT))
     setShouldConnectToReactDevTools(isRDTEnabled);
-
-  logger.log('Exposing decky-frontend-lib APIs as DFL');
-  window.DFL = {
-    findModuleChild,
-    findModule,
-    Navigation,
-    Router,
-    ReactRouter,
-    ReactUtils: {
-      fakeRenderComponent,
-      findInReactTree,
-      findInTree,
-    },
-    classes: {
-      scrollClasses,
-      staticClasses,
-      playSectionClasses,
-      scrollPanelClasses,
-      updaterFieldClasses,
-      gamepadDialogClasses,
-      gamepadSliderClasses,
-      quickAccessMenuClasses,
-      quickAccessControlsClasses,
-    },
-  };
 }

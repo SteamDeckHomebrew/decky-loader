@@ -68,7 +68,7 @@
       "button_idle": "Update",
       "button_processing": "Updating",
       "desc": "Are you sure you want to update {{artifact}} {{version}}?",
-      "title": "Update {{name}}"
+      "title": "Update {{artifact}}"
     }
   },
   "PluginListIndex": {

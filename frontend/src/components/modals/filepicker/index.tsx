@@ -261,7 +261,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
           <Focusable
             style={{ display: 'flex', gap: '.25em', flexDirection: 'column', height: '60vh', overflow: 'scroll' }}
           >
-            {loading && <SteamSpinner style={{ height: '100%' }} />}
+            {loading && error === FileErrorTypes.None && <SteamSpinner style={{ height: '100%' }} />}
             {!loading &&
               files.map((file) => {
                 const extension = file.realpath.split('.').pop() as string;

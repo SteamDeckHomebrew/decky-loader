@@ -93,6 +93,7 @@ const DropdownMultiselect: FC<{
               }
               `}
             </style>
+            <div style={{ marginTop: '10px' }}>{/*FIXME: Hack for missing padding under label menu*/}</div>
             {items.map((x) => (
               <DropdownMultiselectItem
                 key={x.value}

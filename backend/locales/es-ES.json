@@ -1,12 +1,8 @@
 {
     "BranchSelect": {
         "update_channel": {
-            "prerelease": "",
             "testing": ""
         }
-    },
-    "Developer": {
-        "disabling": ""
     },
     "FilePickerIndex": {
         "folder": {
@@ -14,98 +10,63 @@
         }
     },
     "PluginCard": {
-        "plugin_install": "",
         "plugin_version_label": ""
     },
     "PluginInstallModal": {
         "install": {
-            "button_processing": "",
             "title": ""
         },
         "reinstall": {
-            "button_idle": "",
             "desc": ""
         },
         "update": {
-            "button_idle": "",
             "desc": ""
         }
     },
     "PluginListIndex": {
-        "no_plugin": "",
-        "reinstall": "",
-        "uninstall": ""
+        "reinstall": ""
     },
     "PluginLoader": {
         "decky_title": "",
-        "error": "",
         "plugin_load_error": {
             "message": ""
         },
         "plugin_uninstall": {
-            "button": "",
             "title": ""
-        }
-    },
-    "RemoteDebugging": {
-        "remote_cef": {
-            "desc": ""
         }
     },
     "SettingsDeveloperIndex": {
         "header_one": "",
         "header_many": "Other",
         "header_other": "",
-        "react_devtools": {
-            "ip_label": ""
-        },
         "third_party_plugins": {
             "button_install": "",
-            "header": "",
             "label_url": ""
         },
-        "toast_zip": {
-            "body": ""
-        },
         "valve_internal": {
-            "desc1": "",
-            "label": ""
+            "desc1": ""
         }
     },
     "SettingsGeneralIndex": {
         "about": {
             "header": ""
         },
-        "developer_mode": {
-            "desc": ""
-        },
         "other": {
             "header": ""
         }
     },
     "SettingsIndex": {
-        "developer_title": "",
         "navbar_settings": ""
     },
     "Store": {
-        "store_contrib": {
-            "desc": ""
-        },
         "store_filter": {
-            "label": ""
-        },
-        "store_search": {
             "label": ""
         },
         "store_sort": {
             "label_def": ""
         },
-        "store_source": {
-            "label": ""
-        },
         "store_tabs": {
-            "alph_asce": "",
-            "title": ""
+            "alph_asce": ""
         }
     },
     "StoreSelect": {
@@ -113,17 +74,13 @@
             "label": ""
         },
         "store_channel": {
-            "custom": "",
             "label": ""
         }
     },
     "Updater": {
-        "decky_updates": "",
         "patch_notes_desc": "",
         "updates": {
-            "checking": "",
             "install_button": "",
-            "lat_version": "",
             "updating": ""
         }
     }

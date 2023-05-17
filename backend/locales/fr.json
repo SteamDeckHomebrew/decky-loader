@@ -1,9 +1,4 @@
 {
-    "PluginInstallModal": {
-        "install": {
-            "title": ""
-        }
-    },
     "PluginLoader": {
         "decky_title": ""
     },
@@ -12,17 +7,9 @@
         "header_many": "Other",
         "header_other": ""
     },
-    "SettingsGeneralIndex": {
-        "about": {
-            "header": ""
-        }
-    },
     "Store": {
         "store_sort": {
             "label_def": ""
         }
-    },
-    "Updater": {
-        "patch_notes_desc": ""
     }
 }

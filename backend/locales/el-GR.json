@@ -1,14 +1,6 @@
 {
-    "PluginLoader": {
-        "decky_title": ""
-    },
     "SettingsDeveloperIndex": {
         "header_one": "",
         "header_other": "Other"
-    },
-    "Store": {
-        "store_sort": {
-            "label_def": ""
-        }
     }
 }

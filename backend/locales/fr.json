@@ -3,5 +3,11 @@
         "header_one": "",
         "header_many": "Other",
         "header_other": ""
+    },
+    "BranchSelect": {
+        "update_channel": {
+            "prerelease": "Avant-première",
+            "label": "Canal de mise à jour"
+        }
     }
 }

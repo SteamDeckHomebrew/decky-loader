@@ -1,53 +1,28 @@
 {
-    "FilePickerIndex": {
-        "folder": {
-            "select": ""
-        }
-    },
     "PluginInstallModal": {
         "install": {
             "title": ""
-        },
-        "update": {
-            "desc": ""
         }
     },
     "PluginLoader": {
-        "decky_title": "",
-        "plugin_uninstall": {
-            "title": ""
-        }
+        "decky_title": ""
     },
     "SettingsDeveloperIndex": {
         "header_one": "",
         "header_many": "Other",
-        "header_other": "",
-        "third_party_plugins": {
-            "label_url": ""
-        }
+        "header_other": ""
     },
     "SettingsGeneralIndex": {
         "about": {
             "header": ""
         }
     },
-    "SettingsIndex": {
-        "navbar_settings": ""
-    },
     "Store": {
         "store_sort": {
             "label_def": ""
         }
     },
-    "StoreSelect": {
-        "custom_store": {
-            "label": ""
-        }
-    },
     "Updater": {
-        "patch_notes_desc": "",
-        "updates": {
-            "updating": ""
-        }
+        "patch_notes_desc": ""
     }
 }

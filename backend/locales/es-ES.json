@@ -3,5 +3,20 @@
         "header_one": "",
         "header_many": "Other",
         "header_other": ""
+    },
+    "PluginInstallModal": {
+        "install": {
+            "button_idle": "Instalar"
+        }
+    },
+    "Developer": {
+        "disabling": "Deshabilitarlo",
+        "enabling": "Habilitándolo"
+    },
+    "BranchSelect": {
+        "update_channel": {
+            "prerelease": "Prelanzamiento",
+            "stable": "Estable"
+        }
     }
 }

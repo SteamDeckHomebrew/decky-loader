@@ -1,25 +1,10 @@
 {
-    "PluginInstallModal": {
-        "install": {
-            "title": ""
-        }
-    },
     "PluginLoader": {
         "decky_title": ""
-    },
-    "SettingsDeveloperIndex": {
-        "third_party_plugins": {
-            "button_install": ""
-        }
     },
     "SettingsGeneralIndex": {
         "other": {
             "header": ""
-        }
-    },
-    "Store": {
-        "store_tabs": {
-            "alph_asce": ""
         }
     },
     "Updater": {

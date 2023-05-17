@@ -1,5 +1,5 @@
 // TabsHook for versions after the Desktop merge
-import { Patch, QuickAccessTab, afterPatch, findInReactTree, sleep } from 'decky-frontend-lib';
+import { Patch, QuickAccessTab, afterPatch, findInReactTree, findSP, sleep } from 'decky-frontend-lib';
 
 import { QuickAccessVisibleStateProvider } from './components/QuickAccessVisibleState';
 import Logger from './logger';
@@ -32,7 +32,7 @@ class TabsHook extends Logger {
   }
 
   async init() {
-    this.qAMRoot = await this.getQuickSettingsVeryQuick();
+    this.qAMRoot = await this.getQuickMenuRoot();
 
     let patchedInnerQAM: any;
     this.qamPatch = afterPatch(this.qAMRoot.return, 'type', (_: any, ret: any) => {
@@ -72,14 +72,15 @@ class TabsHook extends Logger {
     this.log('Finished initial injection');
   }
 
-  async getQuickSettingsVeryQuick() {
+  async getQuickMenuRoot() {
     while (typeof GamepadNavTree === 'undefined') {
-      await new Promise((resolve) => setTimeout(resolve, 50));
+      await sleep(50);
     }
 
-    const [parentNode] = GamepadNavTree.m_window.document.querySelectorAll("*[class*='BasicUI']");
-    const [reactInstanceKey] = Object.keys(parentNode);
+    const parentNode = findSP().document.querySelector("[class*='BasicUI']");
+    if (!parentNode) return null;
 
+    const [reactInstanceKey] = Object.keys(parentNode);
     const parentReactNode = parentNode[reactInstanceKey];
 
     return findInReactTree(

@@ -31,82 +31,62 @@ class TabsHook extends Logger {
     window.__TABS_HOOK_INSTANCE = this;
   }
 
-  init() {
-    const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
-    let qAMRoot: any;
-    const findQAMRoot = (currentNode: any, iters: number): any => {
-      if (iters >= 65) {
-        // currently 45
-        return null;
-      }
-      if (
-        typeof currentNode?.memoizedProps?.visible == 'boolean' &&
-        currentNode?.type?.toString()?.includes('QuickAccessMenuBrowserView')
-      ) {
-        this.log(`QAM root was found in ${iters} recursion cycles`);
-        return currentNode;
-      }
-      if (currentNode.child) {
-        let node = findQAMRoot(currentNode.child, iters + 1);
-        if (node !== null) return node;
-      }
-      if (currentNode.sibling) {
-        let node = findQAMRoot(currentNode.sibling, iters + 1);
-        if (node !== null) return node;
-      }
-      return null;
-    };
-    (async () => {
-      qAMRoot = findQAMRoot(tree, 0);
-      while (!qAMRoot) {
-        this.error(
-          'Failed to find QAM root node, reattempting in 5 seconds. A developer may need to increase the recursion limit.',
-        );
-        await sleep(5000);
-        qAMRoot = findQAMRoot(tree, 0);
-      }
-      this.qAMRoot = qAMRoot;
-      let patchedInnerQAM: any;
-      this.qamPatch = afterPatch(qAMRoot.return, 'type', (_: any, ret: any) => {
-        try {
-          if (!qAMRoot?.child) {
-            qAMRoot = findQAMRoot(tree, 0);
-            this.qAMRoot = qAMRoot;
-          }
-          if (qAMRoot?.child && !qAMRoot?.child?.type?.decky) {
-            afterPatch(qAMRoot.child, 'type', (_: any, ret: any) => {
-              try {
-                const qamTabsRenderer = findInReactTree(ret, (x) => x?.props?.onFocusNavDeactivated);
-                if (patchedInnerQAM) {
-                  qamTabsRenderer.type = patchedInnerQAM;
-                } else {
-                  afterPatch(qamTabsRenderer, 'type', (innerArgs: any, ret: any) => {
-                    const tabs = findInReactTree(ret, (x) => x?.props?.tabs);
-                    this.render(tabs.props.tabs, innerArgs[0].visible);
-                    return ret;
-                  });
-                  patchedInnerQAM = qamTabsRenderer.type;
-                }
-              } catch (e) {
-                this.error('Error patching QAM inner', e);
+  async init() {
+    this.qAMRoot = await this.getQuickSettingsVeryQuick();
+
+    let patchedInnerQAM: any;
+    this.qamPatch = afterPatch(this.qAMRoot.return, 'type', (_: any, ret: any) => {
+      try {
+        if (this.qAMRoot?.child && !this.qAMRoot?.child?.type?.decky) {
+          afterPatch(this.qAMRoot.child, 'type', (_: any, ret: any) => {
+            try {
+              const qamTabsRenderer = findInReactTree(ret, (x) => x?.props?.onFocusNavDeactivated);
+              if (patchedInnerQAM) {
+                qamTabsRenderer.type = patchedInnerQAM;
+              } else {
+                afterPatch(qamTabsRenderer, 'type', (innerArgs: any, ret: any) => {
+                  const tabs = findInReactTree(ret, (x) => x?.props?.tabs);
+                  this.render(tabs.props.tabs, innerArgs[0].visible);
+                  return ret;
+                });
+                patchedInnerQAM = qamTabsRenderer.type;
               }
-              return ret;
-            });
-            qAMRoot.child.type.decky = true;
-            qAMRoot.child.alternate.type = qAMRoot.child.type;
-          }
-        } catch (e) {
-          this.error('Error patching QAM', e);
+            } catch (e) {
+              this.error('Error patching QAM inner', e);
+            }
+            return ret;
+          });
+          this.qAMRoot.child.type.decky = true;
+          this.qAMRoot.child.alternate.type = this.qAMRoot.child.type;
         }
-
-        return ret;
-      });
-
-      if (qAMRoot.return.alternate) {
-        qAMRoot.return.alternate.type = qAMRoot.return.type;
+      } catch (e) {
+        this.error('Error patching QAM', e);
       }
-      this.log('Finished initial injection');
-    })();
+
+      return ret;
+    });
+
+    if (this.qAMRoot.return.alternate) {
+      this.qAMRoot.return.alternate.type = this.qAMRoot.return.type;
+    }
+    this.log('Finished initial injection');
+  }
+
+  async getQuickSettingsVeryQuick() {
+    while (typeof GamepadNavTree === 'undefined') {
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+
+    const [parentNode] = GamepadNavTree.m_window.document.querySelectorAll("*[class*='BasicUI']");
+    const [reactInstanceKey] = Object.keys(parentNode);
+
+    const parentReactNode = parentNode[reactInstanceKey];
+
+    return findInReactTree(
+      parentReactNode,
+      (n) =>
+        typeof n.memoizedProps?.visible !== 'undefined' && n.type?.toString()?.includes('QuickAccessMenuBrowserView'),
+    );
   }
 
   deinit() {

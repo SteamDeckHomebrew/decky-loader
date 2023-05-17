@@ -65,7 +65,8 @@
             "title": "解除安裝 {{name}}",
             "desc": "您確定要解除安裝 {{name}} 嗎？"
         },
-        "decky_update_available": "可更新至版本 {{tag_name}}！"
+        "decky_update_available": "可更新至版本 {{tag_name}}！",
+        "plugin_update_other": ""
     },
     "RemoteDebugging": {
         "remote_cef": {
@@ -95,7 +96,8 @@
             "desc": "啟用與執行 React DevTools 的電腦的連接。改變這個設定將重新載入 Steam。啟用前必須設定 IP 位址。",
             "ip_label": "IP",
             "label": "啟用 React DevTools"
-        }
+        },
+        "header_other": ""
     },
     "SettingsGeneralIndex": {
         "about": {

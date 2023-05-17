@@ -119,7 +119,10 @@
             "button": "Désinstaller",
             "title": "Désinstaller {{name}}",
             "desc": "Êtes-vous sûr.e de vouloir désinstaller {{name}} ?"
-        }
+        },
+        "plugin_update_one": "",
+        "plugin_update_many": "",
+        "plugin_update_other": ""
     },
     "RemoteDebugging": {
         "remote_cef": {

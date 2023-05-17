@@ -1,5 +1,13 @@
 // TabsHook for versions after the Desktop merge
-import { Patch, QuickAccessTab, afterPatch, findInReactTree, findSP, sleep } from 'decky-frontend-lib';
+import {
+  Patch,
+  QuickAccessTab,
+  afterPatch,
+  findInReactTree,
+  findSP,
+  getReactInstance,
+  sleep,
+} from 'decky-frontend-lib';
 
 import { QuickAccessVisibleStateProvider } from './components/QuickAccessVisibleState';
 import Logger from './logger';
@@ -80,11 +88,8 @@ class TabsHook extends Logger {
     const parentNode = findSP().document.querySelector("[class*='BasicUI']");
     if (!parentNode) return null;
 
-    const [reactInstanceKey] = Object.keys(parentNode);
-    const parentReactNode = parentNode[reactInstanceKey];
-
     return findInReactTree(
-      parentReactNode,
+      getReactInstance(parentNode),
       (n) =>
         typeof n.memoizedProps?.visible !== 'undefined' && n.type?.toString()?.includes('QuickAccessMenuBrowserView'),
     );

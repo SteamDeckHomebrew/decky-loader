@@ -40,7 +40,7 @@ class TabsHook extends Logger {
   }
 
   async init() {
-    this.qAMRoot = await this.getQuickMenuRoot();
+    this.qAMRoot = await this.getQAMRoot();
 
     let patchedInnerQAM: any;
     this.qamPatch = afterPatch(this.qAMRoot.return, 'type', (_: any, ret: any) => {
@@ -80,7 +80,7 @@ class TabsHook extends Logger {
     this.log('Finished initial injection');
   }
 
-  async getQuickMenuRoot() {
+  async getQAMRoot() {
     while (typeof GamepadNavTree === 'undefined') {
       await sleep(50);
     }

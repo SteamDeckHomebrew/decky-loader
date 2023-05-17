@@ -65,7 +65,8 @@
             "title": "卸载 {{name}}",
             "desc": "你确定要卸载 {{name}} 吗?"
         },
-        "decky_update_available": "新版本 {{tag_name}} 可用！"
+        "decky_update_available": "新版本 {{tag_name}} 可用！",
+        "plugin_update_other": ""
     },
     "RemoteDebugging": {
         "remote_cef": {
@@ -95,7 +96,8 @@
             "desc1": "启用 Valve 内部开发者菜单",
             "desc2": "除非你知道你在干什么，否则请不要修改此菜单中的任何内容",
             "label": "启用 Valve 内部开发者"
-        }
+        },
+        "header_other": ""
     },
     "SettingsGeneralIndex": {
         "about": {

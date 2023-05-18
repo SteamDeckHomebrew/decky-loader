@@ -5,6 +5,7 @@ import {
   afterPatch,
   findInReactTree,
   findSP,
+  gamepadUIClasses,
   getReactInstance,
   sleep,
 } from 'decky-frontend-lib';
@@ -81,11 +82,11 @@ class TabsHook extends Logger {
   }
 
   async getQAMRoot() {
-    while (typeof GamepadNavTree === 'undefined') {
+    while (!findSP()) {
       await sleep(50);
     }
 
-    const parentNode = findSP().document.querySelector("[class*='BasicUI']");
+    const parentNode = findSP().document.querySelector(`.${gamepadUIClasses.BasicUiRoot}`);
     if (!parentNode) return null;
 
     return findInReactTree(

@@ -140,7 +140,7 @@
         },
         "store_source": {
             "label": "原始碼",
-            "desc": "所有外掛程式原始碼可以在 GitHub 的 SteamDeckHomebrew/decky-plugin-database repository 查看。"
+            "desc": "所有外掛程式原始碼可以在 GitHub 的 SteamDeckHomebrew/decky-plugin-database 儲存庫查看。"
         },
         "store_tabs": {
             "about": "關於",

@@ -99,7 +99,9 @@
             "message": "",
             "toast": ""
         },
-        "decky_update_available": ""
+        "decky_update_available": "",
+        "plugin_update_one": "",
+        "plugin_update_other": ""
     },
     "PluginListIndex": {
         "no_plugin": "Nuk ka shtesa të instaluar!",

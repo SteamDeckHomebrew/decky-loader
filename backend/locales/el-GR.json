@@ -94,7 +94,9 @@
             "button": "Απεγκατάσταση",
             "desc": "Σίγουρα θέλετε να απεγκαταστήσετε το {{name}};",
             "title": "Απεγκατάσταση {{name}}"
-        }
+        },
+        "plugin_update_one": "",
+        "plugin_update_other": ""
     },
     "RemoteDebugging": {
         "remote_cef": {

@@ -66,18 +66,19 @@
             "desc": "Sei sicuro di voler rimuovere {{name}}?",
             "title": "Rimuovi {{name}}"
         },
-        "plugin_update_one": "",
-        "plugin_update_many": "Aggiornamento disponibile per un plugin!"
+        "plugin_update_one": "Aggiornamento disponibile per 1 plugin!",
+        "plugin_update_many": "Aggiornamenti disponibili per {{count}} plugins!"
     },
     "RemoteDebugging": {
         "remote_cef": {
-            "desc": "Permetti l'accesso non autenticato al debugger di CEF da tutti gli indirizzi sulla tua rete locale.",
+            "desc": "Permetti l'accesso non autenticato al debugger di CEF da tutti gli indirizzi sulla tua rete locale",
             "label": "Permetti il debug remoto di CEF"
         }
     },
     "SettingsDeveloperIndex": {
         "header_one": "",
         "header_many": "",
+        "header_other": "",
         "react_devtools": {
             "desc": "Abilita la connessione ad un computer che esegue i DevTools di React. Cambiando questa impostazione ricaricherà Steam. Imposta l'indirizzo IP prima di abilitarlo.",
             "ip_label": "IP",
@@ -92,7 +93,7 @@
             "label_zip": "Installa plugin da un file ZIP"
         },
         "toast_zip": {
-            "body": "Installazione non riuscita, solo i file ZIP sono supportati!",
+            "body": "Installazione non riuscita! Solo supportati solo file ZIP.",
             "title": "Decky"
         },
         "valve_internal": {
@@ -143,7 +144,7 @@
             "label_def": "Ultimo aggiornato (Più recente)"
         },
         "store_source": {
-            "desc": "Tutto il codice sorgente dei plugin è disponibile su GitHub all'indirizzo SteamDeckHomebrew/decky-plugin-database",
+            "desc": "Tutto il codice sorgente dei plugin è disponibile su GitHub all'indirizzo SteamDeckHomebrew/decky-plugin-database.",
             "label": "Codice Sorgente"
         },
         "store_tabs": {

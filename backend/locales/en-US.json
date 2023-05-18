@@ -76,7 +76,7 @@
     }
   },
   "SettingsDeveloperIndex": {
-    "header_other": "Other",
+    "header": "Other",
     "react_devtools": {
       "desc": "Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set the IP address before enabling.",
       "ip_label": "IP",

@@ -19,9 +19,9 @@
     },
     "PluginCard": {
         "plugin_install": "安装",
-        "plugin_no_desc": "无描述提供",
+        "plugin_no_desc": "无描述提供。",
         "plugin_version_label": "插件版本",
-        "plugin_full_access": "此插件可以完全访问你的Steam Deck"
+        "plugin_full_access": "此插件可以完全访问你的 Steam Deck"
     },
     "PluginInstallModal": {
         "install": {
@@ -65,7 +65,8 @@
             "title": "卸载 {{name}}",
             "desc": "你确定要卸载 {{name}} 吗?"
         },
-        "decky_update_available": "新版本 {{tag_name}} 可用！"
+        "decky_update_available": "新版本 {{tag_name}} 可用！",
+        "plugin_update_other": "{{count}} 个插件有更新！"
     },
     "RemoteDebugging": {
         "remote_cef": {

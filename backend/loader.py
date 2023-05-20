@@ -66,15 +66,14 @@ class Loader:
         self.watcher = None
         self.live_reload = live_reload
         self.reload_queue = Queue()
-        self.loop.create_task(self.enable_reload_wait())
+        self.loop.create_task(self.handle_reloads())
 
         if live_reload:
-            
             self.observer = Observer()
             self.watcher = FileChangeHandler(self.reload_queue, plugin_path)
             self.observer.schedule(self.watcher, self.plugin_path, recursive=True)
             self.observer.start()
-            self.loop.create_task(self.handle_reloads())
+            self.loop.create_task(self.enable_reload_wait())
             
         server_instance.add_routes([
             web.get("/frontend/{path:.*}", self.handle_frontend_assets),
@@ -224,6 +223,6 @@ class Loader:
         plugin_name : str = request.match_info["plugin_name"]
         plugin = self.plugins[plugin_name]
 
-        await self.reload_queue.put((plugin.file, plugin.plugin_directory, True))
+        await self.reload_queue.put((plugin.file, plugin.plugin_directory))
 
         return web.Response(status=200)

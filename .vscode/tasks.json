@@ -38,7 +38,7 @@
             "type": "shell",
             "group": "none",
             "detail": "Check for local runs, create a plugins folder",
-            "command": "rsync -azp --rsh='ssh -p ${config:deckport} ${config:deckkey}' requirements.txt gamer@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader/requirements.txt && ssh gamer@${config:deckip} -p ${config:deckport} ${config:deckkey} 'python -m ensurepip && python -m pip install --upgrade pip && python -m pip install --upgrade setuptools && python -m pip install -r ${config:deckdir}/homebrew/dev/pluginloader/requirements.txt'",
+            "command": "rsync -azp --rsh='ssh -p ${config:deckport} ${config:deckkey}' requirements.txt deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader/requirements.txt && ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'python -m ensurepip && python -m pip install --upgrade pip && python -m pip install --upgrade setuptools && python -m pip install -r ${config:deckdir}/homebrew/dev/pluginloader/requirements.txt'",
             "problemMatcher": []
         },
         {
@@ -95,9 +95,9 @@
             "type": "shell",
             "group": "none",
             "dependsOn": [
-                //"checkforsettings"
+                "checkforsettings"
             ],
-            "command": "ssh gamer@${config:deckip} -p ${config:deckport} ${config:deckkey} 'mkdir -p ${config:deckdir}/homebrew/dev/pluginloader && mkdir -p ${config:deckdir}/homebrew/dev/plugins'",
+            "command": "ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'mkdir -p ${config:deckdir}/homebrew/dev/pluginloader && mkdir -p ${config:deckdir}/homebrew/dev/plugins'",
             "problemMatcher": []
         },
         {
@@ -105,7 +105,7 @@
             "detail": "Deploy dev PluginLoader to deck",
             "type": "shell",
             "group": "none",
-            "command": "rsync -azp --delete --rsh='ssh -p ${config:deckport} ${config:deckkey}' --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='requirements.txt' --exclude='backend/__pycache__/' --exclude='.gitignore' . gamer@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader",
+            "command": "rsync -azp --delete --rsh='ssh -p ${config:deckport} ${config:deckkey}' --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='requirements.txt' --exclude='backend/__pycache__/' --exclude='.gitignore' . deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader",
             "problemMatcher": []
         },
         // RUN
@@ -115,9 +115,9 @@
             "type": "shell",
             "group": "none",
             "dependsOn": [
-                //"checkforsettings"
+                "checkforsettings"
             ],
-            "command": "ssh gamer@${config:deckip} -p ${config:deckport} ${config:deckkey} 'export PLUGIN_PATH=${config:deckdir}/homebrew/dev/plugins; export CHOWN_PLUGIN_PATH=0; export LOG_LEVEL=DEBUG; cd ${config:deckdir}/homebrew/services; echo '${config:deckpass}' | sudo -SE python3 ${config:deckdir}/homebrew/dev/pluginloader/backend/main.py'",
+            "command": "ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'export PLUGIN_PATH=${config:deckdir}/homebrew/dev/plugins; export CHOWN_PLUGIN_PATH=0; export LOG_LEVEL=DEBUG; cd ${config:deckdir}/homebrew/services; echo '${config:deckpass}' | sudo -SE python3 ${config:deckdir}/homebrew/dev/pluginloader/backend/main.py'",
             "problemMatcher": []
         },
         {

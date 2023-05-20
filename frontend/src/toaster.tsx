@@ -1,4 +1,13 @@
-import { Module, Patch, ToastData, afterPatch, findInReactTree, findModuleChild, sleep } from 'decky-frontend-lib';
+import {
+  Module,
+  Patch,
+  ToastData,
+  afterPatch,
+  findInReactTree,
+  findModuleChild,
+  findSP,
+  sleep,
+} from 'decky-frontend-lib';
 import { ReactNode } from 'react';
 
 import Toast from './components/Toast';
@@ -32,6 +41,9 @@ class Toaster extends Logger {
   }
 
   async init() {
+    window.findInReactTree = findInReactTree;
+    window.findSP = findSP;
+
     // this.routerHook.addGlobalComponent('DeckyToaster', () => (
     //   <DeckyToasterStateContextProvider deckyToasterState={this.toasterState}>
     //     <DeckyToaster />
@@ -70,6 +82,10 @@ class Toaster extends Logger {
       await sleep(5000);
       instance = findToasterRoot(tree, 0);
     }
+
+    console.log('here is a toast!!!');
+    console.log(instance);
+
     this.node = instance.return;
     this.rNode = this.node.return;
     let toast: any;
@@ -145,6 +161,22 @@ class Toaster extends Logger {
 
     this.log('Initialized');
     this.finishStartup?.();
+  }
+
+  async getToasterNode() {
+    while (typeof GamepadNavTree === 'undefined') {
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+
+    const [parentNode] = GamepadNavTree.m_window.document.querySelectorAll("*[class*='BasicUI']");
+    const [reactInstanceKey] = Object.keys(parentNode);
+
+    const parentReactNode = parentNode[reactInstanceKey];
+
+    return findInReactTree(
+      parentReactNode,
+      (n) => typeof n.memoizedProps?.visible !== 'undefined' && n.memoizedProps?.visible !== 'undefined',
+    );
   }
 
   async toast(toast: ToastData) {

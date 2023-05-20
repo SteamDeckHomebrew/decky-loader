@@ -43,6 +43,7 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
           onSelected={() => {
             try {
               fetch(`http://127.0.0.1:1337/plugins/${pluginName}/reload`, {
+                method: 'POST',
                 credentials: 'include',
                 headers: {
                   Authentication: window.deckyAuthToken,

@@ -4,6 +4,7 @@ from json.decoder import JSONDecodeError
 from os.path import splitext
 import re
 from traceback import format_exc
+from stat import FILE_ATTRIBUTE_HIDDEN
 
 from asyncio import sleep, start_server, gather, open_connection
 from aiohttp import ClientSession, web

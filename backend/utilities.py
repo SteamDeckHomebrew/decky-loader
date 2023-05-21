@@ -2,6 +2,7 @@ import uuid
 import os
 from json.decoder import JSONDecodeError
 from os.path import splitext
+import re
 from traceback import format_exc
 
 from asyncio import sleep, start_server, gather, open_connection
@@ -197,27 +198,26 @@ class Utilities:
 
         files, folders = [], []
 
+        #Resolving all files/folders in the requested directory
         for file in path.iterdir():
             if file.exists():
                 filest = file.stat()
-                is_hidden = file.name.startswith('.')
-                if ON_WINDOWS and not is_hidden:
-                    is_hidden = bool(stat(file).st_file_attributes & FILE_ATTRIBUTE_HIDDEN)
+                is_hidden = checkForHiddenFile(file)
                 if include_folders and file.is_dir():
                     if (is_hidden and include_hidden) or not is_hidden:
                         folders.append({"file": file, "filest": filest})
                 elif include_files:
+                    # Handle requested extensions if present
                     if 'all_files' in include_ext or splitext(file.name)[1] in include_ext:
                         if (is_hidden and include_hidden) or not is_hidden:
                             files.append({"file": file, "filest": filest})
         # Filter logic
         if filter_for != "":
-            if filter_for.startswith("/"):
-                #TODO: Handle filter with regex
-                pass
-            else:
-                #TODO: Handle exact file name matches
-                pass
+            try:
+                if re.compile(filter_for):
+                    files = filter(lambda file: re.search(file.name), files)
+            except re.error:
+                files = filter(lambda file: file.name.find(filter_for) != -1, files)
         
         # Ordering logic
         ord = order_by.split("_")[0]
@@ -235,7 +235,8 @@ class Utilities:
             case 'size':
                 files = sorted(files, key=lambda x: x.filest.st_size, rev = rev)
                 folders = sorted(folders, key=lambda x: x.filest.st_size, rev = rev)
-                
+        
+        #Constructing the final file list
         all =   [{
                     "is_dir": x.file.is_dir(),
                     "name": x.file.name.encode('utf-8', 'replace').decode('utf-8'),
@@ -250,6 +251,12 @@ class Utilities:
             "files": all[(page-1)*max:(page)*max],
             "total": len(all),
         }
+
+    def checkForHiddenFile(file):
+        is_hidden = file.name.startswith('.')
+        if ON_WINDOWS and not is_hidden:
+            is_hidden = bool(stat(file).st_file_attributes & FILE_ATTRIBUTE_HIDDEN)
+        return is_hidden
 
     # Based on https://stackoverflow.com/a/46422554/13174603
     def start_rdt_proxy(self, ip, port):

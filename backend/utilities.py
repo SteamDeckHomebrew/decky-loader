@@ -211,6 +211,7 @@ class Utilities:
                     if 'all_files' in include_ext or splitext(file.name)[1] in include_ext:
                         if (is_hidden and include_hidden) or not is_hidden:
                             files.append({"file": file, "filest": filest})
+        
         # Filter logic
         if filter_for != "":
             try:
@@ -234,7 +235,7 @@ class Utilities:
                 folders = sorted(folders, key=lambda x: x.filest.st_ctime, rev = rev)
             case 'size':
                 files = sorted(files, key=lambda x: x.filest.st_size, rev = rev)
-                folders = sorted(folders, key=lambda x: x.filest.st_size, rev = rev)
+                folders = sorted(folders, key=lambda x: x.file.name, rev = rev)
         
         #Constructing the final file list
         all =   [{

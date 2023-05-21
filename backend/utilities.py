@@ -187,30 +187,35 @@ class Utilities:
     async def filepicker_ls(self, path, include_files=True):
         path = Path(path).resolve()
 
-        files = []
+        files, folders = [], []
 
         for file in path.iterdir():
-            is_dir = file.is_dir()
-
-            if file.exists() and (is_dir or include_files):
+            if file.exists():
                 filest = file.stat()
                 is_hidden = file.name.startswith('.')
                 if ON_WINDOWS and not is_hidden:
                     is_hidden = bool(stat(file).st_file_attributes & FILE_ATTRIBUTE_HIDDEN)
-
-                files.append({
-                    "isdir": is_dir,
-                    "ishidden": is_hidden,
-                    "name": file.name.encode('utf-8', 'replace').decode('utf-8'),
-                    "realpath": str(file.resolve()).encode('utf-8', 'replace').decode('utf-8'),
-                    "size": filest.st_size,
-                    "modified": filest.st_mtime,
-                    "created": filest.st_ctime,
-                })
+                if file.is_dir():
+                    folders.append({"file": file, "hidden": is_hidden, "filest": filest})
+                elif include_files:
+                    files.append({"file": file, "hidden": is_hidden, "filest": filest})
+        
+        files = sorted(files, key=lambda x: x.file.name)
+        folders = sorted(folders, key=lambda x: x.file.name)
+        all =   [{
+                    "is_dir": x.file.is_dir(),
+                    "ishidden": x.hidden,
+                    "name": x.file.name.encode('utf-8', 'replace').decode('utf-8'),
+                    "realpath": str(x.file.resolve()).encode('utf-8', 'replace').decode('utf-8'),
+                    "size": x.filest.st_size,
+                    "modified": x.filest.st_mtime,
+                    "created": x.filest.st_ctime,
+                } for x in folders + files ]
 
         return {
             "realpath": str(path),
-            "files": files
+            "files": all[(page-1)*max:(page)*max],
+            "total": len(all),
         }
 
     # Based on https://stackoverflow.com/a/46422554/13174603

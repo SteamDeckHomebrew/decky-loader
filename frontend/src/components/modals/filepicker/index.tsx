@@ -28,6 +28,7 @@ const logger = new Logger('FilePicker');
 export interface FilePickerProps {
   startPath: string;
   includeFiles?: boolean;
+  includeFolders?: boolean;
   filter?: RegExp | ((file: File) => boolean);
   validFileExtensions?: string[];
   allowAllFiles?: boolean;
@@ -53,41 +54,57 @@ interface FileListing {
 
 const sortOptions = [
   {
-    data: 'name_desc',
+    data: SortOptions.name_desc,
     label: <TSortOption trans_part={SortOptions.name_desc} />,
   },
   {
-    data: 'name_asc',
+    data: SortOptions.name_asc,
     label: <TSortOption trans_part={SortOptions.name_asc} />,
   },
   {
-    data: 'modified_desc',
+    data: SortOptions.modified_desc,
     label: <TSortOption trans_part={SortOptions.modified_desc} />,
   },
   {
-    data: 'modified_asc',
+    data: SortOptions.modified_asc,
     label: <TSortOption trans_part={SortOptions.modified_asc} />,
   },
   {
-    data: 'created_desc',
+    data: SortOptions.created_desc,
     label: <TSortOption trans_part={SortOptions.created_desc} />,
   },
   {
-    data: 'created_asc',
+    data: SortOptions.created_asc,
     label: <TSortOption trans_part={SortOptions.created_asc} />,
   },
   {
-    data: 'size_desc',
+    data: SortOptions.size_desc,
     label: <TSortOption trans_part={SortOptions.size_desc} />,
   },
   {
-    data: 'size_asc',
+    data: SortOptions.size_asc,
     label: <TSortOption trans_part={SortOptions.size_asc} />,
   },
 ];
 
-function getList(path: string, includeFiles: boolean): Promise<{ result: FileListing | string; success: boolean }> {
-  return window.DeckyPluginLoader.callServerMethod('filepicker_ls', { path, include_files: includeFiles });
+function getList(
+  path: string,
+  includeFiles: boolean,
+  includeFolders: boolean = true,
+  includeExt: string[] | null = null,
+  includeHidden: boolean = false,
+  orderBy: SortOptions = SortOptions.name_desc,
+  filterFor: RegExp | ((file: File) => boolean) | null = null,
+): Promise<{ result: FileListing | string; success: boolean }> {
+  return window.DeckyPluginLoader.callServerMethod('filepicker_ls', {
+    path,
+    include_files: includeFiles,
+    include_folders: includeFolders,
+    include_ext: includeExt ? includeExt : [],
+    include_hidden: includeHidden,
+    order_by: orderBy,
+    filter_for: filterFor,
+  });
 }
 
 const iconStyles = {
@@ -98,6 +115,7 @@ const iconStyles = {
 const FilePicker: FunctionComponent<FilePickerProps> = ({
   startPath,
   includeFiles = true,
+  includeFolders = true,
   filter,
   validFileExtensions = null,
   allowAllFiles = true,
@@ -116,7 +134,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [showHidden, setShowHidden] = useState<boolean>(defaultHidden);
   const [sort, setSort] = useState<SortOptions>(SortOptions.name_desc);
-  const [selectedFiles, setSelectedFiles] = useState<any>(validFileExtensions);
+  const [selectedExts, setSelectedExts] = useState<any>(validFileExtensions);
 
   const validExtsOptions = useMemo(() => {
     let validExt: { label: string; value: string }[] = [];
@@ -131,16 +149,16 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
   const handleExtsSelect = useCallback((val: any) => {
     // unselect other options if "All Files" is checked
     if (val.includes('all_files')) {
-      setSelectedFiles(['all_files']);
+      setSelectedExts(['all_files']);
     } else {
-      setSelectedFiles(val);
+      setSelectedExts(val);
     }
   }, []);
 
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const listing = await getList(path, includeFiles);
+      const listing = await getList(path, includeFiles, includeFolders, validFileExtensions, showHidden, sort, filter);
       if (!listing.success) {
         setListing({ files: [], realpath: path });
         setLoading(false);
@@ -165,43 +183,8 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
       setListing(listing.result as FileListing);
       logger.log('reloaded', path, listing);
     })();
-  }, [includeFiles, path]);
+  }, [includeFiles, path, validFileExtensions, showHidden, sort, selectedExts]);
 
-  useEffect(() => {
-    const files = [...listing.files]
-      // Hidden files filter
-      .filter((file) => {
-        if (showHidden && file.ishidden) return true;
-        if (!showHidden && file.ishidden) return false;
-        return true;
-      })
-      // File extension filter
-      .filter((file) => {
-        if (!validFileExtensions || file.isdir || selectedFiles.includes('all_files')) return true;
-
-        const extension = file.realpath.split('.').pop() as string;
-        if (selectedFiles.includes(extension)) return true;
-        return false;
-      })
-      // Custom filter
-      .filter((file) => {
-        if (filter instanceof RegExp) return filter.test(file.name);
-        if (typeof filter === 'function') return filter(file);
-        return true;
-      })
-      // Sort files
-      .sort((a, b) => {
-        const key = sort.split('_')[0];
-        const order = sort.split('_')[1];
-        if (key === 'name') {
-          return order === 'asc' ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name);
-        }
-        return order === 'asc' ? (a[key] > b[key] ? 1 : -1) : b[key] > a[key] ? 1 : -1;
-      })
-      // Put directories before files
-      .reduceRight((acc, file) => (file.isdir ? [file, ...acc] : [...acc, file]), [] as File[]);
-    setFiles(files);
-  }, [listing.files, filter, showHidden, sort, selectedFiles, validFileExtensions, error]);
   return (
     <>
       <DialogBody className="deckyFilePicker">
@@ -251,7 +234,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
               <DropdownMultiselect
                 label={t('FilePickerIndex.files.file_type')}
                 items={validExtsOptions}
-                selected={selectedFiles}
+                selected={selectedExts}
                 onSelect={handleExtsSelect}
               />
             )}

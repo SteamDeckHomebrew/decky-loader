@@ -1,6 +1,7 @@
 import uuid
 import os
 from json.decoder import JSONDecodeError
+from os.path import splitext
 from traceback import format_exc
 
 from asyncio import sleep, start_server, gather, open_connection
@@ -184,7 +185,14 @@ class Utilities:
         await service_stop(helpers.REMOTE_DEBUGGER_UNIT)
         return True
 
-    async def filepicker_ls(self, path, include_files=True):
+    async def filepicker_ls(self, 
+                            path, 
+                            include_files: bool = True,
+                            include_folders: bool = True,
+                            include_ext: [string] = ['all_files'],
+                            include_hidden: bool = False,
+                            order_by: string = "name_asc",
+                            filter_for: string = ""):
         path = Path(path).resolve()
 
         files, folders = [], []
@@ -195,16 +203,41 @@ class Utilities:
                 is_hidden = file.name.startswith('.')
                 if ON_WINDOWS and not is_hidden:
                     is_hidden = bool(stat(file).st_file_attributes & FILE_ATTRIBUTE_HIDDEN)
-                if file.is_dir():
-                    folders.append({"file": file, "hidden": is_hidden, "filest": filest})
+                if include_folders and file.is_dir():
+                    if (is_hidden and include_hidden) or not is_hidden:
+                        folders.append({"file": file, "filest": filest})
                 elif include_files:
-                    files.append({"file": file, "hidden": is_hidden, "filest": filest})
+                    if 'all_files' in include_ext or splitext(file.name)[1] in include_ext:
+                        if (is_hidden and include_hidden) or not is_hidden:
+                            files.append({"file": file, "filest": filest})
+        # Filter logic
+        if filter_for != "":
+            if filter_for.startswith("/"):
+                #TODO: Handle filter with regex
+                pass
+            else:
+                #TODO: Handle exact file name matches
+                pass
         
-        files = sorted(files, key=lambda x: x.file.name)
-        folders = sorted(folders, key=lambda x: x.file.name)
+        # Ordering logic
+        ord = order_by.split("_")[0]
+        rev = [True if order_by.split("_")[1] == "asc" else False]
+        match ord:
+            case 'name':
+                files = sorted(files, key=lambda x: x.file.name, rev = rev)
+                folders = sorted(folders, key=lambda x: x.file.name, rev = rev)
+            case 'modified':
+                files = sorted(files, key=lambda x: x.filest.st_mtime, rev = rev)
+                folders = sorted(folders, key=lambda x: x.filest.st_mtime, rev = rev)
+            case 'created':
+                files = sorted(files, key=lambda x: x.filest.st_ctime, rev = rev)
+                folders = sorted(folders, key=lambda x: x.filest.st_ctime, rev = rev)
+            case 'size':
+                files = sorted(files, key=lambda x: x.filest.st_size, rev = rev)
+                folders = sorted(folders, key=lambda x: x.filest.st_size, rev = rev)
+                
         all =   [{
                     "is_dir": x.file.is_dir(),
-                    "ishidden": x.hidden,
                     "name": x.file.name.encode('utf-8', 'replace').decode('utf-8'),
                     "realpath": str(x.file.resolve()).encode('utf-8', 'replace').decode('utf-8'),
                     "size": x.filest.st_size,

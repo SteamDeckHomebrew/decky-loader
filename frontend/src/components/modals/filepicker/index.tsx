@@ -30,7 +30,7 @@ export interface FilePickerProps {
   includeFiles?: boolean;
   includeFolders?: boolean;
   filter?: RegExp | ((file: File) => boolean);
-  validFileExtensions?: string[];
+  validFileExtensions?: string[] | null;
   allowAllFiles?: boolean;
   defaultHidden?: boolean;
   max?: number;
@@ -104,7 +104,7 @@ function getList(
     path,
     include_files: includeFiles,
     include_folders: includeFolders,
-    include_ext: includeExt ? includeExt : ['all_files'],
+    include_ext: includeExt ? includeExt : [],
     include_hidden: includeHidden,
     order_by: orderBy,
     filter_for: filterFor,

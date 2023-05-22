@@ -62,7 +62,7 @@ class Utilities:
             res["result"] = r
             res["success"] = True
         except Exception as e:
-            res["result"] = str(e).encode('utf-8', 'replace').decode('utf-8')
+            res["result"] = str(e)
             res["success"] = False
         return web.json_response(res)
 
@@ -213,7 +213,7 @@ class Utilities:
                         folders.append({"file": file, "filest": filest})
                 elif include_files:
                     # Handle requested extensions if present
-                    if 'all_files' in include_ext or splitext(file.name)[1] in include_ext:
+                    if len(include_ext) == 0 or splitext(file.name)[1] in include_ext:
                         if (is_hidden and include_hidden) or not is_hidden:
                             files.append({"file": file, "filest": filest})
         # Filter logic

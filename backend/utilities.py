@@ -245,8 +245,8 @@ class Utilities:
         #Constructing the final file list, folders first
         all =   [{
                     "isdir": x['file'].is_dir(),
-                    "name": x['file'].name.encode('utf-8', 'replace').decode('utf-8'),
-                    "realpath": str(x['file'].resolve()).encode('utf-8', 'replace').decode('utf-8'),
+                    "name": x['file'].name,
+                    "realpath": str(x['file'].resolve()),
                     "size": x['filest'].st_size,
                     "modified": x['filest'].st_mtime,
                     "created": x['filest'].st_ctime,

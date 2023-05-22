@@ -325,6 +325,7 @@ class PluginLoader extends Logger {
     showHiddenFiles?: boolean,
     allowAllFiles?: boolean,
     filter?: RegExp | ((file: File) => boolean),
+    max?: number,
   ): Promise<{ path: string; realpath: string }> {
     return new Promise((resolve, reject) => {
       const Content = ({ closeModal }: { closeModal?: () => void }) => (
@@ -346,6 +347,7 @@ class PluginLoader extends Logger {
               defaultHidden={showHiddenFiles}
               onSubmit={resolve}
               closeModal={closeModal}
+              max={max}
             />
           </WithSuspense>
         </ModalRoot>

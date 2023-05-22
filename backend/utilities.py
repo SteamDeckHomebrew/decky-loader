@@ -191,7 +191,7 @@ class Utilities:
                             path, 
                             include_files: bool = True,
                             include_folders: bool = True,
-                            include_ext: [] = ["all_files"],
+                            include_ext: list[str] = ["all_files"],
                             include_hidden: bool = False,
                             order_by: str = "name_asc",
                             filter_for: str | None = None,
@@ -240,7 +240,7 @@ class Utilities:
             case 'size':
                 files.sort(key=lambda x: x['filest'].st_size, reverse = rev)
                 # Folders has no file size, order by name instead
-                folders.sort(key=lambda x: x['filest'].name, reverse = rev)
+                folders.sort(key=lambda x: x['file'].name, reverse = rev)
         
         #Constructing the final file list, folders first
         all =   [{

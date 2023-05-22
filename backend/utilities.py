@@ -207,15 +207,15 @@ class Utilities:
                 filest = file.stat()
                 is_hidden = file.name.startswith('.')
                 if ON_WINDOWS and not is_hidden:
-                    is_hidden = bool(os.stat(file).st_file_attributes & FILE_ATTRIBUTE_HIDDEN)
+                    is_hidden = bool(filest.st_file_attributes & FILE_ATTRIBUTE_HIDDEN)
                 if include_folders and file.is_dir():
                     if (is_hidden and include_hidden) or not is_hidden:
-                        folders.append({"file": file, "filest": filest})
+                        folders.append({"file": file, "filest": filest, "is_dir": True})
                 elif include_files:
                     # Handle requested extensions if present
-                    if len(include_ext) == 0 or splitext(file.name)[1] in include_ext:
+                    if include_ext == [] or splitext(file.name)[1] in include_ext:
                         if (is_hidden and include_hidden) or not is_hidden:
-                            files.append({"file": file, "filest": filest})
+                            files.append({"file": file, "filest": filest, "is_dir": False})
         # Filter logic
         if filter_for is not None:
             try:
@@ -244,9 +244,9 @@ class Utilities:
         
         #Constructing the final file list, folders first
         all =   [{
-                    "isdir": x['file'].is_dir(),
-                    "name": x['file'].name,
-                    "realpath": str(x['file'].resolve()),
+                    "isdir": x['is_dir'],
+                    "name": str(x['file'].name),
+                    "realpath": str(x['file']),
                     "size": x['filest'].st_size,
                     "modified": x['filest'].st_mtime,
                     "created": x['filest'].st_ctime,

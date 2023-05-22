@@ -10,8 +10,7 @@ import {
 } from 'decky-frontend-lib';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import Chevron from '../Chevron';
+import { FaChevronDown } from 'react-icons/fa';
 
 const dropDownControlButtonClass = findModuleChild((m) => {
   if (typeof m !== 'object') return undefined;
@@ -114,7 +113,7 @@ const DropdownMultiselect: FC<{
           : '…'}
       </Marquee>
       <div style={{ flexGrow: 1, minWidth: '1ch' }} />
-      <Chevron style={{ height: '1em', flex: '0 0 1em' }} direction="down" />
+      <FaChevronDown style={{ height: '1em', flex: '0 0 1em' }} />
     </DialogButton>
   );
 };

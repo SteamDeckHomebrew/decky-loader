@@ -104,7 +104,7 @@ function getList(
     path,
     include_files: includeFiles,
     include_folders: includeFolders,
-    include_ext: includeExt ? includeExt : [],
+    include_ext: includeExt ? includeExt : ['all_files'],
     include_hidden: includeHidden,
     order_by: orderBy,
     filter_for: filterFor,

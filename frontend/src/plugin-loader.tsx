@@ -320,6 +320,7 @@ class PluginLoader extends Logger {
   openFilePicker(
     startPath: string,
     includeFiles?: boolean,
+    includeFolders?: boolean,
     extensions?: string[],
     showHiddenFiles?: boolean,
     allowAllFiles?: boolean,
@@ -338,6 +339,7 @@ class PluginLoader extends Logger {
             <FilePicker
               startPath={startPath}
               includeFiles={includeFiles}
+              includeFolders={includeFolders}
               filter={filter}
               validFileExtensions={extensions}
               allowAllFiles={allowAllFiles}

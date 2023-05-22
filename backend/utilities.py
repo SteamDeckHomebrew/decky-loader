@@ -62,7 +62,8 @@ class Utilities:
             res["result"] = r
             res["success"] = True
         except Exception as e:
-            res["result"] = str(e)
+            self.logger.error(e)
+            res["result"] = str(e).encode('utf-8', 'replace').decode('utf-8')
             res["success"] = False
         return web.json_response(res)
 
@@ -191,11 +192,12 @@ class Utilities:
                             path, 
                             include_files: bool = True,
                             include_folders: bool = True,
-                            include_ext: [str] = ['all_files'],
+                            include_ext: [str] = ["all_files"],
                             include_hidden: bool = False,
                             order_by: str = "name_asc",
                             filter_for: str = "",
-                            page: int = 1):
+                            page: int = 1,
+                            max: int = 1000):
         path = Path(path).resolve()
 
         files, folders = [], []
@@ -204,7 +206,9 @@ class Utilities:
         for file in path.iterdir():
             if file.exists():
                 filest = file.stat()
-                is_hidden = checkForHiddenFile(file)
+                is_hidden = file.name.startswith('.')
+                if ON_WINDOWS and not is_hidden:
+                    is_hidden = bool(stat(file).st_file_attributes & FILE_ATTRIBUTE_HIDDEN)
                 if include_folders and file.is_dir():
                     if (is_hidden and include_hidden) or not is_hidden:
                         folders.append({"file": file, "filest": filest})
@@ -213,9 +217,8 @@ class Utilities:
                     if 'all_files' in include_ext or splitext(file.name)[1] in include_ext:
                         if (is_hidden and include_hidden) or not is_hidden:
                             files.append({"file": file, "filest": filest})
-        
         # Filter logic
-        if filter_for != "":
+        if filter_for is not None:
             try:
                 if re.compile(filter_for):
                     files = filter(lambda file: re.search(file.name) != None, files)
@@ -224,29 +227,30 @@ class Utilities:
         
         # Ordering logic
         ord = order_by.split("_")[0]
-        rev = True if order_by.split("_")[1] == "asc" else False
+        rev = False if order_by.split("_")[1] == "asc" else True
         match ord:
             case 'name':
-                files = sorted(files, key=lambda x: x.file.name, rev = rev)
-                folders = sorted(folders, key=lambda x: x.file.name, rev = rev)
+                files.sort(key=lambda x: x['file'].name, reverse= rev)
+                folders.sort(key=lambda x: x['file'].name, reverse= rev)
             case 'modified':
-                files = sorted(files, key=lambda x: x.filest.st_mtime, rev = rev)
-                folders = sorted(folders, key=lambda x: x.filest.st_mtime, rev = rev)
+                files.sort(key=lambda x: x['filest'].st_mtime, reverse = rev)
+                folders.sort(key=lambda x: x['filest'].st_mtime, reverse = rev)
             case 'created':
-                files = sorted(files, key=lambda x: x.filest.st_ctime, rev = rev)
-                folders = sorted(folders, key=lambda x: x.filest.st_ctime, rev = rev)
+                files.sort(key=lambda x: x['filest'].st_ctime, reverse = rev)
+                folders.sort(key=lambda x: x['filest'].st_ctime, reverse = rev)
             case 'size':
-                files = sorted(files, key=lambda x: x.filest.st_size, rev = rev)
-                folders = sorted(folders, key=lambda x: x.file.name, rev = rev)
+                files.sort(key=lambda x: x['filest'].st_size, reverse = rev)
+                # Folders has no file size, order by name instead
+                folders.sort(key=lambda x: x['filest'].name, reverse = rev)
         
         #Constructing the final file list, folders first
         all =   [{
-                    "is_dir": x.file.is_dir(),
-                    "name": x.file.name.encode('utf-8', 'replace').decode('utf-8'),
-                    "realpath": str(x.file.resolve()).encode('utf-8', 'replace').decode('utf-8'),
-                    "size": x.filest.st_size,
-                    "modified": x.filest.st_mtime,
-                    "created": x.filest.st_ctime,
+                    "isdir": x['file'].is_dir(),
+                    "name": x['file'].name.encode('utf-8', 'replace').decode('utf-8'),
+                    "realpath": str(x['file'].resolve()).encode('utf-8', 'replace').decode('utf-8'),
+                    "size": x['filest'].st_size,
+                    "modified": x['filest'].st_mtime,
+                    "created": x['filest'].st_ctime,
                 } for x in folders + files ]
 
         return {
@@ -254,12 +258,7 @@ class Utilities:
             "files": all[(page-1)*max:(page)*max],
             "total": len(all),
         }
-
-    def checkForHiddenFile(self, file):
-        is_hidden = file.name.startswith('.')
-        if ON_WINDOWS and not is_hidden:
-            is_hidden = bool(stat(file).st_file_attributes & FILE_ATTRIBUTE_HIDDEN)
-        return is_hidden
+        
 
     # Based on https://stackoverflow.com/a/46422554/13174603
     def start_rdt_proxy(self, ip, port):

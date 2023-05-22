@@ -33,6 +33,7 @@ export interface FilePickerProps {
   validFileExtensions?: string[];
   allowAllFiles?: boolean;
   defaultHidden?: boolean;
+  max?: number;
   onSubmit: (val: { path: string; realpath: string }) => void;
   closeModal?: () => void;
 }
@@ -97,6 +98,7 @@ function getList(
   orderBy: SortOptions = SortOptions.name_desc,
   filterFor: RegExp | ((file: File) => boolean) | null = null,
   pageNumber: number = 1,
+  max: number = 1000,
 ): Promise<{ result: FileListing | string; success: boolean }> {
   return window.DeckyPluginLoader.callServerMethod('filepicker_ls', {
     path,
@@ -107,6 +109,7 @@ function getList(
     order_by: orderBy,
     filter_for: filterFor,
     page: pageNumber,
+    max: max,
   });
 }
 
@@ -123,6 +126,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
   validFileExtensions = null,
   allowAllFiles = true,
   defaultHidden = false, // false by default makes sense for most users
+  max = 1000,
   onSubmit,
   closeModal,
 }) => {
@@ -171,6 +175,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
         sort,
         filter,
         page,
+        max,
       );
       if (!listing.success) {
         setListing({ files: [], realpath: path, total: 0 });

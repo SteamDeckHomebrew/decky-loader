@@ -191,7 +191,7 @@ class Utilities:
                             path, 
                             include_files: bool = True,
                             include_folders: bool = True,
-                            include_ext: [str] = ["all_files"],
+                            include_ext: [] = ["all_files"],
                             include_hidden: bool = False,
                             order_by: str = "name_asc",
                             filter_for: str | None = None,
@@ -207,7 +207,7 @@ class Utilities:
                 filest = file.stat()
                 is_hidden = file.name.startswith('.')
                 if ON_WINDOWS and not is_hidden:
-                    is_hidden = bool(stat(file).st_file_attributes & FILE_ATTRIBUTE_HIDDEN)
+                    is_hidden = bool(os.stat(file).st_file_attributes & FILE_ATTRIBUTE_HIDDEN)
                 if include_folders and file.is_dir():
                     if (is_hidden and include_hidden) or not is_hidden:
                         folders.append({"file": file, "filest": filest})

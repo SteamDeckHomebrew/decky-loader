@@ -183,6 +183,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
         const theError = listing.result as string;
         switch (theError) {
           case theError.match(/\[Errno\s2.*/i)?.input:
+          case theError.match(/\[WinError\s3.*/i)?.input:
             setError(FileErrorTypes.FileNotFound);
             break;
           default:

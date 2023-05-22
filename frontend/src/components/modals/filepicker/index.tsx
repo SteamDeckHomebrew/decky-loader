@@ -50,6 +50,7 @@ export interface File {
 interface FileListing {
   realpath: string;
   files: File[];
+  total: number;
 }
 
 const sortOptions = [
@@ -95,6 +96,7 @@ function getList(
   includeHidden: boolean = false,
   orderBy: SortOptions = SortOptions.name_desc,
   filterFor: RegExp | ((file: File) => boolean) | null = null,
+  pageNumber: number = 1,
 ): Promise<{ result: FileListing | string; success: boolean }> {
   return window.DeckyPluginLoader.callServerMethod('filepicker_ls', {
     path,
@@ -104,6 +106,7 @@ function getList(
     include_hidden: includeHidden,
     order_by: orderBy,
     filter_for: filterFor,
+    page: pageNumber,
   });
 }
 
@@ -127,10 +130,11 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
 
   if (startPath !== '/' && startPath.endsWith('/')) startPath = startPath.substring(0, startPath.length - 1); // remove trailing path
   const [path, setPath] = useState<string>(startPath);
-  const [listing, setListing] = useState<FileListing>({ files: [], realpath: path });
+  const [listing, setListing] = useState<FileListing>({ files: [], realpath: path, total: 0 });
   const [files, setFiles] = useState<File[]>([]);
   const [error, setError] = useState<FileErrorTypes>(FileErrorTypes.None);
   const [rawError, setRawError] = useState<string | null>(null);
+  const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const [showHidden, setShowHidden] = useState<boolean>(defaultHidden);
   const [sort, setSort] = useState<SortOptions>(SortOptions.name_desc);
@@ -158,9 +162,18 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const listing = await getList(path, includeFiles, includeFolders, validFileExtensions, showHidden, sort, filter);
+      const listing = await getList(
+        path,
+        includeFiles,
+        includeFolders,
+        validFileExtensions,
+        showHidden,
+        sort,
+        filter,
+        page,
+      );
       if (!listing.success) {
-        setListing({ files: [], realpath: path });
+        setListing({ files: [], realpath: path, total: 0 });
         setLoading(false);
         const theError = listing.result as string;
         switch (theError) {
@@ -183,7 +196,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
       setListing(listing.result as FileListing);
       logger.log('reloaded', path, listing);
     })();
-  }, [includeFiles, path, validFileExtensions, showHidden, sort, selectedExts]);
+  }, [includeFiles, path, validFileExtensions, showHidden, sort, selectedExts, page]);
 
   return (
     <>
@@ -306,6 +319,19 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
             }}
           >
             {t('FilePickerIndex.folder.select')}
+          </DialogButton>
+        </DialogFooter>
+      )}
+      {page * 1000 < listing.total && (
+        <DialogFooter>
+          <DialogButton
+            className="Primary"
+            style={{ marginTop: '10px', alignSelf: 'flex-end' }}
+            onClick={() => {
+              setPage(page + 1);
+            }}
+          >
+            {t('FilePickerIndex.folder.show_more')}
           </DialogButton>
         </DialogFooter>
       )}

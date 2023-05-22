@@ -194,7 +194,8 @@ class Utilities:
                             include_ext: [string] = ['all_files'],
                             include_hidden: bool = False,
                             order_by: string = "name_asc",
-                            filter_for: string = ""):
+                            filter_for: string = "",
+                            page: int = 1):
         path = Path(path).resolve()
 
         files, folders = [], []
@@ -223,7 +224,7 @@ class Utilities:
         
         # Ordering logic
         ord = order_by.split("_")[0]
-        rev = [True if order_by.split("_")[1] == "asc" else False]
+        rev = True if order_by.split("_")[1] == "asc" else False
         match ord:
             case 'name':
                 files = sorted(files, key=lambda x: x.file.name, rev = rev)
@@ -238,7 +239,7 @@ class Utilities:
                 files = sorted(files, key=lambda x: x.filest.st_size, rev = rev)
                 folders = sorted(folders, key=lambda x: x.file.name, rev = rev)
         
-        #Constructing the final file list
+        #Constructing the final file list, folders first
         all =   [{
                     "is_dir": x.file.is_dir(),
                     "name": x.file.name.encode('utf-8', 'replace').decode('utf-8'),
@@ -254,7 +255,7 @@ class Utilities:
             "total": len(all),
         }
 
-    def checkForHiddenFile(file):
+    def checkForHiddenFile(self, file):
         is_hidden = file.name.startswith('.')
         if ON_WINDOWS and not is_hidden:
             is_hidden = bool(stat(file).st_file_attributes & FILE_ATTRIBUTE_HIDDEN)

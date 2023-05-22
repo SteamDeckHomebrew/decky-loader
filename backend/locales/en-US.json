@@ -41,7 +41,8 @@
     },
     "folder": {
       "label": "Folder",
-      "select": "Use this folder"
+      "select": "Use this folder",
+      "show_more": "Show more files"
     }
   },
   "PluginCard": {

@@ -62,7 +62,6 @@ class Utilities:
             res["result"] = r
             res["success"] = True
         except Exception as e:
-            self.logger.error(e)
             res["result"] = str(e).encode('utf-8', 'replace').decode('utf-8')
             res["success"] = False
         return web.json_response(res)
@@ -195,7 +194,7 @@ class Utilities:
                             include_ext: [str] = ["all_files"],
                             include_hidden: bool = False,
                             order_by: str = "name_asc",
-                            filter_for: str = "",
+                            filter_for: str | None = None,
                             page: int = 1,
                             max: int = 1000):
         path = Path(path).resolve()

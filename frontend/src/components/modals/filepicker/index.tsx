@@ -190,7 +190,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
             setError(FileErrorTypes.Unknown);
             break;
         }
-        logger.error(theError);
+        logger.debug(theError);
         return;
       } else {
         setRawError(null);
@@ -221,7 +221,9 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
               }}
               onClick={() => {
                 const newPathArr = path.split('/');
-                newPathArr.pop();
+                const lastPath = newPathArr.pop();
+                //If I have a single / with spaces, pop the array twice
+                if (lastPath?.match(/^\/\s*$/) != null) newPathArr.pop();
                 let newPath = newPathArr.join('/');
                 if (newPath == '') newPath = '/';
                 setPath(newPath);
@@ -264,6 +266,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
           >
             {loading && error === FileErrorTypes.None && <SteamSpinner style={{ height: '100%' }} />}
             {!loading &&
+              error === FileErrorTypes.None &&
               files.map((file) => {
                 const extension = file.realpath.split('.').pop() as string;
                 return (

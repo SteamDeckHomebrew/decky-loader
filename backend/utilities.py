@@ -191,10 +191,10 @@ class Utilities:
                             path, 
                             include_files: bool = True,
                             include_folders: bool = True,
-                            include_ext: [string] = ['all_files'],
+                            include_ext: [str] = ['all_files'],
                             include_hidden: bool = False,
-                            order_by: string = "name_asc",
-                            filter_for: string = "",
+                            order_by: str = "name_asc",
+                            filter_for: str = "",
                             page: int = 1):
         path = Path(path).resolve()
 

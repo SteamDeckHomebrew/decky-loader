@@ -191,7 +191,7 @@ class Utilities:
                             path, 
                             include_files: bool = True,
                             include_folders: bool = True,
-                            include_ext: list[str] = ["all_files"],
+                            include_ext: list[str] = [],
                             include_hidden: bool = False,
                             order_by: str = "name_asc",
                             filter_for: str | None = None,
@@ -225,22 +225,23 @@ class Utilities:
                 files = filter(lambda file: file.name.find(filter_for) != -1, files)
         
         # Ordering logic
-        ord = order_by.split("_")[0]
-        rev = False if order_by.split("_")[1] == "asc" else True
+        ord_arg = order_by.split("_")
+        ord = ord_arg[0]
+        rev = True if ord_arg[1] == "asc" else False
         match ord:
             case 'name':
-                files.sort(key=lambda x: x['file'].name, reverse= rev)
-                folders.sort(key=lambda x: x['file'].name, reverse= rev)
+                files.sort(key=lambda x: x['file'].name.casefold(), reverse = rev)
+                folders.sort(key=lambda x: x['file'].name.casefold(), reverse = rev)
             case 'modified':
-                files.sort(key=lambda x: x['filest'].st_mtime, reverse = rev)
-                folders.sort(key=lambda x: x['filest'].st_mtime, reverse = rev)
+                files.sort(key=lambda x: x['filest'].st_mtime, reverse = not rev)
+                folders.sort(key=lambda x: x['filest'].st_mtime, reverse = not rev)
             case 'created':
-                files.sort(key=lambda x: x['filest'].st_ctime, reverse = rev)
-                folders.sort(key=lambda x: x['filest'].st_ctime, reverse = rev)
+                files.sort(key=lambda x: x['filest'].st_ctime, reverse = not rev)
+                folders.sort(key=lambda x: x['filest'].st_ctime, reverse = not rev)
             case 'size':
-                files.sort(key=lambda x: x['filest'].st_size, reverse = rev)
+                files.sort(key=lambda x: x['filest'].st_size, reverse = not rev)
                 # Folders has no file size, order by name instead
-                folders.sort(key=lambda x: x['file'].name, reverse = rev)
+                folders.sort(key=lambda x: x['file'].name.casefold())
         
         #Constructing the final file list, folders first
         all =   [{

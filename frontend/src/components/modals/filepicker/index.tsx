@@ -331,7 +331,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
           </DialogButton>
         </DialogFooter>
       )}
-      {page * 1000 < listing.total && (
+      {page * max < listing.total && (
         <DialogFooter>
           <DialogButton
             className="Primary"

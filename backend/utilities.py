@@ -220,7 +220,7 @@ class Utilities:
         if filter_for is not None:
             try:
                 if re.compile(filter_for):
-                    files = filter(lambda file: re.search(file.name) != None, files)
+                    files = filter(lambda file: re.search(filter_for, file.name) != None, files)
             except re.error:
                 files = filter(lambda file: file.name.find(filter_for) != -1, files)
         

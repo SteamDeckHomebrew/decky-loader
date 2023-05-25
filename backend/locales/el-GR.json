@@ -1,7 +1,6 @@
 {
     "SettingsDeveloperIndex": {
-        "header_one": "",
-        "header_other": "Other",
+        "header": "",
         "react_devtools": {
             "desc": "Επιτρέπει την σύνδεση με υπολογιστή που τρέχει React DevTools. Η αλλαγή αυτής της ρύθμισης θα προκαλέσει επαναφόρτωση του Steam. Ωρίστε την διεύθυνση IP πριν την ενεργοποιήσετε.",
             "ip_label": "IP",

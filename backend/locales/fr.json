@@ -1,8 +1,6 @@
 {
     "SettingsDeveloperIndex": {
-        "header_one": "",
-        "header_many": "Other",
-        "header_other": "",
+        "header": "",
         "react_devtools": {
             "desc": "Permet la connexion à un ordinateur exécutant React DevTools. Changer ce paramètre rechargera Steam. Définissez l'adresse IP avant l'activation.",
             "ip_label": "IP",

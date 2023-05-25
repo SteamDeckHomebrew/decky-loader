@@ -1,8 +1,6 @@
 {
     "SettingsDeveloperIndex": {
-        "header_one": "",
-        "header_many": "Other",
-        "header_other": "",
+        "header": "",
         "third_party_plugins": {
             "button_install": "Instalar",
             "button_zip": "Navegar"

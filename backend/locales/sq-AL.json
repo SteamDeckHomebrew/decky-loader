@@ -1,7 +1,6 @@
 {
     "SettingsDeveloperIndex": {
-        "header_one": "",
-        "header_other": "Other",
+        "header": "",
         "react_devtools": {
             "ip_label": "IP",
             "label": "Aktivizo React DevTools"

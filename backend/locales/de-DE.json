@@ -2,17 +2,9 @@
 {}
 =======
 {
-    "PluginLoader": {
-        "decky_title": ""
-    },
     "SettingsGeneralIndex": {
         "other": {
             "header": ""
-        }
-    },
-    "Updater": {
-        "updates": {
-            "install_button": ""
         }
     }
 }

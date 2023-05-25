@@ -1,0 +1,116 @@
+{
+    "SettingsDeveloperIndex": {
+        "header_one": "",
+        "header_many": "Other",
+        "header_other": "",
+        "third_party_plugins": {
+            "button_install": "Instalar",
+            "button_zip": "Navegar"
+        },
+        "valve_internal": {
+            "desc2": "No toque nada en este menú a menos que sepa lo que hace."
+        },
+        "toast_zip": {
+            "title": "Decky"
+        }
+    },
+    "PluginInstallModal": {
+        "install": {
+            "button_idle": "Instalar",
+            "button_processing": "Instalando"
+        },
+        "reinstall": {
+            "button_idle": "Reinstalar",
+            "button_processing": "Reinstalando"
+        },
+        "update": {
+            "button_processing": "Actualizando",
+            "button_idle": "Actualizar"
+        }
+    },
+    "Developer": {
+        "disabling": "Desactivando",
+        "enabling": "Activando",
+        "5secreload": "Recargando en 5 segundos"
+    },
+    "BranchSelect": {
+        "update_channel": {
+            "prerelease": "Prelanzamiento",
+            "stable": "Estable",
+            "label": "Canal de actualización"
+        }
+    },
+    "PluginCard": {
+        "plugin_full_access": "Este plugin tiene acceso completo a su Steam Deck.",
+        "plugin_install": "Instalar",
+        "plugin_version_label": "Versión de Plugin"
+    },
+    "FilePickerIndex": {
+        "folder": {
+            "select": "Usar esta carpeta"
+        }
+    },
+    "PluginListIndex": {
+        "uninstall": "Desinstalar",
+        "reinstall": "Reinstalar",
+        "reload": "Recargar",
+        "plugin_actions": "Acciónes de Plugin",
+        "no_plugin": "¡No hay plugins instalados!"
+    },
+    "PluginLoader": {
+        "error": "Error",
+        "plugin_uninstall": {
+            "button": "Desinstalar"
+        },
+        "decky_title": "Decky"
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "desc": "Permitir acceso no autenticado al CEF debugger a cualquier persona en su red"
+        }
+    },
+    "SettingsGeneralIndex": {
+        "updates": {
+            "header": "Actualizaciones"
+        },
+        "about": {
+            "header": "Información"
+        },
+        "developer_mode": {
+            "label": "Modo Desarrollador"
+        }
+    },
+    "SettingsIndex": {
+        "developer_title": "Desarrollador",
+        "general_title": "General",
+        "navbar_settings": "Ajustes de Decky",
+        "plugins_title": "Plugins"
+    },
+    "Store": {
+        "store_search": {
+            "label": "Buscar"
+        },
+        "store_sort": {
+            "label": "Ordenar"
+        },
+        "store_contrib": {
+            "desc": "Si desea contribuir a la Tienda de Decky Plugin, revise el repositorio SteamDeckHomebrew/decky-plugin-template en GitHub. Información acerca del desarrollo y distribución está disponible en al archivo README.",
+            "label": "Contribuyendo"
+        },
+        "store_tabs": {
+            "about": "Información",
+            "title": "Navegar"
+        },
+        "store_testing_cta": "¡Por favor considera probando plugins nuevos para ayudar al equipo de Decky Loader!"
+    },
+    "Updater": {
+        "updates": {
+            "reloading": "Recargando",
+            "updating": "Actualizando",
+            "checking": "Buscando",
+            "check_button": "Buscar Actualizaciones",
+            "install_button": "Instalar Actualización",
+            "label": "Actualizaciones"
+        }
+    }
+}

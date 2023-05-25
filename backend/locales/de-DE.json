@@ -2,87 +2,54 @@
 {}
 =======
 {
-    "BranchSelect": {
-        "update_channel": {
-            "testing": ""
-        }
-    },
     "FilePickerIndex": {
         "folder": {
             "select": ""
         }
     },
-    "PluginCard": {
-        "plugin_version_label": ""
-    },
     "PluginInstallModal": {
         "install": {
             "title": ""
-        },
-        "reinstall": {
-            "desc": ""
         },
         "update": {
             "desc": ""
         }
     },
-    "PluginListIndex": {
-        "reinstall": ""
-    },
     "PluginLoader": {
         "decky_title": "",
-        "plugin_load_error": {
-            "message": ""
-        },
         "plugin_uninstall": {
             "title": ""
         }
     },
     "SettingsDeveloperIndex": {
-        "header": "",
         "third_party_plugins": {
-            "button_install": "",
-            "label_url": ""
+            "button_install": ""
         },
         "valve_internal": {
             "desc1": ""
         }
     },
     "SettingsGeneralIndex": {
-        "about": {
-            "header": ""
-        },
         "other": {
             "header": ""
         }
     },
-    "SettingsIndex": {
-        "navbar_settings": ""
-    },
     "Store": {
         "store_filter": {
             "label": ""
-        },
-        "store_sort": {
-            "label_def": ""
         },
         "store_tabs": {
             "alph_asce": ""
         }
     },
     "StoreSelect": {
-        "custom_store": {
-            "label": ""
-        },
         "store_channel": {
             "label": ""
         }
     },
     "Updater": {
-        "patch_notes_desc": "",
         "updates": {
-            "install_button": "",
-            "updating": ""
+            "install_button": ""
         }
     }
 }

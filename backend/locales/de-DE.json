@@ -2,31 +2,17 @@
 {}
 =======
 {
-    "FilePickerIndex": {
-        "folder": {
-            "select": ""
-        }
-    },
     "PluginInstallModal": {
         "install": {
             "title": ""
-        },
-        "update": {
-            "desc": ""
         }
     },
     "PluginLoader": {
-        "decky_title": "",
-        "plugin_uninstall": {
-            "title": ""
-        }
+        "decky_title": ""
     },
     "SettingsDeveloperIndex": {
         "third_party_plugins": {
             "button_install": ""
-        },
-        "valve_internal": {
-            "desc1": ""
         }
     },
     "SettingsGeneralIndex": {
@@ -35,16 +21,8 @@
         }
     },
     "Store": {
-        "store_filter": {
-            "label": ""
-        },
         "store_tabs": {
             "alph_asce": ""
-        }
-    },
-    "StoreSelect": {
-        "store_channel": {
-            "label": ""
         }
     },
     "Updater": {

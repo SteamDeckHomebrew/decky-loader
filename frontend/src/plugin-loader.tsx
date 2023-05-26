@@ -255,7 +255,6 @@ class PluginLoader extends Logger {
           version: version,
         });
       } catch (e) {
-        //this.error(t('PluginLoader.plugin_load_error.message', { name: name }), e);
         this.error('Error loading plugin ' + name, e);
         const TheError: FC<{}> = () => (
           <Translation>
@@ -266,11 +265,12 @@ class PluginLoader extends Logger {
                   <pre>
                     <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
                   </pre>
-                  <IconContext.Provider value={{ style: { verticalAlign: 'middle' } }}>
-                    <div>
-                      <Trans i18nKey="PluginLoader.plugin_error_uninstall" components={[<FaCog />]} />
-                    </div>
-                  </IconContext.Provider>
+                  <div>
+                    <Trans
+                      i18nKey="PluginLoader.plugin_error_uninstall"
+                      components={[<FaCog style={{ verticalAlign: 'middle' }} />]}
+                    />
+                  </div>
                 </>
               );
             }}

@@ -60,7 +60,7 @@
             "desc": "Je i sigurt që don ta çinstalojsh {{name}}?"
         },
         "error": "Gabim",
-        "plugin_error_uninstall": "Ju lutem shko nga {{-icon}} në Decky menu nëse don ta çinstalojsh këtë shtese."
+        "plugin_error_uninstall": "Ju lutem shko nga <0></0> në Decky menu nëse don ta çinstalojsh këtë shtese."
     },
     "PluginListIndex": {
         "no_plugin": "Nuk ka shtesa të instaluar!",

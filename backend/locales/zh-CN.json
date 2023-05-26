@@ -55,7 +55,7 @@
     "PluginLoader": {
         "decky_title": "Decky",
         "error": "错误",
-        "plugin_error_uninstall": "如果你想卸载插件请点击 Decky 菜单中的 {{-icon}} 图标",
+        "plugin_error_uninstall": "如果你想卸载插件请点击 Decky 菜单中的 <0></0> 图标",
         "plugin_load_error": {
             "message": "加载插件 {{name}} 错误",
             "toast": "加载插件 {{name}} 发生了错误"

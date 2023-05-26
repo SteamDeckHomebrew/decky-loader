@@ -55,7 +55,7 @@
     "PluginLoader": {
         "decky_title": "Decky",
         "error": "錯誤",
-        "plugin_error_uninstall": "如果您要解除安裝外掛程式，請在 Decky 選單，按下 {{-icon}}。",
+        "plugin_error_uninstall": "如果您要解除安裝外掛程式，請在 Decky 選單，按下 <0></0>。",
         "plugin_load_error": {
             "message": "載入外掛程式 {{name}} 發生錯誤",
             "toast": "{{name}} 載入出錯"

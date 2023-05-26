@@ -76,7 +76,7 @@
         "decky_title": "Decky",
         "decky_update_available": "Ενημέρωση σε {{tag_name}} διαθέσιμη!",
         "error": "Σφάλμα",
-        "plugin_error_uninstall": "Πηγαίντε στο {{-icon}} στο μενού του Decky για να απεγκαταστήσετε αυτή την επέκταση.",
+        "plugin_error_uninstall": "Πηγαίντε στο <0></0> στο μενού του Decky για να απεγκαταστήσετε αυτή την επέκταση.",
         "plugin_load_error": {
             "message": "Σφάλμα στη φόρτωση της επέκτασης {{name}}",
             "toast": "Σφάλμα φόρτωσης {{name}}"

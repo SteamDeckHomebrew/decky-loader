@@ -1,5 +1,6 @@
 import { ConfirmModal, ModalRoot, Patch, QuickAccessTab, Router, showModal, sleep } from 'decky-frontend-lib';
 import { FC, lazy } from 'react';
+import { Trans, Translation } from 'react-i18next';
 import { FaCog, FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
 import { DeckyState, DeckyStateContextProvider, useDeckyState } from './components/DeckyState';
@@ -255,26 +256,25 @@ class PluginLoader extends Logger {
       } catch (e) {
         //this.error(t('PluginLoader.plugin_load_error.message', { name: name }), e);
         this.error('Error loading plugin ' + name, e);
-        /*const TheError: FC<{}> = () => (
-          <>
-            {t('PluginLoader.error')}:{' '}
-            <pre>
-              <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
-            </pre>
-            <>{t('PluginLoader.plugin_error_uninstall', { icon: "<FaCog style={{ display: 'inline' }} />" })}</>
-          </>
-        );*/
         const TheError: FC<{}> = () => (
-          <>
-            Error:{' '}
-            <pre>
-              <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
-            </pre>
-            <>
-              Please go to <FaCog style={{ display: 'inline' }} /> in the Decky menu if you need to uninstall this
-              plugin.
-            </>
-          </>
+          <Translation>
+            {(t, {}) => {
+              return (
+                <>
+                  {t('PluginLoader.error')}:{' '}
+                  <pre>
+                    <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
+                  </pre>
+                  <>
+                    <Trans
+                      i18nKey="PluginLoader.plugin_error_uninstall"
+                      components={[<FaCog style={{ display: 'inline' }} />]}
+                    />
+                  </>
+                </>
+              );
+            }}
+          </Translation>
         );
         this.plugins.push({
           name: name,

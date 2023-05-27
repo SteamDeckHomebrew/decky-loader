@@ -6,9 +6,9 @@ import {
   Patch,
   QuickAccessTab,
   Router,
+  quickAccessMenuClasses,
   showModal,
   sleep,
-  staticClasses,
 } from 'decky-frontend-lib';
 import { FC, lazy } from 'react';
 import { FaExclamationCircle, FaPlug } from 'react-icons/fa';
@@ -277,8 +277,11 @@ class PluginLoader extends Logger {
         const TheError: FC<{}> = () => (
           <PanelSection>
             <PanelSectionRow>
-              <div className={staticClasses.FriendsTitle} style={{ display: 'flex', justifyContent: 'center' }}>
-                {<TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="error" />}
+              <div
+                className={quickAccessMenuClasses.FriendsTitle}
+                style={{ display: 'flex', justifyContent: 'center' }}
+              >
+                <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="error" />
               </div>
             </PanelSectionRow>
             <PanelSectionRow>
@@ -287,7 +290,7 @@ class PluginLoader extends Logger {
               </pre>
             </PanelSectionRow>
             <PanelSectionRow>
-              <div className={staticClasses.Text}>
+              <div className={quickAccessMenuClasses.Text}>
                 <TranslationHelper
                   trans_class={TranslationClass.PLUGIN_LOADER}
                   trans_text="plugin_error_uninstall"

@@ -56,7 +56,7 @@
         "decky_title": "Decky",
         "decky_update_available": "Disponibile aggiornamento a {{tag_name}}!",
         "error": "Errore",
-        "plugin_error_uninstall": "Il plugin {{name}} ha causato un'eccezione che è descritta sopra. Questo tipicamente significa che il plugin deve essere aggiornato per funzionare sulla nuova versione di SteamUI. Controlla se è disponibile un'aggiornamento o valutane la rimozione andando in <0></0> <1></1> <2></2> Plugins.",
+        "plugin_error_uninstall": "Il plugin {{name}} ha causato un'eccezione che è descritta sopra. Questo tipicamente significa che il plugin deve essere aggiornato per funzionare sulla nuova versione di SteamUI. Controlla se è disponibile un'aggiornamento o valutane la rimozione andando nelle impostazioni di Decky nella sezione Plugins.",
         "plugin_load_error": {
             "message": "Errore caricando il plugin {{name}}",
             "toast": "Errore caricando {{name}}"

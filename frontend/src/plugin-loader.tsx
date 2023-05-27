@@ -10,10 +10,8 @@ import {
   sleep,
   staticClasses,
 } from 'decky-frontend-lib';
-import { CSSProperties, FC, lazy } from 'react';
-import { Trans } from 'react-i18next';
-import { BsGearFill } from 'react-icons/bs';
-import { FaArrowRight, FaExclamationCircle, FaPlug } from 'react-icons/fa';
+import { FC, lazy } from 'react';
+import { FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
 import { DeckyState, DeckyStateContextProvider, useDeckyState } from './components/DeckyState';
 import LegacyPlugin from './components/LegacyPlugin';
@@ -276,7 +274,6 @@ class PluginLoader extends Logger {
         });
       } catch (e) {
         this.error('Error loading plugin ' + name, e);
-        const style: CSSProperties = { verticalAlign: 'middle' };
         const TheError: FC<{}> = () => (
           <PanelSection>
             <PanelSectionRow>
@@ -291,10 +288,10 @@ class PluginLoader extends Logger {
             </PanelSectionRow>
             <PanelSectionRow>
               <div className={staticClasses.Text}>
-                <Trans
-                  i18nKey="PluginLoader.plugin_error_uninstall"
-                  values={{ name: name }}
-                  components={[<BsGearFill style={style} />, <FaArrowRight style={style} />, <FaPlug style={style} />]}
+                <TranslationHelper
+                  trans_class={TranslationClass.PLUGIN_LOADER}
+                  trans_text="plugin_error_uninstall"
+                  i18n_args={{ name: name }}
                 />
               </div>
             </PanelSectionRow>

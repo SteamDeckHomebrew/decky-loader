@@ -56,7 +56,7 @@
         "decky_title": "Decky",
         "decky_update_available": "Update to {{tag_name}} available!",
         "error": "Error",
-        "plugin_error_uninstall": "Loading {{name}} has caused an exception as shown above. This usually means that the plugin requires an update for the new version of SteamUI. Check if an update is present or evaluate his removal in <0></0> <1></1> <2></2> Plugins.",
+        "plugin_error_uninstall": "Loading {{name}} caused an exception as shown above. This usually means that the plugin requires an update for the new version of SteamUI. Check if an update is present or evaluate his removal in the Decky settings, in the Plugins section.",
         "plugin_load_error": {
             "message": "Error loading plugin {{name}}",
             "toast": "Error loading {{name}}"

@@ -1,8 +1,19 @@
-import { ConfirmModal, ModalRoot, Patch, QuickAccessTab, Router, showModal, sleep } from 'decky-frontend-lib';
-import { FC, lazy } from 'react';
-import { Trans, Translation } from 'react-i18next';
-import { IconContext } from 'react-icons';
-import { FaCog, FaExclamationCircle, FaPlug } from 'react-icons/fa';
+import {
+  ConfirmModal,
+  ModalRoot,
+  PanelSection,
+  PanelSectionRow,
+  Patch,
+  QuickAccessTab,
+  Router,
+  showModal,
+  sleep,
+  staticClasses,
+} from 'decky-frontend-lib';
+import { CSSProperties, FC, lazy } from 'react';
+import { Trans } from 'react-i18next';
+import { BsGearFill } from 'react-icons/bs';
+import { FaArrowRight, FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
 import { DeckyState, DeckyStateContextProvider, useDeckyState } from './components/DeckyState';
 import LegacyPlugin from './components/LegacyPlugin';
@@ -21,6 +32,7 @@ import OldTabsHook from './tabs-hook.old';
 import Toaster from './toaster';
 import { VerInfo, callUpdaterMethod } from './updater';
 import { getSetting } from './utils/settings';
+import TranslationHelper, { TranslationClass } from './utils/TranslationHelper';
 
 const StorePage = lazy(() => import('./components/store/Store'));
 const SettingsPage = lazy(() => import('./components/settings'));
@@ -100,10 +112,14 @@ class PluginLoader extends Logger {
     const versionInfo = await this.updateVersion();
     if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
       this.toaster.toast({
-        //title: t('PluginLoader.decky_title'),
-        title: 'Decky',
-        //body: t('PluginLoader.decky_update_available', { tag_name: versionInfo?.remote?.tag_name }),
-        body: `Update to ${versionInfo?.remote?.tag_name} available!`,
+        title: <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="decky_title" />,
+        body: (
+          <TranslationHelper
+            trans_class={TranslationClass.PLUGIN_LOADER}
+            trans_text="decky_update_available"
+            i18n_args={{ tag_name: versionInfo?.remote?.tag_name }}
+          />
+        ),
         onClick: () => Router.Navigate('/decky/settings'),
       });
       this.deckyState.setHasLoaderUpdate(true);
@@ -122,10 +138,14 @@ class PluginLoader extends Logger {
     const updates = await this.checkPluginUpdates();
     if (updates?.size > 0) {
       this.toaster.toast({
-        //title: t('PluginLoader.decky_title'),
-        title: 'Decky',
-        //body: t('PluginLoader.plugin_update', { count: updates.size }),
-        body: `Updates available for ${updates.size} plugin${updates.size > 1 ? 's' : ''}!`,
+        title: <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="decky_title" />,
+        body: (
+          <TranslationHelper
+            trans_class={TranslationClass.PLUGIN_LOADER}
+            trans_text="plugin_update"
+            i18n_args={{ count: updates.size }}
+          />
+        ),
         onClick: () => Router.Navigate('/decky/settings/plugins'),
       });
     }
@@ -256,25 +276,29 @@ class PluginLoader extends Logger {
         });
       } catch (e) {
         this.error('Error loading plugin ' + name, e);
+        const style: CSSProperties = { verticalAlign: 'middle' };
         const TheError: FC<{}> = () => (
-          <Translation>
-            {(t, {}) => {
-              return (
-                <>
-                  {t('PluginLoader.error')}:{' '}
-                  <pre>
-                    <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
-                  </pre>
-                  <div>
-                    <Trans
-                      i18nKey="PluginLoader.plugin_error_uninstall"
-                      components={[<FaCog style={{ verticalAlign: 'middle' }} />]}
-                    />
-                  </div>
-                </>
-              );
-            }}
-          </Translation>
+          <PanelSection>
+            <PanelSectionRow>
+              <div className={staticClasses.FriendsTitle} style={{ display: 'flex', justifyContent: 'center' }}>
+                {<TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="error" />}
+              </div>
+            </PanelSectionRow>
+            <PanelSectionRow>
+              <pre style={{ overflowX: 'scroll' }}>
+                <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
+              </pre>
+            </PanelSectionRow>
+            <PanelSectionRow>
+              <div className={staticClasses.Text}>
+                <Trans
+                  i18nKey="PluginLoader.plugin_error_uninstall"
+                  values={{ name: name }}
+                  components={[<BsGearFill style={style} />, <FaArrowRight style={style} />, <FaPlug style={style} />]}
+                />
+              </div>
+            </PanelSectionRow>
+          </PanelSection>
         );
         this.plugins.push({
           name: name,
@@ -283,8 +307,13 @@ class PluginLoader extends Logger {
           icon: <FaExclamationCircle />,
         });
         this.toaster.toast({
-          //title: t('PluginLoader.plugin_load_error.toast', { name: name }),
-          title: 'Error loading ' + name,
+          title: (
+            <TranslationHelper
+              trans_class={TranslationClass.PLUGIN_LOADER}
+              trans_text="plugin_load_error.toast"
+              i18n_args={{ name: name }}
+            />
+          ),
           body: '' + e,
           icon: <FaExclamationCircle />,
         });

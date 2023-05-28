@@ -17,6 +17,13 @@
             "select": "Use this folder"
         }
     },
+    "PluginView": {
+        "hidden_one": "1 plugin is hidden from this list",
+        "hidden_other": "{{count}} plugins are hidden from this list"
+    },
+    "PluginListLabel": {
+        "hidden": "Hidden from the quick access menu"
+    },
     "PluginCard": {
         "plugin_full_access": "This plugin has full access to your Steam Deck.",
         "plugin_install": "Install",
@@ -73,6 +80,8 @@
         "reload": "Reload",
         "uninstall": "Uninstall",
         "update_to": "Update to {{name}}",
+        "show": "Quick access: Show",
+        "hide": "Quick access: Hide",
         "update_all_one": "Update 1 plugin",
         "update_all_other": "Update {{count}} plugins"
     },

@@ -22,10 +22,7 @@ import {
 } from '../../../../store';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 import { useDeckyState } from '../../../DeckyState';
-
-function labelToName(pluginLabel: string, pluginVersion?: string): string {
-  return pluginVersion ? pluginLabel.substring(0, pluginLabel.indexOf(` - ${pluginVersion}`)) : pluginLabel;
-}
+import PluginListLabel from './PluginListLabel';
 
 async function reinstallPlugin(pluginName: string, currentVersion?: string) {
   const serverData = await getPluginList();
@@ -36,29 +33,41 @@ async function reinstallPlugin(pluginName: string, currentVersion?: string) {
   }
 }
 
-function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
-  const data = props.entry.data;
+type PluginTableData = PluginData & { name: string; hidden: boolean; onHide(): void; onShow(): void };
+
+function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }) {
   const { t } = useTranslation();
-  let pluginName = labelToName(props.entry.label, data?.version);
+
+  // nothing to display without this data...
+  if (!props.entry.data) {
+    return null;
+  }
+
+  const { name, update, version, onHide, onShow, hidden } = props.entry.data;
 
   const showCtxMenu = (e: MouseEvent | GamepadEvent) => {
     showContextMenu(
       <Menu label={t('PluginListIndex.plugin_actions')}>
-        <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(pluginName, data?.version)}>
+        <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(name, version)}>
           {t('PluginListIndex.reload')}
         </MenuItem>
         <MenuItem
           onSelected={() =>
             window.DeckyPluginLoader.uninstallPlugin(
-              pluginName,
-              t('PluginLoader.plugin_uninstall.title', { name: pluginName }),
+              name,
+              t('PluginLoader.plugin_uninstall.title', { name }),
               t('PluginLoader.plugin_uninstall.button'),
-              t('PluginLoader.plugin_uninstall.desc', { name: pluginName }),
+              t('PluginLoader.plugin_uninstall.desc', { name }),
             )
           }
         >
           {t('PluginListIndex.uninstall')}
         </MenuItem>
+        {hidden ? (
+          <MenuItem onSelected={onShow}>{t('PluginListIndex.show')}</MenuItem>
+        ) : (
+          <MenuItem onSelected={onHide}>{t('PluginListIndex.hide')}</MenuItem>
+        )}
       </Menu>,
       e.currentTarget ?? window,
     );
@@ -66,22 +75,22 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
 
   return (
     <>
-      {data?.update ? (
+      {update ? (
         <DialogButton
           style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
-          onClick={() => requestPluginInstall(pluginName, data?.update as StorePluginVersion, InstallType.UPDATE)}
-          onOKButton={() => requestPluginInstall(pluginName, data?.update as StorePluginVersion, InstallType.UPDATE)}
+          onClick={() => requestPluginInstall(name, update, InstallType.UPDATE)}
+          onOKButton={() => requestPluginInstall(name, update, InstallType.UPDATE)}
         >
           <div style={{ display: 'flex', minWidth: '180px', justifyContent: 'space-between', alignItems: 'center' }}>
-            {t('PluginListIndex.update_to', { name: data?.update?.name })}
+            {t('PluginListIndex.update_to', { name: update.name })}
             <FaDownload style={{ paddingLeft: '1rem' }} />
           </div>
         </DialogButton>
       ) : (
         <DialogButton
           style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
-          onClick={() => reinstallPlugin(pluginName, data?.version)}
-          onOKButton={() => reinstallPlugin(pluginName, data?.version)}
+          onClick={() => reinstallPlugin(name, version)}
+          onOKButton={() => reinstallPlugin(name, version)}
         >
           <div style={{ display: 'flex', minWidth: '180px', justifyContent: 'space-between', alignItems: 'center' }}>
             {t('PluginListIndex.reinstall')}
@@ -114,7 +123,7 @@ type PluginData = {
 };
 
 export default function PluginList() {
-  const { plugins, updates, pluginOrder, setPluginOrder } = useDeckyState();
+  const { plugins, updates, pluginOrder, setPluginOrder, hiddenPlugins } = useDeckyState();
   const [_, setPluginOrderSetting] = useSetting<string[]>(
     'pluginOrder',
     plugins.map((plugin) => plugin.name),
@@ -125,22 +134,29 @@ export default function PluginList() {
     window.DeckyPluginLoader.checkPluginUpdates();
   }, []);
 
-  const [pluginEntries, setPluginEntries] = useState<ReorderableEntry<PluginData>[]>([]);
+  const [pluginEntries, setPluginEntries] = useState<ReorderableEntry<PluginTableData>[]>([]);
+  const hiddenPluginsService = window.DeckyPluginLoader.hiddenPluginsService;
 
   useEffect(() => {
     setPluginEntries(
-      plugins.map((plugin) => {
+      plugins.map(({ name, version }) => {
+        const hidden = hiddenPlugins.includes(name);
+
         return {
-          label: plugin.version ? `${plugin.name} - ${plugin.version}` : plugin.name,
+          label: <PluginListLabel name={name} hidden={hidden} version={version} />,
+          position: pluginOrder.indexOf(name),
           data: {
-            update: updates?.get(plugin.name),
-            version: plugin.version,
+            name,
+            hidden,
+            version,
+            update: updates?.get(name),
+            onHide: () => hiddenPluginsService.update([...hiddenPlugins, name]),
+            onShow: () => hiddenPluginsService.update(hiddenPlugins.filter((pluginName) => name !== pluginName)),
           },
-          position: pluginOrder.indexOf(plugin.name),
         };
       }),
     );
-  }, [plugins, updates]);
+  }, [plugins, updates, hiddenPlugins]);
 
   if (plugins.length === 0) {
     return (
@@ -150,8 +166,8 @@ export default function PluginList() {
     );
   }
 
-  function onSave(entries: ReorderableEntry<PluginData>[]) {
-    const newOrder = entries.map((entry) => labelToName(entry.label, entry?.data?.version));
+  function onSave(entries: ReorderableEntry<PluginTableData>[]) {
+    const newOrder = entries.map((entry) => entry.data!.name);
     console.log(newOrder);
     setPluginOrder(newOrder);
     setPluginOrderSetting(newOrder);
@@ -184,7 +200,7 @@ export default function PluginList() {
         </DialogButton>
       )}
       <DialogControlsSection style={{ marginTop: 0 }}>
-        <ReorderableList<PluginData> entries={pluginEntries} onSave={onSave} interactables={PluginInteractables} />
+        <ReorderableList<PluginTableData> entries={pluginEntries} onSave={onSave} interactables={PluginInteractables} />
       </DialogControlsSection>
     </DialogBody>
   );

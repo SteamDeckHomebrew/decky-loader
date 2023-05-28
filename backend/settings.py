@@ -22,7 +22,7 @@ class SettingsManager:
         for file in listdir(wrong_dir):
             if file.endswith(".json"):
                 rename(path.join(wrong_dir,file),
-                       path.join(settings_directory, file)) 
+                       path.join(settings_directory, file))
                 self.path = path.join(settings_directory, name + ".json")
 
 

@@ -1,4 +1,6 @@
-import { Navigation, Router, sleep } from 'decky-frontend-lib';
+import i18n from 'i18next';
+import Backend from 'i18next-http-backend';
+import { initReactI18next } from 'react-i18next';
 
 import PluginLoader from './plugin-loader';
 import { DeckyUpdater } from './updater';
@@ -17,28 +19,37 @@ declare global {
 }
 
 (async () => {
-  try {
-    if (!Router.NavigateToAppProperties || !Router.NavigateToLibraryTab || !Router.NavigateToInvites) {
-      while (!Navigation.NavigateToAppProperties) await sleep(100);
-      const shims = {
-        NavigateToAppProperties: Navigation.NavigateToAppProperties,
-        NavigateToInvites: Navigation.NavigateToInvites,
-        NavigateToLibraryTab: Navigation.NavigateToLibraryTab,
-      };
-      (Router as unknown as any).deckyShim = true;
-      Object.assign(Router, shims);
-    }
-  } catch (e) {
-    console.error('[DECKY]: Error initializing Navigation interface shims', e);
-  }
-})();
-
-(async () => {
   window.deckyAuthToken = await fetch('http://127.0.0.1:1337/auth/token').then((r) => r.text());
+
+  i18n
+    .use(Backend)
+    .use(initReactI18next)
+    .init({
+      load: 'currentOnly',
+      detection: {
+        order: ['querystring', 'navigator'],
+        lookupQuerystring: 'lng',
+      },
+      //debug: true,
+      lng: navigator.language,
+      fallbackLng: 'en-US',
+      interpolation: {
+        escapeValue: true,
+      },
+      returnEmptyString: false,
+      backend: {
+        loadPath: 'http://127.0.0.1:1337/locales/{{lng}}.json',
+        customHeaders: {
+          Authentication: window.deckyAuthToken,
+        },
+        requestOptions: {
+          credentials: 'include',
+        },
+      },
+    });
 
   window.DeckyPluginLoader?.dismountAll();
   window.DeckyPluginLoader?.deinit();
-
   window.DeckyPluginLoader = new PluginLoader();
   window.DeckyPluginLoader.init();
   window.importDeckyPlugin = function (name: string, version: string) {
@@ -62,3 +73,5 @@ declare global {
 
   setTimeout(() => window.syncDeckyPlugins(), 5000);
 })();
+
+export default i18n;

@@ -1,18 +1,31 @@
 import { ConfirmModal, Navigation, QuickAccessTab } from 'decky-frontend-lib';
 import { FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import TranslationHelper, { TranslationClass } from '../../utils/TranslationHelper';
 
 interface PluginInstallModalProps {
   artifact: string;
   version: string;
   hash: string;
-  // reinstall: boolean;
+  installType: number;
   onOK(): void;
   onCancel(): void;
   closeModal?(): void;
 }
 
-const PluginInstallModal: FC<PluginInstallModalProps> = ({ artifact, version, hash, onOK, onCancel, closeModal }) => {
+const PluginInstallModal: FC<PluginInstallModalProps> = ({
+  artifact,
+  version,
+  hash,
+  installType,
+  onOK,
+  onCancel,
+  closeModal,
+}) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const { t } = useTranslation();
+
   return (
     <ConfirmModal
       bOKDisabled={loading}
@@ -26,14 +39,48 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({ artifact, version, ha
       onCancel={async () => {
         await onCancel();
       }}
-      strTitle={`Install ${artifact}`}
-      strOKButtonText={loading ? 'Installing' : 'Install'}
+      strTitle={
+        <div>
+          <TranslationHelper
+            trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
+            trans_text="title"
+            i18n_args={{ artifact: artifact }}
+            install_type={installType}
+          />
+        </div>
+      }
+      strOKButtonText={
+        loading ? (
+          <div>
+            <TranslationHelper
+              trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
+              trans_text="button_processing"
+              install_type={installType}
+            />
+          </div>
+        ) : (
+          <div>
+            <TranslationHelper
+              trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
+              trans_text="button_idle"
+              install_type={installType}
+            />
+          </div>
+        )
+      }
     >
-      {hash == 'False' ? (
-        <h3 style={{ color: 'red' }}>!!!!NO HASH PROVIDED!!!!</h3>
-      ) : (
-        `Are you sure you want to install ${artifact} ${version}?`
-      )}
+      <div>
+        <TranslationHelper
+          trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
+          trans_text="desc"
+          i18n_args={{
+            artifact: artifact,
+            version: version,
+          }}
+          install_type={installType}
+        />
+      </div>
+      {hash == 'False' && <span style={{ color: 'red' }}>{t('PluginInstallModal.no_hash')}</span>}
     </ConfirmModal>
   );
 };

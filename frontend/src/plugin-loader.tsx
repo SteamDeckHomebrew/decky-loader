@@ -1,6 +1,17 @@
-import { ConfirmModal, ModalRoot, Patch, QuickAccessTab, Router, showModal, sleep } from 'decky-frontend-lib';
+import {
+  ConfirmModal,
+  ModalRoot,
+  PanelSection,
+  PanelSectionRow,
+  Patch,
+  QuickAccessTab,
+  Router,
+  quickAccessMenuClasses,
+  showModal,
+  sleep,
+} from 'decky-frontend-lib';
 import { FC, lazy } from 'react';
-import { FaCog, FaExclamationCircle, FaPlug } from 'react-icons/fa';
+import { FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
 import { DeckyState, DeckyStateContextProvider, useDeckyState } from './components/DeckyState';
 import LegacyPlugin from './components/LegacyPlugin';
@@ -19,6 +30,7 @@ import OldTabsHook from './tabs-hook.old';
 import Toaster from './toaster';
 import { VerInfo, callUpdaterMethod } from './updater';
 import { getSetting } from './utils/settings';
+import TranslationHelper, { TranslationClass } from './utils/TranslationHelper';
 
 const StorePage = lazy(() => import('./components/store/Store'));
 const SettingsPage = lazy(() => import('./components/settings'));
@@ -104,8 +116,14 @@ class PluginLoader extends Logger {
     const versionInfo = await this.updateVersion();
     if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
       this.toaster.toast({
-        title: 'Decky',
-        body: `Update to ${versionInfo?.remote?.tag_name} available!`,
+        title: <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="decky_title" />,
+        body: (
+          <TranslationHelper
+            trans_class={TranslationClass.PLUGIN_LOADER}
+            trans_text="decky_update_available"
+            i18n_args={{ tag_name: versionInfo?.remote?.tag_name }}
+          />
+        ),
         onClick: () => Router.Navigate('/decky/settings'),
       });
       this.deckyState.setHasLoaderUpdate(true);
@@ -124,26 +142,39 @@ class PluginLoader extends Logger {
     const updates = await this.checkPluginUpdates();
     if (updates?.size > 0) {
       this.toaster.toast({
-        title: 'Decky',
-        body: `Updates available for ${updates.size} plugin${updates.size > 1 ? 's' : ''}!`,
+        title: <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="decky_title" />,
+        body: (
+          <TranslationHelper
+            trans_class={TranslationClass.PLUGIN_LOADER}
+            trans_text="plugin_update"
+            i18n_args={{ count: updates.size }}
+          />
+        ),
         onClick: () => Router.Navigate('/decky/settings/plugins'),
       });
     }
   }
 
-  public addPluginInstallPrompt(artifact: string, version: string, request_id: string, hash: string) {
+  public addPluginInstallPrompt(
+    artifact: string,
+    version: string,
+    request_id: string,
+    hash: string,
+    install_type: number,
+  ) {
     showModal(
       <PluginInstallModal
         artifact={artifact}
         version={version}
         hash={hash}
+        installType={install_type}
         onOK={() => this.callServerMethod('confirm_plugin_install', { request_id })}
         onCancel={() => this.callServerMethod('cancel_plugin_install', { request_id })}
       />,
     );
   }
 
-  public uninstallPlugin(name: string) {
+  public uninstallPlugin(name: string, title: string, button_text: string, description: string) {
     showModal(
       <ConfirmModal
         onOK={async () => {
@@ -152,10 +183,10 @@ class PluginLoader extends Logger {
         onCancel={() => {
           // do nothing
         }}
-        strTitle={`Uninstall ${name}`}
-        strOKButtonText={'Uninstall'}
+        strTitle={title}
+        strOKButtonText={button_text}
       >
-        Are you sure you want to uninstall {name}?
+        {description}
       </ConfirmModal>,
     );
   }
@@ -250,16 +281,30 @@ class PluginLoader extends Logger {
       } catch (e) {
         this.error('Error loading plugin ' + name, e);
         const TheError: FC<{}> = () => (
-          <>
-            Error:{' '}
-            <pre>
-              <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
-            </pre>
-            <>
-              Please go to <FaCog style={{ display: 'inline' }} /> in the Decky menu if you need to uninstall this
-              plugin.
-            </>
-          </>
+          <PanelSection>
+            <PanelSectionRow>
+              <div
+                className={quickAccessMenuClasses.FriendsTitle}
+                style={{ display: 'flex', justifyContent: 'center' }}
+              >
+                <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="error" />
+              </div>
+            </PanelSectionRow>
+            <PanelSectionRow>
+              <pre style={{ overflowX: 'scroll' }}>
+                <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
+              </pre>
+            </PanelSectionRow>
+            <PanelSectionRow>
+              <div className={quickAccessMenuClasses.Text}>
+                <TranslationHelper
+                  trans_class={TranslationClass.PLUGIN_LOADER}
+                  trans_text="plugin_error_uninstall"
+                  i18n_args={{ name: name }}
+                />
+              </div>
+            </PanelSectionRow>
+          </PanelSection>
         );
         this.plugins.push({
           name: name,
@@ -267,7 +312,17 @@ class PluginLoader extends Logger {
           content: <TheError />,
           icon: <FaExclamationCircle />,
         });
-        this.toaster.toast({ title: 'Error loading ' + name, body: '' + e, icon: <FaExclamationCircle /> });
+        this.toaster.toast({
+          title: (
+            <TranslationHelper
+              trans_class={TranslationClass.PLUGIN_LOADER}
+              trans_text="plugin_load_error.toast"
+              i18n_args={{ name: name }}
+            />
+          ),
+          body: '' + e,
+          icon: <FaExclamationCircle />,
+        });
       }
     } else throw new Error(`${name} frontend_bundle not OK`);
   }

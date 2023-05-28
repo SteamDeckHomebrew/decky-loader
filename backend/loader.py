@@ -77,6 +77,7 @@ class Loader:
 
         server_instance.add_routes([
             web.get("/frontend/{path:.*}", self.handle_frontend_assets),
+            web.get("/locales/{path:.*}", self.handle_frontend_locales),
             web.get("/plugins", self.get_plugins),
             web.get("/plugins/{plugin_name}/frontend_bundle", self.handle_frontend_bundle),
             web.post("/plugins/{plugin_name}/methods/{method_name}", self.handle_plugin_method_call),
@@ -99,6 +100,15 @@ class Loader:
         file = path.join(path.dirname(__file__), "static", request.match_info["path"])
 
         return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
+
+    async def handle_frontend_locales(self, request):
+        req_lang = request.match_info["path"]
+        file = path.join(path.dirname(__file__), "locales", req_lang)
+        if exists(file):
+            return web.FileResponse(file, headers={"Cache-Control": "no-cache", "Content-Type": "application/json"})
+        else:
+            self.logger.info(f"Language {req_lang} not available, returning an empty dictionary")
+            return web.json_response(data={}, headers={"Cache-Control": "no-cache"})
 
     async def get_plugins(self, request):
         plugins = list(self.plugins.values())

@@ -2,6 +2,7 @@ import { DialogButton, Focusable, SteamSpinner, TextField } from 'decky-frontend
 import { useEffect } from 'react';
 import { FunctionComponent, useState } from 'react';
 import { FileIcon, defaultStyles } from 'react-file-icon';
+import { useTranslation } from 'react-i18next';
 import { FaArrowUp, FaFolder } from 'react-icons/fa';
 
 import Logger from '../../../logger';
@@ -47,6 +48,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
   onSubmit,
   closeModal,
 }) => {
+  const { t } = useTranslation();
   if (startPath.endsWith('/')) startPath = startPath.substring(0, startPath.length - 1); // remove trailing path
   const [path, setPath] = useState<string>(startPath);
   const [listing, setListing] = useState<FileListing>({ files: [], realpath: path });
@@ -134,7 +136,15 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
                         )}
                       </div>
                     )}
-                    {file.name}
+                    <span
+                      style={{
+                        textOverflow: 'ellipsis',
+                        overflow: 'hidden',
+                        textAlign: 'left',
+                      }}
+                    >
+                      {file.name}
+                    </span>
                   </div>
                 </DialogButton>
               );
@@ -150,7 +160,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
             closeModal?.();
           }}
         >
-          Use this folder
+          {t('FilePickerIndex.folder.select')}
         </DialogButton>
       )}
     </div>

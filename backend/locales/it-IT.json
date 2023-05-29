@@ -180,5 +180,15 @@
             "reloading": "Ricaricando",
             "updating": "Aggiornando"
         }
+    },
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "mixed_one": "Modifica un plugin",
+            "mixed_many": "Modifica {{count}} plugins",
+            "mixed_other": "Modifica {{count}} plugins",
+            "update_one": "Aggiorna un plugin",
+            "update_many": "Aggiorna {{count}} plugins",
+            "update_other": "Aggiorna {{count}} plugins"
+        }
     }
 }

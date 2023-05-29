@@ -183,7 +183,7 @@ export default function PluginList() {
           <FaDownload style={{ paddingLeft: '1rem' }} />
         </DialogButton>
       )}
-      <DialogControlsSection>
+      <DialogControlsSection style={{ marginTop: 0 }}>
         <ReorderableList<PluginData> entries={pluginEntries} onSave={onSave} interactables={PluginInteractables} />
       </DialogControlsSection>
     </DialogBody>

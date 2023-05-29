@@ -50,7 +50,10 @@
         "reinstall": "Reinstalla",
         "reload": "Ricarica",
         "uninstall": "Rimuovi",
-        "update_to": "Aggiorna a {{name}}"
+        "update_to": "Aggiorna a {{name}}",
+        "update_all_one": "Aggiorna un plugin",
+        "update_all_many": "Aggiorna {{count}} plugins",
+        "update_all_other": "Aggiorna {{count}} plugins"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -188,7 +191,23 @@
             "mixed_other": "Modifica {{count}} plugins",
             "update_one": "Aggiorna un plugin",
             "update_many": "Aggiorna {{count}} plugins",
-            "update_other": "Aggiorna {{count}} plugins"
+            "update_other": "Aggiorna {{count}} plugins",
+            "reinstall_one": "Reinstalla un plugin",
+            "reinstall_many": "Reinstalla {{count}} plugins",
+            "reinstall_other": "Reinstalla {{count}} plugins",
+            "install_one": "Installa un plugin",
+            "install_many": "Installa {{count}} plugins",
+            "install_other": "Installa {{count}} plugins"
+        },
+        "confirm": "Sei sicuro di voler effettuare le modifiche seguenti?",
+        "ok_button": {
+            "idle": "Conferma",
+            "loading": "Elaboro"
+        },
+        "description": {
+            "install": "Installa {{name}} {{version}}",
+            "update": "Aggiorna {{name}} alla versione {{version}}",
+            "reinstall": "Reinstalla {{name}} {{version}}"
         }
     }
 }

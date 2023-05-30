@@ -143,28 +143,33 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
   const [showHidden, setShowHidden] = useState<boolean>(defaultHidden);
   const [sort, setSort] = useState<SortOptions>(SortOptions.name_desc);
   const [selectedExts, setSelectedExts] = useState<any>(validFileExtensions);
-  const [previousExts, setPreviousExts] = useState<any>(validFileExtensions);
 
   const validExtsOptions = useMemo(() => {
     let validExt: { label: string; value: string }[] = [];
-    if (!validFileExtensions) return [];
-    if (allowAllFiles) {
-      validExt.push({ label: t('FilePickerIndex.files.all_files'), value: 'all_files' });
+    if (validFileExtensions) {
+      if (allowAllFiles) {
+        validExt.push({ label: t('FilePickerIndex.files.all_files'), value: 'all_files' });
+      }
+      validExt.push(...validFileExtensions.map((x) => ({ label: x, value: x })));
     }
-    validExt.push(...validFileExtensions.map((x) => ({ label: x, value: x })));
     return validExt;
   }, [validFileExtensions, allowAllFiles]);
+
+  function isSelectionValid(arr1: string[], arr2: string[]) {
+    if (arr1.some((el) => arr2.includes(el))) return true;
+    return false;
+  }
 
   const handleExtsSelect = useCallback((val: any) => {
     // unselect other options if "All Files" is checked
     if (allowAllFiles && val.includes('all_files')) {
       setSelectedExts(['all_files']);
-      setPreviousExts(['all_files']);
-    } else if (val.length == !0) {
+    } else if (validFileExtensions && isSelectionValid(validFileExtensions, val)) {
+      // If at least one extension is still selected, then assign this to the selected values
       setSelectedExts(val);
-      setPreviousExts(val);
     } else {
-      setSelectedExts(previousExts);
+      // Else do nothing
+      setSelectedExts(selectedExts);
     }
   }, []);
 

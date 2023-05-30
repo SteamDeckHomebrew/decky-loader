@@ -53,9 +53,9 @@ const DropdownMultiselectItem: FC<
 const DropdownMultiselect: FC<{
   items: {
     label: string;
-    value: any;
+    value: string;
   }[];
-  selected: any[];
+  selected: string[];
   onSelect: (selected: any[]) => void;
   label: string;
 }> = ({ label, items, selected, onSelect }) => {

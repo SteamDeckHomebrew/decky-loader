@@ -30,7 +30,7 @@ export interface FilePickerProps {
   includeFiles?: boolean;
   includeFolders?: boolean;
   filter?: RegExp | ((file: File) => boolean);
-  validFileExtensions?: string[] | null;
+  validFileExtensions?: string[];
   allowAllFiles?: boolean;
   defaultHidden?: boolean;
   max?: number;
@@ -121,9 +121,9 @@ const iconStyles = {
 const FilePicker: FunctionComponent<FilePickerProps> = ({
   startPath,
   includeFiles = true,
+  filter = undefined,
   includeFolders = true,
-  filter,
-  validFileExtensions = null,
+  validFileExtensions = undefined,
   allowAllFiles = true,
   defaultHidden = false, // false by default makes sense for most users
   max = 1000,
@@ -142,7 +142,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [showHidden, setShowHidden] = useState<boolean>(defaultHidden);
   const [sort, setSort] = useState<SortOptions>(SortOptions.name_desc);
-  const [selectedExts, setSelectedExts] = useState<any>(validFileExtensions);
+  const [selectedExts, setSelectedExts] = useState<string[] | undefined>(validFileExtensions);
 
   const validExtsOptions = useMemo(() => {
     let validExt: { label: string; value: string }[] = [];
@@ -265,7 +265,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
               <DropdownMultiselect
                 label={t('FilePickerIndex.files.file_type')}
                 items={validExtsOptions}
-                selected={selectedExts}
+                selected={selectedExts ? selectedExts : []}
                 onSelect={handleExtsSelect}
               />
             )}

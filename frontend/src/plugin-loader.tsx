@@ -363,11 +363,11 @@ class PluginLoader extends Logger {
   openFilePicker(
     startPath: string,
     includeFiles?: boolean,
+    filter?: RegExp | ((file: File) => boolean),
     includeFolders?: boolean,
     extensions?: string[],
     showHiddenFiles?: boolean,
     allowAllFiles?: boolean,
-    filter?: RegExp | ((file: File) => boolean),
     max?: number,
   ): Promise<{ path: string; realpath: string }> {
     return new Promise((resolve, reject) => {

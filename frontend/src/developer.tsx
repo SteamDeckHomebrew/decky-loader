@@ -4,6 +4,7 @@ import { FaReact } from 'react-icons/fa';
 
 import Logger from './logger';
 import { getSetting } from './utils/settings';
+import TranslationHelper, { TranslationClass } from './utils/TranslationHelper';
 
 const logger = new Logger('DeveloperMode');
 
@@ -40,11 +41,13 @@ export async function setShowValveInternal(show: boolean) {
 }
 
 export async function setShouldConnectToReactDevTools(enable: boolean) {
-  const { t } = useTranslation();
-
   window.DeckyPluginLoader.toaster.toast({
-    title: (enable ? t('Developer.enabling') : t('Developer.disabling')) + ' React DevTools',
-    body: t('Developer.5secreload'),
+    title: enable ? (
+      <TranslationHelper trans_class={TranslationClass.DEVELOPER} trans_text={'enabling'} />
+    ) : (
+      <TranslationHelper trans_class={TranslationClass.DEVELOPER} trans_text={'disabling'} />
+    ),
+    body: <TranslationHelper trans_class={TranslationClass.DEVELOPER} trans_text={'5secreload'} />,
     icon: <FaReact />,
   });
   await sleep(5000);

@@ -8,9 +8,9 @@
         }
     },
     "Developer": {
-        "5secreload": "Ricaricando in 5 secondi",
-        "disabling": "Disabilitando",
-        "enabling": "Abilitando"
+        "5secreload": "Ricarico in 5 secondi",
+        "disabling": "Disabilito i tools di React",
+        "enabling": "Abilito i tools di React"
     },
     "FilePickerIndex": {
         "folder": {

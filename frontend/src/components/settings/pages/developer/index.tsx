@@ -63,7 +63,7 @@ export default function DeveloperSettings() {
         </Field>
       </DialogControlsSection>
       <DialogControlsSection>
-        <DialogControlsSectionHeader>{t('SettingsDeveloperIndex.header_other')}</DialogControlsSectionHeader>
+        <DialogControlsSectionHeader>{t('SettingsDeveloperIndex.header')}</DialogControlsSectionHeader>
         <RemoteDebuggingSettings />
         <Field
           label={t('SettingsDeveloperIndex.valve_internal.label')}

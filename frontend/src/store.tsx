@@ -23,6 +23,12 @@ export interface StorePlugin {
   image_url: string;
 }
 
+export interface PluginInstallRequest {
+  plugin: string;
+  selectedVer: StorePluginVersion;
+  installType: InstallType;
+}
+
 // name: version
 export type PluginUpdateMapping = Map<string, StorePluginVersion>;
 
@@ -74,14 +80,25 @@ export async function installFromURL(url: string) {
 }
 
 export async function requestPluginInstall(plugin: string, selectedVer: StorePluginVersion, installType: InstallType) {
-  const artifactUrl =
-    selectedVer.artifact ?? `https://cdn.tzatzikiweeb.moe/file/steam-deck-homebrew/versions/${selectedVer.hash}.zip`;
+  const artifactUrl = selectedVer.artifact ?? pluginUrl(selectedVer.hash);
   await window.DeckyPluginLoader.callServerMethod('install_plugin', {
     name: plugin,
     artifact: artifactUrl,
     version: selectedVer.name,
     hash: selectedVer.hash,
     install_type: installType,
+  });
+}
+
+export async function requestMultiplePluginInstalls(requests: PluginInstallRequest[]) {
+  await window.DeckyPluginLoader.callServerMethod('install_plugins', {
+    requests: requests.map(({ plugin, installType, selectedVer }) => ({
+      name: plugin,
+      artifact: selectedVer.artifact ?? pluginUrl(selectedVer.hash),
+      version: selectedVer.name,
+      hash: selectedVer.hash,
+      install_type: installType,
+    })),
   });
 }
 
@@ -95,4 +112,8 @@ export async function checkForUpdates(plugins: Plugin[]): Promise<PluginUpdateMa
     }
   }
   return updateMap;
+}
+
+function pluginUrl(hash: string) {
+  return `https://cdn.tzatzikiweeb.moe/file/steam-deck-homebrew/versions/${hash}.zip`;
 }

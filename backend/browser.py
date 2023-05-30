@@ -49,7 +49,7 @@ class PluginBrowser:
             logger.error(f"chown/chmod exited with a non-zero exit code")
             return False
         return True
-    
+
     async def _download_remote_binaries_for_plugin_with_name(self, pluginBasePath):
         rv = False
         try:
@@ -63,10 +63,8 @@ class PluginBrowser:
                         # create bin directory if needed.
                         chmod(pluginBasePath, 777)
                         if access(pluginBasePath, W_OK):
-                            
                             if not path.exists(pluginBinPath):
                                 mkdir(pluginBinPath)
-                            
                             if not access(pluginBinPath, W_OK):
                                 chmod(pluginBinPath, 777)
 
@@ -85,7 +83,7 @@ class PluginBrowser:
                     else:
                         rv = True
                         logger.debug(f"No Remote Binaries to Download")
-                
+
         except Exception as e:
             rv = False
             logger.debug(str(e))
@@ -174,7 +172,7 @@ class PluginBrowser:
         if res_zip is None:
             logger.fatal(f"Could not fetch {artifact}")
             return
-        
+
         # If plugin is installed, uninstall it
         if isInstalled:
             try:
@@ -196,7 +194,7 @@ class PluginBrowser:
                     self.loader.plugins[name].stop()
                     self.loader.plugins.pop(name, None)
                 await sleep(1)
-                
+
                 current_plugin_order = self.settings.getSetting("pluginOrder")
                 current_plugin_order.append(name)
                 self.settings.setSetting("pluginOrder", current_plugin_order)
@@ -216,9 +214,23 @@ class PluginBrowser:
         await tab.open_websocket()
         await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}', {install_type})")
 
+    async def request_multiple_plugin_installs(self, requests):
+        request_id = str(time())
+        self.install_requests[request_id] = [PluginInstallContext(req['artifact'], req['name'], req['version'], req['hash']) for req in requests]
+        js_requests_parameter = ','.join([
+            f"{{ name: '{req['name']}', version: '{req['version']}', hash: '{req['hash']}', install_type: {req['install_type']}}}" for req in requests
+        ])
+
+        tab = await get_gamepadui_tab()
+        await tab.open_websocket()
+        await tab.evaluate_js(f"DeckyPluginLoader.addMultiplePluginsInstallPrompt('{request_id}', [{js_requests_parameter}])")
+
     async def confirm_plugin_install(self, request_id):
-        request = self.install_requests.pop(request_id) 
-        await self._install(request.artifact, request.name, request.version, request.hash)
+        requestOrRequests = self.install_requests.pop(request_id)
+        if isinstance(requestOrRequests, list):
+            [await self._install(req.artifact, req.name, req.version, req.hash) for req in requestOrRequests]
+        else:
+            await self._install(requestOrRequests.artifact, requestOrRequests.name, requestOrRequests.version, requestOrRequests.hash)
 
     def cancel_plugin_install(self, request_id):
         self.install_requests.pop(request_id)

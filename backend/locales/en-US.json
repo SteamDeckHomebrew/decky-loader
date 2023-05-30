@@ -1,17 +1,17 @@
 {
-  "BranchSelect": {
-    "update_channel": {
-      "label": "Update Channel",
-      "prerelease": "Prerelease",
-      "stable": "Stable",
-      "testing": "Testing"
-    }
-  },
-  "Developer": {
-    "5secreload": "Reloading in 5 seconds",
-    "disabling": "Disabling",
-    "enabling": "Enabling"
-  },
+    "BranchSelect": {
+        "update_channel": {
+            "label": "Update Channel",
+            "prerelease": "Prerelease",
+            "stable": "Stable",
+            "testing": "Testing"
+        }
+    },
+    "Developer": {
+        "5secreload": "Reloading in 5 seconds",
+        "disabling": "Disabling",
+        "enabling": "Enabling"
+    },
   "DropdownMultiselect": {
     "button": {
       "back": "Back"
@@ -23,7 +23,7 @@
       "unknown": "An unknown error occurred. The raw error is: {{raw_error}}"
     }
   },
-  "FilePickerIndex": {
+    "FilePickerIndex": {
     "files": {
       "all_files": "All Files",
       "file_type": "File Type",
@@ -39,178 +39,197 @@
       "size_asce": "Size (Smallest)",
       "size_desc": "Size (Largest)"
     },
-    "folder": {
+      "folder": {
       "label": "Folder",
       "select": "Use this folder",
       "show_more": "Show more files"
+        }
+    },
+    "PluginCard": {
+        "plugin_full_access": "This plugin has full access to your Steam Deck.",
+        "plugin_install": "Install",
+        "plugin_no_desc": "No description provided.",
+        "plugin_version_label": "Plugin Version"
+    },
+    "PluginInstallModal": {
+        "install": {
+            "button_idle": "Install",
+            "button_processing": "Installing",
+            "desc": "Are you sure you want to install {{artifact}} {{version}}?",
+            "title": "Install {{artifact}}"
+        },
+        "no_hash": "This plugin does not have a hash, you are installing it at your own risk.",
+        "reinstall": {
+            "button_idle": "Reinstall",
+            "button_processing": "Reinstalling",
+            "desc": "Are you sure you want to reinstall {{artifact}} {{version}}?",
+            "title": "Reinstall {{artifact}}"
+        },
+        "update": {
+            "button_idle": "Update",
+            "button_processing": "Updating",
+            "desc": "Are you sure you want to update {{artifact}} {{version}}?",
+            "title": "Update {{artifact}}"
+        }
+    },
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "mixed_one": "Modify 1 plugin",
+            "mixed_other": "Modify {{count}} plugins",
+            "update_one": "Update 1 plugin",
+            "update_other": "Update {{count}} plugins",
+            "reinstall_one": "Reinstall 1 plugin",
+            "reinstall_other": "Reinstall {{count}} plugins",
+            "install_one": "Install 1 plugin",
+            "install_other": "Install {{count}} plugins"
+        },
+        "ok_button": {
+            "idle": "Confirm",
+            "loading": "Working"
+        },
+        "confirm": "Are you sure you want to make the following modifications?",
+        "description": {
+            "install": "Install {{name}} {{version}}",
+            "update": "Update {{name}} to {{version}}",
+            "reinstall": "Reinstall {{name}} {{version}}"
+        }
+    },
+    "PluginListIndex": {
+        "no_plugin": "No plugins installed!",
+        "plugin_actions": "Plugin Actions",
+        "reinstall": "Reinstall",
+        "reload": "Reload",
+        "uninstall": "Uninstall",
+        "update_to": "Update to {{name}}",
+        "update_all_one": "Update 1 plugin",
+        "update_all_other": "Update {{count}} plugins"
+    },
+    "PluginLoader": {
+        "decky_title": "Decky",
+        "decky_update_available": "Update to {{tag_name}} available!",
+        "error": "Error",
+        "plugin_error_uninstall": "Loading {{name}} caused an exception as shown above. This usually means that the plugin requires an update for the new version of SteamUI. Check if an update is present or evaluate its removal in the Decky settings, in the Plugins section.",
+        "plugin_load_error": {
+            "message": "Error loading plugin {{name}}",
+            "toast": "Error loading {{name}}"
+        },
+        "plugin_uninstall": {
+            "button": "Uninstall",
+            "desc": "Are you sure you want to uninstall {{name}}?",
+            "title": "Uninstall {{name}}"
+        },
+        "plugin_update_one": "Updates available for 1 plugin!",
+        "plugin_update_other": "Updates available for {{count}} plugins!"
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "desc": "Allow unauthenticated access to the CEF debugger to anyone in your network",
+            "label": "Allow Remote CEF Debugging"
+        }
+    },
+    "SettingsDeveloperIndex": {
+        "header": "Other",
+        "react_devtools": {
+            "desc": "Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set the IP address before enabling.",
+            "ip_label": "IP",
+            "label": "Enable React DevTools"
+        },
+        "third_party_plugins": {
+            "button_install": "Install",
+            "button_zip": "Browse",
+            "header": "Third-Party Plugins",
+            "label_desc": "URL",
+            "label_url": "Install Plugin from URL",
+            "label_zip": "Install Plugin from ZIP File"
+        },
+        "toast_zip": {
+            "body": "Installation failed! Only ZIP files are supported.",
+            "title": "Decky"
+        },
+        "valve_internal": {
+            "desc1": "Enables the Valve internal developer menu.",
+            "desc2": "Do not touch anything in this menu unless you know what it does.",
+            "label": "Enable Valve Internal"
+        }
+    },
+    "SettingsGeneralIndex": {
+        "about": {
+            "decky_version": "Decky Version",
+            "header": "About"
+        },
+        "beta": {
+            "header": "Beta participation"
+        },
+        "developer_mode": {
+            "desc": "Enables Decky's developer settings.",
+            "label": "Developer mode"
+        },
+        "other": {
+            "header": "Other"
+        },
+        "updates": {
+            "header": "Updates"
+        }
+    },
+    "SettingsIndex": {
+        "developer_title": "Developer",
+        "general_title": "General",
+        "navbar_settings": "Decky Settings",
+        "plugins_title": "Plugins"
+    },
+    "Store": {
+        "store_contrib": {
+            "desc": "If you would like to contribute to the Decky Plugin Store, check the SteamDeckHomebrew/decky-plugin-template repository on GitHub. Information on development and distribution is available in the README.",
+            "label": "Contributing"
+        },
+        "store_filter": {
+            "label": "Filter",
+            "label_def": "All"
+        },
+        "store_search": {
+            "label": "Search"
+        },
+        "store_sort": {
+            "label": "Sort",
+            "label_def": "Last Updated (Newest)"
+        },
+        "store_source": {
+            "desc": "All plugin source code is available on SteamDeckHomebrew/decky-plugin-database repository on GitHub.",
+            "label": "Source Code"
+        },
+        "store_tabs": {
+            "about": "About",
+            "alph_asce": "Alphabetical (Z to A)",
+            "alph_desc": "Alphabetical (A to Z)",
+            "title": "Browse"
+        },
+        "store_testing_cta": "Please consider testing new plugins to help the Decky Loader team!"
+    },
+    "StoreSelect": {
+        "custom_store": {
+            "label": "Custom Store",
+            "url_label": "URL"
+        },
+        "store_channel": {
+            "custom": "Custom",
+            "default": "Default",
+            "label": "Store Channel",
+            "testing": "Testing"
+        }
+    },
+    "Updater": {
+        "decky_updates": "Decky Updates",
+        "no_patch_notes_desc": "no patch notes for this version",
+        "patch_notes_desc": "Patch Notes",
+        "updates": {
+            "check_button": "Check For Updates",
+            "checking": "Checking",
+            "cur_version": "Current version: {{ver}}",
+            "install_button": "Install Update",
+            "label": "Updates",
+            "lat_version": "Up to date: running {{ver}}",
+            "reloading": "Reloading",
+            "updating": "Updating"
+        }
     }
-  },
-  "PluginCard": {
-    "plugin_full_access": "This plugin has full access to your Steam Deck.",
-    "plugin_install": "Install",
-    "plugin_no_desc": "No description provided.",
-    "plugin_version_label": "Plugin Version"
-  },
-  "PluginInstallModal": {
-    "install": {
-      "button_idle": "Install",
-      "button_processing": "Installing",
-      "desc": "Are you sure you want to install {{artifact}} {{version}}?",
-      "title": "Install {{artifact}}"
-    },
-    "no_hash": "This plugin does not have a hash, you are installing it at your own risk.",
-    "reinstall": {
-      "button_idle": "Reinstall",
-      "button_processing": "Reinstalling",
-      "desc": "Are you sure you want to reinstall {{artifact}} {{version}}?",
-      "title": "Reinstall {{artifact}}"
-    },
-    "update": {
-      "button_idle": "Update",
-      "button_processing": "Updating",
-      "desc": "Are you sure you want to update {{artifact}} {{version}}?",
-      "title": "Update {{artifact}}"
-    }
-  },
-  "PluginListIndex": {
-    "no_plugin": "No plugins installed!",
-    "plugin_actions": "Plugin Actions",
-    "reinstall": "Reinstall",
-    "reload": "Reload",
-    "uninstall": "Uninstall",
-    "update_to": "Update to {{name}}"
-  },
-  "PluginLoader": {
-    "decky_title": "Decky",
-    "decky_update_available": "Update to {{tag_name}} available!",
-    "error": "Error",
-    "plugin_error_uninstall": "Please go to {{-icon}} in the Decky menu if you need to uninstall this plugin.",
-    "plugin_load_error": {
-      "message": "Error loading plugin {{name}}",
-      "toast": "Error loading {{name}}"
-    },
-    "plugin_uninstall": {
-      "button": "Uninstall",
-      "desc": "Are you sure you want to uninstall {{name}}?",
-      "title": "Uninstall {{name}}"
-    },
-    "plugin_update_one": "Updates available for 1 plugin!",
-    "plugin_update_other": "Updates available for {{count}} plugins!"
-  },
-  "RemoteDebugging": {
-    "remote_cef": {
-      "desc": "Allow unauthenticated access to the CEF debugger to anyone in your network",
-      "label": "Allow Remote CEF Debugging"
-    }
-  },
-  "SettingsDeveloperIndex": {
-    "header_other": "Other",
-    "react_devtools": {
-      "desc": "Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set the IP address before enabling.",
-      "ip_label": "IP",
-      "label": "Enable React DevTools"
-    },
-    "third_party_plugins": {
-      "button_install": "Install",
-      "button_zip": "Browse",
-      "header": "Third-Party Plugins",
-      "label_desc": "URL",
-      "label_url": "Install Plugin from URL",
-      "label_zip": "Install Plugin from ZIP File"
-    },
-    "toast_zip": {
-      "body": "Installation failed! Only ZIP files are supported.",
-      "title": "Decky"
-    },
-    "valve_internal": {
-      "desc1": "Enables the Valve internal developer menu.",
-      "desc2": "Do not touch anything in this menu unless you know what it does.",
-      "label": "Enable Valve Internal"
-    }
-  },
-  "SettingsGeneralIndex": {
-    "about": {
-      "decky_version": "Decky Version",
-      "header": "About"
-    },
-    "beta": {
-      "header": "Beta participation"
-    },
-    "developer_mode": {
-      "desc": "Enables Decky's developer settings.",
-      "label": "Developer mode"
-    },
-    "manual_plugin": {
-      "button": "Install",
-      "label": "Manual plugin install",
-      "url_label": "URL"
-    },
-    "other": {
-      "header": "Other"
-    },
-    "updates": {
-      "header": "Updates"
-    }
-  },
-  "SettingsIndex": {
-    "developer_title": "Developer",
-    "general_title": "General",
-    "navbar_settings": "Decky Settings",
-    "plugins_title": "Plugins"
-  },
-  "Store": {
-    "store_contrib": {
-      "desc": "If you would like to contribute to the Decky Plugin Store, check the SteamDeckHomebrew/decky-plugin-template repository on GitHub. Information on development and distribution is available in the README.",
-      "label": "Contributing"
-    },
-    "store_filter": {
-      "label": "Filter",
-      "label_def": "All"
-    },
-    "store_search": {
-      "label": "Search"
-    },
-    "store_sort": {
-      "label": "Sort",
-      "label_def": "Last Updated (Newest)"
-    },
-    "store_source": {
-      "desc": "All plugin source code is available on SteamDeckHomebrew/decky-plugin-database repository on GitHub.",
-      "label": "Source Code"
-    },
-    "store_tabs": {
-      "about": "About",
-      "alph_asce": "Alphabetical (Z to A)",
-      "alph_desc": "Alphabetical (A to Z)",
-      "title": "Browse"
-    },
-    "store_testing_cta": "Please consider testing new plugins to help the Decky Loader team!"
-  },
-  "StoreSelect": {
-    "custom_store": {
-      "label": "Custom Store",
-      "url_label": "URL"
-    },
-    "store_channel": {
-      "custom": "Custom",
-      "default": "Default",
-      "label": "Store Channel",
-      "testing": "Testing"
-    }
-  },
-  "Updater": {
-    "decky_updates": "Decky Updates",
-    "no_patch_notes_desc": "no patch notes for this version",
-    "patch_notes_desc": "Patch Notes",
-    "updates": {
-      "check_button": "Check For Updates",
-      "checking": "Checking",
-      "cur_version": "Current version: {{ver}}",
-      "install_button": "Install Update",
-      "label": "Updates",
-      "lat_version": "Up to date: running {{ver}}",
-      "reloading": "Reloading",
-      "updating": "Updating"
-    }
-  }
 }

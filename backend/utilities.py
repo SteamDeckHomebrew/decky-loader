@@ -213,7 +213,7 @@ class Utilities:
                         folders.append({"file": file, "filest": filest, "is_dir": True})
                 elif include_files:
                     # Handle requested extensions if present
-                    if include_ext == [] or splitext(file.name)[1] in include_ext:
+                    if 'all_files' in include_ext or splitext(file.name)[1].lstrip('.') in include_ext:
                         if (is_hidden and include_hidden) or not is_hidden:
                             files.append({"file": file, "filest": filest, "is_dir": False})
         # Filter logic

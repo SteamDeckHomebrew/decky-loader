@@ -143,10 +143,11 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
   const [showHidden, setShowHidden] = useState<boolean>(defaultHidden);
   const [sort, setSort] = useState<SortOptions>(SortOptions.name_desc);
   const [selectedExts, setSelectedExts] = useState<any>(validFileExtensions);
+  const [previousExts, setPreviousExts] = useState<any>(validFileExtensions);
 
   const validExtsOptions = useMemo(() => {
     let validExt: { label: string; value: string }[] = [];
-    if (!validFileExtensions) return validExt;
+    if (!validFileExtensions) return [];
     if (allowAllFiles) {
       validExt.push({ label: t('FilePickerIndex.files.all_files'), value: 'all_files' });
     }
@@ -156,10 +157,14 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
 
   const handleExtsSelect = useCallback((val: any) => {
     // unselect other options if "All Files" is checked
-    if (val.includes('all_files')) {
+    if (allowAllFiles && val.includes('all_files')) {
       setSelectedExts(['all_files']);
-    } else {
+      setPreviousExts(['all_files']);
+    } else if (val.length == !0) {
       setSelectedExts(val);
+      setPreviousExts(val);
+    } else {
+      setSelectedExts(previousExts);
     }
   }, []);
 
@@ -170,7 +175,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
         path,
         includeFiles,
         includeFolders,
-        validFileExtensions,
+        selectedExts,
         showHidden,
         sort,
         filter,
@@ -202,7 +207,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
       setListing(listing.result as FileListing);
       logger.log('reloaded', path, listing);
     })();
-  }, [includeFiles, path, validFileExtensions, showHidden, sort, selectedExts, page]);
+  }, [error, path, includeFiles, includeFolders, showHidden, sort, selectedExts, page]);
 
   return (
     <>

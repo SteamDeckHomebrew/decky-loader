@@ -2,7 +2,7 @@ import { ConfirmModal, Navigation, QuickAccessTab } from 'decky-frontend-lib';
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import TPluginInstallModal, { TranslatedPart } from './TPluginInstallModal';
+import TranslationHelper, { TranslationClass } from '../../utils/TranslationHelper';
 
 interface PluginInstallModalProps {
   artifact: string;
@@ -39,21 +39,47 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
       onCancel={async () => {
         await onCancel();
       }}
-      strTitle={<TPluginInstallModal trans_part={TranslatedPart.TITLE} trans_type={installType} artifact={artifact} />}
+      strTitle={
+        <div>
+          <TranslationHelper
+            trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
+            trans_text="title"
+            i18n_args={{ artifact: artifact }}
+            install_type={installType}
+          />
+        </div>
+      }
       strOKButtonText={
         loading ? (
-          <TPluginInstallModal trans_part={TranslatedPart.BUTTON_PROC} trans_type={installType} />
+          <div>
+            <TranslationHelper
+              trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
+              trans_text="button_processing"
+              install_type={installType}
+            />
+          </div>
         ) : (
-          <TPluginInstallModal trans_part={TranslatedPart.BUTTON_IDLE} trans_type={installType} />
+          <div>
+            <TranslationHelper
+              trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
+              trans_text="button_idle"
+              install_type={installType}
+            />
+          </div>
         )
       }
     >
-      <TPluginInstallModal
-        trans_part={TranslatedPart.DESC}
-        trans_type={installType}
-        artifact={artifact}
-        version={version ? version : ''}
-      />
+      <div>
+        <TranslationHelper
+          trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
+          trans_text="desc"
+          i18n_args={{
+            artifact: artifact,
+            version: version,
+          }}
+          install_type={installType}
+        />
+      </div>
       {hash == 'False' && <span style={{ color: 'red' }}>{t('PluginInstallModal.no_hash')}</span>}
     </ConfirmModal>
   );

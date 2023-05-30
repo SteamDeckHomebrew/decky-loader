@@ -6,7 +6,7 @@ from ensurepip import version
 from json.decoder import JSONDecodeError
 from logging import getLogger
 from os import getcwd, path, remove
-from localplatform import chmod, service_restart, ON_LINUX
+from localplatform import chmod, service_restart, ON_LINUX, get_keep_systemd_service
 
 from aiohttp import ClientSession, web
 
@@ -159,7 +159,7 @@ class Updater:
         tab = await get_gamepadui_tab()
         await tab.open_websocket()
         async with ClientSession() as web:
-            if ON_LINUX:
+            if ON_LINUX and not get_keep_systemd_service():
                 logger.debug("Downloading systemd service")
                 # download the relevant systemd service depending upon branch
                 async with web.request("GET", service_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:

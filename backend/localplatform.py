@@ -32,7 +32,10 @@ def get_server_port() -> int:
     return int(os.getenv("SERVER_PORT", "1337"))
 
 def get_live_reload() -> bool:
-    os.getenv("LIVE_RELOAD", "1") == "1"
+    return os.getenv("LIVE_RELOAD", "1") == "1"
+
+def get_keep_systemd_service() -> bool:
+    return os.getenv("KEEP_SYSTEMD_SERVICE", "0") == "1"
 
 def get_log_level() -> int:
     return {"CRITICAL": 50, "ERROR": 40, "WARNING": 30, "INFO": 20, "DEBUG": 10}[

@@ -9,8 +9,8 @@
     },
     "Developer": {
         "5secreload": "Reloading in 5 seconds",
-        "disabling": "Disabling",
-        "enabling": "Enabling"
+        "disabling": "Disabling React DevTools",
+        "enabling": "Enabling React DevTools"
     },
   "DropdownMultiselect": {
     "button": {

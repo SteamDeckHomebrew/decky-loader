@@ -43,7 +43,7 @@
     }
   },
   "dependencies": {
-    "decky-frontend-lib": "3.20.7",
+    "decky-frontend-lib": "3.21.1",
     "filesize": "^10.0.7",
     "i18next": "^22.5.0",
     "i18next-http-backend": "^2.2.1",

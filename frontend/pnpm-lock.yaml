@@ -2,8 +2,8 @@ lockfileVersion: '6.0'
 
 dependencies:
   decky-frontend-lib:
-    specifier: 3.20.7
-    version: 3.20.7
+    specifier: 3.21.1
+    version: 3.21.1
   i18next:
     specifier: ^22.5.0
     version: 22.5.0
@@ -1393,8 +1393,8 @@ packages:
     dependencies:
       ms: 2.1.2
 
-  /decky-frontend-lib@3.20.7:
-    resolution: {integrity: sha512-Zwwbo50cqpTbCfSCZaqITgTRvWs7pK9KO1A+Oo2sCC/DqOfyUtEH5niNPid4Qxu+yh4lsbEjTurJk1nCfd+nZw==}
+  /decky-frontend-lib@3.21.1:
+    resolution: {integrity: sha512-30605ET9qqZ6St6I9WmMmLGgSrTIdMwo7xy85+lRaF1miUd2icOGEJjwnbVcZDdkal+1fJ3tNEDXlchVfG4TrA==}
     dev: false
 
   /decode-named-character-reference@1.0.2:

@@ -1,28 +1,10 @@
-import {
-  Navigation,
-  ReactRouter,
-  Router,
-  fakeRenderComponent,
-  findInReactTree,
-  findInTree,
-  findModule,
-  findModuleChild,
-  gamepadDialogClasses,
-  gamepadSliderClasses,
-  playSectionClasses,
-  quickAccessControlsClasses,
-  quickAccessMenuClasses,
-  scrollClasses,
-  scrollPanelClasses,
-  sleep,
-  staticClasses,
-  updaterFieldClasses,
-} from 'decky-frontend-lib';
+import { findModuleChild, sleep } from 'decky-frontend-lib';
 import { useTranslation } from 'react-i18next';
 import { FaReact } from 'react-icons/fa';
 
 import Logger from './logger';
 import { getSetting } from './utils/settings';
+import TranslationHelper, { TranslationClass } from './utils/TranslationHelper';
 
 const logger = new Logger('DeveloperMode');
 
@@ -59,11 +41,13 @@ export async function setShowValveInternal(show: boolean) {
 }
 
 export async function setShouldConnectToReactDevTools(enable: boolean) {
-  const { t } = useTranslation();
-
   window.DeckyPluginLoader.toaster.toast({
-    title: (enable ? t('Developer.enabling') : t('Developer.disabling')) + ' React DevTools',
-    body: t('Developer.5secreload'),
+    title: enable ? (
+      <TranslationHelper trans_class={TranslationClass.DEVELOPER} trans_text={'enabling'} />
+    ) : (
+      <TranslationHelper trans_class={TranslationClass.DEVELOPER} trans_text={'disabling'} />
+    ),
+    body: <TranslationHelper trans_class={TranslationClass.DEVELOPER} trans_text={'5secreload'} />,
     icon: <FaReact />,
   });
   await sleep(5000);
@@ -80,29 +64,4 @@ export async function startup() {
 
   if ((isRDTEnabled && !window.deckyHasConnectedRDT) || (!isRDTEnabled && window.deckyHasConnectedRDT))
     setShouldConnectToReactDevTools(isRDTEnabled);
-
-  logger.log('Exposing decky-frontend-lib APIs as DFL');
-  window.DFL = {
-    findModuleChild,
-    findModule,
-    Navigation,
-    Router,
-    ReactRouter,
-    ReactUtils: {
-      fakeRenderComponent,
-      findInReactTree,
-      findInTree,
-    },
-    classes: {
-      scrollClasses,
-      staticClasses,
-      playSectionClasses,
-      scrollPanelClasses,
-      updaterFieldClasses,
-      gamepadDialogClasses,
-      gamepadSliderClasses,
-      quickAccessMenuClasses,
-      quickAccessControlsClasses,
-    },
-  };
 }

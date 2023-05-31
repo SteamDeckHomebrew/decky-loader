@@ -19,6 +19,7 @@ class Utilities:
             "ping": self.ping,
             "http_request": self.http_request,
             "install_plugin": self.install_plugin,
+            "install_plugins": self.install_plugins,
             "cancel_plugin_install": self.cancel_plugin_install,
             "confirm_plugin_install": self.confirm_plugin_install,
             "uninstall_plugin": self.uninstall_plugin,
@@ -69,6 +70,11 @@ class Utilities:
             version=version,
             hash=hash,
             install_type=install_type
+        )
+
+    async def install_plugins(self, requests):
+        return await self.context.plugin_browser.request_multiple_plugin_installs(
+            requests=requests
         )
 
     async def confirm_plugin_install(self, request_id):
@@ -267,7 +273,7 @@ class Utilities:
                 await close_old_tabs()
                 result = await tab.reload_and_evaluate(script)
                 self.logger.info(result)
-                        
+
         except Exception:
             self.logger.error("Failed to connect to React DevTools")
             self.logger.error(format_exc())

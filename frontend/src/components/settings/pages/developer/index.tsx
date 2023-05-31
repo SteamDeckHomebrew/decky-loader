@@ -75,7 +75,7 @@ export default function DeveloperSettings() {
         </Field>
       </DialogControlsSection>
       <DialogControlsSection>
-        <DialogControlsSectionHeader>{t('SettingsDeveloperIndex.header_other')}</DialogControlsSectionHeader>
+        <DialogControlsSectionHeader>{t('SettingsDeveloperIndex.header')}</DialogControlsSectionHeader>
         <Field
           label={t('SettingsDeveloperIndex.cef_console.label')}
           description={<span style={{ whiteSpace: 'pre-line' }}>{t('SettingsDeveloperIndex.cef_console.desc')}</span>}

@@ -155,8 +155,8 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
     return validExt;
   }, [validFileExtensions, allowAllFiles]);
 
-  function isSelectionValid(arr1: string[], arr2: string[]) {
-    if (arr1.some((el) => arr2.includes(el))) return true;
+  function isSelectionValid(validExts: string[], selection: string[]) {
+    if (validExts.some((el) => selection.includes(el))) return true;
     return false;
   }
 
@@ -165,7 +165,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
     if (allowAllFiles && val.includes('all_files')) {
       setSelectedExts(['all_files']);
     } else if (validFileExtensions && isSelectionValid(validFileExtensions, val)) {
-      // If at least one extension is still selected, then assign this to the selected values
+      // If at least one extension is still selected, then assign this selection to the selected values
       setSelectedExts(val);
     } else {
       // Else do nothing

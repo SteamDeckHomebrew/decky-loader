@@ -17,11 +17,13 @@ import { useSetting } from '../../../../utils/hooks/useSetting';
 import RemoteDebuggingSettings from '../general/RemoteDebugging';
 
 const installFromZip = () => {
-  window.DeckyPluginLoader.openFilePicker('/home/deck', true, true, ['zip'], false, false).then((val) => {
-    const url = `file://${val.path}`;
-    console.log(`Installing plugin locally from ${url}`);
-    installFromURL(url);
-  });
+  window.DeckyPluginLoader.openFilePicker('/home/deck', true, undefined, true, ['zip', 'rar'], false, true).then(
+    (val) => {
+      const url = `file://${val.path}`;
+      console.log(`Installing plugin locally from ${url}`);
+      installFromURL(url);
+    },
+  );
 };
 
 export default function DeveloperSettings() {

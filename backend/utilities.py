@@ -194,7 +194,7 @@ class Utilities:
         return True
 
     async def filepicker_ls(self, 
-                            path, 
+                            path = os.environ["DECKY_USER_HOME"], 
                             include_files: bool = True,
                             include_folders: bool = True,
                             include_ext: list[str] = [],

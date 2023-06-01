@@ -82,9 +82,8 @@ export default function DeveloperSettings() {
           icon={<FaTerminal style={{ display: 'block' }} />}
         >
           <DialogButton onClick={async () => {
-            let res = (await window.DeckyPluginLoader.callServerMethod('get_tab_id', { "name": "SharedJSContext" }));
+            let res = await window.DeckyPluginLoader.callServerMethod('get_tab_id', { "name": "SharedJSContext" });
             if (res.success) {
-              console.log(res.result);
               Navigation.NavigateToExternalWeb("localhost:8080/devtools/inspector.html?ws=localhost:8080/devtools/page/"+res.result);
             } else {
               console.error('Unable to find ID for SharedJSContext tab ', res.result);

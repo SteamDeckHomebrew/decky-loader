@@ -10,7 +10,7 @@ from asyncio import sleep, start_server, gather, open_connection
 from aiohttp import ClientSession, web
 
 from logging import getLogger
-from injector import inject_to_tab, get_gamepadui_tab, close_old_tabs
+from injector import inject_to_tab, get_gamepadui_tab, close_old_tabs, get_tab
 from pathlib import Path
 from localplatform import ON_WINDOWS
 import helpers
@@ -37,7 +37,8 @@ class Utilities:
             "get_setting": self.get_setting,
             "filepicker_ls": self.filepicker_ls,
             "disable_rdt": self.disable_rdt,
-            "enable_rdt": self.enable_rdt
+            "enable_rdt": self.enable_rdt,
+            "get_tab_id": self.get_tab_id
         }
 
         self.logger = getLogger("Utilities")
@@ -339,3 +340,6 @@ class Utilities:
         await close_old_tabs()
         await tab.evaluate_js("location.reload();", False, True, False)
         self.logger.info("React DevTools disabled")
+
+    async def get_tab_id(self, name):
+        return (await get_tab(name)).id

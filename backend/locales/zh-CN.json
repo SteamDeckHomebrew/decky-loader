@@ -9,8 +9,8 @@
     },
     "Developer": {
         "5secreload": "5 秒钟后重新加载",
-        "disabling": "正在禁用",
-        "enabling": "正在启用"
+        "disabling": "正在禁用 React DevTools",
+        "enabling": "正在启用 React DevTools"
     },
     "FilePickerIndex": {
         "folder": {
@@ -50,12 +50,13 @@
         "reinstall": "重新安装",
         "reload": "重新加载",
         "uninstall": "卸载",
-        "update_to": "更新 {{name}}"
+        "update_to": "更新 {{name}}",
+        "update_all_other": "更新 {{count}} 个插件"
     },
     "PluginLoader": {
         "decky_title": "Decky",
         "error": "错误",
-        "plugin_error_uninstall": "如果你想卸载插件请点击 Decky 菜单中的 <0></0> 图标",
+        "plugin_error_uninstall": "加载 {{name}} 时引起了上述异常。这通常意味着插件需要更新以适应 SteamUI 的新版本。请检查插件是否有更新，或在 Decky 设置中的插件部分将其移除。",
         "plugin_load_error": {
             "message": "加载插件 {{name}} 错误",
             "toast": "加载插件 {{name}} 发生了错误"
@@ -96,7 +97,13 @@
             "desc1": "启用 Valve 内部开发者菜单",
             "desc2": "除非你知道你在干什么，否则请不要修改此菜单中的任何内容",
             "label": "启用 Valve 内部开发者"
-        }
+        },
+        "cef_console": {
+            "button": "打开控制台",
+            "label": "CEF 控制台",
+            "desc": "打开 CEF 控制台。仅在调试目的下使用。这列选项均有风险，请仅在您是插件开发者或是在插件开发者指导时访问使用。"
+        },
+        "header": "其他"
     },
     "SettingsGeneralIndex": {
         "about": {
@@ -176,6 +183,24 @@
             "lat_version": "已是最新版本: {{ver}} 运行中",
             "reloading": "重新加载中",
             "updating": "更新中"
+        }
+    },
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "mixed_other": "更改 {{count}} 个插件",
+            "update_other": "更新 {{count}} 个插件",
+            "reinstall_other": "重装 {{count}} 个插件",
+            "install_other": "安装 {{count}} 个插件"
+        },
+        "ok_button": {
+            "idle": "确认",
+            "loading": "工作中"
+        },
+        "confirm": "确定要进行以下修改吗？",
+        "description": {
+            "install": "安装 {{name}} {{version}}",
+            "update": "更新 {{name}} to {{version}}",
+            "reinstall": "重装 {{name}} {{version}}"
         }
     }
 }

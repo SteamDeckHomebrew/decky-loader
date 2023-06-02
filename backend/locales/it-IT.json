@@ -102,6 +102,11 @@
             "desc1": "Abilita il menu di sviluppo interno di Valve.",
             "desc2": "Non toccare nulla in questo menu se non sai quello che fa.",
             "label": "Abilita Menu Sviluppatore"
+        },
+        "cef_console": {
+            "label": "Console CEF",
+            "button": "Apri la console",
+            "desc": "Apri la console di CEF. Utile solamente per ragioni di debug. Questa opzione deve essere usata solo se sei uno sviluppatore di plugin o se uno di questi ti ha chiesto di farlo, visto che questa feature potrebbe essere potenzialmente pericolosa."
         }
     },
     "SettingsGeneralIndex": {

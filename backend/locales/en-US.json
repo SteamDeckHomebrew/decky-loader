@@ -9,8 +9,8 @@
     },
     "Developer": {
         "5secreload": "Reloading in 5 seconds",
-        "disabling": "Disabling",
-        "enabling": "Enabling"
+        "disabling": "Disabling React DevTools",
+        "enabling": "Enabling React DevTools"
     },
     "FilePickerIndex": {
         "folder": {
@@ -44,13 +44,37 @@
             "title": "Update {{artifact}}"
         }
     },
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "mixed_one": "Modify 1 plugin",
+            "mixed_other": "Modify {{count}} plugins",
+            "update_one": "Update 1 plugin",
+            "update_other": "Update {{count}} plugins",
+            "reinstall_one": "Reinstall 1 plugin",
+            "reinstall_other": "Reinstall {{count}} plugins",
+            "install_one": "Install 1 plugin",
+            "install_other": "Install {{count}} plugins"
+        },
+        "ok_button": {
+            "idle": "Confirm",
+            "loading": "Working"
+        },
+        "confirm": "Are you sure you want to make the following modifications?",
+        "description": {
+            "install": "Install {{name}} {{version}}",
+            "update": "Update {{name}} to {{version}}",
+            "reinstall": "Reinstall {{name}} {{version}}"
+        }
+    },
     "PluginListIndex": {
         "no_plugin": "No plugins installed!",
         "plugin_actions": "Plugin Actions",
         "reinstall": "Reinstall",
         "reload": "Reload",
         "uninstall": "Uninstall",
-        "update_to": "Update to {{name}}"
+        "update_to": "Update to {{name}}",
+        "update_all_one": "Update 1 plugin",
+        "update_all_other": "Update {{count}} plugins"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -76,6 +100,11 @@
         }
     },
     "SettingsDeveloperIndex": {
+        "cef_console": {
+            "button": "Open Console",
+            "desc": "Opens the CEF Console. Only useful for debugging purposes. Stuff here is potentially dangerous and should only be used if you are a plugin dev, or are directed here by one.",
+            "label": "CEF Console"
+        },
         "header": "Other",
         "react_devtools": {
             "desc": "Enables connection to a computer running React DevTools. Changing this setting will reload Steam. Set the IP address before enabling.",

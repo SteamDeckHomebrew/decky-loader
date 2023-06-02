@@ -7,7 +7,7 @@ from asyncio import sleep, start_server, gather, open_connection
 from aiohttp import ClientSession, web
 
 from logging import getLogger
-from injector import inject_to_tab, get_gamepadui_tab, close_old_tabs
+from injector import inject_to_tab, get_gamepadui_tab, close_old_tabs, get_tab
 import helpers
 import subprocess
 from localplatform import service_stop, service_start
@@ -19,6 +19,7 @@ class Utilities:
             "ping": self.ping,
             "http_request": self.http_request,
             "install_plugin": self.install_plugin,
+            "install_plugins": self.install_plugins,
             "cancel_plugin_install": self.cancel_plugin_install,
             "confirm_plugin_install": self.confirm_plugin_install,
             "uninstall_plugin": self.uninstall_plugin,
@@ -31,7 +32,8 @@ class Utilities:
             "get_setting": self.get_setting,
             "filepicker_ls": self.filepicker_ls,
             "disable_rdt": self.disable_rdt,
-            "enable_rdt": self.enable_rdt
+            "enable_rdt": self.enable_rdt,
+            "get_tab_id": self.get_tab_id
         }
 
         self.logger = getLogger("Utilities")
@@ -68,6 +70,11 @@ class Utilities:
             version=version,
             hash=hash,
             install_type=install_type
+        )
+
+    async def install_plugins(self, requests):
+        return await self.context.plugin_browser.request_multiple_plugin_installs(
+            requests=requests
         )
 
     async def confirm_plugin_install(self, request_id):
@@ -266,7 +273,7 @@ class Utilities:
                 await close_old_tabs()
                 result = await tab.reload_and_evaluate(script)
                 self.logger.info(result)
-                        
+
         except Exception:
             self.logger.error("Failed to connect to React DevTools")
             self.logger.error(format_exc())
@@ -281,3 +288,6 @@ class Utilities:
         await close_old_tabs()
         await tab.evaluate_js("location.reload();", False, True, False)
         self.logger.info("React DevTools disabled")
+
+    async def get_tab_id(self, name):
+        return (await get_tab(name)).id

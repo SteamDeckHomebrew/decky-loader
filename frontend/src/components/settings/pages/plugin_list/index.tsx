@@ -14,7 +14,12 @@ import { useTranslation } from 'react-i18next';
 import { FaDownload, FaEllipsisH, FaRecycle } from 'react-icons/fa';
 
 import { InstallType } from '../../../../plugin';
-import { StorePluginVersion, getPluginList, requestPluginInstall } from '../../../../store';
+import {
+  StorePluginVersion,
+  getPluginList,
+  requestMultiplePluginInstalls,
+  requestPluginInstall,
+} from '../../../../store';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 import { useDeckyState } from '../../../DeckyState';
 
@@ -39,7 +44,23 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
   const showCtxMenu = (e: MouseEvent | GamepadEvent) => {
     showContextMenu(
       <Menu label={t('PluginListIndex.plugin_actions')}>
-        <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(pluginName, data?.version)}>
+        <MenuItem
+          onSelected={() => {
+            try {
+              fetch(`http://127.0.0.1:1337/plugins/${pluginName}/reload`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                  Authentication: window.deckyAuthToken,
+                },
+              });
+            } catch (err) {
+              console.error('Error Reloading Plugin Backend', err);
+            }
+
+            window.DeckyPluginLoader.importPlugin(pluginName, data?.version);
+          }}
+        >
           {t('PluginListIndex.reload')}
         </MenuItem>
         <MenuItem
@@ -67,9 +88,9 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
           onClick={() => requestPluginInstall(pluginName, data?.update as StorePluginVersion, InstallType.UPDATE)}
           onOKButton={() => requestPluginInstall(pluginName, data?.update as StorePluginVersion, InstallType.UPDATE)}
         >
-          <div style={{ display: 'flex', flexDirection: 'row' }}>
+          <div style={{ display: 'flex', minWidth: '180px', justifyContent: 'space-between', alignItems: 'center' }}>
             {t('PluginListIndex.update_to', { name: data?.update?.name })}
-            <FaDownload style={{ paddingLeft: '2rem' }} />
+            <FaDownload style={{ paddingLeft: '1rem' }} />
           </div>
         </DialogButton>
       ) : (
@@ -78,14 +99,22 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginData> }) {
           onClick={() => reinstallPlugin(pluginName, data?.version)}
           onOKButton={() => reinstallPlugin(pluginName, data?.version)}
         >
-          <div style={{ display: 'flex', flexDirection: 'row' }}>
+          <div style={{ display: 'flex', minWidth: '180px', justifyContent: 'space-between', alignItems: 'center' }}>
             {t('PluginListIndex.reinstall')}
-            <FaRecycle style={{ paddingLeft: '5.3rem' }} />
+            <FaRecycle style={{ paddingLeft: '1rem' }} />
           </div>
         </DialogButton>
       )}
       <DialogButton
-        style={{ height: '40px', width: '40px', padding: '10px 12px', minWidth: '40px' }}
+        style={{
+          height: '40px',
+          width: '40px',
+          padding: '10px 12px',
+          minWidth: '40px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
         onClick={showCtxMenu}
         onOKButton={showCtxMenu}
       >
@@ -146,7 +175,31 @@ export default function PluginList() {
 
   return (
     <DialogBody>
-      <DialogControlsSection>
+      {updates && updates.size > 0 && (
+        <DialogButton
+          onClick={() =>
+            requestMultiplePluginInstalls(
+              [...updates.entries()].map(([plugin, selectedVer]) => ({
+                installType: InstallType.UPDATE,
+                plugin,
+                selectedVer,
+              })),
+            )
+          }
+          style={{
+            position: 'absolute',
+            top: '57px',
+            right: '2.8vw',
+            width: 'auto',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          {t('PluginListIndex.update_all', { count: updates.size })}
+          <FaDownload style={{ paddingLeft: '1rem' }} />
+        </DialogButton>
+      )}
+      <DialogControlsSection style={{ marginTop: 0 }}>
         <ReorderableList<PluginData> entries={pluginEntries} onSave={onSave} interactables={PluginInteractables} />
       </DialogControlsSection>
     </DialogBody>

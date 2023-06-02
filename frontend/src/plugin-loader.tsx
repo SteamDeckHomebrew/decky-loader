@@ -16,12 +16,13 @@ import { FaExclamationCircle, FaPlug } from 'react-icons/fa';
 import { DeckyState, DeckyStateContextProvider, useDeckyState } from './components/DeckyState';
 import LegacyPlugin from './components/LegacyPlugin';
 import { deinitFilepickerPatches, initFilepickerPatches } from './components/modals/filepicker/patches';
+import MultiplePluginsInstallModal from './components/modals/MultiplePluginsInstallModal';
 import PluginInstallModal from './components/modals/PluginInstallModal';
 import NotificationBadge from './components/NotificationBadge';
 import PluginView from './components/PluginView';
 import WithSuspense from './components/WithSuspense';
 import Logger from './logger';
-import { Plugin } from './plugin';
+import { InstallType, Plugin } from './plugin';
 import RouterHook from './router-hook';
 import { deinitSteamFixes, initSteamFixes } from './steamfixes';
 import { checkForUpdates } from './store';
@@ -168,6 +169,19 @@ class PluginLoader extends Logger {
         version={version}
         hash={hash}
         installType={install_type}
+        onOK={() => this.callServerMethod('confirm_plugin_install', { request_id })}
+        onCancel={() => this.callServerMethod('cancel_plugin_install', { request_id })}
+      />,
+    );
+  }
+
+  public addMultiplePluginsInstallPrompt(
+    request_id: string,
+    requests: { name: string; version: string; hash: string; install_type: InstallType }[],
+  ) {
+    showModal(
+      <MultiplePluginsInstallModal
+        requests={requests}
         onOK={() => this.callServerMethod('confirm_plugin_install', { request_id })}
         onCancel={() => this.callServerMethod('cancel_plugin_install', { request_id })}
       />,

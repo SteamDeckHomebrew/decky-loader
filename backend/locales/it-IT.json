@@ -8,9 +8,9 @@
         }
     },
     "Developer": {
-        "5secreload": "Ricaricando in 5 secondi",
-        "disabling": "Disabilitando",
-        "enabling": "Abilitando"
+        "5secreload": "Ricarico in 5 secondi",
+        "disabling": "Disabilito i tools di React",
+        "enabling": "Abilito i tools di React"
     },
     "FilePickerIndex": {
         "folder": {
@@ -50,13 +50,16 @@
         "reinstall": "Reinstalla",
         "reload": "Ricarica",
         "uninstall": "Rimuovi",
-        "update_to": "Aggiorna a {{name}}"
+        "update_to": "Aggiorna a {{name}}",
+        "update_all_one": "Aggiorna un plugin",
+        "update_all_many": "Aggiorna {{count}} plugins",
+        "update_all_other": "Aggiorna {{count}} plugins"
     },
     "PluginLoader": {
         "decky_title": "Decky",
         "decky_update_available": "Disponibile aggiornamento a {{tag_name}}!",
         "error": "Errore",
-        "plugin_error_uninstall": "Il plugin {{name}} ha causato un'eccezione che è descritta sopra. Questo tipicamente significa che il plugin deve essere aggiornato per funzionare sulla nuova versione di SteamUI. Controlla se è disponibile un'aggiornamento o valutane la rimozione andando nelle impostazioni di Decky nella sezione Plugins.",
+        "plugin_error_uninstall": "Il plugin {{name}} ha causato un'eccezione che è descritta sopra. Questo tipicamente significa che il plugin deve essere aggiornato per funzionare sulla nuova versione di SteamUI. Controlla se è disponibile un aggiornamento o valutane la rimozione andando nelle impostazioni di Decky nella sezione Plugins.",
         "plugin_load_error": {
             "message": "Errore caricando il plugin {{name}}",
             "toast": "Errore caricando {{name}}"
@@ -67,7 +70,8 @@
             "title": "Rimuovi {{name}}"
         },
         "plugin_update_one": "Aggiornamento disponibile per 1 plugin!",
-        "plugin_update_many": "Aggiornamenti disponibili per {{count}} plugins!"
+        "plugin_update_many": "Aggiornamenti disponibili per {{count}} plugins!",
+        "plugin_update_other": "Aggiornamenti disponibili per {{count}} plugins!"
     },
     "RemoteDebugging": {
         "remote_cef": {
@@ -178,6 +182,32 @@
             "lat_version": "Aggiornato. Eseguendo {{ver}}",
             "reloading": "Ricaricando",
             "updating": "Aggiornando"
+        }
+    },
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "mixed_one": "Modifica un plugin",
+            "mixed_many": "Modifica {{count}} plugins",
+            "mixed_other": "Modifica {{count}} plugins",
+            "update_one": "Aggiorna un plugin",
+            "update_many": "Aggiorna {{count}} plugins",
+            "update_other": "Aggiorna {{count}} plugins",
+            "reinstall_one": "Reinstalla un plugin",
+            "reinstall_many": "Reinstalla {{count}} plugins",
+            "reinstall_other": "Reinstalla {{count}} plugins",
+            "install_one": "Installa un plugin",
+            "install_many": "Installa {{count}} plugins",
+            "install_other": "Installa {{count}} plugins"
+        },
+        "confirm": "Sei sicuro di voler effettuare le modifiche seguenti?",
+        "ok_button": {
+            "idle": "Conferma",
+            "loading": "Elaboro"
+        },
+        "description": {
+            "install": "Installa {{name}} {{version}}",
+            "update": "Aggiorna {{name}} alla versione {{version}}",
+            "reinstall": "Reinstalla {{name}} {{version}}"
         }
     }
 }

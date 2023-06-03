@@ -62,19 +62,19 @@ class Loader:
         self.logger = getLogger("Loader")
         self.plugin_path = plugin_path
         self.logger.info(f"plugin_path: {self.plugin_path}")
-        self.plugins = {}
+        self.plugins : dict[str, PluginWrapper] = {}
         self.watcher = None
         self.live_reload = live_reload
+        self.reload_queue = Queue()
+        self.loop.create_task(self.handle_reloads())
 
         if live_reload:
-            self.reload_queue = Queue()
             self.observer = Observer()
             self.watcher = FileChangeHandler(self.reload_queue, plugin_path)
             self.observer.schedule(self.watcher, self.plugin_path, recursive=True)
             self.observer.start()
-            self.loop.create_task(self.handle_reloads())
             self.loop.create_task(self.enable_reload_wait())
-
+            
         server_instance.add_routes([
             web.get("/frontend/{path:.*}", self.handle_frontend_assets),
             web.get("/locales/{path:.*}", self.handle_frontend_locales),
@@ -82,6 +82,7 @@ class Loader:
             web.get("/plugins/{plugin_name}/frontend_bundle", self.handle_frontend_bundle),
             web.post("/plugins/{plugin_name}/methods/{method_name}", self.handle_plugin_method_call),
             web.get("/plugins/{plugin_name}/assets/{path:.*}", self.handle_plugin_frontend_assets),
+            web.post("/plugins/{plugin_name}/reload", self.handle_backend_reload_request),
 
             # The following is legacy plugin code.
             web.get("/plugins/load_main/{name}", self.load_plugin_main_view),
@@ -217,3 +218,11 @@ class Loader:
             return web.Response(text=await tab.get_steam_resource(f"https://steamloopback.host/{request.match_info['path']}"), content_type="text/html")
         except Exception as e:
             return web.Response(text=str(e), status=400)
+
+    async def handle_backend_reload_request(self, request):
+        plugin_name : str = request.match_info["plugin_name"]
+        plugin = self.plugins[plugin_name]
+
+        await self.reload_queue.put((plugin.file, plugin.plugin_directory))
+
+        return web.Response(status=200)

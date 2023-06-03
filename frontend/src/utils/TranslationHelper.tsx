@@ -7,6 +7,7 @@ import { InstallType } from '../plugin';
 export enum TranslationClass {
   PLUGIN_LOADER = 'PluginLoader',
   PLUGIN_INSTALL_MODAL = 'PluginInstallModal',
+  DEVELOPER = 'Developer',
 }
 
 interface TranslationHelperProps {
@@ -47,6 +48,10 @@ const TranslationHelper: FC<TranslationHelperProps> = ({
                   ? t(TranslationClass.PLUGIN_INSTALL_MODAL + '.update.' + trans_text, i18n_args)
                   : t(TranslationClass.PLUGIN_INSTALL_MODAL + '.update.' + trans_text);
             }
+          case TranslationClass.DEVELOPER:
+            return i18n_args
+              ? t(TranslationClass.DEVELOPER + '.' + trans_text, i18n_args)
+              : t(TranslationClass.DEVELOPER + '.' + trans_text);
           default:
             logger.error('We should never fall in the default case!');
             return '';

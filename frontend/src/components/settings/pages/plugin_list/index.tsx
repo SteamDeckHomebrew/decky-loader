@@ -48,7 +48,23 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
   const showCtxMenu = (e: MouseEvent | GamepadEvent) => {
     showContextMenu(
       <Menu label={t('PluginListIndex.plugin_actions')}>
-        <MenuItem onSelected={() => window.DeckyPluginLoader.importPlugin(name, version)}>
+        <MenuItem
+          onSelected={() => {
+            try {
+              fetch(`http://127.0.0.1:1337/plugins/${name}/reload`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                  Authentication: window.deckyAuthToken,
+                },
+              });
+            } catch (err) {
+              console.error('Error Reloading Plugin Backend', err);
+            }
+
+            window.DeckyPluginLoader.importPlugin(name, version);
+          }}
+        >
           {t('PluginListIndex.reload')}
         </MenuItem>
         <MenuItem

@@ -27,20 +27,20 @@
         "install": {
             "button_idle": "Installieren",
             "button_processing": "Wird installiert",
-            "desc": "Bist du dir sicher, dass du {{artifact}}{{version}} installieren willst?",
+            "desc": "Bist du dir sicher, dass du {{artifact}} {{version}} installieren willst?",
             "title": "Installiere {{artifact}}"
         },
         "reinstall": {
             "button_idle": "Neu installieren",
             "button_processing": "Wird neu installiert",
-            "desc": "Bist du dir sicher, dass du {{artifact}}{{version}} neu installieren willst?",
+            "desc": "Bist du dir sicher, dass du {{artifact}} {{version}} neu installieren willst?",
             "title": "Neu installation {{artifact}}"
         },
         "update": {
             "button_idle": "Aktualisieren",
             "button_processing": "Wird aktualisiert",
             "title": "Aktualisiere {{artifact}}",
-            "desc": "Bist du dir sicher, dass du {{artifact}}{{version}} aktualisieren willst?"
+            "desc": "Bist du dir sicher, dass du {{artifact}} {{version}} aktualisieren willst?"
         },
         "no_hash": "Diese Erweiterung besitzt keine Prüfsumme, Installation auf eigene Gefahr."
     },

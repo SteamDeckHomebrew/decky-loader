@@ -10,7 +10,7 @@ from asyncio import sleep, start_server, gather, open_connection
 from aiohttp import ClientSession, web
 
 from logging import getLogger
-from injector import inject_to_tab, get_gamepadui_tab, close_old_tabs
+from injector import inject_to_tab, get_gamepadui_tab, close_old_tabs, get_tab
 from pathlib import Path
 from localplatform import ON_WINDOWS
 import helpers
@@ -351,3 +351,5 @@ class Utilities:
             "username": get_username(),
             "path": get_home_path()
         }
+    async def get_tab_id(self, name):
+        return (await get_tab(name)).id

@@ -13,12 +13,21 @@ import { useTranslation } from 'react-i18next';
 import { FaFileArchive, FaLink, FaReact, FaSteamSymbol, FaTerminal } from 'react-icons/fa';
 
 import { setShouldConnectToReactDevTools, setShowValveInternal } from '../../../../developer';
+import Logger from '../../../../logger';
 import { installFromURL } from '../../../../store';
 import { useSetting } from '../../../../utils/hooks/useSetting';
+import { getSetting } from '../../../../utils/settings';
 import RemoteDebuggingSettings from '../general/RemoteDebugging';
 
-const installFromZip = () => {
-  window.DeckyPluginLoader.openFilePicker(undefined, true, undefined, true, ['zip', 'rar'], false, true).then((val) => {
+const logger = new Logger('DeveloperIndex');
+
+const installFromZip = async () => {
+  const path = await getSetting<string>('user_info.user_home', '');
+  if (path === '') {
+    logger.error('The default path has not been found!');
+    return;
+  }
+  window.DeckyPluginLoader.openFilePicker(path, true, undefined, true, ['zip', 'rar'], false, true).then((val) => {
     const url = `file://${val.path}`;
     console.log(`Installing plugin locally from ${url}`);
     installFromURL(url);

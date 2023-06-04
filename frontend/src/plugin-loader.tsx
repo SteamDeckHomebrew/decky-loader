@@ -31,7 +31,7 @@ import TabsHook from './tabs-hook';
 import OldTabsHook from './tabs-hook.old';
 import Toaster from './toaster';
 import { VerInfo, callUpdaterMethod } from './updater';
-import { getSetting } from './utils/settings';
+import { getSetting, setSetting } from './utils/settings';
 import TranslationHelper, { TranslationClass } from './utils/TranslationHelper';
 
 const StorePage = lazy(() => import('./components/store/Store'));
@@ -105,9 +105,8 @@ class PluginLoader extends Logger {
 
   public async getUserInfo() {
     const userInfo = (await this.callServerMethod('get_user_info')).result as UserInfo;
-    this.deckyState.setUserInfo(userInfo);
-
-    return userInfo;
+    setSetting('user_info.user_name', userInfo.username);
+    setSetting('user_info.user_home', userInfo.path);
   }
 
   public async updateVersion() {
@@ -370,7 +369,7 @@ class PluginLoader extends Logger {
   }
 
   openFilePicker(
-    startPath: string | undefined,
+    startPath: string,
     includeFiles?: boolean,
     filter?: RegExp | ((file: File) => boolean),
     includeFolders?: boolean,

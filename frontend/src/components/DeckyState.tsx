@@ -16,8 +16,8 @@ interface PublicDeckyState {
 }
 
 export interface UserInfo {
-  path: string;
   username: string;
+  path: string;
 }
 
 export class DeckyState {

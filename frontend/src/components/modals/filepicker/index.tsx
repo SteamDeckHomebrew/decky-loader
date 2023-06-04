@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { FaArrowUp, FaFolder } from 'react-icons/fa';
 
 import Logger from '../../../logger';
+import { useDeckyState } from '../../DeckyState';
 import DropdownMultiselect from '../DropdownMultiselect';
 import FilePickerError, { FileErrorTypes } from './FilePickerError';
 import TSortOption, { SortOptions } from './i18n/TSortOptions';
@@ -131,10 +132,16 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
   closeModal,
 }) => {
   const { t } = useTranslation();
+  const { userInfo } = useDeckyState();
 
   if (startPath === undefined) {
-    logger.error('The argument to the path is null, bailing out now!');
-    return null;
+    logger.debug('The argument to path is undefined, trying to use the default home path.');
+    if (userInfo) {
+      startPath = userInfo?.path;
+    } else {
+      logger.error("The default path is undefined, I can't resolve to a valid path, bailing out!");
+      return null;
+    }
   }
 
   if (startPath !== '/' && startPath.endsWith('/')) startPath = startPath.substring(0, startPath.length - 1); // remove trailing path

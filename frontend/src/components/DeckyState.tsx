@@ -97,6 +97,7 @@ export class DeckyState {
 
 interface DeckyStateContext extends PublicDeckyState {
   setVersionInfo(versionInfo: VerInfo): void;
+  setUserInfo(userInfo: UserInfo): void;
   setIsLoaderUpdating(hasUpdate: boolean): void;
   setActivePlugin(name: string): void;
   setPluginOrder(pluginOrder: string[]): void;
@@ -126,6 +127,7 @@ export const DeckyStateContextProvider: FC<Props> = ({ children, deckyState }) =
 
   const setIsLoaderUpdating = (hasUpdate: boolean) => deckyState.setIsLoaderUpdating(hasUpdate);
   const setVersionInfo = (versionInfo: VerInfo) => deckyState.setVersionInfo(versionInfo);
+  const setUserInfo = (userInfo: UserInfo) => deckyState.setUserInfo(userInfo);
   const setActivePlugin = (name: string) => deckyState.setActivePlugin(name);
   const closeActivePlugin = () => deckyState.closeActivePlugin();
   const setPluginOrder = (pluginOrder: string[]) => deckyState.setPluginOrder(pluginOrder);
@@ -136,6 +138,7 @@ export const DeckyStateContextProvider: FC<Props> = ({ children, deckyState }) =
         ...publicDeckyState,
         setIsLoaderUpdating,
         setVersionInfo,
+        setUserInfo,
         setActivePlugin,
         closeActivePlugin,
         setPluginOrder,

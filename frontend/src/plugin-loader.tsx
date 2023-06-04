@@ -104,7 +104,7 @@ class PluginLoader extends Logger {
   }
 
   public async getUserInfo() {
-    const userInfo = (await window.DeckyPluginLoader.callServerMethod('get_user_info')).result as UserInfo;
+    const userInfo = (await this.callServerMethod('get_user_info')).result as UserInfo;
     this.deckyState.setUserInfo(userInfo);
 
     return userInfo;
@@ -380,7 +380,6 @@ class PluginLoader extends Logger {
     max?: number,
   ): Promise<{ path: string; realpath: string }> {
     return new Promise((resolve, reject) => {
-      const { userInfo } = useDeckyState();
       const Content = ({ closeModal }: { closeModal?: () => void }) => (
         // Purposely outside of the FilePicker component as lazy-loaded ModalRoots don't focus correctly
         <ModalRoot
@@ -391,7 +390,7 @@ class PluginLoader extends Logger {
         >
           <WithSuspense>
             <FilePicker
-              startPath={startPath ? startPath : userInfo?.path}
+              startPath={startPath}
               includeFiles={includeFiles}
               includeFolders={includeFolders}
               filter={filter}

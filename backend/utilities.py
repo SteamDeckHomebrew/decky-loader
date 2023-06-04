@@ -351,5 +351,6 @@ class Utilities:
             "username": get_username(),
             "path": get_home_path()
         }
+    
     async def get_tab_id(self, name):
         return (await get_tab(name)).id

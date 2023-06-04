@@ -26,7 +26,7 @@ import { styleDefObj } from './iconCustomizations';
 const logger = new Logger('FilePicker');
 
 export interface FilePickerProps {
-  startPath: string;
+  startPath: string | undefined;
   includeFiles?: boolean;
   includeFolders?: boolean;
   filter?: RegExp | ((file: File) => boolean);
@@ -90,7 +90,7 @@ const sortOptions = [
 ];
 
 function getList(
-  path: string,
+  path: string | undefined,
   includeFiles: boolean,
   includeFolders: boolean = true,
   includeExt: string[] | null = null,
@@ -131,6 +131,11 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
   closeModal,
 }) => {
   const { t } = useTranslation();
+
+  if (startPath === undefined) {
+    logger.error('The argument to the path is null, bailing out now!');
+    return null;
+  }
 
   if (startPath !== '/' && startPath.endsWith('/')) startPath = startPath.substring(0, startPath.length - 1); // remove trailing path
   const [path, setPath] = useState<string>(startPath);

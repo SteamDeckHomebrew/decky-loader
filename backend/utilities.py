@@ -15,7 +15,7 @@ from pathlib import Path
 from localplatform import ON_WINDOWS
 import helpers
 import subprocess
-from localplatform import service_stop, service_start
+from localplatform import service_stop, service_start, get_home_path, get_username
 
 class Utilities:
     def __init__(self, context) -> None:
@@ -37,7 +37,9 @@ class Utilities:
             "get_setting": self.get_setting,
             "filepicker_ls": self.filepicker_ls,
             "disable_rdt": self.disable_rdt,
-            "enable_rdt": self.enable_rdt
+            "enable_rdt": self.enable_rdt,
+            "get_tab_id": self.get_tab_id,
+            "get_user_info": self.get_user_info,
         }
 
         self.logger = getLogger("Utilities")
@@ -194,7 +196,7 @@ class Utilities:
         return True
 
     async def filepicker_ls(self, 
-                            path = os.environ["DECKY_USER_HOME"], 
+                            path : str | None = None, 
                             include_files: bool = True,
                             include_folders: bool = True,
                             include_ext: list[str] = [],
@@ -203,6 +205,10 @@ class Utilities:
                             filter_for: str | None = None,
                             page: int = 1,
                             max: int = 1000):
+        
+        if path == None:
+            path = get_home_path()
+
         path = Path(path).resolve()
 
         files, folders = [], []
@@ -339,3 +345,9 @@ class Utilities:
         await close_old_tabs()
         await tab.evaluate_js("location.reload();", False, True, False)
         self.logger.info("React DevTools disabled")
+
+    async def get_user_info(self) -> dict:
+        return {
+            "username": get_username(),
+            "path": get_home_path()
+        }

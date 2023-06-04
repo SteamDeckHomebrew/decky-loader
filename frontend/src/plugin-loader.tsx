@@ -13,7 +13,7 @@ import {
 import { FC, lazy } from 'react';
 import { FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
-import { DeckyState, DeckyStateContextProvider, useDeckyState } from './components/DeckyState';
+import { DeckyState, DeckyStateContextProvider, UserInfo, useDeckyState } from './components/DeckyState';
 import LegacyPlugin from './components/LegacyPlugin';
 import { File } from './components/modals/filepicker';
 import { deinitFilepickerPatches, initFilepickerPatches } from './components/modals/filepicker/patches';
@@ -98,7 +98,16 @@ class PluginLoader extends Logger {
 
     initFilepickerPatches();
 
+    this.getUserInfo();
+
     this.updateVersion();
+  }
+
+  public async getUserInfo() {
+    const userInfo = (await window.DeckyPluginLoader.callServerMethod('get_user_info')).result as UserInfo;
+    this.deckyState.setUserInfo(userInfo);
+
+    return userInfo;
   }
 
   public async updateVersion() {
@@ -361,7 +370,7 @@ class PluginLoader extends Logger {
   }
 
   openFilePicker(
-    startPath: string,
+    startPath: string | undefined,
     includeFiles?: boolean,
     filter?: RegExp | ((file: File) => boolean),
     includeFolders?: boolean,
@@ -371,6 +380,7 @@ class PluginLoader extends Logger {
     max?: number,
   ): Promise<{ path: string; realpath: string }> {
     return new Promise((resolve, reject) => {
+      const { userInfo } = useDeckyState();
       const Content = ({ closeModal }: { closeModal?: () => void }) => (
         // Purposely outside of the FilePicker component as lazy-loaded ModalRoots don't focus correctly
         <ModalRoot
@@ -381,7 +391,7 @@ class PluginLoader extends Logger {
         >
           <WithSuspense>
             <FilePicker
-              startPath={startPath}
+              startPath={startPath ? startPath : userInfo?.path}
               includeFiles={includeFiles}
               includeFolders={includeFolders}
               filter={filter}

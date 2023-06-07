@@ -7,6 +7,7 @@ import { VerInfo } from '../updater';
 interface PublicDeckyState {
   plugins: Plugin[];
   pluginOrder: string[];
+  hiddenPlugins: string[];
   activePlugin: Plugin | null;
   updates: PluginUpdateMapping | null;
   hasLoaderUpdate?: boolean;
@@ -17,6 +18,7 @@ interface PublicDeckyState {
 export class DeckyState {
   private _plugins: Plugin[] = [];
   private _pluginOrder: string[] = [];
+  private _hiddenPlugins: string[] = [];
   private _activePlugin: Plugin | null = null;
   private _updates: PluginUpdateMapping | null = null;
   private _hasLoaderUpdate: boolean = false;
@@ -29,6 +31,7 @@ export class DeckyState {
     return {
       plugins: this._plugins,
       pluginOrder: this._pluginOrder,
+      hiddenPlugins: this._hiddenPlugins,
       activePlugin: this._activePlugin,
       updates: this._updates,
       hasLoaderUpdate: this._hasLoaderUpdate,
@@ -49,6 +52,11 @@ export class DeckyState {
 
   setPluginOrder(pluginOrder: string[]) {
     this._pluginOrder = pluginOrder;
+    this.notifyUpdate();
+  }
+
+  setHiddenPlugins(hiddenPlugins: string[]) {
+    this._hiddenPlugins = hiddenPlugins;
     this.notifyUpdate();
   }
 
@@ -111,11 +119,11 @@ export const DeckyStateContextProvider: FC<Props> = ({ children, deckyState }) =
     return () => deckyState.eventBus.removeEventListener('update', onUpdate);
   }, []);
 
-  const setIsLoaderUpdating = (hasUpdate: boolean) => deckyState.setIsLoaderUpdating(hasUpdate);
-  const setVersionInfo = (versionInfo: VerInfo) => deckyState.setVersionInfo(versionInfo);
-  const setActivePlugin = (name: string) => deckyState.setActivePlugin(name);
-  const closeActivePlugin = () => deckyState.closeActivePlugin();
-  const setPluginOrder = (pluginOrder: string[]) => deckyState.setPluginOrder(pluginOrder);
+  const setIsLoaderUpdating = deckyState.setIsLoaderUpdating.bind(deckyState);
+  const setVersionInfo = deckyState.setVersionInfo.bind(deckyState);
+  const setActivePlugin = deckyState.setActivePlugin.bind(deckyState);
+  const closeActivePlugin = deckyState.closeActivePlugin.bind(deckyState);
+  const setPluginOrder = deckyState.setPluginOrder.bind(deckyState);
 
   return (
     <DeckyStateContext.Provider

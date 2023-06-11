@@ -155,6 +155,11 @@
         },
         "updates": {
             "header": "Updates"
+        },
+        "notifications": {
+            "header": "Notifications",
+            "decky_updates_label": "Decky update available",
+            "plugin_updates_label": "Plugin updates available"
         }
     },
     "SettingsIndex": {

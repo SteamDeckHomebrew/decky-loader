@@ -23,6 +23,7 @@ import PluginView from './components/PluginView';
 import WithSuspense from './components/WithSuspense';
 import { HiddenPluginsService } from './hidden-plugins-service';
 import Logger from './logger';
+import { NotificationService } from './notification-service';
 import { InstallType, Plugin } from './plugin';
 import RouterHook from './router-hook';
 import { deinitSteamFixes, initSteamFixes } from './steamfixes';
@@ -46,7 +47,9 @@ class PluginLoader extends Logger {
   private routerHook: RouterHook = new RouterHook();
   public toaster: Toaster = new Toaster();
   private deckyState: DeckyState = new DeckyState();
+
   public hiddenPluginsService = new HiddenPluginsService(this.deckyState);
+  public notificationService = new NotificationService(this.deckyState);
 
   private reloadLock: boolean = false;
   // stores a list of plugin names which requested to be reloaded
@@ -112,18 +115,20 @@ class PluginLoader extends Logger {
   public async notifyUpdates() {
     const versionInfo = await this.updateVersion();
     if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
-      this.toaster.toast({
-        title: <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="decky_title" />,
-        body: (
-          <TranslationHelper
-            trans_class={TranslationClass.PLUGIN_LOADER}
-            trans_text="decky_update_available"
-            i18n_args={{ tag_name: versionInfo?.remote?.tag_name }}
-          />
-        ),
-        onClick: () => Router.Navigate('/decky/settings'),
-      });
       this.deckyState.setHasLoaderUpdate(true);
+      if (this.notificationService.shouldNotify('deckyUpdates')) {
+        this.toaster.toast({
+          title: <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="decky_title" />,
+          body: (
+            <TranslationHelper
+              trans_class={TranslationClass.PLUGIN_LOADER}
+              trans_text="decky_update_available"
+              i18n_args={{ tag_name: versionInfo?.remote?.tag_name }}
+            />
+          ),
+          onClick: () => Router.Navigate('/decky/settings'),
+        });
+      }
     }
     await sleep(7000);
     await this.notifyPluginUpdates();
@@ -137,7 +142,7 @@ class PluginLoader extends Logger {
 
   public async notifyPluginUpdates() {
     const updates = await this.checkPluginUpdates();
-    if (updates?.size > 0) {
+    if (updates?.size > 0 && this.notificationService.shouldNotify('pluginUpdates')) {
       this.toaster.toast({
         title: <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="decky_title" />,
         body: (
@@ -211,6 +216,7 @@ class PluginLoader extends Logger {
     });
 
     this.hiddenPluginsService.init();
+    this.notificationService.init();
   }
 
   public deinit() {

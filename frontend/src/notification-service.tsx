@@ -32,11 +32,11 @@ export class NotificationService {
   /**
    * Sends the new notification settings to the server and persists it locally in the decky state
    *
-   * @param notifiationSettings The new notification settings
+   * @param notificationSettings The new notification settings
    */
-  async update(notifiationSettings: NotificationSettings) {
-    await setSetting('notificationSettings', notifiationSettings);
-    this.deckyState.setNotificationSettings(notifiationSettings);
+  async update(notificationSettings: NotificationSettings) {
+    await setSetting('notificationSettings', notificationSettings);
+    this.deckyState.setNotificationSettings(notificationSettings);
   }
 
   /**
@@ -46,6 +46,6 @@ export class NotificationService {
    * @returns true if the notification should be shown
    */
   shouldNotify(event: keyof NotificationSettings) {
-    return this.deckyState.publicState().notifiationSettings[event];
+    return this.deckyState.publicState().notificationSettings[event];
   }
 }

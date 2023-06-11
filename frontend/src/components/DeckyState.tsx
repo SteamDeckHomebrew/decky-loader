@@ -14,7 +14,7 @@ interface PublicDeckyState {
   hasLoaderUpdate?: boolean;
   isLoaderUpdating: boolean;
   versionInfo: VerInfo | null;
-  notifiationSettings: NotificationSettings;
+  notificationSettings: NotificationSettings;
 }
 
 export class DeckyState {
@@ -40,7 +40,7 @@ export class DeckyState {
       hasLoaderUpdate: this._hasLoaderUpdate,
       isLoaderUpdating: this._isLoaderUpdating,
       versionInfo: this._versionInfo,
-      notifiationSettings: this._notificationSettings,
+      notificationSettings: this._notificationSettings,
     };
   }
 
@@ -89,8 +89,8 @@ export class DeckyState {
     this.notifyUpdate();
   }
 
-  setNotificationSettings(notifiationSettings: NotificationSettings) {
-    this._notificationSettings = notifiationSettings;
+  setNotificationSettings(notificationSettings: NotificationSettings) {
+    this._notificationSettings = notificationSettings;
     this.notifyUpdate();
   }
 

@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { useDeckyState } from '../../../DeckyState';
 
 const NotificationSettings: FC = () => {
-  const { notifiationSettings } = useDeckyState();
-  const notifiationService = window.DeckyPluginLoader.notificationService;
+  const { notificationSettings } = useDeckyState();
+  const notificationService = window.DeckyPluginLoader.notificationService;
 
   const { t } = useTranslation();
 
@@ -14,17 +14,17 @@ const NotificationSettings: FC = () => {
     <>
       <Field label={t('SettingsGeneralIndex.notifications.decky_updates_label')}>
         <Toggle
-          value={notifiationSettings.deckyUpdates}
+          value={notificationSettings.deckyUpdates}
           onChange={(deckyUpdates) => {
-            notifiationService.update({ ...notifiationSettings, deckyUpdates });
+            notificationService.update({ ...notificationSettings, deckyUpdates });
           }}
         />
       </Field>
       <Field label={t('SettingsGeneralIndex.notifications.plugin_updates_label')}>
         <Toggle
-          value={notifiationSettings.pluginUpdates}
+          value={notificationSettings.pluginUpdates}
           onChange={(pluginUpdates) => {
-            notifiationService.update({ ...notifiationSettings, pluginUpdates });
+            notificationService.update({ ...notificationSettings, pluginUpdates });
           }}
         />
       </Field>

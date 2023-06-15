@@ -67,9 +67,11 @@ class Updater:
             logger.info("Current branch is not set, determining branch from version...")
             if self.localVer.startswith("v") and "-pre" in self.localVer:
                 logger.info("Current version determined to be pre-release")
+                manager.setSetting('branch', 1)
                 return 1
             else:
                 logger.info("Current version determined to be stable")
+                manager.setSetting('branch', 0)
                 return 0
         return ver
 

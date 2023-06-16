@@ -1,17 +1,7 @@
 {
-    "MultiplePluginsInstallModal": {
-        "ok_button": {
-            "idle": ""
-        }
-    },
     "SettingsDeveloperIndex": {
         "react_devtools": {
             "ip_label": ""
-        }
-    },
-    "Store": {
-        "store_source": {
-            "label": ""
         }
     }
 }

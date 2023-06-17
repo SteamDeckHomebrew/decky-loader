@@ -52,8 +52,8 @@
         "uninstall": "卸载",
         "update_to": "更新 {{name}}",
         "update_all_other": "更新 {{count}} 个插件",
-        "show": "快速访问菜单：显示",
-        "hide": "快速访问：隐藏"
+        "show": "快速访问菜单：可见",
+        "hide": "快速访问菜单：不可见"
     },
     "PluginLoader": {
         "decky_title": "Decky",

@@ -206,7 +206,7 @@
         }
     },
     "PluginListLabel": {
-        "hidden": "从快速访问菜单中隐藏"
+        "hidden": "快速访问菜单中不可见"
     },
     "PluginView": {
         "hidden_other": "此列表隐藏了 {{count}} 个插件"

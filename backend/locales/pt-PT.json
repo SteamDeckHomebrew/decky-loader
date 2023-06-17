@@ -1,65 +1,35 @@
 {
-    "BranchSelect": {
-        "update_channel": {
-            "testing": ""
-        }
-    },
     "FilePickerIndex": {
         "folder": {
             "select": ""
         }
     },
-    "PluginCard": {
-        "plugin_install": ""
-    },
     "PluginInstallModal": {
         "install": {
             "button_processing": ""
-        },
-        "reinstall": {
-            "button_idle": ""
         },
         "update": {
             "button_idle": ""
         }
     },
     "MultiplePluginsInstallModal": {
-        "title": {
-            "mixed": ""
-        },
         "ok_button": {
             "idle": ""
-        },
-        "description": {
-            "update": ""
         }
     },
     "PluginListIndex": {
-        "reinstall": "",
-        "show": ""
+        "reinstall": ""
     },
     "PluginLoader": {
         "decky_update_available": "",
-        "plugin_load_error": {
-            "toast": ""
-        },
         "plugin_update": ""
     },
     "SettingsDeveloperIndex": {
-        "cef_console": {
-            "desc": ""
-        },
         "react_devtools": {
             "ip_label": ""
         },
-        "third_party_plugins": {
-            "header": ""
-        },
         "toast_zip": {
             "body": ""
-        },
-        "valve_internal": {
-            "label": ""
         }
     },
     "SettingsGeneralIndex": {
@@ -67,21 +37,12 @@
             "desc": ""
         }
     },
-    "SettingsIndex": {
-        "developer_title": ""
-    },
     "Store": {
         "store_contrib": {
             "desc": ""
         },
-        "store_search": {
-            "label": ""
-        },
         "store_source": {
             "label": ""
-        },
-        "store_tabs": {
-            "title": ""
         }
     },
     "StoreSelect": {
@@ -90,10 +51,8 @@
         }
     },
     "Updater": {
-        "decky_updates": "",
         "updates": {
-            "checking": "",
-            "lat_version": ""
+            "checking": ""
         }
     }
 }

@@ -1,15 +1,7 @@
 {
-    "FilePickerIndex": {
-        "folder": {
-            "select": ""
-        }
-    },
     "PluginInstallModal": {
         "install": {
             "button_processing": ""
-        },
-        "update": {
-            "button_idle": ""
         }
     },
     "MultiplePluginsInstallModal": {
@@ -17,19 +9,12 @@
             "idle": ""
         }
     },
-    "PluginListIndex": {
-        "reinstall": ""
-    },
     "PluginLoader": {
-        "decky_update_available": "",
-        "plugin_update": ""
+        "decky_update_available": ""
     },
     "SettingsDeveloperIndex": {
         "react_devtools": {
             "ip_label": ""
-        },
-        "toast_zip": {
-            "body": ""
         }
     },
     "SettingsGeneralIndex": {
@@ -38,16 +23,8 @@
         }
     },
     "Store": {
-        "store_contrib": {
-            "desc": ""
-        },
         "store_source": {
             "label": ""
-        }
-    },
-    "StoreSelect": {
-        "store_channel": {
-            "custom": ""
         }
     },
     "Updater": {

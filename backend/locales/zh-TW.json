@@ -9,8 +9,8 @@
     },
     "Developer": {
         "5secreload": "5 秒後重新載入",
-        "disabling": "正在停用",
-        "enabling": "正在啟用"
+        "disabling": "正在停用 React DevTools",
+        "enabling": "正在啟用 React DevTools"
     },
     "FilePickerIndex": {
         "folder": {
@@ -50,7 +50,10 @@
         "uninstall": "解除安裝",
         "update_to": "更新到 {{name}}",
         "reinstall": "重新安裝",
-        "reload": "重新載入"
+        "reload": "重新載入",
+        "show": "快速存取：顯示",
+        "hide": "快速存取：隱藏",
+        "update_all_other": "更新 {{count}} 個外掛程式"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -97,7 +100,12 @@
             "ip_label": "IP",
             "label": "啟用 React DevTools"
         },
-        "header": "其他"
+        "header": "其他",
+        "cef_console": {
+            "button": "開啟控制台",
+            "label": "CEF 控制台",
+            "desc": "開啟 CEF 控制台。僅用於偵錯。這裡的東西有潛在的風險，只有當你是一個外掛程式開發者或者被外掛程式開發者引導到這裡時，才應該使用。"
+        }
     },
     "SettingsGeneralIndex": {
         "about": {
@@ -177,6 +185,30 @@
             "check_button": "檢查更新",
             "cur_version": "目前版本：{{ver}}",
             "updating": "正在更新"
+        }
+    },
+    "PluginView": {
+        "hidden_other": "{{count}} 個外掛程式已隱藏"
+    },
+    "PluginListLabel": {
+        "hidden": "已從快速存取選單中移除"
+    },
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "mixed_other": "修改 {{count}} 個外掛程式",
+            "update_other": "更新 {{count}} 個外掛程式",
+            "reinstall_other": "重新安裝 {{count}} 個外掛程式",
+            "install_other": "安裝 {{count}} 個外掛程式"
+        },
+        "ok_button": {
+            "idle": "確定",
+            "loading": "執行中"
+        },
+        "confirm": "您確定要進行以下的修改嗎？",
+        "description": {
+            "install": "安裝 {{name}} {{version}}",
+            "update": "更新 {{name}} 到 {{version}}",
+            "reinstall": "重新安裝 {{name}} {{version}}"
         }
     }
 }

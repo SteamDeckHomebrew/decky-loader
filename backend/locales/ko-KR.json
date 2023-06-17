@@ -1,1 +1,130 @@
-{}
+{
+    "BranchSelect": {
+        "update_channel": {
+            "label": "업데이트 채널",
+            "stable": "안정판",
+            "testing": "시험판",
+            "prerelease": "프리릴리즈"
+        }
+    },
+    "Developer": {
+        "disabling": "React DevTools 비활성화",
+        "enabling": "React DevTools 활성화",
+        "5secreload": "5초 내로 새로고침 됩니다"
+    },
+    "FilePickerIndex": {
+        "folder": {
+            "select": "이 폴더 사용"
+        }
+    },
+    "PluginView": {
+        "hidden_other": "플러그인 {{count}}개 숨겨짐"
+    },
+    "PluginListLabel": {
+        "hidden": "빠른 액세스 메뉴에서 숨겨짐"
+    },
+    "PluginCard": {
+        "plugin_install": "설치",
+        "plugin_no_desc": "제공된 설명이 없습니다.",
+        "plugin_version_label": "플러그인 버전",
+        "plugin_full_access": "이 플러그인은 Steam Deck의 모든 접근 권한을 가집니다."
+    },
+    "PluginInstallModal": {
+        "install": {
+            "button_idle": "설치",
+            "button_processing": "설치 중",
+            "desc": "{{artifact}} {{version}} 버전을 설치하겠습니까?",
+            "title": "{{artifact}} 설치"
+        },
+        "reinstall": {
+            "button_idle": "재설치",
+            "button_processing": "재설치 중",
+            "desc": "{{artifact}} {{version}} 버전을 설치하겠습니까?",
+            "title": "{{artifact}} 재설치"
+        },
+        "update": {
+            "button_idle": "업데이트",
+            "button_processing": "업데이트 중",
+            "title": "{{artifact}} 업데이트",
+            "desc": "{{artifact}} {{version}} 버전으로 업데이트 하겠습니까?"
+        },
+        "no_hash": "이 플러그인은 해시 확인을 제공하지 않으며 설치에 따른 위험은 사용자가 감수해야 합니다."
+    },
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "mixed_other": "{{count}}개의 플러그인 수정",
+            "update_other": "{{count}}개의 플러그인 업데이트",
+            "reinstall_other": "{{count}}개의 플러그인 재설치",
+            "install_other": "{{count}}개의 플러그인 설치"
+        },
+        "ok_button": {
+            "idle": "확인",
+            "loading": "작업 중"
+        },
+        "confirm": "해당 수정을 적용하겠습니까?",
+        "description": {
+            "install": "{{name}} {{version}} 버전 설치",
+            "update": "{{name}} 게임을 {{version}} 버전으로 업데이트",
+            "reinstall": "{{name}} {{version}} 버전 재설치"
+        }
+    },
+    "PluginListIndex": {
+        "plugin_actions": "플러그인 동작",
+        "reinstall": "재설치",
+        "reload": "새로고침",
+        "uninstall": "제거",
+        "show": "빠른 액세스 메뉴: 표시",
+        "hide": "빠른 액세스 메뉴: 숨기기",
+        "update_all_other": "{{count}}개 플러그인 업데이트",
+        "no_plugin": "설치된 플러그인이 없습니다!",
+        "update_to": "{{name}}(으)로 업데이트"
+    },
+    "PluginLoader": {
+        "decky_title": "Decky",
+        "decky_update_available": "{{tag_name}} 버전으로 업데이트 할 수 있습니다!",
+        "error": "오류",
+        "plugin_load_error": {
+            "message": "{{name}} 플러그인 불러오기 오류",
+            "toast": "{{name}} 불러오기 오류"
+        },
+        "plugin_uninstall": {
+            "button": "설치 제거",
+            "desc": "{{name}}을(를) 삭제하시겠습니까?",
+            "title": "{{name}} 제거"
+        },
+        "plugin_update_other": "플러그인 {{count}}개를 업데이트 할 수 있습니다!",
+        "plugin_error_uninstall": "{{name}} 플러그인을 불러올 때 위와 같은 예외가 발생했습니다. 이는 보통 SteamUI 새 버전에 맞는 플러그인 업데이트가 필요할 때 발생합니다. Decky 설정의 플러그인 항목에서 업데이트가 있는지 확인하거나 삭제를 시도해 보세요."
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "label": "원격 CEF 디버그 허용",
+            "desc": "네트워크의 모든 사용자에게 CEF 디버거에 대한 인증되지 않은 액세스 허용"
+        }
+    },
+    "SettingsDeveloperIndex": {
+        "cef_console": {
+            "button": "콘솔 열기",
+            "label": "CEF 콘솔"
+        },
+        "header": "기타",
+        "react_devtools": {
+            "ip_label": "IP",
+            "label": "React DevTools 활성화"
+        },
+        "third_party_plugins": {
+            "button_install": "설치",
+            "button_zip": "탐색",
+            "header": "제 3자 플러그인",
+            "label_desc": "URL",
+            "label_url": "URL에서 플러그인 설치",
+            "label_zip": "ZIP 파일에서 플러그인 설치"
+        },
+        "toast_zip": {
+            "body": "설치를 실패했습니다! ZIP 파일 만이 지원됩니다.",
+            "title": "Decky"
+        },
+        "valve_internal": {
+            "desc1": "Valve의 내장 개발자 메뉴를 활성화합니다."
+        }
+    }
+}

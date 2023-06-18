@@ -1,149 +1,99 @@
 {
     "BranchSelect": {
         "update_channel": {
-            "prerelease": "",
             "testing": ""
         }
-    },
-    "Developer": {
-        "disabling": ""
     },
     "FilePickerIndex": {
         "folder": {
             "select": ""
         }
     },
-    "PluginListLabel": {
-        "hidden": ""
-    },
     "PluginCard": {
-        "plugin_install": "",
-        "plugin_version_label": ""
+        "plugin_install": ""
     },
     "PluginInstallModal": {
         "install": {
-            "button_processing": "",
-            "title": ""
+            "button_processing": ""
         },
         "reinstall": {
-            "button_idle": "",
-            "desc": ""
+            "button_idle": ""
         },
         "update": {
-            "button_idle": "",
-            "desc": ""
+            "button_idle": ""
         }
     },
     "MultiplePluginsInstallModal": {
         "title": {
-            "mixed": "",
-            "reinstall": ""
+            "mixed": ""
         },
         "ok_button": {
             "idle": ""
         },
-        "confirm": "",
         "description": {
             "update": ""
         }
     },
     "PluginListIndex": {
-        "no_plugin": "",
         "reinstall": "",
-        "uninstall": "",
-        "show": "",
-        "update_all": ""
+        "show": ""
     },
     "PluginLoader": {
         "decky_update_available": "",
-        "plugin_error_uninstall": "",
         "plugin_load_error": {
             "toast": ""
         },
-        "plugin_uninstall": {
-            "desc": ""
-        },
         "plugin_update": ""
-    },
-    "RemoteDebugging": {
-        "remote_cef": {
-            "label": ""
-        }
     },
     "SettingsDeveloperIndex": {
         "cef_console": {
             "desc": ""
         },
-        "header": "",
         "react_devtools": {
             "ip_label": ""
         },
         "third_party_plugins": {
-            "button_install": "",
-            "header": "",
-            "label_url": ""
+            "header": ""
         },
         "toast_zip": {
             "body": ""
         },
         "valve_internal": {
-            "desc1": "",
             "label": ""
         }
     },
     "SettingsGeneralIndex": {
-        "about": {
-            "header": ""
-        },
         "developer_mode": {
             "desc": ""
-        },
-        "other": {
-            "header": ""
         }
     },
     "SettingsIndex": {
-        "developer_title": "",
-        "navbar_settings": ""
+        "developer_title": ""
     },
     "Store": {
         "store_contrib": {
             "desc": ""
         },
-        "store_filter": {
-            "label": ""
-        },
         "store_search": {
             "label": ""
-        },
-        "store_sort": {
-            "label_def": ""
         },
         "store_source": {
             "label": ""
         },
         "store_tabs": {
-            "alph_asce": "",
             "title": ""
         }
     },
     "StoreSelect": {
-        "custom_store": {
-            "label": ""
-        },
         "store_channel": {
-            "custom": "",
-            "label": ""
+            "custom": ""
         }
     },
     "Updater": {
         "decky_updates": "",
-        "patch_notes_desc": "",
         "updates": {
             "checking": "",
-            "install_button": "",
-            "lat_version": "",
-            "updating": ""
+            "lat_version": ""
         }
     }
 }

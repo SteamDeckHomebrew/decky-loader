@@ -1,17 +1,16 @@
 import { FC, createContext, useContext, useState } from 'react';
 
-const QuickAccessVisibleState = createContext<boolean>(true);
+const QuickAccessVisibleState = createContext<boolean>(false);
 
 export const useQuickAccessVisible = () => useContext(QuickAccessVisibleState);
 
-export const QuickAccessVisibleStateProvider: FC<{ initial: boolean; tab: any }> = ({ children, initial, tab }) => {
+export const QuickAccessVisibleStateProvider: FC<{ tab: any }> = ({ children, tab }) => {
+  const initial = tab.initialVisibility;
   const [visible, setVisible] = useState<boolean>(initial);
-  const [prev, setPrev] = useState<boolean>(initial);
   // HACK but i can't think of a better way to do this
-  tab.qAMVisibilitySetter = setVisible;
-  if (initial != prev) {
-    setPrev(initial);
-    setVisible(initial);
-  }
+  tab.qAMVisibilitySetter = (val: boolean) => {
+    if (val != visible) setVisible(val);
+  };
+
   return <QuickAccessVisibleState.Provider value={visible}>{children}</QuickAccessVisibleState.Provider>;
 };

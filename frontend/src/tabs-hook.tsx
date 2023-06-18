@@ -128,7 +128,13 @@ class TabsHook extends Logger {
     let deckyTabAmount = existingTabs.reduce((prev: any, cur: any) => (cur.decky ? prev + 1 : prev), 0);
     if (deckyTabAmount == this.tabs.length) {
       for (let tab of existingTabs) {
-        if (tab?.decky && tab?.qAMVisibilitySetter) tab?.qAMVisibilitySetter(visible);
+        if (tab?.decky) {
+          if (tab?.qAMVisibilitySetter) {
+            tab?.qAMVisibilitySetter(visible);
+          } else {
+            tab.initialVisibility = visible;
+          }
+        }
       }
       return;
     }
@@ -138,12 +144,9 @@ class TabsHook extends Logger {
         title,
         tab: icon,
         decky: true,
+        initialVisibility: visible,
       };
-      tab.panel = (
-        <QuickAccessVisibleStateProvider initial={visible} tab={tab}>
-          {content}
-        </QuickAccessVisibleStateProvider>
-      );
+      tab.panel = <QuickAccessVisibleStateProvider tab={tab}>{content}</QuickAccessVisibleStateProvider>;
       existingTabs.push(tab);
     }
   }

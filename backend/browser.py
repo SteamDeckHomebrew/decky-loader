@@ -129,7 +129,7 @@ class PluginBrowser:
             logger.warning(f"Plugin {name} not installed, skipping uninstallation")
         except Exception as e:
             logger.error(f"Plugin {name} in {plugin_dir} was not uninstalled")
-            logger.error(f"Error at %s", exc_info=e)
+            logger.error(f"Error at {str(e)}", exc_info=e)
         if self.loader.watcher:
             self.loader.watcher.disabled = False
 

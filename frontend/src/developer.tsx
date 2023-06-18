@@ -1,5 +1,4 @@
 import { findModuleChild, sleep } from 'decky-frontend-lib';
-import { useTranslation } from 'react-i18next';
 import { FaReact } from 'react-icons/fa';
 
 import Logger from './logger';

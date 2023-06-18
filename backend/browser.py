@@ -239,10 +239,15 @@ class PluginBrowser:
             name (string): The name of the plugin
         """
         hidden_plugins = self.settings.getSetting("hiddenPlugins", [])
-        hidden_plugins.remove(name)
-        self.settings.setSetting("hiddenPlugins", hidden_plugins)
+        if name in hidden_plugins:
+            hidden_plugins.remove(name)
+            self.settings.setSetting("hiddenPlugins", hidden_plugins)
 
-        plugin_order = self.settings.getSetting("pluginOrder")
-        plugin_order.remove(name)
-        self.settings.setSetting("pluginOrder", plugin_order)
+
+        plugin_order = self.settings.getSetting("pluginOrder", [])
+
+        if name in plugin_order:
+            plugin_order.remove(name)
+            self.settings.setSetting("pluginOrder", plugin_order)
+            
         logger.debug("Removed any settings for plugin %s", name)

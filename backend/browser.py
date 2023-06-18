@@ -122,10 +122,7 @@ class PluginBrowser:
                 logger.debug("Plugin %s was stopped", name)
                 del self.plugins[name]
                 logger.debug("Plugin %s was removed from the dictionary", name)
-                current_plugin_order = self.settings.getSetting("pluginOrder")
-                current_plugin_order.remove(name)
-                self.settings.setSetting("pluginOrder", current_plugin_order)
-                logger.debug("Plugin %s was removed from the pluginOrder setting", name)
+                self.cleanup_plugin_settings(name)
             logger.debug("removing files %s" % str(name))
             rmtree(plugin_dir)
         except FileNotFoundError:
@@ -234,3 +231,18 @@ class PluginBrowser:
 
     def cancel_plugin_install(self, request_id):
         self.install_requests.pop(request_id)
+
+    def cleanup_plugin_settings(self, name):
+        """Removes any settings related to a plugin. Propably called when a plugin is uninstalled.
+
+        Args:
+            name (string): The name of the plugin
+        """
+        hidden_plugins = self.settings.getSetting("hiddenPlugins", [])
+        hidden_plugins.remove(name)
+        self.settings.setSetting("hiddenPlugins", hidden_plugins)
+
+        plugin_order = self.settings.getSetting("pluginOrder")
+        plugin_order.remove(name)
+        self.settings.setSetting("pluginOrder", plugin_order)
+        logger.debug("Removed any settings for plugin %s", name)

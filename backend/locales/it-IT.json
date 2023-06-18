@@ -8,7 +8,7 @@
         }
     },
     "Developer": {
-        "5secreload": "Ricarico in 5 secondi",
+        "5secreload": "Ricarico tra 5 secondi",
         "disabling": "Disabilito i tools di React",
         "enabling": "Abilito i tools di React"
     },
@@ -81,7 +81,9 @@
         "update_to": "Aggiorna a {{name}}",
         "update_all_one": "Aggiorna un plugin",
         "update_all_many": "Aggiorna {{count}} plugins",
-        "update_all_other": "Aggiorna {{count}} plugins"
+        "update_all_other": "Aggiorna {{count}} plugins",
+        "show": "Accesso rapido: Mostra",
+        "hide": "Accesso rapido: Nascondi"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -130,6 +132,11 @@
             "desc1": "Abilita il menu di sviluppo interno di Valve.",
             "desc2": "Non toccare nulla in questo menu se non sai quello che fa.",
             "label": "Abilita Menu Sviluppatore"
+        },
+        "cef_console": {
+            "label": "Console CEF",
+            "button": "Apri la console",
+            "desc": "Apri la console di CEF. Utile solamente per ragioni di debug. Questa opzione deve essere usata solo se sei uno sviluppatore di plugin o se uno di questi ti ha chiesto di farlo, visto che questa feature potrebbe essere potenzialmente pericolosa."
         }
     },
     "SettingsGeneralIndex": {
@@ -237,5 +244,13 @@
             "update": "Aggiorna {{name}} alla versione {{version}}",
             "reinstall": "Reinstalla {{name}} {{version}}"
         }
+    },
+    "PluginView": {
+        "hidden_one": "Un plugin è nascosto dalla lista",
+        "hidden_many": "Sono nascosti {{count}} plugin dalla lista",
+        "hidden_other": "Sono nascosti {{count}} plugin dalla lista"
+    },
+    "PluginListLabel": {
+        "hidden": "Nascosti dal menu di accesso rapido"
     }
 }

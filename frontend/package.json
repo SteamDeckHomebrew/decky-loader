@@ -33,7 +33,8 @@
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-external-globals": "^0.6.1",
     "rollup-plugin-polyfill-node": "^0.10.2",
-    "tslib": "^2.5.3",
+    "rollup-plugin-visualizer": "^5.9.0",
+    "tslib": "^2.5.2",
     "typescript": "^4.9.5"
   },
   "importSort": {

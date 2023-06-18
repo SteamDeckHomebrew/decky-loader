@@ -1,5 +1,4 @@
 import {
-  ConfirmModal,
   ModalRoot,
   PanelSection,
   PanelSectionRow,
@@ -19,9 +18,11 @@ import { File } from './components/modals/filepicker';
 import { deinitFilepickerPatches, initFilepickerPatches } from './components/modals/filepicker/patches';
 import MultiplePluginsInstallModal from './components/modals/MultiplePluginsInstallModal';
 import PluginInstallModal from './components/modals/PluginInstallModal';
+import PluginUninstallModal from './components/modals/PluginUninstallModal';
 import NotificationBadge from './components/NotificationBadge';
 import PluginView from './components/PluginView';
 import WithSuspense from './components/WithSuspense';
+import { HiddenPluginsService } from './hidden-plugins-service';
 import Logger from './logger';
 import { InstallType, Plugin } from './plugin';
 import RouterHook from './router-hook';
@@ -46,6 +47,7 @@ class PluginLoader extends Logger {
   private routerHook: RouterHook = new RouterHook();
   public toaster: Toaster = new Toaster();
   private deckyState: DeckyState = new DeckyState();
+  public hiddenPluginsService = new HiddenPluginsService(this.deckyState);
 
   private reloadLock: boolean = false;
   // stores a list of plugin names which requested to be reloaded
@@ -191,21 +193,8 @@ class PluginLoader extends Logger {
     );
   }
 
-  public uninstallPlugin(name: string, title: string, button_text: string, description: string) {
-    showModal(
-      <ConfirmModal
-        onOK={async () => {
-          await this.callServerMethod('uninstall_plugin', { name });
-        }}
-        onCancel={() => {
-          // do nothing
-        }}
-        strTitle={title}
-        strOKButtonText={button_text}
-      >
-        {description}
-      </ConfirmModal>,
-    );
+  public uninstallPlugin(name: string, title: string, buttonText: string, description: string) {
+    showModal(<PluginUninstallModal name={name} title={title} buttonText={buttonText} description={description} />);
   }
 
   public hasPlugin(name: string) {
@@ -229,6 +218,8 @@ class PluginLoader extends Logger {
       console.log(pluginOrder);
       this.deckyState.setPluginOrder(pluginOrder);
     });
+
+    this.hiddenPluginsService.init();
   }
 
   public deinit() {

@@ -1,7 +1,24 @@
 {
     "FilePickerIndex": {
         "folder": {
-            "select": "Usar esta pasta"
+            "select": "Usar esta pasta",
+            "label": "",
+            "show_more": ""
+        },
+        "files": {
+            "all_files": "",
+            "file_type": "",
+            "show_hidden": ""
+        },
+        "filter": {
+            "created_asce": "",
+            "created_desc": "",
+            "modified_asce": "",
+            "modified_desc": "",
+            "name_asce": "",
+            "name_desc": "",
+            "size_asce": "",
+            "size_desc": ""
         }
     },
     "PluginView": {
@@ -223,6 +240,17 @@
             "updating": "Actualização em curso",
             "reloading": "Recarregar",
             "install_button": "Instalar actualização"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "unknown": "",
+            "file_not_found": ""
+        }
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": ""
         }
     }
 }

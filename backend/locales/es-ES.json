@@ -74,11 +74,7 @@
             "select": "Usar esta carpeta"
         },
         "filter": {
-            "size_asce": "",
             "modified_asce": ""
-        },
-        "files": {
-            "file_type": ""
         }
     },
     "PluginListIndex": {
@@ -226,10 +222,5 @@
         "hidden_one": "",
         "hidden_many": "",
         "hidden_other": ""
-    },
-    "FilePickerError": {
-        "errors": {
-            "unknown": ""
-        }
     }
 }

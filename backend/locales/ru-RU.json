@@ -1,30 +1,17 @@
 {
-    "BranchSelect": {
-        "update_channel": {
-            "testing": ""
-        }
-    },
     "FilePickerIndex": {
         "files": {
             "all_files": ""
         },
         "filter": {
-            "created_desc": "",
             "name_desc": ""
         }
-    },
-    "PluginCard": {
-        "plugin_full_access": ""
     },
     "PluginInstallModal": {
         "install": {
             "button_processing": ""
         },
-        "no_hash": "",
         "reinstall": {
-            "title": ""
-        },
-        "update": {
             "title": ""
         }
     },
@@ -42,75 +29,46 @@
             "mixed_one": "",
             "mixed_few": "",
             "mixed_many": ""
-        },
-        "description": {
-            "install": ""
         }
     },
     "PluginListIndex": {
         "plugin_actions": "",
         "update_all_one": "",
         "update_all_few": "",
-        "update_all_many": "",
-        "update_to": ""
+        "update_all_many": ""
     },
     "PluginLoader": {
         "decky_update_available": "",
-        "plugin_load_error": {
-            "toast": ""
-        },
         "plugin_update_one": "",
         "plugin_update_few": "",
         "plugin_update_many": ""
-    },
-    "RemoteDebugging": {
-        "remote_cef": {
-            "desc": ""
-        }
     },
     "SettingsDeveloperIndex": {
         "cef_console": {
             "label": ""
         },
         "third_party_plugins": {
-            "button_install": "",
             "header": ""
-        },
-        "valve_internal": {
-            "desc2": ""
         }
     },
     "SettingsGeneralIndex": {
         "about": {
             "decky_version": ""
-        },
-        "developer_mode": {
-            "label": ""
         }
     },
     "SettingsIndex": {
         "general_title": ""
     },
     "Store": {
-        "store_contrib": {
-            "label": ""
-        },
         "store_sort": {
             "label": ""
-        },
-        "store_tabs": {
-            "about": ""
         },
         "store_testing_cta": ""
     },
     "Updater": {
         "updates": {
-            "install_button": "",
             "updating": ""
         }
-    },
-    "Developer": {
-        "5secreload": ""
     },
     "PluginView": {
         "hidden_one": "",
@@ -118,9 +76,6 @@
         "hidden_many": ""
     },
     "StoreSelect": {
-        "custom_store": {
-            "label": ""
-        },
         "store_channel": {
             "label": ""
         }

@@ -21,9 +21,6 @@
             "desc1": "Active le menu développeur interne de Valve.",
             "desc2": "Ne touchez à rien dans ce menu à moins que vous ne sachiez ce qu'il fait.",
             "label": "Activer Valve Internal"
-        },
-        "cef_console": {
-            "desc": ""
         }
     },
     "BranchSelect": {
@@ -71,11 +68,7 @@
             "select": "Utiliser ce dossier"
         },
         "filter": {
-            "created_desc": "",
             "name_desc": ""
-        },
-        "files": {
-            "file_type": ""
         }
     },
     "PluginCard": {
@@ -198,11 +191,6 @@
         "hidden_many": "",
         "hidden_other": ""
     },
-    "FilePickerError": {
-        "errors": {
-            "unknown": ""
-        }
-    },
     "MultiplePluginsInstallModal": {
         "title": {
             "reinstall_one": "",
@@ -217,9 +205,6 @@
             "update_one": "",
             "update_many": "",
             "update_other": ""
-        },
-        "description": {
-            "install": ""
         }
     }
 }

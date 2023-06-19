@@ -16,12 +16,8 @@
         "folder": {
             "select": "Použít tuto složku"
         },
-        "files": {
-            "file_type": ""
-        },
         "filter": {
-            "modified_asce": "",
-            "size_asce": ""
+            "modified_asce": ""
         }
     },
     "PluginView": {

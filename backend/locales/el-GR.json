@@ -21,8 +21,7 @@
             "desc1": "Ενεργοποιεί το μενού προγραμματιστή της Valve.",
             "desc2": "Μην αγγίξετε τίποτα σε αυτό το μενού εκτός και αν ξέρετε τι κάνει.",
             "label": "Ενεργοποιήση εσωτερικού μενού Valve"
-        },
-        "header": ""
+        }
     },
     "BranchSelect": {
         "update_channel": {
@@ -181,12 +180,8 @@
         "folder": {
             "select": "Χρησιμοποιήστε αυτό το φάκελο"
         },
-        "files": {
-            "file_type": ""
-        },
         "filter": {
-            "modified_asce": "",
-            "size_asce": ""
+            "modified_asce": ""
         }
     },
     "PluginView": {
@@ -194,7 +189,6 @@
         "hidden_other": ""
     },
     "MultiplePluginsInstallModal": {
-        "confirm": "",
         "title": {
             "mixed_one": "",
             "mixed_other": "",

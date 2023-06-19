@@ -16,12 +16,8 @@
         "folder": {
             "select": "Використовувати цю папку"
         },
-        "files": {
-            "file_type": ""
-        },
         "filter": {
-            "modified_asce": "",
-            "size_asce": ""
+            "modified_asce": ""
         }
     },
     "PluginListLabel": {

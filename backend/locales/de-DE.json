@@ -16,12 +16,8 @@
         "folder": {
             "select": "Diesen Ordner verwenden"
         },
-        "files": {
-            "file_type": ""
-        },
         "filter": {
-            "modified_asce": "",
-            "size_asce": ""
+            "modified_asce": ""
         }
     },
     "PluginCard": {
@@ -203,9 +199,6 @@
             "update_other": "",
             "reinstall_one": "",
             "reinstall_other": ""
-        },
-        "description": {
-            "reinstall": ""
         }
     }
 }

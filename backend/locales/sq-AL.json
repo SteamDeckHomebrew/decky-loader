@@ -15,9 +15,6 @@
         "toast_zip": {
             "title": "Decky"
         },
-        "cef_console": {
-            "label": ""
-        },
         "header": ""
     },
     "BranchSelect": {
@@ -30,12 +27,8 @@
         "folder": {
             "select": "Përdore këtë folder"
         },
-        "files": {
-            "file_type": ""
-        },
         "filter": {
-            "modified_asce": "",
-            "size_asce": ""
+            "modified_asce": ""
         }
     },
     "PluginCard": {
@@ -77,7 +70,6 @@
     "PluginListIndex": {
         "no_plugin": "Nuk ka shtesa të instaluar!",
         "uninstall": "Çinstalo",
-        "update_to": "",
         "update_all_one": "",
         "update_all_other": ""
     },
@@ -121,15 +113,11 @@
     "StoreSelect": {
         "store_channel": {
             "label": "Kanali Dyqanit"
-        },
-        "custom_store": {
-            "url_label": ""
         }
     },
     "Updater": {
         "updates": {
-            "cur_version": "Versioni e tanishëme: {{ver}}",
-            "updating": ""
+            "cur_version": "Versioni e tanishëme: {{ver}}"
         },
         "decky_updates": ""
     },
@@ -143,16 +131,10 @@
             "reinstall_other": "",
             "install_one": "",
             "install_other": ""
-        },
-        "description": {
-            "install": ""
         }
     },
     "Developer": {
         "enabling": ""
-    },
-    "PluginListLabel": {
-        "hidden": ""
     },
     "PluginView": {
         "hidden_one": "",

@@ -84,7 +84,7 @@
     "SettingsDeveloperIndex": {
         "header": "Altro",
         "react_devtools": {
-            "desc": "Abilita la connessione ad un computer che esegue i DevTools di React. Cambiando questa impostazione ricaricherà Steam. Imposta l'indirizzo IP prima di abilitarlo.",
+            "desc": "Abilita la connessione ad un computer che esegue i DevTools di React. Steam verrà ricaricato se lo stato cambia. Imposta il tuo indirizzo IP prima di abilitarlo.",
             "ip_label": "IP",
             "label": "Abilita i DevTools di React"
         },

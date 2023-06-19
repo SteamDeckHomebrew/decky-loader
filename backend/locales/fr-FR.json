@@ -106,7 +106,7 @@
     "PluginLoader": {
         "decky_title": "Decky",
         "error": "Erreur",
-        "plugin_error_uninstall": "Allez sur <0></0> dans le menu de Decky si vous voulez désinstaller ce plugin.",
+        "plugin_error_uninstall": "Allez sur {{name}} dans le menu de Decky si vous voulez désinstaller ce plugin.",
         "plugin_load_error": {
             "message": "Erreur lors du chargement du plugin {{name}}",
             "toast": "Erreur lors du chargement de {{name}}"

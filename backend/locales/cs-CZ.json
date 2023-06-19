@@ -14,7 +14,24 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Použít tuto složku"
+            "select": "Použít tuto složku",
+            "label": "",
+            "show_more": ""
+        },
+        "files": {
+            "all_files": "",
+            "file_type": "",
+            "show_hidden": ""
+        },
+        "filter": {
+            "created_asce": "",
+            "created_desc": "",
+            "modified_asce": "",
+            "modified_desc": "",
+            "name_asce": "",
+            "name_desc": "",
+            "size_asce": "",
+            "size_desc": ""
         }
     },
     "PluginView": {
@@ -224,5 +241,16 @@
         "decky_updates": "Aktualizace Decky",
         "patch_notes_desc": "Poznámky k verzi",
         "no_patch_notes_desc": "žádné poznámky pro tuto verzi"
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": ""
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "",
+            "unknown": ""
+        }
     }
 }

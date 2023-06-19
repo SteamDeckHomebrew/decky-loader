@@ -2,7 +2,8 @@
     "SettingsDeveloperIndex": {
         "react_devtools": {
             "ip_label": "IP",
-            "label": "Aktivizo React DevTools"
+            "label": "Aktivizo React DevTools",
+            "desc": ""
         },
         "third_party_plugins": {
             "button_zip": "Kërko",
@@ -13,23 +14,56 @@
             "label_zip": "Instalo Shtes Nga ZIP"
         },
         "toast_zip": {
-            "title": "Decky"
-        }
+            "title": "Decky",
+            "body": ""
+        },
+        "cef_console": {
+            "button": "",
+            "desc": "",
+            "label": ""
+        },
+        "valve_internal": {
+            "desc1": "",
+            "desc2": "",
+            "label": ""
+        },
+        "header": ""
     },
     "BranchSelect": {
         "update_channel": {
             "stable": "Fiksuar",
-            "label": "Kanali Përditësimet"
+            "label": "Kanali Përditësimet",
+            "prerelease": "",
+            "testing": ""
         }
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Përdore këtë folder"
+            "select": "Përdore këtë folder",
+            "label": "",
+            "show_more": ""
+        },
+        "files": {
+            "all_files": "",
+            "file_type": "",
+            "show_hidden": ""
+        },
+        "filter": {
+            "created_asce": "",
+            "created_desc": "",
+            "modified_asce": "",
+            "modified_desc": "",
+            "name_asce": "",
+            "name_desc": "",
+            "size_asce": "",
+            "size_desc": ""
         }
     },
     "PluginCard": {
         "plugin_install": "Instalo",
-        "plugin_version_label": "Versioni Shteses"
+        "plugin_version_label": "Versioni Shteses",
+        "plugin_full_access": "",
+        "plugin_no_desc": ""
     },
     "PluginInstallModal": {
         "install": {
@@ -48,7 +82,8 @@
         "update": {
             "button_processing": "Përditësohet",
             "desc": "Je i sigurt a don ta përditësojsh {{artifact}} {{version}}?",
-            "title": "Përditëso {{artifact}}"
+            "title": "Përditëso {{artifact}}",
+            "button_idle": ""
         }
     },
     "PluginLoader": {
@@ -59,37 +94,64 @@
             "desc": "Je i sigurt që don ta çinstalojsh {{name}}?"
         },
         "error": "Gabim",
-        "plugin_error_uninstall": "Ju lutem shko nga <0></0> në Decky menu nëse don ta çinstalojsh këtë shtese."
+        "plugin_error_uninstall": "Ju lutem shko nga <0></0> në Decky menu nëse don ta çinstalojsh këtë shtese.",
+        "plugin_load_error": {
+            "message": "",
+            "toast": ""
+        },
+        "decky_update_available": ""
     },
     "PluginListIndex": {
         "no_plugin": "Nuk ka shtesa të instaluar!",
-        "uninstall": "Çinstalo"
+        "uninstall": "Çinstalo",
+        "plugin_actions": "",
+        "reinstall": "",
+        "reload": "",
+        "update_to": "",
+        "update_all_one": "",
+        "update_all_other": "",
+        "show": "",
+        "hide": ""
     },
     "SettingsGeneralIndex": {
         "other": {
             "header": "Të Tjera"
         },
         "about": {
-            "decky_version": "Versioni Decky"
+            "decky_version": "Versioni Decky",
+            "header": ""
         },
         "updates": {
             "header": "Përmirësimet"
+        },
+        "beta": {
+            "header": ""
+        },
+        "developer_mode": {
+            "desc": "",
+            "label": ""
         }
     },
     "SettingsIndex": {
         "developer_title": "Zhvillues",
         "general_title": "Gjeneral",
-        "navbar_settings": "Cilësimet Decky"
+        "navbar_settings": "Cilësimet Decky",
+        "plugins_title": ""
     },
     "Store": {
         "store_sort": {
-            "label": "Rendit"
+            "label": "Rendit",
+            "label_def": ""
         },
         "store_tabs": {
-            "title": "Kërko"
+            "title": "Kërko",
+            "about": "",
+            "alph_asce": "",
+            "alph_desc": ""
         },
         "store_contrib": {
-            "label": "Kontributi"
+            "label": "Kontributi",
+            "desc": ""
         },
         "store_filter": {
             "label": "Filtro",
@@ -99,17 +161,87 @@
             "label": "Kërko"
         },
         "store_source": {
-            "label": "Kodin Burimor"
-        }
+            "label": "Kodin Burimor",
+            "desc": ""
+        },
+        "store_testing_cta": ""
     },
     "StoreSelect": {
         "store_channel": {
-            "label": "Kanali Dyqanit"
+            "label": "Kanali Dyqanit",
+            "custom": "",
+            "default": "",
+            "testing": ""
+        },
+        "custom_store": {
+            "url_label": "",
+            "label": ""
         }
     },
     "Updater": {
         "updates": {
-            "cur_version": "Versioni e tanishëme: {{ver}}"
+            "cur_version": "Versioni e tanishëme: {{ver}}",
+            "checking": "",
+            "label": "",
+            "lat_version": "",
+            "updating": "",
+            "check_button": "",
+            "install_button": "",
+            "reloading": ""
+        },
+        "decky_updates": "",
+        "no_patch_notes_desc": "",
+        "patch_notes_desc": ""
+    },
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "mixed_one": "",
+            "mixed_other": "",
+            "update_one": "",
+            "update_other": "",
+            "reinstall_one": "",
+            "reinstall_other": "",
+            "install_one": "",
+            "install_other": ""
+        },
+        "ok_button": {
+            "idle": "",
+            "loading": ""
+        },
+        "confirm": "",
+        "description": {
+            "install": "",
+            "update": "",
+            "reinstall": ""
+        }
+    },
+    "Developer": {
+        "disabling": "",
+        "enabling": "",
+        "5secreload": ""
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "desc": "",
+            "label": ""
+        }
+    },
+    "PluginListLabel": {
+        "hidden": ""
+    },
+    "PluginView": {
+        "hidden_one": "",
+        "hidden_other": ""
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": ""
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "",
+            "unknown": ""
         }
     }
 }

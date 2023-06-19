@@ -1,9 +1,4 @@
 {
-    "FilePickerIndex": {
-        "filter": {
-            "name_desc": ""
-        }
-    },
     "PluginInstallModal": {
         "reinstall": {
             "title": ""
@@ -35,16 +30,8 @@
         "plugin_update_few": "",
         "plugin_update_many": ""
     },
-    "SettingsDeveloperIndex": {
-        "third_party_plugins": {
-            "header": ""
-        }
-    },
     "SettingsIndex": {
         "general_title": ""
-    },
-    "Store": {
-        "store_testing_cta": ""
     },
     "PluginView": {
         "hidden_one": "",

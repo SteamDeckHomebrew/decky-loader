@@ -214,5 +214,10 @@
             "label": "Canál de la tienda",
             "testing": "Pruebas"
         }
+    },
+    "PluginView": {
+        "hidden_one": "",
+        "hidden_many": "",
+        "hidden_other": ""
     }
 }

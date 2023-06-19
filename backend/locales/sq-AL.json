@@ -59,11 +59,15 @@
             "desc": "Je i sigurt që don ta çinstalojsh {{name}}?"
         },
         "error": "Gabim",
-        "plugin_error_uninstall": "Ju lutem shko nga <0></0> në Decky menu nëse don ta çinstalojsh këtë shtese."
+        "plugin_error_uninstall": "Ju lutem shko nga <0></0> në Decky menu nëse don ta çinstalojsh këtë shtese.",
+        "plugin_update_one": "",
+        "plugin_update_other": ""
     },
     "PluginListIndex": {
         "no_plugin": "Nuk ka shtesa të instaluar!",
-        "uninstall": "Çinstalo"
+        "uninstall": "Çinstalo",
+        "update_all_one": "",
+        "update_all_other": ""
     },
     "SettingsGeneralIndex": {
         "other": {
@@ -111,5 +115,21 @@
         "updates": {
             "cur_version": "Versioni e tanishëme: {{ver}}"
         }
+    },
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "mixed_one": "",
+            "mixed_other": "",
+            "update_one": "",
+            "update_other": "",
+            "reinstall_one": "",
+            "reinstall_other": "",
+            "install_one": "",
+            "install_other": ""
+        }
+    },
+    "PluginView": {
+        "hidden_one": "",
+        "hidden_other": ""
     }
 }

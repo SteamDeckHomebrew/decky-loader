@@ -1,1 +1,33 @@
-{}
+{
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "update_one": "",
+            "update_few": "",
+            "update_many": "",
+            "reinstall_one": "",
+            "reinstall_few": "",
+            "reinstall_many": "",
+            "install_one": "",
+            "install_few": "",
+            "install_many": "",
+            "mixed_one": "",
+            "mixed_few": "",
+            "mixed_many": ""
+        }
+    },
+    "PluginListIndex": {
+        "update_all_one": "",
+        "update_all_few": "",
+        "update_all_many": ""
+    },
+    "PluginLoader": {
+        "plugin_update_one": "",
+        "plugin_update_few": "",
+        "plugin_update_many": ""
+    },
+    "PluginView": {
+        "hidden_one": "",
+        "hidden_few": "",
+        "hidden_many": ""
+    }
+}

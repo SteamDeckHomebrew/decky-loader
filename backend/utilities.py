@@ -1,16 +1,21 @@
 import uuid
 import os
 from json.decoder import JSONDecodeError
+from os.path import splitext
+import re
 from traceback import format_exc
+from stat import FILE_ATTRIBUTE_HIDDEN
 
 from asyncio import sleep, start_server, gather, open_connection
 from aiohttp import ClientSession, web
 
 from logging import getLogger
 from injector import inject_to_tab, get_gamepadui_tab, close_old_tabs, get_tab
+from pathlib import Path
+from localplatform import ON_WINDOWS
 import helpers
 import subprocess
-from localplatform import service_stop, service_start
+from localplatform import service_stop, service_start, get_home_path, get_username
 
 class Utilities:
     def __init__(self, context) -> None:
@@ -33,7 +38,8 @@ class Utilities:
             "filepicker_ls": self.filepicker_ls,
             "disable_rdt": self.disable_rdt,
             "enable_rdt": self.enable_rdt,
-            "get_tab_id": self.get_tab_id
+            "get_tab_id": self.get_tab_id,
+            "get_user_info": self.get_user_info,
         }
 
         self.logger = getLogger("Utilities")
@@ -189,31 +195,82 @@ class Utilities:
         await service_stop(helpers.REMOTE_DEBUGGER_UNIT)
         return True
 
-    async def filepicker_ls(self, path, include_files=True):
-        # def sorter(file): # Modification time
-        #     if os.path.isdir(os.path.join(path, file)) or os.path.isfile(os.path.join(path, file)):
-        #         return os.path.getmtime(os.path.join(path, file))
-        #     return 0
-        # file_names = sorted(os.listdir(path), key=sorter, reverse=True) # TODO provide more sort options
-        file_names = sorted(os.listdir(path)) # Alphabetical
+    async def filepicker_ls(self, 
+                            path : str | None = None, 
+                            include_files: bool = True,
+                            include_folders: bool = True,
+                            include_ext: list[str] = [],
+                            include_hidden: bool = False,
+                            order_by: str = "name_asc",
+                            filter_for: str | None = None,
+                            page: int = 1,
+                            max: int = 1000):
+        
+        if path == None:
+            path = get_home_path()
 
-        files = []
+        path = Path(path).resolve()
 
-        for file in file_names:
-            full_path = os.path.join(path, file)
-            is_dir = os.path.isdir(full_path)
+        files, folders = [], []
 
-            if is_dir or include_files:
-                files.append({
-                    "isdir": is_dir,
-                    "name": file,
-                    "realpath": os.path.realpath(full_path)
-                })
+        #Resolving all files/folders in the requested directory
+        for file in path.iterdir():
+            if file.exists():
+                filest = file.stat()
+                is_hidden = file.name.startswith('.')
+                if ON_WINDOWS and not is_hidden:
+                    is_hidden = bool(filest.st_file_attributes & FILE_ATTRIBUTE_HIDDEN)
+                if include_folders and file.is_dir():
+                    if (is_hidden and include_hidden) or not is_hidden:
+                        folders.append({"file": file, "filest": filest, "is_dir": True})
+                elif include_files:
+                    # Handle requested extensions if present
+                    if 'all_files' in include_ext or splitext(file.name)[1].lstrip('.') in include_ext:
+                        if (is_hidden and include_hidden) or not is_hidden:
+                            files.append({"file": file, "filest": filest, "is_dir": False})
+        # Filter logic
+        if filter_for is not None:
+            try:
+                if re.compile(filter_for):
+                    files = filter(lambda file: re.search(filter_for, file.name) != None, files)
+            except re.error:
+                files = filter(lambda file: file.name.find(filter_for) != -1, files)
+        
+        # Ordering logic
+        ord_arg = order_by.split("_")
+        ord = ord_arg[0]
+        rev = True if ord_arg[1] == "asc" else False
+        match ord:
+            case 'name':
+                files.sort(key=lambda x: x['file'].name.casefold(), reverse = rev)
+                folders.sort(key=lambda x: x['file'].name.casefold(), reverse = rev)
+            case 'modified':
+                files.sort(key=lambda x: x['filest'].st_mtime, reverse = not rev)
+                folders.sort(key=lambda x: x['filest'].st_mtime, reverse = not rev)
+            case 'created':
+                files.sort(key=lambda x: x['filest'].st_ctime, reverse = not rev)
+                folders.sort(key=lambda x: x['filest'].st_ctime, reverse = not rev)
+            case 'size':
+                files.sort(key=lambda x: x['filest'].st_size, reverse = not rev)
+                # Folders has no file size, order by name instead
+                folders.sort(key=lambda x: x['file'].name.casefold())
+        
+        #Constructing the final file list, folders first
+        all =   [{
+                    "isdir": x['is_dir'],
+                    "name": str(x['file'].name),
+                    "realpath": str(x['file']),
+                    "size": x['filest'].st_size,
+                    "modified": x['filest'].st_mtime,
+                    "created": x['filest'].st_ctime,
+                } for x in folders + files ]
 
         return {
-            "realpath": os.path.realpath(path),
-            "files": files
+            "realpath": str(path),
+            "files": all[(page-1)*max:(page)*max],
+            "total": len(all),
         }
+        
 
     # Based on https://stackoverflow.com/a/46422554/13174603
     def start_rdt_proxy(self, ip, port):
@@ -289,5 +346,11 @@ class Utilities:
         await tab.evaluate_js("location.reload();", False, True, False)
         self.logger.info("React DevTools disabled")
 
+    async def get_user_info(self) -> dict:
+        return {
+            "username": get_username(),
+            "path": get_home_path()
+        }
+    
     async def get_tab_id(self, name):
         return (await get_tab(name)).id

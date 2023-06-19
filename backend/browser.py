@@ -129,7 +129,7 @@ class PluginBrowser:
             logger.warning(f"Plugin {name} not installed, skipping uninstallation")
         except Exception as e:
             logger.error(f"Plugin {name} in {plugin_dir} was not uninstalled")
-            logger.error(f"Error at %s", exc_info=e)
+            logger.error(f"Error at {str(e)}", exc_info=e)
         if self.loader.watcher:
             self.loader.watcher.disabled = False
 
@@ -239,10 +239,15 @@ class PluginBrowser:
             name (string): The name of the plugin
         """
         hidden_plugins = self.settings.getSetting("hiddenPlugins", [])
-        hidden_plugins.remove(name)
-        self.settings.setSetting("hiddenPlugins", hidden_plugins)
+        if name in hidden_plugins:
+            hidden_plugins.remove(name)
+            self.settings.setSetting("hiddenPlugins", hidden_plugins)
 
-        plugin_order = self.settings.getSetting("pluginOrder")
-        plugin_order.remove(name)
-        self.settings.setSetting("pluginOrder", plugin_order)
+
+        plugin_order = self.settings.getSetting("pluginOrder", [])
+
+        if name in plugin_order:
+            plugin_order.remove(name)
+            self.settings.setSetting("pluginOrder", plugin_order)
+            
         logger.debug("Removed any settings for plugin %s", name)

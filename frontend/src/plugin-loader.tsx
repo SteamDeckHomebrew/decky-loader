@@ -12,8 +12,9 @@ import {
 import { FC, lazy } from 'react';
 import { FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
-import { DeckyState, DeckyStateContextProvider, useDeckyState } from './components/DeckyState';
+import { DeckyState, DeckyStateContextProvider, UserInfo, useDeckyState } from './components/DeckyState';
 import LegacyPlugin from './components/LegacyPlugin';
+import { File } from './components/modals/filepicker';
 import { deinitFilepickerPatches, initFilepickerPatches } from './components/modals/filepicker/patches';
 import MultiplePluginsInstallModal from './components/modals/MultiplePluginsInstallModal';
 import PluginInstallModal from './components/modals/PluginInstallModal';
@@ -31,7 +32,7 @@ import TabsHook from './tabs-hook';
 import OldTabsHook from './tabs-hook.old';
 import Toaster from './toaster';
 import { VerInfo, callUpdaterMethod } from './updater';
-import { getSetting } from './utils/settings';
+import { getSetting, setSetting } from './utils/settings';
 import TranslationHelper, { TranslationClass } from './utils/TranslationHelper';
 
 const StorePage = lazy(() => import('./components/store/Store'));
@@ -99,7 +100,15 @@ class PluginLoader extends Logger {
 
     initFilepickerPatches();
 
+    this.getUserInfo();
+
     this.updateVersion();
+  }
+
+  public async getUserInfo() {
+    const userInfo = (await this.callServerMethod('get_user_info')).result as UserInfo;
+    setSetting('user_info.user_name', userInfo.username);
+    setSetting('user_info.user_home', userInfo.path);
   }
 
   public async updateVersion() {
@@ -268,6 +277,7 @@ class PluginLoader extends Logger {
         Authentication: window.deckyAuthToken,
       },
     });
+
     if (res.ok) {
       try {
         let plugin_export = await eval(await res.text());
@@ -352,7 +362,12 @@ class PluginLoader extends Logger {
   openFilePicker(
     startPath: string,
     includeFiles?: boolean,
-    regex?: RegExp,
+    filter?: RegExp | ((file: File) => boolean),
+    includeFolders?: boolean,
+    extensions?: string[],
+    showHiddenFiles?: boolean,
+    allowAllFiles?: boolean,
+    max?: number,
   ): Promise<{ path: string; realpath: string }> {
     return new Promise((resolve, reject) => {
       const Content = ({ closeModal }: { closeModal?: () => void }) => (
@@ -367,9 +382,14 @@ class PluginLoader extends Logger {
             <FilePicker
               startPath={startPath}
               includeFiles={includeFiles}
-              regex={regex}
+              includeFolders={includeFolders}
+              filter={filter}
+              validFileExtensions={extensions}
+              allowAllFiles={allowAllFiles}
+              defaultHidden={showHiddenFiles}
               onSubmit={resolve}
               closeModal={closeModal}
+              max={max}
             />
           </WithSuspense>
         </ModalRoot>

@@ -12,9 +12,37 @@
         "disabling": "Disabling React DevTools",
         "enabling": "Enabling React DevTools"
     },
+  "DropdownMultiselect": {
+    "button": {
+      "back": "Back"
+    }
+  },
+  "FilePickerError": {
+    "errors": {
+      "file_not_found": "The path specified is not valid. Please check it and reenter it correctly.",
+      "unknown": "An unknown error occurred. The raw error is: {{raw_error}}"
+    }
+  },
     "FilePickerIndex": {
-        "folder": {
-            "select": "Use this folder"
+    "files": {
+      "all_files": "All Files",
+      "file_type": "File Type",
+      "show_hidden": "Show Hidden Files"
+    },
+    "filter": {
+      "created_asce": "Created (Oldest)",
+      "created_desc": "Created (Newest)",
+      "modified_asce": "Modified (Oldest)",
+      "modified_desc": "Modified (Newest)",
+      "name_asce": "Z-A",
+      "name_desc": "A-Z",
+      "size_asce": "Size (Smallest)",
+      "size_desc": "Size (Largest)"
+    },
+      "folder": {
+      "label": "Folder",
+      "select": "Use this folder",
+      "show_more": "Show more files"
         }
     },
     "PluginView": {

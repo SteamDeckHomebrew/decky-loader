@@ -215,9 +215,9 @@
         }
     },
     "PluginView": {
-        "hidden_one": "1 плагін приховано з цього списку",
+        "hidden_one": "{{count}} плагін приховано з цього списку",
         "hidden_few": "{{count}} плагінів приховано з цього списку",
-        "hidden_many": ""
+        "hidden_many": "{{count}} плагінів приховано з цього списку"
     },
     "RemoteDebugging": {
         "remote_cef": {

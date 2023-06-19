@@ -14,7 +14,24 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Використовувати цю папку"
+            "select": "Використовувати цю папку",
+            "label": "",
+            "show_more": ""
+        },
+        "files": {
+            "all_files": "",
+            "file_type": "",
+            "show_hidden": ""
+        },
+        "filter": {
+            "created_asce": "",
+            "created_desc": "",
+            "modified_asce": "",
+            "modified_desc": "",
+            "name_asce": "",
+            "name_desc": "",
+            "size_asce": "",
+            "size_desc": ""
         }
     },
     "PluginListLabel": {
@@ -223,6 +240,17 @@
         "remote_cef": {
             "desc": "Дозволити доступ до CEF-дебагера без аутентифікації для будь-кого у вашій мережі",
             "label": "Дозволити віддалений CEF-дебагінг"
+        }
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": ""
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "",
+            "unknown": ""
         }
     }
 }

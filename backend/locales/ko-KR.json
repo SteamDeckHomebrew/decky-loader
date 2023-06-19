@@ -14,7 +14,24 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "이 폴더 사용"
+            "select": "이 폴더 사용",
+            "label": "폴더",
+            "show_more": "더 많은 파일 표시"
+        },
+        "filter": {
+            "created_asce": "생성 순 (오래된 순)",
+            "modified_asce": "수정 날짜 (오래된 순)",
+            "created_desc": "생성 순 (최신 순)",
+            "name_asce": "Z-A",
+            "name_desc": "A-Z",
+            "size_asce": "크기 (작은순)",
+            "modified_desc": "수정일 (최신 순)",
+            "size_desc": "크기 (내림차순)"
+        },
+        "files": {
+            "all_files": "모든 파일",
+            "show_hidden": "숨김 파일 표시",
+            "file_type": "파일 형식"
         }
     },
     "PluginView": {
@@ -93,7 +110,7 @@
             "title": "{{name}} 설치 제거"
         },
         "plugin_update_other": "플러그인 {{count}}개를 업데이트 할 수 있습니다!",
-        "plugin_error_uninstall": "{{name}} 플러그인을 불러올 때 위와 같은 예외가 발생했습니다. 이는 보통 SteamUI 최신 버전에 맞는 플러그인 업데이트가 필요할 때 발생합니다. Decky 설정의 플러그인 항목에서 업데이트가 있는지 확인하거나 설치 제거를 시도 해 보세요."
+        "plugin_error_uninstall": "{{name}} 플러그인을 불러올 때 위와 같은 예외가 발생했습니다. 이는 보통 SteamUI 최신 버전에 맞는 플러그인 업데이트가 필요할 때 발생합니다. Decky 설정의 플러그인 탭에서 업데이트가 있는지 확인하거나 설치 제거를 시도 해 보세요."
     },
     "RemoteDebugging": {
         "remote_cef": {
@@ -209,6 +226,17 @@
             "lat_version": "최신 상태: {{ver}} 실행 중",
             "reloading": "다시 로드 중",
             "updating": "업데이트 중"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "설정한 경로가 올바르지 않습니다. 확인 후 정확하게 다시 입력해 주세요.",
+            "unknown": "알 수없는 오류가 발생했습니다. 발생한 오류: {{raw_error}}"
+        }
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "뒤로"
         }
     }
 }

@@ -71,7 +71,24 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Usar esta carpeta"
+            "select": "Usar esta carpeta",
+            "label": "",
+            "show_more": ""
+        },
+        "filter": {
+            "name_desc": "",
+            "size_asce": "",
+            "size_desc": "",
+            "created_asce": "",
+            "created_desc": "",
+            "modified_asce": "",
+            "modified_desc": "",
+            "name_asce": ""
+        },
+        "files": {
+            "all_files": "",
+            "file_type": "",
+            "show_hidden": ""
         }
     },
     "PluginListIndex": {
@@ -83,7 +100,9 @@
         "update_all_one": "Actualizar 1 plugin",
         "update_all_many": "Actualizar {{count}} plugins",
         "update_all_other": "Actualizar {{count}} plugins",
-        "update_to": "Actualizar a {{name}}"
+        "update_to": "Actualizar a {{name}}",
+        "show": "",
+        "hide": ""
     },
     "PluginLoader": {
         "error": "Error",
@@ -213,6 +232,25 @@
             "default": "Por defecto",
             "label": "Canál de la tienda",
             "testing": "Pruebas"
+        }
+    },
+    "PluginView": {
+        "hidden_one": "",
+        "hidden_many": "",
+        "hidden_other": ""
+    },
+    "PluginListLabel": {
+        "hidden": ""
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": ""
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "",
+            "unknown": ""
         }
     }
 }

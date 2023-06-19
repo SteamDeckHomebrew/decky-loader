@@ -1,9 +1,4 @@
 {
-    "PluginInstallModal": {
-        "reinstall": {
-            "title": ""
-        }
-    },
     "MultiplePluginsInstallModal": {
         "title": {
             "update_one": "",
@@ -29,9 +24,6 @@
         "plugin_update_one": "",
         "plugin_update_few": "",
         "plugin_update_many": ""
-    },
-    "SettingsIndex": {
-        "general_title": ""
     },
     "PluginView": {
         "hidden_one": "",

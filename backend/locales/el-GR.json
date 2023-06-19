@@ -21,7 +21,13 @@
             "desc1": "Ενεργοποιεί το μενού προγραμματιστή της Valve.",
             "desc2": "Μην αγγίξετε τίποτα σε αυτό το μενού εκτός και αν ξέρετε τι κάνει.",
             "label": "Ενεργοποιήση εσωτερικού μενού Valve"
-        }
+        },
+        "cef_console": {
+            "button": "",
+            "label": "",
+            "desc": ""
+        },
+        "header": ""
     },
     "BranchSelect": {
         "update_channel": {
@@ -69,7 +75,11 @@
         "reinstall": "Επανεγκατάσταση",
         "reload": "Επαναφόρτωση",
         "uninstall": "Απεγκατάσταση",
-        "update_to": "Ενημέρωση σε {{name}}"
+        "update_to": "Ενημέρωση σε {{name}}",
+        "show": "",
+        "hide": "",
+        "update_all_one": "",
+        "update_all_other": ""
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -174,7 +184,64 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Χρησιμοποιήστε αυτό το φάκελο"
+            "select": "Χρησιμοποιήστε αυτό το φάκελο",
+            "label": "",
+            "show_more": ""
+        },
+        "files": {
+            "all_files": "",
+            "file_type": "",
+            "show_hidden": ""
+        },
+        "filter": {
+            "created_asce": "",
+            "created_desc": "",
+            "modified_asce": "",
+            "modified_desc": "",
+            "name_asce": "",
+            "name_desc": "",
+            "size_asce": "",
+            "size_desc": ""
+        }
+    },
+    "PluginView": {
+        "hidden_one": "",
+        "hidden_other": ""
+    },
+    "PluginListLabel": {
+        "hidden": ""
+    },
+    "MultiplePluginsInstallModal": {
+        "ok_button": {
+            "idle": "",
+            "loading": ""
+        },
+        "confirm": "",
+        "description": {
+            "install": "",
+            "update": "",
+            "reinstall": ""
+        },
+        "title": {
+            "mixed_one": "",
+            "mixed_other": "",
+            "update_one": "",
+            "update_other": "",
+            "reinstall_one": "",
+            "reinstall_other": "",
+            "install_one": "",
+            "install_other": ""
+        }
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": ""
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "",
+            "unknown": ""
         }
     }
 }

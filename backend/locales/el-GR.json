@@ -23,9 +23,7 @@
             "label": "Ενεργοποιήση εσωτερικού μενού Valve"
         },
         "cef_console": {
-            "button": "",
-            "label": "",
-            "desc": ""
+            "label": ""
         },
         "header": ""
     },
@@ -76,7 +74,6 @@
         "reload": "Επαναφόρτωση",
         "uninstall": "Απεγκατάσταση",
         "update_to": "Ενημέρωση σε {{name}}",
-        "show": "",
         "hide": "",
         "update_all_one": "",
         "update_all_other": ""
@@ -187,42 +184,29 @@
     "FilePickerIndex": {
         "folder": {
             "select": "Χρησιμοποιήστε αυτό το φάκελο",
-            "label": "",
             "show_more": ""
         },
         "files": {
-            "all_files": "",
-            "file_type": "",
-            "show_hidden": ""
+            "file_type": ""
         },
         "filter": {
             "created_asce": "",
-            "created_desc": "",
             "modified_asce": "",
-            "modified_desc": "",
             "name_asce": "",
-            "name_desc": "",
-            "size_asce": "",
-            "size_desc": ""
+            "size_asce": ""
         }
     },
     "PluginView": {
         "hidden_one": "",
         "hidden_other": ""
     },
-    "PluginListLabel": {
-        "hidden": ""
-    },
     "MultiplePluginsInstallModal": {
         "ok_button": {
-            "idle": "",
-            "loading": ""
+            "idle": ""
         },
         "confirm": "",
         "description": {
-            "install": "",
-            "update": "",
-            "reinstall": ""
+            "update": ""
         },
         "title": {
             "mixed_one": "",
@@ -235,15 +219,9 @@
             "install_other": ""
         }
     },
-    "DropdownMultiselect": {
-        "button": {
-            "back": ""
-        }
-    },
     "FilePickerError": {
         "errors": {
-            "file_not_found": "",
-            "unknown": ""
+            "file_not_found": ""
         }
     }
 }

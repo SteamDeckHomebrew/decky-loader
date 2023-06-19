@@ -15,23 +15,16 @@
     "FilePickerIndex": {
         "folder": {
             "select": "使用这个文件夹",
-            "label": "",
             "show_more": ""
         },
         "files": {
-            "all_files": "",
-            "file_type": "",
-            "show_hidden": ""
+            "file_type": ""
         },
         "filter": {
             "created_asce": "",
-            "created_desc": "",
             "modified_asce": "",
-            "modified_desc": "",
             "name_asce": "",
-            "name_desc": "",
-            "size_asce": "",
-            "size_desc": ""
+            "size_asce": ""
         }
     },
     "PluginCard": {
@@ -228,15 +221,9 @@
     "PluginView": {
         "hidden_other": "此列表隐藏了 {{count}} 个插件"
     },
-    "DropdownMultiselect": {
-        "button": {
-            "back": ""
-        }
-    },
     "FilePickerError": {
         "errors": {
-            "file_not_found": "",
-            "unknown": ""
+            "file_not_found": ""
         }
     }
 }

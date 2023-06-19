@@ -2,8 +2,7 @@
     "SettingsDeveloperIndex": {
         "react_devtools": {
             "ip_label": "IP",
-            "label": "Aktivizo React DevTools",
-            "desc": ""
+            "label": "Aktivizo React DevTools"
         },
         "third_party_plugins": {
             "button_zip": "Kërko",
@@ -14,18 +13,14 @@
             "label_zip": "Instalo Shtes Nga ZIP"
         },
         "toast_zip": {
-            "title": "Decky",
-            "body": ""
+            "title": "Decky"
         },
         "cef_console": {
             "button": "",
-            "desc": "",
             "label": ""
         },
         "valve_internal": {
-            "desc1": "",
-            "desc2": "",
-            "label": ""
+            "desc2": ""
         },
         "header": ""
     },
@@ -33,36 +28,27 @@
         "update_channel": {
             "stable": "Fiksuar",
             "label": "Kanali Përditësimet",
-            "prerelease": "",
             "testing": ""
         }
     },
     "FilePickerIndex": {
         "folder": {
             "select": "Përdore këtë folder",
-            "label": "",
             "show_more": ""
         },
         "files": {
-            "all_files": "",
-            "file_type": "",
-            "show_hidden": ""
+            "file_type": ""
         },
         "filter": {
             "created_asce": "",
-            "created_desc": "",
             "modified_asce": "",
-            "modified_desc": "",
             "name_asce": "",
-            "name_desc": "",
-            "size_asce": "",
-            "size_desc": ""
+            "size_asce": ""
         }
     },
     "PluginCard": {
         "plugin_install": "Instalo",
         "plugin_version_label": "Versioni Shteses",
-        "plugin_full_access": "",
         "plugin_no_desc": ""
     },
     "PluginInstallModal": {
@@ -82,8 +68,7 @@
         "update": {
             "button_processing": "Përditësohet",
             "desc": "Je i sigurt a don ta përditësojsh {{artifact}} {{version}}?",
-            "title": "Përditëso {{artifact}}",
-            "button_idle": ""
+            "title": "Përditëso {{artifact}}"
         }
     },
     "PluginLoader": {
@@ -96,23 +81,18 @@
         "error": "Gabim",
         "plugin_error_uninstall": "Ju lutem shko nga <0></0> në Decky menu nëse don ta çinstalojsh këtë shtese.",
         "plugin_load_error": {
-            "message": "",
             "toast": ""
         },
-        "decky_update_available": "",
         "plugin_update_one": "",
         "plugin_update_other": ""
     },
     "PluginListIndex": {
         "no_plugin": "Nuk ka shtesa të instaluar!",
         "uninstall": "Çinstalo",
-        "plugin_actions": "",
         "reinstall": "",
-        "reload": "",
         "update_to": "",
         "update_all_one": "",
         "update_all_other": "",
-        "show": "",
         "hide": ""
     },
     "SettingsGeneralIndex": {
@@ -120,40 +100,30 @@
             "header": "Të Tjera"
         },
         "about": {
-            "decky_version": "Versioni Decky",
-            "header": ""
+            "decky_version": "Versioni Decky"
         },
         "updates": {
             "header": "Përmirësimet"
         },
-        "beta": {
-            "header": ""
-        },
         "developer_mode": {
-            "desc": "",
-            "label": ""
+            "desc": ""
         }
     },
     "SettingsIndex": {
         "developer_title": "Zhvillues",
         "general_title": "Gjeneral",
-        "navbar_settings": "Cilësimet Decky",
-        "plugins_title": ""
+        "navbar_settings": "Cilësimet Decky"
     },
     "Store": {
         "store_sort": {
-            "label": "Rendit",
-            "label_def": ""
+            "label": "Rendit"
         },
         "store_tabs": {
             "title": "Kërko",
-            "about": "",
-            "alph_asce": "",
-            "alph_desc": ""
+            "alph_asce": ""
         },
         "store_contrib": {
-            "label": "Kontributi",
-            "desc": ""
+            "label": "Kontributi"
         },
         "store_filter": {
             "label": "Filtro",
@@ -163,36 +133,27 @@
             "label": "Kërko"
         },
         "store_source": {
-            "label": "Kodin Burimor",
-            "desc": ""
+            "label": "Kodin Burimor"
         },
         "store_testing_cta": ""
     },
     "StoreSelect": {
         "store_channel": {
             "label": "Kanali Dyqanit",
-            "custom": "",
-            "default": "",
-            "testing": ""
+            "default": ""
         },
         "custom_store": {
-            "url_label": "",
-            "label": ""
+            "url_label": ""
         }
     },
     "Updater": {
         "updates": {
             "cur_version": "Versioni e tanishëme: {{ver}}",
-            "checking": "",
             "label": "",
-            "lat_version": "",
             "updating": "",
-            "check_button": "",
-            "install_button": "",
-            "reloading": ""
+            "install_button": ""
         },
         "decky_updates": "",
-        "no_patch_notes_desc": "",
         "patch_notes_desc": ""
     },
     "MultiplePluginsInstallModal": {
@@ -207,25 +168,19 @@
             "install_other": ""
         },
         "ok_button": {
-            "idle": "",
             "loading": ""
         },
-        "confirm": "",
         "description": {
             "install": "",
-            "update": "",
             "reinstall": ""
         }
     },
     "Developer": {
-        "disabling": "",
-        "enabling": "",
-        "5secreload": ""
+        "enabling": ""
     },
     "RemoteDebugging": {
         "remote_cef": {
-            "desc": "",
-            "label": ""
+            "desc": ""
         }
     },
     "PluginListLabel": {
@@ -235,15 +190,9 @@
         "hidden_one": "",
         "hidden_other": ""
     },
-    "DropdownMultiselect": {
-        "button": {
-            "back": ""
-        }
-    },
     "FilePickerError": {
         "errors": {
-            "file_not_found": "",
-            "unknown": ""
+            "file_not_found": ""
         }
     }
 }

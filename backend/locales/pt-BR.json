@@ -15,23 +15,16 @@
     "FilePickerIndex": {
         "folder": {
             "select": "Use esta pasta",
-            "label": "",
             "show_more": ""
         },
         "files": {
-            "all_files": "",
-            "file_type": "",
-            "show_hidden": ""
+            "file_type": ""
         },
         "filter": {
             "created_asce": "",
-            "created_desc": "",
             "modified_asce": "",
-            "modified_desc": "",
             "name_asce": "",
-            "name_desc": "",
-            "size_asce": "",
-            "size_desc": ""
+            "size_asce": ""
         }
     },
     "PluginListLabel": {
@@ -242,15 +235,9 @@
         "hidden_many": "{{count}} plugins estão ocultos nesta lista",
         "hidden_other": "{{count}} plugins estão ocultos nesta lista"
     },
-    "DropdownMultiselect": {
-        "button": {
-            "back": ""
-        }
-    },
     "FilePickerError": {
         "errors": {
-            "file_not_found": "",
-            "unknown": ""
+            "file_not_found": ""
         }
     }
 }

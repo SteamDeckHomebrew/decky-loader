@@ -22,10 +22,8 @@
             "desc2": "Ne touchez à rien dans ce menu à moins que vous ne sachiez ce qu'il fait.",
             "label": "Activer Valve Internal"
         },
-        "header": "",
         "cef_console": {
             "button": "",
-            "label": "",
             "desc": ""
         }
     },
@@ -72,23 +70,16 @@
     "FilePickerIndex": {
         "folder": {
             "select": "Utiliser ce dossier",
-            "label": "",
             "show_more": ""
         },
         "filter": {
-            "created_asce": "",
             "created_desc": "",
-            "modified_asce": "",
             "modified_desc": "",
-            "name_asce": "",
             "name_desc": "",
-            "size_asce": "",
             "size_desc": ""
         },
         "files": {
-            "all_files": "",
-            "file_type": "",
-            "show_hidden": ""
+            "file_type": ""
         }
     },
     "PluginCard": {
@@ -128,7 +119,6 @@
         "update_all_one": "",
         "update_all_many": "",
         "update_all_other": "",
-        "show": "",
         "hide": ""
     },
     "PluginLoader": {
@@ -213,9 +203,6 @@
         "hidden_many": "",
         "hidden_other": ""
     },
-    "PluginListLabel": {
-        "hidden": ""
-    },
     "DropdownMultiselect": {
         "button": {
             "back": ""
@@ -223,7 +210,6 @@
     },
     "FilePickerError": {
         "errors": {
-            "file_not_found": "",
             "unknown": ""
         }
     },
@@ -243,13 +229,10 @@
             "update_other": ""
         },
         "ok_button": {
-            "idle": "",
             "loading": ""
         },
-        "confirm": "",
         "description": {
             "install": "",
-            "update": "",
             "reinstall": ""
         }
     }

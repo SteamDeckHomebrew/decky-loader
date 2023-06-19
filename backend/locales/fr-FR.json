@@ -23,7 +23,6 @@
             "label": "Activer Valve Internal"
         },
         "cef_console": {
-            "button": "",
             "desc": ""
         }
     },
@@ -69,14 +68,11 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Utiliser ce dossier",
-            "show_more": ""
+            "select": "Utiliser ce dossier"
         },
         "filter": {
             "created_desc": "",
-            "modified_desc": "",
-            "name_desc": "",
-            "size_desc": ""
+            "name_desc": ""
         },
         "files": {
             "file_type": ""
@@ -118,8 +114,7 @@
         "no_plugin": "Aucun plugin installé !",
         "update_all_one": "",
         "update_all_many": "",
-        "update_all_other": "",
-        "hide": ""
+        "update_all_other": ""
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -203,11 +198,6 @@
         "hidden_many": "",
         "hidden_other": ""
     },
-    "DropdownMultiselect": {
-        "button": {
-            "back": ""
-        }
-    },
     "FilePickerError": {
         "errors": {
             "unknown": ""
@@ -228,12 +218,8 @@
             "update_many": "",
             "update_other": ""
         },
-        "ok_button": {
-            "loading": ""
-        },
         "description": {
-            "install": "",
-            "reinstall": ""
+            "install": ""
         }
     }
 }

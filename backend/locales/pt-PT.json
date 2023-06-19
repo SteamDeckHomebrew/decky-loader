@@ -1,16 +1,13 @@
 {
     "FilePickerIndex": {
         "folder": {
-            "select": "Usar esta pasta",
-            "show_more": ""
+            "select": "Usar esta pasta"
         },
         "files": {
             "file_type": ""
         },
         "filter": {
-            "created_asce": "",
             "modified_asce": "",
-            "name_asce": "",
             "size_asce": ""
         }
     },
@@ -233,11 +230,6 @@
             "updating": "Actualização em curso",
             "reloading": "Recarregar",
             "install_button": "Instalar actualização"
-        }
-    },
-    "FilePickerError": {
-        "errors": {
-            "file_not_found": ""
         }
     }
 }

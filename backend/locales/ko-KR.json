@@ -14,16 +14,13 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "이 폴더 사용",
-            "show_more": ""
+            "select": "이 폴더 사용"
         },
         "files": {
             "file_type": ""
         },
         "filter": {
-            "created_asce": "",
             "modified_asce": "",
-            "name_asce": "",
             "size_asce": ""
         }
     },
@@ -219,11 +216,6 @@
             "lat_version": "최신 상태: {{ver}} 실행 중",
             "reloading": "다시 로드 중",
             "updating": "업데이트 중"
-        }
-    },
-    "FilePickerError": {
-        "errors": {
-            "file_not_found": ""
         }
     }
 }

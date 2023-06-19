@@ -71,14 +71,11 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Usar esta carpeta",
-            "show_more": ""
+            "select": "Usar esta carpeta"
         },
         "filter": {
             "size_asce": "",
-            "created_asce": "",
-            "modified_asce": "",
-            "name_asce": ""
+            "modified_asce": ""
         },
         "files": {
             "file_type": ""
@@ -93,8 +90,7 @@
         "update_all_one": "Actualizar 1 plugin",
         "update_all_many": "Actualizar {{count}} plugins",
         "update_all_other": "Actualizar {{count}} plugins",
-        "update_to": "Actualizar a {{name}}",
-        "hide": ""
+        "update_to": "Actualizar a {{name}}"
     },
     "PluginLoader": {
         "error": "Error",
@@ -230,11 +226,6 @@
         "hidden_one": "",
         "hidden_many": "",
         "hidden_other": ""
-    },
-    "DropdownMultiselect": {
-        "button": {
-            "back": ""
-        }
     },
     "FilePickerError": {
         "errors": {

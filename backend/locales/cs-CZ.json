@@ -14,16 +14,13 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Použít tuto složku",
-            "show_more": ""
+            "select": "Použít tuto složku"
         },
         "files": {
             "file_type": ""
         },
         "filter": {
-            "created_asce": "",
             "modified_asce": "",
-            "name_asce": "",
             "size_asce": ""
         }
     },
@@ -234,10 +231,5 @@
         "decky_updates": "Aktualizace Decky",
         "patch_notes_desc": "Poznámky k verzi",
         "no_patch_notes_desc": "žádné poznámky pro tuto verzi"
-    },
-    "FilePickerError": {
-        "errors": {
-            "file_not_found": ""
-        }
     }
 }

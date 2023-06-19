@@ -1,41 +1,30 @@
 {
     "BranchSelect": {
         "update_channel": {
-            "prerelease": "",
             "testing": ""
         }
     },
     "FilePickerIndex": {
-        "folder": {
-            "label": ""
-        },
         "files": {
-            "all_files": "",
-            "show_hidden": ""
+            "all_files": ""
         },
         "filter": {
             "created_desc": "",
-            "modified_desc": "",
-            "name_desc": "",
-            "size_desc": ""
+            "name_desc": ""
         }
     },
     "PluginCard": {
-        "plugin_full_access": "",
-        "plugin_no_desc": ""
+        "plugin_full_access": ""
     },
     "PluginInstallModal": {
         "install": {
-            "button_processing": "",
-            "title": ""
+            "button_processing": ""
         },
         "no_hash": "",
         "reinstall": {
-            "button_processing": "",
             "title": ""
         },
         "update": {
-            "button_processing": "",
             "title": ""
         }
     },
@@ -54,12 +43,8 @@
             "mixed_few": "",
             "mixed_many": ""
         },
-        "ok_button": {
-            "loading": ""
-        },
         "description": {
-            "install": "",
-            "reinstall": ""
+            "install": ""
         }
     },
     "PluginListIndex": {
@@ -67,22 +52,16 @@
         "update_all_one": "",
         "update_all_few": "",
         "update_all_many": "",
-        "reload": "",
-        "update_to": "",
-        "hide": ""
+        "update_to": ""
     },
     "PluginLoader": {
         "decky_update_available": "",
-        "plugin_error_uninstall": "",
         "plugin_load_error": {
             "toast": ""
         },
         "plugin_update_one": "",
         "plugin_update_few": "",
-        "plugin_update_many": "",
-        "plugin_uninstall": {
-            "desc": ""
-        }
+        "plugin_update_many": ""
     },
     "RemoteDebugging": {
         "remote_cef": {
@@ -91,91 +70,58 @@
     },
     "SettingsDeveloperIndex": {
         "cef_console": {
-            "button": "",
             "label": ""
-        },
-        "react_devtools": {
-            "ip_label": ""
         },
         "third_party_plugins": {
             "button_install": "",
-            "label_zip": "",
             "header": ""
         },
-        "toast_zip": {
-            "body": ""
-        },
         "valve_internal": {
-            "desc2": "",
-            "desc1": ""
+            "desc2": ""
         }
     },
     "SettingsGeneralIndex": {
         "about": {
             "decky_version": ""
         },
-        "beta": {
-            "header": ""
-        },
         "developer_mode": {
             "label": ""
-        },
-        "other": {
-            "header": ""
         }
     },
     "SettingsIndex": {
-        "general_title": "",
-        "plugins_title": ""
+        "general_title": ""
     },
     "Store": {
         "store_contrib": {
             "label": ""
         },
-        "store_filter": {
-            "label_def": ""
-        },
         "store_sort": {
             "label": ""
         },
-        "store_source": {
-            "desc": ""
-        },
         "store_tabs": {
-            "about": "",
-            "alph_desc": ""
+            "about": ""
         },
         "store_testing_cta": ""
     },
     "Updater": {
         "updates": {
-            "checking": "",
             "install_button": "",
-            "lat_version": "",
             "updating": ""
-        },
-        "no_patch_notes_desc": ""
+        }
     },
     "Developer": {
-        "5secreload": "",
-        "enabling": ""
+        "5secreload": ""
     },
     "PluginView": {
         "hidden_one": "",
         "hidden_few": "",
         "hidden_many": ""
     },
-    "FilePickerError": {
-        "errors": {
-            "file_not_found": ""
-        }
-    },
     "StoreSelect": {
         "custom_store": {
             "label": ""
         },
         "store_channel": {
-            "custom": "",
             "label": ""
         }
     }

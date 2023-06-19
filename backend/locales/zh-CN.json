@@ -14,16 +14,13 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "使用这个文件夹",
-            "show_more": ""
+            "select": "使用这个文件夹"
         },
         "files": {
             "file_type": ""
         },
         "filter": {
-            "created_asce": "",
             "modified_asce": "",
-            "name_asce": "",
             "size_asce": ""
         }
     },
@@ -220,10 +217,5 @@
     },
     "PluginView": {
         "hidden_other": "此列表隐藏了 {{count}} 个插件"
-    },
-    "FilePickerError": {
-        "errors": {
-            "file_not_found": ""
-        }
     }
 }

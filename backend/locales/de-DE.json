@@ -14,16 +14,13 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Diesen Ordner verwenden",
-            "show_more": ""
+            "select": "Diesen Ordner verwenden"
         },
         "files": {
             "file_type": ""
         },
         "filter": {
-            "created_asce": "",
             "modified_asce": "",
-            "name_asce": "",
             "size_asce": ""
         }
     },
@@ -110,9 +107,6 @@
             "desc2": "Fasse in diesem Menü nichts an, es sei denn, du weißt was du tust.",
             "label": "Aktiviere Valve-internes Menü",
             "desc1": "Aktiviert das Valve-interne Entwickler Menü."
-        },
-        "cef_console": {
-            "desc": ""
         }
     },
     "SettingsGeneralIndex": {
@@ -200,9 +194,6 @@
         "hidden_other": ""
     },
     "MultiplePluginsInstallModal": {
-        "ok_button": {
-            "idle": ""
-        },
         "title": {
             "install_one": "",
             "install_other": "",
@@ -214,13 +205,7 @@
             "reinstall_other": ""
         },
         "description": {
-            "install": "",
             "reinstall": ""
-        }
-    },
-    "FilePickerError": {
-        "errors": {
-            "file_not_found": ""
         }
     }
 }

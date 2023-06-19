@@ -14,16 +14,13 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "使用此資料夾",
-            "show_more": ""
+            "select": "使用此資料夾"
         },
         "files": {
             "file_type": ""
         },
         "filter": {
-            "created_asce": "",
             "modified_asce": "",
-            "name_asce": "",
             "size_asce": ""
         }
     },
@@ -219,11 +216,6 @@
             "install": "安裝 {{name}} {{version}}",
             "update": "更新 {{name}} 到 {{version}}",
             "reinstall": "重新安裝 {{name}} {{version}}"
-        }
-    },
-    "FilePickerError": {
-        "errors": {
-            "file_not_found": ""
         }
     }
 }

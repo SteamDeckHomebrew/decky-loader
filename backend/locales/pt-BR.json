@@ -14,16 +14,13 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Use esta pasta",
-            "show_more": ""
+            "select": "Use esta pasta"
         },
         "files": {
             "file_type": ""
         },
         "filter": {
-            "created_asce": "",
             "modified_asce": "",
-            "name_asce": "",
             "size_asce": ""
         }
     },
@@ -234,10 +231,5 @@
         "hidden_one": "1 plugin está oculto nesta lista",
         "hidden_many": "{{count}} plugins estão ocultos nesta lista",
         "hidden_other": "{{count}} plugins estão ocultos nesta lista"
-    },
-    "FilePickerError": {
-        "errors": {
-            "file_not_found": ""
-        }
     }
 }

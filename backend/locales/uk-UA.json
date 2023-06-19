@@ -14,16 +14,13 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Використовувати цю папку",
-            "show_more": ""
+            "select": "Використовувати цю папку"
         },
         "files": {
             "file_type": ""
         },
         "filter": {
-            "created_asce": "",
             "modified_asce": "",
-            "name_asce": "",
             "size_asce": ""
         }
     },
@@ -233,11 +230,6 @@
         "remote_cef": {
             "desc": "Дозволити доступ до CEF-дебагера без аутентифікації для будь-кого у вашій мережі",
             "label": "Дозволити віддалений CEF-дебагінг"
-        }
-    },
-    "FilePickerError": {
-        "errors": {
-            "file_not_found": ""
         }
     }
 }

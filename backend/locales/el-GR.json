@@ -22,9 +22,6 @@
             "desc2": "Μην αγγίξετε τίποτα σε αυτό το μενού εκτός και αν ξέρετε τι κάνει.",
             "label": "Ενεργοποιήση εσωτερικού μενού Valve"
         },
-        "cef_console": {
-            "label": ""
-        },
         "header": ""
     },
     "BranchSelect": {
@@ -74,7 +71,6 @@
         "reload": "Επαναφόρτωση",
         "uninstall": "Απεγκατάσταση",
         "update_to": "Ενημέρωση σε {{name}}",
-        "hide": "",
         "update_all_one": "",
         "update_all_other": ""
     },
@@ -183,16 +179,13 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Χρησιμοποιήστε αυτό το φάκελο",
-            "show_more": ""
+            "select": "Χρησιμοποιήστε αυτό το φάκελο"
         },
         "files": {
             "file_type": ""
         },
         "filter": {
-            "created_asce": "",
             "modified_asce": "",
-            "name_asce": "",
             "size_asce": ""
         }
     },
@@ -201,13 +194,7 @@
         "hidden_other": ""
     },
     "MultiplePluginsInstallModal": {
-        "ok_button": {
-            "idle": ""
-        },
         "confirm": "",
-        "description": {
-            "update": ""
-        },
         "title": {
             "mixed_one": "",
             "mixed_other": "",
@@ -217,11 +204,6 @@
             "reinstall_other": "",
             "install_one": "",
             "install_other": ""
-        }
-    },
-    "FilePickerError": {
-        "errors": {
-            "file_not_found": ""
         }
     }
 }

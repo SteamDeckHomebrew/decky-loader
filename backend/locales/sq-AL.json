@@ -14,8 +14,7 @@
         },
         "toast_zip": {
             "title": "Decky"
-        },
-        "header": ""
+        }
     },
     "BranchSelect": {
         "update_channel": {
@@ -26,9 +25,6 @@
     "FilePickerIndex": {
         "folder": {
             "select": "Përdore këtë folder"
-        },
-        "filter": {
-            "modified_asce": ""
         }
     },
     "PluginCard": {
@@ -118,8 +114,7 @@
     "Updater": {
         "updates": {
             "cur_version": "Versioni e tanishëme: {{ver}}"
-        },
-        "decky_updates": ""
+        }
     },
     "MultiplePluginsInstallModal": {
         "title": {
@@ -132,9 +127,6 @@
             "install_one": "",
             "install_other": ""
         }
-    },
-    "Developer": {
-        "enabling": ""
     },
     "PluginView": {
         "hidden_one": "",

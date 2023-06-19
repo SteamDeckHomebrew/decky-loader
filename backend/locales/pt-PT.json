@@ -2,9 +2,6 @@
     "FilePickerIndex": {
         "folder": {
             "select": "Usar esta pasta"
-        },
-        "filter": {
-            "modified_asce": ""
         }
     },
     "PluginView": {

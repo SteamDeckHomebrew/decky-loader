@@ -15,9 +15,6 @@
     "FilePickerIndex": {
         "folder": {
             "select": "使用这个文件夹"
-        },
-        "filter": {
-            "modified_asce": ""
         }
     },
     "PluginCard": {

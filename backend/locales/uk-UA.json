@@ -15,9 +15,6 @@
     "FilePickerIndex": {
         "folder": {
             "select": "Використовувати цю папку"
-        },
-        "filter": {
-            "modified_asce": ""
         }
     },
     "PluginListLabel": {

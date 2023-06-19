@@ -179,9 +179,6 @@
     "FilePickerIndex": {
         "folder": {
             "select": "Χρησιμοποιήστε αυτό το φάκελο"
-        },
-        "filter": {
-            "modified_asce": ""
         }
     },
     "PluginView": {

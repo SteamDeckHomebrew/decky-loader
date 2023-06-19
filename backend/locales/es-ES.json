@@ -72,9 +72,6 @@
     "FilePickerIndex": {
         "folder": {
             "select": "Usar esta carpeta"
-        },
-        "filter": {
-            "modified_asce": ""
         }
     },
     "PluginListIndex": {

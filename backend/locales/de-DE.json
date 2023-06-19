@@ -15,9 +15,6 @@
     "FilePickerIndex": {
         "folder": {
             "select": "Diesen Ordner verwenden"
-        },
-        "filter": {
-            "modified_asce": ""
         }
     },
     "PluginCard": {

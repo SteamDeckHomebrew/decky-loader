@@ -1,16 +1,10 @@
 {
     "FilePickerIndex": {
-        "files": {
-            "all_files": ""
-        },
         "filter": {
             "name_desc": ""
         }
     },
     "PluginInstallModal": {
-        "install": {
-            "button_processing": ""
-        },
         "reinstall": {
             "title": ""
         }
@@ -32,52 +26,29 @@
         }
     },
     "PluginListIndex": {
-        "plugin_actions": "",
         "update_all_one": "",
         "update_all_few": "",
         "update_all_many": ""
     },
     "PluginLoader": {
-        "decky_update_available": "",
         "plugin_update_one": "",
         "plugin_update_few": "",
         "plugin_update_many": ""
     },
     "SettingsDeveloperIndex": {
-        "cef_console": {
-            "label": ""
-        },
         "third_party_plugins": {
             "header": ""
-        }
-    },
-    "SettingsGeneralIndex": {
-        "about": {
-            "decky_version": ""
         }
     },
     "SettingsIndex": {
         "general_title": ""
     },
     "Store": {
-        "store_sort": {
-            "label": ""
-        },
         "store_testing_cta": ""
-    },
-    "Updater": {
-        "updates": {
-            "updating": ""
-        }
     },
     "PluginView": {
         "hidden_one": "",
         "hidden_few": "",
         "hidden_many": ""
-    },
-    "StoreSelect": {
-        "store_channel": {
-            "label": ""
-        }
     }
 }

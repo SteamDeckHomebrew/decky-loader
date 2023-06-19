@@ -15,9 +15,6 @@
     "FilePickerIndex": {
         "folder": {
             "select": "使用此資料夾"
-        },
-        "filter": {
-            "modified_asce": ""
         }
     },
     "PluginCard": {

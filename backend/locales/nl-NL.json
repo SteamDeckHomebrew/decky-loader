@@ -1,35 +1,15 @@
 {
-    "FilePickerIndex": {
-        "filter": {
-            "modified_asce": ""
-        }
-    },
     "PluginInstallModal": {
         "install": {
             "button_processing": ""
         }
     },
-    "MultiplePluginsInstallModal": {
-        "ok_button": {
-            "idle": ""
-        }
-    },
     "PluginLoader": {
         "decky_update_available": ""
-    },
-    "SettingsDeveloperIndex": {
-        "react_devtools": {
-            "ip_label": ""
-        }
     },
     "SettingsGeneralIndex": {
         "developer_mode": {
             "desc": ""
-        }
-    },
-    "Store": {
-        "store_source": {
-            "label": ""
         }
     },
     "Updater": {

@@ -1,16 +1,6 @@
 {
-    "PluginInstallModal": {
-        "install": {
-            "button_processing": ""
-        }
-    },
     "PluginLoader": {
         "decky_update_available": ""
-    },
-    "SettingsGeneralIndex": {
-        "developer_mode": {
-            "desc": ""
-        }
     },
     "Updater": {
         "updates": {

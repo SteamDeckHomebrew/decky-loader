@@ -14,7 +14,24 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "使用这个文件夹"
+            "select": "使用这个文件夹",
+            "label": "文件夹",
+            "show_more": "显示更多文件"
+        },
+        "filter": {
+            "created_asce": "创建日期（最旧）",
+            "created_desc": "创建日期（最新）",
+            "modified_asce": "修改日期（最旧）",
+            "modified_desc": "修改日期（最新）",
+            "name_asce": "字母降序",
+            "name_desc": "字母升序",
+            "size_asce": "大小（最小）",
+            "size_desc": "大小（最大）"
+        },
+        "files": {
+            "all_files": "全部文件",
+            "file_type": "文件类型",
+            "show_hidden": "显示隐藏文件"
         }
     },
     "PluginCard": {
@@ -210,5 +227,16 @@
     },
     "PluginView": {
         "hidden_other": "此列表隐藏了 {{count}} 个插件"
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "返回"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "指定路径无效。请检查并输入正确的路径。",
+            "unknown": "发生了一个为止错误。原始错误为：{{raw_error}}"
+        }
     }
 }

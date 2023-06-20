@@ -1,7 +1,4 @@
 {
-    "PluginLoader": {
-        "decky_update_available": ""
-    },
     "Updater": {
         "updates": {
             "checking": ""

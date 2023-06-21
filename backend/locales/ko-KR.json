@@ -19,13 +19,13 @@
             "show_more": "더 많은 파일 표시"
         },
         "filter": {
-            "created_asce": "생성 순 (오래된 순)",
-            "modified_asce": "수정 날짜 (오래된 순)",
-            "created_desc": "생성 순 (최신 순)",
+            "created_asce": "만든 날짜 (오름차순)",
+            "modified_asce": "수정한 날짜 (오름차순)",
+            "created_desc": "만든 날짜 (내림차 순)",
             "name_asce": "Z-A",
             "name_desc": "A-Z",
-            "size_asce": "크기 (작은순)",
-            "modified_desc": "수정일 (최신 순)",
+            "size_asce": "크기 (오름차순)",
+            "modified_desc": "수정한 날짜 (내림차순)",
             "size_desc": "크기 (내림차순)"
         },
         "files": {
@@ -230,8 +230,8 @@
     },
     "FilePickerError": {
         "errors": {
-            "file_not_found": "설정한 경로가 올바르지 않습니다. 확인 후 정확하게 다시 입력해 주세요.",
-            "unknown": "알 수없는 오류가 발생했습니다. 발생한 오류: {{raw_error}}"
+            "file_not_found": "지정된 경로가 잘못되었습니다. 확인 후에 다시 입력해 주세요.",
+            "unknown": "알 수 없는 오류가 발생했습니다. Raw 오류: {{raw_error}}"
         }
     },
     "DropdownMultiselect": {

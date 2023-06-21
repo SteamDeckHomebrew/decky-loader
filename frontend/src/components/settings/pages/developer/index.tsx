@@ -27,7 +27,7 @@ const installFromZip = async () => {
     logger.error('The default path has not been found!');
     return;
   }
-  window.DeckyPluginLoader.openFilePicker(path, true, undefined, true, ['zip', 'rar'], false, true).then((val) => {
+  window.DeckyPluginLoader.openFilePicker(path, true, undefined, true, ['zip'], false, true).then((val) => {
     const url = `file://${val.path}`;
     console.log(`Installing plugin locally from ${url}`);
     installFromURL(url);

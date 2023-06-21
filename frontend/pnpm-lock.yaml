@@ -12,8 +12,8 @@ dependencies:
     specifier: ^10.0.7
     version: 10.0.7
   i18next:
-    specifier: ^23.1.0
-    version: 23.1.0
+    specifier: ^23.2.1
+    version: 23.2.1
   i18next-http-backend:
     specifier: ^2.2.1
     version: 2.2.1
@@ -22,7 +22,7 @@ dependencies:
     version: 1.3.0(react-dom@16.14.0)(react@16.14.0)
   react-i18next:
     specifier: ^12.3.1
-    version: 12.3.1(i18next@23.1.0)(react-dom@16.14.0)(react@16.14.0)
+    version: 12.3.1(i18next@23.2.1)(react-dom@16.14.0)(react@16.14.0)
   react-icons:
     specifier: ^4.9.0
     version: 4.9.0(react@16.14.0)
@@ -1108,8 +1108,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001504
-      electron-to-chromium: 1.4.433
+      caniuse-lite: 1.0.30001506
+      electron-to-chromium: 1.4.435
       node-releases: 2.0.12
       update-browserslist-db: 1.0.11(browserslist@4.21.9)
     dev: true
@@ -1161,8 +1161,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /caniuse-lite@1.0.30001504:
-    resolution: {integrity: sha512-5uo7eoOp2mKbWyfMXnGO9rJWOGU8duvzEiYITW+wivukL7yHH4gX9yuRaobu6El4jPxo6jKZfG+N6fB621GD/Q==}
+  /caniuse-lite@1.0.30001506:
+    resolution: {integrity: sha512-6XNEcpygZMCKaufIcgpQNZNf00GEqc7VQON+9Rd0K1bMYo8xhMZRAo5zpbnbMNizi4YNgIDAFrdykWsvY3H4Hw==}
     dev: true
 
   /ccount@2.0.1:
@@ -1518,8 +1518,8 @@ packages:
       stream-shift: 1.0.1
     dev: true
 
-  /electron-to-chromium@1.4.433:
-    resolution: {integrity: sha512-MGO1k0w1RgrfdbLVwmXcDhHHuxCn2qRgR7dYsJvWFKDttvYPx6FNzCGG0c/fBBvzK2LDh3UV7Tt9awnHnvAAUQ==}
+  /electron-to-chromium@1.4.435:
+    resolution: {integrity: sha512-B0CBWVFhvoQCW/XtjRzgrmqcgVWg6RXOEM/dK59+wFV93BFGR6AeNKc4OyhM+T3IhJaOOG8o/V+33Y2mwJWtzw==}
     dev: true
 
   /emoji-regex@8.0.0:
@@ -2008,8 +2008,8 @@ packages:
       '@babel/runtime': 7.22.5
     dev: true
 
-  /i18next@23.1.0:
-    resolution: {integrity: sha512-CObNPofJpw7zGVGYLd58mtMZUF+NZQl9czYMihbJkStjX+Nlu9kC3PHiC6uE1niP3qxP/3ocLXIBc2zqbAb1dg==}
+  /i18next@23.2.1:
+    resolution: {integrity: sha512-BAWWqXYM1OtgA2hkGvnXWTs9wg0g3qx0SoiJoVTiL5Ia2EDZK0Veyuq4m2YtZeSs9D/9cwrNFxCKJi2/gdjZ4A==}
     dependencies:
       '@babel/runtime': 7.22.5
     dev: false
@@ -3144,7 +3144,7 @@ packages:
       react-dom: 16.14.0(react@16.14.0)
     dev: false
 
-  /react-i18next@12.3.1(i18next@23.1.0)(react-dom@16.14.0)(react@16.14.0):
+  /react-i18next@12.3.1(i18next@23.2.1)(react-dom@16.14.0)(react@16.14.0):
     resolution: {integrity: sha512-5v8E2XjZDFzK7K87eSwC7AJcAkcLt5xYZ4+yTPDAW1i7C93oOY1dnr4BaQM7un4Hm+GmghuiPvevWwlca5PwDA==}
     peerDependencies:
       i18next: '>= 19.0.0'
@@ -3159,7 +3159,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.22.5
       html-parse-stringify: 3.0.1
-      i18next: 23.1.0
+      i18next: 23.2.1
       react: 16.14.0
       react-dom: 16.14.0(react@16.14.0)
     dev: false
@@ -3637,12 +3637,12 @@ packages:
       jest-worker: 27.5.1
       schema-utils: 3.3.0
       serialize-javascript: 6.0.1
-      terser: 5.18.0
+      terser: 5.18.1
       webpack: 5.87.0
     dev: true
 
-  /terser@5.18.0:
-    resolution: {integrity: sha512-pdL757Ig5a0I+owA42l6tIuEycRuM7FPY4n62h44mRLRfnOxJkkOHd6i89dOpwZlpF6JXBwaAHF6yWzFrt+QyA==}
+  /terser@5.18.1:
+    resolution: {integrity: sha512-j1n0Ao919h/Ai5r43VAnfV/7azUYW43GPxK7qSATzrsERfW7+y2QW9Cp9ufnRF5CQUWbnLSo7UJokSWCqg4tsQ==}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:

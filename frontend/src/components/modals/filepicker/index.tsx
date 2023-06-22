@@ -34,6 +34,7 @@ export interface FilePickerProps {
   allowAllFiles?: boolean;
   defaultHidden?: boolean;
   max?: number;
+  fileSelType?: FileSelectionType;
   onSubmit: (val: { path: string; realpath: string }) => void;
   closeModal?: () => void;
 }
@@ -46,6 +47,11 @@ export interface File {
   size: number;
   modified: number;
   created: number;
+}
+
+export enum FileSelectionType {
+  FILE,
+  FOLDER,
 }
 
 interface FileListing {
@@ -120,13 +126,21 @@ const iconStyles = {
 
 const FilePicker: FunctionComponent<FilePickerProps> = ({
   startPath,
+  //What are we allowing to show in the file picker
   includeFiles = true,
-  filter = undefined,
   includeFolders = true,
+  //Parameter for specifying a specific filename match
+  filter = undefined,
+  //Filter for specific extensions as an array
   validFileExtensions = undefined,
+  //Allow to override the fixed extension above
   allowAllFiles = true,
+  //If we need to show hidden files and folders (both Win and Linux should work)
   defaultHidden = false, // false by default makes sense for most users
+  //How much files per page to show, default 1000
   max = 1000,
+  //Which picking option to select by default
+  fileSelType = FileSelectionType.FOLDER,
   onSubmit,
   closeModal,
 }) => {
@@ -327,7 +341,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
           </Focusable>
         </DialogControlsSection>
       </DialogBody>
-      {!loading && error === FileErrorTypes.None && !includeFiles && (
+      {!loading && error === FileErrorTypes.None && (
         <DialogFooter>
           <DialogButton
             className="Primary"
@@ -337,7 +351,9 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
               closeModal?.();
             }}
           >
-            {t('FilePickerIndex.folder.select')}
+            {fileSelType === FileSelectionType.FILE
+              ? t('FilePickerIndex.file.select')
+              : t('FilePickerIndex.folder.select')}
           </DialogButton>
         </DialogFooter>
       )}

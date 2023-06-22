@@ -14,7 +14,7 @@ import { FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
 import { DeckyState, DeckyStateContextProvider, UserInfo, useDeckyState } from './components/DeckyState';
 import LegacyPlugin from './components/LegacyPlugin';
-import { File } from './components/modals/filepicker';
+import { File, FileSelectionType } from './components/modals/filepicker';
 import { deinitFilepickerPatches, initFilepickerPatches } from './components/modals/filepicker/patches';
 import MultiplePluginsInstallModal from './components/modals/MultiplePluginsInstallModal';
 import PluginInstallModal from './components/modals/PluginInstallModal';
@@ -361,13 +361,46 @@ class PluginLoader extends Logger {
 
   openFilePicker(
     startPath: string,
+    selectFiles?: boolean,
+    regex?: RegExp,
+  ): Promise<{ path: string; realpath: string }> {
+    if (selectFiles) {
+      return this.openFilePickerV2(
+        startPath,
+        true,
+        true,
+        regex,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        FileSelectionType.FILE,
+      );
+    } else {
+      return this.openFilePickerV2(
+        startPath,
+        false,
+        true,
+        regex,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        FileSelectionType.FOLDER,
+      );
+    }
+  }
+
+  openFilePickerV2(
+    startPath: string,
     includeFiles?: boolean,
-    filter?: RegExp | ((file: File) => boolean),
     includeFolders?: boolean,
+    filter?: RegExp | ((file: File) => boolean),
     extensions?: string[],
     showHiddenFiles?: boolean,
     allowAllFiles?: boolean,
     max?: number,
+    select?: FileSelectionType,
   ): Promise<{ path: string; realpath: string }> {
     return new Promise((resolve, reject) => {
       const Content = ({ closeModal }: { closeModal?: () => void }) => (
@@ -389,6 +422,7 @@ class PluginLoader extends Logger {
               defaultHidden={showHiddenFiles}
               onSubmit={resolve}
               closeModal={closeModal}
+              fileSelType={select}
               max={max}
             />
           </WithSuspense>
@@ -404,6 +438,7 @@ class PluginLoader extends Logger {
       toaster: this.toaster,
       callServerMethod: this.callServerMethod,
       openFilePicker: this.openFilePicker,
+      openFilePickerV2: this.openFilePickerV2,
       async callPluginMethod(methodName: string, args = {}) {
         const response = await fetch(`http://127.0.0.1:1337/plugins/${pluginName}/methods/${methodName}`, {
           method: 'POST',

@@ -14,7 +14,27 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Use esta pasta"
+            "select": "Use esta pasta",
+            "label": "Pasta",
+            "show_more": "Mostrar mais arquivos"
+        },
+        "files": {
+            "show_hidden": "Mostrar Arquivos Ocultos",
+            "all_files": "Todos os arquivos",
+            "file_type": "Formato de arquivo"
+        },
+        "filter": {
+            "created_asce": "Criado (Mais antigo)",
+            "created_desc": "Criado (Mais recente)",
+            "modified_asce": "Alterado (Mais antigo)",
+            "name_asce": "Z-A",
+            "name_desc": "A-Z",
+            "size_asce": "Tamanho (Menor)",
+            "size_desc": "Tamanho (Maior)",
+            "modified_desc": "Alterado (Mais recente)"
+        },
+        "file": {
+            "select": "Selecione este arquivo"
         }
     },
     "PluginListLabel": {
@@ -49,7 +69,7 @@
     },
     "MultiplePluginsInstallModal": {
         "title": {
-            "mixed_one": "Modificar 1 plugin",
+            "mixed_one": "Modificar {{count}} plugin",
             "mixed_many": "Modificar {{count}} plugins",
             "mixed_other": "Modificar {{count}} plugins",
             "update_one": "Atualizar 1 plugin",
@@ -182,7 +202,7 @@
             "label_def": "Último atualizado (Mais recente)"
         },
         "store_source": {
-            "desc": "Todos os codigo fonte dos plugins estão disponíveis no repositório SteamDeckHomebrew/decky-plugin-database no GitHub.",
+            "desc": "Todos os códigos fonte dos plugins estão disponíveis no repositório SteamDeckHomebrew/decky-plugin-database no GitHub.",
             "label": "Código Fonte"
         },
         "store_tabs": {
@@ -224,5 +244,16 @@
         "hidden_one": "1 plugin está oculto nesta lista",
         "hidden_many": "{{count}} plugins estão ocultos nesta lista",
         "hidden_other": "{{count}} plugins estão ocultos nesta lista"
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "Voltar"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "O caminho especificado não é válido. Por favor, confira e reinsira corretamente.",
+            "unknown": "Ocorreu um erro desconhecido. O erro completo é: {{raw_error}}"
+        }
     }
 }

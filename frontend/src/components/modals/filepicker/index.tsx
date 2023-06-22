@@ -52,7 +52,6 @@ export interface File {
 export enum FileSelectionType {
   FILE,
   FOLDER,
-  NONE,
 }
 
 interface FileListing {
@@ -141,7 +140,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
   //How much files per page to show, default 1000
   max = 1000,
   //Which picking option to select by default
-  fileSelType = FileSelectionType.NONE,
+  fileSelType = FileSelectionType.FOLDER,
   onSubmit,
   closeModal,
 }) => {
@@ -342,7 +341,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
           </Focusable>
         </DialogControlsSection>
       </DialogBody>
-      {!loading && error === FileErrorTypes.None && fileSelType !== FileSelectionType.NONE && (
+      {!loading && error === FileErrorTypes.None && (
         <DialogFooter>
           <DialogButton
             className="Primary"

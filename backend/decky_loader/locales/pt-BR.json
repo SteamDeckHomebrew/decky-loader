@@ -105,7 +105,8 @@
         "update_all_many": "Atualizar {{count}} plugins",
         "update_all_other": "Atualizar {{count}} plugins",
         "hide": "Acesso Rápido: Ocultar",
-        "freeze": "Congelar updates"
+        "freeze": "Congelar updates",
+        "unfreeze": ""
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -183,7 +184,8 @@
     "SettingsIndex": {
         "developer_title": "Desenvolvedor",
         "general_title": "Geral",
-        "plugins_title": "Plugins"
+        "plugins_title": "Plugins",
+        "testing_title": ""
     },
     "Store": {
         "store_contrib": {
@@ -209,7 +211,11 @@
             "about": "Sobre",
             "alph_desc": "Alfabética (A - Z)",
             "title": "Navegar",
-            "alph_asce": "Alfabética (Z - A)"
+            "alph_asce": "Alfabética (Z - A)",
+            "date_asce": "",
+            "date_desc": "",
+            "downloads_asce": "",
+            "downloads_desc": ""
         },
         "store_testing_cta": "Por favor, considere testar os novos plugins para ajudar o time do Decky Loader!",
         "store_testing_warning": {
@@ -264,5 +270,8 @@
     "TitleView": {
         "decky_store_desc": "Abrir Loja Decky",
         "settings_desc": "Abrir Definições Decky"
+    },
+    "Testing": {
+        "download": ""
     }
 }

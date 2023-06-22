@@ -327,7 +327,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
           </Focusable>
         </DialogControlsSection>
       </DialogBody>
-      {!loading && !error && !includeFiles && (
+      {!loading && error === FileErrorTypes.None && !includeFiles && (
         <DialogFooter>
           <DialogButton
             className="Primary"

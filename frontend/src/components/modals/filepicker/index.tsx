@@ -34,6 +34,7 @@ export interface FilePickerProps {
   allowAllFiles?: boolean;
   defaultHidden?: boolean;
   max?: number;
+  fileSelType?: FileSelectionType;
   onSubmit: (val: { path: string; realpath: string }) => void;
   closeModal?: () => void;
 }
@@ -46,6 +47,12 @@ export interface File {
   size: number;
   modified: number;
   created: number;
+}
+
+export enum FileSelectionType {
+  FILE,
+  FOLDER,
+  NONE,
 }
 
 interface FileListing {
@@ -127,6 +134,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
   allowAllFiles = true,
   defaultHidden = false, // false by default makes sense for most users
   max = 1000,
+  fileSelType = FileSelectionType.NONE,
   onSubmit,
   closeModal,
 }) => {
@@ -327,7 +335,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
           </Focusable>
         </DialogControlsSection>
       </DialogBody>
-      {!loading && error === FileErrorTypes.None && !includeFiles && (
+      {!loading && error === FileErrorTypes.None && fileSelType !== FileSelectionType.NONE && (
         <DialogFooter>
           <DialogButton
             className="Primary"
@@ -337,7 +345,9 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
               closeModal?.();
             }}
           >
-            {t('FilePickerIndex.folder.select')}
+            {fileSelType === FileSelectionType.FILE
+              ? t('FilePickerIndex.file.select')
+              : t('FilePickerIndex.folder.select')}
           </DialogButton>
         </DialogFooter>
       )}

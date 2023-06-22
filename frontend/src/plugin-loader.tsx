@@ -368,8 +368,8 @@ class PluginLoader extends Logger {
       return this.openFilePickerV2(
         startPath,
         true,
-        regex,
         true,
+        regex,
         undefined,
         undefined,
         undefined,
@@ -380,8 +380,8 @@ class PluginLoader extends Logger {
       return this.openFilePickerV2(
         startPath,
         false,
-        regex,
         true,
+        regex,
         undefined,
         undefined,
         undefined,
@@ -394,8 +394,8 @@ class PluginLoader extends Logger {
   openFilePickerV2(
     startPath: string,
     includeFiles?: boolean,
-    filter?: RegExp | ((file: File) => boolean),
     includeFolders?: boolean,
+    filter?: RegExp | ((file: File) => boolean),
     extensions?: string[],
     showHiddenFiles?: boolean,
     allowAllFiles?: boolean,

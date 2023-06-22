@@ -127,13 +127,20 @@ const iconStyles = {
 
 const FilePicker: FunctionComponent<FilePickerProps> = ({
   startPath,
+  //What are we allowing to show in the file picker
   includeFiles = true,
-  filter = undefined,
   includeFolders = true,
+  //Parameter for specifying a specific filename match
+  filter = undefined,
+  //Filter for specific extensions as an array
   validFileExtensions = undefined,
+  //Allow to override the fixed extension above
   allowAllFiles = true,
+  //If we need to show hidden files and folders (both Win and Linux should work)
   defaultHidden = false, // false by default makes sense for most users
+  //How much files per page to show, default 1000
   max = 1000,
+  //Which picking option to select by default
   fileSelType = FileSelectionType.NONE,
   onSubmit,
   closeModal,

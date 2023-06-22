@@ -438,6 +438,7 @@ class PluginLoader extends Logger {
       toaster: this.toaster,
       callServerMethod: this.callServerMethod,
       openFilePicker: this.openFilePicker,
+      openFilePickerV2: this.openFilePickerV2,
       async callPluginMethod(methodName: string, args = {}) {
         const response = await fetch(`http://127.0.0.1:1337/plugins/${pluginName}/methods/${methodName}`, {
           method: 'POST',

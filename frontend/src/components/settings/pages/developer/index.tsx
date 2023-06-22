@@ -17,6 +17,7 @@ import Logger from '../../../../logger';
 import { installFromURL } from '../../../../store';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 import { getSetting } from '../../../../utils/settings';
+import { FileSelectionType } from '../../../modals/filepicker';
 import RemoteDebuggingSettings from '../general/RemoteDebugging';
 
 const logger = new Logger('DeveloperIndex');
@@ -27,7 +28,16 @@ const installFromZip = async () => {
     logger.error('The default path has not been found!');
     return;
   }
-  window.DeckyPluginLoader.openFilePicker(path, true, undefined, true, ['zip'], false, false).then((val) => {
+  window.DeckyPluginLoader.openFilePickerV2(
+    path,
+    true,
+    true,
+    undefined,
+    ['zip'],
+    false,
+    false,
+    FileSelectionType.FILE,
+  ).then((val) => {
     const url = `file://${val.path}`;
     console.log(`Installing plugin locally from ${url}`);
     installFromURL(url);

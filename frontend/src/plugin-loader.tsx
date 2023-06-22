@@ -365,29 +365,9 @@ class PluginLoader extends Logger {
     regex?: RegExp,
   ): Promise<{ path: string; realpath: string }> {
     if (selectFiles) {
-      return this.openFilePickerV2(
-        FileSelectionType.FILE,
-        startPath,
-        true,
-        true,
-        regex,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-      );
+      return this.openFilePickerV2(FileSelectionType.FILE, startPath, true, true, regex);
     } else {
-      return this.openFilePickerV2(
-        FileSelectionType.FOLDER,
-        startPath,
-        false,
-        true,
-        regex,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-      );
+      return this.openFilePickerV2(FileSelectionType.FOLDER, startPath, false, true, regex);
     }
   }
 

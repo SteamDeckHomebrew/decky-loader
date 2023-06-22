@@ -115,7 +115,7 @@
     "update_to": "Aggiorna a {{name}}"
   },
   "PluginListLabel": {
-    "hidden": "Nascosti dal menu di accesso rapido"
+    "hidden": "Nascosto dal menu di accesso rapido"
   },
   "PluginLoader": {
     "decky_title": "Decky",

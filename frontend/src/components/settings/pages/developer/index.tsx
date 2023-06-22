@@ -29,6 +29,7 @@ const installFromZip = async () => {
     return;
   }
   window.DeckyPluginLoader.openFilePickerV2(
+    FileSelectionType.FILE,
     path,
     true,
     true,
@@ -36,7 +37,6 @@ const installFromZip = async () => {
     ['zip'],
     false,
     false,
-    FileSelectionType.FILE,
   ).then((val) => {
     const url = `file://${val.path}`;
     console.log(`Installing plugin locally from ${url}`);

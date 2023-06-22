@@ -366,6 +366,7 @@ class PluginLoader extends Logger {
   ): Promise<{ path: string; realpath: string }> {
     if (selectFiles) {
       return this.openFilePickerV2(
+        FileSelectionType.FILE,
         startPath,
         true,
         true,
@@ -374,10 +375,10 @@ class PluginLoader extends Logger {
         undefined,
         undefined,
         undefined,
-        FileSelectionType.FILE,
       );
     } else {
       return this.openFilePickerV2(
+        FileSelectionType.FOLDER,
         startPath,
         false,
         true,
@@ -386,12 +387,12 @@ class PluginLoader extends Logger {
         undefined,
         undefined,
         undefined,
-        FileSelectionType.FOLDER,
       );
     }
   }
 
   openFilePickerV2(
+    select: FileSelectionType,
     startPath: string,
     includeFiles?: boolean,
     includeFolders?: boolean,
@@ -400,7 +401,6 @@ class PluginLoader extends Logger {
     showHiddenFiles?: boolean,
     allowAllFiles?: boolean,
     max?: number,
-    select?: FileSelectionType,
   ): Promise<{ path: string; realpath: string }> {
     return new Promise((resolve, reject) => {
       const Content = ({ closeModal }: { closeModal?: () => void }) => (

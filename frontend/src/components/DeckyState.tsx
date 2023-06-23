@@ -15,6 +15,12 @@ interface PublicDeckyState {
   isLoaderUpdating: boolean;
   versionInfo: VerInfo | null;
   notificationSettings: NotificationSettings;
+  userInfo: UserInfo | null;
+}
+
+export interface UserInfo {
+  username: string;
+  path: string;
 }
 
 export class DeckyState {
@@ -27,6 +33,7 @@ export class DeckyState {
   private _isLoaderUpdating: boolean = false;
   private _versionInfo: VerInfo | null = null;
   private _notificationSettings = DEFAULT_NOTIFICATION_SETTINGS;
+  private _userInfo: UserInfo | null = null;
 
   public eventBus = new EventTarget();
 
@@ -41,6 +48,7 @@ export class DeckyState {
       isLoaderUpdating: this._isLoaderUpdating,
       versionInfo: this._versionInfo,
       notificationSettings: this._notificationSettings,
+      userInfo: this._userInfo,
     };
   }
 
@@ -91,6 +99,11 @@ export class DeckyState {
 
   setNotificationSettings(notificationSettings: NotificationSettings) {
     this._notificationSettings = notificationSettings;
+    this.notifyUpdate();
+  }
+
+  setUserInfo(userInfo: UserInfo) {
+    this._userInfo = userInfo;
     this.notifyUpdate();
   }
 

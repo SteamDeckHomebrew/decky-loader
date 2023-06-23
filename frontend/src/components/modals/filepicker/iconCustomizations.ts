@@ -38,7 +38,7 @@ const imageStyle = {
   color: '#d18f00',
 };
 
-const imageExtList = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'tif', 'tiff'];
+const imageExtList = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'tif', 'tiff', 'apng', 'tga'];
 
 styleDef.push([imageStyle, imageExtList]);
 

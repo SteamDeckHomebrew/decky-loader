@@ -101,12 +101,15 @@
         "reload": "Recharger",
         "uninstall": "Désinstaller",
         "update_to": "Mettre à jour vers {{name}}",
-        "no_plugin": "Aucun plugin installé !"
+        "no_plugin": "Aucun plugin installé !",
+        "update_all_one": "",
+        "update_all_many": "",
+        "update_all_other": ""
     },
     "PluginLoader": {
         "decky_title": "Decky",
         "error": "Erreur",
-        "plugin_error_uninstall": "Allez sur <0></0> dans le menu de Decky si vous voulez désinstaller ce plugin.",
+        "plugin_error_uninstall": "Allez sur {{name}} dans le menu de Decky si vous voulez désinstaller ce plugin.",
         "plugin_load_error": {
             "message": "Erreur lors du chargement du plugin {{name}}",
             "toast": "Erreur lors du chargement de {{name}}"
@@ -179,5 +182,26 @@
             "title": "Explorer"
         },
         "store_testing_cta": "Pensez à tester de nouveaux plugins pour aider l'équipe Decky Loader !"
+    },
+    "PluginView": {
+        "hidden_one": "",
+        "hidden_many": "",
+        "hidden_other": ""
+    },
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "reinstall_one": "",
+            "reinstall_many": "",
+            "reinstall_other": "",
+            "install_one": "",
+            "install_many": "",
+            "install_other": "",
+            "mixed_one": "",
+            "mixed_many": "",
+            "mixed_other": "",
+            "update_one": "",
+            "update_many": "",
+            "update_other": ""
+        }
     }
 }

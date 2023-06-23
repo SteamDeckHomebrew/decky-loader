@@ -50,7 +50,9 @@
         "reinstall": "Neu installieren",
         "reload": "Neu laden",
         "uninstall": "Deinstallieren",
-        "update_to": "Aktualisieren zu {{name}}"
+        "update_to": "Aktualisieren zu {{name}}",
+        "update_all_one": "",
+        "update_all_other": ""
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -179,5 +181,21 @@
             "updating": "Aktualisiere"
         },
         "no_patch_notes_desc": "Für diese Version gibt es keine Patchnotizen"
+    },
+    "PluginView": {
+        "hidden_one": "",
+        "hidden_other": ""
+    },
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "install_one": "",
+            "install_other": "",
+            "mixed_one": "",
+            "mixed_other": "",
+            "update_one": "",
+            "update_other": "",
+            "reinstall_one": "",
+            "reinstall_other": ""
+        }
     }
 }

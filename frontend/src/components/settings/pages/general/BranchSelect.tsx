@@ -21,7 +21,7 @@ const BranchSelect: FunctionComponent<{}> = () => {
     t('BranchSelect.update_channel.prerelease'),
     t('BranchSelect.update_channel.testing'),
   ];
-  const [selectedBranch, setSelectedBranch] = useSetting<UpdateBranch>('branch', UpdateBranch.Prerelease);
+  const [selectedBranch, setSelectedBranch] = useSetting<UpdateBranch>('branch', UpdateBranch.Stable);
 
   return (
     // Returns numerical values from 0 to 2 (with current branch setup as of 8/28/22)

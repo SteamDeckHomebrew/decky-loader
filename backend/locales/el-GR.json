@@ -69,7 +69,9 @@
         "reinstall": "Επανεγκατάσταση",
         "reload": "Επαναφόρτωση",
         "uninstall": "Απεγκατάσταση",
-        "update_to": "Ενημέρωση σε {{name}}"
+        "update_to": "Ενημέρωση σε {{name}}",
+        "update_all_one": "",
+        "update_all_other": ""
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -84,7 +86,9 @@
             "button": "Απεγκατάσταση",
             "desc": "Σίγουρα θέλετε να απεγκαταστήσετε το {{name}};",
             "title": "Απεγκατάσταση {{name}}"
-        }
+        },
+        "plugin_update_one": "",
+        "plugin_update_other": ""
     },
     "RemoteDebugging": {
         "remote_cef": {
@@ -175,6 +179,22 @@
     "FilePickerIndex": {
         "folder": {
             "select": "Χρησιμοποιήστε αυτό το φάκελο"
+        }
+    },
+    "PluginView": {
+        "hidden_one": "",
+        "hidden_other": ""
+    },
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "mixed_one": "",
+            "mixed_other": "",
+            "update_one": "",
+            "update_other": "",
+            "reinstall_one": "",
+            "reinstall_other": "",
+            "install_one": "",
+            "install_other": ""
         }
     }
 }

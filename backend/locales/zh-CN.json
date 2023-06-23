@@ -14,14 +14,31 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "使用这个文件夹"
+            "select": "使用这个文件夹",
+            "label": "文件夹",
+            "show_more": "显示更多文件"
+        },
+        "filter": {
+            "created_asce": "创建日期（最旧）",
+            "created_desc": "创建日期（最新）",
+            "modified_asce": "修改日期（最旧）",
+            "modified_desc": "修改日期（最新）",
+            "name_asce": "字母降序",
+            "name_desc": "字母升序",
+            "size_asce": "大小（最小）",
+            "size_desc": "大小（最大）"
+        },
+        "files": {
+            "all_files": "全部文件",
+            "file_type": "文件类型",
+            "show_hidden": "显示隐藏文件"
         }
     },
     "PluginCard": {
         "plugin_install": "安装",
         "plugin_no_desc": "无描述提供。",
         "plugin_version_label": "插件版本",
-        "plugin_full_access": "此插件可以完全访问你的 Steam Deck"
+        "plugin_full_access": "此插件可以完全访问你的 Steam Deck。"
     },
     "PluginInstallModal": {
         "install": {
@@ -42,7 +59,7 @@
             "desc": "你确定要更新 {{artifact}} {{version}} 吗?",
             "title": "更新 {{artifact}}"
         },
-        "no_hash": "此插件没有哈希校验值，你需要自行承担安装风险"
+        "no_hash": "此插件没有哈希校验值，你需要自行承担安装风险。"
     },
     "PluginListIndex": {
         "no_plugin": "没有安装插件！",
@@ -51,7 +68,9 @@
         "reload": "重新加载",
         "uninstall": "卸载",
         "update_to": "更新 {{name}}",
-        "update_all_other": "更新 {{count}} 个插件"
+        "update_all_other": "更新 {{count}} 个插件",
+        "show": "快速访问菜单：可见",
+        "hide": "快速访问菜单：不可见"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -79,7 +98,7 @@
         "react_devtools": {
             "ip_label": "IP",
             "label": "启用 React DevTools",
-            "desc": "允许连接到运行着 React DevTools 的计算机，更改此设置将重新加载Steam，请在启用前设置IP地址"
+            "desc": "允许连接到运行着 React DevTools 的计算机，更改此设置将重新加载Steam，请在启用前设置IP地址。"
         },
         "third_party_plugins": {
             "button_install": "安装",
@@ -91,11 +110,11 @@
         },
         "toast_zip": {
             "title": "Decky",
-            "body": "安装失败！只有 ZIP 格式的插件被支持"
+            "body": "安装失败！只有 ZIP 格式的插件被支持。"
         },
         "valve_internal": {
-            "desc1": "启用 Valve 内部开发者菜单",
-            "desc2": "除非你知道你在干什么，否则请不要修改此菜单中的任何内容",
+            "desc1": "启用 Valve 内部开发者菜单。",
+            "desc2": "除非你知道你在干什么，否则请不要修改此菜单中的任何内容。",
             "label": "启用 Valve 内部开发者"
         },
         "cef_console": {
@@ -115,7 +134,7 @@
         },
         "developer_mode": {
             "label": "开发者模式",
-            "desc": "启用 Decky 的开发者测试"
+            "desc": "启用 Decky 的开发者测试。"
         },
         "other": {
             "header": "其他"
@@ -133,7 +152,7 @@
     "Store": {
         "store_contrib": {
             "label": "贡献",
-            "desc": "如果你想要提交你的插件到 Decky 插件商店，请访问 GitHub 上的 SteamDeckHomebrew/decky-plugin-template 存储库，关于开发和分发的相关信息，请查看 README 文件"
+            "desc": "如果你想要提交你的插件到 Decky 插件商店，请访问 GitHub 上的 SteamDeckHomebrew/decky-plugin-template 存储库，关于开发和分发的相关信息，请查看 README 文件。"
         },
         "store_filter": {
             "label": "过滤器",
@@ -148,7 +167,7 @@
         },
         "store_source": {
             "label": "源代码",
-            "desc": "所有插件的源代码都可以在 GitHub 上的 SteamDeckHomebrew/decky-plugin-database 存储库中获得"
+            "desc": "所有插件的源代码都可以在 GitHub 上的 SteamDeckHomebrew/decky-plugin-database 存储库中获得。"
         },
         "store_tabs": {
             "about": "关于",
@@ -201,6 +220,23 @@
             "install": "安装 {{name}} {{version}}",
             "update": "更新 {{name}} to {{version}}",
             "reinstall": "重装 {{name}} {{version}}"
+        }
+    },
+    "PluginListLabel": {
+        "hidden": "快速访问菜单中不可见"
+    },
+    "PluginView": {
+        "hidden_other": "此列表隐藏了 {{count}} 个插件"
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "返回"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "指定路径无效。请检查并输入正确的路径。",
+            "unknown": "发生了一个为止错误。原始错误为：{{raw_error}}"
         }
     }
 }

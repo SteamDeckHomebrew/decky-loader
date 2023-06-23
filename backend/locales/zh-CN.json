@@ -32,6 +32,9 @@
             "all_files": "全部文件",
             "file_type": "文件类型",
             "show_hidden": "显示隐藏文件"
+        },
+        "file": {
+            "select": "选择此文件"
         }
     },
     "PluginCard": {
@@ -69,8 +72,8 @@
         "uninstall": "卸载",
         "update_to": "更新 {{name}}",
         "update_all_other": "更新 {{count}} 个插件",
-        "show": "快速访问菜单：可见",
-        "hide": "快速访问菜单：不可见"
+        "show": "在快速访问菜单中显示",
+        "hide": "在快速访问菜单中隐藏"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -223,7 +226,7 @@
         }
     },
     "PluginListLabel": {
-        "hidden": "快速访问菜单中不可见"
+        "hidden": "在快速访问菜单中已隐藏"
     },
     "PluginView": {
         "hidden_other": "此列表隐藏了 {{count}} 个插件"

@@ -1,5 +1,6 @@
 import { FC, createContext, useContext, useEffect, useState } from 'react';
 
+import { DEFAULT_NOTIFICATION_SETTINGS, NotificationSettings } from '../notification-service';
 import { Plugin } from '../plugin';
 import { PluginUpdateMapping } from '../store';
 import { VerInfo } from '../updater';
@@ -13,6 +14,7 @@ interface PublicDeckyState {
   hasLoaderUpdate?: boolean;
   isLoaderUpdating: boolean;
   versionInfo: VerInfo | null;
+  notificationSettings: NotificationSettings;
   userInfo: UserInfo | null;
 }
 
@@ -30,6 +32,7 @@ export class DeckyState {
   private _hasLoaderUpdate: boolean = false;
   private _isLoaderUpdating: boolean = false;
   private _versionInfo: VerInfo | null = null;
+  private _notificationSettings = DEFAULT_NOTIFICATION_SETTINGS;
   private _userInfo: UserInfo | null = null;
 
   public eventBus = new EventTarget();
@@ -44,6 +47,7 @@ export class DeckyState {
       hasLoaderUpdate: this._hasLoaderUpdate,
       isLoaderUpdating: this._isLoaderUpdating,
       versionInfo: this._versionInfo,
+      notificationSettings: this._notificationSettings,
       userInfo: this._userInfo,
     };
   }
@@ -90,6 +94,11 @@ export class DeckyState {
 
   setIsLoaderUpdating(isUpdating: boolean) {
     this._isLoaderUpdating = isUpdating;
+    this.notifyUpdate();
+  }
+
+  setNotificationSettings(notificationSettings: NotificationSettings) {
+    this._notificationSettings = notificationSettings;
     this.notifyUpdate();
   }
 

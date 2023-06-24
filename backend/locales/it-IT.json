@@ -194,6 +194,11 @@
     },
     "updates": {
       "header": "Aggiornamenti"
+    },
+    "notifications": {
+      "header": "Notifiche",
+      "decky_updates_label": "Aggiornamenti di Decky",
+      "plugin_updates_label": "Aggiornamenti dei plugins"
     }
   },
   "SettingsIndex": {

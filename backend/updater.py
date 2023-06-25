@@ -26,7 +26,9 @@ class Updater:
             "get_version": self.get_version,
             "do_update": self.do_update,
             "do_restart": self.do_restart,
-            "check_for_updates": self.check_for_updates
+            "check_for_updates": self.check_for_updates,
+            "get_testing_versions": self.get_testing_versions,
+            "download_testing_version": self.download_testing_version
         }
         self.remoteVer = None
         self.allRemoteVers = None
@@ -140,12 +142,41 @@ class Updater:
                 pass
             await sleep(60 * 60 * 6) # 6 hours
 
+    async def download_decky_binary(self, download_url):
+        download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
+        download_temp_filename = download_filename + ".new"
+
+        logger.debug("Downloading binary")
+        async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
+            total = int(res.headers.get('content-length', 0))
+            with open(path.join(getcwd(), download_temp_filename), "wb") as out:
+                progress = 0
+                raw = 0
+                async for c in res.content.iter_chunked(512):
+                    out.write(c)
+                    raw += len(c)
+                    new_progress = round((raw / total) * 100)
+                    if progress != new_progress:
+                        self.context.loop.create_task(tab.evaluate_js(f"window.DeckyUpdater.updateProgress({new_progress})", False, False, False))
+                        progress = new_progress
+
+        with open(path.join(getcwd(), ".loader.version"), "w", encoding="utf-8") as out:
+            out.write(version)
+
+        if ON_LINUX:
+            remove(path.join(getcwd(), download_filename))
+            shutil.move(path.join(getcwd(), download_temp_filename), path.join(getcwd(), download_filename))
+            chmod(path.join(getcwd(), download_filename), 777, False)
+
+        logger.info("Updated loader installation.")
+        await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)
+        await self.do_restart()
+        await tab.close_websocket()
+
     async def do_update(self):
         logger.debug("Starting update.")
         version = self.remoteVer["tag_name"]
         download_url = None
-        download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
-        download_temp_filename = download_filename + ".new"
 
         for x in self.remoteVer["assets"]:
             if x["name"] == download_filename:
@@ -187,32 +218,20 @@ class Updater:
                     os.mkdir(path.join(getcwd(), ".systemd"))
                 shutil.move(service_file_path, path.join(getcwd(), ".systemd")+"/plugin_loader.service")
             
-            logger.debug("Downloading binary")
-            async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
-                total = int(res.headers.get('content-length', 0))
-                with open(path.join(getcwd(), download_temp_filename), "wb") as out:
-                    progress = 0
-                    raw = 0
-                    async for c in res.content.iter_chunked(512):
-                        out.write(c)
-                        raw += len(c)
-                        new_progress = round((raw / total) * 100)
-                        if progress != new_progress:
-                            self.context.loop.create_task(tab.evaluate_js(f"window.DeckyUpdater.updateProgress({new_progress})", False, False, False))
-                            progress = new_progress
-
-            with open(path.join(getcwd(), ".loader.version"), "w", encoding="utf-8") as out:
-                out.write(version)
-
-            if ON_LINUX:
-                remove(path.join(getcwd(), download_filename))
-                shutil.move(path.join(getcwd(), download_temp_filename), path.join(getcwd(), download_filename))
-                chmod(path.join(getcwd(), download_filename), 777, False)
-
-            logger.info("Updated loader installation.")
-            await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)
-            await self.do_restart()
-            await tab.close_websocket()
+            download_decky_binary(self, download_url)
 
     async def do_restart(self):
         await service_restart("plugin_loader")
+
+    async def get_testing_versions(self):
+        # TODO: make this request data from a web endpoint
+        return [{'id':479,'name':"Add notification settings, which allows muting decky/plugin toast notifications", 'link':"https://github.com/SteamDeckHomebrew/decky-loader/pull/479"},
+      {'id':454,'name':"[Feature] File picker improvements TEST",'link':"https://github.com/SteamDeckHomebrew/decky-loader/pull/454"},
+      {'id':432,'name':"[RFC] Add info/docs page for each plugin",'link':"https://github.com/SteamDeckHomebrew/decky-loader/pull/432"},
+      {'id':365,'name':"Add linting to Python files in CI",'link':"https://github.com/SteamDeckHomebrew/decky-loader/pull/365"},
+      {'id':308,'name':"[DO NOT MERGE] Main menu and overlay patching API",'link':"https://github.com/SteamDeckHomebrew/decky-loader/pull/308"}]
+
+    async def download_testing_version(self, pr_id):
+        pass
+        # TODO: make this request data from a web endpoint
+        # self.download_decky_binary(url)

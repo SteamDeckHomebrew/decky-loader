@@ -234,7 +234,7 @@ class Updater:
       {'id':308,'name':"[DO NOT MERGE] Main menu and overlay patching API",'link':"https://github.com/SteamDeckHomebrew/decky-loader/pull/308"}]
 
     async def download_testing_version(self, pr_id):
-        pass
+        manager.setSetting('branch', 2)
         # TODO: make this request data from a web endpoint
-        # self.download_decky_binary(url)
-        # manager.setSetting('branch', 2)
+        # self.download_decky_binary(url, f"{pr_id}-PR")
+        await self.do_restart() # remove me once the updating is actually working

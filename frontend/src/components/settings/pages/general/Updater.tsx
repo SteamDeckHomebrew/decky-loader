@@ -20,11 +20,20 @@ import { useDeckyState } from '../../../DeckyState';
 import InlinePatchNotes from '../../../patchnotes/InlinePatchNotes';
 import WithSuspense from '../../../WithSuspense';
 
+import { useSetting } from '../../../../utils/hooks/useSetting';
+
 const MarkdownRenderer = lazy(() => import('../../../Markdown'));
+
+enum UpdateBranch {
+  Stable,
+  Prerelease,
+  Testing,
+}
 
 function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | null; closeModal?: () => {} }) {
   const SP = findSP();
   const { t } = useTranslation();
+  const [selectedBranch, _] = useSetting<UpdateBranch>('branch', UpdateBranch.Stable);
   return (
     <Focusable onCancelButton={closeModal}>
       <FocusRing>

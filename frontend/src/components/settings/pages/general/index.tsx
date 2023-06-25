@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 
 import { useDeckyState } from '../../../DeckyState';
 import BranchSelect from './BranchSelect';
-import NotificationSettings from './NotificationSettings';
 import StoreSelect from './StoreSelect';
 import UpdaterSettings from './Updater';
 
@@ -27,10 +26,6 @@ export default function GeneralSettings({
         <DialogControlsSectionHeader>{t('SettingsGeneralIndex.beta.header')}</DialogControlsSectionHeader>
         <BranchSelect />
         <StoreSelect />
-      </DialogControlsSection>
-      <DialogControlsSection>
-        <DialogControlsSectionHeader>{t('SettingsGeneralIndex.notifications.header')}</DialogControlsSectionHeader>
-        <NotificationSettings />
       </DialogControlsSection>
       <DialogControlsSection>
         <DialogControlsSectionHeader>{t('SettingsGeneralIndex.other.header')}</DialogControlsSectionHeader>

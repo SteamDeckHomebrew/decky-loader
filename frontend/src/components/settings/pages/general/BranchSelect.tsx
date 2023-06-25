@@ -11,7 +11,7 @@ const logger = new Logger('BranchSelect');
 enum UpdateBranch {
   Stable,
   Prerelease,
-  // Testing,
+  // Testing, // commented out as it should not show up as an option in this menu
 }
 
 const BranchSelect: FunctionComponent<{}> = () => {
@@ -24,8 +24,8 @@ const BranchSelect: FunctionComponent<{}> = () => {
   const [selectedBranch, setSelectedBranch] = useSetting<UpdateBranch>('branch', UpdateBranch.Stable);
 
   return (
-    // Returns numerical values from 0 to 2 (with current branch setup as of 8/28/22)
-    // 0 being stable, 1 being pre-release and 2 being nightly
+    // Returns numerical values from 0 to 2 (with current branch setup as of 6/16/23)
+    // 0 being stable, 1 being pre-release and 2 being testing (not a branch!)
     <Field label={t('BranchSelect.update_channel.label')} childrenContainerWidth={'fixed'}>
       <Dropdown
         rgOptions={Object.values(UpdateBranch)
@@ -39,6 +39,7 @@ const BranchSelect: FunctionComponent<{}> = () => {
           await setSelectedBranch(newVal.data);
           callUpdaterMethod('check_for_updates');
           logger.log('switching branches!');
+          console.log(Object.values(UpdateBranch))
         }}
       />
     </Field>

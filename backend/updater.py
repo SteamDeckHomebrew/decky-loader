@@ -145,7 +145,9 @@ class Updater:
     async def download_decky_binary(self, download_url):
         download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
         download_temp_filename = download_filename + ".new"
-
+        
+        tab = await get_gamepadui_tab()
+        await tab.open_websocket()
         async with ClientSession() as web:
             logger.debug("Downloading binary")
             async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
@@ -190,9 +192,6 @@ class Updater:
 
         service_url = self.get_service_url()
         logger.debug("Retrieved service URL")
-
-        tab = await get_gamepadui_tab()
-        await tab.open_websocket()
         async with ClientSession() as web:
             if ON_LINUX and not get_keep_systemd_service():
                 logger.debug("Downloading systemd service")

@@ -142,10 +142,10 @@ class Updater:
                 pass
             await sleep(60 * 60 * 6) # 6 hours
 
-    async def download_decky_binary(self, download_url):
+    async def download_decky_binary(self, download_url, version):
         download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
         download_temp_filename = download_filename + ".new"
-        
+
         tab = await get_gamepadui_tab()
         await tab.open_websocket()
         async with ClientSession() as web:
@@ -192,6 +192,7 @@ class Updater:
 
         service_url = self.get_service_url()
         logger.debug("Retrieved service URL")
+
         async with ClientSession() as web:
             if ON_LINUX and not get_keep_systemd_service():
                 logger.debug("Downloading systemd service")
@@ -219,7 +220,7 @@ class Updater:
                     os.mkdir(path.join(getcwd(), ".systemd"))
                 shutil.move(service_file_path, path.join(getcwd(), ".systemd")+"/plugin_loader.service")
             
-        await self.download_decky_binary(download_url)
+        await self.download_decky_binary(download_url, version)
 
     async def do_restart(self):
         await service_restart("plugin_loader")

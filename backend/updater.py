@@ -146,32 +146,33 @@ class Updater:
         download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
         download_temp_filename = download_filename + ".new"
 
-        logger.debug("Downloading binary")
-        async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
-            total = int(res.headers.get('content-length', 0))
-            with open(path.join(getcwd(), download_temp_filename), "wb") as out:
-                progress = 0
-                raw = 0
-                async for c in res.content.iter_chunked(512):
-                    out.write(c)
-                    raw += len(c)
-                    new_progress = round((raw / total) * 100)
-                    if progress != new_progress:
-                        self.context.loop.create_task(tab.evaluate_js(f"window.DeckyUpdater.updateProgress({new_progress})", False, False, False))
-                        progress = new_progress
+        async with ClientSession() as web:
+            logger.debug("Downloading binary")
+            async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
+                total = int(res.headers.get('content-length', 0))
+                with open(path.join(getcwd(), download_temp_filename), "wb") as out:
+                    progress = 0
+                    raw = 0
+                    async for c in res.content.iter_chunked(512):
+                        out.write(c)
+                        raw += len(c)
+                        new_progress = round((raw / total) * 100)
+                        if progress != new_progress:
+                            self.context.loop.create_task(tab.evaluate_js(f"window.DeckyUpdater.updateProgress({new_progress})", False, False, False))
+                            progress = new_progress
 
-        with open(path.join(getcwd(), ".loader.version"), "w", encoding="utf-8") as out:
-            out.write(version)
+            with open(path.join(getcwd(), ".loader.version"), "w", encoding="utf-8") as out:
+                out.write(version)
 
-        if ON_LINUX:
-            remove(path.join(getcwd(), download_filename))
-            shutil.move(path.join(getcwd(), download_temp_filename), path.join(getcwd(), download_filename))
-            chmod(path.join(getcwd(), download_filename), 777, False)
+            if ON_LINUX:
+                remove(path.join(getcwd(), download_filename))
+                shutil.move(path.join(getcwd(), download_temp_filename), path.join(getcwd(), download_filename))
+                chmod(path.join(getcwd(), download_filename), 777, False)
 
-        logger.info("Updated loader installation.")
-        await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)
-        await self.do_restart()
-        await tab.close_websocket()
+            logger.info("Updated loader installation.")
+            await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)
+            await self.do_restart()
+            await tab.close_websocket()
 
     async def do_update(self):
         download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"

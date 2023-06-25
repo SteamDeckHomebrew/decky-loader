@@ -197,7 +197,8 @@
     "developer_title": "Developer",
     "general_title": "General",
     "navbar_settings": "Decky Settings",
-    "plugins_title": "Plugins"
+    "plugins_title": "Plugins",
+    "testing_title": "Testing"
   },
   "Store": {
     "store_contrib": {

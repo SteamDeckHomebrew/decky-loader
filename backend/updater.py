@@ -174,6 +174,7 @@ class Updater:
         await tab.close_websocket()
 
     async def do_update(self):
+        download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
         logger.debug("Starting update.")
         version = self.remoteVer["tag_name"]
         download_url = None

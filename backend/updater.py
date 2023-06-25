@@ -219,7 +219,7 @@ class Updater:
                     os.mkdir(path.join(getcwd(), ".systemd"))
                 shutil.move(service_file_path, path.join(getcwd(), ".systemd")+"/plugin_loader.service")
             
-        self.download_decky_binary(download_url)
+        await self.download_decky_binary(download_url)
 
     async def do_restart(self):
         await service_restart("plugin_loader")

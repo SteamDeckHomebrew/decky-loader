@@ -218,7 +218,7 @@ class Updater:
                     os.mkdir(path.join(getcwd(), ".systemd"))
                 shutil.move(service_file_path, path.join(getcwd(), ".systemd")+"/plugin_loader.service")
             
-            download_decky_binary(self, download_url)
+        self.download_decky_binary(download_url)
 
     async def do_restart(self):
         await service_restart("plugin_loader")
@@ -235,3 +235,4 @@ class Updater:
         pass
         # TODO: make this request data from a web endpoint
         # self.download_decky_binary(url)
+        # manager.setSetting('branch', 2)

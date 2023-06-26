@@ -1,113 +1,66 @@
 {
-    "BranchSelect": {
-        "update_channel": {
-            "testing": ""
-        }
-    },
     "DropdownMultiselect": {
         "button": {
             "back": ""
         }
     },
     "FilePickerIndex": {
-        "file": {
-            "select": ""
-        },
         "filter": {
-            "created_asce": "",
-            "name_asce": ""
+            "created_asce": ""
         },
         "folder": {
             "label": ""
         }
     },
     "MultiplePluginsInstallModal": {
-        "description": {
-            "install": ""
-        },
         "ok_button": {
             "loading": ""
-        },
-        "title": {
-            "update": ""
         }
     },
     "PluginCard": {
         "plugin_version_label": ""
     },
     "PluginInstallModal": {
-        "install": {
-            "title": ""
-        },
         "reinstall": {
-            "desc": ""
-        },
-        "update": {
             "desc": ""
         }
     },
     "PluginListIndex": {
-        "plugin_actions": "",
-        "uninstall": ""
+        "plugin_actions": ""
     },
     "PluginLoader": {
         "decky_title": "",
-        "plugin_load_error": {
-            "message": ""
-        },
         "plugin_uninstall": {
             "title": ""
-        }
-    },
-    "RemoteDebugging": {
-        "remote_cef": {
-            "label": ""
         }
     },
     "SettingsDeveloperIndex": {
         "header": "",
         "third_party_plugins": {
-            "button_install": "",
             "label_url": ""
-        },
-        "valve_internal": {
-            "label": ""
         }
     },
     "SettingsGeneralIndex": {
         "developer_mode": {
             "label": ""
-        },
-        "other": {
-            "header": ""
         }
     },
     "SettingsIndex": {
         "plugins_title": ""
     },
     "Store": {
-        "store_filter": {
-            "label_def": ""
-        },
         "store_source": {
             "desc": ""
-        },
-        "store_tabs": {
-            "alph_desc": ""
         }
     },
     "StoreSelect": {
         "custom_store": {
             "url_label": ""
-        },
-        "store_channel": {
-            "testing": ""
         }
     },
     "Updater": {
         "updates": {
-            "check_button": "",
-            "label": ""
+            "check_button": ""
         }
     }
 }

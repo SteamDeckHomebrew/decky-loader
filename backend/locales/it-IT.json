@@ -20,6 +20,7 @@
   "FilePickerError": {
     "errors": {
       "file_not_found": "Il percorso specificato non è valido. Controllalo e prova a reinserirlo di nuovo.",
+      "perm_denied": "Il tuo utente (deck su Steam Deck) non ha accesso al percorso specificato. Controlla che abbia i permessi corrispondenti per accedere alla cartella/file desiderato.",
       "unknown": "È avvenuto un'errore sconosciuto. L'errore segnalato è {{raw_error}}"
     }
   },

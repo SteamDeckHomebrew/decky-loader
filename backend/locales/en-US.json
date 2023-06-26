@@ -20,6 +20,7 @@
   "FilePickerError": {
     "errors": {
       "file_not_found": "The path specified is not valid. Please check it and reenter it correctly.",
+      "perm_denied": "You do not have access to the specified directory. Please check if your user (deck on Steam Deck) has the corresponding permission to access the specified folder/file.",
       "unknown": "An unknown error occurred. The raw error is: {{raw_error}}"
     }
   },
@@ -159,10 +160,6 @@
       "label_url": "Install Plugin from URL",
       "label_zip": "Install Plugin from ZIP File"
     },
-    "toast_zip": {
-      "body": "Installation failed! Only ZIP files are supported.",
-      "title": "Decky"
-    },
     "valve_internal": {
       "desc1": "Enables the Valve internal developer menu.",
       "desc2": "Do not touch anything in this menu unless you know what it does.",
@@ -178,25 +175,23 @@
       "header": "Beta participation"
     },
     "developer_mode": {
-      "desc": "Enables Decky's developer settings.",
       "label": "Developer mode"
+    },
+    "notifications": {
+      "decky_updates_label": "Decky update available",
+      "header": "Notifications",
+      "plugin_updates_label": "Plugin updates available"
     },
     "other": {
       "header": "Other"
     },
     "updates": {
       "header": "Updates"
-    },
-    "notifications": {
-      "header": "Notifications",
-      "decky_updates_label": "Decky update available",
-      "plugin_updates_label": "Plugin updates available"
     }
   },
   "SettingsIndex": {
     "developer_title": "Developer",
     "general_title": "General",
-    "navbar_settings": "Decky Settings",
     "plugins_title": "Plugins"
   },
   "Store": {

@@ -210,6 +210,9 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
           case theError.match(/\[WinError\s3.*/i)?.input:
             setError(FileErrorTypes.FileNotFound);
             break;
+          case theError.match(/\[Errno\s13.*/i)?.input:
+            setError(FileErrorTypes.PermissionDenied);
+            break;
           default:
             setRawError(theError);
             setError(FileErrorTypes.Unknown);

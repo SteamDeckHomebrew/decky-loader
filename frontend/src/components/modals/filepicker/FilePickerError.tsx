@@ -1,10 +1,11 @@
 import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconContext } from 'react-icons';
-import { FaExclamationTriangle, FaQuestionCircle } from 'react-icons/fa';
+import { FaExclamationTriangle, FaQuestionCircle, FaUserSlash } from 'react-icons/fa';
 
 export enum FileErrorTypes {
   FileNotFound,
+  PermissionDenied,
   Unknown,
   None,
 }
@@ -24,6 +25,10 @@ const FilePickerError: FC<FilePickerErrorProps> = ({ error, rawError = null }) =
       case FileErrorTypes.FileNotFound:
         setText(t('FilePickerError.errors.file_not_found'));
         setIcon(<FaExclamationTriangle />);
+        break;
+      case FileErrorTypes.PermissionDenied:
+        setText(t('FilePickerError.errors.perm_denied'));
+        setIcon(<FaUserSlash />);
         break;
       case FileErrorTypes.Unknown:
         setText(t('FilePickerError.errors.unknown', { raw_error: rawError }));

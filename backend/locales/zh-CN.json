@@ -112,7 +112,6 @@
             "label_zip": "从 ZIP 压缩文件安装插件"
         },
         "toast_zip": {
-            "title": "Decky",
             "body": "安装失败！只有 ZIP 格式的插件被支持。"
         },
         "valve_internal": {
@@ -136,20 +135,23 @@
             "header": "参与测试"
         },
         "developer_mode": {
-            "label": "开发者模式",
-            "desc": "启用 Decky 的开发者测试。"
+            "label": "开发者模式"
         },
         "other": {
             "header": "其他"
         },
         "updates": {
             "header": "更新"
+        },
+        "notifications": {
+            "header": "通知",
+            "decky_updates_label": "Decky 更新可用",
+            "plugin_updates_label": "插件更新可用"
         }
     },
     "SettingsIndex": {
         "developer_title": "开发者",
         "general_title": "通用",
-        "navbar_settings": "Decky 设置",
         "plugins_title": "插件"
     },
     "Store": {
@@ -239,7 +241,8 @@
     "FilePickerError": {
         "errors": {
             "file_not_found": "指定路径无效。请检查并输入正确的路径。",
-            "unknown": "发生了一个为止错误。原始错误为：{{raw_error}}"
+            "unknown": "发生了一个为止错误。原始错误为：{{raw_error}}",
+            "perm_denied": "你没有访问特定目录的权限。请检查你的用户（Steam Deck 中的 deck 账户）有着相对应的权限以访问特定的文件夹或文件。"
         }
     }
 }

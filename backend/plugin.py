@@ -63,10 +63,13 @@ class PluginWrapper:
             environ["DECKY_USER_HOME"] = helpers.get_home_path()
             environ["DECKY_HOME"] = helpers.get_homebrew_path()
             environ["DECKY_PLUGIN_SETTINGS_DIR"] = path.join(environ["DECKY_HOME"], "settings", self.plugin_directory)
+            helpers.mkdir_as_user(path.join(environ["DECKY_HOME"], "settings"))
             helpers.mkdir_as_user(environ["DECKY_PLUGIN_SETTINGS_DIR"])
             environ["DECKY_PLUGIN_RUNTIME_DIR"] = path.join(environ["DECKY_HOME"], "data", self.plugin_directory)
+            helpers.mkdir_as_user(path.join(environ["DECKY_HOME"], "data"))
             helpers.mkdir_as_user(environ["DECKY_PLUGIN_RUNTIME_DIR"])
             environ["DECKY_PLUGIN_LOG_DIR"] = path.join(environ["DECKY_HOME"], "logs", self.plugin_directory)
+            helpers.mkdir_as_user(path.join(environ["DECKY_HOME"], "logs"))
             helpers.mkdir_as_user(environ["DECKY_PLUGIN_LOG_DIR"])
             environ["DECKY_PLUGIN_DIR"] = path.join(self.plugin_path, self.plugin_directory)
             environ["DECKY_PLUGIN_NAME"] = self.name

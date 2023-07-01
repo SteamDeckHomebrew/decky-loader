@@ -14,7 +14,6 @@
             "desc1": "Activa el menú interno de desarrollo de Valve."
         },
         "toast_zip": {
-            "title": "Decky",
             "body": "¡Ha fallado la instalación! Solo se permiten archivos ZIP."
         },
         "cef_console": {
@@ -118,8 +117,7 @@
             "decky_version": "Versión de Decky"
         },
         "developer_mode": {
-            "label": "Modo desarrollador",
-            "desc": "Activa los ajustes de desarrollador de Decky."
+            "label": "Modo desarrollador"
         },
         "beta": {
             "header": "Participación en la beta"
@@ -131,7 +129,6 @@
     "SettingsIndex": {
         "developer_title": "Desarrollador",
         "general_title": "General",
-        "navbar_settings": "Ajustes de Decky",
         "plugins_title": "Plugins"
     },
     "Store": {

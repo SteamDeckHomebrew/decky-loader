@@ -157,7 +157,6 @@
             "button_zip": "Bladeren"
         },
         "toast_zip": {
-            "title": "Decky",
             "body": "Installatie mislukt! Alleen ZIP-bestanden worden ondersteund."
         },
         "valve_internal": {
@@ -175,7 +174,6 @@
             "header": "Beta deelname"
         },
         "developer_mode": {
-            "desc": "Schakelt de ontwikkelaarsinstellingen van Decky in.",
             "label": "Ontwikkelaars modus"
         },
         "other": {
@@ -188,7 +186,6 @@
     "SettingsIndex": {
         "developer_title": "Ontwikkelaar",
         "general_title": "Algemeen",
-        "navbar_settings": "Decky instellingen",
         "plugins_title": "Plugins"
     },
     "Store": {

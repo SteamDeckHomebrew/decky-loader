@@ -151,7 +151,6 @@
             "label_desc": "URL"
         },
         "toast_zip": {
-            "title": "Decky",
             "body": "Falha na instalação! Somente arquivos ZIP são suportados."
         },
         "valve_internal": {
@@ -166,7 +165,6 @@
             "header": "Sobre"
         },
         "developer_mode": {
-            "desc": "Habilita as configurações de desenvolvedor do Decky.",
             "label": "Modo Deselvolvedor"
         },
         "other": {
@@ -182,7 +180,6 @@
     "SettingsIndex": {
         "developer_title": "Desenvolvedor",
         "general_title": "Geral",
-        "navbar_settings": "Configurações do Decky",
         "plugins_title": "Plugins"
     },
     "Store": {

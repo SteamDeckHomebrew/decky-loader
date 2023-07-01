@@ -87,7 +87,6 @@
             "header": "第三方外掛程式"
         },
         "toast_zip": {
-            "body": "安裝失敗！只支援 ZIP 檔案。",
             "title": "Decky"
         },
         "valve_internal": {
@@ -116,8 +115,7 @@
             "header": "參與測試"
         },
         "developer_mode": {
-            "label": "開發人員模式",
-            "desc": "啟用 Decky 的開發人員模式。"
+            "label": "開發人員模式"
         },
         "other": {
             "header": "其他"
@@ -129,7 +127,6 @@
     "SettingsIndex": {
         "developer_title": "開發人員",
         "general_title": "一般",
-        "navbar_settings": "Decky 設定",
         "plugins_title": "外掛程式"
     },
     "Store": {

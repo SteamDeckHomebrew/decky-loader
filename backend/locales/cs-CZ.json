@@ -130,7 +130,6 @@
             "label_zip": "Instalovat plugin ze ZIP souboru"
         },
         "toast_zip": {
-            "body": "Instalace selhala! Podporovány jsou pouze soubory ZIP.",
             "title": "Decky"
         },
         "valve_internal": {
@@ -154,7 +153,6 @@
             "header": "Účast v betě"
         },
         "developer_mode": {
-            "desc": "Zapíná vývojářské nastavení Decky.",
             "label": "Vývojářský režim"
         },
         "other": {
@@ -167,7 +165,6 @@
     "SettingsIndex": {
         "developer_title": "Vývojář",
         "general_title": "Obecné",
-        "navbar_settings": "Nastavení Decky",
         "plugins_title": "Pluginy"
     },
     "Store": {

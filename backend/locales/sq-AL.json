@@ -11,9 +11,6 @@
             "label_desc": "URL",
             "label_url": "Instalo Shtes Nga URL",
             "label_zip": "Instalo Shtes Nga ZIP"
-        },
-        "toast_zip": {
-            "title": "Decky"
         }
     },
     "BranchSelect": {
@@ -82,8 +79,7 @@
     },
     "SettingsIndex": {
         "developer_title": "Zhvillues",
-        "general_title": "Gjeneral",
-        "navbar_settings": "Cilësimet Decky"
+        "general_title": "Gjeneral"
     },
     "Store": {
         "store_sort": {

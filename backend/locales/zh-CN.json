@@ -111,9 +111,6 @@
             "label_url": "从 URL 安装插件",
             "label_zip": "从 ZIP 压缩文件安装插件"
         },
-        "toast_zip": {
-            "body": "安装失败！只有 ZIP 格式的插件被支持。"
-        },
         "valve_internal": {
             "desc1": "启用 Valve 内部开发者菜单。",
             "desc2": "除非你知道你在干什么，否则请不要修改此菜单中的任何内容。",

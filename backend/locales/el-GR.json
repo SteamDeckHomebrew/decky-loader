@@ -14,7 +14,6 @@
             "label_zip": "Εγκατάσταση επέκτασης από αρχείο ZIP"
         },
         "toast_zip": {
-            "title": "Decky",
             "body": "Η εγκατάσταση απέτυχε. Μόνο αρχεία ZIP επιτρέπονται."
         },
         "valve_internal": {
@@ -102,7 +101,6 @@
             "header": "Σχετικά"
         },
         "developer_mode": {
-            "desc": "Ενεργοποιεί το μενού προγραμματιστή του Decky.",
             "label": "Λειτουργία προγραμματιστή"
         },
         "other": {
@@ -118,8 +116,7 @@
     "SettingsIndex": {
         "plugins_title": "Επεκτάσεις",
         "developer_title": "Προγραμματιστής",
-        "general_title": "Γενικά",
-        "navbar_settings": "Ρυθμίσεις Decky"
+        "general_title": "Γενικά"
     },
     "Store": {
         "store_contrib": {

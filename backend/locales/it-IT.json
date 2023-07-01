@@ -142,7 +142,6 @@
         "hidden_other": "Sono nascosti {{count}} plugin dalla lista"
     },
     "notifications": {
-        "header": "Notifiche",
         "plugin_updates_label": "Aggiornamenti dei plugins"
     },
     "RemoteDebugging": {
@@ -170,9 +169,6 @@
             "label_desc": "URL",
             "label_url": "Installa plugin da un'indirizzo web",
             "label_zip": "Installa plugin da un file ZIP"
-        },
-        "toast_zip": {
-            "title": "Decky"
         },
         "valve_internal": {
             "desc1": "Abilita il menu di sviluppo interno di Valve.",

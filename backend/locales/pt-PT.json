@@ -130,7 +130,6 @@
             "label_zip": "Instalar plugin a partir dum ficheiro ZIP"
         },
         "toast_zip": {
-            "title": "Decky",
             "body": "A instalação falhou! Só ficheiros ZIP são suportados."
         },
         "valve_internal": {
@@ -154,8 +153,7 @@
             "header": "Participação na versão Beta"
         },
         "developer_mode": {
-            "label": "Modo de programador",
-            "desc": "Activa as definições de programador do Decky."
+            "label": "Modo de programador"
         },
         "other": {
             "header": "Outros"
@@ -167,7 +165,6 @@
     "SettingsIndex": {
         "developer_title": "Programador",
         "general_title": "Geral",
-        "navbar_settings": "Definições do Decky",
         "plugins_title": "Plugins"
     },
     "Store": {

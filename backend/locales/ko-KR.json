@@ -141,9 +141,6 @@
             "label_url": "URL에서 플러그인 설치",
             "label_zip": "ZIP 파일에서 플러그인 설치"
         },
-        "toast_zip": {
-            "title": "Decky"
-        },
         "valve_internal": {
             "desc1": "Valve 내부 개발자 메뉴를 활성화합니다.",
             "label": "Valve 내부 개발자 메뉴 활성화",

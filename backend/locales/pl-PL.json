@@ -1,7 +1,4 @@
 {
-    "PluginLoader": {
-        "decky_title": ""
-    },
     "Updater": {
         "updates": {
             "check_button": ""

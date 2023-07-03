@@ -20,7 +20,7 @@
     "FilePickerError": {
         "errors": {
             "perm_denied": "Nie masz dostępu do podanego katalogu. Sprawdź, czy twój użytkownik (deck na Steam Deck) ma odpowiednie uprawnienia dostępu do określonego katalogu/pliku.",
-            "unknown": "Wystąpił nieznany błąd ({{raw_error}}).",
+            "unknown": "Wystąpił nieznany błąd. Surowy błąd to {{raw_error}}",
             "file_not_found": "Podana ścieżka jest nieprawidłowa. Sprawdź ją i wprowadź ponownie poprawnie."
         }
     },

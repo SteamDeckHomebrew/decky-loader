@@ -31,12 +31,14 @@ const TitleView: VFC = () => {
         <DialogButton
           style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
           onClick={onStoreClick}
+          onOKActionDescription={'Open Decky Store'}
         >
           <FaStore style={{ marginTop: '-4px', display: 'block' }} />
         </DialogButton>
         <DialogButton
           style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
           onClick={onSettingsClick}
+          onOKActionDescription={'Open Decky Settings'}
         >
           <BsGearFill style={{ marginTop: '-4px', display: 'block' }} />
         </DialogButton>

@@ -52,11 +52,7 @@ const TitleView: VFC = () => {
       >
         <FaArrowLeft style={{ marginTop: '-4px', display: 'block' }} />
       </DialogButton>
-      {activePlugin?.titleView ? (
-        <div style={{ flex: 0.9 }}>{activePlugin.titleView}</div>
-      ) : (
-        <div style={{ flex: 0.9 }}>{activePlugin.name}</div>
-      )}
+      {activePlugin?.titleView || <div style={{ flex: 0.9 }}>{activePlugin.name}</div>}
     </Focusable>
   );
 };

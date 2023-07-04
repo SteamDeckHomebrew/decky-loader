@@ -238,7 +238,7 @@
     "FilePickerError": {
         "errors": {
             "file_not_found": "指定路径无效。请检查并输入正确的路径。",
-            "unknown": "发生了一个为止错误。原始错误为：{{raw_error}}",
+            "unknown": "发生了一个未知错误。原始错误为：{{raw_error}}",
             "perm_denied": "你没有访问特定目录的权限。请检查你的用户（Steam Deck 中的 deck 账户）有着相对应的权限以访问特定的文件夹或文件。"
         }
     }

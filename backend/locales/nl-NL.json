@@ -156,9 +156,6 @@
             "button_install": "Installeren",
             "button_zip": "Bladeren"
         },
-        "toast_zip": {
-            "body": "Installatie mislukt! Alleen ZIP-bestanden worden ondersteund."
-        },
         "valve_internal": {
             "desc1": "Schakelt het interne ontwikkelaarsmenu van Valve in.",
             "desc2": "Raak niets in dit menu aan tenzij u weet wat het doet.",

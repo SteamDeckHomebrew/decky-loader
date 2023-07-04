@@ -13,9 +13,6 @@
             "label": "Activar menú interno de Valve",
             "desc1": "Activa el menú interno de desarrollo de Valve."
         },
-        "toast_zip": {
-            "body": "¡Ha fallado la instalación! Solo se permiten archivos ZIP."
-        },
         "cef_console": {
             "button": "Abrir consola",
             "label": "Consola CEF",

@@ -13,9 +13,6 @@
             "label_url": "Installer le plugin à partir d'un URL",
             "label_zip": "Installer le plugin à partir d'un fichier ZIP"
         },
-        "toast_zip": {
-            "title": "Decky"
-        },
         "valve_internal": {
             "desc1": "Active le menu développeur interne de Valve.",
             "desc2": "Ne touchez à rien dans ce menu à moins que vous ne sachiez ce qu'il fait.",

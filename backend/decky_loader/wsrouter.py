@@ -15,29 +15,37 @@ class MessageType(Enum):
     CALL = 0
     REPLY = 1
     ERROR = 2
-    # Pub/sub
+    # # Pub/sub
+    # SUBSCRIBE = 3
+    # UNSUBSCRIBE = 4
+    # PUBLISH = 5
 
-running_calls: Dict[str, Future] = {}
-
-subscriptions: Dict[str, Callable[[Any]]]
-
-# {type: MessageType, data: dta, id: id}
+# see wsrouter.ts for typings
 
 class WSRouter:
     def __init__(self) -> None:
         self.ws = None
         self.req_id = 0
         self.routes = {}
+        self.running_calls: Dict[int, Future] = {}
+        # self.subscriptions: Dict[str, Callable[[Any]]] = {}
         self.logger = getLogger("WSRouter")
 
-    async def add_routes(self, routes):
-        self.routes.update(routes)
+    async def add_route(self, name, route):
+        self.routes[name] = route
 
     async def handle(self, request):
         self.logger.debug('Websocket connection starting')
         ws = web.WebSocketResponse()
         await ws.prepare(request)
         self.logger.debug('Websocket connection ready')
+
+        if self.ws != None:
+            try:
+                await self.ws.close()
+            except:
+                pass
+            self.ws = None
 
         self.ws = ws
         
@@ -56,19 +64,30 @@ class WSRouter:
                                 data = msg.json()
                                 if self.routes[data.route]:
                                     try:
-                                        res = await self.routes[data.route](data.data)
-                                        await ws.send_json({type: MessageType.REPLY, id: data.id, data: res})
+                                        res = await self.routes[data.route](*data.args)
+                                        await self.write({"type": MessageType.REPLY, "id": data.id, "result": res})
+                                        self.logger.debug(f"Started PY call {data.route} ID {data.id}")
                                     except:
-                                        await ws.send_json({type: MessageType.ERROR, id: data.ud, data: format_exc()})
+                                        await self.write({"type": MessageType.ERROR, "id": data.id, "error": format_exc()})
+                                else:
+                                    await self.write({"type": MessageType.ERROR, "id": data.id, "error": "Route does not exist."})
                             case MessageType.REPLY:
-                                if running_calls[data.id]:
-                                    running_calls[data.id].set_result(data.data)
+                                if self.running_calls[data.id]:
+                                    self.running_calls[data.id].set_result(data.result)
+                                    del self.running_calls[data.id]
+                                    self.logger.debug(f"Resolved JS call {data.id} with value {str(data.result)}")
                             case MessageType.ERROR:
-                                if running_calls[data.id]:
-                                    running_calls[data.id].set_exception(data.data)
+                                if self.running_calls[data.id]:
+                                    self.running_calls[data.id].set_exception(data.error)
+                                    del self.running_calls[data.id]
+                                    self.logger.debug(f"Errored JS call {data.id} with error {data.error}")
+
+                            case _:
+                                self.logger.error("Unknown message type", data)
         finally:
             try:
                 await ws.close()
+                self.ws = None
             except:
                 pass
 

@@ -22,6 +22,8 @@ declare global {
   }
 }
 
+const isPatched = Symbol('is patched');
+
 class RouterHook extends Logger {
   private router: any;
   private memoizedRouter: any;
@@ -90,9 +92,10 @@ class RouterHook extends Logger {
               ...routeList[index].props,
               children: {
                 ...cloneElement(routeList[index].props.children),
-                type: (props) => createElement(oType, props),
+                type: routeList[index].props.children[isPatched] ? oType : (props) => createElement(oType, props),
               },
             }).children;
+            routeList[index].props.children[isPatched] = true;
           });
         }
       });

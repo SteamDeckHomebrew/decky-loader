@@ -204,7 +204,7 @@
     "Store": {
         "store_contrib": {
             "desc": "Jeśli chcesz przyczynić się do rozwoju Decky Plugin Store, sprawdź repozytorium SteamDeckHomebrew/decky-plugin-template na GitHub. Informacje na temat rozwoju i dystrybucji są dostępne w pliku README.",
-            "label": "Współtworzyenie"
+            "label": "Współtworzenie"
         },
         "store_filter": {
             "label": "Filtr",
@@ -231,7 +231,7 @@
     },
     "StoreSelect": {
         "custom_store": {
-            "label": "Sklep niestandardowy",
+            "label": "Niestandardowy sklep",
             "url_label": "URL"
         },
         "store_channel": {
@@ -251,7 +251,7 @@
             "cur_version": "Aktualna wersja: {{ver}}",
             "install_button": "Zainstaluj aktualizację",
             "label": "Aktualizacje",
-            "lat_version": "Aktualne: działa {{ver}}",
+            "lat_version": "Aktualizacje zainstalowane. Aktualna wersja: {{ver}}",
             "reloading": "Ponowne ładowanie",
             "updating": "Aktualizowanie"
         }

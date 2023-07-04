@@ -129,9 +129,6 @@
             "label_url": "Instalar plugin a partir dum URL",
             "label_zip": "Instalar plugin a partir dum ficheiro ZIP"
         },
-        "toast_zip": {
-            "body": "A instalação falhou! Só ficheiros ZIP são suportados."
-        },
         "valve_internal": {
             "label": "Activar menu interno da Valve",
             "desc1": "Activa o menu interno de programador da Valve.",

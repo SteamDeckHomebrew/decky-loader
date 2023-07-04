@@ -92,9 +92,6 @@
             "button_install": "Installieren",
             "label_url": "Installiere Erweiterung via URL"
         },
-        "toast_zip": {
-            "title": "Decky"
-        },
         "valve_internal": {
             "desc2": "Fasse in diesem Menü nichts an, es sei denn, du weißt was du tust.",
             "label": "Aktiviere Valve-internes Menü",

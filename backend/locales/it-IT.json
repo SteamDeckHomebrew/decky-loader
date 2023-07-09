@@ -255,5 +255,9 @@
             "reloading": "Ricaricando",
             "updating": "Aggiornando"
         }
+    },
+    "TitleView": {
+        "settings_desc": "Apri le impostazioni di Decky",
+        "decky_store_desc": "Apri lo store di Decky"
     }
 }

@@ -115,7 +115,6 @@
         "update_all_one": "Zaktualizuj 1 plugin",
         "update_all_few": "Zaktualizuj {{count}} pluginy",
         "update_all_many": "Zaktualizuj {{count}} pluginów",
-        "update_all_other": "",
         "update_to": "Zaktualizuj do {{name}}"
     },
     "PluginListLabel": {
@@ -142,8 +141,7 @@
     "PluginView": {
         "hidden_one": "1 plugin jest ukryty na tej liście",
         "hidden_few": "{{count}} pluginy jest ukryty na tej liście",
-        "hidden_many": "{{count}} pluginów jest ukryty na tej liście",
-        "hidden_other": ""
+        "hidden_many": "{{count}} pluginów jest ukryty na tej liście"
     },
     "RemoteDebugging": {
         "remote_cef": {

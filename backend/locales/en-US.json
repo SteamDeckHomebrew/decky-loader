@@ -234,6 +234,10 @@
       "testing": "Testing"
     }
   },
+  "TitleView":{
+    "decky_store_desc": "Open Decky Store",
+    "settings_desc": "Open Decky Settings"
+  },
   "Updater": {
     "decky_updates": "Decky Updates",
     "no_patch_notes_desc": "no patch notes for this version",

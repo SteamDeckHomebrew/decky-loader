@@ -1,6 +1,7 @@
 # Change PyInstaller files permissions
 import sys
 from typing import Dict
+from wsrouter import WSRouter
 from .localplatform.localplatform import (chmod, chown, service_stop, service_start,
                             ON_WINDOWS, get_log_level, get_live_reload, 
                             get_server_port, get_server_host, get_chown_plugin_path,
@@ -63,7 +64,8 @@ class PluginManager:
                 allow_credentials=True
             )
         })
-        self.plugin_loader = Loader(self, plugin_path, self.loop, get_live_reload())
+        self.ws = WSRouter(self.loop, self.web_app)
+        self.plugin_loader = Loader(self, self.ws, plugin_path, self.loop, get_live_reload())
         self.settings = SettingsManager("loader", path.join(get_privileged_path(), "settings"))
         self.plugin_browser = PluginBrowser(plugin_path, self.plugin_loader.plugins, self.plugin_loader, self.settings) 
         self.utilities = Utilities(self)

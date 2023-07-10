@@ -41,10 +41,11 @@ interface PromiseResolver<T> {
   promise: Promise<T>;
 }
 
-class WSRouter extends Logger {
+export class WSRouter extends Logger {
   routes: Map<string, (...args: any) => any> = new Map();
   runningCalls: Map<number, PromiseResolver<any>> = new Map();
   ws?: WebSocket;
+  connectPromise?: Promise<void>;
   // Used to map results and errors to calls
   reqId: number = 0;
   constructor() {
@@ -52,30 +53,35 @@ class WSRouter extends Logger {
   }
 
   connect() {
-    this.ws = new WebSocket('ws://127.0.0.1:1337/ws');
+    return (this.connectPromise = new Promise<void>((resolve) => {
+      // Auth is a query param as JS WebSocket doesn't support headers
+      this.ws = new WebSocket(`ws://127.0.0.1:1337/ws?auth=${window.deckyAuthToken}`);
 
-    this.ws.addEventListener('message', this.onMessage.bind(this));
-    this.ws.addEventListener('close', this.onError.bind(this));
-    this.ws.addEventListener('message', this.onError.bind(this));
+      this.ws.addEventListener('open', () => {
+        this.debug('WS Connected');
+        resolve();
+        delete this.connectPromise;
+      });
+      this.ws.addEventListener('message', this.onMessage.bind(this));
+      this.ws.addEventListener('close', this.onError.bind(this));
+      // this.ws.addEventListener('error', this.onError.bind(this));
+    }));
   }
 
   createPromiseResolver<T>(): PromiseResolver<T> {
-    let resolver: PromiseResolver<T>;
+    let resolver: Partial<PromiseResolver<T>> = {};
     const promise = new Promise<T>((resolve, reject) => {
-      resolver = {
-        promise,
-        resolve,
-        reject,
-      };
-      this.debug('Created new PromiseResolver');
+      resolver.resolve = resolve;
+      resolver.reject = reject;
     });
-    this.debug('Returning new PromiseResolver');
+    resolver.promise = promise;
     // The promise will always run first
     // @ts-expect-error 2454
     return resolver;
   }
 
-  write(data: Message) {
+  async write(data: Message) {
+    if (this.connectPromise) await this.connectPromise;
     this.ws?.send(JSON.stringify(data));
   }
 
@@ -129,9 +135,9 @@ class WSRouter extends Logger {
     } catch (e) {
       this.error('Error parsing WebSocket message', e);
     }
-    this.call<[number, number], string>('methodName', 1, 2);
   }
 
+  // this.call<[number, number], string>('methodName', 1, 2);
   call<Args extends any[] = any[], Return = void>(route: string, ...args: Args): Promise<Return> {
     const resolver = this.createPromiseResolver<Return>();
 
@@ -139,12 +145,15 @@ class WSRouter extends Logger {
 
     this.runningCalls.set(id, resolver);
 
+    this.debug(`Calling PY method ${route} with args`, args);
+
     this.write({ type: MessageType.CALL, route, args, id });
 
     return resolver.promise;
   }
 
-  onError(error: any) {
-    this.error('WS ERROR', error);
+  async onError(error: any) {
+    this.error('WS DISCONNECTED', error);
+    await this.connect();
   }
 }

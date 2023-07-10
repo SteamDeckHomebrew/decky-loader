@@ -70,7 +70,7 @@ class FileChangeHandler(RegexMatchingEventHandler):
         self.maybe_reload(src_path)
 
 class Loader:
-    def __init__(self, server_instance: PluginManager, plugin_path: str, loop: AbstractEventLoop, live_reload: bool = False) -> None:
+    def __init__(self, server_instance: PluginManager, ws: WSRouter, plugin_path: str, loop: AbstractEventLoop, live_reload: bool = False) -> None:
         self.loop = loop
         self.logger = getLogger("Loader")
         self.plugin_path = plugin_path
@@ -88,10 +88,7 @@ class Loader:
             self.observer.start()
             self.loop.create_task(self.enable_reload_wait())
 
-        self.ws = WSRouter()
-
-        server_instance.web_app.add_routes([
-            web.get("/ws", self.ws.handle),
+        server_instance.add_routes([
             web.get("/frontend/{path:.*}", self.handle_frontend_assets),
             web.get("/locales/{path:.*}", self.handle_frontend_locales),
             web.get("/plugins", self.get_plugins),
@@ -100,6 +97,15 @@ class Loader:
             web.get("/plugins/{plugin_name}/assets/{path:.*}", self.handle_plugin_frontend_assets),
             web.post("/plugins/{plugin_name}/reload", self.handle_backend_reload_request)
         ])
+
+        ws.add_route("test", self.test_method)
+
+    async def test_method():
+        await sleep(2)
+
+        return {
+            "test data": True
+        }
 
     async def enable_reload_wait(self):
         if self.live_reload:

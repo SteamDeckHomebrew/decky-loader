@@ -98,15 +98,6 @@ class Loader:
             web.post("/plugins/{plugin_name}/reload", self.handle_backend_reload_request)
         ])
 
-        ws.add_route("test", self.test_method)
-
-    async def test_method():
-        await sleep(2)
-
-        return {
-            "test data": True
-        }
-
     async def enable_reload_wait(self):
         if self.live_reload:
             await sleep(10)

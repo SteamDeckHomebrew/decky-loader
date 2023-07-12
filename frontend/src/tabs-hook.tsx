@@ -1,14 +1,5 @@
 // TabsHook for versions after the Desktop merge
-import {
-  Patch,
-  QuickAccessTab,
-  afterPatch,
-  findInReactTree,
-  findSP,
-  gamepadUIClasses,
-  getReactInstance,
-  sleep,
-} from 'decky-frontend-lib';
+import { Patch, QuickAccessTab, afterPatch, findInReactTree, sleep } from 'decky-frontend-lib';
 
 import { QuickAccessVisibleStateProvider } from './components/QuickAccessVisibleState';
 import Logger from './logger';
@@ -40,60 +31,82 @@ class TabsHook extends Logger {
     window.__TABS_HOOK_INSTANCE = this;
   }
 
-  async init() {
-    this.qAMRoot = await this.getQAMRoot();
-
-    let patchedInnerQAM: any;
-    this.qamPatch = afterPatch(this.qAMRoot.return, 'type', (_: any, ret: any) => {
-      try {
-        if (this.qAMRoot?.child && !this.qAMRoot?.child?.type?.decky) {
-          afterPatch(this.qAMRoot.child, 'type', (_: any, ret: any) => {
-            try {
-              const qamTabsRenderer = findInReactTree(ret, (x) => x?.props?.onFocusNavDeactivated);
-              if (patchedInnerQAM) {
-                qamTabsRenderer.type = patchedInnerQAM;
-              } else {
-                afterPatch(qamTabsRenderer, 'type', (innerArgs: any, ret: any) => {
-                  const tabs = findInReactTree(ret, (x) => x?.props?.tabs);
-                  this.render(tabs.props.tabs, innerArgs[0].visible);
-                  return ret;
-                });
-                patchedInnerQAM = qamTabsRenderer.type;
-              }
-            } catch (e) {
-              this.error('Error patching QAM inner', e);
-            }
-            return ret;
-          });
-          this.qAMRoot.child.type.decky = true;
-          this.qAMRoot.child.alternate.type = this.qAMRoot.child.type;
-        }
-      } catch (e) {
-        this.error('Error patching QAM', e);
+  init() {
+    const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
+    let qAMRoot: any;
+    const findQAMRoot = (currentNode: any, iters: number): any => {
+      if (iters >= 65) {
+        // currently 45
+        return null;
       }
+      if (
+        typeof currentNode?.memoizedProps?.visible == 'boolean' &&
+        currentNode?.type?.toString()?.includes('QuickAccessMenuBrowserView')
+      ) {
+        this.log(`QAM root was found in ${iters} recursion cycles`);
+        return currentNode;
+      }
+      if (currentNode.child) {
+        let node = findQAMRoot(currentNode.child, iters + 1);
+        if (node !== null) return node;
+      }
+      if (currentNode.sibling) {
+        let node = findQAMRoot(currentNode.sibling, iters + 1);
+        if (node !== null) return node;
+      }
+      return null;
+    };
+    (async () => {
+      qAMRoot = findQAMRoot(tree, 0);
+      while (!qAMRoot) {
+        this.error(
+          'Failed to find QAM root node, reattempting in 5 seconds. A developer may need to increase the recursion limit.',
+        );
+        await sleep(5000);
+        qAMRoot = findQAMRoot(tree, 0);
+      }
+      this.qAMRoot = qAMRoot;
+      let patchedInnerQAM: any;
+      this.qamPatch = afterPatch(qAMRoot.return, 'type', (_: any, ret: any) => {
+        try {
+          if (!qAMRoot?.child) {
+            qAMRoot = findQAMRoot(tree, 0);
+            this.qAMRoot = qAMRoot;
+          }
+          if (qAMRoot?.child && !qAMRoot?.child?.type?.decky) {
+            afterPatch(qAMRoot.child, 'type', (_: any, ret: any) => {
+              try {
+                const qamTabsRenderer = findInReactTree(ret, (x) => x?.props?.onFocusNavDeactivated);
+                if (patchedInnerQAM) {
+                  qamTabsRenderer.type = patchedInnerQAM;
+                } else {
+                  afterPatch(qamTabsRenderer, 'type', (innerArgs: any, ret: any) => {
+                    const tabs = findInReactTree(ret, (x) => x?.props?.tabs);
+                    this.render(tabs.props.tabs, innerArgs[0].visible);
+                    return ret;
+                  });
+                  patchedInnerQAM = qamTabsRenderer.type;
+                }
+              } catch (e) {
+                this.error('Error patching QAM inner', e);
+              }
+              return ret;
+            });
+            qAMRoot.child.type.decky = true;
+            qAMRoot.child.alternate.type = qAMRoot.child.type;
+          }
+        } catch (e) {
+          this.error('Error patching QAM', e);
+        }
 
-      return ret;
-    });
+        return ret;
+      });
 
-    if (this.qAMRoot.return.alternate) {
-      this.qAMRoot.return.alternate.type = this.qAMRoot.return.type;
-    }
-    this.log('Finished initial injection');
-  }
-
-  async getQAMRoot() {
-    while (!findSP()) {
-      await sleep(50);
-    }
-
-    const parentNode = findSP().document.querySelector(`.${gamepadUIClasses.BasicUiRoot}`);
-    if (!parentNode) return null;
-
-    return findInReactTree(
-      getReactInstance(parentNode),
-      (n) =>
-        typeof n.memoizedProps?.visible !== 'undefined' && n.type?.toString()?.includes('QuickAccessMenuBrowserView'),
-    );
+      if (qAMRoot.return.alternate) {
+        qAMRoot.return.alternate.type = qAMRoot.return.type;
+      }
+      this.log('Finished initial injection');
+    })();
   }
 
   deinit() {
@@ -115,7 +128,13 @@ class TabsHook extends Logger {
     let deckyTabAmount = existingTabs.reduce((prev: any, cur: any) => (cur.decky ? prev + 1 : prev), 0);
     if (deckyTabAmount == this.tabs.length) {
       for (let tab of existingTabs) {
-        if (tab?.decky && tab?.qAMVisibilitySetter) tab?.qAMVisibilitySetter(visible);
+        if (tab?.decky) {
+          if (tab?.qAMVisibilitySetter) {
+            tab?.qAMVisibilitySetter(visible);
+          } else {
+            tab.initialVisibility = visible;
+          }
+        }
       }
       return;
     }
@@ -125,12 +144,9 @@ class TabsHook extends Logger {
         title,
         tab: icon,
         decky: true,
+        initialVisibility: visible,
       };
-      tab.panel = (
-        <QuickAccessVisibleStateProvider initial={visible} tab={tab}>
-          {content}
-        </QuickAccessVisibleStateProvider>
-      );
+      tab.panel = <QuickAccessVisibleStateProvider tab={tab}>{content}</QuickAccessVisibleStateProvider>;
       existingTabs.push(tab);
     }
   }

@@ -50,7 +50,9 @@
         "reinstall": "Neu installieren",
         "reload": "Neu laden",
         "uninstall": "Deinstallieren",
-        "update_to": "Aktualisieren zu {{name}}"
+        "update_to": "Aktualisieren zu {{name}}",
+        "update_all_one": "",
+        "update_all_other": ""
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -90,10 +92,6 @@
             "button_install": "Installieren",
             "label_url": "Installiere Erweiterung via URL"
         },
-        "toast_zip": {
-            "body": "Installation fehlgeschlagen! Nur ZIP Datein werden unterstützt.",
-            "title": "Decky"
-        },
         "valve_internal": {
             "desc2": "Fasse in diesem Menü nichts an, es sei denn, du weißt was du tust.",
             "label": "Aktiviere Valve-internes Menü",
@@ -109,7 +107,6 @@
             "header": "Beta Teilnahme"
         },
         "developer_mode": {
-            "desc": "Aktiviere Deckys Entwickleroptionen.",
             "label": "Entwickleroptionen"
         },
         "other": {
@@ -122,8 +119,7 @@
     "SettingsIndex": {
         "developer_title": "Entwickler",
         "general_title": "Allgemein",
-        "plugins_title": "Erweiterungen",
-        "navbar_settings": "Decky Einstellungen"
+        "plugins_title": "Erweiterungen"
     },
     "Store": {
         "store_contrib": {
@@ -179,5 +175,21 @@
             "updating": "Aktualisiere"
         },
         "no_patch_notes_desc": "Für diese Version gibt es keine Patchnotizen"
+    },
+    "PluginView": {
+        "hidden_one": "",
+        "hidden_other": ""
+    },
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "install_one": "",
+            "install_other": "",
+            "mixed_one": "",
+            "mixed_other": "",
+            "update_one": "",
+            "update_other": "",
+            "reinstall_one": "",
+            "reinstall_other": ""
+        }
     }
 }

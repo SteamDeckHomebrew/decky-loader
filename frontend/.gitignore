@@ -2,3 +2,5 @@ node_modules/
 
 .yalc
 yalc.lock
+
+stats.html

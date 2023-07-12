@@ -220,7 +220,11 @@
       "alph_desc": "Alphabetical (A to Z)",
       "title": "Browse"
     },
-    "store_testing_cta": "Please consider testing new plugins to help the Decky Loader team!"
+    "store_testing_cta": "Please consider testing new plugins to help the Decky Loader team!",
+    "store_testing_warning": {
+      "desc": "You can use this store channel to test bleeding-edge plugin versions. Be sure to leave feedback on GitHub so the plugin can be updated for all users.",
+      "label": "Welcome to the Testing Store Channel"
+    }
   },
   "StoreSelect": {
     "custom_store": {
@@ -234,7 +238,7 @@
       "testing": "Testing"
     }
   },
-  "TitleView":{
+  "TitleView": {
     "decky_store_desc": "Open Decky Store",
     "settings_desc": "Open Decky Settings"
   },

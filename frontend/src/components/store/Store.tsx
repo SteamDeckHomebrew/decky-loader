@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 
 import logo from '../../../assets/plugin_store.png';
 import Logger from '../../logger';
-import { StorePlugin, getPluginList } from '../../store';
+import { Store, StorePlugin, getPluginList, getStore } from '../../store';
 import PluginCard from './PluginCard';
 
 const logger = new Logger('Store');
@@ -21,6 +21,7 @@ const logger = new Logger('Store');
 const StorePage: FC<{}> = () => {
   const [currentTabRoute, setCurrentTabRoute] = useState<string>('browse');
   const [data, setData] = useState<StorePlugin[] | null>(null);
+  const [isTesting, setIsTesting] = useState<boolean>(false);
   const { TabCount } = findModule((m) => {
     if (m?.TabCount && m?.TabTitle) return true;
     return false;
@@ -33,6 +34,9 @@ const StorePage: FC<{}> = () => {
       const res = await getPluginList();
       logger.log('got data!', res);
       setData(res);
+      const storeRes = await getStore();
+      logger.log(`store is ${storeRes}, isTesting is ${storeRes === Store.Testing}`);
+      setIsTesting(storeRes === Store.Testing);
     })();
   }, []);
 
@@ -58,7 +62,7 @@ const StorePage: FC<{}> = () => {
             tabs={[
               {
                 title: t('Store.store_tabs.title'),
-                content: <BrowseTab children={{ data: data }} />,
+                content: <BrowseTab children={{ data: data, isTesting: isTesting }} />,
                 id: 'browse',
                 renderTabAddon: () => <span className={TabCount}>{data.length}</span>,
               },
@@ -75,7 +79,7 @@ const StorePage: FC<{}> = () => {
   );
 };
 
-const BrowseTab: FC<{ children: { data: StorePlugin[] } }> = (data) => {
+const BrowseTab: FC<{ children: { data: StorePlugin[]; isTesting: boolean } }> = (data) => {
   const { t } = useTranslation();
 
   const sortOptions = useMemo(
@@ -178,6 +182,36 @@ const BrowseTab: FC<{ children: { data: StorePlugin[] } }> = (data) => {
           </div>
         </Focusable>
       </div>
+      {data.children.isTesting && (
+        <div
+          style={{
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            marginLeft: '20px',
+            marginRight: '20px',
+            marginBottom: '20px',
+            padding: '8px 36px',
+            background: 'rgba(255, 255, 0, 0.067)',
+            textAlign: 'center',
+            border: '2px solid rgba(255, 255, 0, 0.467)',
+          }}
+        >
+          <h2 style={{ margin: 0 }}>{t('Store.store_testing_warning.label')}</h2>
+          <span>
+            {`${t('Store.store_testing_warning.desc')} `}
+            <a
+              href="https://decky.xyz/testing"
+              target="_blank"
+              style={{
+                textDecoration: 'none',
+              }}
+            >
+              decky.xyz/testing
+            </a>
+          </span>
+        </div>
+      )}
       <div>
         {data.children.data
           .filter((plugin: StorePlugin) => {
@@ -229,13 +263,13 @@ const AboutTab: FC<{}> = () => {
       <span>
         {t('Store.store_testing_cta')}{' '}
         <a
-          href="https://deckbrew.xyz/testing"
+          href="https://decky.xyz/testing"
           target="_blank"
           style={{
             textDecoration: 'none',
           }}
         >
-          deckbrew.xyz/testing
+          decky.xyz/testing
         </a>
       </span>
       <span className="deckyStoreAboutHeader">{t('Store.store_contrib.label')}</span>

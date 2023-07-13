@@ -32,6 +32,10 @@ export interface PluginInstallRequest {
 // name: version
 export type PluginUpdateMapping = Map<string, StorePluginVersion>;
 
+export async function getStore(): Promise<Store> {
+  return await getSetting<Store>('store', Store.Default);
+}
+
 export async function getPluginList(): Promise<StorePlugin[]> {
   let version = await window.DeckyPluginLoader.updateVersion();
   let store = await getSetting<Store>('store', Store.Default);

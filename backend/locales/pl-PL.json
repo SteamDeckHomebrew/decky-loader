@@ -227,7 +227,11 @@
             "title": "Przeglądaj",
             "about": "Informacje"
         },
-        "store_testing_cta": "Rozważ przetestowanie nowych pluginów, aby pomóc zespołowi Decky Loader!"
+        "store_testing_cta": "Rozważ przetestowanie nowych pluginów, aby pomóc zespołowi Decky Loader!",
+        "store_testing_warning": {
+            "label": "Witamy w Testowym Kanale Sklepu",
+            "desc": "Możesz użyć tego kanału sklepu do testowania najnowszych wersji pluginów. Pamiętaj, aby zostawić opinię na GitHub, aby plugin mogła zostać zaktualizowana dla wszystkich użytkowników."
+        }
     },
     "StoreSelect": {
         "custom_store": {

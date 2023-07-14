@@ -1,1 +1,88 @@
-{}
+{
+    "BranchSelect": {
+        "update_channel": {
+            "prerelease": "Esijulkaisu",
+            "testing": "Testiversio",
+            "stable": "Vakaa versio",
+            "label": "Päivityskanava"
+        }
+    },
+    "Developer": {
+        "5secreload": "Uudelleenladataan 5 sekunin kuluttua",
+        "disabling": "Poistetaan React DevTools käytöstä",
+        "enabling": "Otetaan React DevTools käyttöön"
+    },
+    "FilePickerError": {
+        "errors": {
+            "perm_denied": "Sinulla ei ole käyttöoikeutta määritettyyn hakemistoon. Tarkista, onko käyttäjälläsi (käyttäjä 'deck' Steam Deckillä) vastaavat oikeudet käyttää määritettyä kansiota/tiedostoa.",
+            "unknown": "Tapahtui tuntematon virhe. Raaka virhe on: {{raw_error}}",
+            "file_not_found": "Määritetty polku ei kelpaa. Tarkista se ja kirjoita se uudelleen oikein."
+        }
+    },
+    "FilePickerIndex": {
+        "file": {
+            "select": "Valitse tämä tiedosto"
+        },
+        "files": {
+            "all_files": "Kaikki tiedostot",
+            "file_type": "Tiedostotyyppi",
+            "show_hidden": "Näytä piilotetut tiedostot"
+        },
+        "filter": {
+            "created_desc": "Luotu (uusin ensin)",
+            "modified_asce": "Muokattu (vanhin)",
+            "modified_desc": "Muokattu (uusin)",
+            "name_asce": "Z-A",
+            "name_desc": "A-Z",
+            "size_asce": "Koko (pienin ensin)",
+            "size_desc": "Koko (suurin ensin)",
+            "created_asce": "Luotu (vanhin ensin)"
+        },
+        "folder": {
+            "label": "Kansio",
+            "select": "Käytä tätä kansiota",
+            "show_more": "Näytä lisää tiedostoja"
+        }
+    },
+    "MultiplePluginsInstallModal": {
+        "confirm": "Haluatko varmasti tehdä seuraavat muutokset?",
+        "description": {
+            "reinstall": "Uudelleenasenna {{name}} {{version}}",
+            "update": "Päivitä {{name}} versioon {{version}}",
+            "install": "Asenna {{name}} {{version}}"
+        },
+        "ok_button": {
+            "idle": "Vahvista",
+            "loading": "Ladataan"
+        },
+        "title": {
+            "install_one": "Asenna yksi laajennus",
+            "install_other": "Asenna {{count}} laajennusta",
+            "update_one": "Päivitä yksi laajennus",
+            "update_other": "Päivitä {{count}} laajennusta",
+            "mixed_one": "Muuta yhtä laajennusta",
+            "mixed_other": "Muuta {{count}} laajennusta",
+            "reinstall_one": "Uudelleenasenna yksi laajennus",
+            "reinstall_other": "Uudelleenasenna {{count}} laajennusta"
+        }
+    },
+    "PluginCard": {
+        "plugin_install": "Asenna",
+        "plugin_no_desc": "Ei kuvausta.",
+        "plugin_version_label": "Laajennuksen versio",
+        "plugin_full_access": "Tällä laajennuksella on täysi pääsy Steam Deckkiisi."
+    },
+    "PluginInstallModal": {
+        "install": {
+            "button_idle": "Asenna",
+            "button_processing": "Asennetaan",
+            "desc": "Haluatko varmasti asentaa {{artifact}} {{version}}?",
+            "title": "Asenna {{artifact}}"
+        }
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "Takaisin"
+        }
+    }
+}

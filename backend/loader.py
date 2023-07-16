@@ -4,6 +4,7 @@ from logging import getLogger
 from os import listdir, path
 from pathlib import Path
 from traceback import print_exc
+from json import load
 
 from aiohttp import web
 from os.path import exists
@@ -142,12 +143,11 @@ class Loader:
         try:
             with open(path.join(docs_path, "docs.json")) as f:
                 config_file = load(f)
+                for key in config:
+                    if key in config_file:
+                        config[key] = config_file[key]
         except:
             self.logger.warning(f"unable to load docs.json for {plugin_name} at {plugin_path}")
-
-        for key in config:
-            if key in config_file:
-                config[key] = config_file[key]
 
         if config["use_translation"] == None:
             if exists(docs_path, config["default_language"]):

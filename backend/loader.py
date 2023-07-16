@@ -150,12 +150,12 @@ class Loader:
             self.logger.warning(f"unable to load docs.json for {plugin_name} at {plugin_path}")
 
         if config["use_translation"] == None:
-            if exists(docs_path, config["default_language"]):
+            if exists(path.join(docs_path, config["default_language"])):
                 config["use_translation"] = "True"
             else:
                 config["use_translation"] = "False"
-        if config["use_translation"] == "True": docs_file_path = docs_path
-        elif config["use_translation"] == "False": docs_file_path = path.join(docs_path, config["default_language"])
+        if config["use_translation"] == "True": docs_file_path = path.join(docs_path, config["default_language"]) 
+        elif config["use_translation"] == "False": docs_file_path = docs_path
 
         if config["file_list"] == None:
             files = listdir(docs_file_path)

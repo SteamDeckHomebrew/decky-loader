@@ -154,7 +154,7 @@ class Loader:
                 config["use_translation"] = "True"
             else:
                 config["use_translation"] = "False"
-        if config["use_translation"] == "True": docs_file_path = path.join(docs_path, config["default_language"]) 
+        if config["use_translation"] == "True": docs_file_path = path.join(docs_path, config["default_language"])
         elif config["use_translation"] == "False": docs_file_path = docs_path
 
         if config["file_list"] == None:
@@ -164,9 +164,12 @@ class Loader:
 
         for filename in config["file_list"]:
             try:
-                data = frontmatter.load(path.join(docs_file_path,filename))
+                if config["use_translation"] == "True" and not exists(path.join(docs_file_path,filename)):
+                    data = frontmatter.load(path.join(docs_path, config["default_language"]))
+                else:
+                    data = frontmatter.load(path.join(docs_file_path,filename))
                 docs[filename] = {
-                    "name": data['title'],
+                    "name": data.get("title", filename),
                     "text": data.content
                     }
             except:

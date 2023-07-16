@@ -13,6 +13,8 @@ from watchdog.observers import Observer
 from injector import get_tab, get_gamepadui_tab
 from plugin import PluginWrapper
 
+import frontmatter
+
 class FileChangeHandler(RegexMatchingEventHandler):
     def __init__(self, queue, plugin_path) -> None:
         super().__init__(regexes=[r'^.*?dist\/index\.js$', r'^.*?main\.py$'])
@@ -123,75 +125,62 @@ class Loader:
     
     def get_plugin_documentation(self, request):
         plugin_name, language = request.match_info["plugin_name"], request.match_info["language"]
-        self.logger.info(f"Loading docs for {plugin_name}")
-        docs = {} # {"filename": {"name":"readable name", "text":"marked up file"}}
         plugin_path = path.join(self.plugin_path, self.plugins[plugin_name].plugin_directory)
+        docs_path = path.join(plugin_path, "docs")
+        self.logger.info(f"Loading docs for {plugin_name} in {language}")
 
-        if not path.exists(path.join(plugin_path, "docs")):
+        if not exists(docs_path):
             try:
                 with open(path.join(plugin_path, "README.md")) as f:
                     return web.json_response({"readme.md":{"name":"readme","text":f.read()}})
             except:
-                raise Exception(f"Failed to load readme file for {plugin_name} at {plugin_path}")
+                logger.error(f"Failed to load readme file for {plugin_name} at {plugin_path}")
 
-        fallback_config = {"default_language": "en-US", "include_readme": "False"}
-        try:
-            with open(path.join(plugin_path, "docs", "config.json")) as f:
-                config = load(f)
-        except:
-            self.logger.warning(f"unable to load config.json for {plugin_name} at {plugin_path}")
-            config = fallback_config
+        docs = {} # {"filename": {"name":"readable name", "text":"marked up file"}}
 
-        # find list of files for default language and use those as a base
-        if "default_language" in config:
-            base_docs_path = path.join(plugin_path, "docs", config["default_language"])
-        else:
-            base_docs_path = path.join(plugin_path, "docs", fallback_config["default_language"])
-
-        try:
-            with open(path.join(base_docs_path, "docs.json")) as f:
-                files = load(f)
-            for filename in files:
-                docs[filename] = {"name":files[filename],"fallback_path":path.join(base_docs_path, filename)}
-
-        except: # docs.json is invalid in some way, so just use all the files in the docs folder
-            self.logger.warning(f"unable to load docs.json for {plugin_name} at {base_docs_path}")
-            files = listdir(base_docs_path)
-            for filename in files:
-                        docs[filename] = {"name":filename,"fallback_path":path.join(base_docs_path, filename)}
-
-        docs_path = path.join(plugin_path, "docs", language)
+        config = {"default_language": "en-US", "include_readme": "False", "file_list":None, "use_translation":None}
         try:
             with open(path.join(docs_path, "docs.json")) as f:
-                files = load(f)
-            for filename in files:
-                docs[filename] = {"name":files[filename],"path":path.join(docs_path, filename)}
+                config_file = load(f)
+        except:
+            self.logger.warning(f"unable to load docs.json for {plugin_name} at {plugin_path}")
 
-        except: # docs.json is invalid in some way, so just use all the files in the docs folder
-            self.logger.warning(f"unable to load docs.json for {plugin_name} at {docs_path}")
-            files = listdir(docs_path)
-            for filename in files:
-                        docs[filename] = {"name":filename,"path":path.join(docs_path, filename)}
+        for key in config:
+            if key in config_file:
+                config[key] = config_file[key]
 
-        for page in docs:
+        if config["use_translation"] == None:
+            if exists(docs_path, config["default_language"]):
+                config["use_translation"] = "True"
+            else:
+                config["use_translation"] = "False"
+        if config["use_translation"] == "True": docs_file_path = docs_path
+        elif config["use_translation"] == "False": docs_file_path = path.join(docs_path, config["default_language"])
+
+        if config["file_list"] == None:
+            files = listdir(docs_file_path)
+            config["file_list"] = filter(lambda x: (x[-3:] == ".md"),files)
+
+
+        for filename in config["file_list"]:
             try:
-                with open(docs[page]["path"]) as f:
-                    docs[page]["text"] = f.read()
+                data = frontmatter.load(path.join(docs_file_path,filename))
+                docs[filename] = {
+                    "name": data['title'],
+                    "text": data.content
+                    }
             except:
-                try:
-                    with open(docs[page]["fallback_path"]) as f:
-                        docs[page]["text"] = f.read()
-                except:
-                    self.logger.warning(f"unable to load {page} for {plugin_name} at {plugin_path}")
+                self.logger.warning(f"unable to load file {filename} for {plugin_name} at {docs_file_path}")
 
-        if "include_readme" in config and config["include_readme"] == "True":
+        if config["include_readme"] == "True":
             try:
                 with open(path.join(plugin_path, "README.md")) as f:
                     docs["README"] = {"name":"readme","text": f.read()}
             except:
-                self.logger.warning(f"unable to load readme for {plugin_name} at {plugin_path}")
+                self.logger.warning(f"unable to load the readme for {plugin_name} at {plugin_path}")
 
         return web.json_response(docs)
+
 
     def handle_frontend_bundle(self, request):
         plugin = self.plugins[request.match_info["plugin_name"]]

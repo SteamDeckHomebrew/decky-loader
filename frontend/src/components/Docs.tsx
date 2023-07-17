@@ -23,7 +23,6 @@ const DocsPage: VFC<{ content: string }> = ({ content }) => {
         .decky-docs-markdown > .Panel.Focusable.gpfocuswithin {background-color: #868da117;}
         .decky-docs-markdown img {max-width: 588px;}
         `}
-        `}
         </style>
         <Scrollable ref={ref}>
             <ScrollArea scrollable={ref} noFocusRing={true}>
@@ -34,9 +33,14 @@ const DocsPage: VFC<{ content: string }> = ({ content }) => {
       )
 }
 
+interface DocsPage {
+  title: string;
+  text: string;
+}
+
 const StorePage: VFC<{}> = () => {
 
-    const [docs, setDocs] = useState<Object | null>(null); // {"filename": {"name":"readable name", "text":"marked up file"}}
+    const [docs, setDocs] = useState<DocsPage[] | null>(null);
     const { plugin } = useParams<{ plugin: string }>()
 
     useEffect(() => {
@@ -58,7 +62,7 @@ const StorePage: VFC<{}> = () => {
         <div style={{ height: '100%' }}>
           <SteamSpinner />
         </div>
-      : (Object.keys(docs).length == 1) ?
+      : (docs.length == 1) ?
       <div style={{padding:"calc(12px + 1.4vw) 2.8vw", paddingTop:"calc( 24px + var(--basicui-header-height, 0px) )", background:"#0e141b"}}>
         <DocsPage content={docs[Object.keys(docs)[0]]["text"]} />
       </div>
@@ -66,11 +70,11 @@ const StorePage: VFC<{}> = () => {
       <SidebarNavigation
       title={plugin}
       showTitle={true}
-      pages={Object.keys(docs).map((file) => (
+      pages={docs.map((file) => (
         {
-          title: docs[file]["name"],
-          content:<DocsPage content={docs[file]["text"]} />,
-          route: `/decky/docs/${plugin}/${file}`,
+          title: file["name"],
+          content:<DocsPage content={file["text"]} />,
+          route: `/decky/docs/${plugin}/${file["name"]}`,
           hideTitle: true,
         }
       ))}
@@ -79,13 +83,5 @@ const StorePage: VFC<{}> = () => {
     </>
     )
 }
-
-/*
-<Focusable style={{padding:"calc(12px + 1.4vw) 2.8vw", paddingTop:"calc( 24px + var(--basicui-header-height, 0px) )"}} className="deckyDocsMarkdown">
-  <ReactMarkdown children={docs[Object.keys(docs)[0]]["text"]} remarkPlugins={[remarkGfm]}/>
-</Focusable>
-
-<div className="deckyDocsMarkdown"><ReactMarkdown children={docs[file]["text"]} remarkPlugins={[remarkGfm]}/></div>
-*/
 
 export default StorePage;

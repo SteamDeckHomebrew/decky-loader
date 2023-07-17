@@ -133,11 +133,11 @@ class Loader:
         if not exists(docs_path):
             try:
                 with open(path.join(plugin_path, "README.md")) as f:
-                    return web.json_response({"readme.md":{"name":"readme","text":f.read()}})
+                    return web.json_response([{"title":"readme","text":f.read()}])
             except:
                 logger.error(f"Failed to load readme file for {plugin_name} at {plugin_path}")
 
-        docs = {} # {"filename": {"name":"readable name", "text":"marked up file"}}
+        docs = [] # [{"title":"readable name", "text":"marked up file"},'separator',...]
 
         config = {"default_language": "en-US", "include_readme": "False", "file_list":None, "use_translation":None}
         try:
@@ -163,22 +163,25 @@ class Loader:
 
 
         for filename in config["file_list"]:
-            try:
-                if config["use_translation"] == "True" and not exists(path.join(docs_file_path,filename)):
-                    data = frontmatter.load(path.join(docs_path, config["default_language"]))
-                else:
-                    data = frontmatter.load(path.join(docs_file_path,filename))
-                docs[filename] = {
-                    "name": data.get("title", filename),
-                    "text": data.content
-                    }
-            except:
-                self.logger.warning(f"unable to load file {filename} for {plugin_name} at {docs_file_path}")
+            if filename == "seperator":
+                docs.append('separator')
+            else:
+                try:
+                    if config["use_translation"] == "True" and not exists(path.join(docs_file_path,filename)):
+                        data = frontmatter.load(path.join(docs_path, config["default_language"]))
+                    else:
+                        data = frontmatter.load(path.join(docs_file_path,filename))
+                    docs.append({
+                        "title": data.get("title", filename),
+                        "text": data.content
+                        })
+                except:
+                    self.logger.warning(f"unable to load file {filename} for {plugin_name} at {docs_file_path}")
 
         if config["include_readme"] == "True":
             try:
                 with open(path.join(plugin_path, "README.md")) as f:
-                    docs["README"] = {"name":"readme","text": f.read()}
+                    docs.append({"title":"readme","text": f.read()})
             except:
                 self.logger.warning(f"unable to load the readme for {plugin_name} at {plugin_path}")
 

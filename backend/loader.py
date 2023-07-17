@@ -168,7 +168,7 @@ class Loader:
             else:
                 try:
                     if config["use_translation"] == "True" and not exists(path.join(docs_file_path,filename)):
-                        data = frontmatter.load(path.join(docs_path, config["default_language"]))
+                        data = frontmatter.load(path.join(docs_path, config["default_language"], filename))
                     else:
                         data = frontmatter.load(path.join(docs_file_path,filename))
                     docs.append({

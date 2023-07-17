@@ -72,9 +72,9 @@ const StorePage: VFC<{}> = () => {
       showTitle={true}
       pages={docs.map((file) => (
         file == 'separator' ? 'separator' : {
-          title: file["name"],
+          title: file["title"],
           content:<DocsPage content={file["text"]} />,
-          route: `/decky/docs/${plugin}/${file["name"]}`,
+          route: `/decky/docs/${plugin}/${file["title"]}`,
           hideTitle: true,
         }
       ))}

@@ -2,9 +2,9 @@
     "BranchSelect": {
         "update_channel": {
             "label": "업데이트 배포 채널",
-            "stable": "안정판",
-            "testing": "시험판",
-            "prerelease": "사전 출시판"
+            "stable": "안정",
+            "testing": "테스트",
+            "prerelease": "사전 출시"
         }
     },
     "Developer": {
@@ -201,7 +201,11 @@
             "alph_desc": "알파벳순 (A-Z)",
             "title": "검색"
         },
-        "store_testing_cta": "새로운 플러그인을 테스트하여 Decky Loader 팀을 도와주세요!"
+        "store_testing_cta": "새로운 플러그인을 테스트하여 Decky Loader 팀을 도와주세요!",
+        "store_testing_warning": {
+            "desc": "이 스토어 채널을 사용하여 가장 최신 버전의 플러그인을 테스트할 수 있습니다. GitHub에 피드백을 남겨서 모든 사용자가 업데이트 할 수 있게 해주세요.",
+            "label": "테스트 스토어 채널에 오신 것을 환영합니다"
+        }
     },
     "StoreSelect": {
         "custom_store": {
@@ -212,7 +216,7 @@
             "custom": "사용자 지정",
             "label": "스토어 배포 채널",
             "default": "기본",
-            "testing": "시험"
+            "testing": "테스트"
         }
     },
     "Updater": {

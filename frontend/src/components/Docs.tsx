@@ -40,7 +40,7 @@ interface DocsPage {
 
 const StorePage: VFC<{}> = () => {
 
-    const [docs, setDocs] = useState<DocsPage[] | null>(null);
+    const [docs, setDocs] = useState<(DocsPage | 'separator')[] | null>(null);
     const { plugin } = useParams<{ plugin: string }>()
 
     useEffect(() => {
@@ -71,7 +71,7 @@ const StorePage: VFC<{}> = () => {
       title={plugin}
       showTitle={true}
       pages={docs.map((file) => (
-        {
+        file == 'separator' ? 'separator' : {
           title: file["name"],
           content:<DocsPage content={file["text"]} />,
           route: `/decky/docs/${plugin}/${file["name"]}`,

@@ -172,7 +172,7 @@ class Loader:
                     else:
                         data = frontmatter.load(path.join(docs_file_path,filename))
                     docs.append({
-                        "title": data.get("title", filename),
+                        "title": data.get("title", filename[:-3]),
                         "text": data.content
                         })
                 except:

@@ -180,7 +180,7 @@ if __name__ == "__main__":
         multiprocessing.freeze_support()
     else:
       if get_effective_user_id() != 0:
-        logger.warn(f"decky is running as an unprivileged user, this is not officially supported and may cause issues")
+        logger.warning(f"decky is running as an unprivileged user, this is not officially supported and may cause issues")
 
     # Append the loader's plugin path to the recognized python paths
     sys.path.append(path.join(path.dirname(__file__), "plugin"))

@@ -24,7 +24,7 @@ from aiohttp_jinja2 import setup as jinja_setup
 # local modules
 from browser import PluginBrowser
 from helpers import (REMOTE_DEBUGGER_UNIT, csrf_middleware, get_csrf_token,
-                     mkdir_as_user, get_system_pythonpaths)
+                     mkdir_as_user, get_system_pythonpaths, get_effective_user_id)
                      
 from injector import get_gamepadui_tab, Tab, get_tabs, close_old_tabs
 from loader import Loader
@@ -178,6 +178,9 @@ if __name__ == "__main__":
 
         # Required for multiprocessing support in frozen files
         multiprocessing.freeze_support()
+    else:
+      if get_effective_user_id() != 0:
+        logger.warning(f"decky is running as an unprivileged user, this is not officially supported and may cause issues")
 
     # Append the loader's plugin path to the recognized python paths
     sys.path.append(path.join(path.dirname(__file__), "plugin"))

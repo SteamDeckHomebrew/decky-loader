@@ -60,6 +60,8 @@ def chown(path : str,  user : UserType = UserType.HOST_USER, recursive : bool = 
     return result == 0
 
 def chmod(path : str, permissions : int, recursive : bool = True) -> bool:
+    if _get_effective_user_id() != 0:
+        return True
     result = call(["chmod", "-R", str(permissions), path] if recursive else ["chmod", str(permissions), path])
     return result == 0
 

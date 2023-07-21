@@ -1,4 +1,4 @@
-import os, pwd, grp, sys, logging, geteuid
+import os, pwd, grp, sys, logging
 from subprocess import call, run, DEVNULL, PIPE, STDOUT
 from customtypes import UserType
 

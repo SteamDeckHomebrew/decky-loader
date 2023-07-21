@@ -215,7 +215,11 @@
             "alph_desc": "Abecedně (A do Z)",
             "title": "Procházet"
         },
-        "store_testing_cta": "Zvažte prosím testování nových pluginů, pomůžete tím týmu Decky Loader!"
+        "store_testing_cta": "Zvažte prosím testování nových pluginů, pomůžete tím týmu Decky Loader!",
+        "store_testing_warning": {
+            "desc": "Tento kanál obchodu můžete použít k testování nejnovějších verzí pluginů. Nezapomeňte zanechat zpětnou vazbu na GitHubu, aby bylo možné plugin aktualizovat pro všechny uživatele.",
+            "label": "Vítejte na testovacím kanálu obchodu"
+        }
     },
     "StoreSelect": {
         "custom_store": {
@@ -255,5 +259,9 @@
             "unknown": "Nastala neznámá chyba. Nezpracovaná chyba je: {{raw_error}}",
             "perm_denied": "Nemáte přístup k zadanému adresáři. Zkontrolujte, zda jako uživatel (deck na Steam Decku) máte odpovídající oprávnění pro přístup k dané složce/souboru."
         }
+    },
+    "TitleView": {
+        "settings_desc": "Otevřít nastavení Decky",
+        "decky_store_desc": "Otevřít obchod Decky"
     }
 }

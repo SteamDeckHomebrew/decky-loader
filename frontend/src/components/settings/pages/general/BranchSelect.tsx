@@ -11,7 +11,12 @@ const logger = new Logger('BranchSelect');
 enum UpdateBranch {
   Stable,
   Prerelease,
-  // Testing, // commented out as it should not show up as an option in this menu
+  Testing,
+}
+
+enum LessUpdateBranch {
+  Stable,
+  Prerelease,
 }
 
 const BranchSelect: FunctionComponent<{}> = () => {
@@ -28,7 +33,7 @@ const BranchSelect: FunctionComponent<{}> = () => {
     // 0 being stable, 1 being pre-release and 2 being testing (not a branch!)
     <Field label={t('BranchSelect.update_channel.label')} childrenContainerWidth={'fixed'}>
       <Dropdown
-        rgOptions={Object.values(UpdateBranch)
+        rgOptions={Object.values(selectedBranch == UpdateBranch.Testing ? UpdateBranch : LessUpdateBranch)
           .filter((branch) => typeof branch == 'string')
           .map((branch) => ({
             label: tBranches[UpdateBranch[branch]],
@@ -39,7 +44,6 @@ const BranchSelect: FunctionComponent<{}> = () => {
           await setSelectedBranch(newVal.data);
           callUpdaterMethod('check_for_updates');
           logger.log('switching branches!');
-          console.log(Object.values(UpdateBranch))
         }}
       />
     </Field>

@@ -62,7 +62,7 @@ jobs:
           -DSQLITE_SECURE_DELETE -DSQLITE_ENABLE_STMTVTAB -DSQLITE_MAX_VARIABLE_NUMBER=250000 -DSQLITE_MAX_EXPR_DEPTH=10000 -DSQLITE_ENABLE_MATH_FUNCTIONS" &&
         make &&
         sudo make install &&
-        sudo cp /usr/lib/sqlite3.so.0 /usr/lib/x86_64-linux-gnu/ &&
+        sudo cp /usr/lib/sqlite3.so /usr/lib/x86_64-linux-gnu/libsqlite3.so.0 &&
         sudo cp /usr/lib/sqlite3.so.0.8.6 /usr/lib/x86_64-linux-gnu/ &&
         rm -r /tmp/sqlite-autoconf-3420000
 

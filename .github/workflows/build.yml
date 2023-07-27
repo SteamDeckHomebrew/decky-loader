@@ -47,10 +47,10 @@ jobs:
       with:
         node-version: 18
       
-    - name: Set up Python 3.10.12 🐍
+    - name: Set up Python 3.10.6 🐍
       uses: actions/setup-python@v4
       with:
-        python-version: "3.10.12"
+        python-version: "3.10.6"
         
     - name: Install Python dependencies ⬇️
       run: |
@@ -97,10 +97,10 @@ jobs:
       with:
         node-version: 18
       
-    - name: Set up Python 3.10.12 🐍
+    - name: Set up Python 3.10.6 🐍
       uses: actions/setup-python@v4
       with:
-        python-version: "3.10.12"
+        python-version: "3.10.6"
         
     - name: Install Python dependencies ⬇️
       run: |

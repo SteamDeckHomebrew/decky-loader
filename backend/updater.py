@@ -210,7 +210,7 @@ class Updater:
                 chmod(path.join(getcwd(), download_filename), 777, False)
                 if get_selinux():
                     from subprocess import call
-                    call(["chcon", "-R", "-t", "bin_t", path.join(getcwd(), download_filename)])
+                    call(["chcon", "-t", "bin_t", path.join(getcwd(), download_filename)])
 
             logger.info("Updated loader installation.")
             await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)

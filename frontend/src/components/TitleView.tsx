@@ -49,15 +49,15 @@ const TitleView: VFC = () => {
   }
 
   return (
-    <div className={staticClasses.Title} style={titleStyles}>
+    <Focusable className={staticClasses.Title} style={titleStyles}>
       <DialogButton
         style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
         onClick={closeActivePlugin}
       >
         <FaArrowLeft style={{ marginTop: '-4px', display: 'block' }} />
       </DialogButton>
-      <div style={{ flex: 0.9 }}>{activePlugin.name}</div>
-    </div>
+      {activePlugin?.titleView || <div style={{ flex: 0.9 }}>{activePlugin.name}</div>}
+    </Focusable>
   );
 };
 

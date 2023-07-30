@@ -227,7 +227,11 @@
             "alph_desc": "Alfabetico (A a Z)",
             "title": "Sfoglia"
         },
-        "store_testing_cta": "Valuta la possibilità di testare nuovi plugin per aiutare il team di Decky Loader!"
+        "store_testing_cta": "Valuta la possibilità di testare nuovi plugin per aiutare il team di Decky Loader!",
+        "store_testing_warning": {
+            "label": "Benvenuto nel Negozio di Test dei Plugins",
+            "desc": "Puoi usare questo canale del negozio per testare versioni di plugin sperimentali. Assicurati di lasciare un feedback su Github dopo averlo testato in modo che il plugin possa essere promosso a stabile per tutti gli altri utenti o per permettere allo sviluppatore di plugin di correggere eventuali errori."
+        }
     },
     "StoreSelect": {
         "custom_store": {
@@ -255,5 +259,9 @@
             "reloading": "Ricaricando",
             "updating": "Aggiornando"
         }
+    },
+    "TitleView": {
+        "settings_desc": "Apri le impostazioni di Decky",
+        "decky_store_desc": "Apri lo store di Decky"
     }
 }

@@ -120,7 +120,7 @@
         },
         "decky_update_available": "Atualização para {{tag_name}} disponível!",
         "plugin_error_uninstall": "Um erro aconteceu ao carregar {{name}}, como mostrado acima. Isso normalmente significa que o plugin precisa de uma atualização para a nova versão do SteamUI. Confira se existe uma atualização ou avalie a remoção do plugin nas configurações do Decky, na sessão de plugins.",
-        "plugin_update_one": "Atualizações disponível para 1 plugin!",
+        "plugin_update_one": "Atualização disponível para 1 plugin!",
         "plugin_update_many": "Atualizações disponíveis para {{count}} plugins!",
         "plugin_update_other": "Atualizações disponíveis para {{count}} plugins!"
     },
@@ -172,6 +172,11 @@
         },
         "beta": {
             "header": "Participação no Beta"
+        },
+        "notifications": {
+            "decky_updates_label": "Atualização do Decky disponível",
+            "header": "Noificações",
+            "plugin_updates_label": "Atualizações de Plugin disponíveis"
         }
     },
     "SettingsIndex": {
@@ -247,7 +252,8 @@
     "FilePickerError": {
         "errors": {
             "file_not_found": "O caminho especificado não é válido. Por favor, confira e reinsira corretamente.",
-            "unknown": "Ocorreu um erro desconhecido. O erro completo é: {{raw_error}}"
+            "unknown": "Ocorreu um erro desconhecido. O erro completo é: {{raw_error}}",
+            "perm_denied": "Você não tem acesso à este diretório. Por favor, verifiquei se seu usuário (deck no Steam Deck) tem as permissões necessárias para acessar este arquivo/pasta."
         }
     }
 }

@@ -2,12 +2,13 @@ import { FC, createContext, useContext, useEffect, useState } from 'react';
 
 import { DEFAULT_NOTIFICATION_SETTINGS, NotificationSettings } from '../notification-service';
 import { Plugin } from '../plugin';
+import { DEFAULT_PLUGIN_ORDER, PluginOrder } from '../plugin-order-service';
 import { PluginUpdateMapping } from '../store';
 import { VerInfo } from '../updater';
 
 interface PublicDeckyState {
   plugins: Plugin[];
-  pluginOrder: string[];
+  pluginOrder: PluginOrder;
   hiddenPlugins: string[];
   activePlugin: Plugin | null;
   updates: PluginUpdateMapping | null;
@@ -25,7 +26,7 @@ export interface UserInfo {
 
 export class DeckyState {
   private _plugins: Plugin[] = [];
-  private _pluginOrder: string[] = [];
+  private _pluginOrder = DEFAULT_PLUGIN_ORDER;
   private _hiddenPlugins: string[] = [];
   private _activePlugin: Plugin | null = null;
   private _updates: PluginUpdateMapping | null = null;
@@ -62,7 +63,7 @@ export class DeckyState {
     this.notifyUpdate();
   }
 
-  setPluginOrder(pluginOrder: string[]) {
+  setPluginOrder(pluginOrder: PluginOrder) {
     this._pluginOrder = pluginOrder;
     this.notifyUpdate();
   }

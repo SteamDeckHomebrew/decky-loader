@@ -200,7 +200,7 @@ class PluginBrowser:
             else:
                 logger.fatal(f"Failed Downloading Remote Binaries")
         else:
-            self.log.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
+            logger.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
         if self.loader.watcher:
             self.loader.watcher.disabled = False
 

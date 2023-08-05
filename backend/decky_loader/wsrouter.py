@@ -79,7 +79,7 @@ class WSRouter:
                         match data["type"]:
                             case MessageType.CALL.value:
                                 # do stuff with the message
-                                if self.routes[data["route"]]:
+                                if data["route"] in self.routes:
                                     try:
                                         res = await self.routes[data["route"]](*data["args"])
                                         await self.write({"type": MessageType.REPLY.value, "id": data["id"], "result": res})
@@ -87,7 +87,8 @@ class WSRouter:
                                     except:
                                         await self.write({"type": MessageType.ERROR.value, "id": data["id"], "error": format_exc()})
                                 else:
-                                    await self.write({"type": MessageType.ERROR.value, "id": data["id"], "error": "Route does not exist."})
+                                    # Dunno why but fstring doesnt work here
+                                    await self.write({"type": MessageType.ERROR.value, "id": data["id"], "error": "Route " + data["route"] + " does not exist."})
                             case MessageType.REPLY.value:
                                 if self.running_calls[data["id"]]:
                                     self.running_calls[data["id"]].set_result(data["result"])

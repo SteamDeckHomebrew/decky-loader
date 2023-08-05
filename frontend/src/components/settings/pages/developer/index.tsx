@@ -91,13 +91,16 @@ export default function DeveloperSettings() {
         >
           <DialogButton
             onClick={async () => {
-              let res = await window.DeckyPluginLoader.callServerMethod('get_tab_id', { name: 'SharedJSContext' });
-              if (res.success) {
-                Navigation.NavigateToExternalWeb(
-                  'localhost:8080/devtools/inspector.html?ws=localhost:8080/devtools/page/' + res.result,
+              try {
+                let tabId = await window.DeckyBackend.call<[name: string], string>(
+                  'utilities/get_tab_id',
+                  'SharedJSContext',
                 );
-              } else {
-                console.error('Unable to find ID for SharedJSContext tab ', res.result);
+                Navigation.NavigateToExternalWeb(
+                  'localhost:8080/devtools/inspector.html?ws=localhost:8080/devtools/page/' + tabId,
+                );
+              } catch (e) {
+                console.error('Unable to find ID for SharedJSContext tab ', e);
                 Navigation.NavigateToExternalWeb('localhost:8080');
               }
             }}

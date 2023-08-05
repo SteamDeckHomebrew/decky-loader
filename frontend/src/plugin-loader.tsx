@@ -34,7 +34,6 @@ import Toaster from './toaster';
 import { VerInfo, callUpdaterMethod } from './updater';
 import { getSetting, setSetting } from './utils/settings';
 import TranslationHelper, { TranslationClass } from './utils/TranslationHelper';
-import { WSRouter } from './wsrouter';
 
 const StorePage = lazy(() => import('./components/store/Store'));
 const SettingsPage = lazy(() => import('./components/settings'));
@@ -48,8 +47,6 @@ class PluginLoader extends Logger {
   private routerHook: RouterHook = new RouterHook();
   public toaster: Toaster = new Toaster();
   private deckyState: DeckyState = new DeckyState();
-
-  public ws: WSRouter = new WSRouter();
 
   public hiddenPluginsService = new HiddenPluginsService(this.deckyState);
   public notificationService = new NotificationService(this.deckyState);
@@ -105,15 +102,13 @@ class PluginLoader extends Logger {
 
     initFilepickerPatches();
 
-    this.ws.connect().then(() => {
-      this.getUserInfo();
+    this.getUserInfo();
 
-      this.updateVersion();
-    });
+    this.updateVersion();
   }
 
   public async getUserInfo() {
-    const userInfo = (await this.callServerMethod('get_user_info')).result as UserInfo;
+    const userInfo = await window.DeckyBackend.call<[], UserInfo>('utilities/get_user_info');
     setSetting('user_info.user_name', userInfo.username);
     setSetting('user_info.user_home', userInfo.path);
   }
@@ -183,8 +178,8 @@ class PluginLoader extends Logger {
         version={version}
         hash={hash}
         installType={install_type}
-        onOK={() => this.callServerMethod('confirm_plugin_install', { request_id })}
-        onCancel={() => this.callServerMethod('cancel_plugin_install', { request_id })}
+        onOK={() => window.DeckyBackend.call<[string]>('utilities/confirm_plugin_install', request_id)}
+        onCancel={() => window.DeckyBackend.call<[string]>('utilities/cancel_plugin_install', request_id)}
       />,
     );
   }
@@ -196,8 +191,8 @@ class PluginLoader extends Logger {
     showModal(
       <MultiplePluginsInstallModal
         requests={requests}
-        onOK={() => this.callServerMethod('confirm_plugin_install', { request_id })}
-        onCancel={() => this.callServerMethod('cancel_plugin_install', { request_id })}
+        onOK={() => window.DeckyBackend.call<[string]>('utilities/confirm_plugin_install', request_id)}
+        onCancel={() => window.DeckyBackend.call<[string]>('utilities/cancel_plugin_install', request_id)}
       />,
     );
   }
@@ -360,6 +355,7 @@ class PluginLoader extends Logger {
     selectFiles?: boolean,
     regex?: RegExp,
   ): Promise<{ path: string; realpath: string }> {
+    console.warn('openFilePicker is deprecated and will be removed. Please migrate to openFilePickerV2');
     if (selectFiles) {
       return this.openFilePickerV2(FileSelectionType.FILE, startPath, true, true, regex);
     } else {
@@ -443,18 +439,10 @@ class PluginLoader extends Logger {
           code,
         });
       },
-      injectCssIntoTab(tab: string, style: string) {
-        return this.callServerMethod('inject_css_into_tab', {
-          tab,
-          style,
-        });
-      },
-      removeCssFromTab(tab: string, cssId: any) {
-        return this.callServerMethod('remove_css_from_tab', {
-          tab,
-          css_id: cssId,
-        });
-      },
+      injectCssIntoTab: window.DeckyBackend.callable<[tab: string, style: string], string>(
+        'utilities/inject_css_into_tab',
+      ),
+      removeCssFromTab: window.DeckyBackend.callable<[tab: string, cssId: string]>('utilities/remove_css_from_tab'),
     };
   }
 }

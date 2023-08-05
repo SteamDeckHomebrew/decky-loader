@@ -66,6 +66,21 @@ class Utilities:
             context.ws.add_route("utilities/ping", self.ping)
             context.ws.add_route("utilities/settings/get", self.get_setting)
             context.ws.add_route("utilities/settings/set", self.set_setting)
+            context.ws.add_route("utilities/install_plugin", self.install_plugin)
+            context.ws.add_route("utilities/install_plugins", self.install_plugins)
+            context.ws.add_route("utilities/cancel_plugin_install", self.cancel_plugin_install)
+            context.ws.add_route("utilities/confirm_plugin_install", self.confirm_plugin_install)
+            context.ws.add_route("utilities/uninstall_plugin", self.uninstall_plugin)
+            context.ws.add_route("utilities/execute_in_tab", self.execute_in_tab)
+            context.ws.add_route("utilities/inject_css_into_tab", self.inject_css_into_tab)
+            context.ws.add_route("utilities/remove_css_from_tab", self.remove_css_from_tab)
+            context.ws.add_route("utilities/allow_remote_debugging", self.allow_remote_debugging)
+            context.ws.add_route("utilities/disallow_remote_debugging", self.disallow_remote_debugging)
+            context.ws.add_route("utilities/filepicker_ls", self.filepicker_ls)
+            context.ws.add_route("utilities/disable_rdt", self.disable_rdt)
+            context.ws.add_route("utilities/enable_rdt", self.enable_rdt)
+            context.ws.add_route("utilities/get_tab_id", self.get_tab_id)
+            context.ws.add_route("utilities/get_user_info", self.get_user_info)
 
     async def _handle_server_method_call(self, request):
         method_name = request.match_info["method_name"]
@@ -139,62 +154,39 @@ class Utilities:
               "result": e
             }
 
-    async def inject_css_into_tab(self, tab: str, style: str):
-        try:
-            css_id = str(uuid.uuid4())
+    async def inject_css_into_tab(self, tab: str, style: str) -> str:
+        css_id = str(uuid.uuid4())
 
-            result = await inject_to_tab(tab,
-                f"""
-                (function() {{
-                    const style = document.createElement('style');
-                    style.id = "{css_id}";
-                    document.head.append(style);
-                    style.textContent = `{style}`;
-                }})()
-                """, False)
+        result = await inject_to_tab(tab,
+            f"""
+            (function() {{
+                const style = document.createElement('style');
+                style.id = "{css_id}";
+                document.head.append(style);
+                style.textContent = `{style}`;
+            }})()
+            """, False)
 
-            if result and "exceptionDetails" in result["result"]:
-                return {
-                    "success": False,
-                    "result": result["result"]
-                }
+        if "exceptionDetails" in result["result"]:
+            raise result["result"]["exceptionDetails"]
 
-            return {
-                "success": True,
-                "result": css_id
-            }
-        except Exception as e:
-            return {
-                "success": False,
-                "result": e
-            }
+        return css_id
 
     async def remove_css_from_tab(self, tab: str, css_id: str):
-        try:
-            result = await inject_to_tab(tab,
-                f"""
-                (function() {{
-                    let style = document.getElementById("{css_id}");
+        result = await inject_to_tab(tab,
+            f"""
+            (function() {{
+                let style = document.getElementById("{css_id}");
 
-                    if (style.nodeName.toLowerCase() == 'style')
-                        style.parentNode.removeChild(style);
-                }})()
-                """, False)
+                if (style.nodeName.toLowerCase() == 'style')
+                    style.parentNode.removeChild(style);
+            }})()
+            """, False)
 
-            if result and "exceptionDetails" in result["result"]:
-                return {
-                    "success": False,
-                    "result": result
-                }
+        if "exceptionDetails" in result["result"]:
+            raise result["result"]["exceptionDetails"]
 
-            return {
-                "success": True
-            }
-        except Exception as e:
-            return {
-                "success": False,
-                "result": e
-            }
+        return
 
     async def get_setting(self, key: str, default: Any):
         return self.context.settings.getSetting(key, default)
@@ -211,12 +203,12 @@ class Utilities:
         return True
 
     async def filepicker_ls(self, 
-                            path : str | None = None, 
+                            path: str | None = None, 
                             include_files: bool = True,
                             include_folders: bool = True,
-                            include_ext: list[str] = [],
+                            include_ext: list[str] | None = None,
                             include_hidden: bool = False,
-                            order_by: str = "name_asc",
+                            order_by: str = "name_desc",
                             filter_for: str | None = None,
                             page: int = 1,
                             max: int = 1000):

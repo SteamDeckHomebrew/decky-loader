@@ -18,8 +18,8 @@ export default function RemoteDebuggingSettings() {
         value={allowRemoteDebugging || false}
         onChange={(toggleValue) => {
           setAllowRemoteDebugging(toggleValue);
-          if (toggleValue) window.DeckyPluginLoader.callServerMethod('allow_remote_debugging');
-          else window.DeckyPluginLoader.callServerMethod('disallow_remote_debugging');
+          if (toggleValue) window.DeckyBackend.call('allow_remote_debugging');
+          else window.DeckyBackend.call('disallow_remote_debugging');
         }}
       />
     </Field>

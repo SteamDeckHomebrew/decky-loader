@@ -19,8 +19,6 @@ declare global {
 }
 
 (async () => {
-  window.deckyAuthToken = await fetch('http://127.0.0.1:1337/auth/token').then((r) => r.text());
-
   i18n
     .use(Backend)
     .use(initReactI18next)

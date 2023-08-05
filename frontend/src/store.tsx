@@ -1,4 +1,4 @@
-import { InstallType, Plugin } from './plugin';
+import { InstallType, Plugin, installPlugin, installPlugins } from './plugin';
 import { getSetting, setSetting } from './utils/settings';
 
 export enum Store {
@@ -92,33 +92,24 @@ export async function getPluginList(): Promise<StorePlugin[]> {
 
 export async function installFromURL(url: string) {
   const splitURL = url.split('/');
-  await window.DeckyPluginLoader.callServerMethod('install_plugin', {
-    name: splitURL[splitURL.length - 1].replace('.zip', ''),
-    artifact: url,
-  });
+  await installPlugin(url, splitURL[splitURL.length - 1].replace('.zip', ''));
 }
 
 export async function requestPluginInstall(plugin: string, selectedVer: StorePluginVersion, installType: InstallType) {
   const artifactUrl = selectedVer.artifact ?? pluginUrl(selectedVer.hash);
-  await window.DeckyPluginLoader.callServerMethod('install_plugin', {
-    name: plugin,
-    artifact: artifactUrl,
-    version: selectedVer.name,
-    hash: selectedVer.hash,
-    install_type: installType,
-  });
+  await installPlugin(artifactUrl, plugin, selectedVer.name, selectedVer.hash, installType);
 }
 
 export async function requestMultiplePluginInstalls(requests: PluginInstallRequest[]) {
-  await window.DeckyPluginLoader.callServerMethod('install_plugins', {
-    requests: requests.map(({ plugin, installType, selectedVer }) => ({
+  await installPlugins(
+    requests.map(({ plugin, installType, selectedVer }) => ({
       name: plugin,
       artifact: selectedVer.artifact ?? pluginUrl(selectedVer.hash),
       version: selectedVer.name,
       hash: selectedVer.hash,
       install_type: installType,
     })),
-  });
+  );
 }
 
 export async function checkForUpdates(plugins: Plugin[]): Promise<PluginUpdateMapping> {

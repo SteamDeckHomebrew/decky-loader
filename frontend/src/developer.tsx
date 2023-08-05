@@ -50,9 +50,7 @@ export async function setShouldConnectToReactDevTools(enable: boolean) {
     icon: <FaReact />,
   });
   await sleep(5000);
-  return enable
-    ? window.DeckyPluginLoader.callServerMethod('enable_rdt')
-    : window.DeckyPluginLoader.callServerMethod('disable_rdt');
+  return enable ? window.DeckyBackend.call('utilities/enable_rdt') : window.DeckyBackend.call('utilities/disable_rdt');
 }
 
 export async function startup() {

@@ -95,29 +95,20 @@ const sortOptions = [
   },
 ];
 
-function getList(
-  path: string,
-  includeFiles: boolean,
-  includeFolders: boolean = true,
-  includeExt: string[] | null = null,
-  includeHidden: boolean = false,
-  orderBy: SortOptions = SortOptions.name_desc,
-  filterFor: RegExp | ((file: File) => boolean) | null = null,
-  pageNumber: number = 1,
-  max: number = 1000,
-): Promise<{ result: FileListing | string; success: boolean }> {
-  return window.DeckyPluginLoader.callServerMethod('filepicker_ls', {
-    path,
-    include_files: includeFiles,
-    include_folders: includeFolders,
-    include_ext: includeExt ? includeExt : [],
-    include_hidden: includeHidden,
-    order_by: orderBy,
-    filter_for: filterFor,
-    page: pageNumber,
-    max: max,
-  });
-}
+const getList = window.DeckyBackend.callable<
+  [
+    path: string,
+    includeFiles?: boolean,
+    includeFolders?: boolean,
+    includeExt?: string[] | null,
+    includeHidden?: boolean,
+    orderBy?: SortOptions,
+    filterFor?: RegExp | ((file: File) => boolean) | null,
+    pageNumber?: number,
+    max?: number,
+  ],
+  FileListing
+>('utilities/filepicker_ls');
 
 const iconStyles = {
   paddingRight: '10px',
@@ -126,20 +117,20 @@ const iconStyles = {
 
 const FilePicker: FunctionComponent<FilePickerProps> = ({
   startPath,
-  //What are we allowing to show in the file picker
+  // What are we allowing to show in the file picker
   includeFiles = true,
   includeFolders = true,
-  //Parameter for specifying a specific filename match
+  // Parameter for specifying a specific filename match
   filter = undefined,
-  //Filter for specific extensions as an array
+  // Filter for specific extensions as an array
   validFileExtensions = undefined,
-  //Allow to override the fixed extension above
+  // Allow to override the fixed extension above
   allowAllFiles = true,
-  //If we need to show hidden files and folders (both Win and Linux should work)
+  // If we need to show hidden files and folders (both Win and Linux should work)
   defaultHidden = false, // false by default makes sense for most users
-  //How much files per page to show, default 1000
+  // How many files per page to show, default 1000
   max = 1000,
-  //Which picking option to select by default
+  // Which picking option to select by default
   fileSelType = FileSelectionType.FOLDER,
   onSubmit,
   closeModal,
@@ -190,21 +181,27 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const listing = await getList(
-        path,
-        includeFiles,
-        includeFolders,
-        selectedExts,
-        showHidden,
-        sort,
-        filter,
-        page,
-        max,
-      );
-      if (!listing.success) {
+      try {
+        const listing = await getList(
+          path,
+          includeFiles,
+          includeFolders,
+          selectedExts,
+          showHidden,
+          sort,
+          filter,
+          page,
+          max,
+        );
+        setRawError(null);
+        setError(FileErrorTypes.None);
+        setFiles(listing.files);
+        setLoading(false);
+        setListing(listing);
+        logger.log('reloaded', path, listing);
+      } catch (theError: any) {
         setListing({ files: [], realpath: path, total: 0 });
         setLoading(false);
-        const theError = listing.result as string;
         switch (theError) {
           case theError.match(/\[Errno\s2.*/i)?.input:
           case theError.match(/\[WinError\s3.*/i)?.input:
@@ -220,14 +217,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
         }
         logger.debug(theError);
         return;
-      } else {
-        setRawError(null);
-        setError(FileErrorTypes.None);
-        setFiles((listing.result as FileListing).files);
       }
-      setLoading(false);
-      setListing(listing.result as FileListing);
-      logger.log('reloaded', path, listing);
     })();
   }, [error, path, includeFiles, includeFolders, showHidden, sort, selectedExts, page]);
 

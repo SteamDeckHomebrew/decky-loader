@@ -1,5 +1,11 @@
 import Logger from './logger';
 
+declare global {
+  interface Window {
+    DeckyBackend: WSRouter;
+  }
+}
+
 enum MessageType {
   // Call-reply
   CALL,
@@ -94,7 +100,6 @@ export class WSRouter extends Logger {
   }
 
   async onMessage(msg: MessageEvent) {
-    this.debug('WS Message', msg);
     try {
       const data = JSON.parse(msg.data) as Message;
       switch (data.type) {
@@ -108,7 +113,7 @@ export class WSRouter extends Logger {
               await this.write({ type: MessageType.ERROR, id: data.id, error: (e as Error)?.stack || e });
             }
           } else {
-            await this.write({ type: MessageType.ERROR, id: data.id, error: 'Route does not exist.' });
+            await this.write({ type: MessageType.ERROR, id: data.id, error: `Route ${data.route} does not exist.` });
           }
           break;
 
@@ -150,6 +155,10 @@ export class WSRouter extends Logger {
     this.write({ type: MessageType.CALL, route, args, id });
 
     return resolver.promise;
+  }
+
+  callable<Args extends any[] = any[], Return = void>(route: string): (...args: Args) => Promise<Return> {
+    return (...args) => this.call<Args, Return>(route, ...args);
   }
 
   async onError(error: any) {

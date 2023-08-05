@@ -3,21 +3,19 @@ import sys
 from localplatform import (chmod, chown, service_stop, service_start,
                             ON_WINDOWS, get_log_level, get_live_reload, 
                             get_server_port, get_server_host, get_chown_plugin_path,
-                            get_unprivileged_user, get_unprivileged_path, 
                             get_privileged_path)
 if hasattr(sys, '_MEIPASS'):
-    chmod(sys._MEIPASS, 755)
+    chmod(sys._MEIPASS, 755) # type: ignore
 # Full imports
 from asyncio import new_event_loop, set_event_loop, sleep
-from json import dumps, loads
-from logging import DEBUG, INFO, basicConfig, getLogger
-from os import getenv, path
+from logging import basicConfig, getLogger
+from os import path
 from traceback import format_exc
 import multiprocessing
 
 import aiohttp_cors
 # Partial imports
-from aiohttp import client_exceptions, WSMsgType
+from aiohttp import client_exceptions
 from aiohttp.web import Application, Response, get, run_app, static
 from aiohttp_jinja2 import setup as jinja_setup
 
@@ -26,7 +24,7 @@ from browser import PluginBrowser
 from helpers import (REMOTE_DEBUGGER_UNIT, csrf_middleware, get_csrf_token,
                      mkdir_as_user, get_system_pythonpaths, get_effective_user_id)
                      
-from injector import get_gamepadui_tab, Tab, get_tabs, close_old_tabs
+from injector import get_gamepadui_tab, Tab, close_old_tabs
 from loader import Loader
 from settings import SettingsManager
 from updater import Updater

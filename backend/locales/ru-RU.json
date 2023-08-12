@@ -49,7 +49,7 @@
         },
         "plugin_uninstall": {
             "button": "Удалить",
-            "desc": "Вы уверенны, что хотите удалить {{name}}?",
+            "desc": "Вы уверены, что хотите удалить {{name}}?",
             "title": "Удалить {{name}}"
         },
         "decky_title": "Decky",
@@ -97,19 +97,19 @@
             "button_processing": "Установка",
             "title": "Установить {{artifact}}",
             "button_idle": "Установить",
-            "desc": "Вы уверенны, что хотите установить {{artifact}} {{version}}?"
+            "desc": "Вы уверены, что хотите установить {{artifact}} {{version}}?"
         },
         "no_hash": "У данного плагина отсутствует хэш, устанавливайте на свой страх и риск.",
         "reinstall": {
             "title": "Переустановить {{artifact}}",
-            "desc": "Вы уверенны, что хотите переустановить {{artifact}} {{version}}?",
+            "desc": "Вы уверены, что хотите переустановить {{artifact}} {{version}}?",
             "button_idle": "Переустановить",
             "button_processing": "Переустановка"
         },
         "update": {
             "button_idle": "Обновить",
             "button_processing": "Обновление",
-            "desc": "Вы уверенны, что хотите обновить {{artifact}} {{version}}?",
+            "desc": "Вы уверены, что хотите обновить {{artifact}} {{version}}?",
             "title": "Обновить {{artifact}}"
         }
     },
@@ -197,6 +197,10 @@
         },
         "store_search": {
             "label": "Поиск"
+        },
+        "store_testing_warning": {
+            "label": "Добро пожаловать в тестовый канал магазина",
+            "desc": "Вы можете использовать этот канал магазина для тестирования новейших версий плагинов. Не забудьте оставить отзыв на GitHub, чтобы плагин можно было обновить для всех пользователей."
         }
     },
     "StoreSelect": {
@@ -208,7 +212,7 @@
             "custom": "Сторонний",
             "default": "По-умолчанию",
             "label": "Канал магазина",
-            "testing": "Тестирование"
+            "testing": "Тестовый"
         }
     },
     "Updater": {
@@ -255,5 +259,9 @@
         "developer_title": "Разработчик",
         "general_title": "Общее",
         "plugins_title": "Плагины"
+    },
+    "TitleView": {
+        "decky_store_desc": "Открыть магазин Decky",
+        "settings_desc": "Открыть настройки Decky"
     }
 }

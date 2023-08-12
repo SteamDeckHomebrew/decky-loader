@@ -177,7 +177,11 @@
             "alph_desc": "字母排序 (A 到 Z)",
             "title": "浏览"
         },
-        "store_testing_cta": "请考虑测试新插件以帮助 Decky Loader 团队！"
+        "store_testing_cta": "请考虑测试新插件以帮助 Decky Loader 团队！",
+        "store_testing_warning": {
+            "desc": "你可以使用该商店频道以体验最新版本的插件。 请在插件 Github 页面留言以使插件可以正式面向所有用户。",
+            "label": "欢迎来到商店测试频道"
+        }
     },
     "StoreSelect": {
         "store_channel": {
@@ -241,5 +245,9 @@
             "unknown": "发生了一个未知错误。原始错误为：{{raw_error}}",
             "perm_denied": "你没有访问特定目录的权限。请检查你的用户（Steam Deck 中的 deck 账户）有着相对应的权限以访问特定的文件夹或文件。"
         }
+    },
+    "TitleView": {
+        "decky_store_desc": "打开 Decky 商店",
+        "settings_desc": "打开 Decky 设置"
     }
 }

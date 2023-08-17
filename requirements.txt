@@ -2,4 +2,4 @@ aiohttp==3.8.4
 aiohttp-jinja2==1.5.1
 aiohttp_cors==0.7.0
 watchdog==2.1.7
-certifi==2022.12.7
+certifi==2023.7.22

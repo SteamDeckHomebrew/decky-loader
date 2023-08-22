@@ -48,6 +48,11 @@ def mkdir_as_user(path):
 
 # Fetches the version of loader
 def get_loader_version() -> str:
+    # FIXME: this should really come from package metadata
+    env_version = os.getenv('DECKY_VERSION')
+    if env_version:
+        return env_version
+
     try:
         with open(os.path.join(os.getcwd(), ".loader.version"), "r", encoding="utf-8") as version_file:
             return version_file.readline().strip()

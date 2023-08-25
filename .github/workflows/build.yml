@@ -47,10 +47,10 @@ jobs:
       with:
         node-version: 18
       
-    - name: Set up Python 3.11.4 🐍
+    - name: Set up Python 3.10.6 🐍
       uses: actions/setup-python@v4
       with:
-        python-version: "3.11.4"
+        python-version: "3.10.6"
     
     - name: Upgrade SQLite 3 binary version to 3.42.0 🧑‍💻
       run: >

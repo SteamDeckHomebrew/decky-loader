@@ -163,3 +163,4 @@ plugins/*
 act/.directory
 act/artifacts/*
 bin/act
+settings/

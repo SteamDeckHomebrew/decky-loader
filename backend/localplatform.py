@@ -45,7 +45,8 @@ def get_log_level() -> int:
 def get_selinux() -> bool:
     if ON_LINUX:
         from subprocess import check_output
-        import shutil
-        if (shutil.which(getenforce) is not None and (check_output("getenforce").decode("ascii").strip("\n") is "Enforcing")):
-            return True
+        try:
+          if (check_output("getenforce").decode("ascii").strip("\n") == "Enforcing"): return True
+        except FileNotFoundError:
+          pass
     return False

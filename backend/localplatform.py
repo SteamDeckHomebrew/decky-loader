@@ -48,7 +48,4 @@ def get_selinux() -> bool:
         import shutil
         if (shutil.which(getenforce) is not None and (check_output("getenforce").decode("ascii").strip("\n") is "Enforcing")):
             return True
-        else:
-            return False
-    else:
-        return False
+    return False

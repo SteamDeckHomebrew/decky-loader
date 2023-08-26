@@ -43,4 +43,8 @@ def get_log_level() -> int:
     ]
 
 def get_selinux() -> bool:
-    return os.getenv("DECKY_SELINUX", "0") == "1"
+    if ON_LINUX:
+        from subprocess import check_output
+        check_output("getenforce").decode('ascii').strip("\n") == "Enforcing" ? True : False
+    else:
+        return False

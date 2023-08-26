@@ -211,7 +211,7 @@ class Updater:
                 if get_selinux():
                     from asyncio.subprocess import create_subprocess_exec
                     process = await create_subprocess_exec("chcon", "-t", "bin_t", path.join(getcwd(), download_filename))
-                    logger.info(f"Setting the executable flag with chcon returned {process.returncode}")
+                    logger.info(f"Setting the executable flag with chcon returned {await process.wait()}")
 
             logger.info("Updated loader installation.")
             await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)

@@ -1,26 +1,27 @@
 import uuid
-import os
 from json.decoder import JSONDecodeError
 from os.path import splitext
 import re
 from traceback import format_exc
-from stat import FILE_ATTRIBUTE_HIDDEN
+from stat import FILE_ATTRIBUTE_HIDDEN # type: ignore
 
-from asyncio import sleep, start_server, gather, open_connection
+from asyncio import start_server, gather, open_connection
 from aiohttp import ClientSession, web
+from typing import Dict
 
 from logging import getLogger
+from backend.browser import PluginInstallType
+from backend.main import PluginManager
 from injector import inject_to_tab, get_gamepadui_tab, close_old_tabs, get_tab
 from pathlib import Path
 from localplatform import ON_WINDOWS
 import helpers
-import subprocess
 from localplatform import service_stop, service_start, get_home_path, get_username
 
 class Utilities:
-    def __init__(self, context) -> None:
+    def __init__(self, context: PluginManager) -> None:
         self.context = context
-        self.util_methods = {
+        self.util_methods: Dict[] = {
             "ping": self.ping,
             "http_request": self.http_request,
             "install_plugin": self.install_plugin,
@@ -69,7 +70,7 @@ class Utilities:
             res["success"] = False
         return web.json_response(res)
 
-    async def install_plugin(self, artifact="", name="No name", version="dev", hash=False, install_type=0):
+    async def install_plugin(self, artifact="", name="No name", version="dev", hash=False, install_type=PluginInstallType.INSTALL):
         return await self.context.plugin_browser.request_plugin_install(
             artifact=artifact,
             name=name,

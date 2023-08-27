@@ -7,16 +7,16 @@ from localplatform import (chmod, chown, service_stop, service_start,
 if hasattr(sys, '_MEIPASS'):
     chmod(sys._MEIPASS, 755) # type: ignore
 # Full imports
-from asyncio import new_event_loop, set_event_loop, sleep
+from asyncio import AbstractEventLoop, new_event_loop, set_event_loop, sleep
 from logging import basicConfig, getLogger
 from os import path
 from traceback import format_exc
 import multiprocessing
 
-import aiohttp_cors
+import aiohttp_cors # type: ignore
 # Partial imports
 from aiohttp import client_exceptions
-from aiohttp.web import Application, Response, get, run_app, static
+from aiohttp.web import Application, Response, get, run_app, static # type: ignore
 from aiohttp_jinja2 import setup as jinja_setup
 
 # local modules
@@ -51,7 +51,7 @@ if get_chown_plugin_path() == True:
     chown_plugin_dir()
 
 class PluginManager:
-    def __init__(self, loop) -> None:
+    def __init__(self, loop: AbstractEventLoop) -> None:
         self.loop = loop
         self.web_app = Application()
         self.web_app.middlewares.append(csrf_middleware)
@@ -62,7 +62,7 @@ class PluginManager:
                 allow_credentials=True
             )
         })
-        self.plugin_loader = Loader(self.web_app, plugin_path, self.loop, get_live_reload())
+        self.plugin_loader = Loader(self, plugin_path, self.loop, get_live_reload())
         self.settings = SettingsManager("loader", path.join(get_privileged_path(), "settings"))
         self.plugin_browser = PluginBrowser(plugin_path, self.plugin_loader.plugins, self.plugin_loader, self.settings) 
         self.utilities = Utilities(self)

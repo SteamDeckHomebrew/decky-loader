@@ -1,7 +1,6 @@
 import multiprocessing
 from asyncio import (Lock, get_event_loop, new_event_loop,
                      set_event_loop, sleep)
-from concurrent.futures import ProcessPoolExecutor
 from importlib.util import module_from_spec, spec_from_file_location
 from json import dumps, load, loads
 from logging import getLogger
@@ -9,14 +8,14 @@ from traceback import format_exc
 from os import path, environ
 from signal import SIGINT, signal
 from sys import exit, path as syspath
-from time import time
+from typing import Any, Dict
 from localsocket import LocalSocket
 from localplatform import setgid, setuid, get_username, get_home_path
 from customtypes import UserType
 import helpers
 
 class PluginWrapper:
-    def __init__(self, file, plugin_directory, plugin_path) -> None:
+    def __init__(self, file: str, plugin_directory: str, plugin_path: str) -> None:
         self.file = file
         self.plugin_path = plugin_path
         self.plugin_directory = plugin_directory
@@ -73,14 +72,17 @@ class PluginWrapper:
             helpers.mkdir_as_user(environ["DECKY_PLUGIN_LOG_DIR"])
             environ["DECKY_PLUGIN_DIR"] = path.join(self.plugin_path, self.plugin_directory)
             environ["DECKY_PLUGIN_NAME"] = self.name
-            environ["DECKY_PLUGIN_VERSION"] = self.version
+            if self.version:
+                environ["DECKY_PLUGIN_VERSION"] = self.version
             environ["DECKY_PLUGIN_AUTHOR"] = self.author
 
             # append the plugin's `py_modules` to the recognized python paths
             syspath.append(path.join(environ["DECKY_PLUGIN_DIR"], "py_modules"))
 
             spec = spec_from_file_location("_", self.file)
+            assert spec is not None
             module = module_from_spec(spec)
+            assert spec.loader is not None
             spec.loader.exec_module(module)
             self.Plugin = module.Plugin
 
@@ -118,7 +120,8 @@ class PluginWrapper:
             get_event_loop().close()
             raise Exception("Closing message listener")
 
-        d = {"res": None, "success": True}
+        # TODO there is definitely a better way to type this
+        d: Dict[str, Any] = {"res": None, "success": True}
         try:
             d["res"] = await getattr(self.Plugin, data["method"])(self.Plugin, **data["args"])
         except Exception as e:
@@ -137,17 +140,18 @@ class PluginWrapper:
         if self.passive:
             return
 
-        async def _(self):
+        async def _(self: PluginWrapper):
             await self.socket.write_single_line(dumps({ "stop": True }, ensure_ascii=False))
             await self.socket.close_socket_connection()
             
         get_event_loop().create_task(_(self))
 
-    async def execute_method(self, method_name, kwargs):
+    async def execute_method(self, method_name: str, kwargs: Dict[Any, Any]):
         if self.passive:
             raise RuntimeError("This plugin is passive (aka does not implement main.py)")
         async with self.method_call_lock:
-            reader, writer = await self.socket.get_socket_connection()
+            # reader, writer = 
+            await self.socket.get_socket_connection()
 
             await self.socket.write_single_line(dumps({ "method": method_name, "args": kwargs }, ensure_ascii=False))
 

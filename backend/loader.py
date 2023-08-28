@@ -171,9 +171,10 @@ class Loader:
                         data = frontmatter.load(path.join(docs_path, config["default_language"], filename))
                     else:
                         data = frontmatter.load(path.join(docs_file_path,filename))
+                    text = data.content.replace("/decky/assets", f"http://127.0.0.1:1337/plugins/{plugin_name.replace(' ', '%20')}/assets")
                     docs.append({
                         "title": data.get("title", filename[:-3]),
-                        "text": data.content
+                        "text": text
                         })
                 except:
                     self.logger.warning(f"unable to load file {filename} for {plugin_name} at {docs_file_path}")
@@ -181,7 +182,8 @@ class Loader:
         if config["include_readme"] == "True":
             try:
                 with open(path.join(plugin_path, "README.md")) as f:
-                    docs.append({"title":"readme","text": f.read()})
+                    text = f.read().replace("/decky/assets", f"http://127.0.0.1:1337/plugins/{plugin_name.replace(' ', '%20')}/assets")
+                    docs.append({"title":"readme","text": text})
             except:
                 self.logger.warning(f"unable to load the readme for {plugin_name} at {plugin_path}")
 

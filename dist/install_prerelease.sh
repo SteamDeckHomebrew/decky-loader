@@ -23,7 +23,7 @@ curl -L $DOWNLOADURL --output ${HOMEBREW_FOLDER}/services/PluginLoader
 chmod +x ${HOMEBREW_FOLDER}/services/PluginLoader
 
 echo "Check for SELinux presence and if it is present, set the correct permission on the binary file..."
-hash getenforce 2>/dev/null && getenforce | grep "Enforcing" >/dev/null && setenforce -t bin_t ${HOMEBREW_FOLDER}/services/PluginLoader
+hash getenforce 2>/dev/null && getenforce | grep "Enforcing" >/dev/null && chcon -t bin_t ${HOMEBREW_FOLDER}/services/PluginLoader
 
 echo $VERSION > ${HOMEBREW_FOLDER}/services/.loader.version
 

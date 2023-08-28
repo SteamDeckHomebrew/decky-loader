@@ -139,6 +139,8 @@ class PluginBrowser:
 
         # Check if plugin is installed
         isInstalled = False
+        # Preserve plugin order before removing plugin (uninstall alters the order and removes the plugin from the list)
+        current_plugin_order = self.settings.getSetting("pluginOrder")[:]
         if self.loader.watcher:
             self.loader.watcher.disabled = True
         try:
@@ -191,9 +193,9 @@ class PluginBrowser:
                     self.loader.plugins[name].stop()
                     self.loader.plugins.pop(name, None)
                 await sleep(1)
-
-                current_plugin_order = self.settings.getSetting("pluginOrder")
-                current_plugin_order.append(name)
+                if not isInstalled:
+                    current_plugin_order = self.settings.getSetting("pluginOrder")
+                    current_plugin_order.append(name)
                 self.settings.setSetting("pluginOrder", current_plugin_order)
                 logger.debug("Plugin %s was added to the pluginOrder setting", name)
                 self.loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_folder)

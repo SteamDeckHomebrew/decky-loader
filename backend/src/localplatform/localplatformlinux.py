@@ -140,6 +140,8 @@ def get_privileged_path() -> str:
     if path == None:
         path = get_unprivileged_path()
 
+    os.makedirs(path, exist_ok=True)
+
     return path
 
 def _parent_dir(path : str | None) -> str | None:
@@ -169,6 +171,8 @@ def get_unprivileged_path() -> str:
         logger.warn("Unprivileged path is not properly configured. Defaulting to /home/deck/homebrew")
         path = "/home/deck/homebrew" # We give up
     
+    os.makedirs(path, exist_ok=True)
+
     return path
 
 

@@ -41,3 +41,12 @@ def get_log_level() -> int:
     return {"CRITICAL": 50, "ERROR": 40, "WARNING": 30, "INFO": 20, "DEBUG": 10}[
         os.getenv("LOG_LEVEL", "INFO")
     ]
+
+def get_selinux() -> bool:
+    if ON_LINUX:
+        from subprocess import check_output
+        try:
+          if (check_output("getenforce").decode("ascii").strip("\n") == "Enforcing"): return True
+        except FileNotFoundError:
+          pass
+    return False

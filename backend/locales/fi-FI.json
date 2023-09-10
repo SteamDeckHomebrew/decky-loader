@@ -1,0 +1,260 @@
+{
+    "BranchSelect": {
+        "update_channel": {
+            "prerelease": "Esijulkaisu",
+            "testing": "Testiversio",
+            "stable": "Vakaa versio",
+            "label": "Päivityskanava"
+        }
+    },
+    "Developer": {
+        "5secreload": "Uudelleenladataan 5 sekunin kuluttua",
+        "disabling": "Poistetaan React DevTools käytöstä",
+        "enabling": "Otetaan React DevTools käyttöön"
+    },
+    "FilePickerError": {
+        "errors": {
+            "perm_denied": "Sinulla ei ole käyttöoikeutta määritettyyn hakemistoon. Tarkista, onko käyttäjälläsi (käyttäjä 'deck' Steam Deckillä) vastaavat oikeudet käyttää määritettyä kansiota/tiedostoa.",
+            "unknown": "Tapahtui tuntematon virhe. Raaka virhe on: {{raw_error}}",
+            "file_not_found": "Määritetty polku ei kelpaa. Tarkista se ja kirjoita se uudelleen oikein."
+        }
+    },
+    "FilePickerIndex": {
+        "file": {
+            "select": "Valitse tämä tiedosto"
+        },
+        "files": {
+            "all_files": "Kaikki tiedostot",
+            "file_type": "Tiedostotyyppi",
+            "show_hidden": "Näytä piilotetut tiedostot"
+        },
+        "filter": {
+            "created_desc": "Luotu (uusin ensin)",
+            "modified_asce": "Muokattu (vanhin)",
+            "modified_desc": "Muokattu (uusin)",
+            "name_asce": "Z-A",
+            "name_desc": "A-Z",
+            "size_asce": "Koko (pienin ensin)",
+            "size_desc": "Koko (suurin ensin)",
+            "created_asce": "Luotu (vanhin ensin)"
+        },
+        "folder": {
+            "label": "Kansio",
+            "select": "Käytä tätä kansiota",
+            "show_more": "Näytä lisää tiedostoja"
+        }
+    },
+    "MultiplePluginsInstallModal": {
+        "confirm": "Haluatko varmasti tehdä seuraavat muutokset?",
+        "description": {
+            "reinstall": "Uudelleenasenna {{name}} {{version}}",
+            "update": "Päivitä {{name}} versioon {{version}}",
+            "install": "Asenna {{name}} {{version}}"
+        },
+        "ok_button": {
+            "idle": "Vahvista",
+            "loading": "Ladataan"
+        },
+        "title": {
+            "install_one": "Asenna yksi laajennus",
+            "install_other": "Asenna {{count}} laajennusta",
+            "update_one": "Päivitä yksi laajennus",
+            "update_other": "Päivitä {{count}} laajennusta",
+            "mixed_one": "Muuta yhtä laajennusta",
+            "mixed_other": "Muuta {{count}} laajennusta",
+            "reinstall_one": "Uudelleenasenna yksi laajennus",
+            "reinstall_other": "Uudelleenasenna {{count}} laajennusta"
+        }
+    },
+    "PluginCard": {
+        "plugin_install": "Asenna",
+        "plugin_no_desc": "Ei kuvausta.",
+        "plugin_version_label": "Laajennuksen versio",
+        "plugin_full_access": "Tällä laajennuksella on täysi pääsy Steam Deckkiisi."
+    },
+    "PluginInstallModal": {
+        "install": {
+            "button_idle": "Asenna",
+            "button_processing": "Asennetaan",
+            "desc": "Haluatko varmasti asentaa {{artifact}} {{version}}?",
+            "title": "Asenna {{artifact}}"
+        },
+        "no_hash": "Tällä laajennuksella ei ole hashia, asennat sen omalla vastuullasi.",
+        "reinstall": {
+            "button_idle": "Uudelleenasenna",
+            "button_processing": "Uudelleenasennetaan",
+            "desc": "Haluatko varmasti uudelleenasentaa {{artifact}} {{version}}?",
+            "title": "Uudelleenasenna {{artifact}}"
+        },
+        "update": {
+            "button_idle": "Päivitä",
+            "button_processing": "Päivitetään",
+            "desc": "Haluatko varmasti päivittää {{artifact}} {{version}}?",
+            "title": "Päivitä {{artifact}}"
+        }
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "Takaisin"
+        }
+    },
+    "PluginListIndex": {
+        "no_plugin": "Ei asennettuja laajennuksia!",
+        "plugin_actions": "Laajennustoiminnot",
+        "reinstall": "Uudelleenasenna",
+        "reload": "Lataa uudelleen",
+        "uninstall": "Poista asennus",
+        "update_all_one": "Päivitä yksi laajennus",
+        "update_all_other": "Päivitä {{count}} laajennusta",
+        "update_to": "Päivitä versioon {{name}}",
+        "hide": "Pikavalikko: Piilota",
+        "show": "Pikavalikko: Näytä"
+    },
+    "PluginListLabel": {
+        "hidden": "Piilotettu pikavalikosta"
+    },
+    "PluginLoader": {
+        "decky_title": "Decky",
+        "decky_update_available": "Päivitys versioon {{tag_name}} on saatavilla!",
+        "error": "Virhe",
+        "plugin_load_error": {
+            "message": "Virhe ladattaessa {{name}}-laajennusta",
+            "toast": "Virhe ladattaessa {{name}}"
+        },
+        "plugin_uninstall": {
+            "button": "Poista asennus",
+            "desc": "Haluatko varmasti poistaa {{name}} asennuksen?",
+            "title": "Poista {{name}}"
+        },
+        "plugin_update_one": "Päivityksiä saatavilla yhdelle laajennukselle!",
+        "plugin_update_other": "Päivityksiä saatavilla {{count}} laajennukselle!",
+        "plugin_error_uninstall": "{{name}} lataaminen aiheutti yllä olevan poikkeuksen. Tämä tarkoittaa yleensä sitä, että laajennus vaatii päivityksen uudelle SteamUI-versiolle. Tarkista, onko päivitystä saatavilla, tai harkitse laajennuksen poistoa Decky-asetuksista, laajennukset-osiosta."
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "desc": "Salli todentamaton pääsy CEF-debuggeriin kenelle tahansa verkossasi",
+            "label": "Salli CEF-etädebugaus"
+        }
+    },
+    "SettingsDeveloperIndex": {
+        "cef_console": {
+            "button": "Avaa konsoli",
+            "desc": "Avaa CEF-konsolin. Hyödyllinen vain debugaustarkoituksiin. Täällä olevat jutut ovat mahdollisesti vaarallisia, ja niitä tulisi käyttää vain, jos olet laajennuksen kehittäjä tai jos kehittäjä on ohjannut sinut tänne.",
+            "label": "CEF-konsoli"
+        },
+        "header": "Muu",
+        "react_devtools": {
+            "desc": "Mahdollistaa yhteyden tietokoneeseen, jossa on käytössä React DevTools. Tämän asetuksen muuttaminen lataa Steamin uudelleen. Aseta IP-osoite ennen käyttöönottoa.",
+            "ip_label": "IP-osoite",
+            "label": "Ota React DevTools käyttöön"
+        },
+        "third_party_plugins": {
+            "button_install": "Asenna",
+            "button_zip": "Selaa",
+            "header": "Kolmannen osapuolen laajennukset",
+            "label_desc": "URL-osoite",
+            "label_zip": "Asenna laajennus ZIP-tiedostosta",
+            "label_url": "Asenna laajennus URL-osoitteesta"
+        },
+        "valve_internal": {
+            "desc2": "Älä koske mihinkään tässä valikossa, ellet tiedä mitä se tekee.",
+            "label": "Ota Valve Internal käyttöön",
+            "desc1": "Ottaa käyttöön Valven sisäisen kehittäjävalikon."
+        }
+    },
+    "SettingsGeneralIndex": {
+        "about": {
+            "decky_version": "Decky-versio",
+            "header": "Tietoja"
+        },
+        "beta": {
+            "header": "Beta-osallistuminen"
+        },
+        "developer_mode": {
+            "label": "Kehittäjätila"
+        },
+        "notifications": {
+            "decky_updates_label": "Decky-päivitys saatavilla",
+            "header": "Ilmoitukset",
+            "plugin_updates_label": "Laajennuspäivityksiä saatavilla"
+        },
+        "other": {
+            "header": "Muu"
+        },
+        "updates": {
+            "header": "Päivitykset"
+        }
+    },
+    "SettingsIndex": {
+        "developer_title": "Kehittäjä",
+        "general_title": "Yleinen",
+        "plugins_title": "Laajennukset"
+    },
+    "Store": {
+        "store_contrib": {
+            "label": "Osallistuminen",
+            "desc": "Mikäli haluat julkaista Decky Plugin Storeen, tarkista GitHubin SteamDeckHomebrew/decky-plugin-template -esimerkkitietovarasto. Tietoa kehityksestä ja jakelusta löytyy README:stä."
+        },
+        "store_filter": {
+            "label": "Suodin",
+            "label_def": "Kaikki"
+        },
+        "store_search": {
+            "label": "Hae"
+        },
+        "store_sort": {
+            "label": "Järjestä",
+            "label_def": "Viimeksi päivitetty (uusin ensin)"
+        },
+        "store_source": {
+            "desc": "Kaikken laajennusten lähdekoodit ovat saatavilla SteamDeckHomebrew/decky-plugin-database -arkistosta GitHubissa.",
+            "label": "Lähdekoodi"
+        },
+        "store_tabs": {
+            "about": "Tietoja",
+            "alph_asce": "Aakkosjärjestyksessä (Z–A)",
+            "alph_desc": "Aakkosjärjestyksessä (A–Z)",
+            "title": "Selaa"
+        },
+        "store_testing_cta": "Harkitse uusien lisäosien testaamista auttaaksesi Decky Loader -tiimiä!",
+        "store_testing_warning": {
+            "label": "Tervetuloa testausmyymälä-kanavalle",
+            "desc": "Voit käyttää tätä myymäläkanavaa testataksesi uusimpia laajennusversioita. Muista jättää palautetta GitHubissa, jotta laajennus voidaan päivittää kaikille käyttäjille."
+        }
+    },
+    "StoreSelect": {
+        "custom_store": {
+            "label": "Mukautettu myymälä",
+            "url_label": "URL-osoite"
+        },
+        "store_channel": {
+            "custom": "Mukautettu",
+            "default": "Oletus",
+            "label": "Myymäläkanava",
+            "testing": "Testaus"
+        }
+    },
+    "TitleView": {
+        "decky_store_desc": "Avaa Decky-myymälä",
+        "settings_desc": "Avaa Decky-asetukset"
+    },
+    "Updater": {
+        "decky_updates": "Decky-päivitykset",
+        "no_patch_notes_desc": "tälle versiolle ei ole korjausmerkintöjä",
+        "patch_notes_desc": "Korjausmerkinnät",
+        "updates": {
+            "check_button": "Tarkista päivitykset",
+            "checking": "Tarkistetaan",
+            "cur_version": "Nykyinen versio: {{ver}}",
+            "install_button": "Asenna päivitys",
+            "label": "Päivitykset",
+            "lat_version": "Ajan tasalla: versio {{ver}}",
+            "reloading": "Uudelleenladataan",
+            "updating": "Päivitetään"
+        }
+    },
+    "PluginView": {
+        "hidden_one": "Yksi laajennus on piilotettu tästä luettelosta",
+        "hidden_other": "{{count}} laajennusta on piilotettu tästä luettelosta"
+    }
+}

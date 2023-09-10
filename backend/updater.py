@@ -6,7 +6,7 @@ from ensurepip import version
 from json.decoder import JSONDecodeError
 from logging import getLogger
 from os import getcwd, path, remove
-from localplatform import chmod, service_restart, ON_LINUX, get_keep_systemd_service
+from localplatform import chmod, service_restart, ON_LINUX, get_keep_systemd_service, get_selinux
 
 from aiohttp import ClientSession, web
 
@@ -208,6 +208,10 @@ class Updater:
                 remove(path.join(getcwd(), download_filename))
                 shutil.move(path.join(getcwd(), download_temp_filename), path.join(getcwd(), download_filename))
                 chmod(path.join(getcwd(), download_filename), 777, False)
+                if get_selinux():
+                    from asyncio.subprocess import create_subprocess_exec
+                    process = await create_subprocess_exec("chcon", "-t", "bin_t", path.join(getcwd(), download_filename))
+                    logger.info(f"Setting the executable flag with chcon returned {await process.wait()}")
 
             logger.info("Updated loader installation.")
             await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)

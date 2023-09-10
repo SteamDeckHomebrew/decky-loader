@@ -61,7 +61,7 @@ const TitleView: VFC = () => {
         >
           <FaArrowLeft style={{ marginTop: '-4px', display: 'block' }} />
         </DialogButton>
-        <div style={{ marginRight: 'auto', flex: 0.9 }}>{activePlugin.name}</div>
+        {activePlugin?.titleView || <div style={{ flex: 0.9 }}>{activePlugin.name}</div>}
         <DialogButton
           style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
           onClick={onInfoClick}

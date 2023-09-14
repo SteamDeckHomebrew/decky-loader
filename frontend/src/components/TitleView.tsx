@@ -1,8 +1,8 @@
 import { DialogButton, Focusable, Router, staticClasses } from 'decky-frontend-lib';
-import { CSSProperties, VFC } from 'react';
+import { CSSProperties, VFC, cloneElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BsGearFill } from 'react-icons/bs';
-import { FaArrowLeft, FaStore, FaInfo } from 'react-icons/fa';
+import { FaArrowLeft, FaInfo, FaStore } from 'react-icons/fa';
 
 import { useDeckyState } from './DeckyState';
 
@@ -53,21 +53,29 @@ const TitleView: VFC = () => {
     );
   }
 
+  const CustomTitleView = activePlugin?.titleView
+    ? cloneElement(activePlugin.titleView, { onDocsClick: onInfoClick })
+    : null;
+
   return (
-      <Focusable className={staticClasses.Title} style={titleStyles}>
-        <DialogButton
-          style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
-          onClick={closeActivePlugin}
-        >
-          <FaArrowLeft style={{ marginTop: '-4px', display: 'block' }} />
-        </DialogButton>
-        {activePlugin?.titleView || <div style={{ flex: 0.9 }}>{activePlugin.name}</div>}
-        <DialogButton
-          style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
-          onClick={onInfoClick}
-        >
-          <FaInfo style={{ marginTop: '-4px', display: 'block' }} />
-        </DialogButton>
+    <Focusable className={staticClasses.Title} style={titleStyles}>
+      <DialogButton
+        style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
+        onClick={closeActivePlugin}
+      >
+        <FaArrowLeft style={{ marginTop: '-4px', display: 'block' }} />
+      </DialogButton>
+      {CustomTitleView || (
+        <>
+          <div style={{ flex: 0.9 }}>{activePlugin.name}</div>
+          <DialogButton
+            style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
+            onClick={onInfoClick}
+          >
+            <FaInfo style={{ marginTop: '-4px', display: 'block' }} />
+          </DialogButton>
+        </>
+      )}
     </Focusable>
   );
 };

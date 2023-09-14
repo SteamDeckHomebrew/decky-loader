@@ -1,17 +1,18 @@
-import { VFC, useEffect, useState } from 'react';
-import { useParams, SidebarNavigation, SteamSpinner } from "decky-frontend-lib";
-import { lazy } from 'react';
+import { SidebarNavigation, SteamSpinner, useParams } from 'decky-frontend-lib';
 import i18n from 'i18next';
+import { VFC, useEffect, useState } from 'react';
+import { lazy } from 'react';
 
-import { ScrollArea, Scrollable, scrollableRef } from "./Scrollable";
+import { ScrollArea, Scrollable, scrollableRef } from './Scrollable';
+
 const MarkdownRenderer = lazy(() => import('./Markdown'));
 
 const DocsPage: VFC<{ content: string }> = ({ content }) => {
-      const ref = scrollableRef();
+  const ref = scrollableRef();
 
-      return (
-      <>
-        <style>
+  return (
+    <>
+      <style>
         {`
         .decky-docs-markdown p {white-space: pre-wrap}
         .decky-docs-markdown a {text-decoration: none;}
@@ -23,15 +24,15 @@ const DocsPage: VFC<{ content: string }> = ({ content }) => {
         .decky-docs-markdown > .Panel.Focusable.gpfocuswithin {background-color: #868da117;}
         .decky-docs-markdown img {max-width: 588px;}
         `}
-        </style>
-        <Scrollable ref={ref}>
-            <ScrollArea scrollable={ref} noFocusRing={true}>
-              <MarkdownRenderer className="decky-docs-markdown" children={content} />
-          </ScrollArea>
-        </Scrollable>
-      </>
-      )
-}
+      </style>
+      <Scrollable ref={ref}>
+        <ScrollArea scrollable={ref} noFocusRing={true}>
+          <MarkdownRenderer className="decky-docs-markdown" children={content} />
+        </ScrollArea>
+      </Scrollable>
+    </>
+  );
+};
 
 interface DocsPage {
   title: string;
@@ -39,49 +40,60 @@ interface DocsPage {
 }
 
 const StorePage: VFC<{}> = () => {
+  const [docs, setDocs] = useState<(DocsPage | 'separator')[] | null>(null);
+  const { plugin } = useParams<{ plugin: string }>();
 
-    const [docs, setDocs] = useState<(DocsPage | 'separator')[] | null>(null);
-    const { plugin } = useParams<{ plugin: string }>()
-
-    useEffect(() => {
+  useEffect(() => {
     (async () => {
-      setDocs(await (await fetch(`http://127.0.0.1:1337/docs/${plugin}/${i18n.resolvedLanguage}`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          Authentication: window.deckyAuthToken,
-        }
-        })).json())
-      })();
-    }, []);
+      setDocs(
+        await (
+          await fetch(`http://127.0.0.1:1337/docs/${plugin}/${i18n.resolvedLanguage}`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+              Authentication: window.deckyAuthToken,
+            },
+          })
+        ).json(),
+      );
+    })();
+  }, []);
 
-    return (
-      <>
-      {!docs ?
+  return (
+    <>
+      {!docs ? (
         <div style={{ height: '100%' }}>
           <SteamSpinner />
         </div>
-      : (docs.length == 1) ?
-      <div style={{padding:"calc(12px + 1.4vw) 2.8vw", paddingTop:"calc( 24px + var(--basicui-header-height, 0px) )", background:"#0e141b"}}>
-        <DocsPage content={docs[Object.keys(docs)[0]]["text"]} />
-      </div>
-      :
-      <SidebarNavigation
-      title={plugin}
-      showTitle={true}
-      pages={docs.map((file) => (
-        file == 'separator' ? 'separator' : {
-          title: file["title"],
-          content:<DocsPage content={file["text"]} />,
-          route: `/decky/docs/${plugin}/${file["title"]}`,
-          hideTitle: true,
-        }
-      ))}
-    />
-    }
+      ) : docs.length == 1 ? (
+        <div
+          style={{
+            padding: 'calc(12px + 1.4vw) 2.8vw',
+            paddingTop: 'calc( 24px + var(--basicui-header-height, 0px) )',
+            background: '#0e141b',
+          }}
+        >
+          <DocsPage content={docs[Object.keys(docs)[0]]['text']} />
+        </div>
+      ) : (
+        <SidebarNavigation
+          title={plugin}
+          showTitle={true}
+          pages={docs.map((file) =>
+            file == 'separator'
+              ? 'separator'
+              : {
+                  title: file['title'],
+                  content: <DocsPage content={file['text']} />,
+                  route: `/decky/docs/${plugin}/${file['title']}`,
+                  hideTitle: true,
+                },
+          )}
+        />
+      )}
     </>
-    )
-}
+  );
+};
 
 export default StorePage;

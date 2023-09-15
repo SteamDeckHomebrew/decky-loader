@@ -84,6 +84,13 @@ class PluginWrapper:
             for key in keys:
                 sysmodules[key] = sysmodules["src"].__dict__[key]
 
+            # add decky_plugin as module ahead of time
+            plugin_file = path.join(path.dirname(__file__), "..", "plugin", "decky_plugin.py")
+            spec = spec_from_file_location("decky_plugin", plugin_file)
+            decky_plugin = module_from_spec(spec)
+            sysmodules["decky_plugin"] = decky_plugin
+            spec.loader.exec_module(decky_plugin)
+
             spec = spec_from_file_location("_", self.file)
             assert spec is not None
             module = module_from_spec(spec)

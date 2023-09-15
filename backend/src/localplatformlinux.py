@@ -58,8 +58,22 @@ def chown(path : str,  user : UserType = UserType.HOST_USER, recursive : bool = 
 def chmod(path : str, permissions : int, recursive : bool = True) -> bool:
     if _get_effective_user_id() != 0:
         return True
-    result = call(["chmod", "-R", str(permissions), path] if recursive else ["chmod", str(permissions), path])
-    return result == 0
+
+    try:
+        octal_permissions = int(str(permissions), 8)
+
+        if recursive:
+            for root, dirs, files in os.walk(path):  
+                for d in dirs:  
+                    os.chmod(os.path.join(root, d), octal_permissions)
+                for d in files:
+                    os.chmod(os.path.join(root, d), octal_permissions)
+
+        os.chmod(path, octal_permissions)
+    except:
+        return False
+
+    return True
 
 def folder_owner(path : str) -> UserType|None:
     user_owner = _get_user_owner(path)

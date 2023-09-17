@@ -1,23 +1,31 @@
 import os
 import shutil
-import uuid
 from asyncio import sleep
-from ensurepip import version
 from json.decoder import JSONDecodeError
 from logging import getLogger
 from os import getcwd, path, remove
+from typing import List, TypedDict
+from backend.main import PluginManager
 from localplatform import chmod, service_restart, ON_LINUX, get_keep_systemd_service, get_selinux
 
 from aiohttp import ClientSession, web
 
 import helpers
-from injector import get_gamepadui_tab, inject_to_tab
+from injector import get_gamepadui_tab
 from settings import SettingsManager
 
 logger = getLogger("Updater")
 
+class RemoteVerAsset(TypedDict):
+    name: str
+    browser_download_url: str
+class RemoteVer(TypedDict):
+    tag_name: str
+    prerelease: bool
+    assets: List[RemoteVerAsset]
+
 class Updater:
-    def __init__(self, context) -> None:
+    def __init__(self, context: PluginManager) -> None:
         self.context = context
         self.settings = self.context.settings
         # Exposes updater methods to frontend
@@ -28,8 +36,8 @@ class Updater:
             "do_restart": self.do_restart,
             "check_for_updates": self.check_for_updates
         }
-        self.remoteVer = None
-        self.allRemoteVers = None
+        self.remoteVer: RemoteVer | None = None
+        self.allRemoteVers: List[RemoteVer] = []
         self.localVer = helpers.get_loader_version()
 
         try:
@@ -44,7 +52,7 @@ class Updater:
             ])
             context.loop.create_task(self.version_reloader())
 
-    async def _handle_server_method_call(self, request):
+    async def _handle_server_method_call(self, request: web.Request):
         method_name = request.match_info["method_name"]
         try:
             args = await request.json()
@@ -52,7 +60,7 @@ class Updater:
             args = {}
         res = {}
         try:
-            r = await self.updater_methods[method_name](**args)
+            r = await self.updater_methods[method_name](**args) # type: ignore
             res["result"] = r
             res["success"] = True
         except Exception as e:
@@ -105,7 +113,7 @@ class Updater:
         selectedBranch = self.get_branch(self.context.settings)
         async with ClientSession() as web:
             async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases", ssl=helpers.get_ssl_context()) as res:
-                remoteVersions = await res.json()
+                remoteVersions: List[RemoteVer] = await res.json()
                 if selectedBranch == 0:
                     logger.debug("release type: release")
                     remoteVersions = list(filter(lambda ver: ver["tag_name"].startswith("v") and not ver["prerelease"] and not ver["tag_name"].find("-pre") > 0 and ver["tag_name"], remoteVersions))
@@ -142,6 +150,7 @@ class Updater:
 
     async def do_update(self):
         logger.debug("Starting update.")
+        assert self.remoteVer
         version = self.remoteVer["tag_name"]
         download_url = None
         download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"

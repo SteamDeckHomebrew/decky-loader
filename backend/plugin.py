@@ -20,7 +20,7 @@ class PluginWrapper:
         self.plugin_path = plugin_path
         self.plugin_directory = plugin_directory
         self.method_call_lock = Lock()
-        self.socket = LocalSocket(self._on_new_message)
+        self.socket: LocalSocket = LocalSocket(self._on_new_message)
 
         self.version = None
 

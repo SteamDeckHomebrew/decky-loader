@@ -1,5 +1,6 @@
 # Change PyInstaller files permissions
 import sys
+from typing import Dict
 from localplatform import (chmod, chown, service_stop, service_start,
                             ON_WINDOWS, get_log_level, get_live_reload, 
                             get_server_port, get_server_host, get_chown_plugin_path,
@@ -16,7 +17,7 @@ import multiprocessing
 import aiohttp_cors # type: ignore
 # Partial imports
 from aiohttp import client_exceptions
-from aiohttp.web import Application, Response, get, run_app, static # type: ignore
+from aiohttp.web import Application, Response, Request, get, run_app, static # type: ignore
 from aiohttp_jinja2 import setup as jinja_setup
 
 # local modules
@@ -70,7 +71,7 @@ class PluginManager:
 
         jinja_setup(self.web_app)
 
-        async def startup(_):
+        async def startup(_: Application):
             if self.settings.getSetting("cef_forward", False):
                 self.loop.create_task(service_start(REMOTE_DEBUGGER_UNIT))
             else:
@@ -84,16 +85,16 @@ class PluginManager:
         self.web_app.add_routes([get("/auth/token", self.get_auth_token)])
 
         for route in list(self.web_app.router.routes()):
-            self.cors.add(route)
+            self.cors.add(route) # type: ignore
         self.web_app.add_routes([static("/static", path.join(path.dirname(__file__), 'static'))])
         self.web_app.add_routes([static("/legacy", path.join(path.dirname(__file__), 'legacy'))])
 
-    def exception_handler(self, loop, context):
+    def exception_handler(self, loop: AbstractEventLoop, context: Dict[str, str]):
         if context["message"] == "Unclosed connection":
             return
         loop.default_exception_handler(context)
 
-    async def get_auth_token(self, request):
+    async def get_auth_token(self, request: Request):
         return Response(text=get_csrf_token())
 
     async def load_plugins(self):
@@ -144,7 +145,7 @@ class PluginManager:
                 # This is because of https://github.com/aio-libs/aiohttp/blob/3ee7091b40a1bc58a8d7846e7878a77640e96996/aiohttp/client_ws.py#L321
                 logger.info("CEF has disconnected...")
                 # At this point the loop starts again and we connect to the freshly started Steam client once it is ready.
-            except Exception as e:
+            except Exception:
                 logger.error("Exception while reading page events " + format_exc())
                 await tab.close_websocket()
                 pass
@@ -154,7 +155,7 @@ class PluginManager:
         #         logger.info("Plugin loader isn't present in Steam anymore, reinjecting...")
         #         await self.inject_javascript(tab)
 
-    async def inject_javascript(self, tab: Tab, first=False, request=None):
+    async def inject_javascript(self, tab: Tab, first: bool=False, request: Request|None=None):
         logger.info("Loading Decky frontend!")
         try:
             if first:

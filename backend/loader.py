@@ -1,3 +1,4 @@
+from __future__ import annotations
 from asyncio import AbstractEventLoop, Queue, sleep
 from json.decoder import JSONDecodeError
 from logging import getLogger
@@ -65,7 +66,7 @@ class FileChangeHandler(RegexMatchingEventHandler):
         self.maybe_reload(src_path)
 
 class Loader:
-    def __init__(self, server_instance: 'PluginManager', plugin_path: str, loop: AbstractEventLoop, live_reload: bool = False) -> None:
+    def __init__(self, server_instance: PluginManager, plugin_path: str, loop: AbstractEventLoop, live_reload: bool = False) -> None:
         self.loop = loop
         self.logger = getLogger("Loader")
         self.plugin_path = plugin_path

@@ -127,7 +127,7 @@ jobs:
     - name: Get latest release
       uses: rez0n/actions-github-release@main
       id: latest_release
-      env:
+      with:
         token: ${{ secrets.GITHUB_TOKEN }}
         repository: "SteamDeckHomebrew/decky-loader"
         type: "nodraft"
@@ -206,7 +206,7 @@ jobs:
     - name: Get latest release
       uses: rez0n/actions-github-release@main
       id: latest_release
-      env:
+      with:
         token: ${{ secrets.GITHUB_TOKEN }}
         repository: "SteamDeckHomebrew/decky-loader"
         type: "nodraft"

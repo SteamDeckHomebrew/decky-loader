@@ -2,7 +2,7 @@ import asyncio, time
 from typing import Awaitable, Callable
 import random
 
-from localplatform import ON_WINDOWS
+from .localplatform import ON_WINDOWS
 
 BUFFER_LIMIT = 2 ** 20  # 1 MiB
 

@@ -10,8 +10,8 @@ import certifi
 from aiohttp.web import Request, Response, middleware
 from aiohttp.typedefs import Handler
 from aiohttp import ClientSession
-import localplatform
-from customtypes import UserType
+from . import localplatform
+from .customtypes import UserType
 from logging import getLogger
 
 REMOTE_DEBUGGER_UNIT = "steam-web-debug-portforward.service"

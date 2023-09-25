@@ -11,7 +11,9 @@ from os.path import exists
 from watchdog.events import RegexMatchingEventHandler, DirCreatedEvent, DirModifiedEvent, FileCreatedEvent, FileModifiedEvent # type: ignore
 from watchdog.observers import Observer # type: ignore
 
-from backend.main import PluginManager # type: ignore
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .main import PluginManager
 
 from .injector import get_tab, get_gamepadui_tab
 from .plugin import PluginWrapper
@@ -63,7 +65,7 @@ class FileChangeHandler(RegexMatchingEventHandler):
         self.maybe_reload(src_path)
 
 class Loader:
-    def __init__(self, server_instance: PluginManager, plugin_path: str, loop: AbstractEventLoop, live_reload: bool =False) -> None:
+    def __init__(self, server_instance: 'PluginManager', plugin_path: str, loop: AbstractEventLoop, live_reload: bool = False) -> None:
         self.loop = loop
         self.logger = getLogger("Loader")
         self.plugin_path = plugin_path

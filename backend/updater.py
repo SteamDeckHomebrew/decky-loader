@@ -4,15 +4,16 @@ from asyncio import sleep
 from json.decoder import JSONDecodeError
 from logging import getLogger
 from os import getcwd, path, remove
-from typing import List, TypedDict
-from backend.main import PluginManager
-from localplatform import chmod, service_restart, ON_LINUX, get_keep_systemd_service, get_selinux
+from typing import TYPE_CHECKING, List, TypedDict
+if TYPE_CHECKING:
+    from .main import PluginManager
+from .localplatform import chmod, service_restart, ON_LINUX, get_keep_systemd_service, get_selinux
 
 from aiohttp import ClientSession, web
 
-import helpers
-from injector import get_gamepadui_tab
-from settings import SettingsManager
+from .import helpers
+from .injector import get_gamepadui_tab
+from .settings import SettingsManager
 
 logger = getLogger("Updater")
 
@@ -25,7 +26,7 @@ class RemoteVer(TypedDict):
     assets: List[RemoteVerAsset]
 
 class Updater:
-    def __init__(self, context: PluginManager) -> None:
+    def __init__(self, context: 'PluginManager') -> None:
         self.context = context
         self.settings = self.context.settings
         # Exposes updater methods to frontend
@@ -150,7 +151,12 @@ class Updater:
 
     async def do_update(self):
         logger.debug("Starting update.")
-        assert self.remoteVer
+        try:
+            assert self.remoteVer
+        except AssertionError:
+            logger.error("Unable to update as remoteVer is missing")
+            return
+
         version = self.remoteVer["tag_name"]
         download_url = None
         download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"

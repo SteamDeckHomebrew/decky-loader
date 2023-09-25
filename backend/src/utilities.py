@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from .main import PluginManager
 from .injector import inject_to_tab, get_gamepadui_tab, close_old_tabs, get_tab
 from .localplatform import ON_WINDOWS
-from . import helpers
+from .import helpers
 from .localplatform import service_stop, service_start, get_home_path, get_username
 
 class FilePickerObj(TypedDict):
@@ -26,13 +26,8 @@ class FilePickerObj(TypedDict):
     filest: stat_result
     is_dir: bool
 
-class FilePickerObj(TypedDict):
-    file: Path
-    filest: stat_result
-    is_dir: bool
-
 class Utilities:
-    def __init__(self, context: PluginManager) -> None:
+    def __init__(self, context: 'PluginManager') -> None:
         self.context = context
         self.util_methods: Dict[str, Callable[..., Coroutine[Any, Any, Any]]] = {
             "ping": self.ping,

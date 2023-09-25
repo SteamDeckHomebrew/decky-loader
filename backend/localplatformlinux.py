@@ -1,6 +1,6 @@
 import os, pwd, grp, sys, logging
 from subprocess import call, run, DEVNULL, PIPE, STDOUT
-from customtypes import UserType
+from .customtypes import UserType
 
 logger = logging.getLogger("localplatform")
 

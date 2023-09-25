@@ -9,10 +9,10 @@ from os import path, environ
 from signal import SIGINT, signal
 from sys import exit, path as syspath
 from typing import Any, Dict
-from localsocket import LocalSocket
-from localplatform import setgid, setuid, get_username, get_home_path
-from customtypes import UserType
-import helpers
+from .localsocket import LocalSocket
+from .localplatform import setgid, setuid, get_username, get_home_path
+from .customtypes import UserType
+from . import helpers
 
 class PluginWrapper:
     def __init__(self, file: str, plugin_directory: str, plugin_path: str) -> None:

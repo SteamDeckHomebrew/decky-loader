@@ -8,16 +8,18 @@ from stat import FILE_ATTRIBUTE_HIDDEN # type: ignore
 
 from asyncio import StreamReader, StreamWriter, start_server, gather, open_connection
 from aiohttp import ClientSession, web
-from typing import Callable, Coroutine, Dict, Any, List, TypedDict
+from typing import TYPE_CHECKING, Callable, Coroutine, Dict, Any, List, TypedDict
 
 from logging import getLogger
-from backend.browser import PluginInstallRequest, PluginInstallType
-from backend.main import PluginManager
-from injector import inject_to_tab, get_gamepadui_tab, close_old_tabs, get_tab
 from pathlib import Path
-from localplatform import ON_WINDOWS
-import helpers
-from localplatform import service_stop, service_start, get_home_path, get_username
+
+from .browser import PluginInstallRequest, PluginInstallType
+if TYPE_CHECKING:
+    from .main import PluginManager
+from .injector import inject_to_tab, get_gamepadui_tab, close_old_tabs, get_tab
+from .localplatform import ON_WINDOWS
+from .import helpers
+from .localplatform import service_stop, service_start, get_home_path, get_username
 
 class FilePickerObj(TypedDict):
     file: Path
@@ -25,7 +27,7 @@ class FilePickerObj(TypedDict):
     is_dir: bool
 
 class Utilities:
-    def __init__(self, context: PluginManager) -> None:
+    def __init__(self, context: 'PluginManager') -> None:
         self.context = context
         self.util_methods: Dict[str, Callable[..., Coroutine[Any, Any, Any]]] = {
             "ping": self.ping,
@@ -307,7 +309,7 @@ class Utilities:
         self.rdt_proxy_task = self.context.loop.create_task(self.rdt_proxy_server)
 
     def stop_rdt_proxy(self):
-        if self.rdt_proxy_server:
+        if self.rdt_proxy_server != None:
             self.rdt_proxy_server.close()
             if self.rdt_proxy_task:
                 self.rdt_proxy_task.cancel()

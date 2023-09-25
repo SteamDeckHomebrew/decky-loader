@@ -10,8 +10,24 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2 # Check out the repository first.
-      - name: Run prettier (JavaScript & TypeScript)
+
+      - name: Install Python dependencies
         run: |
-          pushd frontend
-          npm install
-          npm run lint
+          python -m pip install --upgrade pip
+          [ -f requirements.txt ] && pip install -r requirements.txt
+
+      - name: Install JavaScript dependencies
+        working-directory: frontend
+        run: |
+          npm i -g pnpm
+          pnpm i --frozen-lockfile
+
+      - name: Run pyright (Python)
+        uses: jakebailey/pyright-action@v1
+        with:
+          python-version: "3.10.6"
+          no-comments: true
+
+      - name: Run prettier (JavaScript & TypeScript)
+        working-directory: frontend
+        run: pnpm run lint

@@ -1,3 +1,4 @@
+from __future__ import annotations
 from asyncio import AbstractEventLoop, Queue, sleep
 from json.decoder import JSONDecodeError
 from logging import getLogger

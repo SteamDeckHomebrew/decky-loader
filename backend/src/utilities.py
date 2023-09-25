@@ -1,3 +1,4 @@
+from __future__ import annotations
 from os import stat_result
 import uuid
 from json.decoder import JSONDecodeError
@@ -27,7 +28,7 @@ class FilePickerObj(TypedDict):
     is_dir: bool
 
 class Utilities:
-    def __init__(self, context: 'PluginManager') -> None:
+    def __init__(self, context: PluginManager) -> None:
         self.context = context
         self.util_methods: Dict[str, Callable[..., Coroutine[Any, Any, Any]]] = {
             "ping": self.ping,

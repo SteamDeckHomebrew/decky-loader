@@ -27,7 +27,7 @@ class RemoteVer(TypedDict):
     assets: List[RemoteVerAsset]
 
 class Updater:
-    def __init__(self, context: 'PluginManager') -> None:
+    def __init__(self, context: PluginManager) -> None:
         self.context = context
         self.settings = self.context.settings
         # Exposes updater methods to frontend

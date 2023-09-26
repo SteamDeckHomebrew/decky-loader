@@ -86,7 +86,7 @@ jobs:
       run: pnpm run build
 
     - name: Build Python Backend 🛠️
-      run: pyinstaller --noconfirm --onefile --name "PluginLoader" --add-data ./backend/static:/backend/static --add-data ./backend/locales:/backend/locales --add-data ./backend/legacy:/backend/legacy --add-data ./plugin:/plugin --hidden-import=sqlite3 ./main.py
+      run: pyinstaller --noconfirm --onefile --name "PluginLoader" --add-data ./backend/src/static:/backend/src/static --add-data ./backend/src/locales:/backend/src/locales --add-data ./backend/src/legacy:/backend/src/legacy --add-data ./plugin:/plugin --hidden-import=sqlite3 ./backend/main.py
         
     - name: Upload package artifact ⬆️
       if: ${{ !env.ACT }}

@@ -86,7 +86,7 @@ class PluginManager:
 
         for route in list(self.web_app.router.routes()):
             self.cors.add(route) # type: ignore
-        self.web_app.add_routes([static("/static", path.join(path.dirname(__file__), 'static'))])
+        self.web_app.add_routes([static("/static", path.join(path.dirname(__file__), '..', 'static'))])
         self.web_app.add_routes([static("/legacy", path.join(path.dirname(__file__), 'legacy'))])
 
     def exception_handler(self, loop: AbstractEventLoop, context: Dict[str, str]):

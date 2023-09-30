@@ -74,7 +74,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install pyinstaller==5.13.0
-        [ -f backend/requirements.txt ] && pip install -r backend/requirements.txt
+        pip install -r requirements.txt
 
     - name: Install JS dependencies ⬇️
       working-directory: ./frontend

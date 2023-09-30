@@ -1,3 +1,4 @@
+from __future__ import annotations
 import os
 import shutil
 from asyncio import sleep
@@ -11,7 +12,7 @@ from .localplatform import chmod, service_restart, ON_LINUX, get_keep_systemd_se
 
 from aiohttp import ClientSession, web
 
-from .import helpers
+from . import helpers
 from .injector import get_gamepadui_tab
 from .settings import SettingsManager
 

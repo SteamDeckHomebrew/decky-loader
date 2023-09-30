@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from .main import PluginManager
 from .injector import inject_to_tab, get_gamepadui_tab, close_old_tabs, get_tab
 from .localplatform import ON_WINDOWS
-from .import helpers
+from . import helpers
 from .localplatform import service_stop, service_start, get_home_path, get_username
 
 class FilePickerObj(TypedDict):

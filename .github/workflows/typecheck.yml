@@ -13,6 +13,7 @@ jobs:
       - uses: actions/checkout@v2 # Check out the repository first.
 
       - name: Install Python dependencies
+        working-directory: backend
         run: |
           python -m pip install --upgrade pip
           [ -f requirements.txt ] && pip install -r requirements.txt
@@ -28,6 +29,7 @@ jobs:
         with:
           python-version: "3.10.6"
           no-comments: true
+          working-directory: backend
 
       - name: Run tsc (TypeScript)
         working-directory: frontend

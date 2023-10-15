@@ -54,7 +54,7 @@ export async function getPluginList(sort_by : SortOptions | null=null, sort_dire
   let query = new URLSearchParams()
   sort_by && query.set("sort_by",sort_by)
   sort_direction && query.set("sort_direction", sort_direction)
-  query = "?"+query
+  query = "?"+String(query)
 
   let storeURL;
   if (!store) {

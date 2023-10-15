@@ -61,7 +61,7 @@ const StorePage: FC<{}> = () => {
   );
 };
 
-const BrowseTab: FC<{ children: { setPluginCount: Dispatch<SetStateAction<Number>> } }> = (data) => {
+const BrowseTab: FC<{ children: { setPluginCount: Dispatch<SetStateAction<Number | null>> } }> = (data) => {
 
   const { t } = useTranslation();
 

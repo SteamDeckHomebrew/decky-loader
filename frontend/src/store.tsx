@@ -51,11 +51,11 @@ export async function getPluginList(sort_by : SortOptions | null=null, sort_dire
   let store = await getSetting<Store>('store', Store.Default);
   let customURL = await getSetting<string>('store-url', 'https://plugins.deckbrew.xyz/plugins');
 
-  let query = URLSearchParams()
+  let query = new URLSearchParams()
   sort_by && query.set("sort_by",sort_by)
   sort_direction && query.set("sort_direction", sort_direction)
   query = "?"+query
-  
+
   let storeURL;
   if (!store) {
     console.log('Could not get a default store, using Default.');

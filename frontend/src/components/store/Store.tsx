@@ -232,10 +232,10 @@ const BrowseTab: FC<{ children: { setPluginCount: Dispatch<SetStateAction<Number
               plugin.tags.some((tag: string) => tag.toLowerCase().includes(searchFieldValue.toLowerCase()))
             );
           })
-          .sort((a, b) => {
-            if (selectedSort % 2 === 1) return a.name.localeCompare(b.name);
-            else return b.name.localeCompare(a.name);
-          })
+          //.sort((a, b) => {
+          //  if (selectedSort % 2 === 1) return a.name.localeCompare(b.name);
+          //  else return b.name.localeCompare(a.name);
+          //})
           .map((plugin: StorePlugin) => (
             <PluginCard plugin={plugin} />
           ))}

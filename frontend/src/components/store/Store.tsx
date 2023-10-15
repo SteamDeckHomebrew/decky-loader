@@ -87,15 +87,20 @@ const BrowseTab: FC<{ children: { setPluginCount: Dispatch<SetStateAction<Number
       let sort = null
       let direction = null
       switch (selectedSort) {
-        case 1: direction=SortDirections.ascending; sort=SortOptions.name
-        case 2: direction=SortDirections.descending;sort=SortOptions.name
-        case 3: direction=SortDirections.ascending; sort=SortOptions.date
-        case 4: direction=SortDirections.descending;sort=SortOptions.date
+        case 1: direction=SortDirections.ascending;  sort=SortOptions.name
+        case 2: direction=SortDirections.descending; sort=SortOptions.name
+        case 3: direction=SortDirections.ascending;  sort=SortOptions.date
+        case 4: direction=SortDirections.descending; sort=SortOptions.date
       }
       const res = await getPluginList(sort, direction);
       logger.log('got data!', res);
       setPluginList(res);
       data.children.setPluginCount(res.length)
+    })();
+  }, [selectedSort]);
+
+  useEffect(() => {
+    (async () => {
       const storeRes = await getStore();
       logger.log(`store is ${storeRes}, isTesting is ${storeRes === Store.Testing}`);
       setIsTesting(storeRes === Store.Testing);

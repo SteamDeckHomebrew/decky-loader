@@ -8,7 +8,7 @@ import {
   TextField,
   findModule,
 } from 'decky-frontend-lib';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState, Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import logo from '../../../assets/plugin_store.png';
@@ -61,7 +61,7 @@ const StorePage: FC<{}> = () => {
   );
 };
 
-const BrowseTab: FC<{ children: { setPluginCount: setPluginCount } }> = (data) => {
+const BrowseTab: FC<{ children: { setPluginCount: Dispatch<SetStateAction<Number>> } }> = (data) => {
 
   const { t } = useTranslation();
 
@@ -79,29 +79,30 @@ const BrowseTab: FC<{ children: { setPluginCount: setPluginCount } }> = (data) =
   const [selectedSort, setSort] = useState<number>(dropdownSortOptions[0].data);
   // const [selectedFilter, setFilter] = useState<number>(filterOptions[0].data);
   const [searchFieldValue, setSearchValue] = useState<string>('');
-  const [data, setData] = useState<StorePlugin[] | null>(null);
+  const [pluginList, setPluginList] = useState<StorePlugin[] | null>(null);
   const [isTesting, setIsTesting] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
-      sort, direction = null, null
+      let sort = null
+      let direction = null
       switch (selectedSort) {
-        case 1: direction=SortDirections.ascending;sort=SortOptions.name
+        case 1: direction=SortDirections.ascending; sort=SortOptions.name
         case 2: direction=SortDirections.descending;sort=SortOptions.name
-        case 3: direction=SortDirections.ascending;sort=SortOptions.date
+        case 3: direction=SortDirections.ascending; sort=SortOptions.date
         case 4: direction=SortDirections.descending;sort=SortOptions.date
       }
       const res = await getPluginList(sort, direction);
       logger.log('got data!', res);
-      setData(res);
-      setPluginCount(res.length)
+      setPluginList(res);
+      data.children.setPluginCount(res.length)
       const storeRes = await getStore();
       logger.log(`store is ${storeRes}, isTesting is ${storeRes === Store.Testing}`);
       setIsTesting(storeRes === Store.Testing);
     })();
   }, []);
 
-  return !data ? (
+  return !pluginList ? (
     <div style={{ height: '100%' }}>
       <SteamSpinner />
     </div>
@@ -222,7 +223,7 @@ const BrowseTab: FC<{ children: { setPluginCount: setPluginCount } }> = (data) =
         </div>
       )}
       <div>
-        {data
+        {pluginList
           .filter((plugin: StorePlugin) => {
             return (
               plugin.name.toLowerCase().includes(searchFieldValue.toLowerCase()) ||

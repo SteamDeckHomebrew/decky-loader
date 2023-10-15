@@ -8,13 +8,13 @@ export enum Store {
 }
 
 export enum SortOptions {
-  name = "name",
-  date = "date"
+  name = 'name',
+  date = 'date',
 }
 
 export enum SortDirections {
-  ascending = "asc",
-  descending = "desc"
+  ascending = 'asc',
+  descending = 'desc',
 }
 
 export interface StorePluginVersion {
@@ -46,15 +46,18 @@ export async function getStore(): Promise<Store> {
   return await getSetting<Store>('store', Store.Default);
 }
 
-export async function getPluginList(sort_by : SortOptions | null=null, sort_direction: SortDirections | null=null): Promise<StorePlugin[]> {
+export async function getPluginList(
+  sort_by: SortOptions | null = null,
+  sort_direction: SortDirections | null = null,
+): Promise<StorePlugin[]> {
   let version = await window.DeckyPluginLoader.updateVersion();
   let store = await getSetting<Store>('store', Store.Default);
   let customURL = await getSetting<string>('store-url', 'https://plugins.deckbrew.xyz/plugins');
 
-  let query = new URLSearchParams()
-  sort_by && query.set("sort_by",sort_by)
-  sort_direction && query.set("sort_direction", sort_direction)
-  query = "?"+String(query)
+  let query: URLSearchParams | string = new URLSearchParams();
+  sort_by && query.set('sort_by', sort_by);
+  sort_direction && query.set('sort_direction', sort_direction);
+  query = '?' + String(query);
 
   let storeURL;
   if (!store) {
@@ -82,7 +85,7 @@ export async function getPluginList(sort_by : SortOptions | null=null, sort_dire
         storeURL = 'https://plugins.deckbrew.xyz/plugins';
         break;
     }
-    return fetch(storeURL+query, {
+    return fetch(storeURL + query, {
       method: 'GET',
       headers: {
         'X-Decky-Version': version.current,

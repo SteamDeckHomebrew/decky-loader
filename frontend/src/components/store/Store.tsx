@@ -8,12 +8,12 @@ import {
   TextField,
   findModule,
 } from 'decky-frontend-lib';
-import { FC, useEffect, useMemo, useState, Dispatch, SetStateAction } from 'react';
+import { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import logo from '../../../assets/plugin_store.png';
 import Logger from '../../logger';
-import { Store, StorePlugin, getPluginList, getStore, SortOptions, SortDirections } from '../../store';
+import { SortDirections, SortOptions, Store, StorePlugin, getPluginList, getStore } from '../../store';
 import PluginCard from './PluginCard';
 
 const logger = new Logger('Store');
@@ -61,16 +61,15 @@ const StorePage: FC<{}> = () => {
   );
 };
 
-const BrowseTab: FC<{ children: { setPluginCount: Dispatch<SetStateAction<Number | null>> } }> = (data) => {
-
+const BrowseTab: FC<{ children: { setPluginCount: Dispatch<SetStateAction<number | null>> } }> = (data) => {
   const { t } = useTranslation();
 
   const dropdownSortOptions = useMemo(
     (): DropdownOption[] => [
       { data: 1, label: t('Store.store_tabs.alph_desc') },
       { data: 2, label: t('Store.store_tabs.alph_asce') },
-      { data: 3, label: "date descending" },
-      { data: 4, label: "date ascending" },
+      { data: 3, label: 'date descending' },
+      { data: 4, label: 'date ascending' },
     ],
     [],
   );
@@ -84,18 +83,26 @@ const BrowseTab: FC<{ children: { setPluginCount: Dispatch<SetStateAction<Number
 
   useEffect(() => {
     (async () => {
-      let sort = null
-      let direction = null
+      let sort = null;
+      let direction = null;
       switch (selectedSort) {
-        case 1: direction=SortDirections.ascending;  sort=SortOptions.name
-        case 2: direction=SortDirections.descending; sort=SortOptions.name
-        case 3: direction=SortDirections.ascending;  sort=SortOptions.date
-        case 4: direction=SortDirections.descending; sort=SortOptions.date
+        case 1:
+          direction = SortDirections.ascending;
+          sort = SortOptions.name;
+        case 2:
+          direction = SortDirections.descending;
+          sort = SortOptions.name;
+        case 3:
+          direction = SortDirections.ascending;
+          sort = SortOptions.date;
+        case 4:
+          direction = SortDirections.descending;
+          sort = SortOptions.date;
       }
       const res = await getPluginList(sort, direction);
       logger.log('got data!', res);
       setPluginList(res);
-      data.children.setPluginCount(res.length)
+      data.children.setPluginCount(res.length);
     })();
   }, [selectedSort]);
 

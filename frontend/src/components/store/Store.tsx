@@ -13,32 +13,20 @@ import { useTranslation } from 'react-i18next';
 
 import logo from '../../../assets/plugin_store.png';
 import Logger from '../../logger';
-import { Store, StorePlugin, getPluginList, getStore } from '../../store';
+import { Store, StorePlugin, getPluginList, getStore, SortOptions, SortDirections } from '../../store';
 import PluginCard from './PluginCard';
 
 const logger = new Logger('Store');
 
 const StorePage: FC<{}> = () => {
   const [currentTabRoute, setCurrentTabRoute] = useState<string>('browse');
-  const [data, setData] = useState<StorePlugin[] | null>(null);
-  const [isTesting, setIsTesting] = useState<boolean>(false);
+  const [pluginCount, setPluginCount] = useState<number | null>(null);
   const { TabCount } = findModule((m) => {
     if (m?.TabCount && m?.TabTitle) return true;
     return false;
   });
 
   const { t } = useTranslation();
-
-  useEffect(() => {
-    (async () => {
-      const res = await getPluginList();
-      logger.log('got data!', res);
-      setData(res);
-      const storeRes = await getStore();
-      logger.log(`store is ${storeRes}, isTesting is ${storeRes === Store.Testing}`);
-      setIsTesting(storeRes === Store.Testing);
-    })();
-  }, []);
 
   return (
     <>
@@ -49,54 +37,75 @@ const StorePage: FC<{}> = () => {
           background: '#0005',
         }}
       >
-        {!data ? (
-          <div style={{ height: '100%' }}>
-            <SteamSpinner />
-          </div>
-        ) : (
-          <Tabs
-            activeTab={currentTabRoute}
-            onShowTab={(tabId: string) => {
-              setCurrentTabRoute(tabId);
-            }}
-            tabs={[
-              {
-                title: t('Store.store_tabs.title'),
-                content: <BrowseTab children={{ data: data, isTesting: isTesting }} />,
-                id: 'browse',
-                renderTabAddon: () => <span className={TabCount}>{data.length}</span>,
-              },
-              {
-                title: t('Store.store_tabs.about'),
-                content: <AboutTab />,
-                id: 'about',
-              },
-            ]}
-          />
-        )}
+        <Tabs
+          activeTab={currentTabRoute}
+          onShowTab={(tabId: string) => {
+            setCurrentTabRoute(tabId);
+          }}
+          tabs={[
+            {
+              title: t('Store.store_tabs.title'),
+              content: <BrowseTab children={{ setPluginCount: setPluginCount }} />,
+              id: 'browse',
+              renderTabAddon: () => <span className={TabCount}>{pluginCount}</span>,
+            },
+            {
+              title: t('Store.store_tabs.about'),
+              content: <AboutTab />,
+              id: 'about',
+            },
+          ]}
+        />
       </div>
     </>
   );
 };
 
-const BrowseTab: FC<{ children: { data: StorePlugin[]; isTesting: boolean } }> = (data) => {
+const BrowseTab: FC<{ children: { setPluginCount: setPluginCount } }> = (data) => {
+
   const { t } = useTranslation();
 
-  const sortOptions = useMemo(
+  const dropdownSortOptions = useMemo(
     (): DropdownOption[] => [
       { data: 1, label: t('Store.store_tabs.alph_desc') },
       { data: 2, label: t('Store.store_tabs.alph_asce') },
+      { data: 3, label: "date descending" },
+      { data: 4, label: "date ascending" },
     ],
     [],
   );
 
   // const filterOptions = useMemo((): DropdownOption[] => [{ data: 1, label: 'All' }], []);
-
-  const [selectedSort, setSort] = useState<number>(sortOptions[0].data);
+  const [selectedSort, setSort] = useState<number>(dropdownSortOptions[0].data);
   // const [selectedFilter, setFilter] = useState<number>(filterOptions[0].data);
   const [searchFieldValue, setSearchValue] = useState<string>('');
+  const [data, setData] = useState<StorePlugin[] | null>(null);
+  const [isTesting, setIsTesting] = useState<boolean>(false);
 
-  return (
+  useEffect(() => {
+    (async () => {
+      sort, direction = null, null
+      switch (selectedSort) {
+        case 1: direction=SortDirections.ascending;sort=SortOptions.name
+        case 2: direction=SortDirections.descending;sort=SortOptions.name
+        case 3: direction=SortDirections.ascending;sort=SortOptions.date
+        case 4: direction=SortDirections.descending;sort=SortOptions.date
+      }
+      const res = await getPluginList(sort, direction);
+      logger.log('got data!', res);
+      setData(res);
+      setPluginCount(res.length)
+      const storeRes = await getStore();
+      logger.log(`store is ${storeRes}, isTesting is ${storeRes === Store.Testing}`);
+      setIsTesting(storeRes === Store.Testing);
+    })();
+  }, []);
+
+  return !data ? (
+    <div style={{ height: '100%' }}>
+      <SteamSpinner />
+    </div>
+  ) : (
     <>
       <style>{`
               .deckyStoreCardInstallContainer > .Panel {
@@ -117,7 +126,7 @@ const BrowseTab: FC<{ children: { data: StorePlugin[]; isTesting: boolean } }> =
             <span className="DialogLabel">{t("Store.store_sort.label")}</span>
             <Dropdown
               menuLabel={t("Store.store_sort.label") as string}
-              rgOptions={sortOptions}
+              rgOptions={dropdownSortOptions}
               strDefaultLabel={t("Store.store_sort.label_def") as string}
               selectedOption={selectedSort}
               onChange={(e) => setSort(e.data)}
@@ -163,7 +172,7 @@ const BrowseTab: FC<{ children: { data: StorePlugin[]; isTesting: boolean } }> =
             <span className="DialogLabel">{t('Store.store_sort.label')}</span>
             <Dropdown
               menuLabel={t('Store.store_sort.label') as string}
-              rgOptions={sortOptions}
+              rgOptions={dropdownSortOptions}
               strDefaultLabel={t('Store.store_sort.label_def') as string}
               selectedOption={selectedSort}
               onChange={(e) => setSort(e.data)}
@@ -182,7 +191,7 @@ const BrowseTab: FC<{ children: { data: StorePlugin[]; isTesting: boolean } }> =
           </div>
         </Focusable>
       </div>
-      {data.children.isTesting && (
+      {isTesting && (
         <div
           style={{
             alignItems: 'center',
@@ -213,7 +222,7 @@ const BrowseTab: FC<{ children: { data: StorePlugin[]; isTesting: boolean } }> =
         </div>
       )}
       <div>
-        {data.children.data
+        {data
           .filter((plugin: StorePlugin) => {
             return (
               plugin.name.toLowerCase().includes(searchFieldValue.toLowerCase()) ||

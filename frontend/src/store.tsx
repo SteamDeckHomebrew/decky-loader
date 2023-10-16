@@ -63,7 +63,7 @@ export async function getPluginList(
   if (!store) {
     console.log('Could not get a default store, using Default.');
     await setSetting('store-url', Store.Default);
-    return fetch('https://plugins.deckbrew.xyz/plugins', {
+    return fetch('https://plugins.deckbrew.xyz/plugins' + query, {
       method: 'GET',
       headers: {
         'X-Decky-Version': version.current,

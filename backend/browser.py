@@ -175,7 +175,7 @@ class PluginBrowser:
                 case _: storeUrl = "https://plugins.deckbrew.xyz"
             logger.info(f"Incrementing installs for {name} from URL {storeUrl} (version {hash})")
             async with ClientSession() as client:
-                res = await client.post(storeUrl+"/increment/{hash}?isUpdate={isInstalled}", ssl=get_ssl_context())
+                res = await client.post(storeUrl+f"/increment/{version}/{hash}?isUpdate={isInstalled}", ssl=get_ssl_context())
                 if res.status != 200:
                     logger.error(f"Server did not accept install count increment request. code: {res.status}")
 

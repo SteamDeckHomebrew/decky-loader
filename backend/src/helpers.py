@@ -10,7 +10,7 @@ import certifi
 from aiohttp.web import Request, Response, middleware
 from aiohttp.typedefs import Handler
 from aiohttp import ClientSession
-from . import localplatform
+from .localplatform import localplatform
 from .customtypes import UserType
 from logging import getLogger
 

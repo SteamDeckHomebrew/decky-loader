@@ -17,7 +17,7 @@ from enum import IntEnum
 from typing import Dict, List, TypedDict
 
 # Local modules
-from .localplatform import chown, chmod
+from .localplatform.localplatform import chown, chmod
 from .loader import Loader, Plugins
 from .helpers import get_ssl_context, download_remote_binary_to_path
 from .settings import SettingsManager

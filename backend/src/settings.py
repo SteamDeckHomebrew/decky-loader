@@ -1,7 +1,7 @@
 from json import dump, load
 from os import mkdir, path, listdir, rename
 from typing import Any, Dict
-from .localplatform import chown, folder_owner, get_chown_plugin_path
+from .localplatform.localplatform import chown, folder_owner, get_chown_plugin_path
 from .customtypes import UserType
 
 from .helpers import get_homebrew_path

@@ -162,3 +162,4 @@ backend/static
 plugins/*
 act/.directory
 act/artifacts/*
+bin/act

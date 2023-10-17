@@ -125,7 +125,7 @@ class PluginBrowser:
         tab = await get_gamepadui_tab()
         plugin_folder = self.find_plugin_folder(name)
         assert plugin_folder is not None
-        plugin_dir = path.join(self.plugin_path, )
+        plugin_dir = path.join(self.plugin_path, plugin_folder)
         try:
             logger.info("uninstalling " + name)
             logger.info(" at dir " + plugin_dir)

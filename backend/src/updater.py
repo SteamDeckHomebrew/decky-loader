@@ -8,7 +8,7 @@ from os import getcwd, path, remove
 from typing import TYPE_CHECKING, List, TypedDict
 if TYPE_CHECKING:
     from .main import PluginManager
-from .localplatform import chmod, service_restart, ON_LINUX, get_keep_systemd_service, get_selinux
+from .localplatform.localplatform import chmod, service_restart, ON_LINUX, get_keep_systemd_service, get_selinux
 
 from aiohttp import ClientSession, web
 

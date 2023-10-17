@@ -1,7 +1,7 @@
 # Change PyInstaller files permissions
 import sys
 from typing import Dict
-from .localplatform import (chmod, chown, service_stop, service_start,
+from .localplatform.localplatform import (chmod, chown, service_stop, service_start,
                             ON_WINDOWS, get_log_level, get_live_reload, 
                             get_server_port, get_server_host, get_chown_plugin_path,
                             get_privileged_path)

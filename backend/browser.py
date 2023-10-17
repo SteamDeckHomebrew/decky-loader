@@ -173,10 +173,11 @@ class PluginBrowser:
                 case 1: storeUrl = "https://testing.deckbrew.xyz" # testing
                 case 2: storeUrl = self.settings.getSetting("store-url", "https://plugins.deckbrew.xyz")  # custom TODO: this won't work properly, maybe change the way the url is handled in the frontend to not include the /plugins bit
                 case _: storeUrl = "https://plugins.deckbrew.xyz"
-            logger.info(f"Incrementing {name} from URL {storeUrl}")
+            logger.info(f"Incrementing installs for {name} from URL {storeUrl} (version {hash})")
             async with ClientSession() as client:
-                await client.post(storeUrl+"/increment", ssl=get_ssl_context(), data={"plugin_name":name,"isUpdate":str(isInstalled)})
-                # todo: have error handling here? it doesn't really matter if it succeeds or not to be honest.
+                res = await client.post(storeUrl+"/increment/{hash}?isUpdate={isInstalled}", ssl=get_ssl_context())
+                if res.status != 200:
+                    logger.error(f"Server did not accept install count increment request. code: {res.status}")
 
         # Check to make sure we got the file
         if res_zip is None:

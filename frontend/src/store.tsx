@@ -44,7 +44,28 @@ export async function getPluginList(): Promise<StorePlugin[]> {
   if (store === null) {
     console.log('Could not get store, using Default.');
     await setSetting('store', Store.Default);
-    store = Store.Default;
+    store = Store.Default
+  }
+  switch (+store) {
+    case Store.Default:
+      storeURL = 'https://plugins.deckbrew.xyz/plugins';
+      break;
+    case Store.Testing:
+      storeURL = 'https://testing.deckbrew.xyz/plugins';
+      break;
+    case Store.Custom:
+      storeURL = customURL;
+      break;
+    default:
+      console.error('Somehow you ended up without a standard URL, using the default URL.');
+      storeURL = 'https://plugins.deckbrew.xyz/plugins';
+      break;
+  return fetch(storeURL, {
+    method: 'GET',
+    headers: {
+      'X-Decky-Version': version.current,
+    },
+  }).then((r) => r.json());
   }
   switch (+store) {
     case Store.Default:

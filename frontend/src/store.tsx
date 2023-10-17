@@ -38,7 +38,7 @@ export async function getStore(): Promise<Store> {
 
 export async function getPluginList(): Promise<StorePlugin[]> {
   let version = await window.DeckyPluginLoader.updateVersion();
-  let store = await getSetting<Store>('store', null);
+  let store = await getSetting<Store | null>('store', null);
 
   let customURL = await getSetting<string>('store-url', 'https://plugins.deckbrew.xyz/plugins');
   let storeURL;

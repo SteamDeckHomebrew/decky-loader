@@ -13,7 +13,6 @@ import { FC, lazy } from 'react';
 import { FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
 import { DeckyState, DeckyStateContextProvider, UserInfo, useDeckyState } from './components/DeckyState';
-import LegacyPlugin from './components/LegacyPlugin';
 import { File, FileSelectionType } from './components/modals/filepicker';
 import { deinitFilepickerPatches, initFilepickerPatches } from './components/modals/filepicker/patches';
 import MultiplePluginsInstallModal from './components/modals/MultiplePluginsInstallModal';
@@ -238,7 +237,7 @@ class PluginLoader extends Logger {
 
   public unloadPlugin(name: string) {
     console.log('Plugin List: ', this.plugins);
-    const plugin = this.plugins.find((plugin) => plugin.name === name || plugin.name === name.replace('$LEGACY_', ''));
+    const plugin = this.plugins.find((plugin) => plugin.name === name);
     plugin?.onDismount?.();
     this.plugins = this.plugins.filter((p) => p !== plugin);
     this.deckyState.setPlugins(this.plugins);
@@ -256,12 +255,7 @@ class PluginLoader extends Logger {
       this.log(`Trying to load ${name}`);
 
       this.unloadPlugin(name);
-
-      if (name.startsWith('$LEGACY_')) {
-        await this.importLegacyPlugin(name.replace('$LEGACY_', ''));
-      } else {
-        await this.importReactPlugin(name, version);
-      }
+      await this.importReactPlugin(name, version);
 
       this.deckyState.setPlugins(this.plugins);
       this.log(`Loaded ${name}`);
@@ -340,15 +334,6 @@ class PluginLoader extends Logger {
         });
       }
     } else throw new Error(`${name} frontend_bundle not OK`);
-  }
-
-  private async importLegacyPlugin(name: string) {
-    const url = `http://127.0.0.1:1337/plugins/load_main/${name}`;
-    this.plugins.push({
-      name: name,
-      icon: <FaPlug />,
-      content: <LegacyPlugin url={url} />,
-    });
   }
 
   async callServerMethod(methodName: string, args = {}) {

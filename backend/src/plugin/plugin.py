@@ -1,3 +1,4 @@
+from asyncio import Task, create_task
 from json import dumps, load, loads
 from logging import getLogger
 from os import path
@@ -31,12 +32,12 @@ class PluginWrapper:
         self.sandboxed_plugin = SandboxedPlugin(self.name, self.passive, self.flags, self.file, self.plugin_directory, self.plugin_path, self.version, self.author)
         #TODO: Maybe somehow make LocalSocket not require on_new_message to make this more clear
         self.socket = LocalSocket(self.sandboxed_plugin.on_new_message)
-        self.sandboxed_plugin.start(self.socket)
+        self.listener_task: Task[Any]
 
     def __str__(self) -> str:
         return self.name
     
-    async def response_listener(self):
+    async def _response_listener(self):
         while True:
             line = await self.socket.read_single_line()
             if line != None:
@@ -53,3 +54,14 @@ class PluginWrapper:
         self.method_call_requests[request.id] = request
 
         return await request.wait_for_result()
+    
+    async def start(self):
+        self.sandboxed_plugin.start(self.socket)
+        self.listener_task = create_task(self._response_listener())
+
+    async def stop(self):
+        self.listener_task.cancel()
+        async def _(self: PluginWrapper):
+            await self.socket.write_single_line(dumps({ "stop": True }, ensure_ascii=False))
+            await self.socket.close_socket_connection()
+        create_task(_(self))

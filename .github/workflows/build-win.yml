@@ -44,10 +44,10 @@ jobs:
       run: pnpm run build
 
     - name: Build Python Backend 🛠️
-      run: pyinstaller --noconfirm --onefile --name "PluginLoader" --add-data "./backend/static;/static" --add-data "./backend/locales;/locales" --add-data "./backend/src/legacy;/src/legacy" --add-data "./plugin;/plugin" --hidden-import=sqlite3 ./backend/main.py
+      run: pyinstaller --noconfirm --onefile --name "PluginLoader" --add-data "./backend/static;/static" --add-data "./backend/locales;/locales" --add-data "./plugin;/plugin" --hidden-import=sqlite3 ./backend/main.py
 
     - name: Build Python Backend (noconsole) 🛠️
-      run: pyinstaller --noconfirm --noconsole --onefile --name "PluginLoader_noconsole" --add-data "./backend/static;/static" --add-data "./backend/locales;/locales" --add-data "./backend/src/legacy;/src/legacy" --add-data "./plugin;/plugin" --hidden-import=sqlite3 ./backend/main.py
+      run: pyinstaller --noconfirm --noconsole --onefile --name "PluginLoader_noconsole" --add-data "./backend/static;/static" --add-data "./backend/locales;/locales" --add-data "./plugin;/plugin" --hidden-import=sqlite3 ./backend/main.py
         
     - name: Upload package artifact ⬆️
       uses: actions/upload-artifact@v3

@@ -29,11 +29,6 @@ class PluginWrapper:
             package_json = load(open(path.join(plugin_path, plugin_directory, "package.json"), "r", encoding="utf-8"))
             self.version = package_json["version"]
 
-        self.legacy = False
-        self.main_view_html = json["main_view_html"] if "main_view_html" in json else ""
-        self.tile_view_html = json["tile_view_html"] if "tile_view_html" in json else ""
-        self.legacy = self.main_view_html or self.tile_view_html
-
         self.name = json["name"]
         self.author = json["author"]
         self.flags = json["flags"]

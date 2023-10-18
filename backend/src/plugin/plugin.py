@@ -50,8 +50,8 @@ class PluginWrapper:
                     res = loads(line)
                     if res["id"] == "0":
                         create_task(self.emitted_message_callback(res["payload"]))
-                        return
-                    self._method_call_requests.pop(res["id"]).set_result(res)
+                    else:
+                        self._method_call_requests.pop(res["id"]).set_result(res)
             except:
                 pass
 

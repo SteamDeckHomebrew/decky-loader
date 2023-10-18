@@ -22,6 +22,10 @@ from .plugin.plugin import PluginWrapper
 Plugins = dict[str, PluginWrapper]
 ReloadQueue = Queue[Tuple[str, str, bool | None] | Tuple[str, str]]
 
+#TODO: Remove placeholder method
+async def log_plugin_emitted_message(message: Any):
+    getLogger().debug(f"EMITTED MESSAGE: " + str(message))
+
 class FileChangeHandler(RegexMatchingEventHandler):
     def __init__(self, queue: ReloadQueue, plugin_path: str) -> None:
         super().__init__(regexes=[r'^.*?dist\/index\.js$', r'^.*?main\.py$']) # type: ignore
@@ -143,6 +147,7 @@ class Loader:
             if plugin.passive:
                 self.logger.info(f"Plugin {plugin.name} is passive")
             self.plugins[plugin.name] = plugin.start()
+            self.plugins[plugin.name].set_emitted_message_callback(log_plugin_emitted_message)
             self.logger.info(f"Loaded {plugin.name}")
             if not batch:
                 self.loop.create_task(self.dispatch_plugin(plugin.name, plugin.version))

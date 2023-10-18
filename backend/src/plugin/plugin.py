@@ -65,14 +65,14 @@ class PluginWrapper:
 
         return await request.wait_for_result()
     
-    async def start(self):
+    def start(self):
         if self.passive:
             return self
         Process(target=self.sandboxed_plugin.initialize, args=[self._socket]).start()
         self.listener_task = create_task(self._response_listener())
         return self
 
-    async def stop(self):
+    def stop(self):
         self._listener_task.cancel()
         async def _(self: PluginWrapper):
             await self._socket.write_single_line(dumps({ "stop": True }, ensure_ascii=False))

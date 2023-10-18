@@ -185,6 +185,14 @@
                 "runpydeck"
             ],
             "problemMatcher": []
+        },
+        {
+            "label": "act",
+            "type": "shell",
+            "group": "none",
+            "detail": "Run the act thing",
+            "command": "./act/run-act.sh release",
+            "problemMatcher": []
         }
     ]
 }

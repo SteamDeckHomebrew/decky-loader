@@ -3,7 +3,6 @@ from signal import SIGINT, signal
 from importlib.util import module_from_spec, spec_from_file_location
 from json import dumps, loads
 from logging import getLogger
-import multiprocessing
 from sys import exit, path as syspath
 from traceback import format_exc
 from asyncio import (get_event_loop, new_event_loop,
@@ -15,7 +14,7 @@ from ..localplatform.localplatform import setgid, setuid, get_username, get_home
 from ..customtypes import UserType
 from .. import helpers
 
-from typing import List
+from typing import Any, Dict, List
 
 class SandboxedPlugin:
     def __init__(self,
@@ -38,7 +37,9 @@ class SandboxedPlugin:
 
         self.log = getLogger("plugin")
 
-    def _init(self, socket: LocalSocket):
+    def initialize(self, socket: LocalSocket):
+        self._socket = socket
+
         try:
             signal(SIGINT, lambda s, f: exit(0))
 
@@ -84,6 +85,9 @@ class SandboxedPlugin:
             spec.loader.exec_module(module)
             self.Plugin = module.Plugin
 
+            setattr(self.Plugin, "emit_message", self.emit_message)
+            #TODO: Find how to put emit_message on global namespace so it doesn't pollute Plugin
+
             if hasattr(self.Plugin, "_migration"):
                 get_event_loop().run_until_complete(self.Plugin._migration(self.Plugin))
             if hasattr(self.Plugin, "_main"):
@@ -118,7 +122,6 @@ class SandboxedPlugin:
             get_event_loop().close()
             raise Exception("Closing message listener")
 
-        # TODO there is definitely a better way to type this
         d: SocketResponseDict = {"res": None, "success": True, "id": data["id"]}
         try:
             d["res"] = await getattr(self.Plugin, data["method"])(self.Plugin, **data["args"])
@@ -128,9 +131,8 @@ class SandboxedPlugin:
         finally:
             return dumps(d, ensure_ascii=False)
         
-
-    def start(self, socket: LocalSocket):
-        if self.passive:
-            return self
-        multiprocessing.Process(target=self._init, args=[socket]).start()
-        return self
+    async def emit_message(self, message: Dict[Any, Any]):
+        await self._socket.write_single_line(dumps({
+            "id": 0,
+            "payload": message
+        }))

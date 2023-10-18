@@ -1,5 +1,5 @@
 import asyncio, time
-from typing import Awaitable, Callable
+from typing import Any, Callable, Coroutine
 import random
 
 from .localplatform import ON_WINDOWS
@@ -7,7 +7,7 @@ from .localplatform import ON_WINDOWS
 BUFFER_LIMIT = 2 ** 20  # 1 MiB
 
 class UnixSocket:
-    def __init__(self, on_new_message: Callable[[str], Awaitable[str|None]]):
+    def __init__(self, on_new_message: Callable[[str], Coroutine[Any, Any, Any]]):
         '''
         on_new_message takes 1 string argument.
         It's return value gets used, if not None, to write data to the socket.
@@ -93,18 +93,17 @@ class UnixSocket:
 
     async def _listen_for_method_call(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
         while True:
+
+            def _(task: asyncio.Task[str|None]):
+                res = task.result()
+                if res is not None:
+                    asyncio.create_task(self._write_single_line(writer, res))
+
             line = await self._read_single_line(reader)
-
-            try:
-                res = await self.on_new_message(line)
-            except Exception:
-                return
-
-            if res != None:
-                await self._write_single_line(writer, res)
+            asyncio.create_task(self.on_new_message(line)).add_done_callback(_)
             
 class PortSocket (UnixSocket):
-    def __init__(self, on_new_message: Callable[[str], Awaitable[str|None]]):
+    def __init__(self, on_new_message: Callable[[str], Coroutine[Any, Any, Any]]):
         '''
         on_new_message takes 1 string argument.
         It's return value gets used, if not None, to write data to the socket.

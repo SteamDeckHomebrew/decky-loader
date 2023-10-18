@@ -128,6 +128,6 @@ class SandboxedPlugin:
         
     async def emit_message(self, message: Dict[Any, Any]):
         await self._socket.write_single_line(dumps({
-            "id": 0,
+            "id": "0",
             "payload": message
         }))

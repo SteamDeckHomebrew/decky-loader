@@ -26,6 +26,7 @@ class PluginWrapper:
         self.name = json["name"]
         self.author = json["author"]
         self.flags = json["flags"]
+        
         self.passive = not path.isfile(self.file)
 
         self.log = getLogger("plugin")
@@ -43,15 +44,18 @@ class PluginWrapper:
     
     async def _response_listener(self):
         while True:
-            line = await self._socket.read_single_line()
-            if line != None:
-                res = loads(line)
-                if res["id"] == 0:
-                    create_task(self.emitted_message_callback(res["payload"]))
-                    return
-                self._method_call_requests.pop(res["id"]).set_result(res)
+            try:
+                line = await self._socket.read_single_line()
+                if line != None:
+                    res = loads(line)
+                    if res["id"] == "0":
+                        create_task(self.emitted_message_callback(res["payload"]))
+                        return
+                    self._method_call_requests.pop(res["id"]).set_result(res)
+            except:
+                pass
 
-    async def set_emitted_message_callback(self, callback: Callable[[Dict[Any, Any]], Coroutine[Any, Any, Any]]):
+    def set_emitted_message_callback(self, callback: Callable[[Dict[Any, Any]], Coroutine[Any, Any, Any]]):
         self.emitted_message_callback = callback
 
     async def execute_method(self, method_name: str, kwargs: Dict[Any, Any]):
@@ -69,7 +73,7 @@ class PluginWrapper:
         if self.passive:
             return self
         Process(target=self.sandboxed_plugin.initialize, args=[self._socket]).start()
-        self.listener_task = create_task(self._response_listener())
+        self._listener_task = create_task(self._response_listener())
         return self
 
     def stop(self):

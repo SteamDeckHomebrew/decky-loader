@@ -26,4 +26,4 @@ class MethodCallRequest:
         await self.event.wait()
         if not self.response.success:
             raise Exception(self.response.result)
-        return self.response
+        return self.response.result

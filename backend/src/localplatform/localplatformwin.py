@@ -1,4 +1,4 @@
-from .customtypes import UserType
+from ..customtypes import UserType
 import os, sys
 
 def chown(path : str,  user : UserType = UserType.HOST_USER, recursive : bool = True) -> bool:

@@ -18,6 +18,7 @@ class UnixSocket:
         self.socket = None
         self.reader = None
         self.writer = None
+        self.server_writer = None
 
     async def setup_server(self):
         self.socket = await asyncio.start_unix_server(self._listen_for_method_call, path=self.socket_addr, limit=BUFFER_LIMIT)
@@ -90,8 +91,14 @@ class UnixSocket:
 
         writer.write(message.encode("utf-8"))
         await writer.drain()
+    
+    async def write_single_line_server(self, message: str):
+        if self.server_writer is None:
+            return
+        await self._write_single_line(self.server_writer, message)
 
     async def _listen_for_method_call(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
+        self.server_writer = writer
         while True:
 
             def _(task: asyncio.Task[str|None]):

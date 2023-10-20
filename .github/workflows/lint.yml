@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2 # Check out the repository first.
+      - uses: actions/checkout@v3 # Check out the repository first.
       - name: Run prettier (JavaScript & TypeScript)
         run: |
           pushd frontend

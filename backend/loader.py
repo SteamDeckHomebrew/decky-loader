@@ -4,6 +4,7 @@ from logging import getLogger
 from os import listdir, path
 from pathlib import Path
 from traceback import print_exc
+from json import load
 
 from aiohttp import web
 from os.path import exists
@@ -12,6 +13,8 @@ from watchdog.observers import Observer
 
 from injector import get_tab, get_gamepadui_tab
 from plugin import PluginWrapper
+
+import frontmatter
 
 class FileChangeHandler(RegexMatchingEventHandler):
     def __init__(self, queue, plugin_path) -> None:
@@ -78,6 +81,7 @@ class Loader:
         server_instance.add_routes([
             web.get("/frontend/{path:.*}", self.handle_frontend_assets),
             web.get("/locales/{path:.*}", self.handle_frontend_locales),
+            web.get("/docs/{plugin_name}/{language}", self.get_plugin_documentation),
             web.get("/plugins", self.get_plugins),
             web.get("/plugins/{plugin_name}/frontend_bundle", self.handle_frontend_bundle),
             web.post("/plugins/{plugin_name}/methods/{method_name}", self.handle_plugin_method_call),
@@ -119,6 +123,72 @@ class Loader:
         file = path.join(self.plugin_path, plugin.plugin_directory, "dist/assets", request.match_info["path"])
 
         return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
+    
+    def get_plugin_documentation(self, request):
+        plugin_name, language = request.match_info["plugin_name"], request.match_info["language"]
+        plugin_path = path.join(self.plugin_path, self.plugins[plugin_name].plugin_directory)
+        docs_path = path.join(plugin_path, "docs")
+        self.logger.info(f"Loading docs for {plugin_name} in {language}")
+
+        if not exists(docs_path):
+            try:
+                with open(path.join(plugin_path, "README.md")) as f:
+                    return web.json_response([{"title":"readme","text":f.read()}])
+            except:
+                logger.error(f"Failed to load readme file for {plugin_name} at {plugin_path}")
+
+        docs = [] # [{"title":"readable name", "text":"marked up file"},'separator',...]
+
+        config = {"default_language": "en-US", "include_readme": "False", "file_list":None, "use_translation":None}
+        try:
+            with open(path.join(docs_path, "docs.json")) as f:
+                config_file = load(f)
+                for key in config:
+                    if key in config_file:
+                        config[key] = config_file[key]
+        except:
+            self.logger.warning(f"unable to load docs.json for {plugin_name} at {plugin_path}")
+
+        if config["use_translation"] == None:
+            if exists(path.join(docs_path, config["default_language"])):
+                config["use_translation"] = "True"
+            else:
+                config["use_translation"] = "False"
+        if config["use_translation"] == "True": docs_file_path = path.join(docs_path, language)
+        elif config["use_translation"] == "False": docs_file_path = docs_path
+
+        if config["file_list"] == None:
+            files = listdir(docs_file_path)
+            config["file_list"] = filter(lambda x: (x[-3:] == ".md"),files)
+
+
+        for filename in config["file_list"]:
+            if filename == "seperator":
+                docs.append('separator')
+            else:
+                try:
+                    if config["use_translation"] == "True" and not exists(path.join(docs_file_path,filename)):
+                        data = frontmatter.load(path.join(docs_path, config["default_language"], filename))
+                    else:
+                        data = frontmatter.load(path.join(docs_file_path,filename))
+                    text = data.content.replace("/decky/assets", f"http://127.0.0.1:1337/plugins/{plugin_name.replace(' ', '%20')}/assets")
+                    docs.append({
+                        "title": data.get("title", filename[:-3]),
+                        "text": text
+                        })
+                except:
+                    self.logger.warning(f"unable to load file {filename} for {plugin_name} at {docs_file_path}")
+
+        if config["include_readme"] == "True":
+            try:
+                with open(path.join(plugin_path, "README.md")) as f:
+                    text = f.read().replace("/decky/assets", f"http://127.0.0.1:1337/plugins/{plugin_name.replace(' ', '%20')}/assets")
+                    docs.append({"title":"readme","text": text})
+            except:
+                self.logger.warning(f"unable to load the readme for {plugin_name} at {plugin_path}")
+
+        return web.json_response(docs)
+
 
     def handle_frontend_bundle(self, request):
         plugin = self.plugins[request.match_info["plugin_name"]]

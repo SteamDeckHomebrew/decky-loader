@@ -26,10 +26,10 @@ const StoreSelect: FunctionComponent<{}> = () => {
       <Field label={t('StoreSelect.store_channel.label')} childrenContainerWidth={'fixed'}>
         <Dropdown
           rgOptions={Object.values(Store)
-            .filter((store) => typeof store == 'string')
+            .filter((store) => typeof store == 'number')
             .map((store) => ({
-              label: tStores[Store[store]],
-              data: Store[store],
+              label: tStores[store as number],
+              data: store,
             }))}
           selectedOption={selectedStore}
           onChange={async (newVal) => {

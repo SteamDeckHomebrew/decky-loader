@@ -29,10 +29,10 @@ const BranchSelect: FunctionComponent<{}> = () => {
     <Field label={t('BranchSelect.update_channel.label')} childrenContainerWidth={'fixed'}>
       <Dropdown
         rgOptions={Object.values(UpdateBranch)
-          .filter((branch) => typeof branch == 'string')
+          .filter((branch) => typeof branch == 'number')
           .map((branch) => ({
-            label: tBranches[UpdateBranch[branch]],
-            data: UpdateBranch[branch],
+            label: tBranches[branch as number],
+            data: branch,
           }))}
         selectedOption={selectedBranch}
         onChange={async (newVal) => {

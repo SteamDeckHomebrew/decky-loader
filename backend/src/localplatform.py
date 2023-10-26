@@ -4,11 +4,11 @@ ON_WINDOWS = platform.system() == "Windows"
 ON_LINUX = not ON_WINDOWS
 
 if ON_WINDOWS:
-    from localplatformwin import *
-    import localplatformwin as localplatform
+    from .localplatformwin import *
+    from . import localplatformwin as localplatform
 else:
-    from localplatformlinux import *
-    import localplatformlinux as localplatform
+    from .localplatformlinux import *
+    from . import localplatformlinux as localplatform
 
 def get_privileged_path() -> str:
     '''Get path accessible by elevated user. Holds plugins, decky loader and decky loader configs'''

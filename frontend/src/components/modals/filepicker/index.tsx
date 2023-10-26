@@ -13,7 +13,7 @@ import {
 } from 'decky-frontend-lib';
 import { filesize } from 'filesize';
 import { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react';
-import { FileIcon, defaultStyles } from 'react-file-icon';
+import { DefaultExtensionType, FileIcon, defaultStyles } from 'react-file-icon';
 import { useTranslation } from 'react-i18next';
 import { FaArrowUp, FaFolder } from 'react-icons/fa';
 
@@ -316,7 +316,12 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
                       ) : (
                         <div style={iconStyles}>
                           {file.realpath.includes('.') ? (
-                            <FileIcon {...defaultStyles[extension]} {...styleDefObj[extension]} extension={''} />
+                            <FileIcon
+                              {...defaultStyles[extension as DefaultExtensionType]}
+                              // @ts-expect-error
+                              {...styleDefObj[extension]}
+                              extension={''}
+                            />
                           ) : (
                             <FileIcon />
                           )}

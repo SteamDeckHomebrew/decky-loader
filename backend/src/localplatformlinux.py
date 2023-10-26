@@ -1,6 +1,6 @@
 import os, pwd, grp, sys, logging
 from subprocess import call, run, DEVNULL, PIPE, STDOUT
-from customtypes import UserType
+from .customtypes import UserType
 
 logger = logging.getLogger("localplatform")
 
@@ -29,20 +29,16 @@ def _get_effective_user_group() -> str:
     return grp.getgrgid(_get_effective_user_group_id()).gr_name
 
 # Get the user owner of the given file path.
-def _get_user_owner(file_path) -> str:
+def _get_user_owner(file_path: str) -> str:
     return pwd.getpwuid(os.stat(file_path).st_uid).pw_name
 
-# Get the user group of the given file path.
-def _get_user_group(file_path) -> str:
-    return grp.getgrgid(os.stat(file_path).st_gid).gr_name
+# Get the user group of the given file path, or the user group hosting the plugin loader
+def _get_user_group(file_path: str | None = None) -> str:
+    return grp.getgrgid(os.stat(file_path).st_gid if file_path is not None else _get_user_group_id()).gr_name
 
 # Get the group id of the user hosting the plugin loader
 def _get_user_group_id() -> int:
     return pwd.getpwuid(_get_user_id()).pw_gid
-
-# Get the group of the user hosting the plugin loader
-def _get_user_group() -> str:
-    return grp.getgrgid(_get_user_group_id()).gr_name
 
 def chown(path : str,  user : UserType = UserType.HOST_USER, recursive : bool = True) -> bool:
     user_str = ""
@@ -146,7 +142,7 @@ def get_privileged_path() -> str:
 
     return path
 
-def _parent_dir(path : str) -> str:
+def _parent_dir(path : str | None) -> str | None:
     if path == None:
         return None
 
@@ -166,7 +162,7 @@ def get_unprivileged_path() -> str:
         # Expected path of loader binary is /home/deck/homebrew/service/PluginLoader
         path = _parent_dir(_parent_dir(os.path.realpath(sys.argv[0])))
 
-        if not os.path.exists(path):
+        if path != None and not os.path.exists(path):
             path = None
 
     if path == None:

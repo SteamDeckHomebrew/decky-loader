@@ -4,53 +4,70 @@ import json
 # from pprint import pformat
 
 # Partial imports
-from aiohttp import ClientSession, web
-from asyncio import get_event_loop, sleep
-from concurrent.futures import ProcessPoolExecutor
+from aiohttp import ClientSession
+from asyncio import sleep
 from hashlib import sha256
 from io import BytesIO
 from logging import getLogger
-from os import R_OK, W_OK, path, rename, listdir, access, mkdir
+from os import R_OK, W_OK, path, listdir, access, mkdir
 from shutil import rmtree
 from time import time
 from zipfile import ZipFile
-from localplatform import chown, chmod
+from enum import IntEnum
+from typing import Dict, List, TypedDict
 
 # Local modules
-from helpers import get_ssl_context, download_remote_binary_to_path
-from injector import get_gamepadui_tab
+from .localplatform import chown, chmod
+from .loader import Loader, Plugins
+from .helpers import get_ssl_context, download_remote_binary_to_path
+from .settings import SettingsManager
+from .injector import get_gamepadui_tab
 
 logger = getLogger("Browser")
 
+class PluginInstallType(IntEnum):
+    INSTALL = 0
+    REINSTALL = 1
+    UPDATE = 2
+
+class PluginInstallRequest(TypedDict):
+    name: str
+    artifact: str
+    version: str
+    hash: str
+    install_type: PluginInstallType
+
 class PluginInstallContext:
-    def __init__(self, artifact, name, version, hash) -> None:
+    def __init__(self, artifact: str, name: str, version: str, hash: str) -> None:
         self.artifact = artifact
         self.name = name
         self.version = version
         self.hash = hash
 
 class PluginBrowser:
-    def __init__(self, plugin_path, plugins, loader, settings) -> None:
+    def __init__(self, plugin_path: str, plugins: Plugins, loader: Loader, settings: SettingsManager) -> None:
         self.plugin_path = plugin_path
         self.plugins = plugins
         self.loader = loader
         self.settings = settings
-        self.install_requests = {}
+        self.install_requests: Dict[str, PluginInstallContext | List[PluginInstallContext]] = {}
 
-    def _unzip_to_plugin_dir(self, zip, name, hash):
+    def _unzip_to_plugin_dir(self, zip: BytesIO, name: str, hash: str):
         zip_hash = sha256(zip.getbuffer()).hexdigest()
         if hash and (zip_hash != hash):
             return False
         zip_file = ZipFile(zip)
         zip_file.extractall(self.plugin_path)
-        plugin_dir = path.join(self.plugin_path, self.find_plugin_folder(name))
+        plugin_folder = self.find_plugin_folder(name)
+        assert plugin_folder is not None
+        plugin_dir = path.join(self.plugin_path, plugin_folder)
 
         if not chown(plugin_dir) or not chmod(plugin_dir, 555):
             logger.error(f"chown/chmod exited with a non-zero exit code")
             return False
         return True
 
-    async def _download_remote_binaries_for_plugin_with_name(self, pluginBasePath):
+    async def _download_remote_binaries_for_plugin_with_name(self, pluginBasePath: str):
         rv = False
         try:
             packageJsonPath = path.join(pluginBasePath, 'package.json')
@@ -91,7 +108,7 @@ class PluginBrowser:
         return rv
 
     """Return the filename (only) for the specified plugin"""
-    def find_plugin_folder(self, name):
+    def find_plugin_folder(self, name: str) -> str | None:
         for folder in listdir(self.plugin_path):
             try:
                 with open(path.join(self.plugin_path, folder, 'plugin.json'), "r", encoding="utf-8") as f:
@@ -102,11 +119,13 @@ class PluginBrowser:
             except:
                 logger.debug(f"skipping {folder}")
 
-    async def uninstall_plugin(self, name):
+    async def uninstall_plugin(self, name: str):
         if self.loader.watcher:
             self.loader.watcher.disabled = True
         tab = await get_gamepadui_tab()
-        plugin_dir = path.join(self.plugin_path, self.find_plugin_folder(name))
+        plugin_folder = self.find_plugin_folder(name)
+        assert plugin_folder is not None
+        plugin_dir = path.join(self.plugin_path, plugin_folder)
         try:
             logger.info("uninstalling " + name)
             logger.info(" at dir " + plugin_dir)
@@ -133,7 +152,7 @@ class PluginBrowser:
         if self.loader.watcher:
             self.loader.watcher.disabled = False
 
-    async def _install(self, artifact, name, version, hash):
+    async def _install(self, artifact: str, name: str, version: str, hash: str):
         # Will be set later in code
         res_zip = None
 
@@ -185,6 +204,7 @@ class PluginBrowser:
         ret = self._unzip_to_plugin_dir(res_zip, name, hash)
         if ret:
             plugin_folder = self.find_plugin_folder(name)
+            assert plugin_folder is not None
             plugin_dir = path.join(self.plugin_path, plugin_folder)
             ret = await self._download_remote_binaries_for_plugin_with_name(plugin_dir)
             if ret:
@@ -206,14 +226,14 @@ class PluginBrowser:
         if self.loader.watcher:
             self.loader.watcher.disabled = False
 
-    async def request_plugin_install(self, artifact, name, version, hash, install_type):
+    async def request_plugin_install(self, artifact: str, name: str, version: str, hash: str, install_type: PluginInstallType):
         request_id = str(time())
         self.install_requests[request_id] = PluginInstallContext(artifact, name, version, hash)
         tab = await get_gamepadui_tab()
         await tab.open_websocket()
         await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}', {install_type})")
 
-    async def request_multiple_plugin_installs(self, requests):
+    async def request_multiple_plugin_installs(self, requests: List[PluginInstallRequest]):
         request_id = str(time())
         self.install_requests[request_id] = [PluginInstallContext(req['artifact'], req['name'], req['version'], req['hash']) for req in requests]
         js_requests_parameter = ','.join([
@@ -224,17 +244,17 @@ class PluginBrowser:
         await tab.open_websocket()
         await tab.evaluate_js(f"DeckyPluginLoader.addMultiplePluginsInstallPrompt('{request_id}', [{js_requests_parameter}])")
 
-    async def confirm_plugin_install(self, request_id):
+    async def confirm_plugin_install(self, request_id: str):
         requestOrRequests = self.install_requests.pop(request_id)
         if isinstance(requestOrRequests, list):
             [await self._install(req.artifact, req.name, req.version, req.hash) for req in requestOrRequests]
         else:
             await self._install(requestOrRequests.artifact, requestOrRequests.name, requestOrRequests.version, requestOrRequests.hash)
 
-    def cancel_plugin_install(self, request_id):
+    def cancel_plugin_install(self, request_id: str):
         self.install_requests.pop(request_id)
 
-    def cleanup_plugin_settings(self, name):
+    def cleanup_plugin_settings(self, name: str):
         """Removes any settings related to a plugin. Propably called when a plugin is uninstalled.
 
         Args:

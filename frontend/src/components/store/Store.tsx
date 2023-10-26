@@ -118,11 +118,7 @@ const BrowseTab: FC<{ children: { setPluginCount: Dispatch<SetStateAction<number
     })();
   }, []);
 
-  return !pluginList ? (
-    <div style={{ height: '100%' }}>
-      <SteamSpinner />
-    </div>
-  ) : (
+  return (
     <>
       <style>{`
               .deckyStoreCardInstallContainer > .Panel {
@@ -239,22 +235,26 @@ const BrowseTab: FC<{ children: { setPluginCount: Dispatch<SetStateAction<number
         </div>
       )}
       <div>
-        {pluginList
-          .filter((plugin: StorePlugin) => {
-            return (
-              plugin.name.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
-              plugin.description.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
-              plugin.author.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
-              plugin.tags.some((tag: string) => tag.toLowerCase().includes(searchFieldValue.toLowerCase()))
-            );
-          })
-          //.sort((a, b) => {
-          //  if (selectedSort % 2 === 1) return a.name.localeCompare(b.name);
-          //  else return b.name.localeCompare(a.name);
-          //})
-          .map((plugin: StorePlugin) => (
-            <PluginCard plugin={plugin} />
-          ))}
+        {!pluginList ? (
+          <div style={{ height: '100%' }}>
+            <SteamSpinner />
+          </div>
+        ) : (
+          pluginList
+            .filter((plugin: StorePlugin) => {
+              return (
+                plugin.name.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
+                plugin.description.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
+                plugin.author.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
+                plugin.tags.some((tag: string) => tag.toLowerCase().includes(searchFieldValue.toLowerCase()))
+              );
+            })
+            //.sort((a, b) => {
+            //  if (selectedSort % 2 === 1) return a.name.localeCompare(b.name);
+            //  else return b.name.localeCompare(a.name);
+            //})
+            .map((plugin: StorePlugin) => <PluginCard plugin={plugin} />)
+        )}
       </div>
     </>
   );

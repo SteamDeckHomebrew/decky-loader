@@ -7,7 +7,7 @@ from logging import getLogger
 from traceback import format_exc
 from os import path, environ
 from signal import SIGINT, signal
-from sys import exit, path as syspath
+from sys import exit, path as syspath, modules as sysmodules
 from typing import Any, Dict
 from .localsocket import LocalSocket
 from .localplatform import setgid, setuid, get_username, get_home_path
@@ -78,6 +78,9 @@ class PluginWrapper:
 
             # append the plugin's `py_modules` to the recognized python paths
             syspath.append(path.join(environ["DECKY_PLUGIN_DIR"], "py_modules"))
+            
+            #TODO: FIX IN A LESS CURSED WAY
+            sysmodules.update(sysmodules["src"].__dict__)
 
             spec = spec_from_file_location("_", self.file)
             assert spec is not None

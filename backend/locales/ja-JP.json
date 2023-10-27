@@ -1,16 +1,6 @@
 {
-    "MultiplePluginsInstallModal": {
-        "ok_button": {
-            "loading": ""
-        }
-    },
     "PluginLoader": {
         "decky_title": ""
-    },
-    "SettingsGeneralIndex": {
-        "developer_mode": {
-            "label": ""
-        }
     },
     "TitleView": {
         "settings_desc": ""

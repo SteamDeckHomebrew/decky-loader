@@ -1,33 +1,15 @@
 {
-    "FilePickerIndex": {
-        "filter": {
-            "created_asce": ""
-        }
-    },
     "MultiplePluginsInstallModal": {
         "ok_button": {
             "loading": ""
         }
     },
-    "PluginInstallModal": {
-        "reinstall": {
-            "desc": ""
-        }
-    },
     "PluginLoader": {
         "decky_title": ""
-    },
-    "SettingsDeveloperIndex": {
-        "header": ""
     },
     "SettingsGeneralIndex": {
         "developer_mode": {
             "label": ""
-        }
-    },
-    "Store": {
-        "store_source": {
-            "desc": ""
         }
     },
     "TitleView": {

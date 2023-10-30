@@ -103,7 +103,8 @@
     },
     "SettingsDeveloperIndex": {
         "cef_console": {
-            "button": "コンソールを開く"
+            "button": "コンソールを開く",
+            "label": "CEFコンソール"
         },
         "react_devtools": {
             "ip_label": "IP",
@@ -120,15 +121,18 @@
         },
         "valve_internal": {
             "desc1": "Valveの内部開発者メニューを有効にします。",
-            "desc2": "このメニューの機能が分からない場合、このメニューには触れないでください。"
-        }
+            "desc2": "このメニューの機能が分からない場合、このメニューには触れないでください。",
+            "label": "Valve Internalを有効"
+        },
+        "header": "その他"
     },
     "PluginView": {
         "hidden_other": "{{count}} 個のプラグインがこのリストから非表示になります"
     },
     "SettingsGeneralIndex": {
         "about": {
-            "decky_version": "Deckyバージョン"
+            "decky_version": "Deckyバージョン",
+            "header": "情報"
         },
         "developer_mode": {
             "label": "開発者モード"
@@ -137,6 +141,15 @@
             "header": "通知",
             "plugin_updates_label": "プラグインのアップデートが利用可能な場合に通知",
             "decky_updates_label": "Deckyのアップデートが利用可能な場合に通知"
+        },
+        "beta": {
+            "header": "ベータ版への参加"
+        },
+        "other": {
+            "header": "その他"
+        },
+        "updates": {
+            "header": "アップデート"
         }
     },
     "SettingsIndex": {
@@ -146,7 +159,8 @@
     },
     "Store": {
         "store_filter": {
-            "label": "フィルター"
+            "label": "フィルター",
+            "label_def": "すべて"
         },
         "store_search": {
             "label": "検索"
@@ -170,7 +184,8 @@
             "desc": "このストアチャンネルを使用して、最先端のプラグイン バージョンをテストできます。 すべてのユーザーがプラグインを更新できるように、必ずGitHubにフィードバックを残してください。"
         },
         "store_contrib": {
-            "desc": "Decky Plugin Storeに貢献したい場合は、GitHubのSteamDeckHomebrew/decky-plugin-templateリポジトリを確認してください。 開発と配布に関する情報は README で入手できます。"
+            "desc": "Decky Plugin Storeに貢献したい場合は、GitHubのSteamDeckHomebrew/decky-plugin-templateリポジトリを確認してください。 開発と配布に関する情報は README で入手できます。",
+            "label": "貢献"
         },
         "store_testing_cta": "Decky Loaderチームを支援するために、新しいプラグインのテストを検討してください!"
     },

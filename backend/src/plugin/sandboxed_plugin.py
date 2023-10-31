@@ -3,7 +3,7 @@ from signal import SIGINT, signal
 from importlib.util import module_from_spec, spec_from_file_location
 from json import dumps, loads
 from logging import getLogger
-from sys import exit, path as syspath
+from sys import exit, path as syspath, modules as sysmodules
 from traceback import format_exc
 from asyncio import (get_event_loop, new_event_loop,
                      set_event_loop, sleep)

@@ -80,7 +80,9 @@ class PluginWrapper:
             syspath.append(path.join(environ["DECKY_PLUGIN_DIR"], "py_modules"))
             
             #TODO: FIX IN A LESS CURSED WAY
-            sysmodules.update(sysmodules["src"].__dict__)
+            keys = [key.replace("src.", "") for key in sysmodules if key.startswith("src.")]
+            for key in keys:
+                sysmodules[key] = sysmodules["src"].__dict__[key]
 
             spec = spec_from_file_location("_", self.file)
             assert spec is not None

@@ -25,10 +25,16 @@
             "name_asce": "Z-A",
             "name_desc": "A-Z",
             "size_asce": "サイズ(小さい順)",
-            "size_desc": "サイズ(大きい順)"
+            "size_desc": "サイズ(大きい順)",
+            "created_asce": "作成日(古い順)",
+            "created_desc": "作成日(新しい順)",
+            "modified_asce": "更新日(古い順)",
+            "modified_desc": "更新日(新しい順)"
         },
         "folder": {
-            "label": "フォルダ"
+            "label": "フォルダ",
+            "select": "このフォルダを使用",
+            "show_more": "その他のファイルを表示"
         }
     },
     "MultiplePluginsInstallModal": {
@@ -38,11 +44,12 @@
             "update": "アップデート {{name}} {{version}}"
         },
         "ok_button": {
-            "idle": "確認"
+            "idle": "確認",
+            "loading": "作業中"
         },
         "title": {
             "install_other": "{{count}} 個のプラグインをインストール",
-            "mixed_other": "{{count}} 個のプラグインを変更",
+            "mixed_other": "{{count}} 個のプラグインを修正",
             "update_other": "{{count}} 個のプラグインをアップデート",
             "reinstall_other": "{{count}} 個のプラグインを再インストール"
         },
@@ -50,7 +57,8 @@
     },
     "Developer": {
         "enabling": "React DevToolsを有効",
-        "disabling": "React DevToolsを無効"
+        "disabling": "React DevToolsを無効",
+        "5secreload": "5秒以内に再読み込みされます"
     },
     "PluginInstallModal": {
         "install": {
@@ -81,7 +89,8 @@
         "uninstall": "アンインストール",
         "plugin_actions": "プラグインアクション",
         "update_all_other": "{{count}} 個のプラグインをアップデート",
-        "show": "クイックアクセス: 表示"
+        "show": "クイックアクセス: 表示",
+        "update_to": "{{name}} を更新"
     },
     "PluginListLabel": {
         "hidden": "クイックアクセスメニューから非表示にします"
@@ -99,12 +108,14 @@
         },
         "decky_title": "Decky",
         "decky_update_available": "{{tag_name}} のアップデートが利用可能です!",
-        "plugin_update_other": "{{count}} 個のプラグインのアップデートが利用可能です!"
+        "plugin_update_other": "{{count}} 個のプラグインのアップデートが利用可能です!",
+        "plugin_error_uninstall": "{{name}} プラグインを読み込む際に上記のような例外が発生しました。 これは通常、SteamUIの最新バージョンに合ったプラグインのアップデートが必要な場合に発生します。Decky設定のプラグインセクションでアップデートがあるかどうかを確認するか、アンインストールをお試しください。"
     },
     "SettingsDeveloperIndex": {
         "cef_console": {
             "button": "コンソールを開く",
-            "label": "CEFコンソール"
+            "label": "CEFコンソール",
+            "desc": "CEFコンソールを開きます。デバッグ目的でのみ使用してください。これらの項目は危険な可能性があるので、プラグイン開発者であるか、開発者のガイドに従う場合のみ使用する必要があります。"
         },
         "react_devtools": {
             "ip_label": "IP",
@@ -223,16 +234,20 @@
     "FilePickerError": {
         "errors": {
             "file_not_found": "指定されたパスは無効です。 内容をご確認の上、正しく入力し直してください。",
-            "unknown": "不明なエラーが発生しました。 エラー内容は次のとおりです: {{raw_error}}"
+            "unknown": "不明なエラーが発生しました。 エラー内容は次のとおりです: {{raw_error}}",
+            "perm_denied": "選択したパスへのアクセス権がありません。選択したフォルダ/ファイルのアクセス権がユーザー(Steam Deckのdeckユーザー)に合わせて正しく設定されていることを確認してください。"
         }
     },
     "PluginCard": {
         "plugin_version_label": "プラグインバージョン",
-        "plugin_no_desc": "説明はありません。"
+        "plugin_no_desc": "説明はありません。",
+        "plugin_full_access": "このプラグインはSteam Deckの全てのアクセス権を持ちます。",
+        "plugin_install": "インストール"
     },
     "RemoteDebugging": {
         "remote_cef": {
-            "label": "リモート CEF デバッグを許可する"
+            "label": "リモート CEF デバッグを許可する",
+            "desc": "ネットワーク上のすべてのユーザーにCEFデバッガへの非認証アクセスを許可します"
         }
     }
 }

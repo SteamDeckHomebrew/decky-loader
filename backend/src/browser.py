@@ -9,7 +9,7 @@ from asyncio import sleep
 from hashlib import sha256
 from io import BytesIO
 from logging import getLogger
-from os import R_OK, W_OK, path, listdir, access, mkdir
+from os import R_OK, W_OK, path, listdir, access, mkdir, path
 from shutil import rmtree
 from time import time
 from zipfile import ZipFile
@@ -57,7 +57,15 @@ class PluginBrowser:
         if hash and (zip_hash != hash):
             return False
         zip_file = ZipFile(zip)
-        zip_file.extractall(self.plugin_path)
+
+        files = zip_file.namelist()
+        if "plugin.json" in files:
+            zip_file.extractall(path.join(self.plugin_path, name))
+        if name in files:
+            zip_file.extractall(self.plugin_path)
+        if name + ".zip" in files:
+            return self._unzip_to_plugin_dir(BytesIO(zip_file.read(name + ".zip")), name, hash)
+        
         plugin_folder = self.find_plugin_folder(name)
         assert plugin_folder is not None
         plugin_dir = path.join(self.plugin_path, plugin_folder)

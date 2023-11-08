@@ -188,10 +188,10 @@ class PluginBrowser:
 
             storeUrl = ""
             match self.settings.getSetting("store", 0):
-                case 0: storeUrl = "https://plugins.deckbrew.xyz" # default
-                case 1: storeUrl = "https://testing.deckbrew.xyz" # testing
-                case 2: storeUrl = self.settings.getSetting("store-url", "https://plugins.deckbrew.xyz")  # custom
-                case _: storeUrl = "https://plugins.deckbrew.xyz"
+                case 0: storeUrl = "https://plugins.deckbrew.xyz/plugins" # default
+                case 1: storeUrl = "https://testing.deckbrew.xyz/plugins" # testing
+                case 2: storeUrl = self.settings.getSetting("store-url", "https://plugins.deckbrew.xyz/plugins")  # custom
+                case _: storeUrl = "https://plugins.deckbrew.xyz/plugins"
             logger.info(f"Incrementing installs for {name} from URL {storeUrl} (version {version})")
             async with ClientSession() as client:
                 res = await client.post(storeUrl+f"/{name}/versions/{version}/increment?isUpdate={isInstalled}", ssl=get_ssl_context())

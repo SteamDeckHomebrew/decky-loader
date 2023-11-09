@@ -10,6 +10,8 @@ const titleStyles: CSSProperties = {
   display: 'flex',
   paddingTop: '3px',
   paddingRight: '16px',
+  position: 'sticky',
+  top: '0px',
 };
 
 const TitleView: VFC = () => {

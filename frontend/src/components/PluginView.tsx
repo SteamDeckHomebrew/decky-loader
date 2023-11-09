@@ -1,12 +1,4 @@
-import {
-  ButtonItem,
-  Focusable,
-  PanelSection,
-  PanelSectionRow,
-  joinClassNames,
-  scrollClasses,
-  staticClasses,
-} from 'decky-frontend-lib';
+import { ButtonItem, Focusable, PanelSection, PanelSectionRow } from 'decky-frontend-lib';
 import { VFC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaEyeSlash } from 'react-icons/fa';
@@ -36,10 +28,7 @@ const PluginView: VFC = () => {
     return (
       <Focusable onCancelButton={closeActivePlugin}>
         <TitleView />
-        <div
-          className={joinClassNames(staticClasses.TabGroupPanel, scrollClasses.ScrollPanel, scrollClasses.ScrollY)}
-          style={{ height: '100%' }}
-        >
+        <div style={{ height: '100%', paddingTop: '16px' }}>
           {(visible || activePlugin.alwaysRender) && activePlugin.content}
         </div>
       </Focusable>
@@ -48,7 +37,11 @@ const PluginView: VFC = () => {
   return (
     <>
       <TitleView />
-      <div className={joinClassNames(staticClasses.TabGroupPanel, scrollClasses.ScrollPanel, scrollClasses.ScrollY)}>
+      <div
+        style={{
+          paddingTop: '16px',
+        }}
+      >
         <PanelSection>
           {pluginList
             .filter((p) => p.content)

@@ -33,7 +33,7 @@ jobs:
         SHA_PREV=HEAD^
         FILES=$(git diff $SHA_PREV..$SHA --name-only -- ${PATHS[@]} | jq -Rsc 'split("\n")[:-1] | join (",")')
         if [[ "$FILES" == *"plugin/decky_plugin.pyi"* ]]; then
-          $STUB_CHANGED="true"
+          STUB_CHANGED="true"
           echo "Stub has changed, pushing updated stub"
         else
           echo "Stub has not changed, exiting."

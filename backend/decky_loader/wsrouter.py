@@ -132,7 +132,8 @@ class WSRouter:
         self.logger.debug('Websocket connection closed')
         return ws
 
-    async def emit(self, event: str, data: DataType | None = None, data_type: Type[DataType] = Any):
+    # DataType defaults to None so that if a plugin opts in to strict pyright checking and attempts to pass data witbout specifying the type (or any), the type check fails
+    async def emit(self, event: str, data: DataType | None = None, data_type: Type[DataType] = None):
         self.logger.debug('Firing frontend event %s with args %s', data)
 
         await self.write({ "type": MessageType.EVENT.value, "event": event, "data": data })

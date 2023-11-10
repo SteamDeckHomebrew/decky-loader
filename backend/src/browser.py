@@ -186,6 +186,18 @@ class PluginBrowser:
                 else:
                     logger.fatal(f"Could not fetch from URL. {await res.text()}")
 
+            storeUrl = ""
+            match self.settings.getSetting("store", 0):
+                case 0: storeUrl = "https://plugins.deckbrew.xyz/plugins" # default
+                case 1: storeUrl = "https://testing.deckbrew.xyz/plugins" # testing
+                case 2: storeUrl = self.settings.getSetting("store-url", "https://plugins.deckbrew.xyz/plugins")  # custom
+                case _: storeUrl = "https://plugins.deckbrew.xyz/plugins"
+            logger.info(f"Incrementing installs for {name} from URL {storeUrl} (version {version})")
+            async with ClientSession() as client:
+                res = await client.post(storeUrl+f"/{name}/versions/{version}/increment?isUpdate={isInstalled}", ssl=get_ssl_context())
+                if res.status != 200:
+                    logger.error(f"Server did not accept install count increment request. code: {res.status}")
+
         # Check to make sure we got the file
         if res_zip is None:
             logger.fatal(f"Could not fetch {artifact}")

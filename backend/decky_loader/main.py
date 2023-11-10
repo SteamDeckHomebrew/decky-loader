@@ -180,9 +180,6 @@ def main():
       if get_effective_user_id() != 0:
         logger.warning(f"decky is running as an unprivileged user, this is not officially supported and may cause issues")
 
-    # Append the loader's plugin path to the recognized python paths
-    sys.path.append(path.join(path.dirname(__file__), "..", "plugin"))
-
     # Append the system and user python paths
     sys.path.extend(get_system_pythonpaths())
 

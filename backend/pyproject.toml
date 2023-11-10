@@ -5,7 +5,11 @@ description = "A plugin loader for the Steam Deck"
 license = "GPLv2"
 readme = "../README.md"
 authors = []
-packages = [{include = "decky_loader"}]
+packages = [
+    {include = "decky_loader"},
+    {include = "decky_plugin.py"},
+    {include = "decky_plugin.pyi"},
+]
 include = ["decky_loader/static/*"]
 
 [tool.poetry.dependencies]

@@ -166,7 +166,7 @@ class Utilities:
                 style.textContent = `{style}`;
             }})()
             """, False)
-
+        assert result is not None # TODO remove this once it has proper typings
         if "exceptionDetails" in result["result"]:
             raise result["result"]["exceptionDetails"]
 
@@ -233,7 +233,7 @@ class Utilities:
                         folders.append({"file": file, "filest": filest, "is_dir": True})
                 elif include_files:
                     # Handle requested extensions if present
-                    if len(include_ext) == 0 or 'all_files' in include_ext \
+                    if include_ext == None or len(include_ext) == 0 or 'all_files' in include_ext \
                         or splitext(file.name)[1].lstrip('.') in include_ext:
                         if (is_hidden and include_hidden) or not is_hidden:
                             files.append({"file": file, "filest": filest, "is_dir": False})

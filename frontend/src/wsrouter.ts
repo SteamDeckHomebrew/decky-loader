@@ -7,14 +7,12 @@ declare global {
 }
 
 enum MessageType {
-  // Call-reply
-  CALL,
-  REPLY,
-  ERROR,
-  // Pub/sub
-  // SUBSCRIBE,
-  // UNSUBSCRIBE,
-  // PUBLISH
+  ERROR = -1,
+  // Call-reply, Frontend -> Backend
+  CALL = 0,
+  REPLY = 1,
+  // Pub/Sub, Backend -> Frontend
+  EVENT = 3,
 }
 
 interface CallMessage {

@@ -25,13 +25,15 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: "3.11.4"
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        virtualenvs-create: false
         
     - name: Install Python dependencies ⬇️
       working-directory: ./backend
-      run: |
-        python -m pip install --upgrade pip
-        pip install pyinstaller==5.13.0
-        pip install -r requirements.txt
+      run: C:\Users\runneradmin\.local\bin\poetry install --no-interaction
 
     - name: Install JS dependencies ⬇️
       working-directory: ./frontend
@@ -44,16 +46,18 @@ jobs:
       run: pnpm run build
 
     - name: Build Python Backend 🛠️
-      run: pyinstaller --noconfirm --onefile --name "PluginLoader" --add-data "./backend/static;/static" --add-data "./backend/locales;/locales" --add-data "./plugin;/plugin" --hidden-import=logging.handlers --hidden-import=sqlite3 ./backend/main.py
+      working-directory: ./backend
+      run: C:\Users\runneradmin\.local\bin\poetry run pyinstaller pyinstaller.spec
 
     - name: Build Python Backend (noconsole) 🛠️
-      run: pyinstaller --noconfirm --noconsole --onefile --name "PluginLoader_noconsole" --add-data "./backend/static;/static" --add-data "./backend/locales;/locales" --add-data "./plugin;/plugin" --hidden-import=logging.handlers --hidden-import=sqlite3 ./backend/main.py
-        
+      working-directory: ./backend
+      run: $env:DECKY_NOCONSOLE = 1; C:\Users\runneradmin\.local\bin\poetry run pyinstaller pyinstaller.spec
+
     - name: Upload package artifact ⬆️
       uses: actions/upload-artifact@v3
       with:
         name: PluginLoader Win
         path: |
-          ./dist/PluginLoader.exe
-          ./dist/PluginLoader_noconsole.exe
+          ./backend/dist/PluginLoader.exe
+          ./backend/dist/PluginLoader_noconsole.exe
     

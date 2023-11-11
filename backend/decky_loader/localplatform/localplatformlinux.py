@@ -125,11 +125,19 @@ async def service_restart(service_name : str) -> bool:
     return res.returncode == 0
 
 async def service_stop(service_name : str) -> bool:
+    if not await service_active(service_name):
+        # Service isn't running. pretend we stopped it
+        return True
+
     cmd = ["systemctl", "stop", service_name]
     res = run(cmd, stdout=PIPE, stderr=STDOUT)
     return res.returncode == 0
 
 async def service_start(service_name : str) -> bool:
+    if await service_active(service_name):
+        # Service is running. pretend we started it
+        return True
+
     cmd = ["systemctl", "start", service_name]
     res = run(cmd, stdout=PIPE, stderr=STDOUT)
     return res.returncode == 0

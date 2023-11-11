@@ -68,8 +68,8 @@ const BrowseTab: FC<{ children: { setPluginCount: Dispatch<SetStateAction<number
     (): DropdownOption[] => [
       { data: 1, label: t('Store.store_tabs.alph_desc') },
       { data: 2, label: t('Store.store_tabs.alph_asce') },
-      { data: 3, label: 'date ascending' },
-      { data: 4, label: 'date descending' },
+      { data: 3, label: t('Store.store_tabs.date_desc') },
+      { data: 4, label: t('Store.store_tabs.date_asce') },
     ],
     [],
   );
@@ -87,19 +87,19 @@ const BrowseTab: FC<{ children: { setPluginCount: Dispatch<SetStateAction<number
       let direction = null;
       switch (selectedSort) {
         case 1:
-          direction = SortDirections.ascending;
+          direction = SortDirections.descending;
           sort = SortOptions.name;
           break;
         case 2:
-          direction = SortDirections.descending;
+          direction = SortDirections.ascending;
           sort = SortOptions.name;
           break;
         case 3:
-          direction = SortDirections.ascending;
+          direction = SortDirections.descending;
           sort = SortOptions.date;
           break;
         case 4:
-          direction = SortDirections.descending;
+          direction = SortDirections.ascending;
           sort = SortOptions.date;
           break;
       }

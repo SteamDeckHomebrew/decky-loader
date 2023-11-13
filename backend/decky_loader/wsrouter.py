@@ -1,13 +1,13 @@
 from logging import getLogger
 
-from asyncio import AbstractEventLoop, Future, create_task
+from asyncio import AbstractEventLoop, create_task
 
 from aiohttp import WSMsgType, WSMessage
 from aiohttp.web import Application, WebSocketResponse, Request, Response, get
 
 from enum import IntEnum
 
-from typing import Callable, Dict, Any, cast, TypeVar, Type
+from typing import Callable, Coroutine, Dict, Any, cast, TypeVar, Type
 from dataclasses import dataclass
 
 from traceback import format_exc
@@ -38,7 +38,7 @@ class Message:
 
 DataType = TypeVar("DataType")
 
-Route = Callable[..., Future[Any]]
+Route = Callable[..., Coroutine[Any, Any, Any]]
 
 class WSRouter:
     def __init__(self, loop: AbstractEventLoop, server_instance: Application) -> None:
@@ -133,7 +133,7 @@ class WSRouter:
         return ws
 
     # DataType defaults to None so that if a plugin opts in to strict pyright checking and attempts to pass data witbout specifying the type (or any), the type check fails
-    async def emit(self, event: str, data: DataType | None = None, data_type: Type[DataType] = None):
+    async def emit(self, event: str, data: DataType | None = None, data_type: Type[DataType]|None = None):
         self.logger.debug('Firing frontend event %s with args %s', data)
 
         await self.write({ "type": MessageType.EVENT.value, "event": event, "data": data })

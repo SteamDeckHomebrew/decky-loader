@@ -82,7 +82,7 @@ class Utilities:
             context.ws.add_route("utilities/get_tab_id", self.get_tab_id)
             context.ws.add_route("utilities/get_user_info", self.get_user_info)
 
-    async def _handle_server_method_call(self, request):
+    async def _handle_server_method_call(self, request: web.Request):
         method_name = request.match_info["method_name"]
         try:
             args = await request.json()
@@ -182,7 +182,8 @@ class Utilities:
                     style.parentNode.removeChild(style);
             }})()
             """, False)
-
+        
+        assert result
         if "exceptionDetails" in result["result"]:
             raise result["result"]["exceptionDetails"]
 

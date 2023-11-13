@@ -18,6 +18,7 @@ if TYPE_CHECKING:
 
 from .injector import get_gamepadui_tab
 from .plugin.plugin import PluginWrapper
+from .wsrouter import WSRouter
 
 Plugins = dict[str, PluginWrapper]
 ReloadQueue = Queue[Tuple[str, str, bool | None] | Tuple[str, str]]

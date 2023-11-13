@@ -74,9 +74,9 @@ class SandboxedPlugin:
             syspath.append(path.join(environ["DECKY_PLUGIN_DIR"], "py_modules"))
             
             #TODO: FIX IN A LESS CURSED WAY
-            keys = [key.replace("src.", "") for key in sysmodules if key.startswith("src.")]
+            keys = [key for key in sysmodules if key.startswith("decky_loader.")]
             for key in keys:
-                sysmodules[key] = sysmodules["src"].__dict__[key]
+                sysmodules[key.replace("decky_loader.", "")] = sysmodules[key]
 
             spec = spec_from_file_location("_", self.file)
             assert spec is not None

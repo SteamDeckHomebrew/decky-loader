@@ -22,7 +22,7 @@ from aiohttp_jinja2 import setup as jinja_setup
 
 # local modules
 from .browser import PluginBrowser
-from .helpers import (REMOTE_DEBUGGER_UNIT, csrf_middleware, get_csrf_token,
+from .helpers import (REMOTE_DEBUGGER_UNIT, csrf_middleware, get_csrf_token, get_loader_version,
                      mkdir_as_user, get_system_pythonpaths, get_effective_user_id)
                      
 from .injector import get_gamepadui_tab, Tab, close_old_tabs
@@ -160,7 +160,7 @@ class PluginManager:
             if first:
                 if await tab.has_global_var("deckyHasLoaded", False):
                     await close_old_tabs()
-            await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => location.reload(), 100)}else{window.deckyHasLoaded = true;(async()=>{try{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js')}catch(e){console.error(e)};})();}}catch(e){console.error(e)}", False, False, False)
+            await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => location.reload(), 100)}else{window.deckyHasLoaded = true;(async()=>{try{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js?v=%s')}catch(e){console.error(e)};})();}}catch(e){console.error(e)}" % (get_loader_version(), ), False, False, False)
         except:
             logger.info("Failed to inject JavaScript into tab\n" + format_exc())
             pass
@@ -179,9 +179,6 @@ def main():
     else:
       if get_effective_user_id() != 0:
         logger.warning(f"decky is running as an unprivileged user, this is not officially supported and may cause issues")
-
-    # Append the loader's plugin path to the recognized python paths
-    sys.path.append(path.join(path.dirname(__file__), "..", "plugin"))
 
     # Append the system and user python paths
     sys.path.extend(get_system_pythonpaths())

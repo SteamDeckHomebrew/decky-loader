@@ -47,6 +47,8 @@ def get_unprivileged_path() -> str:
     if path == None:
         path = os.getenv("PRIVILEGED_PATH", os.path.join(os.path.expanduser("~"), "homebrew"))
 
+    os.makedirs(path, exist_ok=True)
+
     return path
 
 def get_unprivileged_user() -> str:

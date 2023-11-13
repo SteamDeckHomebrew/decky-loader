@@ -69,12 +69,14 @@ jobs:
         sudo cp /usr/lib/libsqlite3.so.0.8.6 /usr/lib/x86_64-linux-gnu/ &&
         rm -r /tmp/sqlite-autoconf-3420000
 
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        virtualenvs-create: false
+
     - name: Install Python dependencies ⬇️
       working-directory: ./backend
-      run: |
-        python -m pip install --upgrade pip
-        pip install pyinstaller==5.13.0
-        pip install -r requirements.txt
+      run: poetry install --no-interaction
 
     - name: Install JS dependencies ⬇️
       working-directory: ./frontend
@@ -87,20 +89,21 @@ jobs:
       run: pnpm run build
 
     - name: Build Python Backend 🛠️
-      run: pyinstaller --noconfirm --onefile --name "PluginLoader" --add-data ./backend/static:/static --add-data ./backend/locales:/locales --add-data ./plugin:/plugin --hidden-import=logging.handlers --hidden-import=sqlite3 ./backend/main.py
-        
+      working-directory: ./backend
+      run: pyinstaller pyinstaller.spec
+
     - name: Upload package artifact ⬆️
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v3
       with:
         name: PluginLoader
-        path: ./dist/PluginLoader
+        path: ./backend/dist/PluginLoader
 
     - name: Download package artifact locally
       if: ${{ env.ACT }}
       uses: actions/upload-artifact@v3
       with:
-        path: ./dist/PluginLoader
+        path: ./backend/dist/PluginLoader
 
   release:
     name: Release stable version of the package
@@ -177,7 +180,7 @@ jobs:
       with:
         name: Release ${{ steps.ready_tag.outputs.tag_name }}
         tag_name: ${{ steps.ready_tag.outputs.tag_name }}
-        files: ./dist/PluginLoader
+        files: ./backend/dist/PluginLoader
         prerelease: false
         generate_release_notes: true
   
@@ -264,6 +267,6 @@ jobs:
       with:
         name: Prerelease ${{ steps.ready_tag.outputs.tag_name }}
         tag_name: ${{ steps.ready_tag.outputs.tag_name }}
-        files: ./dist/PluginLoader
+        files: ./backend/dist/PluginLoader
         prerelease: true
         generate_release_notes: true

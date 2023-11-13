@@ -29,7 +29,7 @@ MANIFEST
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
-*.spec
+backend/dist/
 
 # Installer logs
 pip-log.txt
@@ -163,3 +163,4 @@ plugins/*
 act/.directory
 act/artifacts/*
 bin/act
+settings/

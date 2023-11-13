@@ -22,18 +22,18 @@ jobs:
       with:
         separator: ","
         files: |
-          plugin/*
+          backend/decky_plugin.pyi
           
     - name: Is stub changed
       id: changed-stub
       run: |
         STUB_CHANGED="false"
-        PATHS=(plugin plugin/decky_plugin.pyi)
+        PATHS=(backend backend/decky_plugin.pyi)
         SHA=${{ github.sha }}
         SHA_PREV=HEAD^
         FILES=$(git diff $SHA_PREV..$SHA --name-only -- ${PATHS[@]} | jq -Rsc 'split("\n")[:-1] | join (",")')
-        if [[ "$FILES" == *"plugin/decky_plugin.pyi"* ]]; then
-          $STUB_CHANGED="true"
+        if [[ "$FILES" == *"backend/decky_plugin.pyi"* ]]; then
+          STUB_CHANGED="true"
           echo "Stub has changed, pushing updated stub"
         else
           echo "Stub has not changed, exiting."
@@ -48,7 +48,7 @@ jobs:
       env:
         API_TOKEN_GITHUB: ${{ secrets.GITHUB_TOKEN }}
       with:
-        source_file: 'plugin/decky_plugin.pyi'
+        source_file: 'backend/decky_plugin.pyi'
         destination_repo: 'SteamDeckHomebrew/decky-plugin-template'
         user_email: '11465594+TrainDoctor@users.noreply.github.com'
         user_name: 'TrainDoctor'

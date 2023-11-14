@@ -5,6 +5,7 @@ import os
 import subprocess
 from hashlib import sha256
 from io import BytesIO
+import importlib.metadata
 
 import certifi
 from aiohttp.web import Request, Response, middleware
@@ -13,6 +14,7 @@ from aiohttp import ClientSession
 from .localplatform import localplatform
 from .customtypes import UserType
 from logging import getLogger
+from packaging.version import Version
 
 REMOTE_DEBUGGER_UNIT = "steam-web-debug-portforward.service"
 
@@ -49,8 +51,18 @@ def mkdir_as_user(path: str):
 # Fetches the version of loader
 def get_loader_version() -> str:
     try:
-        with open(os.path.join(os.getcwd(), ".loader.version"), "r", encoding="utf-8") as version_file:
-            return version_file.readline().strip()
+        # Normalize Python-style version to conform to Decky style
+        v = Version(importlib.metadata.version("decky_loader"))
+
+        version_str = f'v{v.major}.{v.minor}.{v.micro}'
+
+        if v.pre:
+            version_str += f'-pre{v.pre[1]}'
+
+        if v.post:
+            version_str += f'-post{v.post}'
+
+        return version_str
     except Exception as e:
         logger.warn(f"Failed to execute get_loader_version(): {str(e)}")
         return "unknown"

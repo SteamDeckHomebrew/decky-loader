@@ -158,7 +158,6 @@ class Updater:
             logger.error("Unable to update as remoteVer is missing")
             return
 
-        version = self.remoteVer["tag_name"]
         download_url = None
         download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
         download_temp_filename = download_filename + ".new"
@@ -216,9 +215,6 @@ class Updater:
                         if progress != new_progress:
                             self.context.loop.create_task(tab.evaluate_js(f"window.DeckyUpdater.updateProgress({new_progress})", False, False, False))
                             progress = new_progress
-
-            with open(path.join(getcwd(), ".loader.version"), "w", encoding="utf-8") as out:
-                out.write(version)
 
             if ON_LINUX:
                 remove(path.join(getcwd(), download_filename))

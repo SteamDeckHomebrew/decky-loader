@@ -19,6 +19,7 @@ aiohttp-jinja2 = "^1.5.1"
 aiohttp-cors = "^0.7.0"
 watchdog = "^2.1.7"
 certifi = "*"
+packaging = "^23.2"
 
 [tool.poetry.group.dev.dependencies]
 pyinstaller = "^5.13.0"

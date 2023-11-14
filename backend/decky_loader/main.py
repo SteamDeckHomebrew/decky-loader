@@ -185,6 +185,8 @@ def main():
     # Append the system and user python paths
     sys.path.extend(get_system_pythonpaths())
 
+    logger.info(f"Starting Decky version {get_loader_version()}")
+
     loop = new_event_loop()
     set_event_loop(loop)
     PluginManager(loop).run()

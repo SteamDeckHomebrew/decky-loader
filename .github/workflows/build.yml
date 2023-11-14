@@ -41,6 +41,8 @@ jobs:
 
     - name: Checkout 🧰
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
     - name: Set up NodeJS 18 💎
       uses: actions/setup-node@v3
@@ -76,7 +78,9 @@ jobs:
 
     - name: Install Python dependencies ⬇️
       working-directory: ./backend
-      run: poetry install --no-interaction
+      run: |
+        poetry self add "poetry-dynamic-versioning[plugin]"
+        poetry install --no-interaction
 
     - name: Install JS dependencies ⬇️
       working-directory: ./frontend
@@ -90,7 +94,9 @@ jobs:
 
     - name: Build Python Backend 🛠️
       working-directory: ./backend
-      run: pyinstaller pyinstaller.spec
+      run: |
+        poetry dynamic-versioning 
+        pyinstaller pyinstaller.spec
 
     - name: Upload package artifact ⬆️
       if: ${{ !env.ACT }}

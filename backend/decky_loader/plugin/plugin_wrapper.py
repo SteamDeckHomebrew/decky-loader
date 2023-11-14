@@ -2,9 +2,9 @@ from asyncio import Task, create_task
 from json import dumps, load, loads
 from logging import getLogger
 from os import path
-from multiprocessing import Process
 
-from .sandboxed_plugin import SandboxedPlugin
+from .python_plugin import PythonPlugin
+from .binary_plugin import BinaryPlugin
 from .method_call_request import MethodCallRequest
 from ..localplatform.localsocket import LocalSocket
 
@@ -26,21 +26,31 @@ class PluginWrapper:
         self.name = json["name"]
         self.author = json["author"]
         self.flags = json["flags"]
-        
-        self.passive = not path.isfile(self.file)
+        self.env: Dict[str, str] = json["env"] if "env" in json else {}
+
+        passive = not path.isfile(self.file)
+
+        if "backend" in json:
+            self.file = path.join(plugin_path, plugin_directory, json["backend"])
+            self._socket = LocalSocket()
+            self.sandboxed_plugin = BinaryPlugin(self._socket, self.name, self.flags, self.file, self.plugin_directory, self.plugin_path, self.version, self.author, self.env)
+        elif not passive:
+            self._socket = LocalSocket()
+            self.sandboxed_plugin = PythonPlugin(self._socket, self.name, self.flags, self.file, self.plugin_directory, self.plugin_path, self.version, self.author, self.env)
+        else:
+            self.sandboxed_plugin = None
 
         self.log = getLogger("plugin")
-
-        self.sandboxed_plugin = SandboxedPlugin(self.name, self.passive, self.flags, self.file, self.plugin_directory, self.plugin_path, self.version, self.author)
-        #TODO: Maybe make LocalSocket not require on_new_message to make this cleaner
-        self._socket = LocalSocket(self.sandboxed_plugin.on_new_message)
         self._listener_task: Task[Any]
         self._method_call_requests: Dict[str, MethodCallRequest] = {}
-
         self.emitted_message_callback: Callable[[Dict[Any, Any]], Coroutine[Any, Any, Any]]
 
     def __str__(self) -> str:
         return self.name
+    
+    @property
+    def passive(self):
+        return not self.sandboxed_plugin
     
     async def _response_listener(self):
         while True:
@@ -59,8 +69,8 @@ class PluginWrapper:
         self.emitted_message_callback = callback
 
     async def execute_method(self, method_name: str, kwargs: Dict[Any, Any]):
-        if self.passive:
-            raise RuntimeError("This plugin is passive (aka does not implement main.py)")
+        if not self.sandboxed_plugin:
+            raise RuntimeError("This plugin is passive and does not implement a backend.")
         
         request = MethodCallRequest()
         await self._socket.get_socket_connection()
@@ -69,16 +79,27 @@ class PluginWrapper:
 
         return await request.wait_for_result()
     
-    def start(self):
-        if self.passive:
-            return self
-        Process(target=self.sandboxed_plugin.initialize, args=[self._socket]).start()
+    async def _start(self):
+        if not self.sandboxed_plugin:
+            return
+        await self._socket.setup_server()
         self._listener_task = create_task(self._response_listener())
-        return self
+        self.sandboxed_plugin.start()
+    
+    def start(self):
+        if not self.sandboxed_plugin:
+            return
+        create_task(self._start())
 
     def stop(self):
+        try:
+            assert self.sandboxed_plugin
+        except AssertionError:
+            return
+        
         self._listener_task.cancel()
         async def _(self: PluginWrapper):
-            await self._socket.write_single_line(dumps({ "stop": True }, ensure_ascii=False))
+            assert self.sandboxed_plugin #Need to assert again or pyright complains. No need to care about this, it will fail above first. 
+            await self.sandboxed_plugin.stop()
             await self._socket.close_socket_connection()
         create_task(_(self))

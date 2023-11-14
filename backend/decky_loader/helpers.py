@@ -140,8 +140,8 @@ def get_user_group_id() -> int:
     return localplatform.localplatform._get_user_group_id() # pyright: ignore [reportPrivateUsage]
 
 # Get the default home path unless a user is specified
-def get_home_path(username: str | None = None) -> str:
-    return localplatform.get_home_path(UserType.ROOT if username == "root" else UserType.HOST_USER)
+def get_home_path(type: UserType = UserType.HOST_USER) -> str:
+    return localplatform.get_home_path(type)
 
 async def is_systemd_unit_active(unit_name: str) -> bool:
     return await localplatform.service_active(unit_name)

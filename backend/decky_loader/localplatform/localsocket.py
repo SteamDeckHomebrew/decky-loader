@@ -7,21 +7,25 @@ from .localplatform import ON_WINDOWS
 BUFFER_LIMIT = 2 ** 20  # 1 MiB
 
 class UnixSocket:
-    def __init__(self, on_new_message: Callable[[str], Coroutine[Any, Any, Any]]):
+    def __init__(self):
         '''
         on_new_message takes 1 string argument.
         It's return value gets used, if not None, to write data to the socket.
         Method should be async
         '''
         self.socket_addr = f"/tmp/plugin_socket_{time.time()}"
-        self.on_new_message = on_new_message
         self.socket = None
         self.reader = None
         self.writer = None
         self.server_writer = None
 
+        self.on_new_message: Callable[[str], Coroutine[Any, Any, Any]]
+
     async def setup_server(self):
         self.socket = await asyncio.start_unix_server(self._listen_for_method_call, path=self.socket_addr, limit=BUFFER_LIMIT)
+    
+    def set_new_message_callback(self, callback: Callable[[str], Coroutine[Any, Any, Any]]):
+        self.on_new_message = callback
     
     async def _open_socket_if_not_exists(self):
         if not self.reader:
@@ -110,13 +114,13 @@ class UnixSocket:
             asyncio.create_task(self.on_new_message(line)).add_done_callback(_)
             
 class PortSocket (UnixSocket):
-    def __init__(self, on_new_message: Callable[[str], Coroutine[Any, Any, Any]]):
+    def __init__(self):
         '''
         on_new_message takes 1 string argument.
         It's return value gets used, if not None, to write data to the socket.
         Method should be async
         '''
-        super().__init__(on_new_message)
+        super().__init__()
         self.host = "127.0.0.1"
         self.port = random.sample(range(40000, 60000), 1)[0]
     

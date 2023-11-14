@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from .main import PluginManager
 
 from .injector import get_gamepadui_tab
-from .plugin.plugin import PluginWrapper
+from .plugin.plugin_wrapper import PluginWrapper
 
 Plugins = dict[str, PluginWrapper]
 ReloadQueue = Queue[Tuple[str, str, bool | None] | Tuple[str, str]]
@@ -146,8 +146,9 @@ class Loader:
                         self.plugins.pop(plugin.name, None)
             if plugin.passive:
                 self.logger.info(f"Plugin {plugin.name} is passive")
-            self.plugins[plugin.name] = plugin.start()
+            self.plugins[plugin.name] = plugin
             self.plugins[plugin.name].set_emitted_message_callback(log_plugin_emitted_message)
+            plugin.start()
             self.logger.info(f"Loaded {plugin.name}")
             if not batch:
                 self.loop.create_task(self.dispatch_plugin(plugin.name, plugin.version))

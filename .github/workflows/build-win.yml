@@ -33,7 +33,9 @@ jobs:
         
     - name: Install Python dependencies ⬇️
       working-directory: ./backend
-      run: C:\Users\runneradmin\.local\bin\poetry install --no-interaction
+      run: |
+        C:\Users\runneradmin\.local\bin\poetry self add "poetry-dynamic-versioning[plugin]"
+        C:\Users\runneradmin\.local\bin\poetry install --no-interaction
 
     - name: Install JS dependencies ⬇️
       working-directory: ./frontend
@@ -47,7 +49,9 @@ jobs:
 
     - name: Build Python Backend 🛠️
       working-directory: ./backend
-      run: C:\Users\runneradmin\.local\bin\poetry run pyinstaller pyinstaller.spec
+      run: |
+        C:\Users\runneradmin\.local\bin\poetry dynamic-versioning
+        C:\Users\runneradmin\.local\bin\poetry run pyinstaller pyinstaller.spec
 
     - name: Build Python Backend (noconsole) 🛠️
       working-directory: ./backend

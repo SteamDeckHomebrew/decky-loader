@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   decky-frontend-lib:
-    specifier: 3.21.1
-    version: 3.21.1
+    specifier: 3.23.1
+    version: 3.23.1
   filesize:
     specifier: ^10.0.7
     version: 10.0.7
@@ -1482,8 +1482,8 @@ packages:
     dependencies:
       ms: 2.1.2
 
-  /decky-frontend-lib@3.21.1:
-    resolution: {integrity: sha512-30605ET9qqZ6St6I9WmMmLGgSrTIdMwo7xy85+lRaF1miUd2icOGEJjwnbVcZDdkal+1fJ3tNEDXlchVfG4TrA==}
+  /decky-frontend-lib@3.23.1:
+    resolution: {integrity: sha512-6JKtSCjk5liJ+xBqOPZvPSp1HdkaQ+j/I19bGSk+cWuxSrodyduduXKJE4p4GJ/+KgFdn0yg/8tRi+DSqmBvdw==}
     dev: false
 
   /decode-named-character-reference@1.0.2:
@@ -1852,8 +1852,8 @@ packages:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
     dev: true
 
-  /fsevents@2.3.2:
-    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
+  /fsevents@2.3.3:
+    resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
     requiresBuild: true
@@ -3477,7 +3477,7 @@ packages:
     engines: {node: '>=10.0.0'}
     hasBin: true
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     dev: true
 
   /rsvp@3.2.1:

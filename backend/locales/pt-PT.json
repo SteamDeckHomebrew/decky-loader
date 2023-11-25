@@ -1,7 +1,27 @@
 {
     "FilePickerIndex": {
         "folder": {
-            "select": "Usar esta pasta"
+            "select": "Usar esta pasta",
+            "label": "Pasta",
+            "show_more": "Mostrar mais ficheiros"
+        },
+        "file": {
+            "select": "Selecionar este ficheiro"
+        },
+        "filter": {
+            "size_desc": "Tamanho (maior)",
+            "created_asce": "Criado (mais antigo)",
+            "created_desc": "Criado (mais recente)",
+            "modified_asce": "Modificado (mais antigo)",
+            "modified_desc": "Modificado (mais recente)",
+            "name_asce": "Z-A",
+            "name_desc": "A-Z",
+            "size_asce": "Tamanho (mais pequeno)"
+        },
+        "files": {
+            "file_type": "Tipo de ficheiro",
+            "show_hidden": "Mostrar ficheiros ocultos",
+            "all_files": "Todos os ficheiros"
         }
     },
     "PluginView": {
@@ -157,6 +177,11 @@
         },
         "updates": {
             "header": "Actualizações"
+        },
+        "notifications": {
+            "decky_updates_label": "Atualização Decky disponível",
+            "header": "Notificações",
+            "plugin_updates_label": "Atualizações de plugins disponíveis"
         }
     },
     "SettingsIndex": {
@@ -190,7 +215,11 @@
             "alph_desc": "Alfabeticamente (A-Z)",
             "title": "Navegar"
         },
-        "store_testing_cta": "Testa novos plugins e ajuda a equipa do Decky Loader!"
+        "store_testing_cta": "Testa novos plugins e ajuda a equipa do Decky Loader!",
+        "store_testing_warning": {
+            "desc": "Pode usar esta versão da loja para testar versões experimentais de plugins. Certifique-se de deixar feedback no GitHub para que o plugin possa ser atualizado para todos os utilizadores.",
+            "label": "Bem-vindo ao Canal de Testes da Loja"
+        }
     },
     "StoreSelect": {
         "custom_store": {
@@ -217,6 +246,22 @@
             "updating": "Actualização em curso",
             "reloading": "Recarregar",
             "install_button": "Instalar actualização"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "perm_denied": "Não tem acesso ao diretório especificado. Por favor, verifique se o seu utilizador (deck na Steam Deck) possui as permissões correspondentes para aceder à pasta/ficheiro especificado.",
+            "unknown": "Ocorreu um erro desconhecido. O erro é: {{raw_error}}",
+            "file_not_found": "O caminho especificado não é válido. Por favor, verifique e insira-o corretamente."
+        }
+    },
+    "TitleView": {
+        "decky_store_desc": "Abrir a Loja Decky",
+        "settings_desc": "Abrir as Definições Decky"
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "Voltar"
         }
     }
 }

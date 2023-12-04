@@ -13,6 +13,9 @@ BASE_ADDRESS = "http://localhost:8080"
 
 logger = getLogger("Injector")
 
+# Request IDs have to be globally unique to prevent accidentally reading the wrong response
+cmd_id = 0
+
 class _TabResponse(TypedDict):
     title: str
     id: str
@@ -20,8 +23,6 @@ class _TabResponse(TypedDict):
     webSocketDebuggerUrl: str
 
 class Tab:
-    cmd_id = 0
-
     def __init__(self, res: _TabResponse) -> None:
         self.title: str = res["title"]
         self.id: str = res["id"]
@@ -50,9 +51,11 @@ class Tab:
             await self.close_websocket()
             
     async def _send_devtools_cmd(self, dc: Dict[str, Any], receive: bool = True):
+        global cmd_id
+
         if self.websocket:
-            self.cmd_id += 1
-            dc["id"] = self.cmd_id
+            cmd_id += 1
+            dc["id"] = cmd_id
             await self.websocket.send_json(dc)
             if receive:
                 async for msg in self.listen_for_message():

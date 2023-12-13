@@ -9,32 +9,40 @@ const logger = new Logger('DeveloperMode');
 
 let removeSettingsObserver: () => void = () => {};
 
-export async function setShowValveInternal(show: boolean) {
-  let settingsMod: any;
-  while (!settingsMod) {
-    settingsMod = findModuleChild((m) => {
-      if (typeof m !== 'object') return undefined;
-      for (let prop in m) {
-        if (typeof m[prop]?.settings?.bIsValveEmail !== 'undefined') return m[prop];
-      }
-    });
-    if (!settingsMod) {
-      logger.debug('[ValveInternal] waiting for settingsMod');
-      await sleep(1000);
-    }
+declare global {
+  interface Window {
+    settingsStore: any;
   }
+}
 
+export async function setShowValveInternal(show: boolean) {
   if (show) {
-    removeSettingsObserver = settingsMod[
-      Object.getOwnPropertySymbols(settingsMod).find((x) => x.toString() == 'Symbol(mobx administration)') as any
-    ].observe((e: any) => {
-      e.newValue.bIsValveEmail = true;
-    });
-    settingsMod.m_Settings.bIsValveEmail = true;
+    const mobx =
+      window.settingsStore[
+        Object.getOwnPropertySymbols(window.settingsStore).find(
+          (x) => x.toString() == 'Symbol(mobx administration)',
+        ) as any
+      ];
+
+    if (mobx.observe_) {
+      // New style, currently broken
+      logger.log('Valve internal not yet supported on this build.');
+      // removeSettingsObserver = mobx.observe_(mobx, [(e: any) => {
+      //   console.log("got e", e)
+      //   e.newValue.bIsValveEmail = true;
+      // }]);
+    } else if (mobx.observe) {
+      // Old style
+      removeSettingsObserver = mobx.observe((e: any) => {
+        e.newValue.bIsValveEmail = true;
+      });
+    }
+
+    window.settingsStore.m_Settings.bIsValveEmail = true;
     logger.log('Enabled Valve Internal menu');
   } else {
     removeSettingsObserver();
-    settingsMod.m_Settings.bIsValveEmail = false;
+    window.settingsStore.m_Settings.bIsValveEmail = false;
     logger.log('Disabled Valve Internal menu');
   }
 }

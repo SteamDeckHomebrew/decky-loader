@@ -1,5 +1,5 @@
 // TabsHook for versions before the Desktop merge
-import { Patch, afterPatch, sleep } from 'decky-frontend-lib';
+import { Patch, afterPatch, getReactRoot, sleep } from 'decky-frontend-lib';
 import { memo } from 'react';
 
 import NewTabsHook from './tabs-hook';
@@ -35,7 +35,7 @@ class TabsHook extends NewTabsHook {
 
   init() {
     const self = this;
-    const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
+    const tree = getReactRoot(document.getElementById('root') as any);
     let scrollRoot: any;
     async function findScrollRoot(currentNode: any, iters: number): Promise<any> {
       if (iters >= 30) {

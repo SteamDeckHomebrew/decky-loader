@@ -24,19 +24,9 @@ export async function setShowValveInternal(show: boolean) {
         ) as any
       ];
 
-    if (mobx.observe_) {
-      // New style, currently broken
-      logger.log('Valve internal not yet supported on this build.');
-      // removeSettingsObserver = mobx.observe_(mobx, [(e: any) => {
-      //   console.log("got e", e)
-      //   e.newValue.bIsValveEmail = true;
-      // }]);
-    } else if (mobx.observe) {
-      // Old style
-      removeSettingsObserver = mobx.observe((e: any) => {
-        e.newValue.bIsValveEmail = true;
-      });
-    }
+    removeSettingsObserver = (mobx.observe_ || mobx.observe).call(mobx, (e: any) => {
+      e.newValue.bIsValveEmail = true;
+    });
 
     window.settingsStore.m_Settings.bIsValveEmail = true;
     logger.log('Enabled Valve Internal menu');

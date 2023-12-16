@@ -210,7 +210,11 @@
             "title": "Navegar",
             "alph_asce": "Alfabética (Z - A)"
         },
-        "store_testing_cta": "Por favor, considere testar os novos plugins para ajudar o time do Decky Loader!"
+        "store_testing_cta": "Por favor, considere testar os novos plugins para ajudar o time do Decky Loader!",
+        "store_testing_warning": {
+            "desc": "Você pode usar este canal da loja para testar versões avançadas do plugin. Certifique-se de deixar feedback no GitHub para que o plugin possa ser atualizado para todos os usuários.",
+            "label": "Bem-vindo ao Canal de Testes da Loja"
+        }
     },
     "StoreSelect": {
         "custom_store": {
@@ -255,5 +259,9 @@
             "unknown": "Ocorreu um erro desconhecido. O erro completo é: {{raw_error}}",
             "perm_denied": "Você não tem acesso à este diretório. Por favor, verifiquei se seu usuário (deck no Steam Deck) tem as permissões necessárias para acessar este arquivo/pasta."
         }
+    },
+    "TitleView": {
+        "decky_store_desc": "Abrir Loja Decky",
+        "settings_desc": "Abrir Definições Decky"
     }
 }

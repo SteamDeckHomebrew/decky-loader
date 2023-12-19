@@ -67,17 +67,17 @@ const BrowseTab: FC<{ children: { setPluginCount: Dispatch<SetStateAction<number
   const dropdownSortOptions = useMemo(
     (): DropdownOption[] => [
       { data: [SortOptions.name, SortDirections.descending], label: t('Store.store_tabs.alph_desc') },
-      { data: [SortOptions.name, SortDirections.descending], label: t('Store.store_tabs.alph_asce') },
+      { data: [SortOptions.name, SortDirections.ascending], label: t('Store.store_tabs.alph_asce') },
       { data: [SortOptions.date, SortDirections.descending], label: t('Store.store_tabs.date_desc') },
-      { data: [SortOptions.date, SortDirections.descending], label: t('Store.store_tabs.date_asce') },
+      { data: [SortOptions.date, SortDirections.ascending], label: t('Store.store_tabs.date_asce') },
       { data: [SortOptions.downloads, SortDirections.descending], label: t('Store.store_tabs.downloads_desc') },
-      { data: [SortOptions.downloads, SortDirections.descending], label: t('Store.store_tabs.downloads_asce') },
+      { data: [SortOptions.downloads, SortDirections.ascending], label: t('Store.store_tabs.downloads_asce') },
     ],
     [],
   );
 
   // const filterOptions = useMemo((): DropdownOption[] => [{ data: 1, label: 'All' }], []);
-  const [selectedSort, setSort] = useState<number>(dropdownSortOptions[0].data);
+  const [selectedSort, setSort] = useState<[SortOptions, SortDirections]>(dropdownSortOptions[0].data);
   // const [selectedFilter, setFilter] = useState<number>(filterOptions[0].data);
   const [searchFieldValue, setSearchValue] = useState<string>('');
   const [pluginList, setPluginList] = useState<StorePlugin[] | null>(null);

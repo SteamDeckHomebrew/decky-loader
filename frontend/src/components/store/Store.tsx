@@ -73,8 +73,8 @@ const BrowseTab: FC<{ children: { setPluginCount: Dispatch<SetStateAction<number
       { data: [SortOptions.name, SortDirections.descending], label: t('Store.store_tabs.alph_asce') },
       { data: [SortOptions.date, SortDirections.ascending], label: t('Store.store_tabs.date_asce') },
       { data: [SortOptions.date, SortDirections.descending], label: t('Store.store_tabs.date_desc') },
-      { data: [SortOptions.downloads, SortDirections.ascending], label: t('Store.store_tabs.downloads_asce') },
       { data: [SortOptions.downloads, SortDirections.descending], label: t('Store.store_tabs.downloads_desc') },
+      { data: [SortOptions.downloads, SortDirections.ascending], label: t('Store.store_tabs.downloads_asce') },
     ],
     [],
   );

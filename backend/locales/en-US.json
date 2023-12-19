@@ -218,8 +218,8 @@
       "about": "About",
       "alph_asce": "Alphabetical (Z to A)",
       "alph_desc": "Alphabetical (A to Z)",
-      "date_asce": "Newest First",
-      "date_desc": "Oldest First",
+      "date_asce": "Oldest First",
+      "date_desc": "Newest First",
       "downloads_asce": "Least Downloaded First",
       "downloads_desc": "Most Downloaded First",
       "title": "Browse"

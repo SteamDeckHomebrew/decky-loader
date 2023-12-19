@@ -66,10 +66,12 @@ const BrowseTab: FC<{ children: { setPluginCount: Dispatch<SetStateAction<number
 
   const dropdownSortOptions = useMemo(
     (): DropdownOption[] => [
-      { data: 1, label: t('Store.store_tabs.alph_desc') },
-      { data: 2, label: t('Store.store_tabs.alph_asce') },
-      { data: 3, label: t('Store.store_tabs.date_desc') },
-      { data: 4, label: t('Store.store_tabs.date_asce') },
+      { data: [SortOptions.name, SortDirections.descending], label: t('Store.store_tabs.alph_desc') },
+      { data: [SortOptions.name, SortDirections.descending], label: t('Store.store_tabs.alph_asce') },
+      { data: [SortOptions.date, SortDirections.descending], label: t('Store.store_tabs.date_desc') },
+      { data: [SortOptions.date, SortDirections.descending], label: t('Store.store_tabs.date_asce') },
+      { data: [SortOptions.downloads, SortDirections.descending], label: t('Store.store_tabs.downloads_desc') },
+      { data: [SortOptions.downloads, SortDirections.descending], label: t('Store.store_tabs.downloads_asce') },
     ],
     [],
   );
@@ -83,27 +85,7 @@ const BrowseTab: FC<{ children: { setPluginCount: Dispatch<SetStateAction<number
 
   useEffect(() => {
     (async () => {
-      let sort = null;
-      let direction = null;
-      switch (selectedSort) {
-        case 1:
-          direction = SortDirections.descending;
-          sort = SortOptions.name;
-          break;
-        case 2:
-          direction = SortDirections.ascending;
-          sort = SortOptions.name;
-          break;
-        case 3:
-          direction = SortDirections.descending;
-          sort = SortOptions.date;
-          break;
-        case 4:
-          direction = SortDirections.ascending;
-          sort = SortOptions.date;
-          break;
-      }
-      const res = await getPluginList(sort, direction);
+      const res = await getPluginList(selectedSort[0], selectedSort[1]);
       logger.log('got data!', res);
       setPluginList(res);
       data.children.setPluginCount(res.length);
@@ -249,10 +231,6 @@ const BrowseTab: FC<{ children: { setPluginCount: Dispatch<SetStateAction<number
                 plugin.tags.some((tag: string) => tag.toLowerCase().includes(searchFieldValue.toLowerCase()))
               );
             })
-            //.sort((a, b) => {
-            //  if (selectedSort % 2 === 1) return a.name.localeCompare(b.name);
-            //  else return b.name.localeCompare(a.name);
-            //})
             .map((plugin: StorePlugin) => <PluginCard plugin={plugin} />)
         )}
       </div>

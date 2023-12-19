@@ -10,6 +10,7 @@ export enum Store {
 export enum SortOptions {
   name = 'name',
   date = 'date',
+  downloads = 'downloads',
 }
 
 export enum SortDirections {

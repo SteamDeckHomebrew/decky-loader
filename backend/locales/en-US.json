@@ -220,6 +220,8 @@
       "alph_desc": "Alphabetical (A to Z)",
       "date_asce": "Oldest first",
       "date_desc": "Newest first",
+      "downloads_asce": "Most Downloaded",
+      "downloads_desc": "Least Downloaded",
       "title": "Browse"
     },
     "store_testing_cta": "Please consider testing new plugins to help the Decky Loader team!",

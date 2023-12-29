@@ -38,7 +38,7 @@
             "type": "shell",
             "group": "none",
             "detail": "Check for local runs, create a plugins folder",
-            "command": "rsync -azp --rsh='ssh -p ${config:deckport} ${config:deckkey}' pyproject.toml poetry.lock deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader && ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'python -m ensurepip && python -m pip install --upgrade poetry && cd ${config:deckdir}/homebrew/dev/pluginloader/backend && python -m poetry install'",
+            "command": "rsync -azp --rsh='ssh -p ${config:deckport} ${config:deckkey}' backend/pyproject.toml backend/poetry.lock deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader && ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'python -m ensurepip && python -m pip install --upgrade poetry && cd ${config:deckdir}/homebrew/dev/pluginloader/backend && python -m poetry install'",
             "problemMatcher": []
         },
         {

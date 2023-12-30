@@ -30,7 +30,6 @@ import RouterHook from './router-hook';
 import { deinitSteamFixes, initSteamFixes } from './steamfixes';
 import { checkForUpdates } from './store';
 import TabsHook from './tabs-hook';
-import OldTabsHook from './tabs-hook.old';
 import Toaster from './toaster';
 import { VerInfo, callUpdaterMethod } from './updater';
 import { getSetting, setSetting } from './utils/settings';
@@ -43,8 +42,7 @@ const FilePicker = lazy(() => import('./components/modals/filepicker'));
 
 class PluginLoader extends Logger {
   private plugins: Plugin[] = [];
-  private tabsHook: TabsHook | OldTabsHook = document.title == 'SP' ? new OldTabsHook() : new TabsHook();
-  // private windowHook: WindowHook = new WindowHook();
+  private tabsHook: TabsHook = new TabsHook();
   private routerHook: RouterHook = new RouterHook();
   public toaster: Toaster = new Toaster();
   private deckyState: DeckyState = new DeckyState();

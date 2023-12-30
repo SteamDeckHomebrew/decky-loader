@@ -1,3 +1,5 @@
+import { sleep } from 'decky-frontend-lib';
+
 import Logger from './logger';
 
 declare global {
@@ -161,6 +163,8 @@ export class WSRouter extends Logger {
 
   async onError(error: any) {
     this.error('WS DISCONNECTED', error);
+    // TODO queue up lost messages and send them once we connect again
+    await sleep(5000);
     await this.connect();
   }
 }

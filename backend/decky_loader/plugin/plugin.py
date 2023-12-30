@@ -4,11 +4,12 @@ from logging import getLogger
 from os import path
 from multiprocessing import Process
 
+
 from .sandboxed_plugin import SandboxedPlugin
 from .method_call_request import MethodCallRequest
 from ..localplatform.localsocket import LocalSocket
 
-from typing import Any, Callable, Coroutine, Dict
+from typing import Any, Callable, Coroutine, Dict, List
 
 class PluginWrapper:
     def __init__(self, file: str, plugin_directory: str, plugin_path: str) -> None:
@@ -39,6 +40,8 @@ class PluginWrapper:
 
         self.emitted_message_callback: Callable[[Dict[Any, Any]], Coroutine[Any, Any, Any]]
 
+        self.legacy_method_warning = False
+
     def __str__(self) -> str:
         return self.name
     
@@ -58,13 +61,27 @@ class PluginWrapper:
     def set_emitted_message_callback(self, callback: Callable[[Dict[Any, Any]], Coroutine[Any, Any, Any]]):
         self.emitted_message_callback = callback
 
-    async def execute_method(self, method_name: str, kwargs: Dict[Any, Any]):
+    async def execute_legacy_method(self, method_name: str, kwargs: Dict[Any, Any]):
+        if not self.legacy_method_warning:
+            self.legacy_method_warning = True
+            self.log.warn(f"Plugin {self.name} is using legacy method calls. This will be removed in a future release.")
         if self.passive:
             raise RuntimeError("This plugin is passive (aka does not implement main.py)")
         
         request = MethodCallRequest()
         await self._socket.get_socket_connection()
-        await self._socket.write_single_line(dumps({ "method": method_name, "args": kwargs, "id": request.id }, ensure_ascii=False))
+        await self._socket.write_single_line(dumps({ "method": method_name, "args": kwargs, "id": request.id, "legacy": True }, ensure_ascii=False))
+        self._method_call_requests[request.id] = request
+
+        return await request.wait_for_result()
+
+    async def execute_method(self, method_name: str, args: List[Any]):
+        if self.passive:
+            raise RuntimeError("This plugin is passive (aka does not implement main.py)")
+        
+        request = MethodCallRequest()
+        await self._socket.get_socket_connection()
+        await self._socket.write_single_line(dumps({ "method": method_name, "args": args, "id": request.id }, ensure_ascii=False))
         self._method_call_requests[request.id] = request
 
         return await request.wait_for_result()

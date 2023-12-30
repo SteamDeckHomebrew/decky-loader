@@ -5,6 +5,7 @@ import {
   Patch,
   QuickAccessTab,
   Router,
+  findSP,
   quickAccessMenuClasses,
   showModal,
   sleep,
@@ -60,7 +61,6 @@ class PluginLoader extends Logger {
   constructor() {
     super(PluginLoader.name);
     this.tabsHook.init();
-    this.log('Initialized');
 
     const TabBadge = () => {
       const { updates, hasLoaderUpdate } = useDeckyState();
@@ -102,9 +102,32 @@ class PluginLoader extends Logger {
 
     initFilepickerPatches();
 
-    this.getUserInfo();
+    Promise.all([this.getUserInfo(), this.updateVersion()])
+      .then(() => this.loadPlugins())
+      .then(() => this.checkPluginUpdates())
+      .then(() => this.log('Initialized'));
+  }
 
-    this.updateVersion();
+  private getPluginsFromBackend = window.DeckyBackend.callable<[], { name: string; version: string }[]>(
+    'loader/get_plugins',
+  );
+
+  private async loadPlugins() {
+    // wait for SP window to exist before loading plugins
+    while (!findSP()) {
+      await sleep(100);
+    }
+    const plugins = await this.getPluginsFromBackend();
+    const pluginLoadPromises = [];
+    const loadStart = performance.now();
+    for (const plugin of plugins) {
+      if (!this.hasPlugin(plugin.name)) pluginLoadPromises.push(this.importPlugin(plugin.name, plugin.version, false));
+    }
+    await Promise.all(pluginLoadPromises);
+    const loadEnd = performance.now();
+    this.log(`Loaded ${plugins.length} plugins in ${loadEnd - loadStart}ms`);
+
+    this.checkPluginUpdates();
   }
 
   public async getUserInfo() {
@@ -217,9 +240,9 @@ class PluginLoader extends Logger {
       if (val) import('./developer').then((developer) => developer.startup());
     });
 
-    //* Grab and set plugin order
+    // Grab and set plugin order
     getSetting<string[]>('pluginOrder', []).then((pluginOrder) => {
-      console.log(pluginOrder);
+      this.debug('pluginOrder: ', pluginOrder);
       this.deckyState.setPluginOrder(pluginOrder);
     });
 
@@ -236,15 +259,14 @@ class PluginLoader extends Logger {
   }
 
   public unloadPlugin(name: string) {
-    console.log('Plugin List: ', this.plugins);
     const plugin = this.plugins.find((plugin) => plugin.name === name);
     plugin?.onDismount?.();
     this.plugins = this.plugins.filter((p) => p !== plugin);
     this.deckyState.setPlugins(this.plugins);
   }
 
-  public async importPlugin(name: string, version?: string | undefined) {
-    if (this.reloadLock) {
+  public async importPlugin(name: string, version?: string | undefined, useQueue: boolean = true) {
+    if (useQueue && this.reloadLock) {
       this.log('Reload currently in progress, adding to queue', name);
       this.pluginReloadQueue.push({ name, version: version });
       return;
@@ -255,17 +277,21 @@ class PluginLoader extends Logger {
       this.log(`Trying to load ${name}`);
 
       this.unloadPlugin(name);
+      const startTime = performance.now();
       await this.importReactPlugin(name, version);
+      const endTime = performance.now();
 
       this.deckyState.setPlugins(this.plugins);
-      this.log(`Loaded ${name}`);
+      this.log(`Loaded ${name} in ${endTime - startTime}ms`);
     } catch (e) {
       throw e;
     } finally {
-      this.reloadLock = false;
-      const nextPlugin = this.pluginReloadQueue.shift();
-      if (nextPlugin) {
-        this.importPlugin(nextPlugin.name, nextPlugin.version);
+      if (useQueue) {
+        this.reloadLock = false;
+        const nextPlugin = this.pluginReloadQueue.shift();
+        if (nextPlugin) {
+          this.importPlugin(nextPlugin.name, nextPlugin.version);
+        }
       }
     }
   }
@@ -337,17 +363,14 @@ class PluginLoader extends Logger {
   }
 
   async callServerMethod(methodName: string, args = {}) {
-    const response = await fetch(`http://127.0.0.1:1337/methods/${methodName}`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        Authentication: window.deckyAuthToken,
-      },
-      body: JSON.stringify(args),
-    });
-
-    return response.json();
+    this.warn(
+      `Calling ${methodName} via callServerMethod, which is deprecated and will be removed in a future release. Please switch to the backend API.`,
+    );
+    return await window.DeckyBackend.call<[methodName: string, kwargs: any], any>(
+      'utilities/_call_legacy_utility',
+      methodName,
+      args,
+    );
   }
 
   openFilePicker(
@@ -355,7 +378,7 @@ class PluginLoader extends Logger {
     selectFiles?: boolean,
     regex?: RegExp,
   ): Promise<{ path: string; realpath: string }> {
-    console.warn('openFilePicker is deprecated and will be removed. Please migrate to openFilePickerV2');
+    this.warn('openFilePicker is deprecated and will be removed. Please migrate to openFilePickerV2');
     if (selectFiles) {
       return this.openFilePickerV2(FileSelectionType.FILE, startPath, true, true, regex);
     } else {
@@ -405,45 +428,72 @@ class PluginLoader extends Logger {
   }
 
   createPluginAPI(pluginName: string) {
-    return {
+    const pluginAPI = {
+      backend: {
+        call<Args extends any[] = any[], Return = void>(method: string, ...args: Args): Promise<Return> {
+          return window.DeckyBackend.call<[pluginName: string, method: string, ...args: Args], Return>(
+            'loader/call_plugin_method',
+            pluginName,
+            method,
+            ...args,
+          );
+        },
+        callable<Args extends any[] = any[], Return = void>(method: string): (...args: Args) => Promise<Return> {
+          return (...args) => pluginAPI.backend.call<Args, Return>(method, ...args);
+        },
+      },
       routerHook: this.routerHook,
       toaster: this.toaster,
+      // Legacy
       callServerMethod: this.callServerMethod,
       openFilePicker: this.openFilePicker,
       openFilePickerV2: this.openFilePickerV2,
+      // Legacy
       async callPluginMethod(methodName: string, args = {}) {
-        const response = await fetch(`http://127.0.0.1:1337/plugins/${pluginName}/methods/${methodName}`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-            Authentication: window.deckyAuthToken,
-          },
-          body: JSON.stringify({
-            args,
-          }),
-        });
-
-        return response.json();
+        return window.DeckyBackend.call<[pluginName: string, methodName: string, kwargs: any], any>(
+          'loader/call_legacy_plugin_method',
+          pluginName,
+          methodName,
+          args,
+        );
       },
-      fetchNoCors(url: string, request: any = {}) {
-        let args = { method: 'POST', headers: {} };
-        const req = { ...args, ...request, url, data: request.body };
+      /* TODO replace with the following flow (or similar) so we can reuse the JS Fetch API
+        frontend --request URL only--> backend (ws method)
+        backend --new temporary backend URL--> frontend (ws response)
+        frontend <--> backend <--> target URL (over http!)
+      */
+      async fetchNoCors(url: string, request: any = {}) {
+        let method: string;
+        const req = { headers: {}, ...request, data: request.body };
         req?.body && delete req.body;
-        return this.callServerMethod('http_request', req);
+        if (!request.method) {
+          method = 'POST';
+        } else {
+          method = request.method;
+          delete req.method;
+        }
+        // this is terrible but a. we're going to redo this entire method anyway and b. it was already terrible
+        try {
+          const ret = await window.DeckyBackend.call<
+            [method: string, url: string, extra_opts?: any],
+            { status: number; headers: { [key: string]: string }; body: string }
+          >('utilities/http_request', method, url, req);
+          return { success: true, result: ret };
+        } catch (e) {
+          return { success: false, result: e?.toString() };
+        }
       },
-      executeInTab(tab: string, runAsync: boolean, code: string) {
-        return this.callServerMethod('execute_in_tab', {
-          tab,
-          run_async: runAsync,
-          code,
-        });
-      },
+      executeInTab: window.DeckyBackend.callable<
+        [tab: String, runAsync: Boolean, code: string],
+        { success: boolean; result: any }
+      >('utilities/execute_in_tab'),
       injectCssIntoTab: window.DeckyBackend.callable<[tab: string, style: string], string>(
         'utilities/inject_css_into_tab',
       ),
       removeCssFromTab: window.DeckyBackend.callable<[tab: string, cssId: string]>('utilities/remove_css_from_tab'),
     };
+
+    return pluginAPI;
   }
 }
 

@@ -159,8 +159,8 @@ backend/static
 .vscode/settings.json
 
 # plugins folder for local launches
-plugins/*
+/plugins/*
 act/.directory
 act/artifacts/*
 bin/act
-settings/
+/settings/

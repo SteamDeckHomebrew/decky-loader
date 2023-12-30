@@ -37,8 +37,11 @@
             "label": "dependencies",
             "type": "shell",
             "group": "none",
+            "dependsOn": [
+                "deploy"
+            ],
             "detail": "Check for local runs, create a plugins folder",
-            "command": "rsync -azp --rsh='ssh -p ${config:deckport} ${config:deckkey}' backend/pyproject.toml backend/poetry.lock deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader && ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'python -m ensurepip && python -m pip install --upgrade poetry && cd ${config:deckdir}/homebrew/dev/pluginloader/backend && python -m poetry install'",
+            "command": "ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'python -m ensurepip && python -m pip install --user --upgrade poetry && cd ${config:deckdir}/homebrew/dev/pluginloader/backend && python -m poetry install'",
             "problemMatcher": []
         },
         {
@@ -105,7 +108,7 @@
             "detail": "Deploy dev PluginLoader to deck",
             "type": "shell",
             "group": "none",
-            "command": "rsync -azp --delete --rsh='ssh -p ${config:deckport} ${config:deckkey}' --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='backend/decky_loader/__pycache__/' --exclude='.gitignore' . deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader",
+            "command": "rsync -azp --delete --rsh='ssh -p ${config:deckport} ${config:deckkey}' --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='backend/**/__pycache__/' --exclude='.gitignore' . deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader",
             "problemMatcher": []
         },
         // RUN
@@ -117,7 +120,7 @@
             "dependsOn": [
                 "checkforsettings"
             ],
-            "command": "ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'export PLUGIN_PATH=${config:deckdir}/homebrew/dev/plugins; export CHOWN_PLUGIN_PATH=0; export LOG_LEVEL=DEBUG; cd ${config:deckdir}/homebrew/services; echo '${config:deckpass}' | sudo -SE python3 ${config:deckdir}/homebrew/dev/pluginloader/backend/main.py'",
+            "command": "ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'export PATH=${config:deckdir}/.local/bin:$PATH; export PLUGIN_PATH=${config:deckdir}/homebrew/dev/plugins; export CHOWN_PLUGIN_PATH=0; export LOG_LEVEL=DEBUG; cd ${config:deckdir}/homebrew/dev/pluginloader/backend; echo '${config:deckpass}' | sudo -SE poetry run sh -c \"cd ${config:deckdir}/homebrew/services; python3 ${config:deckdir}/homebrew/dev/pluginloader/backend/main.py\"'",
             "problemMatcher": []
         },
         {
@@ -181,7 +184,8 @@
                 "buildall",
                 "createfolders",
                 "dependencies",
-                "deploy",
+                // dependencies runs deploy already
+                // "deploy",
                 "runpydeck"
             ],
             "problemMatcher": []
@@ -190,7 +194,7 @@
             "label": "act",
             "type": "shell",
             "group": "none",
-            "detail": "Run the act thing",
+            "detail": "Build release artifact using local CI",
             "command": "./act/run-act.sh release",
             "problemMatcher": []
         }

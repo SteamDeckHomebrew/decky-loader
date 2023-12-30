@@ -77,16 +77,27 @@ class SandboxedPlugin:
             keys = [key for key in sysmodules if key.startswith("decky_loader.")]
             for key in keys:
                 sysmodules[key.replace("decky_loader.", "")] = sysmodules[key]
+            
+            from .imports import decky
+            async def emit_message(message: Dict[Any, Any]):
+                await self._socket.write_single_line_server(dumps({
+                    "id": "0",
+                    "payload": message
+                }))
+            # copy the docstring over so we don't have to duplicate it
+            emit_message.__doc__ = decky.emit_message.__doc__
+            decky.emit_message = emit_message
+            sysmodules["decky"] = decky
+            # provided for compatibility
+            sysmodules["decky_plugin"] = decky
 
             spec = spec_from_file_location("_", self.file)
             assert spec is not None
             module = module_from_spec(spec)
             assert spec.loader is not None
             spec.loader.exec_module(module)
+            # TODO fix self weirdness once plugin.json versioning is done. need this before WS release!
             self.Plugin = module.Plugin
-
-            setattr(self.Plugin, "emit_message", self.emit_message)
-            #TODO: Find how to put emit_message on global namespace so it doesn't pollute Plugin
 
             if hasattr(self.Plugin, "_migration"):
                 get_event_loop().run_until_complete(self.Plugin._migration(self.Plugin))
@@ -124,15 +135,14 @@ class SandboxedPlugin:
 
         d: SocketResponseDict = {"res": None, "success": True, "id": data["id"]}
         try:
-            d["res"] = await getattr(self.Plugin, data["method"])(self.Plugin, **data["args"])
+            if data["legacy"]:
+                # Legacy kwargs
+                d["res"] = await getattr(self.Plugin, data["method"])(self.Plugin, **data["args"])
+            else:
+                # New args
+                d["res"] = await getattr(self.Plugin, data["method"])(self.Plugin, *data["args"])
         except Exception as e:
             d["res"] = str(e)
             d["success"] = False
         finally:
             return dumps(d, ensure_ascii=False)
-        
-    async def emit_message(self, message: Dict[Any, Any]):
-        await self._socket.write_single_line_server(dumps({
-            "id": "0",
-            "payload": message
-        }))

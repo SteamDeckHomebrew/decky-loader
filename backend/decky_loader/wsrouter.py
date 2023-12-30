@@ -12,7 +12,7 @@ from dataclasses import dataclass
 
 from traceback import format_exc
 
-from helpers import get_csrf_token
+from .helpers import get_csrf_token
 
 class MessageType(IntEnum):
     ERROR = -1
@@ -43,7 +43,7 @@ Route = Callable[..., Coroutine[Any, Any, Any]]
 class WSRouter:
     def __init__(self, loop: AbstractEventLoop, server_instance: Application) -> None:
         self.loop = loop
-        self.ws: WebSocketResponse | None
+        self.ws: WebSocketResponse | None = None
         self.instance_id = 0
         self.routes: Dict[str, Route]  = {}
         # self.subscriptions: Dict[str, Callable[[Any]]] = {}

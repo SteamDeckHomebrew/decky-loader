@@ -19,6 +19,8 @@ import subprocess
 import logging
 import time
 
+from typing import Dict, Any
+
 """
 Constants
 """
@@ -207,3 +209,13 @@ logger: logging.Logger = logging.getLogger()
 """The main plugin logger writing to `DECKY_PLUGIN_LOG`."""
 
 logger.setLevel(logging.INFO)
+
+"""
+Event handling
+"""
+# TODO better docstring im lazy
+async def emit_message(message: Dict[Any, Any]) -> None:
+    """
+    Send a message to the frontend.
+    """
+    pass

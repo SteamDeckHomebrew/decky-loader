@@ -59,10 +59,6 @@ class Utilities:
         self.rdt_proxy_task = None
 
         if context:
-            context.web_app.add_routes([
-                web.post("/methods/{method_name}", self._handle_server_method_call)
-            ])
-
             context.ws.add_route("utilities/ping", self.ping)
             context.ws.add_route("utilities/settings/get", self.get_setting)
             context.ws.add_route("utilities/settings/set", self.set_setting)
@@ -81,22 +77,20 @@ class Utilities:
             context.ws.add_route("utilities/enable_rdt", self.enable_rdt)
             context.ws.add_route("utilities/get_tab_id", self.get_tab_id)
             context.ws.add_route("utilities/get_user_info", self.get_user_info)
+            context.ws.add_route("utilities/http_request", self.http_request)
+            context.ws.add_route("utilities/_call_legacy_utility", self._call_legacy_utility)
 
-    async def _handle_server_method_call(self, request: web.Request):
-        method_name = request.match_info["method_name"]
+    async def _call_legacy_utility(self, method_name: str, kwargs: Dict[Any, Any]) -> Any:
+        self.logger.debug(f"Calling utility {method_name} with legacy kwargs");
+        res: Dict[Any, Any] = {}
         try:
-            args = await request.json()
-        except JSONDecodeError:
-            args = {}
-        res = {}
-        try:
-            r = await self.util_methods[method_name](**args)
+            r = await self.util_methods[method_name](**kwargs)
             res["result"] = r
             res["success"] = True
         except Exception as e:
             res["result"] = str(e)
             res["success"] = False
-        return web.json_response(res)
+        return res
 
     async def install_plugin(self, artifact: str="", name: str="No name", version: str="dev", hash: str="", install_type: PluginInstallType=PluginInstallType.INSTALL):
         return await self.context.plugin_browser.request_plugin_install(
@@ -121,9 +115,9 @@ class Utilities:
     async def uninstall_plugin(self, name: str):
         return await self.context.plugin_browser.uninstall_plugin(name)
 
-    async def http_request(self, method: str="", url: str="", **kwargs: Any):
+    async def http_request(self, method: str, url: str, extra_opts: Any = {}):
         async with ClientSession() as web:
-            res = await web.request(method, url, ssl=helpers.get_ssl_context(), **kwargs)
+            res = await web.request(method, url, ssl=helpers.get_ssl_context(), **extra_opts)
             text = await res.text()
         return {
             "status": res.status,

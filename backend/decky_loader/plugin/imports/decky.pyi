@@ -16,6 +16,8 @@ __version__ = '0.1.0'
 
 import logging
 
+from typing import Dict, Any
+
 """
 Constants
 """
@@ -171,3 +173,12 @@ Logging
 
 logger: logging.Logger
 """The main plugin logger writing to `DECKY_PLUGIN_LOG`."""
+
+"""
+Event handling
+"""
+# TODO better docstring im lazy
+async def emit_message(message: Dict[Any, Any]) -> None:
+    """
+    Send a message to the frontend.
+    """

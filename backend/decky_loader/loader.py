@@ -4,15 +4,15 @@ from json.decoder import JSONDecodeError
 from logging import getLogger
 from os import listdir, path
 from pathlib import Path
-from traceback import print_exc
-from typing import Any, Tuple
+from traceback import format_exc, print_exc
+from typing import Any, Tuple, Dict
 
 from aiohttp import web
 from os.path import exists
 from watchdog.events import RegexMatchingEventHandler, DirCreatedEvent, DirModifiedEvent, FileCreatedEvent, FileModifiedEvent # type: ignore
 from watchdog.observers import Observer # type: ignore
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 if TYPE_CHECKING:
     from .main import PluginManager
 
@@ -92,12 +92,14 @@ class Loader:
         server_instance.web_app.add_routes([
             web.get("/frontend/{path:.*}", self.handle_frontend_assets),
             web.get("/locales/{path:.*}", self.handle_frontend_locales),
-            web.get("/plugins", self.get_plugins),
             web.get("/plugins/{plugin_name}/frontend_bundle", self.handle_frontend_bundle),
-            web.post("/plugins/{plugin_name}/methods/{method_name}", self.handle_plugin_method_call),
             web.get("/plugins/{plugin_name}/assets/{path:.*}", self.handle_plugin_frontend_assets),
-            web.post("/plugins/{plugin_name}/reload", self.handle_backend_reload_request)
         ])
+
+        server_instance.ws.add_route("loader/get_plugins", self.get_plugins)
+        server_instance.ws.add_route("loader/reload_plugin", self.handle_plugin_backend_reload)
+        server_instance.ws.add_route("loader/call_plugin_method", self.handle_plugin_method_call)
+        server_instance.ws.add_route("loader/call_legacy_plugin_method", self.handle_plugin_method_call_legacy)
 
     async def enable_reload_wait(self):
         if self.live_reload:
@@ -119,9 +121,9 @@ class Loader:
             self.logger.info(f"Language {req_lang} not available, returning an empty dictionary")
             return web.json_response(data={}, headers={"Cache-Control": "no-cache"})
 
-    async def get_plugins(self, request: web.Request):
+    async def get_plugins(self):
         plugins = list(self.plugins.values())
-        return web.json_response([{"name": str(i), "version": i.version} for i in plugins])
+        return [{"name": str(i), "version": i.version} for i in plugins]
 
     async def handle_plugin_frontend_assets(self, request: web.Request):
         plugin = self.plugins[request.match_info["plugin_name"]]
@@ -173,29 +175,31 @@ class Loader:
             args = await self.reload_queue.get()
             self.import_plugin(*args) # type: ignore
 
-    async def handle_plugin_method_call(self, request: web.Request):
-        res = {}
-        plugin = self.plugins[request.match_info["plugin_name"]]
-        method_name = request.match_info["method_name"]
-        try:
-            method_info = await request.json()
-            args: Any = method_info["args"]
-        except JSONDecodeError:
-            args = {}
+    async def handle_plugin_method_call_legacy(self, plugin_name: str, method_name: str, kwargs: Dict[Any, Any]):
+        res: Dict[Any, Any] = {}
+        plugin = self.plugins[plugin_name]
         try:
           if method_name.startswith("_"):
-              raise RuntimeError("Tried to call private method")
-          res["result"] = await plugin.execute_method(method_name, args)
+              raise RuntimeError(f"Plugin {plugin.name} tried to call private method {method_name}")
+          res["result"] = await plugin.execute_legacy_method(method_name, kwargs)
           res["success"] = True
         except Exception as e:
             res["result"] = str(e)
             res["success"] = False
-        return web.json_response(res)
+        return res
 
-    async def handle_backend_reload_request(self, request: web.Request):
-        plugin_name : str = request.match_info["plugin_name"]
+    async def handle_plugin_method_call(self, plugin_name: str, method_name: str, *args: List[Any]):
+        plugin = self.plugins[plugin_name]
+        try:
+          if method_name.startswith("_"):
+              raise RuntimeError(f"Plugin {plugin.name} tried to call private method {method_name}")
+          result = await plugin.execute_method(method_name, *args)
+        except Exception as e:
+            self.logger.error(f"Method {method_name} of plugin {plugin.name} failed with the following exception:\n{format_exc()}")
+            raise e # throw again to pass the error to the frontend
+        return result
+
+    async def handle_plugin_backend_reload(self, plugin_name: str):
         plugin = self.plugins[plugin_name]
 
         await self.reload_queue.put((plugin.file, plugin.plugin_directory))
-
-        return web.Response(status=200)

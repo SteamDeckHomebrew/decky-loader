@@ -35,6 +35,8 @@ async function reinstallPlugin(pluginName: string, currentVersion?: string) {
 
 type PluginTableData = PluginData & { name: string; hidden: boolean; onHide(): void; onShow(): void };
 
+const reloadPluginBackend = window.DeckyBackend.callable<[pluginName: string], void>('loader/reload_plugin');
+
 function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }) {
   const { t } = useTranslation();
 
@@ -49,15 +51,9 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
     showContextMenu(
       <Menu label={t('PluginListIndex.plugin_actions')}>
         <MenuItem
-          onSelected={() => {
+          onSelected={async () => {
             try {
-              fetch(`http://127.0.0.1:1337/plugins/${name}/reload`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                  Authentication: window.deckyAuthToken,
-                },
-              });
+              await reloadPluginBackend(name);
             } catch (err) {
               console.error('Error Reloading Plugin Backend', err);
             }

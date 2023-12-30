@@ -1,7 +1,6 @@
 # Change PyInstaller files permissions
 import sys
 from typing import Dict
-from wsrouter import WSRouter
 from .localplatform.localplatform import (chmod, chown, service_stop, service_start,
                             ON_WINDOWS, get_log_level, get_live_reload, 
                             get_server_port, get_server_host, get_chown_plugin_path,
@@ -32,6 +31,7 @@ from .settings import SettingsManager
 from .updater import Updater
 from .utilities import Utilities
 from .customtypes import UserType
+from .wsrouter import WSRouter
 
 
 basicConfig(
@@ -102,7 +102,6 @@ class PluginManager:
         # await self.wait_for_server()
         logger.debug("Loading plugins")
         self.plugin_loader.import_plugins()
-        # await inject_to_tab("SP", "window.syncDeckyPlugins();")
         if self.settings.getSetting("pluginOrder", None) == None:
           self.settings.setSetting("pluginOrder", list(self.plugin_loader.plugins.keys()))
           logger.debug("Did not find pluginOrder setting, set it to default")

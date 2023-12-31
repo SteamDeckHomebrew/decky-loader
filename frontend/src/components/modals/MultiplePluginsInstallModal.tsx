@@ -46,7 +46,7 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
         setLoading(true);
         await onOK();
         setTimeout(() => Navigation.OpenQuickAccessMenu(QuickAccessTab.Decky), 250);
-        setTimeout(() => window.DeckyPluginLoader.checkPluginUpdates(), 1000);
+        setTimeout(() => DeckyPluginLoader.checkPluginUpdates(), 1000);
       }}
       onCancel={async () => {
         await onCancel();

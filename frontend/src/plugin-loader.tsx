@@ -28,10 +28,10 @@ import { NotificationService } from './notification-service';
 import { InstallType, Plugin } from './plugin';
 import RouterHook from './router-hook';
 import { deinitSteamFixes, initSteamFixes } from './steamfixes';
-import { checkForUpdates } from './store';
+import { checkForPluginUpdates } from './store';
 import TabsHook from './tabs-hook';
 import Toaster from './toaster';
-import { VerInfo, callUpdaterMethod } from './updater';
+import { getVersionInfo } from './updater';
 import { getSetting, setSetting } from './utils/settings';
 import TranslationHelper, { TranslationClass } from './utils/TranslationHelper';
 
@@ -106,9 +106,7 @@ class PluginLoader extends Logger {
       .then(() => this.log('Initialized'));
   }
 
-  private getPluginsFromBackend = window.DeckyBackend.callable<[], { name: string; version: string }[]>(
-    'loader/get_plugins',
-  );
+  private getPluginsFromBackend = DeckyBackend.callable<[], { name: string; version: string }[]>('loader/get_plugins');
 
   private async loadPlugins() {
     // wait for SP window to exist before loading plugins
@@ -129,13 +127,13 @@ class PluginLoader extends Logger {
   }
 
   public async getUserInfo() {
-    const userInfo = await window.DeckyBackend.call<[], UserInfo>('utilities/get_user_info');
+    const userInfo = await DeckyBackend.call<[], UserInfo>('utilities/get_user_info');
     setSetting('user_info.user_name', userInfo.username);
     setSetting('user_info.user_home', userInfo.path);
   }
 
   public async updateVersion() {
-    const versionInfo = (await callUpdaterMethod('get_version')).result as VerInfo;
+    const versionInfo = await getVersionInfo();
     this.deckyState.setVersionInfo(versionInfo);
 
     return versionInfo;
@@ -164,7 +162,7 @@ class PluginLoader extends Logger {
   }
 
   public async checkPluginUpdates() {
-    const updates = await checkForUpdates(this.plugins);
+    const updates = await checkForPluginUpdates(this.plugins);
     this.deckyState.setUpdates(updates);
     return updates;
   }
@@ -199,8 +197,8 @@ class PluginLoader extends Logger {
         version={version}
         hash={hash}
         installType={install_type}
-        onOK={() => window.DeckyBackend.call<[string]>('utilities/confirm_plugin_install', request_id)}
-        onCancel={() => window.DeckyBackend.call<[string]>('utilities/cancel_plugin_install', request_id)}
+        onOK={() => DeckyBackend.call<[string]>('utilities/confirm_plugin_install', request_id)}
+        onCancel={() => DeckyBackend.call<[string]>('utilities/cancel_plugin_install', request_id)}
       />,
     );
   }
@@ -212,8 +210,8 @@ class PluginLoader extends Logger {
     showModal(
       <MultiplePluginsInstallModal
         requests={requests}
-        onOK={() => window.DeckyBackend.call<[string]>('utilities/confirm_plugin_install', request_id)}
-        onCancel={() => window.DeckyBackend.call<[string]>('utilities/cancel_plugin_install', request_id)}
+        onOK={() => DeckyBackend.call<[string]>('utilities/confirm_plugin_install', request_id)}
+        onCancel={() => DeckyBackend.call<[string]>('utilities/cancel_plugin_install', request_id)}
       />,
     );
   }
@@ -298,7 +296,7 @@ class PluginLoader extends Logger {
     let res = await fetch(`http://127.0.0.1:1337/plugins/${name}/frontend_bundle`, {
       credentials: 'include',
       headers: {
-        Authentication: window.deckyAuthToken,
+        Authentication: deckyAuthToken,
       },
     });
 
@@ -364,7 +362,7 @@ class PluginLoader extends Logger {
     this.warn(
       `Calling ${methodName} via callServerMethod, which is deprecated and will be removed in a future release. Please switch to the backend API.`,
     );
-    return await window.DeckyBackend.call<[methodName: string, kwargs: any], any>(
+    return await DeckyBackend.call<[methodName: string, kwargs: any], any>(
       'utilities/_call_legacy_utility',
       methodName,
       args,
@@ -429,7 +427,7 @@ class PluginLoader extends Logger {
     const pluginAPI = {
       backend: {
         call<Args extends any[] = any[], Return = void>(method: string, ...args: Args): Promise<Return> {
-          return window.DeckyBackend.call<[pluginName: string, method: string, ...args: Args], Return>(
+          return DeckyBackend.call<[pluginName: string, method: string, ...args: Args], Return>(
             'loader/call_plugin_method',
             pluginName,
             method,
@@ -448,7 +446,7 @@ class PluginLoader extends Logger {
       openFilePickerV2: this.openFilePickerV2,
       // Legacy
       async callPluginMethod(methodName: string, args = {}) {
-        return window.DeckyBackend.call<[pluginName: string, methodName: string, kwargs: any], any>(
+        return DeckyBackend.call<[pluginName: string, methodName: string, kwargs: any], any>(
           'loader/call_legacy_plugin_method',
           pluginName,
           methodName,
@@ -472,7 +470,7 @@ class PluginLoader extends Logger {
         }
         // this is terrible but a. we're going to redo this entire method anyway and b. it was already terrible
         try {
-          const ret = await window.DeckyBackend.call<
+          const ret = await DeckyBackend.call<
             [method: string, url: string, extra_opts?: any],
             { status: number; headers: { [key: string]: string }; body: string }
           >('utilities/http_request', method, url, req);
@@ -481,14 +479,12 @@ class PluginLoader extends Logger {
           return { success: false, result: e?.toString() };
         }
       },
-      executeInTab: window.DeckyBackend.callable<
+      executeInTab: DeckyBackend.callable<
         [tab: String, runAsync: Boolean, code: string],
         { success: boolean; result: any }
       >('utilities/execute_in_tab'),
-      injectCssIntoTab: window.DeckyBackend.callable<[tab: string, style: string], string>(
-        'utilities/inject_css_into_tab',
-      ),
-      removeCssFromTab: window.DeckyBackend.callable<[tab: string, cssId: string]>('utilities/remove_css_from_tab'),
+      injectCssIntoTab: DeckyBackend.callable<[tab: string, style: string], string>('utilities/inject_css_into_tab'),
+      removeCssFromTab: DeckyBackend.callable<[tab: string, cssId: string]>('utilities/remove_css_from_tab'),
     };
 
     return pluginAPI;

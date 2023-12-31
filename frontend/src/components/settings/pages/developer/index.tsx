@@ -28,20 +28,13 @@ const installFromZip = async () => {
     logger.error('The default path has not been found!');
     return;
   }
-  window.DeckyPluginLoader.openFilePickerV2(
-    FileSelectionType.FILE,
-    path,
-    true,
-    true,
-    undefined,
-    ['zip'],
-    false,
-    false,
-  ).then((val) => {
-    const url = `file://${val.path}`;
-    console.log(`Installing plugin locally from ${url}`);
-    installFromURL(url);
-  });
+  DeckyPluginLoader.openFilePickerV2(FileSelectionType.FILE, path, true, true, undefined, ['zip'], false, false).then(
+    (val) => {
+      const url = `file://${val.path}`;
+      console.log(`Installing plugin locally from ${url}`);
+      installFromURL(url);
+    },
+  );
 };
 
 export default function DeveloperSettings() {
@@ -92,10 +85,7 @@ export default function DeveloperSettings() {
           <DialogButton
             onClick={async () => {
               try {
-                let tabId = await window.DeckyBackend.call<[name: string], string>(
-                  'utilities/get_tab_id',
-                  'SharedJSContext',
-                );
+                let tabId = await DeckyBackend.call<[name: string], string>('utilities/get_tab_id', 'SharedJSContext');
                 Navigation.NavigateToExternalWeb(
                   'localhost:8080/devtools/inspector.html?ws=localhost:8080/devtools/page/' + tabId,
                 );

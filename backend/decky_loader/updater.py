@@ -2,7 +2,6 @@ from __future__ import annotations
 import os
 import shutil
 from asyncio import sleep
-from json.decoder import JSONDecodeError
 from logging import getLogger
 from os import getcwd, path, remove
 from typing import TYPE_CHECKING, List, TypedDict
@@ -10,7 +9,7 @@ if TYPE_CHECKING:
     from .main import PluginManager
 from .localplatform.localplatform import chmod, service_restart, ON_LINUX, get_keep_systemd_service, get_selinux
 
-from aiohttp import ClientSession, web
+from aiohttp import ClientSession
 
 from . import helpers
 from .injector import get_gamepadui_tab
@@ -30,14 +29,6 @@ class Updater:
     def __init__(self, context: PluginManager) -> None:
         self.context = context
         self.settings = self.context.settings
-        # Exposes updater methods to frontend
-        self.updater_methods = {
-            "get_branch": self._get_branch,
-            "get_version": self.get_version,
-            "do_update": self.do_update,
-            "do_restart": self.do_restart,
-            "check_for_updates": self.check_for_updates
-        }
         self.remoteVer: RemoteVer | None = None
         self.allRemoteVers: List[RemoteVer] = []
         self.localVer = helpers.get_loader_version()
@@ -49,26 +40,11 @@ class Updater:
             logger.error("Current branch could not be determined, defaulting to \"Stable\"")
 
         if context:
-            context.web_app.add_routes([
-                web.post("/updater/{method_name}", self._handle_server_method_call)
-            ])
+            context.ws.add_route("updater/get_version_info", self.get_version_info);
+            context.ws.add_route("updater/check_for_updates", self.check_for_updates);
+            context.ws.add_route("updater/do_restart", self.do_restart);
+            context.ws.add_route("updater/do_update", self.do_update);
             context.loop.create_task(self.version_reloader())
-
-    async def _handle_server_method_call(self, request: web.Request):
-        method_name = request.match_info["method_name"]
-        try:
-            args = await request.json()
-        except JSONDecodeError:
-            args = {}
-        res = {}
-        try:
-            r = await self.updater_methods[method_name](**args) # type: ignore
-            res["result"] = r
-            res["success"] = True
-        except Exception as e:
-            res["result"] = str(e)
-            res["success"] = False
-        return web.json_response(res)
 
     def get_branch(self, manager: SettingsManager):
         ver = manager.getSetting("branch", -1)
@@ -102,7 +78,7 @@ class Updater:
                 url = "https://raw.githubusercontent.com/SteamDeckHomebrew/decky-loader/main/dist/plugin_loader-prerelease.service"
         return str(url)
 
-    async def get_version(self):
+    async def get_version_info(self):
         return {
             "current": self.localVer,
             "remote": self.remoteVer,
@@ -139,7 +115,7 @@ class Updater:
         logger.info("Updated remote version information")
         tab = await get_gamepadui_tab()
         await tab.evaluate_js(f"window.DeckyPluginLoader.notifyUpdates()", False, True, False)
-        return await self.get_version()
+        return await self.get_version_info()
 
     async def version_reloader(self):
         await sleep(30)

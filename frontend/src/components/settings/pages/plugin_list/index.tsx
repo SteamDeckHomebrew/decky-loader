@@ -35,7 +35,7 @@ async function reinstallPlugin(pluginName: string, currentVersion?: string) {
 
 type PluginTableData = PluginData & { name: string; hidden: boolean; onHide(): void; onShow(): void };
 
-const reloadPluginBackend = window.DeckyBackend.callable<[pluginName: string], void>('loader/reload_plugin');
+const reloadPluginBackend = DeckyBackend.callable<[pluginName: string], void>('loader/reload_plugin');
 
 function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }) {
   const { t } = useTranslation();
@@ -58,14 +58,14 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
               console.error('Error Reloading Plugin Backend', err);
             }
 
-            window.DeckyPluginLoader.importPlugin(name, version);
+            DeckyPluginLoader.importPlugin(name, version);
           }}
         >
           {t('PluginListIndex.reload')}
         </MenuItem>
         <MenuItem
           onSelected={() =>
-            window.DeckyPluginLoader.uninstallPlugin(
+            DeckyPluginLoader.uninstallPlugin(
               name,
               t('PluginLoader.plugin_uninstall.title', { name }),
               t('PluginLoader.plugin_uninstall.button'),
@@ -143,11 +143,11 @@ export default function PluginList() {
   const { t } = useTranslation();
 
   useEffect(() => {
-    window.DeckyPluginLoader.checkPluginUpdates();
+    DeckyPluginLoader.checkPluginUpdates();
   }, []);
 
   const [pluginEntries, setPluginEntries] = useState<ReorderableEntry<PluginTableData>[]>([]);
-  const hiddenPluginsService = window.DeckyPluginLoader.hiddenPluginsService;
+  const hiddenPluginsService = DeckyPluginLoader.hiddenPluginsService;
 
   useEffect(() => {
     setPluginEntries(

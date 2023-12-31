@@ -38,7 +38,7 @@ export async function setShowValveInternal(show: boolean) {
 }
 
 export async function setShouldConnectToReactDevTools(enable: boolean) {
-  window.DeckyPluginLoader.toaster.toast({
+  DeckyPluginLoader.toaster.toast({
     title: enable ? (
       <TranslationHelper trans_class={TranslationClass.DEVELOPER} trans_text={'enabling'} />
     ) : (
@@ -48,7 +48,7 @@ export async function setShouldConnectToReactDevTools(enable: boolean) {
     icon: <FaReact />,
   });
   await sleep(5000);
-  return enable ? window.DeckyBackend.call('utilities/enable_rdt') : window.DeckyBackend.call('utilities/disable_rdt');
+  return enable ? DeckyBackend.call('utilities/enable_rdt') : DeckyBackend.call('utilities/disable_rdt');
 }
 
 export async function startup() {

@@ -6,7 +6,7 @@ import { useDeckyState } from '../../../DeckyState';
 
 const NotificationSettings: FC = () => {
   const { notificationSettings } = useDeckyState();
-  const notificationService = window.DeckyPluginLoader.notificationService;
+  const notificationService = DeckyPluginLoader.notificationService;
 
   const { t } = useTranslation();
 

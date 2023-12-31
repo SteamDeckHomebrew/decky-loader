@@ -3,14 +3,12 @@ import { sleep } from 'decky-frontend-lib';
 import Logger from './logger';
 
 declare global {
-  interface Window {
-    DeckyBackend: WSRouter;
-  }
+  export var DeckyBackend: WSRouter;
 }
 
 enum MessageType {
   ERROR = -1,
-  // Call-reply, Frontend -> Backend
+  // Call-reply, Frontend -> Backend -> Frontend
   CALL = 0,
   REPLY = 1,
   // Pub/Sub, Backend -> Frontend
@@ -22,8 +20,6 @@ interface CallMessage {
   args: any[];
   route: string;
   id: number;
-  // TODO implement this
-  // skipResponse?: boolean;
 }
 
 interface ReplyMessage {
@@ -61,7 +57,7 @@ export class WSRouter extends Logger {
   connect() {
     return (this.connectPromise = new Promise<void>((resolve) => {
       // Auth is a query param as JS WebSocket doesn't support headers
-      this.ws = new WebSocket(`ws://127.0.0.1:1337/ws?auth=${window.deckyAuthToken}`);
+      this.ws = new WebSocket(`ws://127.0.0.1:1337/ws?auth=${deckyAuthToken}`);
 
       this.ws.addEventListener('open', () => {
         this.debug('WS Connected');
@@ -129,7 +125,7 @@ export class WSRouter extends Logger {
           if (this.runningCalls.has(data.id)) {
             this.runningCalls.get(data.id)!.reject(data.error);
             this.runningCalls.delete(data.id);
-            this.debug(`Errored PY call ${data.id} with error`, data.error);
+            this.debug(`Rejected PY call ${data.id} with error`, data.error);
           }
           break;
 
@@ -143,7 +139,7 @@ export class WSRouter extends Logger {
   }
 
   // this.call<[number, number], string>('methodName', 1, 2);
-  call<Args extends any[] = any[], Return = void>(route: string, ...args: Args): Promise<Return> {
+  call<Args extends any[] = [], Return = void>(route: string, ...args: Args): Promise<Return> {
     const resolver = this.createPromiseResolver<Return>();
 
     const id = ++this.reqId;
@@ -157,7 +153,7 @@ export class WSRouter extends Logger {
     return resolver.promise;
   }
 
-  callable<Args extends any[] = any[], Return = void>(route: string): (...args: Args) => Promise<Return> {
+  callable<Args extends any[] = [], Return = void>(route: string): (...args: Args) => Promise<Return> {
     return (...args) => this.call<Args, Return>(route, ...args);
   }
 

@@ -16,7 +16,7 @@ from .helpers import get_csrf_token
 
 class MessageType(IntEnum):
     ERROR = -1
-    # Call-reply, Frontend -> Backend
+    # Call-reply, Frontend -> Backend -> Frontend
     CALL = 0
     REPLY = 1
     # Pub/Sub, Backend -> Frontend

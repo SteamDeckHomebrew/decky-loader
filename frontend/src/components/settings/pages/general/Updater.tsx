@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaExclamation } from 'react-icons/fa';
 
-import { VerInfo, callUpdaterMethod, finishUpdate } from '../../../../updater';
+import { VerInfo, checkForUpdates, doRestart, doUpdate } from '../../../../updater';
 import { useDeckyState } from '../../../DeckyState';
 import InlinePatchNotes from '../../../patchnotes/InlinePatchNotes';
 import WithSuspense from '../../../WithSuspense';
@@ -85,7 +85,7 @@ export default function UpdaterSettings() {
       finish: async () => {
         setUpdateProgress(0);
         setReloading(true);
-        await finishUpdate();
+        await doRestart();
       },
     };
   }, []);
@@ -122,13 +122,13 @@ export default function UpdaterSettings() {
               !versionInfo?.remote || versionInfo?.remote?.tag_name == versionInfo?.current
                 ? async () => {
                     setCheckingForUpdates(true);
-                    const res = (await callUpdaterMethod('check_for_updates')) as { result: VerInfo };
-                    setVersionInfo(res.result);
+                    const verInfo = await checkForUpdates();
+                    setVersionInfo(verInfo);
                     setCheckingForUpdates(false);
                   }
                 : async () => {
                     setUpdateProgress(0);
-                    callUpdaterMethod('do_update');
+                    doUpdate();
                   }
             }
           >

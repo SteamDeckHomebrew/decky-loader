@@ -37,7 +37,7 @@ export async function getStore(): Promise<Store> {
 }
 
 export async function getPluginList(): Promise<StorePlugin[]> {
-  let version = await window.DeckyPluginLoader.updateVersion();
+  let version = await DeckyPluginLoader.updateVersion();
   let store = await getSetting<Store | null>('store', null);
   let customURL = await getSetting<string>('store-url', 'https://plugins.deckbrew.xyz/plugins');
   let storeURL;
@@ -112,7 +112,7 @@ export async function requestMultiplePluginInstalls(requests: PluginInstallReque
   );
 }
 
-export async function checkForUpdates(plugins: Plugin[]): Promise<PluginUpdateMapping> {
+export async function checkForPluginUpdates(plugins: Plugin[]): Promise<PluginUpdateMapping> {
   const serverData = await getPluginList();
   const updateMap = new Map<string, StorePluginVersion>();
   for (let plugin of plugins) {

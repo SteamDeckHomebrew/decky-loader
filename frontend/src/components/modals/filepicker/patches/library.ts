@@ -13,9 +13,7 @@ function rePatch() {
       const details = window.appDetailsStore.GetAppDetails(appid);
       logger.debug('game details', details);
       // strShortcutStartDir
-      const file = await window.DeckyPluginLoader.openFilePicker(
-        details?.strShortcutStartDir.replaceAll('"', '') || '/',
-      );
+      const file = await DeckyPluginLoader.openFilePicker(details?.strShortcutStartDir.replaceAll('"', '') || '/');
       logger.debug('user selected', file);
       window.SteamClient.Apps.SetShortcutExe(appid, JSON.stringify(file.path));
       const pathArr = file.path.split('/');

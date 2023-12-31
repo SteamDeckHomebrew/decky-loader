@@ -6,15 +6,13 @@ import PluginLoader from './plugin-loader';
 import { DeckyUpdater } from './updater';
 
 declare global {
-  interface Window {
-    DeckyPluginLoader: PluginLoader;
-    DeckyUpdater?: DeckyUpdater;
-    importDeckyPlugin: Function;
-    deckyHasLoaded: boolean;
-    deckyHasConnectedRDT?: boolean;
-    deckyAuthToken: string;
-    DFL?: any;
-  }
+  export var DeckyPluginLoader: PluginLoader;
+  export var DeckyUpdater: DeckyUpdater | undefined; // TODO get rid of this
+  export var importDeckyPlugin: Function;
+  export var deckyHasLoaded: boolean;
+  export var deckyHasConnectedRDT: boolean | undefined;
+  export var deckyAuthToken: string;
+  export var DFL: any | undefined;
 }
 
 (async () => {
@@ -37,7 +35,7 @@ declare global {
       backend: {
         loadPath: 'http://127.0.0.1:1337/locales/{{lng}}.json',
         customHeaders: {
-          Authentication: window.deckyAuthToken,
+          Authentication: deckyAuthToken,
         },
         requestOptions: {
           credentials: 'include',
@@ -45,12 +43,12 @@ declare global {
       },
     });
 
-  window.DeckyPluginLoader?.dismountAll();
-  window.DeckyPluginLoader?.deinit();
+  window?.DeckyPluginLoader?.dismountAll();
+  window?.DeckyPluginLoader?.deinit();
   window.DeckyPluginLoader = new PluginLoader();
-  window.DeckyPluginLoader.init();
+  DeckyPluginLoader.init();
   window.importDeckyPlugin = function (name: string, version: string) {
-    window.DeckyPluginLoader?.importPlugin(name, version);
+    DeckyPluginLoader?.importPlugin(name, version);
   };
 })();
 

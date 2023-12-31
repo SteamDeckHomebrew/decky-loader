@@ -95,7 +95,7 @@ const sortOptions = [
   },
 ];
 
-const getList = window.DeckyBackend.callable<
+const getList = DeckyBackend.callable<
   [
     path: string,
     includeFiles?: boolean,

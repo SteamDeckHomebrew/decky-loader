@@ -22,7 +22,7 @@ type installPluginArgs = [
   installType?: InstallType,
 ];
 
-export let installPlugin = window.DeckyBackend.callable<installPluginArgs>('utilities/install_plugin');
+export let installPlugin = DeckyBackend.callable<installPluginArgs>('utilities/install_plugin');
 
 type installPluginsArgs = [
   requests: {
@@ -34,6 +34,6 @@ type installPluginsArgs = [
   }[],
 ];
 
-export let installPlugins = window.DeckyBackend.callable<installPluginsArgs>('utilities/install_plugins');
+export let installPlugins = DeckyBackend.callable<installPluginsArgs>('utilities/install_plugins');
 
-export let uninstallPlugin = window.DeckyBackend.callable<[name: string]>('utilities/uninstall_plugin');
+export let uninstallPlugin = DeckyBackend.callable<[name: string]>('utilities/uninstall_plugin');

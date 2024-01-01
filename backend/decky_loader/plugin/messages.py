@@ -1,8 +1,15 @@
 from typing import Any, TypedDict
+from enum import IntEnum
 from uuid import uuid4
 from asyncio import Event
 
+class SocketMessageType(IntEnum):
+    CALL = 0
+    RESPONSE = 1
+    EVENT = 2
+
 class SocketResponseDict(TypedDict):
+    type: SocketMessageType
     id: str
     success: bool
     res: Any

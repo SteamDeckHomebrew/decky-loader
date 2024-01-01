@@ -1,6 +1,5 @@
 from __future__ import annotations
 from asyncio import AbstractEventLoop, Queue, sleep
-from json.decoder import JSONDecodeError
 from logging import getLogger
 from os import listdir, path
 from pathlib import Path
@@ -9,6 +8,7 @@ from typing import Any, Tuple, Dict
 
 from aiohttp import web
 from os.path import exists
+from attr import dataclass
 from watchdog.events import RegexMatchingEventHandler, DirCreatedEvent, DirModifiedEvent, FileCreatedEvent, FileModifiedEvent # type: ignore
 from watchdog.observers import Observer # type: ignore
 
@@ -22,10 +22,6 @@ from .wsrouter import WSRouter
 
 Plugins = dict[str, PluginWrapper]
 ReloadQueue = Queue[Tuple[str, str, bool | None] | Tuple[str, str]]
-
-#TODO: Remove placeholder method
-async def log_plugin_emitted_message(message: Any):
-    getLogger().debug(f"EMITTED MESSAGE: " + str(message))
 
 class FileChangeHandler(RegexMatchingEventHandler):
     def __init__(self, queue: ReloadQueue, plugin_path: str) -> None:
@@ -70,10 +66,17 @@ class FileChangeHandler(RegexMatchingEventHandler):
         self.logger.debug(f"file modified: {src_path}")
         self.maybe_reload(src_path)
 
+@dataclass
+class PluginEvent:
+    plugin_name: str
+    event: str
+    data: str
+
 class Loader:
     def __init__(self, server_instance: PluginManager, ws: WSRouter, plugin_path: str, loop: AbstractEventLoop, live_reload: bool = False) -> None:
         self.loop = loop
         self.logger = getLogger("Loader")
+        self.ws = ws
         self.plugin_path = plugin_path
         self.logger.info(f"plugin_path: {self.plugin_path}")
         self.plugins: Plugins = {}
@@ -149,8 +152,14 @@ class Loader:
                         self.plugins.pop(plugin.name, None)
             if plugin.passive:
                 self.logger.info(f"Plugin {plugin.name} is passive")
+
+            async def plugin_emitted_event(event: str, data: Any):
+                self.logger.debug(f"PLUGIN EMITTED EVENT: {str(event)} {data}")
+                event_data = PluginEvent(plugin_name=plugin.name, event=event, data=data)
+                await self.ws.emit("plugin_event", event_data)
+
+            self.plugins[plugin.name].set_emitted_event_callback(plugin_emitted_event)
             self.plugins[plugin.name] = plugin.start()
-            self.plugins[plugin.name].set_emitted_message_callback(log_plugin_emitted_message)
             self.logger.info(f"Loaded {plugin.name}")
             if not batch:
                 self.loop.create_task(self.dispatch_plugin(plugin.name, plugin.version))

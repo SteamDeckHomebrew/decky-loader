@@ -8,13 +8,17 @@ from traceback import format_exc
 from asyncio import (get_event_loop, new_event_loop,
                      set_event_loop, sleep)
 
-from .method_call_request import SocketResponseDict
+from backend.decky_loader.plugin.messages import SocketMessageType
+
+from .messages import SocketResponseDict, SocketMessageType
 from ..localplatform.localsocket import LocalSocket
 from ..localplatform.localplatform import setgid, setuid, get_username, get_home_path
 from ..customtypes import UserType
 from .. import helpers
 
-from typing import Any, Dict, List
+from typing import List, TypeVar, Type
+
+DataType = TypeVar("DataType")
 
 class SandboxedPlugin:
     def __init__(self,
@@ -25,7 +29,8 @@ class SandboxedPlugin:
                  plugin_directory: str,
                  plugin_path: str,
                  version: str|None,
-                 author: str) -> None:
+                 author: str,
+                 api_version: int) -> None:
         self.name = name
         self.passive = passive
         self.flags = flags
@@ -34,6 +39,7 @@ class SandboxedPlugin:
         self.plugin_directory = plugin_directory
         self.version = version
         self.author = author
+        self.api_version = api_version
 
         self.log = getLogger("plugin")
 
@@ -79,10 +85,11 @@ class SandboxedPlugin:
                 sysmodules[key.replace("decky_loader.", "")] = sysmodules[key]
             
             from .imports import decky
-            async def emit_message(message: Dict[Any, Any]):
+            async def emit_message(event: str, data: DataType | None = None, data_type: Type[DataType] | None = None) -> None:
                 await self._socket.write_single_line_server(dumps({
-                    "id": "0",
-                    "payload": message
+                    "type": SocketMessageType.EVENT,
+                    "event": event,
+                    "data": data
                 }))
             # copy the docstring over so we don't have to duplicate it
             emit_message.__doc__ = decky.emit_message.__doc__
@@ -97,12 +104,21 @@ class SandboxedPlugin:
             assert spec.loader is not None
             spec.loader.exec_module(module)
             # TODO fix self weirdness once plugin.json versioning is done. need this before WS release!
-            self.Plugin = module.Plugin
+            if self.api_version > 0:
+                self.Plugin = module.Plugin()
+            else:
+                self.Plugin = module.Plugin
 
             if hasattr(self.Plugin, "_migration"):
-                get_event_loop().run_until_complete(self.Plugin._migration(self.Plugin))
+                if self.api_version > 0:
+                    get_event_loop().run_until_complete(self.Plugin._migration())
+                else:
+                    get_event_loop().run_until_complete(self.Plugin._migration(self.Plugin))
             if hasattr(self.Plugin, "_main"):
-                get_event_loop().create_task(self.Plugin._main(self.Plugin))
+                if self.api_version > 0:
+                    get_event_loop().create_task(self.Plugin._main())
+                else:
+                    get_event_loop().create_task(self.Plugin._main(self.Plugin))
             get_event_loop().create_task(socket.setup_server())
             get_event_loop().run_forever()
         except:
@@ -113,7 +129,10 @@ class SandboxedPlugin:
         try:
             self.log.info("Attempting to unload with plugin " + self.name + "'s \"_unload\" function.\n")
             if hasattr(self.Plugin, "_unload"):
-                await self.Plugin._unload(self.Plugin)
+                if self.api_version > 0:
+                    await self.Plugin._unload()
+                else:
+                    await self.Plugin._unload(self.Plugin)
                 self.log.info("Unloaded " + self.name + "\n")
             else:
                 self.log.info("Could not find \"_unload\" in " + self.name + "'s main.py" + "\n")
@@ -121,7 +140,7 @@ class SandboxedPlugin:
             self.log.error("Failed to unload " + self.name + "!\n" + format_exc())
             exit(0)
 
-    async def on_new_message(self, message : str) -> str|None:
+    async def on_new_message(self, message : str) -> str | None:
         data = loads(message)
 
         if "stop" in data:
@@ -133,14 +152,18 @@ class SandboxedPlugin:
             await self._unload()
             raise Exception("Closing message listener")
 
-        d: SocketResponseDict = {"res": None, "success": True, "id": data["id"]}
+        d: SocketResponseDict = {"type": SocketMessageType.RESPONSE, "res": None, "success": True, "id": data["id"]}
         try:
             if data["legacy"]:
+                if self.api_version > 0:
+                    raise Exception("Legacy methods may not be used on api_version > 0")
                 # Legacy kwargs
                 d["res"] = await getattr(self.Plugin, data["method"])(self.Plugin, **data["args"])
             else:
+                if self.api_version < 1 :
+                    raise Exception("api_version 1 or newer is required to call methods with index-based arguments")
                 # New args
-                d["res"] = await getattr(self.Plugin, data["method"])(self.Plugin, *data["args"])
+                d["res"] = await getattr(self.Plugin, data["method"])(*data["args"])
         except Exception as e:
             d["res"] = str(e)
             d["success"] = False

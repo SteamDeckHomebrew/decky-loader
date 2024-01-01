@@ -6,10 +6,12 @@ from multiprocessing import Process
 
 
 from .sandboxed_plugin import SandboxedPlugin
-from .method_call_request import MethodCallRequest
+from .messages import MethodCallRequest, SocketMessageType
 from ..localplatform.localsocket import LocalSocket
 
 from typing import Any, Callable, Coroutine, Dict, List
+
+EmittedEventCallbackType = Callable[[str, Any], Coroutine[Any, Any, Any]]
 
 class PluginWrapper:
     def __init__(self, file: str, plugin_directory: str, plugin_path: str) -> None:
@@ -27,18 +29,19 @@ class PluginWrapper:
         self.name = json["name"]
         self.author = json["author"]
         self.flags = json["flags"]
+        self.api_version = json["api_version"] if "api_version" in json else 0
         
         self.passive = not path.isfile(self.file)
 
         self.log = getLogger("plugin")
 
-        self.sandboxed_plugin = SandboxedPlugin(self.name, self.passive, self.flags, self.file, self.plugin_directory, self.plugin_path, self.version, self.author)
-        #TODO: Maybe make LocalSocket not require on_new_message to make this cleaner
+        self.sandboxed_plugin = SandboxedPlugin(self.name, self.passive, self.flags, self.file, self.plugin_directory, self.plugin_path, self.version, self.author, self.api_version)
+        # TODO: Maybe make LocalSocket not require on_new_message to make this cleaner
         self._socket = LocalSocket(self.sandboxed_plugin.on_new_message)
         self._listener_task: Task[Any]
         self._method_call_requests: Dict[str, MethodCallRequest] = {}
 
-        self.emitted_message_callback: Callable[[Dict[Any, Any]], Coroutine[Any, Any, Any]]
+        self.emitted_event_callback: EmittedEventCallbackType
 
         self.legacy_method_warning = False
 
@@ -51,15 +54,15 @@ class PluginWrapper:
                 line = await self._socket.read_single_line()
                 if line != None:
                     res = loads(line)
-                    if res["id"] == "0":
-                        create_task(self.emitted_message_callback(res["payload"]))
-                    else:
+                    if res["type"] == SocketMessageType.EVENT.value:
+                        create_task(self.emitted_event_callback(res["event"], res["data"]))
+                    elif res["type"] == SocketMessageType.RESPONSE.value:
                         self._method_call_requests.pop(res["id"]).set_result(res)
             except:
                 pass
 
-    def set_emitted_message_callback(self, callback: Callable[[Dict[Any, Any]], Coroutine[Any, Any, Any]]):
-        self.emitted_message_callback = callback
+    def set_emitted_event_callback(self, callback: EmittedEventCallbackType):
+        self.emitted_event_callback = callback
 
     async def execute_legacy_method(self, method_name: str, kwargs: Dict[Any, Any]):
         if not self.legacy_method_warning:
@@ -70,7 +73,7 @@ class PluginWrapper:
         
         request = MethodCallRequest()
         await self._socket.get_socket_connection()
-        await self._socket.write_single_line(dumps({ "method": method_name, "args": kwargs, "id": request.id, "legacy": True }, ensure_ascii=False))
+        await self._socket.write_single_line(dumps({ "type": SocketMessageType.CALL, "method": method_name, "args": kwargs, "id": request.id, "legacy": True }, ensure_ascii=False))
         self._method_call_requests[request.id] = request
 
         return await request.wait_for_result()
@@ -81,7 +84,7 @@ class PluginWrapper:
         
         request = MethodCallRequest()
         await self._socket.get_socket_connection()
-        await self._socket.write_single_line(dumps({ "method": method_name, "args": args, "id": request.id }, ensure_ascii=False))
+        await self._socket.write_single_line(dumps({ "type": SocketMessageType.CALL, "method": method_name, "args": args, "id": request.id }, ensure_ascii=False))
         self._method_call_requests[request.id] = request
 
         return await request.wait_for_result()

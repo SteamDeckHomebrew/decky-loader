@@ -16,7 +16,7 @@ __version__ = '0.1.0'
 
 import logging
 
-from typing import Dict, Any
+from typing import TypeVar, Type
 
 """
 Constants
@@ -177,8 +177,9 @@ logger: logging.Logger
 """
 Event handling
 """
+DataType = TypeVar("DataType")
 # TODO better docstring im lazy
-async def emit_message(message: Dict[Any, Any]) -> None:
+async def emit(event: str, data: DataType | None = None, data_type: Type[DataType] | None = None) -> None:
     """
-    Send a message to the frontend.
+    Send an event to the frontend.
     """

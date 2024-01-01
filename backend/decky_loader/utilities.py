@@ -1,14 +1,13 @@
 from __future__ import annotations
 from os import stat_result
 import uuid
-from json.decoder import JSONDecodeError
 from os.path import splitext
 import re
 from traceback import format_exc
 from stat import FILE_ATTRIBUTE_HIDDEN # type: ignore
 
 from asyncio import StreamReader, StreamWriter, start_server, gather, open_connection
-from aiohttp import ClientSession, web
+from aiohttp import ClientSession
 from typing import TYPE_CHECKING, Callable, Coroutine, Dict, Any, List, TypedDict
 
 from logging import getLogger
@@ -30,7 +29,7 @@ class FilePickerObj(TypedDict):
 class Utilities:
     def __init__(self, context: PluginManager) -> None:
         self.context = context
-        self.util_methods: Dict[str, Callable[..., Coroutine[Any, Any, Any]]] = {
+        self.legacy_util_methods: Dict[str, Callable[..., Coroutine[Any, Any, Any]]] = {
             "ping": self.ping,
             "http_request": self.http_request,
             "install_plugin": self.install_plugin,
@@ -84,7 +83,7 @@ class Utilities:
         self.logger.debug(f"Calling utility {method_name} with legacy kwargs");
         res: Dict[Any, Any] = {}
         try:
-            r = await self.util_methods[method_name](**kwargs)
+            r = await self.legacy_util_methods[method_name](**kwargs)
             res["result"] = r
             res["success"] = True
         except Exception as e:

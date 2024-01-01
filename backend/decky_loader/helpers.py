@@ -60,7 +60,7 @@ def get_loader_version() -> str:
             version_str += f'-pre{v.pre[1]}'
 
         if v.post:
-            version_str += f'-post{v.post}'
+            version_str += f'-dev{v.post}'
 
         return version_str
     except Exception as e:

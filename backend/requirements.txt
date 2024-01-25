@@ -1,4 +1,4 @@
-aiohttp==3.8.5
+aiohttp==3.9.0
 aiohttp-jinja2==1.5.1
 aiohttp_cors==0.7.0
 watchdog==2.1.7

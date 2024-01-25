@@ -56,7 +56,8 @@ class Toaster extends Logger {
       if (
         currentNode?.memoizedProps?.className?.startsWith?.('gamepadtoasts_GamepadToastPlaceholder') ||
         currentNode?.memoizedProps?.className?.startsWith?.('toastmanager_ToastPlaceholder') ||
-        currentNode?.memoizedProps?.className?.startsWith?.('toastmanager_ToastPopup')
+        currentNode?.memoizedProps?.className?.startsWith?.('toastmanager_ToastPopup') ||
+        currentNode?.memoizedProps?.className?.startsWith?.('gamepadtoasts_GamepadToastPopup')
       ) {
         this.log(`Toaster root was found in ${iters} recursion cycles`);
         return currentNode;

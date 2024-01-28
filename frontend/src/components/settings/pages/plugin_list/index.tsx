@@ -33,7 +33,16 @@ async function reinstallPlugin(pluginName: string, currentVersion?: string) {
   }
 }
 
-type PluginTableData = PluginData & { name: string; hidden: boolean; onHide(): void; onShow(): void };
+type PluginTableData = PluginData & {
+  name: string;
+  frozen: boolean;
+  onFreeze(): void;
+  onUnfreeze(): void;
+  hidden: boolean;
+  onHide(): void;
+  onShow(): void;
+  isDeveloper: boolean;
+};
 
 function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }) {
   const { t } = useTranslation();
@@ -43,7 +52,7 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
     return null;
   }
 
-  const { name, update, version, onHide, onShow, hidden } = props.entry.data;
+  const { name, update, version, onHide, onShow, hidden, onFreeze, onUnfreeze, frozen, isDeveloper } = props.entry.data;
 
   const showCtxMenu = (e: MouseEvent | GamepadEvent) => {
     showContextMenu(
@@ -83,6 +92,11 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
           <MenuItem onSelected={onShow}>{t('PluginListIndex.show')}</MenuItem>
         ) : (
           <MenuItem onSelected={onHide}>{t('PluginListIndex.hide')}</MenuItem>
+        )}
+        {frozen ? (
+          <MenuItem onSelected={onUnfreeze}>{t('PluginListIndex.unfreeze')}</MenuItem>
+        ) : (
+          isDeveloper && <MenuItem onSelected={onFreeze}>{t('PluginListIndex.freeze')}</MenuItem>
         )}
       </Menu>,
       e.currentTarget ?? window,
@@ -138,8 +152,8 @@ type PluginData = {
   version?: string;
 };
 
-export default function PluginList() {
-  const { plugins, updates, pluginOrder, setPluginOrder, hiddenPlugins } = useDeckyState();
+export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
+  const { plugins, updates, pluginOrder, setPluginOrder, frozenPlugins, hiddenPlugins } = useDeckyState();
   const [_, setPluginOrderSetting] = useSetting<string[]>(
     'pluginOrder',
     plugins.map((plugin) => plugin.name),
@@ -151,21 +165,27 @@ export default function PluginList() {
   }, []);
 
   const [pluginEntries, setPluginEntries] = useState<ReorderableEntry<PluginTableData>[]>([]);
+  const frozenPluginsService = window.DeckyPluginLoader.frozenPluginsService;
   const hiddenPluginsService = window.DeckyPluginLoader.hiddenPluginsService;
 
   useEffect(() => {
     setPluginEntries(
       plugins.map(({ name, version }) => {
+        const frozen = frozenPlugins.includes(name);
         const hidden = hiddenPlugins.includes(name);
 
         return {
-          label: <PluginListLabel name={name} hidden={hidden} version={version} />,
+          label: <PluginListLabel name={name} frozen={frozen} hidden={hidden} version={version} />,
           position: pluginOrder.indexOf(name),
           data: {
             name,
+            frozen,
             hidden,
+            isDeveloper,
             version,
             update: updates?.get(name),
+            onFreeze: () => frozenPluginsService.update([...frozenPlugins, name]),
+            onUnfreeze: () => frozenPluginsService.update(frozenPlugins.filter((pluginName) => name !== pluginName)),
             onHide: () => hiddenPluginsService.update([...hiddenPlugins, name]),
             onShow: () => hiddenPluginsService.update(hiddenPlugins.filter((pluginName) => name !== pluginName)),
           },

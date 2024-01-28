@@ -15,8 +15,9 @@ const PluginUninstallModal: FC<PluginUninstallModalProps> = ({ name, title, butt
       closeModal={closeModal}
       onOK={async () => {
         await window.DeckyPluginLoader.callServerMethod('uninstall_plugin', { name });
-        // uninstalling a plugin resets the hidden setting for it server-side
+        // uninstalling a plugin resets the frozen and hidden setting for it server-side
         // we invalidate here so if you re-install it, you won't have an out-of-date hidden filter
+        await window.DeckyPluginLoader.frozenPluginsService.invalidate();
         await window.DeckyPluginLoader.hiddenPluginsService.invalidate();
       }}
       strTitle={title}

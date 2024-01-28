@@ -24,7 +24,7 @@ export default function SettingsPage() {
     },
     {
       title: t('SettingsIndex.plugins_title'),
-      content: <PluginList />,
+      content: <PluginList isDeveloper={isDeveloper} />,
       route: '/decky/settings/plugins',
       icon: <FaPlug />,
     },

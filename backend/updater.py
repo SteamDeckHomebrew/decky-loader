@@ -1,12 +1,13 @@
 import os
 import shutil
 import uuid
+import zipfile
 from asyncio import sleep
 from ensurepip import version
 from json.decoder import JSONDecodeError
 from logging import getLogger
 from os import getcwd, path, remove
-from localplatform import chmod, service_restart, ON_LINUX, get_keep_systemd_service
+from localplatform import chmod, service_restart, ON_LINUX, ON_WINDOWS, get_keep_systemd_service
 
 from aiohttp import ClientSession, web
 
@@ -142,7 +143,7 @@ class Updater:
                 pass
             await sleep(60 * 60 * 6) # 6 hours
 
-    async def download_decky_binary(self, download_url, version):
+    async def download_decky_binary(self, download_url, version, is_zip = False):
         download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
         download_temp_filename = download_filename + ".new"
 
@@ -150,6 +151,7 @@ class Updater:
         await tab.open_websocket()
         async with ClientSession() as web:
             logger.debug("Downloading binary")
+            #TODO: To allow fetching to the artifact API, this call need a token with repo scope, see here https://docs.github.com/en/rest/actions/artifacts?apiVersion=2022-11-28#download-an-artifact
             async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
                 total = int(res.headers.get('content-length', 0))
                 with open(path.join(getcwd(), download_temp_filename), "wb") as out:
@@ -163,12 +165,19 @@ class Updater:
                             self.context.loop.create_task(tab.evaluate_js(f"window.DeckyUpdater.updateProgress({new_progress})", False, False, False))
                             progress = new_progress
 
+            if (is_zip):
+                with zipfile.ZipFile(path.join(getcwd(), download_temp_filename), 'r') as zr:
+                    zr.extractall(getcwd())
+                remove(path.join(getcwd(), download_temp_filename))
+
+
             with open(path.join(getcwd(), ".loader.version"), "w", encoding="utf-8") as out:
                 out.write(version)
 
             if ON_LINUX:
-                remove(path.join(getcwd(), download_filename))
-                shutil.move(path.join(getcwd(), download_temp_filename), path.join(getcwd(), download_filename))
+                if not is_zip:
+                    remove(path.join(getcwd(), download_filename))
+                    shutil.move(path.join(getcwd(), download_temp_filename), path.join(getcwd(), download_filename))
                 chmod(path.join(getcwd(), download_filename), 777, False)
 
             logger.info("Updated loader installation.")
@@ -226,15 +235,40 @@ class Updater:
         await service_restart("plugin_loader")
 
     async def get_testing_versions(self):
-        # TODO: make this request data from a web endpoint
-        return [{'id':479,'name':"Add notification settings, which allows muting decky/plugin toast notifications", 'link':"https://github.com/SteamDeckHomebrew/decky-loader/pull/479"},
-      {'id':454,'name':"[Feature] File picker improvements TEST",'link':"https://github.com/SteamDeckHomebrew/decky-loader/pull/454"},
-      {'id':432,'name':"[RFC] Add info/docs page for each plugin",'link':"https://github.com/SteamDeckHomebrew/decky-loader/pull/432"},
-      {'id':365,'name':"Add linting to Python files in CI",'link':"https://github.com/SteamDeckHomebrew/decky-loader/pull/365"},
-      {'id':308,'name':"[DO NOT MERGE] Main menu and overlay patching API",'link':"https://github.com/SteamDeckHomebrew/decky-loader/pull/308"}]
+        res = []
+        async with ClientSession() as web:
+            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/pulls", params={'state':'open'}, ssl=helpers.get_ssl_context()) as res:
+                open_prs = await res.json()
+                for pr in open_prs:
+                    res.id = int(pr['number'])
+                    res.name = pr['title']
+                    res.link = pr['html_url']
+                    res.head_sha = pr['head']['sha']
+        return res
 
-    async def download_testing_version(self, pr_id):
+    async def download_testing_version(self, pr_id, sha_id):
         manager.setSetting('branch', 2)
-        # TODO: make this request data from a web endpoint
-        # self.download_decky_binary(url, f"{pr_id}-PR")
-        await self.do_restart() # remove me once the updating is actually working
+        n_arts = 0
+        #Fetch the number of artifacts on the server itself, divided by the per page number
+        async with ClientSession() as web:
+            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/actions/artifacts", params={'per_page':'1', 'page': i}, ssl=helpers.get_ssl_context()) as res:
+                arts = await res.json()
+                n_arts = int(art['total_count'])/30
+        #Iterate over the API
+        for i in range(1, n_arts+1)
+        async with ClientSession() as web:
+            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/actions/artifacts", params={'per_page':'30', 'page': i}, ssl=helpers.get_ssl_context()) as res:
+                res = handle_response_from_artifact_api(await res.json())
+                if res != '':
+                    self.download_decky_binary(url, res, pr_id, true)
+        #We should never exit out from the inner loop if the call is correct (we should find the associated binary and exit before ending here). Log an error.
+        logger.error("Couldn't find the requested artifact id, this shouldn't happen normally!")
+
+    def handle_response_from_artifact_api(self, json_res):
+        for art in json_res['artifacts']:
+            if art['workflow_run']['head_sha'] == sha_id:
+                if ON_LINUX and not art['name'].endwith('win'):
+                    return art['archive_download_url']
+                else if ON_WINDOWS:
+                    return art['archive_download_url']
+        return ''

@@ -1,7 +1,7 @@
 import { SidebarNavigation } from 'decky-frontend-lib';
 import { lazy } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaCode, FaPlug, FaFlask } from 'react-icons/fa';
+import { FaCode, FaFlask, FaPlug } from 'react-icons/fa';
 
 import { useSetting } from '../../utils/hooks/useSetting';
 import DeckyIcon from '../DeckyIcon';

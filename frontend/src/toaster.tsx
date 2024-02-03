@@ -81,7 +81,10 @@ class Toaster extends Logger {
       instance = findToasterRoot(tree, 0);
     }
     this.node = instance.return;
-    this.rNode = this.node.return;
+    this.rNode = findInReactTree(
+      this.node.return.return,
+      (node) => node?.stateNode && node.type?.InstallErrorReportingStore,
+    );
     let toast: any;
     let renderedToast: ReactNode = null;
     let innerPatched: any;

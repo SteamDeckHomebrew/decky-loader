@@ -38,7 +38,7 @@
             "type": "shell",
             "group": "none",
             "detail": "Check for local runs, create a plugins folder",
-            "command": "rsync -azp --rsh='ssh -p ${config:deckport} ${config:deckkey}' requirements.txt deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader/requirements.txt && ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'python -m ensurepip && python -m pip install --upgrade pip && python -m pip install --upgrade setuptools && python -m pip install -r ${config:deckdir}/homebrew/dev/pluginloader/requirements.txt'",
+            "command": "rsync -azp --rsh='ssh -p ${config:deckport} ${config:deckkey}' backend/requirements.txt deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader/backend/requirements.txt && ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'python -m ensurepip && python -m pip install --upgrade --break-system-packages pip && python -m pip install --break-system-packages --upgrade setuptools && python -m pip install --break-system-packages -r ${config:deckdir}/homebrew/dev/pluginloader/backend/requirements.txt'",
             "problemMatcher": []
         },
         {
@@ -105,7 +105,7 @@
             "detail": "Deploy dev PluginLoader to deck",
             "type": "shell",
             "group": "none",
-            "command": "rsync -azp --delete --rsh='ssh -p ${config:deckport} ${config:deckkey}' --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='requirements.txt' --exclude='backend/__pycache__/' --exclude='.gitignore' . deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader",
+            "command": "rsync -azp --delete --rsh='ssh -p ${config:deckport} ${config:deckkey}' --exclude='.git/' --exclude='.github/' --exclude='.vscode/' --exclude='frontend/' --exclude='dist/' --exclude='contrib/' --exclude='*.log' --exclude='requirements.txt' --exclude='**/__pycache__/' --exclude='.gitignore' . deck@${config:deckip}:${config:deckdir}/homebrew/dev/pluginloader",
             "problemMatcher": []
         },
         // RUN

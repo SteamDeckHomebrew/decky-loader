@@ -26,6 +26,12 @@ class RemoteVer(TypedDict):
     tag_name: str
     prerelease: bool
     assets: List[RemoteVerAsset]
+class TestingVersion(TypedDict):
+    id: int
+    name: str
+    link: str
+    head_sha: str
+
 
 class Updater:
     def __init__(self, context: PluginManager) -> None:
@@ -153,7 +159,7 @@ class Updater:
                 pass
             await sleep(60 * 60 * 6) # 6 hours
 
-    async def download_decky_binary(self, download_url, version, is_zip = False):
+    async def download_decky_binary(self, download_url: str, version: str, is_zip: bool = False):
         download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
         download_temp_filename = download_filename + ".new"
 
@@ -254,37 +260,40 @@ class Updater:
     async def do_restart(self):
         await service_restart("plugin_loader")
 
-    async def get_testing_versions(self):
-        res = []
+    async def get_testing_versions(self) -> List[TestingVersion]:
+        result = []
         async with ClientSession() as web:
             async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/pulls", params={'state':'open'}, ssl=helpers.get_ssl_context()) as res:
                 open_prs = await res.json()
                 for pr in open_prs:
-                    res.id = int(pr['number'])
-                    res.name = pr['title']
-                    res.link = pr['html_url']
-                    res.head_sha = pr['head']['sha']
-        return res
+                    result.append({
+                        "id": int(pr['number']),
+                        "name": pr['title'],
+                        "link":  pr['html_url'],
+                        "head_sha": pr['head']['sha'],
+                    })
+        return result
 
-    async def download_testing_version(self, pr_id, sha_id):
-        manager.setSetting('branch', 2)
+    async def download_testing_version(self, pr_id: str, sha_id: str):
+        #manager.setSetting('branch', 2) #TODO: actually change the branch. maybe don't do it here?
         n_arts = 0
         #Fetch the number of artifacts on the server itself, divided by the per page number
         async with ClientSession() as web:
             async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/actions/artifacts", params={'per_page':'1'}, ssl=helpers.get_ssl_context()) as res:
                 arts = await res.json()
-                n_arts = int(arts['total_count'])/30
+                n_arts = int(int(arts['total_count'])/30)
         #Iterate over the API
         for i in range(1, n_arts+1):
             async with ClientSession() as web:
                 async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/actions/artifacts", params={'per_page':'30', 'page': i}, ssl=helpers.get_ssl_context()) as res:
-                    res = handle_response_from_artifact_api(await res.json(), sha_id)
-                    if res != '':
-                        self.download_decky_binary(url, res, 'PR-' + pr_id, true)
+                    url = self.handle_response_from_artifact_api(await res.json(), sha_id)
+                    if url != '':
+                        await self.download_decky_binary(url, 'PR-' + pr_id, True)
+                        return
         #We should never exit out from the inner loop if the call is correct (we should find the associated binary and exit before ending here). Log an error.
         logger.error("Couldn't find the requested artifact id, this shouldn't happen normally!")
 
-    def handle_response_from_artifact_api(self, json_res, sha_id):
+    def handle_response_from_artifact_api(self, json_res, sha_id: str):
         for art in json_res['artifacts']:
             if art['workflow_run']['head_sha'] == sha_id:
                 if ON_LINUX and not art['name'].endwith('Win'):

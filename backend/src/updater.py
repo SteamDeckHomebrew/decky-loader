@@ -5,7 +5,7 @@ from logging import getLogger
 import os
 from os import getcwd, path, remove
 import shutil
-from typing import Any, List, TYPE_CHECKING, TypedDict
+from typing import List, TYPE_CHECKING, TypedDict
 import zipfile
 
 from aiohttp import ClientSession, web

@@ -124,10 +124,6 @@
             "label_zip": "Встановити плагін з ZIP-файлу",
             "button_zip": "Огляд"
         },
-        "toast_zip": {
-            "title": "Decky",
-            "body": "Помилка встановлення! Підтримуються лише ZIP-файли."
-        },
         "valve_internal": {
             "desc1": "Вмикає внутрішнє розробницьке меню Valve.",
             "label": "Увімкнути Valve Internal",
@@ -143,7 +139,6 @@
             "header": "Участь у Beta"
         },
         "developer_mode": {
-            "desc": "Вмикає розробницькі налаштування Decky.",
             "label": "Розробницький режим"
         },
         "other": {
@@ -156,7 +151,6 @@
     "SettingsIndex": {
         "developer_title": "Розробник",
         "general_title": "Загальне",
-        "navbar_settings": "Налаштування Decky",
         "plugins_title": "Плагіни"
     },
     "Store": {

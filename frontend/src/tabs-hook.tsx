@@ -1,5 +1,5 @@
 // TabsHook for versions after the Desktop merge
-import { Patch, QuickAccessTab, afterPatch, findInReactTree, sleep } from 'decky-frontend-lib';
+import { Patch, QuickAccessTab, afterPatch, findInReactTree, getReactRoot, sleep } from 'decky-frontend-lib';
 
 import { QuickAccessVisibleStateProvider } from './components/QuickAccessVisibleState';
 import Logger from './logger';
@@ -32,11 +32,11 @@ class TabsHook extends Logger {
   }
 
   init() {
-    const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
+    const tree = getReactRoot(document.getElementById('root') as any);
     let qAMRoot: any;
     const findQAMRoot = (currentNode: any, iters: number): any => {
-      if (iters >= 65) {
-        // currently 45
+      if (iters >= 80) {
+        // currently 67
         return null;
       }
       if (

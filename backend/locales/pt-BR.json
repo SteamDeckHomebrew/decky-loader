@@ -14,7 +14,27 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Use esta pasta"
+            "select": "Use esta pasta",
+            "label": "Pasta",
+            "show_more": "Mostrar mais arquivos"
+        },
+        "files": {
+            "show_hidden": "Mostrar Arquivos Ocultos",
+            "all_files": "Todos os arquivos",
+            "file_type": "Formato de arquivo"
+        },
+        "filter": {
+            "created_asce": "Criado (Mais antigo)",
+            "created_desc": "Criado (Mais recente)",
+            "modified_asce": "Alterado (Mais antigo)",
+            "name_asce": "Z-A",
+            "name_desc": "A-Z",
+            "size_asce": "Tamanho (Menor)",
+            "size_desc": "Tamanho (Maior)",
+            "modified_desc": "Alterado (Mais recente)"
+        },
+        "file": {
+            "select": "Selecione este arquivo"
         }
     },
     "PluginListLabel": {
@@ -49,7 +69,7 @@
     },
     "MultiplePluginsInstallModal": {
         "title": {
-            "mixed_one": "Modificar 1 plugin",
+            "mixed_one": "Modificar {{count}} plugin",
             "mixed_many": "Modificar {{count}} plugins",
             "mixed_other": "Modificar {{count}} plugins",
             "update_one": "Atualizar 1 plugin",
@@ -100,7 +120,7 @@
         },
         "decky_update_available": "Atualização para {{tag_name}} disponível!",
         "plugin_error_uninstall": "Um erro aconteceu ao carregar {{name}}, como mostrado acima. Isso normalmente significa que o plugin precisa de uma atualização para a nova versão do SteamUI. Confira se existe uma atualização ou avalie a remoção do plugin nas configurações do Decky, na sessão de plugins.",
-        "plugin_update_one": "Atualizações disponível para 1 plugin!",
+        "plugin_update_one": "Atualização disponível para 1 plugin!",
         "plugin_update_many": "Atualizações disponíveis para {{count}} plugins!",
         "plugin_update_other": "Atualizações disponíveis para {{count}} plugins!"
     },
@@ -130,10 +150,6 @@
             "label_zip": "Instalar Plugin a partir de um arquivo ZIP",
             "label_desc": "URL"
         },
-        "toast_zip": {
-            "title": "Decky",
-            "body": "Falha na instalação! Somente arquivos ZIP são suportados."
-        },
         "valve_internal": {
             "desc1": "Habilita o menu interno de desenvolvedor da Valve.",
             "desc2": "Não toque em nada neste menu, a não ser que você saiba o que está fazendo.",
@@ -146,7 +162,6 @@
             "header": "Sobre"
         },
         "developer_mode": {
-            "desc": "Habilita as configurações de desenvolvedor do Decky.",
             "label": "Modo Deselvolvedor"
         },
         "other": {
@@ -157,12 +172,16 @@
         },
         "beta": {
             "header": "Participação no Beta"
+        },
+        "notifications": {
+            "decky_updates_label": "Atualização do Decky disponível",
+            "header": "Noificações",
+            "plugin_updates_label": "Atualizações de Plugin disponíveis"
         }
     },
     "SettingsIndex": {
         "developer_title": "Desenvolvedor",
         "general_title": "Geral",
-        "navbar_settings": "Configurações do Decky",
         "plugins_title": "Plugins"
     },
     "Store": {
@@ -182,7 +201,7 @@
             "label_def": "Último atualizado (Mais recente)"
         },
         "store_source": {
-            "desc": "Todos os codigo fonte dos plugins estão disponíveis no repositório SteamDeckHomebrew/decky-plugin-database no GitHub.",
+            "desc": "Todos os códigos fonte dos plugins estão disponíveis no repositório SteamDeckHomebrew/decky-plugin-database no GitHub.",
             "label": "Código Fonte"
         },
         "store_tabs": {
@@ -191,7 +210,11 @@
             "title": "Navegar",
             "alph_asce": "Alfabética (Z - A)"
         },
-        "store_testing_cta": "Por favor, considere testar os novos plugins para ajudar o time do Decky Loader!"
+        "store_testing_cta": "Por favor, considere testar os novos plugins para ajudar o time do Decky Loader!",
+        "store_testing_warning": {
+            "desc": "Você pode usar este canal da loja para testar versões avançadas do plugin. Certifique-se de deixar feedback no GitHub para que o plugin possa ser atualizado para todos os usuários.",
+            "label": "Bem-vindo ao Canal de Testes da Loja"
+        }
     },
     "StoreSelect": {
         "custom_store": {
@@ -224,5 +247,21 @@
         "hidden_one": "1 plugin está oculto nesta lista",
         "hidden_many": "{{count}} plugins estão ocultos nesta lista",
         "hidden_other": "{{count}} plugins estão ocultos nesta lista"
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "Voltar"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "O caminho especificado não é válido. Por favor, confira e reinsira corretamente.",
+            "unknown": "Ocorreu um erro desconhecido. O erro completo é: {{raw_error}}",
+            "perm_denied": "Você não tem acesso à este diretório. Por favor, verifiquei se seu usuário (deck no Steam Deck) tem as permissões necessárias para acessar este arquivo/pasta."
+        }
+    },
+    "TitleView": {
+        "decky_store_desc": "Abrir Loja Decky",
+        "settings_desc": "Abrir Definições Decky"
     }
 }

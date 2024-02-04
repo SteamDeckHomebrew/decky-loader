@@ -14,7 +14,27 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Použít tuto složku"
+            "select": "Použít tuto složku",
+            "label": "Složka",
+            "show_more": "Zobrazit více souborů"
+        },
+        "filter": {
+            "created_asce": "Vytvořeno (Nejstarší)",
+            "created_desc": "Vytvořeno (Nejnovější)",
+            "modified_asce": "Upraveno (Nejstarší)",
+            "modified_desc": "Upraveno (Nejnovější)",
+            "name_asce": "Z-A",
+            "name_desc": "A-Z",
+            "size_asce": "Velikost (Nejmenší)",
+            "size_desc": "Velikost (Největší)"
+        },
+        "files": {
+            "show_hidden": "Zobrazit skryté soubory",
+            "all_files": "Všechny soubory",
+            "file_type": "Typ souboru"
+        },
+        "file": {
+            "select": "Vybrat tento soubor"
         }
     },
     "PluginView": {
@@ -54,7 +74,7 @@
     },
     "MultiplePluginsInstallModal": {
         "title": {
-            "mixed_one": "Upravit 1 plugin",
+            "mixed_one": "Upravit {{count}} plugin",
             "mixed_few": "Upravit {{count}} pluginů",
             "mixed_other": "Upravit {{count}} pluginů",
             "reinstall_one": "Přeinstalovat 1 plugin",
@@ -129,10 +149,6 @@
             "label_url": "Instalovat plugin z URL",
             "label_zip": "Instalovat plugin ze ZIP souboru"
         },
-        "toast_zip": {
-            "body": "Instalace selhala! Podporovány jsou pouze soubory ZIP.",
-            "title": "Decky"
-        },
         "valve_internal": {
             "desc1": "Zapíná interní vývojářské menu Valve.",
             "desc2": "Nedotýkejte se ničeho v této nabídce, pokud nevíte, co děláte.",
@@ -154,7 +170,6 @@
             "header": "Účast v betě"
         },
         "developer_mode": {
-            "desc": "Zapíná vývojářské nastavení Decky.",
             "label": "Vývojářský režim"
         },
         "other": {
@@ -162,12 +177,16 @@
         },
         "updates": {
             "header": "Aktualizace"
+        },
+        "notifications": {
+            "decky_updates_label": "Dostupná aktualizace Decky",
+            "header": "Notifikace",
+            "plugin_updates_label": "Dostupná aktualizace pluginu"
         }
     },
     "SettingsIndex": {
         "developer_title": "Vývojář",
         "general_title": "Obecné",
-        "navbar_settings": "Nastavení Decky",
         "plugins_title": "Pluginy"
     },
     "Store": {
@@ -196,7 +215,11 @@
             "alph_desc": "Abecedně (A do Z)",
             "title": "Procházet"
         },
-        "store_testing_cta": "Zvažte prosím testování nových pluginů, pomůžete tím týmu Decky Loader!"
+        "store_testing_cta": "Zvažte prosím testování nových pluginů, pomůžete tím týmu Decky Loader!",
+        "store_testing_warning": {
+            "desc": "Tento kanál obchodu můžete použít k testování nejnovějších verzí pluginů. Nezapomeňte zanechat zpětnou vazbu na GitHubu, aby bylo možné plugin aktualizovat pro všechny uživatele.",
+            "label": "Vítejte na testovacím kanálu obchodu"
+        }
     },
     "StoreSelect": {
         "custom_store": {
@@ -224,5 +247,21 @@
         "decky_updates": "Aktualizace Decky",
         "patch_notes_desc": "Poznámky k verzi",
         "no_patch_notes_desc": "žádné poznámky pro tuto verzi"
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "Zpět"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "Zadaná cesta není platná. Zkontrolujte ji a zadejte znovu správně.",
+            "unknown": "Nastala neznámá chyba. Nezpracovaná chyba je: {{raw_error}}",
+            "perm_denied": "Nemáte přístup k zadanému adresáři. Zkontrolujte, zda jako uživatel (deck na Steam Decku) máte odpovídající oprávnění pro přístup k dané složce/souboru."
+        }
+    },
+    "TitleView": {
+        "settings_desc": "Otevřít nastavení Decky",
+        "decky_store_desc": "Otevřít obchod Decky"
     }
 }

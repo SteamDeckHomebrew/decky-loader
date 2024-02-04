@@ -13,10 +13,6 @@
             "label_url": "Installer le plugin à partir d'un URL",
             "label_zip": "Installer le plugin à partir d'un fichier ZIP"
         },
-        "toast_zip": {
-            "body": "Échec de l'installation! Seuls les fichiers ZIP sont pris en charge.",
-            "title": "Decky"
-        },
         "valve_internal": {
             "desc1": "Active le menu développeur interne de Valve.",
             "desc2": "Ne touchez à rien dans ce menu à moins que vous ne sachiez ce qu'il fait.",
@@ -139,7 +135,6 @@
             "header": "Participation à la Bêta"
         },
         "developer_mode": {
-            "desc": "Active les paramètres de développeur de Decky.",
             "label": "Mode développeur"
         },
         "other": {
@@ -152,7 +147,6 @@
     "SettingsIndex": {
         "developer_title": "Développeur",
         "general_title": "Général",
-        "navbar_settings": "Paramètres de Decky",
         "plugins_title": "Plugins"
     },
     "Store": {

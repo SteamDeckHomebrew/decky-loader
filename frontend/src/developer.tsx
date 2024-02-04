@@ -1,4 +1,4 @@
-import { findModuleChild, sleep } from 'decky-frontend-lib';
+import { sleep } from 'decky-frontend-lib';
 import { FaReact } from 'react-icons/fa';
 
 import Logger from './logger';
@@ -9,32 +9,30 @@ const logger = new Logger('DeveloperMode');
 
 let removeSettingsObserver: () => void = () => {};
 
-export async function setShowValveInternal(show: boolean) {
-  let settingsMod: any;
-  while (!settingsMod) {
-    settingsMod = findModuleChild((m) => {
-      if (typeof m !== 'object') return undefined;
-      for (let prop in m) {
-        if (typeof m[prop]?.settings?.bIsValveEmail !== 'undefined') return m[prop];
-      }
-    });
-    if (!settingsMod) {
-      logger.debug('[ValveInternal] waiting for settingsMod');
-      await sleep(1000);
-    }
+declare global {
+  interface Window {
+    settingsStore: any;
   }
+}
 
+export async function setShowValveInternal(show: boolean) {
   if (show) {
-    removeSettingsObserver = settingsMod[
-      Object.getOwnPropertySymbols(settingsMod).find((x) => x.toString() == 'Symbol(mobx administration)') as any
-    ].observe((e: any) => {
+    const mobx =
+      window.settingsStore[
+        Object.getOwnPropertySymbols(window.settingsStore).find(
+          (x) => x.toString() == 'Symbol(mobx administration)',
+        ) as any
+      ];
+
+    removeSettingsObserver = (mobx.observe_ || mobx.observe).call(mobx, (e: any) => {
       e.newValue.bIsValveEmail = true;
     });
-    settingsMod.m_Settings.bIsValveEmail = true;
+
+    window.settingsStore.m_Settings.bIsValveEmail = true;
     logger.log('Enabled Valve Internal menu');
   } else {
     removeSettingsObserver();
-    settingsMod.m_Settings.bIsValveEmail = false;
+    window.settingsStore.m_Settings.bIsValveEmail = false;
     logger.log('Disabled Valve Internal menu');
   }
 }

@@ -92,10 +92,6 @@
             "button_install": "Installieren",
             "label_url": "Installiere Erweiterung via URL"
         },
-        "toast_zip": {
-            "body": "Installation fehlgeschlagen! Nur ZIP Datein werden unterstützt.",
-            "title": "Decky"
-        },
         "valve_internal": {
             "desc2": "Fasse in diesem Menü nichts an, es sei denn, du weißt was du tust.",
             "label": "Aktiviere Valve-internes Menü",
@@ -111,7 +107,6 @@
             "header": "Beta Teilnahme"
         },
         "developer_mode": {
-            "desc": "Aktiviere Deckys Entwickleroptionen.",
             "label": "Entwickleroptionen"
         },
         "other": {
@@ -124,8 +119,7 @@
     "SettingsIndex": {
         "developer_title": "Entwickler",
         "general_title": "Allgemein",
-        "plugins_title": "Erweiterungen",
-        "navbar_settings": "Decky Einstellungen"
+        "plugins_title": "Erweiterungen"
     },
     "Store": {
         "store_contrib": {

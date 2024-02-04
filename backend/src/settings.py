@@ -1,13 +1,14 @@
 from json import dump, load
 from os import mkdir, path, listdir, rename
-from localplatform import chown, folder_owner, get_chown_plugin_path
-from customtypes import UserType
+from typing import Any, Dict
+from .localplatform import chown, folder_owner, get_chown_plugin_path
+from .customtypes import UserType
 
-from helpers import get_homebrew_path
+from .helpers import get_homebrew_path
 
 
 class SettingsManager:
-    def __init__(self, name, settings_directory = None) -> None:
+    def __init__(self, name: str, settings_directory: str | None = None) -> None:
         wrong_dir = get_homebrew_path()
         if settings_directory == None:
             settings_directory = path.join(wrong_dir, "settings")
@@ -31,11 +32,11 @@ class SettingsManager:
         if folder_owner(settings_directory) != expected_user:
             chown(settings_directory, expected_user, False)
 
-        self.settings = {}
+        self.settings: Dict[str, Any] = {}
 
         try:
             open(self.path, "x", encoding="utf-8")
-        except FileExistsError as e:
+        except FileExistsError as _:
             self.read()
             pass
 
@@ -51,9 +52,9 @@ class SettingsManager:
         with open(self.path, "w+", encoding="utf-8") as file:
             dump(self.settings, file, indent=4, ensure_ascii=False)
 
-    def getSetting(self, key, default=None):
+    def getSetting(self, key: str, default: Any = None) -> Any:
         return self.settings.get(key, default)
 
-    def setSetting(self, key, value):
+    def setSetting(self, key: str, value: Any) -> Any:
         self.settings[key] = value
         self.commit()

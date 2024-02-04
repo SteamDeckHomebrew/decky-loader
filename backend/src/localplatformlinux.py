@@ -1,6 +1,6 @@
 import os, pwd, grp, sys, logging
 from subprocess import call, run, DEVNULL, PIPE, STDOUT
-from customtypes import UserType
+from .customtypes import UserType
 
 logger = logging.getLogger("localplatform")
 
@@ -29,20 +29,16 @@ def _get_effective_user_group() -> str:
     return grp.getgrgid(_get_effective_user_group_id()).gr_name
 
 # Get the user owner of the given file path.
-def _get_user_owner(file_path) -> str:
+def _get_user_owner(file_path: str) -> str:
     return pwd.getpwuid(os.stat(file_path).st_uid).pw_name
 
-# Get the user group of the given file path.
-def _get_user_group(file_path) -> str:
-    return grp.getgrgid(os.stat(file_path).st_gid).gr_name
+# Get the user group of the given file path, or the user group hosting the plugin loader
+def _get_user_group(file_path: str | None = None) -> str:
+    return grp.getgrgid(os.stat(file_path).st_gid if file_path is not None else _get_user_group_id()).gr_name
 
 # Get the group id of the user hosting the plugin loader
 def _get_user_group_id() -> int:
     return pwd.getpwuid(_get_user_id()).pw_gid
-
-# Get the group of the user hosting the plugin loader
-def _get_user_group() -> str:
-    return grp.getgrgid(_get_user_group_id()).gr_name
 
 def chown(path : str,  user : UserType = UserType.HOST_USER, recursive : bool = True) -> bool:
     user_str = ""
@@ -60,8 +56,24 @@ def chown(path : str,  user : UserType = UserType.HOST_USER, recursive : bool = 
     return result == 0
 
 def chmod(path : str, permissions : int, recursive : bool = True) -> bool:
-    result = call(["chmod", "-R", str(permissions), path] if recursive else ["chmod", str(permissions), path])
-    return result == 0
+    if _get_effective_user_id() != 0:
+        return True
+
+    try:
+        octal_permissions = int(str(permissions), 8)
+
+        if recursive:
+            for root, dirs, files in os.walk(path):  
+                for d in dirs:  
+                    os.chmod(os.path.join(root, d), octal_permissions)
+                for d in files:
+                    os.chmod(os.path.join(root, d), octal_permissions)
+
+        os.chmod(path, octal_permissions)
+    except:
+        return False
+
+    return True
 
 def folder_owner(path : str) -> UserType|None:
     user_owner = _get_user_owner(path)
@@ -127,11 +139,19 @@ async def service_restart(service_name : str) -> bool:
     return res.returncode == 0
 
 async def service_stop(service_name : str) -> bool:
+    if not await service_active(service_name):
+        # Service isn't running. pretend we stopped it
+        return True
+
     cmd = ["systemctl", "stop", service_name]
     res = run(cmd, stdout=PIPE, stderr=STDOUT)
     return res.returncode == 0
 
 async def service_start(service_name : str) -> bool:
+    if await service_active(service_name):
+        # Service is running. pretend we started it
+        return True
+
     cmd = ["systemctl", "start", service_name]
     res = run(cmd, stdout=PIPE, stderr=STDOUT)
     return res.returncode == 0
@@ -144,7 +164,7 @@ def get_privileged_path() -> str:
 
     return path
 
-def _parent_dir(path : str) -> str:
+def _parent_dir(path : str | None) -> str | None:
     if path == None:
         return None
 
@@ -164,7 +184,7 @@ def get_unprivileged_path() -> str:
         # Expected path of loader binary is /home/deck/homebrew/service/PluginLoader
         path = _parent_dir(_parent_dir(os.path.realpath(sys.argv[0])))
 
-        if not os.path.exists(path):
+        if path != None and not os.path.exists(path):
             path = None
 
     if path == None:

@@ -1,4 +1,13 @@
-import { Module, Patch, ToastData, afterPatch, findInReactTree, findModuleChild, sleep } from 'decky-frontend-lib';
+import {
+  Module,
+  Patch,
+  ToastData,
+  afterPatch,
+  findInReactTree,
+  findModuleChild,
+  getReactRoot,
+  sleep,
+} from 'decky-frontend-lib';
 import { ReactNode } from 'react';
 
 import Toast from './components/Toast';
@@ -38,16 +47,17 @@ class Toaster extends Logger {
     //   </DeckyToasterStateContextProvider>
     // ));
     let instance: any;
-    const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
+    const tree = getReactRoot(document.getElementById('root') as any);
     const findToasterRoot = (currentNode: any, iters: number): any => {
-      if (iters >= 65) {
-        // currently 65
+      if (iters >= 80) {
+        // currently 66
         return null;
       }
       if (
         currentNode?.memoizedProps?.className?.startsWith?.('gamepadtoasts_GamepadToastPlaceholder') ||
         currentNode?.memoizedProps?.className?.startsWith?.('toastmanager_ToastPlaceholder') ||
-        currentNode?.memoizedProps?.className?.startsWith?.('toastmanager_ToastPopup')
+        currentNode?.memoizedProps?.className?.startsWith?.('toastmanager_ToastPopup') ||
+        currentNode?.memoizedProps?.className?.startsWith?.('gamepadtoasts_GamepadToastPopup')
       ) {
         this.log(`Toaster root was found in ${iters} recursion cycles`);
         return currentNode;
@@ -71,7 +81,10 @@ class Toaster extends Logger {
       instance = findToasterRoot(tree, 0);
     }
     this.node = instance.return;
-    this.rNode = this.node.return;
+    this.rNode = findInReactTree(
+      this.node.return.return,
+      (node) => node?.stateNode && node.type?.InstallErrorReportingStore,
+    );
     let toast: any;
     let renderedToast: ReactNode = null;
     let innerPatched: any;

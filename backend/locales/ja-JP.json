@@ -1,0 +1,253 @@
+{
+    "BranchSelect": {
+        "update_channel": {
+            "stable": "安定",
+            "testing": "テスト",
+            "label": "アップデートチャンネル",
+            "prerelease": "プレリリース"
+        }
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "戻る"
+        }
+    },
+    "FilePickerIndex": {
+        "file": {
+            "select": "ファイルを選択"
+        },
+        "files": {
+            "all_files": "すべてのファイル",
+            "file_type": "ファイルタイプ",
+            "show_hidden": "非表示ファイルを表示する"
+        },
+        "filter": {
+            "name_asce": "Z-A",
+            "name_desc": "A-Z",
+            "size_asce": "サイズ(小さい順)",
+            "size_desc": "サイズ(大きい順)",
+            "created_asce": "作成日(古い順)",
+            "created_desc": "作成日(新しい順)",
+            "modified_asce": "更新日(古い順)",
+            "modified_desc": "更新日(新しい順)"
+        },
+        "folder": {
+            "label": "フォルダ",
+            "select": "このフォルダを使用",
+            "show_more": "その他のファイルを表示"
+        }
+    },
+    "MultiplePluginsInstallModal": {
+        "description": {
+            "install": "インストール {{name}} {{version}}",
+            "reinstall": "再インストール {{name}} {{version}}",
+            "update": "アップデート {{name}} {{version}}"
+        },
+        "ok_button": {
+            "idle": "確認",
+            "loading": "作業中"
+        },
+        "title": {
+            "install_other": "{{count}} 個のプラグインをインストール",
+            "mixed_other": "{{count}} 個のプラグインを修正",
+            "update_other": "{{count}} 個のプラグインをアップデート",
+            "reinstall_other": "{{count}} 個のプラグインを再インストール"
+        },
+        "confirm": "以下の変更を加えてもよろしいですか?"
+    },
+    "Developer": {
+        "enabling": "React DevToolsを有効",
+        "disabling": "React DevToolsを無効",
+        "5secreload": "5秒以内に再読み込みされます"
+    },
+    "PluginInstallModal": {
+        "install": {
+            "button_idle": "インストール",
+            "title": "{{artifact}} をインストール",
+            "button_processing": "インストール中",
+            "desc": "{{artifact}} {{version}} をインストールしてもよろしいですか？"
+        },
+        "no_hash": "このプラグインにはハッシュがありません。ご自身の責任でインストールしてください。",
+        "reinstall": {
+            "button_idle": "再インストール",
+            "button_processing": "再インストール中",
+            "desc": "{{artifact}} {{version}} を再インストールしてもよろしいですか?",
+            "title": "{{artifact}} を再インストール"
+        },
+        "update": {
+            "button_idle": "アップデート",
+            "title": "{{artifact}} をアップデート",
+            "desc": "{{artifact}} {{version}} をアップデートしてもよろしいですか？",
+            "button_processing": "アップデート中"
+        }
+    },
+    "PluginListIndex": {
+        "hide": "クイックアクセス: 非表示",
+        "no_plugin": "プラグインがインストールされていません!",
+        "reinstall": "再インストール",
+        "reload": "再読み込み",
+        "uninstall": "アンインストール",
+        "plugin_actions": "プラグインアクション",
+        "update_all_other": "{{count}} 個のプラグインをアップデート",
+        "show": "クイックアクセス: 表示",
+        "update_to": "{{name}} を更新"
+    },
+    "PluginListLabel": {
+        "hidden": "クイックアクセスメニューから非表示にします"
+    },
+    "PluginLoader": {
+        "error": "エラー",
+        "plugin_load_error": {
+            "message": "プラグイン {{name}} の読み込みエラー",
+            "toast": "{{name}} の読み込みエラー"
+        },
+        "plugin_uninstall": {
+            "button": "アンインストール",
+            "desc": "{{name}} をアンインストールしてもよろしいですか?",
+            "title": "{{name}} をアンインストール"
+        },
+        "decky_title": "Decky",
+        "decky_update_available": "{{tag_name}} のアップデートが利用可能です!",
+        "plugin_update_other": "{{count}} 個のプラグインのアップデートが利用可能です!",
+        "plugin_error_uninstall": "{{name}} プラグインを読み込む際に上記のような例外が発生しました。 これは通常、SteamUIの最新バージョンに合ったプラグインのアップデートが必要な場合に発生します。Decky設定のプラグインセクションでアップデートがあるかどうかを確認するか、アンインストールをお試しください。"
+    },
+    "SettingsDeveloperIndex": {
+        "cef_console": {
+            "button": "コンソールを開く",
+            "label": "CEFコンソール",
+            "desc": "CEFコンソールを開きます。デバッグ目的でのみ使用してください。これらの項目は危険な可能性があるので、プラグイン開発者であるか、開発者のガイドに従う場合のみ使用する必要があります。"
+        },
+        "react_devtools": {
+            "ip_label": "IP",
+            "label": "React DevTools を有効化",
+            "desc": "React DevToolsを実行しているコンピューターへの接続を有効にします。この設定を変更すると、Steam が再ロードされます。有効にする前にIPアドレスを設定してください。"
+        },
+        "third_party_plugins": {
+            "button_install": "インストール",
+            "button_zip": "ブラウズ",
+            "header": "サードパーティプラグイン",
+            "label_desc": "URL",
+            "label_url": "URLからプラグインをインストール",
+            "label_zip": "ZIPファイルからプラグインをインストール"
+        },
+        "valve_internal": {
+            "desc1": "Valveの内部開発者メニューを有効にします。",
+            "desc2": "このメニューの機能が分からない場合、このメニューには触れないでください。",
+            "label": "Valve Internalを有効"
+        },
+        "header": "その他"
+    },
+    "PluginView": {
+        "hidden_other": "{{count}} 個のプラグインがこのリストから非表示になります"
+    },
+    "SettingsGeneralIndex": {
+        "about": {
+            "decky_version": "Deckyバージョン",
+            "header": "情報"
+        },
+        "developer_mode": {
+            "label": "開発者モード"
+        },
+        "notifications": {
+            "header": "通知",
+            "plugin_updates_label": "プラグインのアップデートが利用可能な場合に通知",
+            "decky_updates_label": "Deckyのアップデートが利用可能な場合に通知"
+        },
+        "beta": {
+            "header": "ベータ版への参加"
+        },
+        "other": {
+            "header": "その他"
+        },
+        "updates": {
+            "header": "アップデート"
+        }
+    },
+    "SettingsIndex": {
+        "developer_title": "開発者",
+        "plugins_title": "プラグイン",
+        "general_title": "一般"
+    },
+    "Store": {
+        "store_filter": {
+            "label": "フィルター",
+            "label_def": "すべて"
+        },
+        "store_search": {
+            "label": "検索"
+        },
+        "store_sort": {
+            "label": "並べ替え",
+            "label_def": "直近のアップデート(新しい順)"
+        },
+        "store_source": {
+            "desc": "すべてのプラグインのソース コードは、GitHubのSteamDeckHomebrew/decky-plugin-databaseリポジトリで入手できます。",
+            "label": "ソースコード"
+        },
+        "store_tabs": {
+            "alph_asce": "アルファベット(Z to A)",
+            "alph_desc": "アルファベット(A to Z)",
+            "title": "閲覧",
+            "about": "概要"
+        },
+        "store_testing_warning": {
+            "label": "テストストア チャンネルへようこそ",
+            "desc": "このストアチャンネルを使用して、最先端のプラグイン バージョンをテストできます。 すべてのユーザーがプラグインを更新できるように、必ずGitHubにフィードバックを残してください。"
+        },
+        "store_contrib": {
+            "desc": "Decky Plugin Storeに貢献したい場合は、GitHubのSteamDeckHomebrew/decky-plugin-templateリポジトリを確認してください。 開発と配布に関する情報は README で入手できます。",
+            "label": "貢献"
+        },
+        "store_testing_cta": "Decky Loaderチームを支援するために、新しいプラグインのテストを検討してください!"
+    },
+    "StoreSelect": {
+        "custom_store": {
+            "label": "カスタムストア",
+            "url_label": "URL"
+        },
+        "store_channel": {
+            "custom": "カスタム",
+            "default": "デフォルト",
+            "label": "ストアチャンネル",
+            "testing": "テスト"
+        }
+    },
+    "TitleView": {
+        "decky_store_desc": "Deckyストアを開く",
+        "settings_desc": "Decky設定を開く"
+    },
+    "Updater": {
+        "decky_updates": "Deckyアップデート",
+        "no_patch_notes_desc": "このバージョンのパッチノートはありません",
+        "patch_notes_desc": "パッチノート",
+        "updates": {
+            "check_button": "アップデートを確認",
+            "checking": "確認中",
+            "cur_version": "現在のバージョン: {{ver}}",
+            "install_button": "アップデートをインストール",
+            "label": "アップデート",
+            "lat_version": "アップデート: {{ver}} を実行中",
+            "reloading": "再読み込み中",
+            "updating": "アップデート中"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "指定されたパスは無効です。 内容をご確認の上、正しく入力し直してください。",
+            "unknown": "不明なエラーが発生しました。 エラー内容は次のとおりです: {{raw_error}}",
+            "perm_denied": "選択したパスへのアクセス権がありません。選択したフォルダ/ファイルのアクセス権がユーザー(Steam Deckのdeckユーザー)に合わせて正しく設定されていることを確認してください。"
+        }
+    },
+    "PluginCard": {
+        "plugin_version_label": "プラグインバージョン",
+        "plugin_no_desc": "説明はありません。",
+        "plugin_full_access": "このプラグインはSteam Deckの全てのアクセス権を持ちます。",
+        "plugin_install": "インストール"
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "label": "リモート CEF デバッグを許可する",
+            "desc": "ネットワーク上のすべてのユーザーにCEFデバッガへの非認証アクセスを許可します"
+        }
+    }
+}

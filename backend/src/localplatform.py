@@ -4,11 +4,11 @@ ON_WINDOWS = platform.system() == "Windows"
 ON_LINUX = not ON_WINDOWS
 
 if ON_WINDOWS:
-    from localplatformwin import *
-    import localplatformwin as localplatform
+    from .localplatformwin import *
+    from . import localplatformwin as localplatform
 else:
-    from localplatformlinux import *
-    import localplatformlinux as localplatform
+    from .localplatformlinux import *
+    from . import localplatformlinux as localplatform
 
 def get_privileged_path() -> str:
     '''Get path accessible by elevated user. Holds plugins, decky loader and decky loader configs'''
@@ -41,3 +41,12 @@ def get_log_level() -> int:
     return {"CRITICAL": 50, "ERROR": 40, "WARNING": 30, "INFO": 20, "DEBUG": 10}[
         os.getenv("LOG_LEVEL", "INFO")
     ]
+
+def get_selinux() -> bool:
+    if ON_LINUX:
+        from subprocess import check_output
+        try:
+          if (check_output("getenforce").decode("ascii").strip("\n") == "Enforcing"): return True
+        except FileNotFoundError:
+          pass
+    return False

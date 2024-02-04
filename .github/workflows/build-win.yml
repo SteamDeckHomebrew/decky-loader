@@ -1,0 +1,59 @@
+name: Builder Win
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  build-win:
+    name: Build PluginLoader for Win
+    runs-on: windows-2022
+
+    steps:
+    - name: Checkout 🧰
+      uses: actions/checkout@v3
+
+    - name: Set up NodeJS 18 💎
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+      
+    - name: Set up Python 3.11.4 🐍
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11.4"
+        
+    - name: Install Python dependencies ⬇️
+      working-directory: ./backend
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller==5.13.0
+        pip install -r requirements.txt
+
+    - name: Install JS dependencies ⬇️
+      working-directory: ./frontend
+      run: |
+        npm i -g pnpm
+        pnpm i --frozen-lockfile
+
+    - name: Build JS Frontend 🛠️
+      working-directory: ./frontend
+      run: pnpm run build
+
+    - name: Build Python Backend 🛠️
+      run: pyinstaller --noconfirm --onefile --name "PluginLoader" --add-data "./backend/static;/static" --add-data "./backend/locales;/locales" --add-data "./backend/src/legacy;/src/legacy" --add-data "./plugin;/plugin" --hidden-import=logging.handlers --hidden-import=sqlite3 ./backend/main.py
+
+    - name: Build Python Backend (noconsole) 🛠️
+      run: pyinstaller --noconfirm --noconsole --onefile --name "PluginLoader_noconsole" --add-data "./backend/static;/static" --add-data "./backend/locales;/locales" --add-data "./backend/src/legacy;/src/legacy" --add-data "./plugin;/plugin" --hidden-import=logging.handlers --hidden-import=sqlite3 ./backend/main.py
+        
+    - name: Upload package artifact ⬆️
+      uses: actions/upload-artifact@v3
+      with:
+        name: PluginLoader Win
+        path: |
+          ./dist/PluginLoader.exe
+          ./dist/PluginLoader_noconsole.exe
+    

@@ -1,21 +1,29 @@
 from __future__ import annotations
-import os
-import shutil
-import zipfile
 from asyncio import sleep
 from json.decoder import JSONDecodeError
 from logging import getLogger
+import os
 from os import getcwd, path, remove
-from typing import TYPE_CHECKING, List, TypedDict, Any
-if TYPE_CHECKING:
-    from .main import PluginManager
-from .localplatform import chmod, service_restart, ON_LINUX, ON_WINDOWS, get_keep_systemd_service, get_selinux
+import shutil
+from typing import Any, List, TYPE_CHECKING, TypedDict
+import zipfile
 
 from aiohttp import ClientSession, web
 
 from . import helpers
 from .injector import get_gamepadui_tab
+from .localplatform import (
+    ON_LINUX,
+    ON_WINDOWS,
+    chmod,
+    get_keep_systemd_service,
+    get_selinux,
+    service_restart,
+)
 from .settings import SettingsManager
+if TYPE_CHECKING:
+    from .main import PluginManager
+
 
 logger = getLogger("Updater")
 
@@ -263,7 +271,8 @@ class Updater:
     async def get_testing_versions(self) -> List[TestingVersion]:
         result: List[TestingVersion] = []
         async with ClientSession() as web:
-            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/pulls", params={'state':'open'}, ssl=helpers.get_ssl_context()) as res:
+            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/pulls", 
+                    headers={'X-GitHub-Api-Version': '2022-11-28'}, params={'state':'open'}, ssl=helpers.get_ssl_context()) as res:
                 open_prs = await res.json()
                 for pr in open_prs:
                     result.append({
@@ -276,28 +285,29 @@ class Updater:
 
     async def download_testing_version(self, pr_id: str, sha_id: str):
         #manager.setSetting('branch', 2) #TODO: actually change the branch. maybe don't do it here?
-        n_arts = 0
-        #Fetch the number of artifacts on the server itself, divided by the per page number
+        down_id = ''
+        #Get all the associated workflow run for the given sha_id code hash
         async with ClientSession() as web:
-            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/actions/artifacts", params={'per_page':'1'}, ssl=helpers.get_ssl_context()) as res:
-                arts = await res.json()
-                n_arts = int(int(arts['total_count'])/30)
-        #Iterate over the API
-        for i in range(1, n_arts+1):
+            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/actions/runs", 
+                    headers={'X-GitHub-Api-Version': '2022-11-28'}, params={'event':'pull_request', 'head_sha': sha_id}, ssl=helpers.get_ssl_context()) as res:
+                works = await res.json()
+        #Iterate over the workflow_run to get the two builds if they exists
+        for work in works['workflow_run']:
+            if ON_WINDOWS and work['name'] == 'Builder Win':
+                down_id=work['id']
+                break
+            elif ON_LINUX and work['name'] == 'Builder':
+                down_id=work['id']
+                break
+        if down_id is not '':
             async with ClientSession() as web:
-                async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/actions/artifacts", params={'per_page':'30', 'page': i}, ssl=helpers.get_ssl_context()) as res:
-                    url = self.handle_response_from_artifact_api(await res.json(), sha_id)
-                    if url != '':
-                        await self.download_decky_binary(url, 'PR-' + pr_id, True)
-                        return
-        #We should never exit out from the inner loop if the call is correct (we should find the associated binary and exit before ending here). Log an error.
-        logger.error("Couldn't find the requested artifact id, this shouldn't happen normally!")
-
-    def handle_response_from_artifact_api(self, json_res: dict[str, Any], sha_id: str) -> str:
-        for art in json_res['artifacts']:
-            if art['workflow_run']['head_sha'] == sha_id:
-                if ON_LINUX and not art['name'].endwith('Win'):
-                    return art['archive_download_url']
-                elif ON_WINDOWS:
-                    return art['archive_download_url']
-        return ''
+                async with web.request("GET", f"https://api.github.com/repos/SteamDeckHomebrew/decky-loader/actions/runs/{down_id}/artifacts",
+                        headers={'X-GitHub-Api-Version': '2022-11-28'}, ssl=helpers.get_ssl_context()) as res:
+                    jresp = await res.json()
+                    #If the request found at least one artifact to download...
+                    if int(jresp['total_count']) is not 0:
+                        down_link = jresp['artifacts']['archive_download_url']
+                        #Then fetch it and restart itself
+                        await self.download_decky_binary(down_link, 'PR-' + pr_id, True)
+        #TODO: If I ended here either the API is rate limiting or there is no artifact for that specific head_sha yet, show an UI warning here.
+        logger.debug("TODO: Show warning to the user!")

@@ -22,7 +22,6 @@ import WithSuspense from '../../../WithSuspense';
 
 const MarkdownRenderer = lazy(() => import('../../../Markdown'));
 
-
 function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | null; closeModal?: () => {} }) {
   const SP = findSP();
   const { t } = useTranslation();

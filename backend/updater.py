@@ -269,6 +269,6 @@ class Updater:
             if art['workflow_run']['head_sha'] == sha_id:
                 if ON_LINUX and not art['name'].endwith('Win'):
                     return art['archive_download_url']
-                else if ON_WINDOWS:
+                elif ON_WINDOWS:
                     return art['archive_download_url']
         return ''

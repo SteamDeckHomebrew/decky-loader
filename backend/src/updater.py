@@ -175,7 +175,6 @@ class Updater:
         await tab.open_websocket()
         async with ClientSession() as web:
             logger.debug("Downloading binary")
-            #TODO: To allow fetching to the artifact API, this call need a token with repo scope, see here https://docs.github.com/en/rest/actions/artifacts?apiVersion=2022-11-28#download-an-artifact
             async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
                 total = int(res.headers.get('content-length', 0))
                 with open(path.join(getcwd(), download_temp_filename), "wb") as out:
@@ -306,7 +305,7 @@ class Updater:
                     jresp = await res.json()
                     #If the request found at least one artifact to download...
                     if int(jresp['total_count']) is not 0:
-                        down_link = jresp['artifacts']['archive_download_url']
+                        down_link = f"https://nightly.link/SteamDeckHomebrew/decky-loader/actions/artifacts/${jresp['artifacts']['id']}.zip" 
                         #Then fetch it and restart itself
                         await self.download_decky_binary(down_link, 'PR-' + pr_id, True)
         #TODO: If I ended here either the API is rate limiting or there is no artifact for that specific head_sha yet, show an UI warning here.

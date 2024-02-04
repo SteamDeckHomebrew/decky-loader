@@ -16,11 +16,10 @@ import { useTranslation } from 'react-i18next';
 import { FaExclamation } from 'react-icons/fa';
 
 import { VerInfo, callUpdaterMethod, finishUpdate } from '../../../../updater';
+import { useSetting } from '../../../../utils/hooks/useSetting';
 import { useDeckyState } from '../../../DeckyState';
 import InlinePatchNotes from '../../../patchnotes/InlinePatchNotes';
 import WithSuspense from '../../../WithSuspense';
-
-import { useSetting } from '../../../../utils/hooks/useSetting';
 
 const MarkdownRenderer = lazy(() => import('../../../Markdown'));
 
@@ -144,8 +143,8 @@ export default function UpdaterSettings() {
             {checkingForUpdates
               ? t('Updater.updates.checking')
               : !versionInfo?.remote || versionInfo?.remote?.tag_name == versionInfo?.current
-              ? t('Updater.updates.check_button')
-              : t('Updater.updates.install_button')}
+                ? t('Updater.updates.check_button')
+                : t('Updater.updates.install_button')}
           </DialogButton>
         ) : (
           <ProgressBarWithInfo

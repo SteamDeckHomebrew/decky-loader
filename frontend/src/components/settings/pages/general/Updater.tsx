@@ -16,23 +16,16 @@ import { useTranslation } from 'react-i18next';
 import { FaExclamation } from 'react-icons/fa';
 
 import { VerInfo, callUpdaterMethod, finishUpdate } from '../../../../updater';
-import { useSetting } from '../../../../utils/hooks/useSetting';
 import { useDeckyState } from '../../../DeckyState';
 import InlinePatchNotes from '../../../patchnotes/InlinePatchNotes';
 import WithSuspense from '../../../WithSuspense';
 
 const MarkdownRenderer = lazy(() => import('../../../Markdown'));
 
-enum UpdateBranch {
-  Stable,
-  Prerelease,
-  Testing,
-}
 
 function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | null; closeModal?: () => {} }) {
   const SP = findSP();
   const { t } = useTranslation();
-  const [selectedBranch, _] = useSetting<UpdateBranch>('branch', UpdateBranch.Stable);
   return (
     <Focusable onCancelButton={closeModal}>
       <FocusRing>

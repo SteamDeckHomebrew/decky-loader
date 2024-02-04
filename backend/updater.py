@@ -258,13 +258,13 @@ class Updater:
         for i in range(1, n_arts+1):
             async with ClientSession() as web:
                 async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/actions/artifacts", params={'per_page':'30', 'page': i}, ssl=helpers.get_ssl_context()) as res:
-                    res = handle_response_from_artifact_api(await res.json())
+                    res = handle_response_from_artifact_api(await res.json(), sha_id)
                     if res != '':
                         self.download_decky_binary(url, res, pr_id, true)
         #We should never exit out from the inner loop if the call is correct (we should find the associated binary and exit before ending here). Log an error.
         logger.error("Couldn't find the requested artifact id, this shouldn't happen normally!")
 
-    def handle_response_from_artifact_api(self, json_res):
+    def handle_response_from_artifact_api(self, json_res, sha_id):
         for art in json_res['artifacts']:
             if art['workflow_run']['head_sha'] == sha_id:
                 if ON_LINUX and not art['name'].endwith('Win'):

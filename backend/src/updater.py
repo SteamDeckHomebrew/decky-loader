@@ -305,7 +305,7 @@ class Updater:
                     jresp = await res.json()
                     #If the request found at least one artifact to download...
                     if int(jresp['total_count']) is not 0:
-                        down_link = f"https://nightly.link/SteamDeckHomebrew/decky-loader/actions/artifacts/${jresp['artifacts']['id']}.zip" 
+                        down_link = f"https://nightly.link/SteamDeckHomebrew/decky-loader/actions/artifacts/{jresp['artifacts']['id']}.zip" 
                         #Then fetch it and restart itself
                         await self.download_decky_binary(down_link, 'PR-' + pr_id, True)
         #TODO: If I ended here either the API is rate limiting or there is no artifact for that specific head_sha yet, show an UI warning here.

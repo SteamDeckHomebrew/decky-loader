@@ -6,7 +6,7 @@ from asyncio import sleep
 from json.decoder import JSONDecodeError
 from logging import getLogger
 from os import getcwd, path, remove
-from typing import TYPE_CHECKING, List, TypedDict
+from typing import TYPE_CHECKING, List, TypedDict, Any
 if TYPE_CHECKING:
     from .main import PluginManager
 from .localplatform import chmod, service_restart, ON_LINUX, ON_WINDOWS, get_keep_systemd_service, get_selinux
@@ -261,7 +261,7 @@ class Updater:
         await service_restart("plugin_loader")
 
     async def get_testing_versions(self) -> List[TestingVersion]:
-        result = []
+        result: List[TestingVersion] = []
         async with ClientSession() as web:
             async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/pulls", params={'state':'open'}, ssl=helpers.get_ssl_context()) as res:
                 open_prs = await res.json()
@@ -293,7 +293,7 @@ class Updater:
         #We should never exit out from the inner loop if the call is correct (we should find the associated binary and exit before ending here). Log an error.
         logger.error("Couldn't find the requested artifact id, this shouldn't happen normally!")
 
-    def handle_response_from_artifact_api(self, json_res, sha_id: str):
+    def handle_response_from_artifact_api(self, json_res: dict[str, Any], sha_id: str) -> str:
         for art in json_res['artifacts']:
             if art['workflow_run']['head_sha'] == sha_id:
                 if ON_LINUX and not art['name'].endwith('Win'):

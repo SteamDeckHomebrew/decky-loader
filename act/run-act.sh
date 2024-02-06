@@ -29,10 +29,10 @@ cd ..
 
 if [[ "$type" == "release" ]]; then
     printf "release!\n"
-    act workflow_dispatch -e act/release.json --artifact-server-path act/artifacts --container-architecture linux/amd64
+    act workflow_dispatch -e act/release.json --artifact-server-path act/artifacts --container-architecture linux/amd64 --platform ubuntu-22.04=catthehacker/ubuntu:act-22.04
 elif [[ "$type" == "prerelease" ]]; then
     printf "prerelease!\n"
-    act workflow_dispatch -e act/prerelease.json --artifact-server-path act/artifacts --container-architecture linux/amd64
+    act workflow_dispatch -e act/prerelease.json --artifact-server-path act/artifacts --container-architecture linux/amd64 --platform ubuntu-22.04=catthehacker/ubuntu:act-22.04
 else
     printf "Release type unspecified/badly specified.\n"
     printf "Options: 'release' or 'prerelease'\n"

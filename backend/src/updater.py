@@ -170,9 +170,9 @@ class Updater:
     async def download_decky_binary(self, download_url: str, version: str, is_zip: bool = False):
         download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
         download_temp_filename = download_filename + ".new"
-
         tab = await get_gamepadui_tab()
         await tab.open_websocket()
+
         async with ClientSession() as web:
             logger.debug("Downloading binary")
             async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
@@ -182,35 +182,37 @@ class Updater:
                     raw = 0
                     async for c in res.content.iter_chunked(512):
                         out.write(c)
-                        raw += len(c)
-                        new_progress = round((raw / total) * 100)
-                        if progress != new_progress:
-                            self.context.loop.create_task(tab.evaluate_js(f"window.DeckyUpdater.updateProgress({new_progress})", False, False, False))
-                            progress = new_progress
+                        if total != 0:
+                            raw += len(c)
+                            new_progress = round((raw / total) * 100)
+                            if progress != new_progress:
+                                self.context.loop.create_task(tab.evaluate_js(f"window.DeckyUpdater.updateProgress({new_progress})", False, False, False))
+                                progress = new_progress
 
+        with open(path.join(getcwd(), ".loader.version"), "w", encoding="utf-8") as out:
+            out.write(version)
+
+        if ON_LINUX:
+            remove(path.join(getcwd(), download_filename))
             if (is_zip):
-                with zipfile.ZipFile(path.join(getcwd(), download_temp_filename), 'r') as zr:
-                    zr.extractall(getcwd())
+                with zipfile.ZipFile(path.join(getcwd(), download_temp_filename), 'r') as file:
+                    file.getinfo(download_filename).filename = download_filename + ".unzipped"
+                    file.extract(download_filename)
                 remove(path.join(getcwd(), download_temp_filename))
+                shutil.move(path.join(getcwd(), download_filename + ".unzipped"), path.join(getcwd(), download_filename))
+            else:
+                shutil.move(path.join(getcwd(), download_temp_filename), path.join(getcwd(), download_filename))
+            
+            chmod(path.join(getcwd(), download_filename), 777, False)
+            if get_selinux():
+                from asyncio.subprocess import create_subprocess_exec
+                process = await create_subprocess_exec("chcon", "-t", "bin_t", path.join(getcwd(), download_filename))
+                logger.info(f"Setting the executable flag with chcon returned {await process.wait()}")
 
-
-            with open(path.join(getcwd(), ".loader.version"), "w", encoding="utf-8") as out:
-                out.write(version)
-
-            if ON_LINUX:
-                if not is_zip:
-                    remove(path.join(getcwd(), download_filename))
-                    shutil.move(path.join(getcwd(), download_temp_filename), path.join(getcwd(), download_filename))
-                chmod(path.join(getcwd(), download_filename), 777, False)
-                if get_selinux():
-                    from asyncio.subprocess import create_subprocess_exec
-                    process = await create_subprocess_exec("chcon", "-t", "bin_t", path.join(getcwd(), download_filename))
-                    logger.info(f"Setting the executable flag with chcon returned {await process.wait()}")
-
-            logger.info("Updated loader installation.")
-            await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)
-            await self.do_restart()
-            await tab.close_websocket()
+        logger.info("Updated loader installation.")
+        await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)
+        await self.do_restart()
+        await tab.close_websocket()
 
     async def do_update(self):
         logger.debug("Starting update.")
@@ -282,7 +284,7 @@ class Updater:
                     })
         return result
 
-    async def download_testing_version(self, pr_id: str, sha_id: str):
+    async def download_testing_version(self, pr_id: int, sha_id: str):
         #manager.setSetting('branch', 2) #TODO: actually change the branch. maybe don't do it here?
         down_id = ''
         #Get all the associated workflow run for the given sha_id code hash
@@ -291,22 +293,23 @@ class Updater:
                     headers={'X-GitHub-Api-Version': '2022-11-28'}, params={'event':'pull_request', 'head_sha': sha_id}, ssl=helpers.get_ssl_context()) as res:
                 works = await res.json()
         #Iterate over the workflow_run to get the two builds if they exists
-        for work in works['workflow_run']:
+        for work in works['workflow_runs']:
             if ON_WINDOWS and work['name'] == 'Builder Win':
                 down_id=work['id']
                 break
             elif ON_LINUX and work['name'] == 'Builder':
                 down_id=work['id']
                 break
-        if down_id is not '':
+        if down_id != '':
             async with ClientSession() as web:
                 async with web.request("GET", f"https://api.github.com/repos/SteamDeckHomebrew/decky-loader/actions/runs/{down_id}/artifacts",
                         headers={'X-GitHub-Api-Version': '2022-11-28'}, ssl=helpers.get_ssl_context()) as res:
                     jresp = await res.json()
                     #If the request found at least one artifact to download...
-                    if int(jresp['total_count']) is not 0:
-                        down_link = f"https://nightly.link/SteamDeckHomebrew/decky-loader/actions/artifacts/{jresp['artifacts']['id']}.zip" 
+                    if int(jresp['total_count']) != 0:
+                        # this assumes that the artifact we want is the first one!
+                        down_link = f"https://nightly.link/SteamDeckHomebrew/decky-loader/actions/artifacts/{jresp['artifacts'][0]['id']}.zip"
                         #Then fetch it and restart itself
-                        await self.download_decky_binary(down_link, 'PR-' + pr_id, True)
+                        await self.download_decky_binary(down_link, f'PR-{pr_id}' , True)
         #TODO: If I ended here either the API is rate limiting or there is no artifact for that specific head_sha yet, show an UI warning here.
         logger.debug("TODO: Show warning to the user!")

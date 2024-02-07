@@ -45,7 +45,7 @@ const StorePage: FC<{}> = () => {
           tabs={[
             {
               title: t('Store.store_tabs.title'),
-              content: <BrowseTab children={{ setPluginCount: setPluginCount }} />,
+              content: <BrowseTab setPluginCount={setPluginCount} />,
               id: 'browse',
               renderTabAddon: () => <span className={TabCount}>{pluginCount}</span>,
             },
@@ -61,7 +61,7 @@ const StorePage: FC<{}> = () => {
   );
 };
 
-const BrowseTab: FC<{ children: { setPluginCount: Dispatch<SetStateAction<number | null>> } }> = (data) => {
+const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }> = ({ setPluginCount }) => {
   const { t } = useTranslation();
 
   const dropdownSortOptions = useMemo(
@@ -91,7 +91,7 @@ const BrowseTab: FC<{ children: { setPluginCount: Dispatch<SetStateAction<number
       const res = await getPluginList(selectedSort[0], selectedSort[1]);
       logger.log('got data!', res);
       setPluginList(res);
-      data.children.setPluginCount(res.length);
+      setPluginCount(res.length);
     })();
   }, [selectedSort]);
 

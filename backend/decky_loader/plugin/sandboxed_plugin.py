@@ -143,11 +143,11 @@ class SandboxedPlugin:
 
         if "stop" in data:
             self.log.info("Calling Loader unload function.")
+            await self._unload()
             get_event_loop().stop()
             while get_event_loop().is_running():
                 await sleep(0)
             get_event_loop().close()
-            await self._unload()
             raise Exception("Closing message listener")
 
         d: SocketResponseDict = {"type": SocketMessageType.RESPONSE, "res": None, "success": True, "id": data["id"]}

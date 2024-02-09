@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { FaDownload, FaInfo } from 'react-icons/fa';
 
 import { callUpdaterMethod } from '../../../../updater';
+import { setSetting } from '../../../../utils/settings';
+import { UpdateBranch } from '../general/BranchSelect';
 
 interface TestingVersion {
   id: number;
@@ -43,9 +45,10 @@ export default function TestingVersionList() {
                 <Focusable style={{ height: '40px', marginLeft: 'auto', display: 'flex' }}>
                   <DialogButton
                     style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
-                    onClick={() =>
-                      callUpdaterMethod('download_testing_version', { pr_id: version.id, sha_id: version.head_sha })
-                    }
+                    onClick={() => {
+                      callUpdaterMethod('download_testing_version', { pr_id: version.id, sha_id: version.head_sha });
+                      setSetting('branch', UpdateBranch.Testing);
+                    }}
                   >
                     <div
                       style={{

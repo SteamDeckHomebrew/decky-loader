@@ -285,7 +285,6 @@ class Updater:
         return result
 
     async def download_testing_version(self, pr_id: int, sha_id: str):
-        #manager.setSetting('branch', 2) #TODO: actually change the branch. maybe don't do it here?
         down_id = ''
         #Get all the associated workflow run for the given sha_id code hash
         async with ClientSession() as web:
@@ -311,5 +310,3 @@ class Updater:
                         down_link = f"https://nightly.link/SteamDeckHomebrew/decky-loader/actions/artifacts/{jresp['artifacts'][0]['id']}.zip"
                         #Then fetch it and restart itself
                         await self.download_decky_binary(down_link, f'PR-{pr_id}' , True)
-        #TODO: If I ended here either the API is rate limiting or there is no artifact for that specific head_sha yet, show an UI warning here.
-        logger.debug("TODO: Show warning to the user!")

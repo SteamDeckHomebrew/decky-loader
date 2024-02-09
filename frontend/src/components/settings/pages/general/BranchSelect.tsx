@@ -8,7 +8,7 @@ import { useSetting } from '../../../../utils/hooks/useSetting';
 
 const logger = new Logger('BranchSelect');
 
-enum UpdateBranch {
+export enum UpdateBranch {
   Stable,
   Prerelease,
   Testing,

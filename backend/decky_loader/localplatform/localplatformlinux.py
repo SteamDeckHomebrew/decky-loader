@@ -156,6 +156,10 @@ async def service_start(service_name : str) -> bool:
     res = run(cmd, stdout=PIPE, stderr=STDOUT)
     return res.returncode == 0
 
+async def restart_webhelper() -> bool:
+    res = run(["killall", "-s", "SIGTERM", "steamwebhelper"], stdout=DEVNULL, stderr=DEVNULL)
+    return res.returncode == 0
+
 def get_privileged_path() -> str:
     path = os.getenv("PRIVILEGED_PATH")
 

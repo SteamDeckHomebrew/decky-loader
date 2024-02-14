@@ -2,9 +2,9 @@
 import sys
 from typing import Dict
 from .localplatform.localplatform import (chmod, chown, service_stop, service_start,
-                            ON_WINDOWS, get_log_level, get_live_reload, 
+                            ON_WINDOWS, ON_LINUX, get_log_level, get_live_reload, 
                             get_server_port, get_server_host, get_chown_plugin_path,
-                            get_privileged_path)
+                            get_privileged_path, restart_webhelper)
 if hasattr(sys, '_MEIPASS'):
     chmod(sys._MEIPASS, 755) # type: ignore
 # Full imports
@@ -25,7 +25,7 @@ from .browser import PluginBrowser
 from .helpers import (REMOTE_DEBUGGER_UNIT, csrf_middleware, get_csrf_token, get_loader_version,
                      mkdir_as_user, get_system_pythonpaths, get_effective_user_id)
                      
-from .injector import get_gamepadui_tab, Tab, close_old_tabs
+from .injector import get_gamepadui_tab, Tab
 from .loader import Loader
 from .settings import SettingsManager
 from .updater import Updater
@@ -131,16 +131,13 @@ class PluginManager:
             await self.inject_javascript(tab, True)
             try:
                 async for msg in tab.listen_for_message():
-                    # this gets spammed a lot
-                    if msg.get("method", None) != "Page.navigatedWithinDocument":
-                        logger.debug("Page event: " + str(msg.get("method", None)))
-                        if msg.get("method", None) == "Page.domContentEventFired":
-                            if not await tab.has_global_var("deckyHasLoaded", False):
-                                await self.inject_javascript(tab)
-                        if msg.get("method", None) == "Inspector.detached":
-                            logger.info("CEF has requested that we detach.")
-                            await tab.close_websocket()
-                            break
+                    if msg.get("method", None) == "Page.domContentEventFired":
+                        if not await tab.has_global_var("deckyHasLoaded", False):
+                            await self.inject_javascript(tab)
+                    elif msg.get("method", None) == "Inspector.detached":
+                        logger.info("CEF has requested that we detach.")
+                        await tab.close_websocket()
+                        break
                 # If this is a forceful disconnect the loop will just stop without any failure message. In this case, injector.py will handle this for us so we don't need to close the socket.
                 # This is because of https://github.com/aio-libs/aiohttp/blob/3ee7091b40a1bc58a8d7846e7878a77640e96996/aiohttp/client_ws.py#L321
                 logger.info("CEF has disconnected...")
@@ -158,10 +155,11 @@ class PluginManager:
     async def inject_javascript(self, tab: Tab, first: bool=False, request: Request|None=None):
         logger.info("Loading Decky frontend!")
         try:
-            if first:
-                if await tab.has_global_var("deckyHasLoaded", False):
-                    await close_old_tabs()
-            await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => location.reload(), 100)}else{window.deckyHasLoaded = true;(async()=>{try{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js?v=%s')}catch(e){console.error(e)};})();}}catch(e){console.error(e)}" % (get_loader_version(), ), False, False, False)
+            # if first:
+            if ON_LINUX and await tab.has_global_var("deckyHasLoaded", False):
+                await restart_webhelper()
+                return # We'll catch the next tab in the main loop
+            await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => SteamClient.Browser.RestartJSContext(), 100)}else{window.deckyHasLoaded = true;(async()=>{try{while(!window.SP_REACT){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js?v=%s')}catch(e){console.error(e)};})();}}catch(e){console.error(e)}" % (get_loader_version(), ), False, False, False)
         except:
             logger.info("Failed to inject JavaScript into tab\n" + format_exc())
             pass

@@ -8,8 +8,6 @@ from traceback import format_exc
 from asyncio import (get_event_loop, new_event_loop,
                      set_event_loop, sleep)
 
-from backend.decky_loader.plugin.messages import SocketMessageType
-
 from .messages import SocketResponseDict, SocketMessageType
 from ..localplatform.localsocket import LocalSocket
 from ..localplatform.localplatform import setgid, setuid, get_username, get_home_path

@@ -83,15 +83,15 @@ class SandboxedPlugin:
                 sysmodules[key.replace("decky_loader.", "")] = sysmodules[key]
             
             from .imports import decky
-            async def emit_message(event: str, data: DataType | None = None, data_type: Type[DataType] | None = None) -> None:
+            async def emit(event: str, data: DataType | None = None, data_type: Type[DataType] | None = None) -> None:
                 await self._socket.write_single_line_server(dumps({
                     "type": SocketMessageType.EVENT,
                     "event": event,
                     "data": data
                 }))
             # copy the docstring over so we don't have to duplicate it
-            emit_message.__doc__ = decky.emit_message.__doc__
-            decky.emit_message = emit_message
+            emit.__doc__ = decky.emit.__doc__
+            decky.emit = emit
             sysmodules["decky"] = decky
             # provided for compatibility
             sysmodules["decky_plugin"] = decky

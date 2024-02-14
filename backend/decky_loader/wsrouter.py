@@ -1,4 +1,3 @@
-from _typeshed import DataclassInstance
 from logging import getLogger
 
 from asyncio import AbstractEventLoop, create_task
@@ -27,8 +26,8 @@ class MessageType(IntEnum):
 # WSMessage with slightly better typings
 class WSMessageExtra(WSMessage):
     # TODO message typings here too
-    data: Any
-    type: WSMsgType
+    data: Any # type: ignore yes you can extend it
+    type: WSMsgType # type: ignore
 
 # see wsrouter.ts for typings
 
@@ -133,7 +132,6 @@ class WSRouter:
         self.logger.debug('Firing frontend event %s with args %s', data)
         sent_data: Dict[Any, Any] | None = cast(Dict[Any, Any], data)
         if is_dataclass(data):
-            data_as_dataclass = cast(DataclassInstance, data)
-            sent_data = asdict(data_as_dataclass)
+            sent_data = asdict(data) # type: ignore Argument of type "DataclassInstance | type[DataclassInstance]" cannot be assigned to parameter "obj" of type "DataclassInstance" in function "asdict"
 
         await self.write({ "type": MessageType.EVENT.value, "event": event, "data": sent_data })

@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   decky-frontend-lib:
-    specifier: 3.24.2
-    version: 3.24.2
+    specifier: 3.24.5
+    version: link:../../lib
   filesize:
     specifier: ^10.0.7
     version: 10.0.7
@@ -1481,10 +1481,6 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
-
-  /decky-frontend-lib@3.24.2:
-    resolution: {integrity: sha512-G6AEV/PTdOaw2AoGGs+tpEWIPhVODzM8XWAJcHwXVpCnAGH+qUhHZH/Mz56ZxYcbVdN3m6FRAQ2eHSUIEY9TjA==}
-    dev: false
 
   /decode-named-character-reference@1.0.2:
     resolution: {integrity: sha512-O8x12RzrUF8xyVcY0KJowWsmaJxQbmy0/EtnNtHRpsOcT7dFk5W598coHqBVpmWo1oQQfsCqfCmkZN5DJrZVdg==}
@@ -3200,6 +3196,7 @@ packages:
       prop-types: 15.8.1
       react: 16.14.0
       scheduler: 0.19.1
+    bundledDependencies: false
 
   /react-file-icon@1.3.0(react-dom@16.14.0)(react@16.14.0):
     resolution: {integrity: sha512-wxl/WwSX5twQKVXloPHbS71iZQUKO84KgZ44Kh7vYZGu1qH2kagx+RSTNfk/+IHtXfjPWPNIHPGi2Y8S94N1CQ==}
@@ -3283,6 +3280,7 @@ packages:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       prop-types: 15.8.1
+    bundledDependencies: false
 
   /readable-stream@2.3.8:
     resolution: {integrity: sha512-8p0AUk4XODgIewSi0l8Epjs+EVnWiK7NoDIEGU0HhE7+ZyY8D1IMY7odu5lRrFXGg71L15KG8QrPmum45RTtdA==}

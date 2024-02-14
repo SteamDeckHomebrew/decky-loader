@@ -100,7 +100,7 @@
             "dependsOn": [
                 "checkforsettings"
             ],
-            "command": "ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'mkdir -p ${config:deckdir}/homebrew/dev/pluginloader && mkdir -p ${config:deckdir}/homebrew/dev/plugins'",
+            "command": "ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'mkdir -p ${config:deckdir}/homebrew/dev/pluginloader && mkdir -p ${config:deckdir}/homebrew/plugins'",
             "problemMatcher": []
         },
         {
@@ -120,7 +120,7 @@
             "dependsOn": [
                 "checkforsettings"
             ],
-            "command": "ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'export PATH=${config:deckdir}/.local/bin:$PATH; export PLUGIN_PATH=${config:deckdir}/homebrew/dev/plugins; export CHOWN_PLUGIN_PATH=0; export LOG_LEVEL=DEBUG; cd ${config:deckdir}/homebrew/dev/pluginloader/backend; echo '${config:deckpass}' | sudo -SE poetry run sh -c \"cd ${config:deckdir}/homebrew/services; python3 ${config:deckdir}/homebrew/dev/pluginloader/backend/main.py\"'",
+            "command": "ssh deck@${config:deckip} -p ${config:deckport} ${config:deckkey} 'export PATH=${config:deckdir}/.local/bin:$PATH; export PLUGIN_PATH=${config:deckdir}/homebrew/plugins; export CHOWN_PLUGIN_PATH=0; export LOG_LEVEL=DEBUG; cd ${config:deckdir}/homebrew/dev/pluginloader/backend; echo '${config:deckpass}' | sudo -SE poetry run sh -c \"cd ${config:deckdir}/homebrew/services; python3 ${config:deckdir}/homebrew/dev/pluginloader/backend/main.py\"'",
             "problemMatcher": []
         },
         {

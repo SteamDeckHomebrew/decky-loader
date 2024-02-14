@@ -14,7 +14,7 @@ from typing import Any, Callable, Coroutine, Dict, List
 EmittedEventCallbackType = Callable[[str, Any], Coroutine[Any, Any, Any]]
 
 class PluginWrapper:
-    def __init__(self, file: str, plugin_directory: str, plugin_path: str) -> None:
+    def __init__(self, file: str, plugin_directory: str, plugin_path: str, emit_callback: EmittedEventCallbackType) -> None:
         self.file = file
         self.plugin_path = plugin_path
         self.plugin_directory = plugin_directory
@@ -41,7 +41,7 @@ class PluginWrapper:
         self._listener_task: Task[Any]
         self._method_call_requests: Dict[str, MethodCallRequest] = {}
 
-        self.emitted_event_callback: EmittedEventCallbackType
+        self.emitted_event_callback: EmittedEventCallbackType = emit_callback
 
         self.legacy_method_warning = False
 
@@ -60,9 +60,6 @@ class PluginWrapper:
                         self._method_call_requests.pop(res["id"]).set_result(res)
             except:
                 pass
-
-    def set_emitted_event_callback(self, callback: EmittedEventCallbackType):
-        self.emitted_event_callback = callback
 
     async def execute_legacy_method(self, method_name: str, kwargs: Dict[Any, Any]):
         if not self.legacy_method_warning:

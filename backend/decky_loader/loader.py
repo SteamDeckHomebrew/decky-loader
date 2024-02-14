@@ -142,7 +142,12 @@ class Loader:
 
     def import_plugin(self, file: str, plugin_directory: str, refresh: bool | None = False, batch: bool | None = False):
         try:
-            plugin = PluginWrapper(file, plugin_directory, self.plugin_path)
+            async def plugin_emitted_event(event: str, data: Any):
+                self.logger.debug(f"PLUGIN EMITTED EVENT: {str(event)} {data}")
+                event_data = PluginEvent(plugin_name=plugin.name, event=event, data=data)
+                await self.ws.emit("plugin_event", event_data)
+
+            plugin = PluginWrapper(file, plugin_directory, self.plugin_path, plugin_emitted_event)
             if plugin.name in self.plugins:
                     if not "debug" in plugin.flags and refresh:
                         self.logger.info(f"Plugin {plugin.name} is already loaded and has requested to not be re-loaded")
@@ -153,12 +158,6 @@ class Loader:
             if plugin.passive:
                 self.logger.info(f"Plugin {plugin.name} is passive")
 
-            async def plugin_emitted_event(event: str, data: Any):
-                self.logger.debug(f"PLUGIN EMITTED EVENT: {str(event)} {data}")
-                event_data = PluginEvent(plugin_name=plugin.name, event=event, data=data)
-                await self.ws.emit("plugin_event", event_data)
-
-            self.plugins[plugin.name].set_emitted_event_callback(plugin_emitted_event)
             self.plugins[plugin.name] = plugin.start()
             self.logger.info(f"Loaded {plugin.name}")
             if not batch:

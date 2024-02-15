@@ -22,6 +22,7 @@ import PluginUninstallModal from './components/modals/PluginUninstallModal';
 import NotificationBadge from './components/NotificationBadge';
 import PluginView from './components/PluginView';
 import WithSuspense from './components/WithSuspense';
+import { FrozenPluginService } from './frozen-plugins-service';
 import { HiddenPluginsService } from './hidden-plugins-service';
 import Logger from './logger';
 import { NotificationService } from './notification-service';
@@ -49,6 +50,7 @@ class PluginLoader extends Logger {
   public toaster: Toaster = new Toaster();
   private deckyState: DeckyState = new DeckyState();
 
+  public frozenPluginsService = new FrozenPluginService(this.deckyState);
   public hiddenPluginsService = new HiddenPluginsService(this.deckyState);
   public notificationService = new NotificationService(this.deckyState);
 
@@ -144,7 +146,9 @@ class PluginLoader extends Logger {
   }
 
   public async checkPluginUpdates() {
-    const updates = await checkForUpdates(this.plugins);
+    const frozenPlugins = this.deckyState.publicState().frozenPlugins;
+
+    const updates = await checkForUpdates(this.plugins.filter((p) => !frozenPlugins.includes(p.name)));
     this.deckyState.setUpdates(updates);
     return updates;
   }
@@ -224,6 +228,7 @@ class PluginLoader extends Logger {
       this.deckyState.setPluginOrder(pluginOrder);
     });
 
+    this.frozenPluginsService.init();
     this.hiddenPluginsService.init();
     this.notificationService.init();
   }

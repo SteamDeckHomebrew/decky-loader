@@ -289,11 +289,15 @@ class PluginBrowser:
         Args:
             name (string): The name of the plugin
         """
+        frozen_plugins = self.settings.getSetting("frozenPlugins", [])
+        if name in frozen_plugins:
+            frozen_plugins.remove(name)
+            self.settings.setSetting("frozenPlugins", frozen_plugins)
+
         hidden_plugins = self.settings.getSetting("hiddenPlugins", [])
         if name in hidden_plugins:
             hidden_plugins.remove(name)
             self.settings.setSetting("hiddenPlugins", hidden_plugins)
-
 
         plugin_order = self.settings.getSetting("pluginOrder", [])
 

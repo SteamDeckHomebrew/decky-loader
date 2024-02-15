@@ -8,6 +8,7 @@ import { VerInfo } from '../updater';
 interface PublicDeckyState {
   plugins: Plugin[];
   pluginOrder: string[];
+  frozenPlugins: string[];
   hiddenPlugins: string[];
   activePlugin: Plugin | null;
   updates: PluginUpdateMapping | null;
@@ -26,6 +27,7 @@ export interface UserInfo {
 export class DeckyState {
   private _plugins: Plugin[] = [];
   private _pluginOrder: string[] = [];
+  private _frozenPlugins: string[] = [];
   private _hiddenPlugins: string[] = [];
   private _activePlugin: Plugin | null = null;
   private _updates: PluginUpdateMapping | null = null;
@@ -41,6 +43,7 @@ export class DeckyState {
     return {
       plugins: this._plugins,
       pluginOrder: this._pluginOrder,
+      frozenPlugins: this._frozenPlugins,
       hiddenPlugins: this._hiddenPlugins,
       activePlugin: this._activePlugin,
       updates: this._updates,
@@ -64,6 +67,11 @@ export class DeckyState {
 
   setPluginOrder(pluginOrder: string[]) {
     this._pluginOrder = pluginOrder;
+    this.notifyUpdate();
+  }
+
+  setFrozenPlugins(frozenPlugins: string[]) {
+    this._frozenPlugins = frozenPlugins;
     this.notifyUpdate();
   }
 

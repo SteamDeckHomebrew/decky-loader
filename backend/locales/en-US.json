@@ -99,12 +99,14 @@
     }
   },
   "PluginListIndex": {
+    "freeze": "Freeze updates",
     "hide": "Quick access: Hide",
     "no_plugin": "No plugins installed!",
     "plugin_actions": "Plugin Actions",
     "reinstall": "Reinstall",
     "reload": "Reload",
     "show": "Quick access: Show",
+    "unfreeze": "Allow updates",
     "uninstall": "Uninstall",
     "update_all_one": "Update 1 plugin",
     "update_all_other": "Update {{count}} plugins",

@@ -192,7 +192,8 @@
   "SettingsIndex": {
     "developer_title": "Developer",
     "general_title": "General",
-    "plugins_title": "Plugins"
+    "plugins_title": "Plugins",
+    "testing_title": "Testing"
   },
   "Store": {
     "store_contrib": {
@@ -260,5 +261,8 @@
       "reloading": "Reloading",
       "updating": "Updating"
     }
-  }
+      },
+    "Testing": {
+        "download": "Download"
+    }
 }

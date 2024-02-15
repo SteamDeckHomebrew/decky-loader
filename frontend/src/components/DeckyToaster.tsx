@@ -30,11 +30,14 @@ const DeckyToaster: FC<DeckyToasterProps> = () => {
     // not actually node but TS is shit
     let interval: NodeJS.Timer | null;
     if (renderedToast) {
-      interval = setTimeout(() => {
-        interval = null;
-        console.log('clear toast', renderedToast.data);
-        removeToast(renderedToast.data);
-      }, (renderedToast.data.duration || 5e3) + 1000);
+      interval = setTimeout(
+        () => {
+          interval = null;
+          console.log('clear toast', renderedToast.data);
+          removeToast(renderedToast.data);
+        },
+        (renderedToast.data.duration || 5e3) + 1000,
+      );
       console.log('set int', interval);
     }
     return () => {

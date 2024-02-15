@@ -136,8 +136,8 @@ export default function UpdaterSettings() {
             {checkingForUpdates
               ? t('Updater.updates.checking')
               : !versionInfo?.remote || versionInfo?.remote?.tag_name == versionInfo?.current
-              ? t('Updater.updates.check_button')
-              : t('Updater.updates.install_button')}
+                ? t('Updater.updates.check_button')
+                : t('Updater.updates.install_button')}
           </DialogButton>
         ) : (
           <ProgressBarWithInfo

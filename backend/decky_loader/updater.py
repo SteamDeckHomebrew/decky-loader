@@ -1,19 +1,24 @@
 from __future__ import annotations
-import os
-import shutil
 from asyncio import sleep
 from logging import getLogger
+import os
 from os import getcwd, path, remove
 from typing import TYPE_CHECKING, List, TypedDict
 if TYPE_CHECKING:
     from .main import PluginManager
-from .localplatform.localplatform import chmod, service_restart, ON_LINUX, get_keep_systemd_service, get_selinux
+from .localplatform.localplatform import chmod, service_restart, ON_LINUX, ON_WINDOWS, get_keep_systemd_service, get_selinux
+import shutil
+from typing import List, TYPE_CHECKING, TypedDict
+import zipfile
 
 from aiohttp import ClientSession
 
 from . import helpers
 from .injector import get_gamepadui_tab
 from .settings import SettingsManager
+if TYPE_CHECKING:
+    from .main import PluginManager
+
 
 logger = getLogger("Updater")
 
@@ -24,6 +29,12 @@ class RemoteVer(TypedDict):
     tag_name: str
     prerelease: bool
     assets: List[RemoteVerAsset]
+class TestingVersion(TypedDict):
+    id: int
+    name: str
+    link: str
+    head_sha: str
+
 
 class Updater:
     def __init__(self, context: PluginManager) -> None:
@@ -44,6 +55,8 @@ class Updater:
             context.ws.add_route("updater/check_for_updates", self.check_for_updates);
             context.ws.add_route("updater/do_restart", self.do_restart);
             context.ws.add_route("updater/do_update", self.do_update);
+            context.ws.add_route("updater/get_testing_versions", self.get_testing_versions);
+            context.ws.add_route("updater/download_testing_version", self.download_testing_version);
             context.loop.create_task(self.version_reloader())
 
     def get_branch(self, manager: SettingsManager):
@@ -126,6 +139,53 @@ class Updater:
                 pass
             await sleep(60 * 60 * 6) # 6 hours
 
+    async def download_decky_binary(self, download_url: str, version: str, is_zip: bool = False):
+        download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
+        download_temp_filename = download_filename + ".new"
+        tab = await get_gamepadui_tab()
+        await tab.open_websocket()
+
+        async with ClientSession() as web:
+            logger.debug("Downloading binary")
+            async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
+                total = int(res.headers.get('content-length', 0))
+                with open(path.join(getcwd(), download_temp_filename), "wb") as out:
+                    progress = 0
+                    raw = 0
+                    async for c in res.content.iter_chunked(512):
+                        out.write(c)
+                        if total != 0:
+                            raw += len(c)
+                            new_progress = round((raw / total) * 100)
+                            if progress != new_progress:
+                                self.context.loop.create_task(self.context.ws.emit("frontend/update_download_percentage", new_progress))
+                                progress = new_progress
+
+        with open(path.join(getcwd(), ".loader.version"), "w", encoding="utf-8") as out:
+            out.write(version)
+
+        if ON_LINUX:
+            remove(path.join(getcwd(), download_filename))
+            if (is_zip):
+                with zipfile.ZipFile(path.join(getcwd(), download_temp_filename), 'r') as file:
+                    file.getinfo(download_filename).filename = download_filename + ".unzipped"
+                    file.extract(download_filename)
+                remove(path.join(getcwd(), download_temp_filename))
+                shutil.move(path.join(getcwd(), download_filename + ".unzipped"), path.join(getcwd(), download_filename))
+            else:
+                shutil.move(path.join(getcwd(), download_temp_filename), path.join(getcwd(), download_filename))
+            
+            chmod(path.join(getcwd(), download_filename), 777, False)
+            if get_selinux():
+                from asyncio.subprocess import create_subprocess_exec
+                process = await create_subprocess_exec("chcon", "-t", "bin_t", path.join(getcwd(), download_filename))
+                logger.info(f"Setting the executable flag with chcon returned {await process.wait()}")
+
+        logger.info("Updated loader installation.")
+        await self.context.ws.emit("frontend/finish_download")
+        await self.do_restart()
+        await tab.close_websocket()
+
     async def do_update(self):
         logger.debug("Starting update.")
         try:
@@ -134,9 +194,9 @@ class Updater:
             logger.error("Unable to update as remoteVer is missing")
             return
 
+        version = self.remoteVer["tag_name"]
         download_url = None
         download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
-        download_temp_filename = download_filename + ".new"
 
         for x in self.remoteVer["assets"]:
             if x["name"] == download_filename:
@@ -149,8 +209,6 @@ class Updater:
         service_url = self.get_service_url()
         logger.debug("Retrieved service URL")
 
-        tab = await get_gamepadui_tab()
-        await tab.open_websocket()
         async with ClientSession() as web:
             if ON_LINUX and not get_keep_systemd_service():
                 logger.debug("Downloading systemd service")
@@ -178,33 +236,51 @@ class Updater:
                     os.mkdir(path.join(getcwd(), ".systemd"))
                 shutil.move(service_file_path, path.join(getcwd(), ".systemd")+"/plugin_loader.service")
             
-            logger.debug("Downloading binary")
-            async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
-                total = int(res.headers.get('content-length', 0))
-                with open(path.join(getcwd(), download_temp_filename), "wb") as out:
-                    progress = 0
-                    raw = 0
-                    async for c in res.content.iter_chunked(512):
-                        out.write(c)
-                        raw += len(c)
-                        new_progress = round((raw / total) * 100)
-                        if progress != new_progress:
-                            self.context.loop.create_task(self.context.ws.emit("frontend/update_download_percentage", new_progress))
-                            progress = new_progress
-
-            if ON_LINUX:
-                remove(path.join(getcwd(), download_filename))
-                shutil.move(path.join(getcwd(), download_temp_filename), path.join(getcwd(), download_filename))
-                chmod(path.join(getcwd(), download_filename), 777, False)
-                if get_selinux():
-                    from asyncio.subprocess import create_subprocess_exec
-                    process = await create_subprocess_exec("chcon", "-t", "bin_t", path.join(getcwd(), download_filename))
-                    logger.info(f"Setting the executable flag with chcon returned {await process.wait()}")
-
-            logger.info("Updated loader installation.")
-            await self.context.ws.emit("frontend/finish_download")
-            await self.do_restart()
-            await tab.close_websocket()
+        await self.download_decky_binary(download_url, version)
 
     async def do_restart(self):
         await service_restart("plugin_loader")
+
+    async def get_testing_versions(self) -> List[TestingVersion]:
+        result: List[TestingVersion] = []
+        async with ClientSession() as web:
+            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/pulls", 
+                    headers={'X-GitHub-Api-Version': '2022-11-28'}, params={'state':'open'}, ssl=helpers.get_ssl_context()) as res:
+                open_prs = await res.json()
+                for pr in open_prs:
+                    result.append({
+                        "id": int(pr['number']),
+                        "name": pr['title'],
+                        "link":  pr['html_url'],
+                        "head_sha": pr['head']['sha'],
+                    })
+        return result
+
+    async def download_testing_version(self, pr_id: int, sha_id: str):
+        down_id = ''
+        #Get all the associated workflow run for the given sha_id code hash
+        async with ClientSession() as web:
+            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/actions/runs", 
+                    headers={'X-GitHub-Api-Version': '2022-11-28'}, params={'event':'pull_request', 'head_sha': sha_id}, ssl=helpers.get_ssl_context()) as res:
+                works = await res.json()
+        #Iterate over the workflow_run to get the two builds if they exists
+        for work in works['workflow_runs']:
+            if ON_WINDOWS and work['name'] == 'Builder Win':
+                down_id=work['id']
+                break
+            elif ON_LINUX and work['name'] == 'Builder':
+                down_id=work['id']
+                break
+        if down_id != '':
+            async with ClientSession() as web:
+                async with web.request("GET", f"https://api.github.com/repos/SteamDeckHomebrew/decky-loader/actions/runs/{down_id}/artifacts",
+                        headers={'X-GitHub-Api-Version': '2022-11-28'}, ssl=helpers.get_ssl_context()) as res:
+                    jresp = await res.json()
+                    #If the request found at least one artifact to download...
+                    if int(jresp['total_count']) != 0:
+                        # this assumes that the artifact we want is the first one!
+                        down_link = f"https://nightly.link/SteamDeckHomebrew/decky-loader/actions/artifacts/{jresp['artifacts'][0]['id']}.zip"
+                        #Then fetch it and restart itself
+                        await self.download_decky_binary(down_link, f'PR-{pr_id}' , True)
+        else:
+            logger.error("workflow run not found", str(works))

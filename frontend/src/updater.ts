@@ -4,11 +4,6 @@ export enum Branches {
   // Testing,
 }
 
-export interface DeckyUpdater {
-  updateProgress: (val: number) => void;
-  finish: () => void;
-}
-
 export interface RemoteVerInfo {
   assets: {
     browser_download_url: string;

@@ -77,16 +77,20 @@ export default function UpdaterSettings() {
   const { t } = useTranslation();
 
   useEffect(() => {
-    window.DeckyUpdater = {
-      updateProgress: (i) => {
-        setUpdateProgress(i);
-        setIsLoaderUpdating(true);
-      },
-      finish: async () => {
-        setUpdateProgress(0);
-        setReloading(true);
-        await doRestart();
-      },
+    const a = DeckyBackend.addEventListener('frontend/update_download_percentage', (percentage) => {
+      setUpdateProgress(percentage);
+      setIsLoaderUpdating(true);
+    });
+
+    const b = DeckyBackend.addEventListener('frontend/finish_download', async () => {
+      setUpdateProgress(0);
+      setReloading(true);
+      await doRestart();
+    });
+
+    return () => {
+      DeckyBackend.removeEventListener('frontend/update_download_percentage', a);
+      DeckyBackend.removeEventListener('frontend/finish_download', b);
     };
   }, []);
 

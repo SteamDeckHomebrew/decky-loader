@@ -34,7 +34,13 @@ interface ErrorMessage {
   id: number;
 }
 
-type Message = CallMessage | ReplyMessage | ErrorMessage;
+interface EventMessage {
+  type: MessageType.EVENT;
+  event: string;
+  args: any;
+}
+
+type Message = CallMessage | ReplyMessage | ErrorMessage | EventMessage;
 
 // Helper to resolve a promise from the outside
 interface PromiseResolver<T> {
@@ -46,6 +52,7 @@ interface PromiseResolver<T> {
 export class WSRouter extends Logger {
   routes: Map<string, (...args: any) => any> = new Map();
   runningCalls: Map<number, PromiseResolver<any>> = new Map();
+  eventListeners: Map<string, Set<(...args: any) => any>> = new Map();
   ws?: WebSocket;
   connectPromise?: Promise<void>;
   // Used to map results and errors to calls
@@ -87,12 +94,31 @@ export class WSRouter extends Logger {
     this.ws?.send(JSON.stringify(data));
   }
 
-  addRoute(name: string, route: (args: any) => any) {
+  addRoute(name: string, route: (...args: any) => any) {
     this.routes.set(name, route);
   }
 
   removeRoute(name: string) {
     this.routes.delete(name);
+  }
+
+  addEventListener(event: string, listener: (...args: any) => any) {
+    if (!this.eventListeners.has(event)) {
+      this.eventListeners.set(event, new Set([listener]));
+    } else {
+      this.eventListeners.get(event)?.add(listener);
+    }
+    return listener;
+  }
+
+  removeEventListener(event: string, listener: (...args: any) => any) {
+    if (this.eventListeners.has(event)) {
+      const set = this.eventListeners.get(event);
+      set?.delete(listener);
+      if (set?.size === 0) {
+        this.eventListeners.delete(event);
+      }
+    }
   }
 
   async onMessage(msg: MessageEvent) {
@@ -126,6 +152,20 @@ export class WSRouter extends Logger {
             this.runningCalls.get(data.id)!.reject(data.error);
             this.runningCalls.delete(data.id);
             this.debug(`Rejected PY call ${data.id} with error`, data.error);
+          }
+          break;
+
+        case MessageType.EVENT:
+          if (this.eventListeners.has(data.event)) {
+            for (const listener of this.eventListeners.get(data.event)!) {
+              try {
+                listener(...data.args);
+              } catch (e) {
+                this.error(`error in event ${data.event}`, e, listener);
+              }
+            }
+          } else {
+            this.debug(`event ${data.event} has no listeners`);
           }
           break;
 

@@ -7,9 +7,7 @@ from aiohttp.web import Application, WebSocketResponse, Request, Response, get
 
 from enum import IntEnum
 
-from typing import Callable, Coroutine, Dict, Any, cast, TypeVar, Type
-
-from dataclasses import asdict, is_dataclass
+from typing import Callable, Coroutine, Dict, Any, cast, TypeVar
 
 from traceback import format_exc
 
@@ -127,11 +125,6 @@ class WSRouter:
         self.logger.debug('Websocket connection closed')
         return ws
 
-    # DataType defaults to None so that if a plugin opts in to strict pyright checking and attempts to pass data witbout specifying the type (or any), the type check fails
-    async def emit(self, event: str, data: DataType | None = None, data_type: Type[DataType] | None = None):
-        self.logger.debug('Firing frontend event %s with args %s', data)
-        sent_data: Dict[Any, Any] | None = cast(Dict[Any, Any], data)
-        if is_dataclass(data):
-            sent_data = asdict(data) # type: ignore Argument of type "DataclassInstance | type[DataclassInstance]" cannot be assigned to parameter "obj" of type "DataclassInstance" in function "asdict"
-
-        await self.write({ "type": MessageType.EVENT.value, "event": event, "data": sent_data })
+    async def emit(self, event: str, *args: Any):
+        self.logger.debug(f'Firing frontend event {event} with args {args}')
+        await self.write({ "type": MessageType.EVENT.value, "event": event, "args": args })

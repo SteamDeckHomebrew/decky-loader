@@ -3,11 +3,9 @@ import Backend from 'i18next-http-backend';
 import { initReactI18next } from 'react-i18next';
 
 import PluginLoader from './plugin-loader';
-import { DeckyUpdater } from './updater';
 
 declare global {
   export var DeckyPluginLoader: PluginLoader;
-  export var DeckyUpdater: DeckyUpdater | undefined; // TODO get rid of this
   export var importDeckyPlugin: Function;
   export var deckyHasLoaded: boolean;
   export var deckyHasConnectedRDT: boolean | undefined;

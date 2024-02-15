@@ -189,7 +189,7 @@ class Updater:
                         raw += len(c)
                         new_progress = round((raw / total) * 100)
                         if progress != new_progress:
-                            self.context.loop.create_task(tab.evaluate_js(f"window.DeckyUpdater.updateProgress({new_progress})", False, False, False))
+                            self.context.loop.create_task(self.context.ws.emit("frontend/update_download_percentage", new_progress))
                             progress = new_progress
 
             if ON_LINUX:
@@ -202,7 +202,7 @@ class Updater:
                     logger.info(f"Setting the executable flag with chcon returned {await process.wait()}")
 
             logger.info("Updated loader installation.")
-            await tab.evaluate_js("window.DeckyUpdater.finish()", False, False)
+            await self.context.ws.emit("frontend/finish_download")
             await self.do_restart()
             await tab.close_websocket()
 

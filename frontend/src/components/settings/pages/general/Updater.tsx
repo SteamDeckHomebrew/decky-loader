@@ -13,7 +13,7 @@ import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaExclamation } from 'react-icons/fa';
 
-import { VerInfo, checkForUpdates, doRestart, doUpdate } from '../../../../updater';
+import { VerInfo, checkForUpdates, doUpdate } from '../../../../updater';
 import { useDeckyState } from '../../../DeckyState';
 import InlinePatchNotes from '../../../patchnotes/InlinePatchNotes';
 import WithSuspense from '../../../WithSuspense';

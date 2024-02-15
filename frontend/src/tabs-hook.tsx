@@ -41,7 +41,7 @@ class TabsHook extends Logger {
       }
       if (
         (typeof currentNode?.memoizedProps?.visible == 'boolean' ||
-        typeof currentNode?.memoizedProps?.active == 'boolean') &&
+          typeof currentNode?.memoizedProps?.active == 'boolean') &&
         currentNode?.type?.toString()?.includes('QuickAccessMenuBrowserView')
       ) {
         this.log(`QAM root was found in ${iters} recursion cycles`);

@@ -158,11 +158,13 @@ export class WSRouter extends Logger {
         case MessageType.EVENT:
           if (this.eventListeners.has(data.event)) {
             for (const listener of this.eventListeners.get(data.event)!) {
-              try {
-                listener(...data.args);
-              } catch (e) {
-                this.error(`error in event ${data.event}`, e, listener);
-              }
+              (async () => {
+                try {
+                  await listener(...data.args);
+                } catch (e) {
+                  this.error(`error in event ${data.event}`, e, listener);
+                }
+              })();
             }
           } else {
             this.debug(`event ${data.event} has no listeners`);

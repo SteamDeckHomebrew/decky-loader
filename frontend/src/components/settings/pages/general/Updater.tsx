@@ -9,9 +9,7 @@ import {
   findSP,
   showModal,
 } from 'decky-frontend-lib';
-import { useCallback } from 'react';
-import { Suspense, lazy } from 'react';
-import { useEffect, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaExclamation } from 'react-icons/fa';
 

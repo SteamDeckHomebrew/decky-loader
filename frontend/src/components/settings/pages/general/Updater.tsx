@@ -80,10 +80,9 @@ export default function UpdaterSettings() {
       setIsLoaderUpdating(true);
     });
 
-    const b = DeckyBackend.addEventListener('frontend/finish_download', async () => {
+    const b = DeckyBackend.addEventListener('frontend/finish_download', () => {
       setUpdateProgress(0);
       setReloading(true);
-      await doRestart();
     });
 
     return () => {

@@ -84,9 +84,7 @@ export class WSRouter extends Logger {
       resolver.reject = reject;
     });
     resolver.promise = promise;
-    // The promise will always run first
-    // @ts-expect-error 2454
-    return resolver;
+    return resolver as PromiseResolver<T>;
   }
 
   async write(data: Message) {
@@ -167,7 +165,7 @@ export class WSRouter extends Logger {
               })();
             }
           } else {
-            this.debug(`event ${data.event} has no listeners`);
+            this.warn(`event ${data.event} has no listeners`);
           }
           break;
 

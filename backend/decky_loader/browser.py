@@ -4,7 +4,7 @@ import json
 # from pprint import pformat
 
 # Partial imports
-from aiohttp import ClientSession
+from aiohttp import ClientSession, request
 from asyncio import sleep
 from hashlib import sha256
 from io import BytesIO
@@ -123,7 +123,6 @@ class PluginBrowser:
     async def uninstall_plugin(self, name: str):
         if self.loader.watcher:
             self.loader.watcher.disabled = True
-        tab = await get_gamepadui_tab()
         plugin_folder = self.find_plugin_folder(name)
         assert plugin_folder is not None
         plugin_dir = path.join(self.plugin_path, plugin_folder)
@@ -131,8 +130,7 @@ class PluginBrowser:
             logger.info("uninstalling " + name)
             logger.info(" at dir " + plugin_dir)
             logger.debug("calling frontend unload for %s" % str(name))
-            res = await tab.evaluate_js(f"DeckyPluginLoader.unloadPlugin('{name}')")
-            logger.debug("result of unload from UI: %s", res)
+            await self.loader.ws.emit("loader/unload_plugin", name)
             # plugins_snapshot = self.plugins.copy()
             # snapshot_string = pformat(plugins_snapshot)
             # logger.debug("current plugins: %s", snapshot_string)
@@ -258,20 +256,14 @@ class PluginBrowser:
     async def request_plugin_install(self, artifact: str, name: str, version: str, hash: str, install_type: PluginInstallType):
         request_id = str(time())
         self.install_requests[request_id] = PluginInstallContext(artifact, name, version, hash)
-        tab = await get_gamepadui_tab()
-        await tab.open_websocket()
-        await tab.evaluate_js(f"DeckyPluginLoader.addPluginInstallPrompt('{name}', '{version}', '{request_id}', '{hash}', {install_type})")
+
+        await self.loader.ws.emit("loader/add_plugin_install_prompt", name, version, request_id, hash, install_type)
 
     async def request_multiple_plugin_installs(self, requests: List[PluginInstallRequest]):
         request_id = str(time())
         self.install_requests[request_id] = [PluginInstallContext(req['artifact'], req['name'], req['version'], req['hash']) for req in requests]
-        js_requests_parameter = ','.join([
-            f"{{ name: '{req['name']}', version: '{req['version']}', hash: '{req['hash']}', install_type: {req['install_type']}}}" for req in requests
-        ])
 
-        tab = await get_gamepadui_tab()
-        await tab.open_websocket()
-        await tab.evaluate_js(f"DeckyPluginLoader.addMultiplePluginsInstallPrompt('{request_id}', [{js_requests_parameter}])")
+        await self.loader.ws.emit("loader/add_multiple_plugins_install_prompt", request_id, requests)
 
     async def confirm_plugin_install(self, request_id: str):
         requestOrRequests = self.install_requests.pop(request_id)

@@ -16,9 +16,9 @@ from typing import TYPE_CHECKING, List
 if TYPE_CHECKING:
     from .main import PluginManager
 
-from .injector import get_gamepadui_tab
 from .plugin.plugin import PluginWrapper
 from .wsrouter import WSRouter
+from .enums import PluginLoadType
 
 Plugins = dict[str, PluginWrapper]
 ReloadQueue = Queue[Tuple[str, str, bool | None] | Tuple[str, str]]
@@ -96,6 +96,7 @@ class Loader:
             web.get("/frontend/{path:.*}", self.handle_frontend_assets),
             web.get("/locales/{path:.*}", self.handle_frontend_locales),
             web.get("/plugins/{plugin_name}/frontend_bundle", self.handle_frontend_bundle),
+            web.get("/plugins/{plugin_name}/dist/{path:.*}", self.handle_plugin_dist),
             web.get("/plugins/{plugin_name}/assets/{path:.*}", self.handle_plugin_frontend_assets),
         ])
 
@@ -126,7 +127,13 @@ class Loader:
 
     async def get_plugins(self):
         plugins = list(self.plugins.values())
-        return [{"name": str(i), "version": i.version} for i in plugins]
+        return [{"name": str(i), "version": i.version, "load_type": i.load_type} for i in plugins]
+
+    async def handle_plugin_dist(self, request: web.Request):
+        plugin = self.plugins[request.match_info["plugin_name"]]
+        file = path.join(self.plugin_path, plugin.plugin_directory, "dist", request.match_info["path"])
+
+        return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
 
     async def handle_plugin_frontend_assets(self, request: web.Request):
         plugin = self.plugins[request.match_info["plugin_name"]]
@@ -145,7 +152,7 @@ class Loader:
             async def plugin_emitted_event(event: str, data: Any):
                 self.logger.debug(f"PLUGIN EMITTED EVENT: {str(event)} {data}")
                 event_data = PluginEvent(plugin_name=plugin.name, event=event, data=data)
-                await self.ws.emit("plugin_event", event_data)
+                await self.ws.emit("loader/plugin_event", event_data)
 
             plugin = PluginWrapper(file, plugin_directory, self.plugin_path, plugin_emitted_event)
             if plugin.name in self.plugins:
@@ -166,9 +173,8 @@ class Loader:
             self.logger.error(f"Could not load {file}. {e}")
             print_exc()
 
-    async def dispatch_plugin(self, name: str, version: str | None):
-        gpui_tab = await get_gamepadui_tab()
-        await gpui_tab.evaluate_js(f"window.importDeckyPlugin('{name}', '{version}')")
+    async def dispatch_plugin(self, name: str, version: str | None, load_type: int = PluginLoadType.ESMODULE_V1.value):
+        await self.ws.emit("loader/import_plugin", name, version, load_type)        
 
     def import_plugins(self):
         self.logger.info(f"import plugins from {self.plugin_path}")

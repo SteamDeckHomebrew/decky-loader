@@ -30,7 +30,7 @@ from .loader import Loader
 from .settings import SettingsManager
 from .updater import Updater
 from .utilities import Utilities
-from .customtypes import UserType
+from .enums import UserType
 from .wsrouter import WSRouter
 
 

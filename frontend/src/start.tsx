@@ -6,7 +6,6 @@ import PluginLoader from './plugin-loader';
 
 declare global {
   export var DeckyPluginLoader: PluginLoader;
-  export var importDeckyPlugin: Function;
   export var deckyHasLoaded: boolean;
   export var deckyHasConnectedRDT: boolean | undefined;
   export var deckyAuthToken: string;
@@ -45,9 +44,7 @@ declare global {
   window?.DeckyPluginLoader?.deinit();
   window.DeckyPluginLoader = new PluginLoader();
   DeckyPluginLoader.init();
-  window.importDeckyPlugin = function (name: string, version: string) {
-    DeckyPluginLoader?.importPlugin(name, version);
-  };
+  console.log(import.meta.url);
 })();
 
 export default i18n;

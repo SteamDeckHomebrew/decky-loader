@@ -89,7 +89,7 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
   useEffect(() => {
     (async () => {
       const res = await getPluginList(selectedSort[0], selectedSort[1]);
-      logger.log('got data!', res);
+      logger.debug('got data!', res);
       setPluginList(res);
       setPluginCount(res.length);
     })();
@@ -98,7 +98,7 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
   useEffect(() => {
     (async () => {
       const storeRes = await getStore();
-      logger.log(`store is ${storeRes}, isTesting is ${storeRes === Store.Testing}`);
+      logger.debug(`store is ${storeRes}, isTesting is ${storeRes === Store.Testing}`);
       setIsTesting(storeRes === Store.Testing);
     })();
   }, []);

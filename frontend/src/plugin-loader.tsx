@@ -2,7 +2,6 @@ import {
   ModalRoot,
   PanelSection,
   PanelSectionRow,
-  Patch,
   QuickAccessTab,
   Router,
   findSP,
@@ -26,7 +25,7 @@ import { FrozenPluginService } from './frozen-plugins-service';
 import { HiddenPluginsService } from './hidden-plugins-service';
 import Logger from './logger';
 import { NotificationService } from './notification-service';
-import { InstallType, Plugin } from './plugin';
+import { InstallType, Plugin, PluginLoadType } from './plugin';
 import RouterHook from './router-hook';
 import { deinitSteamFixes, initSteamFixes } from './steamfixes';
 import { checkForPluginUpdates } from './store';
@@ -40,6 +39,18 @@ const StorePage = lazy(() => import('./components/store/Store'));
 const SettingsPage = lazy(() => import('./components/settings'));
 
 const FilePicker = lazy(() => import('./components/modals/filepicker'));
+
+declare global {
+  interface Window {
+    __DECKY_SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED_deckyPluginBackendAPIInit?: {
+      connect: (version: number, key: string) => any; // Returns the backend API used above, no real point adding types to this.
+    };
+  }
+}
+
+const callPluginMethod = DeckyBackend.callable<[pluginName: string, method: string, ...args: any], any>(
+  'loader/call_plugin_method',
+);
 
 class PluginLoader extends Logger {
   private plugins: Plugin[] = [];
@@ -55,11 +66,21 @@ class PluginLoader extends Logger {
   private reloadLock: boolean = false;
   // stores a list of plugin names which requested to be reloaded
   private pluginReloadQueue: { name: string; version?: string }[] = [];
-
-  private focusWorkaroundPatch?: Patch;
+  private apiKeys: Map<string, string> = new Map();
 
   constructor() {
     super(PluginLoader.name);
+    console.log(import.meta.url);
+
+    DeckyBackend.addEventListener('loader/notify_updates', this.notifyUpdates.bind(this));
+    DeckyBackend.addEventListener('loader/import_plugin', this.importPlugin.bind(this));
+    DeckyBackend.addEventListener('loader/unload_plugin', this.unloadPlugin.bind(this));
+    DeckyBackend.addEventListener('loader/add_plugin_install_prompt', this.addPluginInstallPrompt.bind(this));
+    DeckyBackend.addEventListener(
+      'loader/add_multiple_plugins_install_prompt',
+      this.addMultiplePluginsInstallPrompt.bind(this),
+    );
+
     this.tabsHook.init();
 
     const TabBadge = () => {
@@ -108,7 +129,10 @@ class PluginLoader extends Logger {
       .then(() => this.log('Initialized'));
   }
 
-  private getPluginsFromBackend = DeckyBackend.callable<[], { name: string; version: string }[]>('loader/get_plugins');
+  private getPluginsFromBackend = DeckyBackend.callable<
+    [],
+    { name: string; version: string; load_type: PluginLoadType }[]
+  >('loader/get_plugins');
 
   private async loadPlugins() {
     // wait for SP window to exist before loading plugins
@@ -119,7 +143,8 @@ class PluginLoader extends Logger {
     const pluginLoadPromises = [];
     const loadStart = performance.now();
     for (const plugin of plugins) {
-      if (!this.hasPlugin(plugin.name)) pluginLoadPromises.push(this.importPlugin(plugin.name, plugin.version, false));
+      if (!this.hasPlugin(plugin.name))
+        pluginLoadPromises.push(this.importPlugin(plugin.name, plugin.version, plugin.load_type, false));
     }
     await Promise.all(pluginLoadPromises);
     const loadEnd = performance.now();
@@ -256,7 +281,6 @@ class PluginLoader extends Logger {
     this.routerHook.removeRoute('/decky/settings');
     deinitSteamFixes();
     deinitFilepickerPatches();
-    this.focusWorkaroundPatch?.unpatch();
   }
 
   public unloadPlugin(name: string) {
@@ -266,7 +290,12 @@ class PluginLoader extends Logger {
     this.deckyState.setPlugins(this.plugins);
   }
 
-  public async importPlugin(name: string, version?: string | undefined, useQueue: boolean = true) {
+  public async importPlugin(
+    name: string,
+    version?: string | undefined,
+    loadType: PluginLoadType = PluginLoadType.ESMODULE_V1,
+    useQueue: boolean = true,
+  ) {
     if (useQueue && this.reloadLock) {
       this.log('Reload currently in progress, adding to queue', name);
       this.pluginReloadQueue.push({ name, version: version });
@@ -279,7 +308,7 @@ class PluginLoader extends Logger {
 
       this.unloadPlugin(name);
       const startTime = performance.now();
-      await this.importReactPlugin(name, version);
+      await this.importReactPlugin(name, version, loadType);
       const endTime = performance.now();
 
       this.deckyState.setPlugins(this.plugins);
@@ -297,70 +326,94 @@ class PluginLoader extends Logger {
     }
   }
 
-  private async importReactPlugin(name: string, version?: string) {
-    let res = await fetch(`http://127.0.0.1:1337/plugins/${name}/frontend_bundle`, {
-      credentials: 'include',
-      headers: {
-        Authentication: deckyAuthToken,
-      },
-    });
+  private async importReactPlugin(
+    name: string,
+    version?: string,
+    loadType: PluginLoadType = PluginLoadType.ESMODULE_V1,
+  ) {
+    try {
+      switch (loadType) {
+        case PluginLoadType.ESMODULE_V1:
+          const uuid = this.initPluginBackendAPIConnection(name);
+          let plugin_export: () => Plugin;
+          try {
+            plugin_export = await import(`http://127.0.0.1:1337/plugins/${name}/dist/index.js#apiKey=${uuid}`);
+          } finally {
+            this.destroyPluginBackendAPIConnection(uuid);
+          }
+          let plugin = plugin_export();
 
-    if (res.ok) {
-      try {
-        let plugin_export = await eval(await res.text());
-        let plugin = plugin_export(this.createPluginAPI(name));
-        this.plugins.push({
-          ...plugin,
-          name: name,
-          version: version,
-        });
-      } catch (e) {
-        this.error('Error loading plugin ' + name, e);
-        const TheError: FC<{}> = () => (
-          <PanelSection>
-            <PanelSectionRow>
-              <div
-                className={quickAccessMenuClasses.FriendsTitle}
-                style={{ display: 'flex', justifyContent: 'center' }}
-              >
-                <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="error" />
-              </div>
-            </PanelSectionRow>
-            <PanelSectionRow>
-              <pre style={{ overflowX: 'scroll' }}>
-                <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
-              </pre>
-            </PanelSectionRow>
-            <PanelSectionRow>
-              <div className={quickAccessMenuClasses.Text}>
-                <TranslationHelper
-                  trans_class={TranslationClass.PLUGIN_LOADER}
-                  trans_text="plugin_error_uninstall"
-                  i18n_args={{ name: name }}
-                />
-              </div>
-            </PanelSectionRow>
-          </PanelSection>
-        );
-        this.plugins.push({
-          name: name,
-          version: version,
-          content: <TheError />,
-          icon: <FaExclamationCircle />,
-        });
-        this.toaster.toast({
-          title: (
-            <TranslationHelper
-              trans_class={TranslationClass.PLUGIN_LOADER}
-              trans_text="plugin_load_error.toast"
-              i18n_args={{ name: name }}
-            />
-          ),
-          body: '' + e,
-          icon: <FaExclamationCircle />,
-        });
+          this.plugins.push({
+            ...plugin,
+            name: name,
+            version: version,
+          });
+          break;
+
+        case PluginLoadType.LEGACY_EVAL_IIFE:
+          let res = await fetch(`http://127.0.0.1:1337/plugins/${name}/frontend_bundle`, {
+            credentials: 'include',
+            headers: {
+              Authentication: deckyAuthToken,
+            },
+          });
+          if (res.ok) {
+            let plugin_export: (serverAPI: any) => Plugin = await eval(await res.text());
+            let plugin = plugin_export(this.createLegacyPluginAPI(name));
+            this.plugins.push({
+              ...plugin,
+              name: name,
+              version: version,
+            });
+          } else throw new Error(`${name} frontend_bundle not OK`);
+          break;
+
+        default:
+          throw new Error(`${name} has no defined loadType.`);
       }
-    } else throw new Error(`${name} frontend_bundle not OK`);
+    } catch (e) {
+      this.error('Error loading plugin ' + name, e);
+      const TheError: FC<{}> = () => (
+        <PanelSection>
+          <PanelSectionRow>
+            <div className={quickAccessMenuClasses.FriendsTitle} style={{ display: 'flex', justifyContent: 'center' }}>
+              <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="error" />
+            </div>
+          </PanelSectionRow>
+          <PanelSectionRow>
+            <pre style={{ overflowX: 'scroll' }}>
+              <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
+            </pre>
+          </PanelSectionRow>
+          <PanelSectionRow>
+            <div className={quickAccessMenuClasses.Text}>
+              <TranslationHelper
+                trans_class={TranslationClass.PLUGIN_LOADER}
+                trans_text="plugin_error_uninstall"
+                i18n_args={{ name: name }}
+              />
+            </div>
+          </PanelSectionRow>
+        </PanelSection>
+      );
+      this.plugins.push({
+        name: name,
+        version: version,
+        content: <TheError />,
+        icon: <FaExclamationCircle />,
+      });
+      this.toaster.toast({
+        title: (
+          <TranslationHelper
+            trans_class={TranslationClass.PLUGIN_LOADER}
+            trans_text="plugin_load_error.toast"
+            i18n_args={{ name: name }}
+          />
+        ),
+        body: '' + e,
+        icon: <FaExclamationCircle />,
+      });
+    }
   }
 
   async callServerMethod(methodName: string, args = {}) {
@@ -374,20 +427,20 @@ class PluginLoader extends Logger {
     );
   }
 
-  openFilePicker(
+  openFilePickerLegacy(
     startPath: string,
     selectFiles?: boolean,
     regex?: RegExp,
   ): Promise<{ path: string; realpath: string }> {
     this.warn('openFilePicker is deprecated and will be removed. Please migrate to openFilePickerV2');
     if (selectFiles) {
-      return this.openFilePickerV2(FileSelectionType.FILE, startPath, true, true, regex);
+      return this.openFilePicker(FileSelectionType.FILE, startPath, true, true, regex);
     } else {
-      return this.openFilePickerV2(FileSelectionType.FOLDER, startPath, false, true, regex);
+      return this.openFilePicker(FileSelectionType.FOLDER, startPath, false, true, regex);
     }
   }
 
-  openFilePickerV2(
+  openFilePicker(
     select: FileSelectionType,
     startPath: string,
     includeFiles?: boolean,
@@ -428,27 +481,84 @@ class PluginLoader extends Logger {
     });
   }
 
-  createPluginAPI(pluginName: string) {
-    const pluginAPI = {
-      backend: {
-        call<Args extends any[] = any[], Return = void>(method: string, ...args: Args): Promise<Return> {
-          return DeckyBackend.call<[pluginName: string, method: string, ...args: Args], Return>(
-            'loader/call_plugin_method',
-            pluginName,
-            method,
-            ...args,
-          );
-        },
-        callable<Args extends any[] = any[], Return = void>(method: string): (...args: Args) => Promise<Return> {
-          return (...args) => pluginAPI.backend.call<Args, Return>(method, ...args);
-        },
+  /* TODO replace with the following flow (or similar) so we can reuse the JS Fetch API
+        frontend --request URL only--> backend (ws method)
+        backend --new temporary backend URL--> frontend (ws response)
+        frontend <--> backend <--> target URL (over http!)
+      */
+  async fetchNoCors(url: string, request: any = {}) {
+    let method: string;
+    const req = { headers: {}, ...request, data: request.body };
+    req?.body && delete req.body;
+    if (!request.method) {
+      method = 'POST';
+    } else {
+      method = request.method;
+      delete req.method;
+    }
+    // this is terrible but a. we're going to redo this entire method anyway and b. it was already terrible
+    try {
+      const ret = await DeckyBackend.call<
+        [method: string, url: string, extra_opts?: any],
+        { status: number; headers: { [key: string]: string }; body: string }
+      >('utilities/http_request', method, url, req);
+      return { success: true, result: ret };
+    } catch (e) {
+      return { success: false, result: e?.toString() };
+    }
+  }
+
+  destroyPluginBackendAPIConnection(uuid: string) {
+    if (this.apiKeys.delete(uuid)) {
+      this.debug(`backend api connection init data destroyed for ${uuid}`);
+    }
+  }
+
+  initPluginBackendAPI() {
+    // Things will break *very* badly if plugin code touches this outside of @decky/backend, so lets make that clear.
+    window.__DECKY_SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED_deckyPluginBackendAPIInit = {
+      connect: (version: number, key: string) => {
+        if (!this.apiKeys.has(key)) {
+          throw new Error(`Backend API key ${key} is invalid.`);
+        }
+
+        const pluginName = this.apiKeys.get(key)!;
+
+        if (version <= 0) {
+          this.destroyPluginBackendAPIConnection(key);
+          throw new Error(`UUID ${key} requested invalid backend api version ${version}.`);
+        }
+
+        const backendAPI = {
+          call: (methodName: string, ...args: any) => {
+            return callPluginMethod(pluginName, methodName, ...args);
+          },
+          callable: (methodName: string) => {
+            return (...args: any) => callPluginMethod(pluginName, methodName, ...args);
+          },
+        };
+
+        this.destroyPluginBackendAPIConnection(key);
+        return backendAPI;
       },
+    };
+  }
+
+  initPluginBackendAPIConnection(pluginName: string) {
+    const key = crypto.randomUUID();
+    this.apiKeys.set(key, pluginName);
+
+    return key;
+  }
+
+  createLegacyPluginAPI(pluginName: string) {
+    const pluginAPI = {
       routerHook: this.routerHook,
       toaster: this.toaster,
       // Legacy
       callServerMethod: this.callServerMethod,
-      openFilePicker: this.openFilePicker,
-      openFilePickerV2: this.openFilePickerV2,
+      openFilePicker: this.openFilePickerLegacy,
+      openFilePickerV2: this.openFilePicker,
       // Legacy
       async callPluginMethod(methodName: string, args = {}) {
         return DeckyBackend.call<[pluginName: string, methodName: string, kwargs: any], any>(
@@ -458,32 +568,7 @@ class PluginLoader extends Logger {
           args,
         );
       },
-      /* TODO replace with the following flow (or similar) so we can reuse the JS Fetch API
-        frontend --request URL only--> backend (ws method)
-        backend --new temporary backend URL--> frontend (ws response)
-        frontend <--> backend <--> target URL (over http!)
-      */
-      async fetchNoCors(url: string, request: any = {}) {
-        let method: string;
-        const req = { headers: {}, ...request, data: request.body };
-        req?.body && delete req.body;
-        if (!request.method) {
-          method = 'POST';
-        } else {
-          method = request.method;
-          delete req.method;
-        }
-        // this is terrible but a. we're going to redo this entire method anyway and b. it was already terrible
-        try {
-          const ret = await DeckyBackend.call<
-            [method: string, url: string, extra_opts?: any],
-            { status: number; headers: { [key: string]: string }; body: string }
-          >('utilities/http_request', method, url, req);
-          return { success: true, result: ret };
-        } catch (e) {
-          return { success: false, result: e?.toString() };
-        }
-      },
+      fetchNoCors: this.fetchNoCors,
       executeInTab: DeckyBackend.callable<
         [tab: String, runAsync: Boolean, code: string],
         { success: boolean; result: any }

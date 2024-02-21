@@ -12,7 +12,7 @@ from aiohttp.web import Request, Response, middleware
 from aiohttp.typedefs import Handler
 from aiohttp import ClientSession
 from .localplatform import localplatform
-from .customtypes import UserType
+from .enums import UserType
 from logging import getLogger
 from packaging.version import Version
 
@@ -23,6 +23,7 @@ csrf_token = str(uuid.uuid4())
 ssl_ctx = ssl.create_default_context(cafile=certifi.where())
 
 assets_regex = re.compile("^/plugins/.*/assets/.*")
+dist_regex = re.compile("^/plugins/.*/dist/.*")
 frontend_regex = re.compile("^/frontend/.*")
 logger = getLogger("Main")
 
@@ -34,7 +35,18 @@ def get_csrf_token():
 
 @middleware
 async def csrf_middleware(request: Request, handler: Handler):
-    if str(request.method) == "OPTIONS" or request.headers.get('Authentication') == csrf_token or str(request.rel_url) == "/auth/token" or str(request.rel_url).startswith("/plugins/load_main/") or str(request.rel_url).startswith("/static/") or str(request.rel_url).startswith("/steam_resource/") or str(request.rel_url).startswith("/frontend/") or str(request.rel_url.path) == "/ws" or assets_regex.match(str(request.rel_url)) or frontend_regex.match(str(request.rel_url)):
+    if str(request.method) == "OPTIONS" or \
+        request.headers.get('Authentication') == csrf_token or \
+        str(request.rel_url) == "/auth/token" or \
+        str(request.rel_url).startswith("/plugins/load_main/") or \
+        str(request.rel_url).startswith("/static/") or \
+        str(request.rel_url).startswith("/steam_resource/") or \
+        str(request.rel_url).startswith("/frontend/") or \
+        str(request.rel_url.path) == "/ws" or \
+        assets_regex.match(str(request.rel_url)) or \
+        dist_regex.match(str(request.rel_url)) or \
+        frontend_regex.match(str(request.rel_url)):
+
         return await handler(request)
     return Response(text='Forbidden', status=403)
 

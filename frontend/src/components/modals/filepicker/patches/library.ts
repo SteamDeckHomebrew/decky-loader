@@ -1,6 +1,7 @@
 import { Patch, findModuleChild, replacePatch, sleep } from 'decky-frontend-lib';
 
 import Logger from '../../../../logger';
+import { FileSelectionType } from '..';
 
 const logger = new Logger('LibraryPatch');
 
@@ -13,7 +14,12 @@ function rePatch() {
       const details = window.appDetailsStore.GetAppDetails(appid);
       logger.debug('game details', details);
       // strShortcutStartDir
-      const file = await DeckyPluginLoader.openFilePicker(details?.strShortcutStartDir.replaceAll('"', '') || '/');
+      const file = await DeckyPluginLoader.openFilePicker(
+        FileSelectionType.FILE,
+        details?.strShortcutStartDir.replaceAll('"', '') || '/',
+        true,
+        true,
+      );
       logger.debug('user selected', file);
       window.SteamClient.Apps.SetShortcutExe(appid, JSON.stringify(file.path));
       const pathArr = file.path.split('/');

@@ -75,12 +75,12 @@ export default function UpdaterSettings() {
   const { t } = useTranslation();
 
   useEffect(() => {
-    const a = DeckyBackend.addEventListener('frontend/update_download_percentage', (percentage) => {
+    const a = DeckyBackend.addEventListener('updater/update_download_percentage', (percentage) => {
       setUpdateProgress(percentage);
       setIsLoaderUpdating(true);
     });
 
-    const b = DeckyBackend.addEventListener('frontend/finish_download', () => {
+    const b = DeckyBackend.addEventListener('updater/finish_download', () => {
       setUpdateProgress(0);
       setReloading(true);
     });

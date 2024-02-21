@@ -7,7 +7,7 @@ settings:
 dependencies:
   decky-frontend-lib:
     specifier: 3.24.5
-    version: link:../../lib
+    version: 3.24.5
   filesize:
     specifier: ^10.0.7
     version: 10.0.7
@@ -1481,6 +1481,10 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
+
+  /decky-frontend-lib@3.24.5:
+    resolution: {integrity: sha512-eYlbKDOOcIBPI0b76Rqvlryq2ym/QNiry4xf2pFrXmBa1f95dflqbQAb2gTq9uHEa5gFmeV4lUcMPGJ3M14Xqw==}
+    dev: false
 
   /decode-named-character-reference@1.0.2:
     resolution: {integrity: sha512-O8x12RzrUF8xyVcY0KJowWsmaJxQbmy0/EtnNtHRpsOcT7dFk5W598coHqBVpmWo1oQQfsCqfCmkZN5DJrZVdg==}

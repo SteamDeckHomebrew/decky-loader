@@ -35,7 +35,6 @@ class TestingVersion(TypedDict):
     link: str
     head_sha: str
 
-
 class Updater:
     def __init__(self, context: PluginManager) -> None:
         self.context = context
@@ -103,7 +102,7 @@ class Updater:
         logger.debug("checking for updates")
         selectedBranch = self.get_branch(self.context.settings)
         async with ClientSession() as web:
-            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases", ssl=helpers.get_ssl_context()) as res:
+            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases", headers={'X-GitHub-Api-Version': '2022-11-28'}, ssl=helpers.get_ssl_context()) as res:
                 remoteVersions: List[RemoteVer] = await res.json()
                 if selectedBranch == 0:
                     logger.debug("release type: release")
@@ -126,8 +125,7 @@ class Updater:
             logger.error("release type: NOT FOUND")
             raise ValueError("no valid branch found")
         logger.info("Updated remote version information")
-        tab = await get_gamepadui_tab()
-        await tab.evaluate_js(f"window.DeckyPluginLoader.notifyUpdates()", False, True, False)
+        await self.context.ws.emit("loader/notify_updates")
         return await self.get_version_info()
 
     async def version_reloader(self):
@@ -158,7 +156,7 @@ class Updater:
                             raw += len(c)
                             new_progress = round((raw / total) * 100)
                             if progress != new_progress:
-                                self.context.loop.create_task(self.context.ws.emit("frontend/update_download_percentage", new_progress))
+                                self.context.loop.create_task(self.context.ws.emit("updater/update_download_percentage", new_progress))
                                 progress = new_progress
 
         with open(path.join(getcwd(), ".loader.version"), "w", encoding="utf-8") as out:
@@ -182,7 +180,7 @@ class Updater:
                 logger.info(f"Setting the executable flag with chcon returned {await process.wait()}")
 
         logger.info("Updated loader installation.")
-        await self.context.ws.emit("frontend/finish_download")
+        await self.context.ws.emit("updater/finish_download")
         await self.do_restart()
         await tab.close_websocket()
 

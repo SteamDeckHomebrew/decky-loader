@@ -1,6 +1,6 @@
 import os, pwd, grp, sys, logging
 from subprocess import call, run, DEVNULL, PIPE, STDOUT
-from ..customtypes import UserType
+from ..enums import UserType
 
 logger = logging.getLogger("localplatform")
 
@@ -157,6 +157,7 @@ async def service_start(service_name : str) -> bool:
     return res.returncode == 0
 
 async def restart_webhelper() -> bool:
+    logger.info("Restarting steamwebhelper")
     res = run(["killall", "-s", "SIGTERM", "steamwebhelper"], stdout=DEVNULL, stderr=DEVNULL)
     return res.returncode == 0
 

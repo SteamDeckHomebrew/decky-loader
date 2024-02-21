@@ -28,6 +28,6 @@ export const doRestart = DeckyBackend.callable('updater/do_restart');
 export const getVersionInfo = DeckyBackend.callable<[], VerInfo>('updater/get_version_info');
 export const checkForUpdates = DeckyBackend.callable<[], VerInfo>('updater/check_for_updates');
 
-DeckyBackend.addEventListener('frontend/finish_download', async () => {
+DeckyBackend.addEventListener('updater/finish_download', async () => {
   await doRestart();
 });

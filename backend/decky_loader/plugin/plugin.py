@@ -4,9 +4,9 @@ from logging import getLogger
 from os import path
 from multiprocessing import Process
 
-
 from .sandboxed_plugin import SandboxedPlugin
 from .messages import MethodCallRequest, SocketMessageType
+from ..enums import PluginLoadType
 from ..localplatform.localsocket import LocalSocket
 
 from typing import Any, Callable, Coroutine, Dict, List
@@ -21,10 +21,14 @@ class PluginWrapper:
 
         self.version = None
 
+        self.load_type = PluginLoadType.LEGACY_EVAL_IIFE.value
+
         json = load(open(path.join(plugin_path, plugin_directory, "plugin.json"), "r", encoding="utf-8"))
         if path.isfile(path.join(plugin_path, plugin_directory, "package.json")):
             package_json = load(open(path.join(plugin_path, plugin_directory, "package.json"), "r", encoding="utf-8"))
             self.version = package_json["version"]
+            if ("type" in package_json and package_json["type"] == "module"):
+                self.load_type = PluginLoadType.ESMODULE_V1.value
 
         self.name = json["name"]
         self.author = json["author"]

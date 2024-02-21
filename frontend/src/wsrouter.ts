@@ -50,7 +50,6 @@ interface PromiseResolver<T> {
 }
 
 export class WSRouter extends Logger {
-  routes: Map<string, (...args: any) => any> = new Map();
   runningCalls: Map<number, PromiseResolver<any>> = new Map();
   eventListeners: Map<string, Set<(...args: any) => any>> = new Map();
   ws?: WebSocket;
@@ -92,14 +91,6 @@ export class WSRouter extends Logger {
     this.ws?.send(JSON.stringify(data));
   }
 
-  addRoute(name: string, route: (...args: any) => any) {
-    this.routes.set(name, route);
-  }
-
-  removeRoute(name: string) {
-    this.routes.delete(name);
-  }
-
   addEventListener(event: string, listener: (...args: any) => any) {
     if (!this.eventListeners.has(event)) {
       this.eventListeners.set(event, new Set([listener]));
@@ -123,20 +114,6 @@ export class WSRouter extends Logger {
     try {
       const data = JSON.parse(msg.data) as Message;
       switch (data.type) {
-        case MessageType.CALL:
-          if (this.routes.has(data.route)) {
-            try {
-              const res = await this.routes.get(data.route)!(...data.args);
-              this.write({ type: MessageType.REPLY, id: data.id, result: res });
-              this.debug(`Started JS call ${data.route} ID ${data.id}`);
-            } catch (e) {
-              await this.write({ type: MessageType.ERROR, id: data.id, error: (e as Error)?.stack || e });
-            }
-          } else {
-            await this.write({ type: MessageType.ERROR, id: data.id, error: `Route ${data.route} does not exist.` });
-          }
-          break;
-
         case MessageType.REPLY:
           if (this.runningCalls.has(data.id)) {
             this.runningCalls.get(data.id)!.resolve(data.result);
@@ -154,6 +131,7 @@ export class WSRouter extends Logger {
           break;
 
         case MessageType.EVENT:
+          this.debug(`Recieved event ${data.event} with args`, data.args);
           if (this.eventListeners.has(data.event)) {
             for (const listener of this.eventListeners.get(data.event)!) {
               (async () => {

@@ -11,7 +11,7 @@ from asyncio import (get_event_loop, new_event_loop,
 from .messages import SocketResponseDict, SocketMessageType
 from ..localplatform.localsocket import LocalSocket
 from ..localplatform.localplatform import setgid, setuid, get_username, get_home_path
-from ..customtypes import UserType
+from ..enums import UserType
 from .. import helpers
 
 from typing import List, TypeVar, Type

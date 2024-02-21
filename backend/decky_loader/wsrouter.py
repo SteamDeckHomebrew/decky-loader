@@ -93,9 +93,7 @@ class WSRouter:
             async for msg in ws:
                 msg = cast(WSMessageExtra, msg)
 
-                self.logger.debug(msg)
                 if msg.type == WSMsgType.TEXT:
-                    self.logger.debug(msg.data)
                     if msg.data == 'close':
                         # TODO DO NOT RELY ON THIS!
                         break

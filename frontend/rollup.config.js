@@ -43,6 +43,8 @@ export default defineConfig({
     chunkFileNames: (chunkInfo) => {
       return 'chunk-[hash].js';
     },
+    sourcemap: true,
+    sourcemapPathTransform: (relativeSourcePath) => relativeSourcePath.replace(/^\.\.\//, `decky://decky/loader/`),
   },
   onwarn: function (message, handleWarning) {
     if (hiddenWarnings.some((warning) => message.code === warning)) return;

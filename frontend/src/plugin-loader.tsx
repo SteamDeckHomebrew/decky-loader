@@ -66,11 +66,9 @@ class PluginLoader extends Logger {
   private reloadLock: boolean = false;
   // stores a list of plugin names which requested to be reloaded
   private pluginReloadQueue: { name: string; version?: string }[] = [];
-  private apiKeys: Map<string, string> = new Map();
 
   constructor() {
     super(PluginLoader.name);
-    console.log(import.meta.url);
 
     DeckyBackend.addEventListener('loader/notify_updates', this.notifyUpdates.bind(this));
     DeckyBackend.addEventListener('loader/import_plugin', this.importPlugin.bind(this));
@@ -122,6 +120,8 @@ class PluginLoader extends Logger {
     initSteamFixes();
 
     initFilepickerPatches();
+
+    this.initPluginBackendAPI();
 
     Promise.all([this.getUserInfo(), this.updateVersion()])
       .then(() => this.loadPlugins())
@@ -334,14 +334,8 @@ class PluginLoader extends Logger {
     try {
       switch (loadType) {
         case PluginLoadType.ESMODULE_V1:
-          const uuid = this.initPluginBackendAPIConnection(name);
-          let plugin_export: () => Plugin;
-          try {
-            plugin_export = await import(`http://127.0.0.1:1337/plugins/${name}/dist/index.js#apiKey=${uuid}`);
-          } finally {
-            this.destroyPluginBackendAPIConnection(uuid);
-          }
-          let plugin = plugin_export();
+          const plugin_exports = await import(`http://127.0.0.1:1337/plugins/${name}/dist/index.js`);
+          let plugin = plugin_exports.default();
 
           this.plugins.push({
             ...plugin,
@@ -508,25 +502,12 @@ class PluginLoader extends Logger {
     }
   }
 
-  destroyPluginBackendAPIConnection(uuid: string) {
-    if (this.apiKeys.delete(uuid)) {
-      this.debug(`backend api connection init data destroyed for ${uuid}`);
-    }
-  }
-
   initPluginBackendAPI() {
     // Things will break *very* badly if plugin code touches this outside of @decky/backend, so lets make that clear.
     window.__DECKY_SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED_deckyPluginBackendAPIInit = {
-      connect: (version: number, key: string) => {
-        if (!this.apiKeys.has(key)) {
-          throw new Error(`Backend API key ${key} is invalid.`);
-        }
-
-        const pluginName = this.apiKeys.get(key)!;
-
+      connect: (version: number, pluginName: string) => {
         if (version <= 0) {
-          this.destroyPluginBackendAPIConnection(key);
-          throw new Error(`UUID ${key} requested invalid backend api version ${version}.`);
+          throw new Error(`Plugin ${pluginName} requested invalid backend api version ${version}.`);
         }
 
         const backendAPI = {
@@ -538,17 +519,10 @@ class PluginLoader extends Logger {
           },
         };
 
-        this.destroyPluginBackendAPIConnection(key);
+        this.debug(`${pluginName} connected to backend API.`);
         return backendAPI;
       },
     };
-  }
-
-  initPluginBackendAPIConnection(pluginName: string) {
-    const key = crypto.randomUUID();
-    this.apiKeys.set(key, pluginName);
-
-    return key;
   }
 
   createLegacyPluginAPI(pluginName: string) {

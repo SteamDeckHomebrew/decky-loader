@@ -44,7 +44,6 @@ declare global {
   window?.DeckyPluginLoader?.deinit();
   window.DeckyPluginLoader = new PluginLoader();
   DeckyPluginLoader.init();
-  console.log(import.meta.url);
 })();
 
 export default i18n;

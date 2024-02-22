@@ -113,7 +113,9 @@
         "update_all_one": "Aggiorna un plugin",
         "update_all_many": "Aggiorna {{count}} plugins",
         "update_all_other": "Aggiorna {{count}} plugins",
-        "update_to": "Aggiorna a {{name}}"
+        "update_to": "Aggiorna a {{name}}",
+        "unfreeze": "Permetti aggiornamenti",
+        "freeze": "Congela aggiornamenti"
     },
     "PluginListLabel": {
         "hidden": "Nascosto dal menu di accesso rapido"
@@ -199,7 +201,8 @@
     "SettingsIndex": {
         "developer_title": "Sviluppatore",
         "general_title": "Generali",
-        "plugins_title": "Plugins"
+        "plugins_title": "Plugins",
+        "testing_title": "Testing"
     },
     "Store": {
         "store_contrib": {
@@ -225,7 +228,11 @@
             "about": "Riguardo a",
             "alph_asce": "Alfabetico (Z a A)",
             "alph_desc": "Alfabetico (A a Z)",
-            "title": "Sfoglia"
+            "title": "Sfoglia",
+            "date_desc": "Per più recente",
+            "date_asce": "Per più vecchio",
+            "downloads_desc": "Per più scaricato",
+            "downloads_asce": "Per meno scaricato"
         },
         "store_testing_cta": "Valuta la possibilità di testare nuovi plugin per aiutare il team di Decky Loader!",
         "store_testing_warning": {
@@ -263,5 +270,8 @@
     "TitleView": {
         "settings_desc": "Apri le impostazioni di Decky",
         "decky_store_desc": "Apri lo store di Decky"
+    },
+    "Testing": {
+        "download": "Scarica"
     }
 }

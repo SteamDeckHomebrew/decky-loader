@@ -56,12 +56,32 @@
     },
     "Developer": {
         "5secreload": "Rechargement dans 5 secondes",
-        "disabling": "Désactivation",
-        "enabling": "Activation"
+        "disabling": "Désactivation des React DevTools",
+        "enabling": "Activation des React DevTools"
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Utiliser ce dossier"
+            "select": "Utiliser ce dossier",
+            "label": "Dossier",
+            "show_more": "Afficher plus de fichiers"
+        },
+        "files": {
+            "show_hidden": "Afficher les fichiers cachés",
+            "all_files": "Tout les fichiers",
+            "file_type": "Type de fichier"
+        },
+        "file": {
+            "select": "Sélectionner ce fichier"
+        },
+        "filter": {
+            "created_desc": "Création (Plus récent)",
+            "modified_asce": "Modifié (Plus vieux)",
+            "modified_desc": "Modifié (Plus récent)",
+            "created_asce": "Création (Plus vieux)",
+            "name_asce": "Z-A",
+            "name_desc": "A-Z",
+            "size_asce": "Taille (Plus petit)",
+            "size_desc": "Taille (Plus grand)"
         }
     },
     "PluginCard": {
@@ -98,9 +118,11 @@
         "uninstall": "Désinstaller",
         "update_to": "Mettre à jour vers {{name}}",
         "no_plugin": "Aucun plugin installé !",
-        "update_all_one": "",
-        "update_all_many": "",
-        "update_all_other": ""
+        "update_all_one": "Mettre à jour 1 plugin",
+        "update_all_many": "Mettre à jour {{count}} plugins",
+        "update_all_other": "Mettre à jour {{count}} plugins",
+        "show": "Accès Rapide : Afficher",
+        "hide": "Accès rapide : Cacher"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -116,9 +138,9 @@
             "title": "Désinstaller {{name}}",
             "desc": "Êtes-vous sûr.e de vouloir désinstaller {{name}} ?"
         },
-        "plugin_update_one": "",
-        "plugin_update_many": "",
-        "plugin_update_other": ""
+        "plugin_update_one": "Mise à jour disponible pour 1 plugin !",
+        "plugin_update_many": "Mises à jour disponible pour {{count}} plugins !",
+        "plugin_update_other": "Mises à jour disponible pour {{count}} plugins !"
     },
     "RemoteDebugging": {
         "remote_cef": {
@@ -184,18 +206,43 @@
     },
     "MultiplePluginsInstallModal": {
         "title": {
-            "reinstall_one": "",
-            "reinstall_many": "",
-            "reinstall_other": "",
-            "install_one": "",
-            "install_many": "",
-            "install_other": "",
-            "mixed_one": "",
-            "mixed_many": "",
-            "mixed_other": "",
-            "update_one": "",
-            "update_many": "",
-            "update_other": ""
+            "reinstall_one": "Réinstaller 1 plugin",
+            "reinstall_many": "Réinstaller {{count}} plugins",
+            "reinstall_other": "Réinstaller {{count}} plugins",
+            "install_one": "Installer 1 plugin",
+            "install_many": "Installer {{count}} plugins",
+            "install_other": "Installer {{count}} plugins",
+            "mixed_one": "Modifier {{count}} plugin",
+            "mixed_many": "Modifier {{count}} plugins",
+            "mixed_other": "Modifier {{count}} plugins",
+            "update_one": "Mettre à jour 1 plugin",
+            "update_many": "Mettre à jour {{count}} plugins",
+            "update_other": "Mettre à jour {{count}} plugins"
+        },
+        "confirm": "Êtes-vous sûr de vouloir apporter les modifications suivantes ?",
+        "description": {
+            "install": "Installer {{name}} {{version}}",
+            "update": "Mettre à jour {{name}} à {{version}}",
+            "reinstall": "Réinstaller {{name}} {{version}}"
+        },
+        "ok_button": {
+            "idle": "Confirmer",
+            "loading": "En cours"
+        }
+    },
+    "PluginListLabel": {
+        "hidden": "Caché du menu d'accès rapide"
+    },
+    "FilePickerError": {
+        "errors": {
+            "perm_denied": "Vous n'avez pas accès au dossier spécifié. Veuillez vérifier que votre utilisateur (deck sur un Steam Deck) possède les permissions requises pour accéder au dossier/fichier spécifié.",
+            "file_not_found": "Le chemin spécifié n'est pas valide. Veuillez vérifier et essayer à nouveau.",
+            "unknown": "Une erreur inconnue est survenue. L'erreur est : {{raw_error}}"
+        }
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "Retour"
         }
     }
 }

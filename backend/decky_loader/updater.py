@@ -282,3 +282,4 @@ class Updater:
                         await self.download_decky_binary(down_link, f'PR-{pr_id}' , True)
         else:
             logger.error("workflow run not found", str(works))
+            raise Exception("Workflow run not found.")

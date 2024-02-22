@@ -60,15 +60,25 @@ class WSRouter:
 
     async def _call_route(self, route: str, args: ..., call_id: int):
         instance_id = self.instance_id
-        res = await self.routes[route](*args)
+        error = None
+        try:
+            res = await self.routes[route](*args)
+        except Exception as err:
+            error = {"name":err.__class__.__name__, "message":str(err), "traceback":format_exc()}
+            res = None
+        
         if instance_id != self.instance_id:
             try:
                 self.logger.warn("Ignoring %s reply from stale instance %d with args %s and response %s", route, instance_id, args, res)
             except:
                 self.logger.warn("Ignoring %s reply from stale instance %d (failed to log event data)", route, instance_id)
             finally:
-                return
-        await self.write({"type": MessageType.REPLY.value, "id": call_id, "result": res})
+                return 
+
+        if error:
+            await self.write({"type": MessageType.ERROR.value, "id": call_id, "error": error})
+        else:
+            await self.write({"type": MessageType.REPLY.value, "id": call_id, "result": res})
 
     async def handle(self, request: Request):
         # Auth is a query param as JS WebSocket doesn't support headers
@@ -103,14 +113,12 @@ class WSRouter:
                             case MessageType.CALL.value:
                                 # do stuff with the message
                                 if data["route"] in self.routes:
-                                    try:
-                                        self.logger.debug(f'Started PY call {data["route"]} ID {data["id"]}')
-                                        create_task(self._call_route(data["route"], data["args"], data["id"]))
-                                    except:
-                                        create_task(self.write({"type": MessageType.ERROR.value, "id": data["id"], "error": format_exc()}))
+                                    self.logger.debug(f'Started PY call {data["route"]} ID {data["id"]}')
+                                    create_task(self._call_route(data["route"], data["args"], data["id"]))
                                 else:
+                                    error = {"error":"Route " + data["route"] + " does not exist.", "name": "NameMeOrNoneIDK", "traceback": None}
                                     # Dunno why but fstring doesnt work here
-                                    create_task(self.write({"type": MessageType.ERROR.value, "id": data["id"], "error": "Route " + data["route"] + " does not exist."}))
+                                    create_task(self.write({"type": MessageType.ERROR.value, "id": data["id"], "message": error}))
                             case _:
                                 self.logger.error("Unknown message type", data)
         finally:

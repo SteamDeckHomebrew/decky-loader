@@ -70,8 +70,14 @@ export default function TestingVersionList() {
                   <Focusable style={{ height: '40px', marginLeft: 'auto', display: 'flex' }}>
                     <DialogButton
                       style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
-                      onClick={() => {
-                        downloadTestingVersion(version.id, version.head_sha);
+                      onClick={async () => {
+                        try {
+                          await downloadTestingVersion(version.id, version.head_sha);
+                        } catch (e) {
+                          if (e instanceof Error) {
+                            DeckyPluginLoader.toaster.toast({ title: 'Error Installing PR', body: e.message });
+                          }
+                        }
                         setSetting('branch', UpdateBranch.Testing);
                       }}
                     >

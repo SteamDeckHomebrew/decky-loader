@@ -30,8 +30,18 @@ interface ReplyMessage {
 
 interface ErrorMessage {
   type: MessageType.ERROR;
-  error: any;
+  error: { name: string; message: string; traceback: string | null };
   id: number;
+}
+
+export class PyError extends Error {
+  pythonTraceback: string | null;
+
+  constructor(name: string, message: string, traceback: string | null) {
+    super(message);
+    this.name = `Python ${name}`;
+    this.pythonTraceback = traceback;
+  }
 }
 
 interface EventMessage {
@@ -45,7 +55,7 @@ type Message = CallMessage | ReplyMessage | ErrorMessage | EventMessage;
 // Helper to resolve a promise from the outside
 interface PromiseResolver<T> {
   resolve: (res: T) => void;
-  reject: (error: string) => void;
+  reject: (error: PyError) => void;
   promise: Promise<T>;
 }
 
@@ -124,7 +134,8 @@ export class WSRouter extends Logger {
 
         case MessageType.ERROR:
           if (this.runningCalls.has(data.id)) {
-            this.runningCalls.get(data.id)!.reject(data.error);
+            let err = new PyError(data.error.name, data.error.message, data.error.traceback);
+            this.runningCalls.get(data.id)!.reject(err);
             this.runningCalls.delete(data.id);
             this.debug(`Rejected PY call ${data.id} with error`, data.error);
           }

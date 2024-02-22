@@ -99,12 +99,14 @@
     }
   },
   "PluginListIndex": {
+    "freeze": "Freeze updates",
     "hide": "Quick access: Hide",
     "no_plugin": "No plugins installed!",
     "plugin_actions": "Plugin Actions",
     "reinstall": "Reinstall",
     "reload": "Reload",
     "show": "Quick access: Show",
+    "unfreeze": "Allow updates",
     "uninstall": "Uninstall",
     "update_all_one": "Update 1 plugin",
     "update_all_other": "Update {{count}} plugins",
@@ -192,7 +194,8 @@
   "SettingsIndex": {
     "developer_title": "Developer",
     "general_title": "General",
-    "plugins_title": "Plugins"
+    "plugins_title": "Plugins",
+    "testing_title": "Testing"
   },
   "Store": {
     "store_contrib": {
@@ -218,6 +221,10 @@
       "about": "About",
       "alph_asce": "Alphabetical (Z to A)",
       "alph_desc": "Alphabetical (A to Z)",
+      "date_asce": "Oldest First",
+      "date_desc": "Newest First",
+      "downloads_asce": "Least Downloaded First",
+      "downloads_desc": "Most Downloaded First",
       "title": "Browse"
     },
     "store_testing_cta": "Please consider testing new plugins to help the Decky Loader team!",
@@ -256,5 +263,8 @@
       "reloading": "Reloading",
       "updating": "Updating"
     }
-  }
+      },
+    "Testing": {
+        "download": "Download"
+    }
 }

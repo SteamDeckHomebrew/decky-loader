@@ -10,6 +10,7 @@ from hashlib import sha256
 from io import BytesIO
 from logging import getLogger
 from os import R_OK, W_OK, path, listdir, access, mkdir
+from re import sub
 from shutil import rmtree
 from time import time
 from zipfile import ZipFile
@@ -162,12 +163,6 @@ class PluginBrowser:
         current_plugin_order = self.settings.getSetting("pluginOrder")[:]
         if self.loader.watcher:
             self.loader.watcher.disabled = True
-        try:
-            pluginFolderPath = self.find_plugin_folder(name)
-            if pluginFolderPath:
-                isInstalled = True
-        except:
-            logger.error(f"Failed to determine if {name} is already installed, continuing anyway.")
 
         # Check if the file is a local file or a URL
         if artifact.startswith("file://"):
@@ -197,6 +192,28 @@ class PluginBrowser:
                 res = await client.post(storeUrl+f"/{name}/versions/{version}/increment?isUpdate={isInstalled}", ssl=get_ssl_context())
                 if res.status != 200:
                     logger.error(f"Server did not accept install count increment request. code: {res.status}")
+
+        if res_zip and version == "dev":
+            with ZipFile(res_zip) as plugin_zip:
+                plugin_json_list = [file for file in plugin_zip.namelist() if file.endswith("/plugin.json") and file.count("/") == 1]
+
+                if len(plugin_json_list) == 0:
+                    logger.fatal("No plugin.json found in plugin ZIP")
+                    return
+
+                elif len(plugin_json_list) > 1:
+                    logger.fatal("Multiple plugin.json found in plugin ZIP")
+                    return
+
+                else:
+                    name = sub(r"/.+$", "", plugin_json_list[0])
+
+        try:
+            pluginFolderPath = self.find_plugin_folder(name)
+            if pluginFolderPath:
+                isInstalled = True
+        except:
+            logger.error(f"Failed to determine if {name} is already installed, continuing anyway.")
 
         # Check to make sure we got the file
         if res_zip is None:
@@ -272,11 +289,15 @@ class PluginBrowser:
         Args:
             name (string): The name of the plugin
         """
+        frozen_plugins = self.settings.getSetting("frozenPlugins", [])
+        if name in frozen_plugins:
+            frozen_plugins.remove(name)
+            self.settings.setSetting("frozenPlugins", frozen_plugins)
+
         hidden_plugins = self.settings.getSetting("hiddenPlugins", [])
         if name in hidden_plugins:
             hidden_plugins.remove(name)
             self.settings.setSetting("hiddenPlugins", hidden_plugins)
-
 
         plugin_order = self.settings.getSetting("pluginOrder", [])
 

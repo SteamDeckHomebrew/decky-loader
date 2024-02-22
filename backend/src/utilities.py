@@ -238,7 +238,7 @@ class Utilities:
                 elif include_files:
                     # Handle requested extensions if present
                     if len(include_ext) == 0 or 'all_files' in include_ext \
-                        or splitext(file.name)[1].lstrip('.') in include_ext:
+                        or splitext(file.name)[1].lstrip('.').upper() in (ext.upper() for ext in include_ext):
                         if (is_hidden and include_hidden) or not is_hidden:
                             files.append({"file": file, "filest": filest, "is_dir": False})
         # Filter logic

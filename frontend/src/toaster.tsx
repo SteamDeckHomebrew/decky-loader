@@ -56,7 +56,8 @@ class Toaster extends Logger {
       if (
         currentNode?.memoizedProps?.className?.startsWith?.('gamepadtoasts_GamepadToastPlaceholder') ||
         currentNode?.memoizedProps?.className?.startsWith?.('toastmanager_ToastPlaceholder') ||
-        currentNode?.memoizedProps?.className?.startsWith?.('toastmanager_ToastPopup')
+        currentNode?.memoizedProps?.className?.startsWith?.('toastmanager_ToastPopup') ||
+        currentNode?.memoizedProps?.className?.startsWith?.('gamepadtoasts_GamepadToastPopup')
       ) {
         this.log(`Toaster root was found in ${iters} recursion cycles`);
         return currentNode;
@@ -80,7 +81,10 @@ class Toaster extends Logger {
       instance = findToasterRoot(tree, 0);
     }
     this.node = instance.return;
-    this.rNode = this.node.return;
+    this.rNode = findInReactTree(
+      this.node.return.return,
+      (node) => node?.stateNode && node.type?.InstallErrorReportingStore,
+    );
     let toast: any;
     let renderedToast: ReactNode = null;
     let innerPatched: any;

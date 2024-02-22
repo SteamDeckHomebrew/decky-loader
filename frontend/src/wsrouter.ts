@@ -34,12 +34,20 @@ interface ErrorMessage {
   id: number;
 }
 
+/**
+ * An error from a python call
+ */
 export class PyError extends Error {
   pythonTraceback: string | null;
 
   constructor(name: string, message: string, traceback: string | null) {
     super(message);
     this.name = `Python ${name}`;
+    if (traceback) {
+      // traceback will always start with `Traceback (most recent call last):`
+      // so this will make it say `Python Traceback (most recent call last):` after the JS callback
+      this.stack = this.stack + '\n\nPython ' + traceback;
+    }
     this.pythonTraceback = traceback;
   }
 }

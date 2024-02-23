@@ -24,7 +24,7 @@ const LogList: FC<{ plugin: string }> = ({ plugin }) => {
       {logList.map((log_file) => (
         <DialogButton
           style={{ marginBottom: "0.5rem" }}
-          onOKActionDescription={t("LogViewer.viewLog", "View Log")}
+          onOKActionDescription={t("LogViewer.viewLog")}
           onOKButton={() =>
             showModal(
               <LogViewModal name={log_file} plugin={plugin}></LogViewModal>,

@@ -396,4 +396,9 @@ class Utilities:
             return log_file.read()
     
     async def upload_log(self, plugin_name: str, log_name: str):
-        raise RuntimeError("Not Implemented")
+        text = await self.get_plugin_log_text(plugin_name, log_name)
+        async with ClientSession() as web:
+            res = await web.put("https://lp.deckbrew.xyz", data=text)
+            res.raise_for_status()
+            upload_id = (await res.json())["id"]
+            return f"https://lp.deckbrew.xyz/{upload_id}"

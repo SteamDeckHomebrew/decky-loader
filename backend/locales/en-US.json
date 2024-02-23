@@ -266,5 +266,12 @@
       },
     "Testing": {
         "download": "Download"
+    },
+    "LogViewer": {
+      "viewLog": "View Log",
+      "uploadLog": "Upload Log",
+      "textError": "Error loading text",
+      "uploadConfirm": "Are you sure you want to upload this log ?",
+      "uploadDisclaimer": "Depending on how this plugin is written, this log might contain confidential information. Are you sure you want to continue ? If unsure, ask the plugin developer."
     }
 }

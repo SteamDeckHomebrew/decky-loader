@@ -75,8 +75,8 @@ body:
 
   - type: textarea
     attributes:
-      label: Frontend Logslike move here 
-      description: Please copy from your deck ~/.steam/steam/logs/cef_log.txt and ~/..steam/steam/logs/cef_log.previous.txt
+      label: Frontend Logs
+      description: Please copy from your deck ~/.steam/steam/logs/cef_log.txt and ~/.steam/steam/logs/cef_log.previous.txt. Make sure to scrub your Steam username as it may appear in these logs.
       placeholder: cef_log.txt
     validations:
       required: true

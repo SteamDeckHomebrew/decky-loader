@@ -137,27 +137,30 @@ class Updater:
                 pass
             await sleep(60 * 60 * 6) # 6 hours
 
-    async def download_decky_binary(self, download_url: str, version: str, is_zip: bool = False):
+    async def download_decky_binary(self, download_url: str, version: str, is_zip: bool = False, size_in_bytes: int | None = None):
         download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
         download_temp_filename = download_filename + ".new"
         tab = await get_gamepadui_tab()
         await tab.open_websocket()
 
+        if size_in_bytes == None:
+            size_in_bytes = 26214400 # 25MiB, a reasonable overestimate (19.6MiB as of 2024/02/25)
+
         async with ClientSession() as web:
             logger.debug("Downloading binary")
             async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
-                total = int(res.headers.get('content-length', 0))
+                total = int(res.headers.get('content-length', size_in_bytes))
+                if total == 0: total = 1
                 with open(path.join(getcwd(), download_temp_filename), "wb") as out:
                     progress = 0
                     raw = 0
                     async for c in res.content.iter_chunked(512):
                         out.write(c)
-                        if total != 0:
-                            raw += len(c)
-                            new_progress = round((raw / total) * 100)
-                            if progress != new_progress:
-                                self.context.loop.create_task(self.context.ws.emit("updater/update_download_percentage", new_progress))
-                                progress = new_progress
+                        raw += len(c)
+                        new_progress = round((raw / total) * 100)
+                        if progress != new_progress:
+                            self.context.loop.create_task(self.context.ws.emit("updater/update_download_percentage", new_progress))
+                            progress = new_progress
 
         with open(path.join(getcwd(), ".loader.version"), "w", encoding="utf-8") as out:
             out.write(version)
@@ -277,9 +280,10 @@ class Updater:
                     #If the request found at least one artifact to download...
                     if int(jresp['total_count']) != 0:
                         # this assumes that the artifact we want is the first one!
-                        down_link = f"https://nightly.link/SteamDeckHomebrew/decky-loader/actions/artifacts/{jresp['artifacts'][0]['id']}.zip"
+                        artifact = jresp['artifacts'][0]
+                        down_link = f"https://nightly.link/SteamDeckHomebrew/decky-loader/actions/artifacts/{artifact['id']}.zip"
                         #Then fetch it and restart itself
-                        await self.download_decky_binary(down_link, f'PR-{pr_id}' , True)
+                        await self.download_decky_binary(down_link, f'PR-{pr_id}', is_zip=True, size_in_bytes=artifact.get('size_in_bytes',None))
         else:
             logger.error("workflow run not found", str(works))
             raise Exception("Workflow run not found.")

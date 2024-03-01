@@ -5,6 +5,7 @@ import {
   Field,
   Focusable,
   Navigation,
+  ProgressBar,
   SteamSpinner,
 } from 'decky-frontend-lib';
 import { useEffect, useState } from 'react';
@@ -26,14 +27,32 @@ const downloadTestingVersion = DeckyBackend.callable<[pr_id: number, sha: string
 
 export default function TestingVersionList() {
   const { t } = useTranslation();
+
   const [testingVersions, setTestingVersions] = useState<TestingVersion[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [updateProgress, setUpdateProgress] = useState<number | null>(null);
+  const [reloading, setReloading] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
       setTestingVersions(await getTestingVersions());
       setLoading(false);
     })();
+  }, []);
+
+  useEffect(() => {
+    const a = DeckyBackend.addEventListener('updater/update_download_percentage', (percentage) => {
+      setUpdateProgress(percentage);
+    });
+
+    const b = DeckyBackend.addEventListener('updater/finish_download', () => {
+      setReloading(true);
+    });
+
+    return () => {
+      DeckyBackend.removeEventListener('updater/update_download_percentage', a);
+      DeckyBackend.removeEventListener('updater/finish_download', b);
+    };
   }, []);
 
   if (loading) {
@@ -54,6 +73,7 @@ export default function TestingVersionList() {
 
   return (
     <DialogBody>
+      {updateProgress !== null && <ProgressBar nProgress={updateProgress} indeterminate={reloading} />}
       <DialogControlsSection>
         <h4>{t('Testing.header')}</h4>
         <ul style={{ listStyleType: 'none', padding: '0' }}>
@@ -71,11 +91,18 @@ export default function TestingVersionList() {
                     <DialogButton
                       style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
                       onClick={async () => {
+                        DeckyPluginLoader.toaster.toast({
+                          title: t('Testing.start_download_toast', { id: version.id }),
+                          body: null,
+                        });
                         try {
                           await downloadTestingVersion(version.id, version.head_sha);
                         } catch (e) {
                           if (e instanceof Error) {
-                            DeckyPluginLoader.toaster.toast({ title: 'Error Installing PR', body: e.message });
+                            DeckyPluginLoader.toaster.toast({
+                              title: t('Testing.error'),
+                              body: `${e.name}: ${e.message}`,
+                            });
                           }
                         }
                         setSetting('branch', UpdateBranch.Testing);

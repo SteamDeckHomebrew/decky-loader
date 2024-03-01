@@ -78,6 +78,9 @@ class PluginLoader extends Logger {
       'loader/add_multiple_plugins_install_prompt',
       this.addMultiplePluginsInstallPrompt.bind(this),
     );
+    DeckyBackend.addEventListener('updater/update_download_percentage', () => {
+      this.deckyState.setIsLoaderUpdating(true);
+    });
 
     this.tabsHook.init();
 

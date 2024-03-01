@@ -66,7 +66,7 @@ function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | n
 }
 
 export default function UpdaterSettings() {
-  const { isLoaderUpdating, setIsLoaderUpdating, versionInfo, setVersionInfo } = useDeckyState();
+  const { isLoaderUpdating, versionInfo, setVersionInfo } = useDeckyState();
 
   const [checkingForUpdates, setCheckingForUpdates] = useState<boolean>(false);
   const [updateProgress, setUpdateProgress] = useState<number>(-1);
@@ -77,7 +77,6 @@ export default function UpdaterSettings() {
   useEffect(() => {
     const a = DeckyBackend.addEventListener('updater/update_download_percentage', (percentage) => {
       setUpdateProgress(percentage);
-      setIsLoaderUpdating(true);
     });
 
     const b = DeckyBackend.addEventListener('updater/finish_download', () => {
@@ -86,8 +85,8 @@ export default function UpdaterSettings() {
     });
 
     return () => {
-      DeckyBackend.removeEventListener('frontend/update_download_percentage', a);
-      DeckyBackend.removeEventListener('frontend/finish_download', b);
+      DeckyBackend.removeEventListener('updater/update_download_percentage', a);
+      DeckyBackend.removeEventListener('updater/finish_download', b);
     };
   }, []);
 

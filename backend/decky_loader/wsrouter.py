@@ -116,8 +116,7 @@ class WSRouter:
                                     self.logger.debug(f'Started PY call {data["route"]} ID {data["id"]}')
                                     create_task(self._call_route(data["route"], data["args"], data["id"]))
                                 else:
-                                    error = {"error":"Route " + data["route"] + " does not exist.", "name": "NameMeOrNoneIDK", "traceback": None}
-                                    # Dunno why but fstring doesnt work here
+                                    error = {"error":f'Route {data["route"]} does not exist.', "name": "RouteNotFoundError", "traceback": None}
                                     create_task(self.write({"type": MessageType.ERROR.value, "id": data["id"], "message": error}))
                             case _:
                                 self.logger.error("Unknown message type", data)

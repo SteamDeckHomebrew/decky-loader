@@ -113,7 +113,9 @@
         "reinstall": "Reinstalacja",
         "show": "Szybki dostęp: Pokaż",
         "uninstall": "Odinstaluj",
-        "update_to": "Zaktualizuj do {{name}}"
+        "update_to": "Zaktualizuj do {{name}}",
+        "unfreeze": "Odblokuj aktualizacje",
+        "freeze": "Zablokuj aktualizacje"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -199,7 +201,8 @@
     "SettingsIndex": {
         "developer_title": "Deweloper",
         "general_title": "Ogólne",
-        "plugins_title": "Pluginy"
+        "plugins_title": "Pluginy",
+        "testing_title": "Testowanie"
     },
     "Store": {
         "store_contrib": {
@@ -225,7 +228,11 @@
             "alph_asce": "Alfabetycznie (od Z do A)",
             "alph_desc": "Alfabetycznie (od A do Z)",
             "title": "Przeglądaj",
-            "about": "Informacje"
+            "about": "Informacje",
+            "date_desc": "Od najnowszych",
+            "downloads_desc": "Najwięcej pobrań",
+            "downloads_asce": "Najmniej pobrań",
+            "date_asce": "Od najstarszych"
         },
         "store_testing_cta": "Rozważ przetestowanie nowych pluginów, aby pomóc zespołowi Decky Loader!",
         "store_testing_warning": {
@@ -263,5 +270,8 @@
     "TitleView": {
         "settings_desc": "Otwórz ustawienia Decky",
         "decky_store_desc": "Otwórz sklep Decky"
+    },
+    "Testing": {
+        "download": "Pobierz"
     }
 }

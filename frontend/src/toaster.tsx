@@ -3,6 +3,7 @@ import {
   Patch,
   ToastData,
   afterPatch,
+  findClass,
   findInReactTree,
   findModuleChild,
   getReactRoot,
@@ -48,16 +49,20 @@ class Toaster extends Logger {
     // ));
     let instance: any;
     const tree = getReactRoot(document.getElementById('root') as any);
+    const toasterClass1 = findClass('GamepadToastPlaceholder');
+    const toasterClass2 = findClass('ToastPlaceholder');
+    const toasterClass3 = findClass('ToastPopup');
+    const toasterClass4 = findClass('GamepadToastPopup');
     const findToasterRoot = (currentNode: any, iters: number): any => {
       if (iters >= 80) {
         // currently 66
         return null;
       }
       if (
-        currentNode?.memoizedProps?.className?.startsWith?.('gamepadtoasts_GamepadToastPlaceholder') ||
-        currentNode?.memoizedProps?.className?.startsWith?.('toastmanager_ToastPlaceholder') ||
-        currentNode?.memoizedProps?.className?.startsWith?.('toastmanager_ToastPopup') ||
-        currentNode?.memoizedProps?.className?.startsWith?.('gamepadtoasts_GamepadToastPopup')
+        currentNode?.memoizedProps?.className?.startsWith?.(toasterClass1) ||
+        currentNode?.memoizedProps?.className?.startsWith?.(toasterClass2) ||
+        currentNode?.memoizedProps?.className?.startsWith?.(toasterClass3) ||
+        currentNode?.memoizedProps?.className?.startsWith?.(toasterClass4)
       ) {
         this.log(`Toaster root was found in ${iters} recursion cycles`);
         return currentNode;

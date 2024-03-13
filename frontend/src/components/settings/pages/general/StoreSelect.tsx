@@ -13,6 +13,8 @@ const logger = new Logger('StoreSelect');
 const StoreSelect: FunctionComponent<{}> = () => {
   const [selectedStore, setSelectedStore] = useSetting<Store>('store', Store.Default);
   const [selectedStoreURL, setSelectedStoreURL] = useSetting<string | null>('store-url', null);
+  const [acceptedWarning, setAcceptedWarning] = useSetting<boolean>('store_select.warn.third_party', false);
+  const waitTime = acceptedWarning ? 0 : 5;
   const { t } = useTranslation();
   const tStores = [
     t('StoreSelect.store_channel.default'),
@@ -43,7 +45,10 @@ const StoreSelect: FunctionComponent<{}> = () => {
         showModal(
           <WarnThirdParty
             type={WarnThirdPartyType.REPO}
-            onOK={() => {}}
+            seconds={waitTime}
+            onOK={() => {
+              setAcceptedWarning(true);
+            }}
             onCancel={() => setSelectedStore(Store.Default)}
           />,
         ) && (

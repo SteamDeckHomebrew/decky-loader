@@ -50,6 +50,8 @@ export default function DeveloperSettings() {
   const [enableValveInternal, setEnableValveInternal] = useSetting<boolean>('developer.valve_internal', false);
   const [reactDevtoolsEnabled, setReactDevtoolsEnabled] = useSetting<boolean>('developer.rdt.enabled', false);
   const [reactDevtoolsIP, setReactDevtoolsIP] = useSetting<string>('developer.rdt.ip', '');
+  const [acceptedWarning, setAcceptedWarning] = useSetting<boolean>('developer.warn.third_party', false);
+  const waitTime = acceptedWarning ? 0 : 5;
   const [pluginURL, setPluginURL] = useState('');
   const textRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
@@ -86,9 +88,11 @@ export default function DeveloperSettings() {
                 <WarnThirdParty
                   type={WarnThirdPartyType.ZIP}
                   onOK={() => {
+                    setAcceptedWarning(true);
                     installFromURL(pluginURL);
                   }}
                   onCancel={() => {}}
+                  seconds={waitTime}
                 />,
               )
             }

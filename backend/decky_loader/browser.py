@@ -135,7 +135,7 @@ class PluginBrowser:
             # logger.debug("current plugins: %s", snapshot_string)
             if name in self.plugins:
                 logger.debug("Plugin %s was found", name)
-                self.plugins[name].stop()
+                self.plugins[name].stop(uninstall=True)
                 logger.debug("Plugin %s was stopped", name)
                 del self.plugins[name]
                 logger.debug("Plugin %s was removed from the dictionary", name)

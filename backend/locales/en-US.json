@@ -264,6 +264,15 @@
             "updating": "Updating"
         }
     },
+    "WarnThirdParty":{
+        "title_zip": "Third party plugin install",
+        "title_repo": "Third party store selection",
+        "button_processing_one": "Please wait {{timer}} second",
+        "button_processing_many": "Please wait {{timer}} seconds",
+        "button_idle": "I accept the risks",
+        "desc_zip": "This plugin that has been requested to be installed is taken outside our official store; we haven't audited it, so it will contain unvetted code: it might be doing exactly what it would be supposed to do or it might have additional features built in that will try to steal your data and take over your Steam account. Decky devs are not responsible for any problem arising from installing this plugin.",
+        "desc_repo": "This third party store that has been requested to be used is not our official store; we haven't audited it, so it will contain plugins with unvetted code from us: you should check with whoever is maintaining this store and decide for yourself if you trust them or not. Decky devs are not responsible for any problem arising from installing plugins from this third party store."
+    },
     "Testing": {
         "download": "Download"
     }

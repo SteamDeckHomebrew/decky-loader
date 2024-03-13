@@ -1,4 +1,4 @@
-import { Dropdown, Field, TextField } from 'decky-frontend-lib';
+import { Dropdown, Field, TextField, showModal } from 'decky-frontend-lib';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaShapes } from 'react-icons/fa';
@@ -6,6 +6,7 @@ import { FaShapes } from 'react-icons/fa';
 import Logger from '../../../../logger';
 import { Store } from '../../../../store';
 import { useSetting } from '../../../../utils/hooks/useSetting';
+import WarnThirdParty, { WarnThirdPartyType } from '../../../modals/WarnThirdParty';
 
 const logger = new Logger('StoreSelect');
 
@@ -38,20 +39,27 @@ const StoreSelect: FunctionComponent<{}> = () => {
           }}
         />
       </Field>
-      {selectedStore == Store.Custom && (
-        <Field
-          label={t('StoreSelect.custom_store.label')}
-          indentLevel={1}
-          description={
-            <TextField
-              label={t('StoreSelect.custom_store.url_label')}
-              value={selectedStoreURL || undefined}
-              onChange={(e) => setSelectedStoreURL(e?.target.value || null)}
-            />
-          }
-          icon={<FaShapes style={{ display: 'block' }} />}
-        ></Field>
-      )}
+      {selectedStore == Store.Custom &&
+        showModal(
+          <WarnThirdParty
+            type={WarnThirdPartyType.REPO}
+            onOK={() => {}}
+            onCancel={() => setSelectedStore(Store.Default)}
+          />,
+        ) && (
+          <Field
+            label={t('StoreSelect.custom_store.label')}
+            indentLevel={1}
+            description={
+              <TextField
+                label={t('StoreSelect.custom_store.url_label')}
+                value={selectedStoreURL || undefined}
+                onChange={(e) => setSelectedStoreURL(e?.target.value || null)}
+              />
+            }
+            icon={<FaShapes style={{ display: 'block' }} />}
+          ></Field>
+        )}
     </>
   );
 };

@@ -7,6 +7,7 @@ import {
   Navigation,
   TextField,
   Toggle,
+  showModal,
 } from 'decky-frontend-lib';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +19,7 @@ import { installFromURL } from '../../../../store';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 import { getSetting } from '../../../../utils/settings';
 import { FileSelectionType } from '../../../modals/filepicker';
+import WarnThirdParty, { WarnThirdPartyType } from '../../../modals/WarnThirdParty';
 import RemoteDebuggingSettings from '../general/RemoteDebugging';
 
 const logger = new Logger('DeveloperIndex');
@@ -77,7 +79,20 @@ export default function DeveloperSettings() {
           }
           icon={<FaLink style={{ display: 'block' }} />}
         >
-          <DialogButton disabled={pluginURL.length == 0} onClick={() => installFromURL(pluginURL)}>
+          <DialogButton
+            disabled={pluginURL.length == 0}
+            onClick={() =>
+              showModal(
+                <WarnThirdParty
+                  type={WarnThirdPartyType.ZIP}
+                  onOK={() => {
+                    installFromURL(pluginURL);
+                  }}
+                  onCancel={() => {}}
+                />,
+              )
+            }
+          >
             {t('SettingsDeveloperIndex.third_party_plugins.button_install')}
           </DialogButton>
         </Field>

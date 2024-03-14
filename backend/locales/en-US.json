@@ -265,13 +265,13 @@
         }
     },
     "WarnThirdParty":{
-        "title_zip": "Third party plugin install",
-        "title_repo": "Third party store selection",
+        "title_zip": "Third-Party Plugin Installation",
+        "title_repo": "Third-Party Store Selection",
         "button_processing_one": "Please wait {{timer}} second",
         "button_processing_many": "Please wait {{timer}} seconds",
-        "button_idle": "I accept the risks",
-        "desc_zip": "This plugin that has been requested to be installed is taken outside our official store; we haven't audited it, so it will contain unvetted code; it might be doing exactly what it would be supposed to do or it might have additional features built in that will try to steal your data and take over your Steam account. The Decky team is not responsible for any problem arising from installing this plugin.",
-        "desc_repo": "This third party store you are installing is not our official store; The plugins it contains aren't being reviewed for security and stability by the Decky team; you should check with whoever is maintaining this store and decide for yourself if you trust them or not. The Decky team is not responsible for any problem arising from installing plugins from this third party store."
+        "button_idle": "Continue",
+        "desc_zip": "The Decky Loader team has not reviewed this plugin. It may contain malware, such as software to steal your Steam account or harm your device. By installing this plugin, you agree you have assumed all risks to your device.",
+        "desc_repo": "The Decky Loader team does not maintain this plugin store. It and its plugins may contain malware, such as software to steal your Steam account or harm your device. By adding this store, you agree you have assumed all risks to your device."
     },
     "Testing": {
         "download": "Download"

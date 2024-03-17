@@ -93,7 +93,7 @@
         "update_to": "{{name}} を更新"
     },
     "PluginListLabel": {
-        "hidden": "クイックアクセスメニューから非表示にします"
+        "hidden": "クイックアクセスメニューから表示されません"
     },
     "PluginLoader": {
         "error": "エラー",
@@ -124,7 +124,7 @@
         },
         "third_party_plugins": {
             "button_install": "インストール",
-            "button_zip": "ブラウズ",
+            "button_zip": "開く",
             "header": "サードパーティプラグイン",
             "label_desc": "URL",
             "label_url": "URLからプラグインをインストール",
@@ -138,7 +138,7 @@
         "header": "その他"
     },
     "PluginView": {
-        "hidden_other": "{{count}} 個のプラグインがこのリストから非表示になります"
+        "hidden_other": "{{count}} 個のプラグインがこのリストから非表示になっています"
     },
     "SettingsGeneralIndex": {
         "about": {

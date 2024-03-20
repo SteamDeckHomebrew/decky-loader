@@ -115,7 +115,9 @@
         "update_all_one": "Werk 1 plug-in bij",
         "update_all_other": "Werk {{count}} plug-ins bij",
         "reinstall": "Opnieuw installeren",
-        "show": "Toon in snelle toegang"
+        "show": "Toon in snelle toegang",
+        "unfreeze": "Updates toestaan",
+        "freeze": "Updates bevriezen"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -192,7 +194,8 @@
     "SettingsIndex": {
         "developer_title": "Ontwikkelaar",
         "general_title": "Algemeen",
-        "plugins_title": "Plug-ins"
+        "plugins_title": "Plug-ins",
+        "testing_title": "Testen"
     },
     "Store": {
         "store_filter": {
@@ -214,7 +217,11 @@
             "about": "Over",
             "alph_asce": "Alfabetisch (Z naar A)",
             "alph_desc": "Alfabetisch (A naar Z)",
-            "title": "Bladeren"
+            "title": "Bladeren",
+            "date_desc": "Nieuwste eerst",
+            "downloads_asce": "Minste gedownload eerst",
+            "downloads_desc": "Meeste gedownload eerst",
+            "date_asce": "Oudste eerst"
         },
         "store_testing_cta": "Overweeg om nieuwe plug-ins te testen om het Decky Loader-team te helpen!",
         "store_contrib": {
@@ -256,5 +263,8 @@
     "TitleView": {
         "decky_store_desc": "Decky Store openen",
         "settings_desc": "Decky-instellingen openen"
+    },
+    "Testing": {
+        "download": "Downloaden"
     }
 }

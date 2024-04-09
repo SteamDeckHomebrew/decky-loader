@@ -48,9 +48,7 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
   }
 
   function finishDownload(name: string) {
-    // TODO, this does not work as it should
-    // something REALLY funky is occuring
-    setPluginsCompleted([...pluginsCompleted, name]);
+    setPluginsCompleted((list) => [...list, name]);
   }
 
   useEffect(() => {
@@ -119,7 +117,6 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
             sOperationText={downloadInfo}
           />
         )}
-        {pluginsCompleted}
       </div>
     </ConfirmModal>
   );

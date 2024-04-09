@@ -231,7 +231,16 @@
     "store_testing_warning": {
       "desc": "You can use this store channel to test bleeding-edge plugin versions. Be sure to leave feedback on GitHub so the plugin can be updated for all users.",
       "label": "Welcome to the Testing Store Channel"
-    }
+    },
+		"download_progress_info": {
+			"start": "Initializing",
+			"open_zip": "Opening zip file",
+			"download_zip": "Downloading plugin",
+			"increment_count": "Incrementing download count",
+			"parse_zip": "Parsing zip file",
+			"uninstalling_previous": "Uninstalling previous copy",
+			"installing_plugin": "Installing plugin"
+		}
   },
   "StoreSelect": {
     "custom_store": {

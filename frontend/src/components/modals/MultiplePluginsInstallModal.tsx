@@ -30,7 +30,7 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [percentage, setPercentage] = useState<number>(0);
   const [pluginsCompleted, setPluginsCompleted] = useState<string[]>([]);
-  const [pluginInProgress, setPluginInProgress] = useState<string | null>();
+  const [inProgress, setInProgress] = useState<string | null>();
   const [downloadInfo, setDownloadInfo] = useState<string | null>(null);
   const { t } = useTranslation();
 
@@ -43,16 +43,24 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
     }
   }
 
+  function startDownload(name: string) {
+    setInProgress(name);
+  }
+
   function finishDownload(name: string) {
+    // TODO, this does not work as it should
+    // something REALLY funky is occuring
     setPluginsCompleted([...pluginsCompleted, name]);
   }
 
   useEffect(() => {
     DeckyBackend.addEventListener('loader/plugin_download_info', updateDownloadState);
+    DeckyBackend.addEventListener('loader/plugin_download_start', startDownload);
     DeckyBackend.addEventListener('loader/plugin_download_finish', finishDownload);
 
     return () => {
       DeckyBackend.removeEventListener('loader/plugin_download_info', updateDownloadState);
+      DeckyBackend.removeEventListener('loader/plugin_download_start', startDownload);
       DeckyBackend.removeEventListener('loader/plugin_download_finish', finishDownload);
     };
   }, []);
@@ -95,7 +103,7 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
             return (
               <li key={i} style={{ display: 'flex', flexDirection: 'column' }}>
                 <div>{description}</div>
-                {(pluginsCompleted.includes(name) && <FaCheck />) || (name === pluginInProgress && <FaSpinner />)}
+                {(pluginsCompleted.includes(name) && <FaCheck />) || (name === inProgress && <FaSpinner />)}
                 {hash === 'False' && (
                   <div style={{ color: 'red', paddingLeft: '10px' }}>{t('PluginInstallModal.no_hash')}</div>
                 )}
@@ -103,12 +111,15 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
             );
           })}
         </ul>
-        <ProgressBarWithInfo
-          layout="inline"
-          bottomSeparator="none"
-          nProgress={percentage}
-          sOperationText={downloadInfo}
-        />
+        {loading && (
+          <ProgressBarWithInfo
+            layout="inline"
+            bottomSeparator="none"
+            nProgress={percentage}
+            sOperationText={downloadInfo}
+          />
+        )}
+        {pluginsCompleted}
       </div>
     </ConfirmModal>
   );

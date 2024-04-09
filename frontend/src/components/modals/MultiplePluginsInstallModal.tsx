@@ -100,8 +100,10 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
 
             return (
               <li key={i} style={{ display: 'flex', flexDirection: 'column' }}>
-                <div>{description}</div>
-                {(pluginsCompleted.includes(name) && <FaCheck />) || (name === inProgress && <FaSpinner />)}
+                <span>
+                  {description}{' '}
+                  {(pluginsCompleted.includes(name) && <FaCheck />) || (name === inProgress && <FaSpinner />)}
+                </span>
                 {hash === 'False' && (
                   <div style={{ color: 'red', paddingLeft: '10px' }}>{t('PluginInstallModal.no_hash')}</div>
                 )}
@@ -109,10 +111,11 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
             );
           })}
         </ul>
+        {/* TODO: center the progress bar and make it 80% width */}
         {loading && (
           <ProgressBarWithInfo
-            layout="inline"
             bottomSeparator="none"
+            focusable={false}
             nProgress={percentage}
             sOperationText={downloadInfo}
           />

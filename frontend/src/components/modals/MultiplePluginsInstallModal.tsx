@@ -1,6 +1,7 @@
-import { ConfirmModal, Navigation, QuickAccessTab } from 'decky-frontend-lib';
-import { FC, useMemo, useState } from 'react';
+import { ConfirmModal, Navigation, ProgressBarWithInfo, QuickAccessTab } from 'decky-frontend-lib';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FaCheck, FaSpinner } from 'react-icons/fa';
 
 import { InstallType } from '../../plugin';
 
@@ -27,7 +28,34 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
   closeModal,
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [percentage, setPercentage] = useState<number>(0);
+  const [pluginsCompleted, setPluginsCompleted] = useState<string[]>([]);
+  const [pluginInProgress, setPluginInProgress] = useState<string | null>();
+  const [downloadInfo, setDownloadInfo] = useState<string | null>(null);
   const { t } = useTranslation();
+
+  function updateDownloadState(percent: number, trans_text: string | undefined, trans_info: Record<string, string>) {
+    setPercentage(percent);
+    if (trans_text === undefined) {
+      setDownloadInfo(null);
+    } else {
+      setDownloadInfo(t(trans_text, trans_info));
+    }
+  }
+
+  function finishDownload(name: string) {
+    setPluginsCompleted([...pluginsCompleted, name]);
+  }
+
+  useEffect(() => {
+    DeckyBackend.addEventListener('loader/plugin_download_info', updateDownloadState);
+    DeckyBackend.addEventListener('loader/plugin_download_finish', finishDownload);
+
+    return () => {
+      DeckyBackend.removeEventListener('loader/plugin_download_info', updateDownloadState);
+      DeckyBackend.removeEventListener('loader/plugin_download_finish', finishDownload);
+    };
+  }, []);
 
   // used as part of the title translation
   // if we know all operations are of a specific type, we can show so in the title to make decision easier
@@ -67,6 +95,7 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
             return (
               <li key={i} style={{ display: 'flex', flexDirection: 'column' }}>
                 <div>{description}</div>
+                {(pluginsCompleted.includes(name) && <FaCheck />) || (name === pluginInProgress && <FaSpinner />)}
                 {hash === 'False' && (
                   <div style={{ color: 'red', paddingLeft: '10px' }}>{t('PluginInstallModal.no_hash')}</div>
                 )}
@@ -74,6 +103,12 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
             );
           })}
         </ul>
+        <ProgressBarWithInfo
+          layout="inline"
+          bottomSeparator="none"
+          nProgress={percentage}
+          sOperationText={downloadInfo}
+        />
       </div>
     </ConfirmModal>
   );

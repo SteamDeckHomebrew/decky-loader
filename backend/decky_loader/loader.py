@@ -8,7 +8,6 @@ from typing import Any, Tuple, Dict
 
 from aiohttp import web
 from os.path import exists
-from attr import dataclass
 from watchdog.events import RegexMatchingEventHandler, DirCreatedEvent, DirModifiedEvent, FileCreatedEvent, FileModifiedEvent # type: ignore
 from watchdog.observers import Observer # type: ignore
 
@@ -65,12 +64,6 @@ class FileChangeHandler(RegexMatchingEventHandler):
         # file that changed is not necessarily the one that needs to be reloaded
         self.logger.debug(f"file modified: {src_path}")
         self.maybe_reload(src_path)
-
-@dataclass
-class PluginEvent:
-    plugin_name: str
-    event: str
-    data: str
 
 class Loader:
     def __init__(self, server_instance: PluginManager, ws: WSRouter, plugin_path: str, loop: AbstractEventLoop, live_reload: bool = False) -> None:
@@ -149,10 +142,9 @@ class Loader:
 
     def import_plugin(self, file: str, plugin_directory: str, refresh: bool | None = False, batch: bool | None = False):
         try:
-            async def plugin_emitted_event(event: str, data: Any):
-                self.logger.debug(f"PLUGIN EMITTED EVENT: {str(event)} {data}")
-                event_data = PluginEvent(plugin_name=plugin.name, event=event, data=data)
-                await self.ws.emit("loader/plugin_event", event_data)
+            async def plugin_emitted_event(event: str, args: Any):
+                self.logger.debug(f"PLUGIN EMITTED EVENT: {event} with args {args}")
+                await self.ws.emit(f"loader/plugin_event", {plugin:plugin.name, event:event, args:args})
 
             plugin = PluginWrapper(file, plugin_directory, self.plugin_path, plugin_emitted_event)
             if plugin.name in self.plugins:

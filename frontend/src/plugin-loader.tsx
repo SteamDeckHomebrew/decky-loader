@@ -48,6 +48,9 @@ declare global {
   }
 }
 
+/** Map of event names to event listeners */
+type listenerMap = Map<string, Set<(...args: any) => any>>;
+
 const callPluginMethod = DeckyBackend.callable<[pluginName: string, method: string, ...args: any], any>(
   'loader/call_plugin_method',
 );
@@ -58,6 +61,8 @@ class PluginLoader extends Logger {
   private routerHook: RouterHook = new RouterHook();
   public toaster: Toaster = new Toaster();
   private deckyState: DeckyState = new DeckyState();
+  // stores a map of plugin names to all their event listeners
+  private pluginEventListeners: Map<string, listenerMap> = new Map();
 
   public frozenPluginsService = new FrozenPluginService(this.deckyState);
   public hiddenPluginsService = new HiddenPluginsService(this.deckyState);
@@ -81,6 +86,7 @@ class PluginLoader extends Logger {
     DeckyBackend.addEventListener('updater/update_download_percentage', () => {
       this.deckyState.setIsLoaderUpdating(true);
     });
+    DeckyBackend.addEventListener(`loader/plugin_event`, this.pluginEventListener);
 
     this.tabsHook.init();
 
@@ -513,12 +519,29 @@ class PluginLoader extends Logger {
           throw new Error(`Plugin ${pluginName} requested invalid backend api version ${version}.`);
         }
 
+        const eventListeners: listenerMap = new Map();
+        this.pluginEventListeners.set(pluginName, eventListeners);
+
         const backendAPI = {
           call: (methodName: string, ...args: any) => {
             return callPluginMethod(pluginName, methodName, ...args);
           },
           callable: (methodName: string) => {
             return (...args: any) => callPluginMethod(pluginName, methodName, ...args);
+          },
+          addEventListener: (event: string, listener: (...args: any) => any) => {
+            if (!eventListeners.has(event)) {
+              eventListeners.set(event, new Set([listener]));
+            } else {
+              eventListeners.get(event)?.add(listener);
+            }
+            return listener;
+          },
+          removeEventListener: (event: string, listener: (...args: any) => any) => {
+            if (eventListeners.has(event)) {
+              const set = eventListeners.get(event);
+              set?.delete(listener);
+            }
           },
         };
 
@@ -527,6 +550,29 @@ class PluginLoader extends Logger {
       },
     };
   }
+
+  pluginEventListener = (data: { plugin: string; event: string; args: any }) => {
+    const { plugin, event, args } = data;
+    this.debug(`Recieved plugin event ${event} for ${plugin} with args`, args);
+    if (!this.pluginEventListeners.has(plugin)) {
+      this.warn(`plugin ${plugin} does not have event listeners`);
+      return;
+    }
+    const eventListeners = this.pluginEventListeners.get(plugin)!;
+    if (eventListeners.has(event)) {
+      for (const listener of eventListeners.get(event)!) {
+        (async () => {
+          try {
+            await listener(...args);
+          } catch (e) {
+            this.error(`error in event ${event}`, e, listener);
+          }
+        })();
+      }
+    } else {
+      this.warn(`event ${event} has no listeners`);
+    }
+  };
 
   createLegacyPluginAPI(pluginName: string) {
     const pluginAPI = {

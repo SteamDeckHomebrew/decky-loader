@@ -16,7 +16,7 @@ __version__ = '0.1.0'
 
 import logging
 
-from typing import TypeVar, Type
+from typing import Any
 
 """
 Constants
@@ -177,9 +177,8 @@ logger: logging.Logger
 """
 Event handling
 """
-DataType = TypeVar("DataType")
 # TODO better docstring im lazy
-async def emit(event: str, data: DataType | None = None, data_type: Type[DataType] | None = None) -> None:
+async def emit(event: str, *args: Any) -> None:
     """
     Send an event to the frontend.
     """

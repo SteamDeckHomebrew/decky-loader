@@ -59,7 +59,7 @@ class PluginWrapper:
                 if line != None:
                     res = loads(line)
                     if res["type"] == SocketMessageType.EVENT.value:
-                        create_task(self.emitted_event_callback(res["event"], res["data"]))
+                        create_task(self.emitted_event_callback(res["event"], res["args"]))
                     elif res["type"] == SocketMessageType.RESPONSE.value:
                         self._method_call_requests.pop(res["id"]).set_result(res)
             except:

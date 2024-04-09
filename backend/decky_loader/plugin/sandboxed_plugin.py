@@ -14,7 +14,7 @@ from ..localplatform.localplatform import setgid, setuid, get_username, get_home
 from ..enums import UserType
 from .. import helpers
 
-from typing import List, TypeVar, Type
+from typing import List, TypeVar, Any
 
 DataType = TypeVar("DataType")
 
@@ -83,11 +83,11 @@ class SandboxedPlugin:
                 sysmodules[key.replace("decky_loader.", "")] = sysmodules[key]
             
             from .imports import decky
-            async def emit(event: str, data: DataType | None = None, data_type: Type[DataType] | None = None) -> None:
+            async def emit(event: str, *args: Any) -> None:
                 await self._socket.write_single_line_server(dumps({
                     "type": SocketMessageType.EVENT,
                     "event": event,
-                    "data": data
+                    "args": args
                 }))
             # copy the docstring over so we don't have to duplicate it
             emit.__doc__ = decky.emit.__doc__

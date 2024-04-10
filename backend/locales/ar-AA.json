@@ -1,16 +1,6 @@
 {
-    "MultiplePluginsInstallModal": {
-        "ok_button": {
-            "loading": ""
-        }
-    },
     "PluginListIndex": {
         "update_to": ""
-    },
-    "SettingsGeneralIndex": {
-        "about": {
-            "header": ""
-        }
     },
     "StoreSelect": {
         "custom_store": {

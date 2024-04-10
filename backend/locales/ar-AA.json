@@ -1,15 +1,7 @@
 {
-    "DropdownMultiselect": {
-        "button": {
-            "back": ""
-        }
-    },
     "FilePickerIndex": {
         "filter": {
             "created_asce": ""
-        },
-        "folder": {
-            "label": ""
         }
     },
     "MultiplePluginsInstallModal": {
@@ -17,29 +9,17 @@
             "loading": ""
         }
     },
-    "PluginCard": {
-        "plugin_version_label": ""
-    },
     "PluginInstallModal": {
         "reinstall": {
             "desc": ""
         }
     },
     "PluginListIndex": {
-        "no_plugin": "",
         "update_to": ""
-    },
-    "PluginLoader": {
-        "plugin_uninstall": {
-            "button": ""
-        }
     },
     "SettingsDeveloperIndex": {
         "cef_console": {
             "desc": ""
-        },
-        "third_party_plugins": {
-            "header": ""
         }
     },
     "SettingsGeneralIndex": {
@@ -47,15 +27,9 @@
             "header": ""
         }
     },
-    "SettingsIndex": {
-        "developer_title": ""
-    },
     "Store": {
         "store_search": {
             "label": ""
-        },
-        "store_tabs": {
-            "date_asce": ""
         }
     },
     "StoreSelect": {
@@ -64,7 +38,6 @@
         }
     },
     "Updater": {
-        "decky_updates": "",
         "updates": {
             "lat_version": ""
         }

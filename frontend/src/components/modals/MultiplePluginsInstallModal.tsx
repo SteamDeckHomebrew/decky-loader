@@ -1,7 +1,7 @@
 import { ConfirmModal, Navigation, ProgressBarWithInfo, QuickAccessTab } from 'decky-frontend-lib';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaCheck, FaSpinner } from 'react-icons/fa';
+import { FaCheck, FaDownload } from 'react-icons/fa';
 
 import { InstallType } from '../../plugin';
 
@@ -30,7 +30,7 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [percentage, setPercentage] = useState<number>(0);
   const [pluginsCompleted, setPluginsCompleted] = useState<string[]>([]);
-  const [inProgress, setInProgress] = useState<string | null>();
+  const [pluginInProgress, setInProgress] = useState<string | null>();
   const [downloadInfo, setDownloadInfo] = useState<string | null>(null);
   const { t } = useTranslation();
 
@@ -45,6 +45,7 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
 
   function startDownload(name: string) {
     setInProgress(name);
+    setPercentage(0);
   }
 
   function finishDownload(name: string) {
@@ -102,7 +103,7 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
               <li key={i} style={{ display: 'flex', flexDirection: 'column' }}>
                 <span>
                   {description}{' '}
-                  {(pluginsCompleted.includes(name) && <FaCheck />) || (name === inProgress && <FaSpinner />)}
+                  {(pluginsCompleted.includes(name) && <FaCheck />) || (name === pluginInProgress && <FaDownload />)}
                 </span>
                 {hash === 'False' && (
                   <div style={{ color: 'red', paddingLeft: '10px' }}>{t('PluginInstallModal.no_hash')}</div>
@@ -114,6 +115,8 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
         {/* TODO: center the progress bar and make it 80% width */}
         {loading && (
           <ProgressBarWithInfo
+            // when the key changes, react considers this a new component so resets the progress without the smoothing animation
+            key={pluginInProgress}
             bottomSeparator="none"
             focusable={false}
             nProgress={percentage}

@@ -28,7 +28,9 @@ const StoreSelect: FunctionComponent<{}> = () => {
           rgOptions={Object.values(Store)
             .filter((store) => typeof store == 'string')
             .map((store) => ({
+              // @ts-ignore
               label: tStores[Store[store]],
+              // @ts-ignore
               data: Store[store],
             }))}
           selectedOption={selectedStore}

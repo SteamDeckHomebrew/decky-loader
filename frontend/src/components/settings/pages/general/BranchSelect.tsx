@@ -31,7 +31,9 @@ const BranchSelect: FunctionComponent<{}> = () => {
         rgOptions={Object.values(UpdateBranch)
           .filter((branch) => typeof branch == 'string')
           .map((branch) => ({
+            // @ts-ignore
             label: tBranches[UpdateBranch[branch]],
+            // @ts-ignore
             data: UpdateBranch[branch],
           }))}
         selectedOption={selectedBranch}

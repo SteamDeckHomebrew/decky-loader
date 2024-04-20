@@ -130,6 +130,7 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
                     ) : (
                       <div style={iconStyles}>
                         {file.realpath.includes('.') ? (
+                          // @ts-ignore
                           <FileIcon {...defaultStyles[extension]} {...styleDefObj[extension]} extension={''} />
                         ) : (
                           <FileIcon />

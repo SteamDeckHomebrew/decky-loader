@@ -1,7 +1,7 @@
 import { SidebarNavigation } from 'decky-frontend-lib';
 import { lazy } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaCode, FaPlug } from 'react-icons/fa';
+import { FaCode, FaFlask, FaPlug } from 'react-icons/fa';
 
 import { useSetting } from '../../utils/hooks/useSetting';
 import DeckyIcon from '../DeckyIcon';
@@ -10,6 +10,7 @@ import GeneralSettings from './pages/general';
 import PluginList from './pages/plugin_list';
 
 const DeveloperSettings = lazy(() => import('./pages/developer'));
+const TestingMenu = lazy(() => import('./pages/testing'));
 
 export default function SettingsPage() {
   const [isDeveloper, setIsDeveloper] = useSetting<boolean>('developer.enabled', false);
@@ -24,7 +25,7 @@ export default function SettingsPage() {
     },
     {
       title: t('SettingsIndex.plugins_title'),
-      content: <PluginList />,
+      content: <PluginList isDeveloper={isDeveloper} />,
       route: '/decky/settings/plugins',
       icon: <FaPlug />,
     },
@@ -37,6 +38,17 @@ export default function SettingsPage() {
       ),
       route: '/decky/settings/developer',
       icon: <FaCode />,
+      visible: isDeveloper,
+    },
+    {
+      title: t('SettingsIndex.testing_title'),
+      content: (
+        <WithSuspense>
+          <TestingMenu />
+        </WithSuspense>
+      ),
+      route: '/decky/settings/testing',
+      icon: <FaFlask />,
       visible: isDeveloper,
     },
   ];

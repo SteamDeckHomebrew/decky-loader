@@ -33,6 +33,7 @@
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-external-globals": "^0.10.0",
     "rollup-plugin-polyfill-node": "^0.13.0",
+    "rollup-plugin-visualizer": "^5.9.2",
     "tslib": "^2.6.2",
     "typescript": "^5.4.5"
   },
@@ -44,6 +45,7 @@
   },
   "dependencies": {
     "decky-frontend-lib": "3.25.0",
+    "filesize": "^10.0.7",
     "i18next": "^23.11.2",
     "i18next-http-backend": "^2.5.1",
     "react-file-icon": "^1.4.0",

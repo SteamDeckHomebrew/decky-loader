@@ -8,33 +8,25 @@ import {
   TextField,
   findModule,
 } from 'decky-frontend-lib';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import logo from '../../../assets/plugin_store.png';
 import Logger from '../../logger';
-import { StorePlugin, getPluginList } from '../../store';
+import { SortDirections, SortOptions, Store, StorePlugin, getPluginList, getStore } from '../../store';
 import PluginCard from './PluginCard';
 
 const logger = new Logger('Store');
 
 const StorePage: FC<{}> = () => {
   const [currentTabRoute, setCurrentTabRoute] = useState<string>('browse');
-  const [data, setData] = useState<StorePlugin[] | null>(null);
+  const [pluginCount, setPluginCount] = useState<number | null>(null);
   const { TabCount } = findModule((m) => {
     if (m?.TabCount && m?.TabTitle) return true;
     return false;
   });
 
   const { t } = useTranslation();
-
-  useEffect(() => {
-    (async () => {
-      const res = await getPluginList();
-      logger.log('got data!', res);
-      setData(res);
-    })();
-  }, []);
 
   return (
     <>
@@ -45,52 +37,71 @@ const StorePage: FC<{}> = () => {
           background: '#0005',
         }}
       >
-        {!data ? (
-          <div style={{ height: '100%' }}>
-            <SteamSpinner />
-          </div>
-        ) : (
-          <Tabs
-            activeTab={currentTabRoute}
-            onShowTab={(tabId: string) => {
-              setCurrentTabRoute(tabId);
-            }}
-            tabs={[
-              {
-                title: t('Store.store_tabs.title'),
-                content: <BrowseTab children={{ data: data }} />,
-                id: 'browse',
-                renderTabAddon: () => <span className={TabCount}>{data.length}</span>,
-              },
-              {
-                title: t('Store.store_tabs.about'),
-                content: <AboutTab />,
-                id: 'about',
-              },
-            ]}
-          />
-        )}
+        <Tabs
+          activeTab={currentTabRoute}
+          onShowTab={(tabId: string) => {
+            setCurrentTabRoute(tabId);
+          }}
+          tabs={[
+            {
+              title: t('Store.store_tabs.title'),
+              content: <BrowseTab setPluginCount={setPluginCount} />,
+              id: 'browse',
+              renderTabAddon: () => <span className={TabCount}>{pluginCount}</span>,
+            },
+            {
+              title: t('Store.store_tabs.about'),
+              content: <AboutTab />,
+              id: 'about',
+            },
+          ]}
+        />
       </div>
     </>
   );
 };
 
-const BrowseTab: FC<{ children: { data: StorePlugin[] } }> = (data) => {
+const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }> = ({ setPluginCount }) => {
   const { t } = useTranslation();
 
-  const sortOptions = useMemo(
+  const dropdownSortOptions = useMemo(
     (): DropdownOption[] => [
-      { data: 1, label: t('Store.store_tabs.alph_desc') },
-      { data: 2, label: t('Store.store_tabs.alph_asce') },
+      // ascending and descending order are the wrong way around for the alphabetical sort
+      // this is because it was initially done incorrectly for i18n and 'fixing' it would
+      // make all the translations incorrect
+      { data: [SortOptions.name, SortDirections.ascending], label: t('Store.store_tabs.alph_desc') },
+      { data: [SortOptions.name, SortDirections.descending], label: t('Store.store_tabs.alph_asce') },
+      { data: [SortOptions.date, SortDirections.ascending], label: t('Store.store_tabs.date_asce') },
+      { data: [SortOptions.date, SortDirections.descending], label: t('Store.store_tabs.date_desc') },
+      { data: [SortOptions.downloads, SortDirections.descending], label: t('Store.store_tabs.downloads_desc') },
+      { data: [SortOptions.downloads, SortDirections.ascending], label: t('Store.store_tabs.downloads_asce') },
     ],
     [],
   );
 
   // const filterOptions = useMemo((): DropdownOption[] => [{ data: 1, label: 'All' }], []);
-
-  const [selectedSort, setSort] = useState<number>(sortOptions[0].data);
+  const [selectedSort, setSort] = useState<[SortOptions, SortDirections]>(dropdownSortOptions[0].data);
   // const [selectedFilter, setFilter] = useState<number>(filterOptions[0].data);
   const [searchFieldValue, setSearchValue] = useState<string>('');
+  const [pluginList, setPluginList] = useState<StorePlugin[] | null>(null);
+  const [isTesting, setIsTesting] = useState<boolean>(false);
+
+  useEffect(() => {
+    (async () => {
+      const res = await getPluginList(selectedSort[0], selectedSort[1]);
+      logger.log('got data!', res);
+      setPluginList(res);
+      setPluginCount(res.length);
+    })();
+  }, [selectedSort]);
+
+  useEffect(() => {
+    (async () => {
+      const storeRes = await getStore();
+      logger.log(`store is ${storeRes}, isTesting is ${storeRes === Store.Testing}`);
+      setIsTesting(storeRes === Store.Testing);
+    })();
+  }, []);
 
   return (
     <>
@@ -113,7 +124,7 @@ const BrowseTab: FC<{ children: { data: StorePlugin[] } }> = (data) => {
             <span className="DialogLabel">{t("Store.store_sort.label")}</span>
             <Dropdown
               menuLabel={t("Store.store_sort.label") as string}
-              rgOptions={sortOptions}
+              rgOptions={dropdownSortOptions}
               strDefaultLabel={t("Store.store_sort.label_def") as string}
               selectedOption={selectedSort}
               onChange={(e) => setSort(e.data)}
@@ -159,7 +170,7 @@ const BrowseTab: FC<{ children: { data: StorePlugin[] } }> = (data) => {
             <span className="DialogLabel">{t('Store.store_sort.label')}</span>
             <Dropdown
               menuLabel={t('Store.store_sort.label') as string}
-              rgOptions={sortOptions}
+              rgOptions={dropdownSortOptions}
               strDefaultLabel={t('Store.store_sort.label_def') as string}
               selectedOption={selectedSort}
               onChange={(e) => setSort(e.data)}
@@ -178,23 +189,53 @@ const BrowseTab: FC<{ children: { data: StorePlugin[] } }> = (data) => {
           </div>
         </Focusable>
       </div>
+      {isTesting && (
+        <div
+          style={{
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            marginLeft: '20px',
+            marginRight: '20px',
+            marginBottom: '20px',
+            padding: '8px 36px',
+            background: 'rgba(255, 255, 0, 0.067)',
+            textAlign: 'center',
+            border: '2px solid rgba(255, 255, 0, 0.467)',
+          }}
+        >
+          <h2 style={{ margin: 0 }}>{t('Store.store_testing_warning.label')}</h2>
+          <span>
+            {`${t('Store.store_testing_warning.desc')} `}
+            <a
+              href="https://decky.xyz/testing"
+              target="_blank"
+              style={{
+                textDecoration: 'none',
+              }}
+            >
+              decky.xyz/testing
+            </a>
+          </span>
+        </div>
+      )}
       <div>
-        {data.children.data
-          .filter((plugin: StorePlugin) => {
-            return (
-              plugin.name.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
-              plugin.description.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
-              plugin.author.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
-              plugin.tags.some((tag: string) => tag.toLowerCase().includes(searchFieldValue.toLowerCase()))
-            );
-          })
-          .sort((a, b) => {
-            if (selectedSort % 2 === 1) return a.name.localeCompare(b.name);
-            else return b.name.localeCompare(a.name);
-          })
-          .map((plugin: StorePlugin) => (
-            <PluginCard plugin={plugin} />
-          ))}
+        {!pluginList ? (
+          <div style={{ height: '100%' }}>
+            <SteamSpinner />
+          </div>
+        ) : (
+          pluginList
+            .filter((plugin: StorePlugin) => {
+              return (
+                plugin.name.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
+                plugin.description.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
+                plugin.author.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
+                plugin.tags.some((tag: string) => tag.toLowerCase().includes(searchFieldValue.toLowerCase()))
+              );
+            })
+            .map((plugin: StorePlugin) => <PluginCard plugin={plugin} />)
+        )}
       </div>
     </>
   );
@@ -229,13 +270,13 @@ const AboutTab: FC<{}> = () => {
       <span>
         {t('Store.store_testing_cta')}{' '}
         <a
-          href="https://deckbrew.xyz/testing"
+          href="https://decky.xyz/testing"
           target="_blank"
           style={{
             textDecoration: 'none',
           }}
         >
-          deckbrew.xyz/testing
+          decky.xyz/testing
         </a>
       </span>
       <span className="deckyStoreAboutHeader">{t('Store.store_contrib.label')}</span>

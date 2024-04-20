@@ -1,0 +1,195 @@
+{
+    "BranchSelect": {
+        "update_channel": {
+            "label": "Updatekanal",
+            "prerelease": "Vorabveröffentlichung",
+            "stable": "Standard",
+            "testing": "Test"
+        }
+    },
+    "Developer": {
+        "disabling": "Deaktiviere",
+        "enabling": "Aktiviere",
+        "5secreload": "Neu laden in 5 Sekunden"
+    },
+    "FilePickerIndex": {
+        "folder": {
+            "select": "Diesen Ordner verwenden"
+        }
+    },
+    "PluginCard": {
+        "plugin_install": "Installieren",
+        "plugin_no_desc": "Keine Beschreibung angegeben.",
+        "plugin_version_label": "Erweiterungs Version",
+        "plugin_full_access": "Diese Erweiterung hat uneingeschränkten Zugriff auf dein Steam Deck."
+    },
+    "PluginInstallModal": {
+        "install": {
+            "button_idle": "Installieren",
+            "button_processing": "Wird installiert",
+            "desc": "Bist du dir sicher, dass du {{artifact}} {{version}} installieren willst?",
+            "title": "Installiere {{artifact}}"
+        },
+        "reinstall": {
+            "button_idle": "Neu installieren",
+            "button_processing": "Wird neu installiert",
+            "desc": "Bist du dir sicher, dass du {{artifact}} {{version}} neu installieren willst?",
+            "title": "Neu installation {{artifact}}"
+        },
+        "update": {
+            "button_idle": "Aktualisieren",
+            "button_processing": "Wird aktualisiert",
+            "title": "Aktualisiere {{artifact}}",
+            "desc": "Bist du dir sicher, dass du {{artifact}} {{version}} aktualisieren willst?"
+        },
+        "no_hash": "Diese Erweiterung besitzt keine Prüfsumme, Installation auf eigene Gefahr."
+    },
+    "PluginListIndex": {
+        "no_plugin": "Keine Erweiterungen installiert!",
+        "plugin_actions": "Erweiterungs Aktionen",
+        "reinstall": "Neu installieren",
+        "reload": "Neu laden",
+        "uninstall": "Deinstallieren",
+        "update_to": "Aktualisieren zu {{name}}",
+        "update_all_one": "",
+        "update_all_other": ""
+    },
+    "PluginLoader": {
+        "decky_title": "Decky",
+        "decky_update_available": "Eine neue Version ({{tag_name}}) ist verfügbar!",
+        "error": "Fehler",
+        "plugin_load_error": {
+            "toast": "Fehler beim Laden von {{name}}",
+            "message": "Fehler beim Laden von {{name}}"
+        },
+        "plugin_uninstall": {
+            "button": "Deinstallieren",
+            "desc": "Bist du dir sicher, dass du {{name}} deinstallieren willst?",
+            "title": "Deinstalliere {{name}}"
+        },
+        "plugin_error_uninstall": "Das Laden von {{name}} hat einen Fehler verursacht. Dies bedeutet normalerweise, dass die Erweiterung ein Update für die neue Version von SteamUI benötigt. Prüfe in den Decky-Einstellungen im Bereich Erweiterungen, ob ein Update vorhanden ist.",
+        "plugin_update_one": "1 Erweiterung kann aktualisiert werden!",
+        "plugin_update_other": "{{count}} Erweiterungen können aktualisiert werden!"
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "label": "Remote CEF Debugging Zugriff",
+            "desc": "Erlaubt jedem aus dem Neztwerk unautorisierten Zugriff auf den CEF Debugger"
+        }
+    },
+    "SettingsDeveloperIndex": {
+        "header": "Sonstiges",
+        "react_devtools": {
+            "ip_label": "IP",
+            "label": "Aktiviere React DevTools",
+            "desc": "Erlaubt die Verbindung mit einem anderen Rechner, auf welchem React DevTools läuft. Eine Änderung startet Steam neu. Die IP Adresse muss vor Aktivierung ausgefüllt sein."
+        },
+        "third_party_plugins": {
+            "button_zip": "Durchsuchen",
+            "header": "Erweiterungen von Drittanbietern",
+            "label_desc": "URL",
+            "label_zip": "Installiere Erweiterung via ZIP Datei",
+            "button_install": "Installieren",
+            "label_url": "Installiere Erweiterung via URL"
+        },
+        "valve_internal": {
+            "desc2": "Fasse in diesem Menü nichts an, es sei denn, du weißt was du tust.",
+            "label": "Aktiviere Valve-internes Menü",
+            "desc1": "Aktiviert das Valve-interne Entwickler Menü."
+        }
+    },
+    "SettingsGeneralIndex": {
+        "about": {
+            "decky_version": "Decky Version",
+            "header": "Über"
+        },
+        "beta": {
+            "header": "Beta Teilnahme"
+        },
+        "developer_mode": {
+            "label": "Entwickleroptionen"
+        },
+        "other": {
+            "header": "Sonstiges"
+        },
+        "updates": {
+            "header": "Aktualisierungen"
+        }
+    },
+    "SettingsIndex": {
+        "developer_title": "Entwickler",
+        "general_title": "Allgemein",
+        "plugins_title": "Erweiterungen"
+    },
+    "Store": {
+        "store_contrib": {
+            "label": "Mitwirken",
+            "desc": "Wenn du Erweiterungen im Decky Store veröffentlichen willst, besuche die SteamDeckHomebrew/decky-plugin-template Repository auf GitHub. Informationen rund um Entwicklung und Veröffentlichung findest du in der README."
+        },
+        "store_filter": {
+            "label": "Filter",
+            "label_def": "Alle"
+        },
+        "store_search": {
+            "label": "Suche"
+        },
+        "store_sort": {
+            "label": "Sortierung",
+            "label_def": "Zuletzt aktualisiert"
+        },
+        "store_source": {
+            "desc": "Jeder Erweiterungs Quellcode ist in der SteamDeckHomebrew/decky-plugin-database Repository auf GitHub verfügbar.",
+            "label": "Quellcode"
+        },
+        "store_tabs": {
+            "about": "Über",
+            "alph_asce": "Alphabetisch (Z zu A)",
+            "alph_desc": "Alphabetisch (A zu Z)",
+            "title": "Durchstöbern"
+        },
+        "store_testing_cta": "Unterstütze das Decky Loader Team mit dem Testen von neuen Erweiterungen!"
+    },
+    "StoreSelect": {
+        "custom_store": {
+            "label": "Benutzerdefinierter Marktplatz",
+            "url_label": "URL"
+        },
+        "store_channel": {
+            "custom": "Benutzerdefiniert",
+            "default": "Standard",
+            "label": "Marktplatz Kanal",
+            "testing": "Test"
+        }
+    },
+    "Updater": {
+        "decky_updates": "Decky Aktualisierungen",
+        "patch_notes_desc": "Patchnotizen",
+        "updates": {
+            "check_button": "Auf Aktualisierungen prüfen",
+            "checking": "Wird überprüft",
+            "cur_version": "Aktualle Version: {{ver}}",
+            "install_button": "Aktualisierung installieren",
+            "label": "Aktualisierungen",
+            "lat_version": "{{ver}} ist die aktuellste",
+            "reloading": "Lade neu",
+            "updating": "Aktualisiere"
+        },
+        "no_patch_notes_desc": "Für diese Version gibt es keine Patchnotizen"
+    },
+    "PluginView": {
+        "hidden_one": "",
+        "hidden_other": ""
+    },
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "install_one": "",
+            "install_other": "",
+            "mixed_one": "",
+            "mixed_other": "",
+            "update_one": "",
+            "update_other": "",
+            "reinstall_one": "",
+            "reinstall_other": ""
+        }
+    }
+}

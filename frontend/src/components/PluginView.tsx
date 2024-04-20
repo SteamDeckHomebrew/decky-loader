@@ -1,13 +1,7 @@
-import {
-  ButtonItem,
-  Focusable,
-  PanelSection,
-  PanelSectionRow,
-  joinClassNames,
-  scrollClasses,
-  staticClasses,
-} from 'decky-frontend-lib';
+import { ButtonItem, Focusable, PanelSection, PanelSectionRow } from 'decky-frontend-lib';
 import { VFC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { FaEyeSlash } from 'react-icons/fa';
 
 import { Plugin } from '../plugin';
 import { useDeckyState } from './DeckyState';
@@ -16,8 +10,10 @@ import { useQuickAccessVisible } from './QuickAccessVisibleState';
 import TitleView from './TitleView';
 
 const PluginView: VFC = () => {
+  const { hiddenPlugins } = useDeckyState();
   const { plugins, updates, activePlugin, pluginOrder, setActivePlugin, closeActivePlugin } = useDeckyState();
   const visible = useQuickAccessVisible();
+  const { t } = useTranslation();
 
   const [pluginList, setPluginList] = useState<Plugin[]>(
     plugins.sort((a, b) => pluginOrder.indexOf(a.name) - pluginOrder.indexOf(b.name)),
@@ -32,10 +28,7 @@ const PluginView: VFC = () => {
     return (
       <Focusable onCancelButton={closeActivePlugin}>
         <TitleView />
-        <div
-          className={joinClassNames(staticClasses.TabGroupPanel, scrollClasses.ScrollPanel, scrollClasses.ScrollY)}
-          style={{ height: '100%' }}
-        >
+        <div style={{ height: '100%', paddingTop: '16px' }}>
           {(visible || activePlugin.alwaysRender) && activePlugin.content}
         </div>
       </Focusable>
@@ -44,10 +37,15 @@ const PluginView: VFC = () => {
   return (
     <>
       <TitleView />
-      <div className={joinClassNames(staticClasses.TabGroupPanel, scrollClasses.ScrollPanel, scrollClasses.ScrollY)}>
+      <div
+        style={{
+          paddingTop: '16px',
+        }}
+      >
         <PanelSection>
           {pluginList
             .filter((p) => p.content)
+            .filter(({ name }) => !hiddenPlugins.includes(name))
             .map(({ name, icon }) => (
               <PanelSectionRow key={name}>
                 <ButtonItem layout="below" onClick={() => setActivePlugin(name)}>
@@ -59,6 +57,12 @@ const PluginView: VFC = () => {
                 </ButtonItem>
               </PanelSectionRow>
             ))}
+          {hiddenPlugins.length > 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.8rem', marginTop: '10px' }}>
+              <FaEyeSlash />
+              <div>{t('PluginView.hidden', { count: hiddenPlugins.length })}</div>
+            </div>
+          )}
         </PanelSection>
       </div>
     </>

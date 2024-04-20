@@ -1,0 +1,222 @@
+{
+    "BranchSelect": {
+        "update_channel": {
+            "prerelease": "Передреліз",
+            "testing": "Тестовий",
+            "label": "Канал оновлень",
+            "stable": "Стабільний"
+        }
+    },
+    "Developer": {
+        "5secreload": "Перезавантаження за 5 секунд",
+        "enabling": "Увімкнення React DevTools",
+        "disabling": "Вимкнення React DevTools"
+    },
+    "FilePickerIndex": {
+        "folder": {
+            "select": "Використовувати цю папку"
+        }
+    },
+    "PluginListLabel": {
+        "hidden": "Приховано з меню швидкого доступу"
+    },
+    "PluginCard": {
+        "plugin_full_access": "Цей плагін має повний доступ до вашого Steam Deck.",
+        "plugin_install": "Встановити",
+        "plugin_no_desc": "Опис не надано.",
+        "plugin_version_label": "Версія плагіна"
+    },
+    "PluginInstallModal": {
+        "install": {
+            "button_idle": "Встановити",
+            "button_processing": "Встановлення",
+            "title": "Встановити {{artifact}}",
+            "desc": "Ви впевнені, що хочете встановити {{artifact}} {{version}}?"
+        },
+        "reinstall": {
+            "button_idle": "Перевстановити",
+            "desc": "Ви впевнені, що хочете перевстановити {{artifact}} {{version}}?",
+            "title": "Перевстановити {{artifact}}",
+            "button_processing": "Перевстановлення"
+        },
+        "update": {
+            "button_idle": "Оновити",
+            "button_processing": "Оновлення",
+            "title": "Оновити {{artifact}}",
+            "desc": "Ви впевнені, що хочете оновити {{artifact}} {{version}}?"
+        },
+        "no_hash": "Цей плагін не має хешу, ви встановлюєте його на власний ризик."
+    },
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "mixed_one": "Модифікувати 1 плагін",
+            "mixed_few": "Модифікувати {{count}} плагінів",
+            "mixed_many": "",
+            "reinstall_one": "Перевстановити 1 плагін",
+            "reinstall_few": "Перевстановити {{count}} плагінів",
+            "reinstall_many": "Перевстановити {{count}} плагінів",
+            "update_one": "Оновити 1 плагін",
+            "update_few": "Оновити {{count}} плагінів",
+            "update_many": "Оновити {{count}} плагінів",
+            "install_one": "Встановити 1 плагін",
+            "install_few": "Встановити {{count}} плагінів",
+            "install_many": "Встановити {{count}} плагінів"
+        },
+        "ok_button": {
+            "idle": "Підтвердити",
+            "loading": "Опрацювання"
+        },
+        "description": {
+            "install": "Встановити {{name}} {{version}}",
+            "update": "Оновити {{name}} до {{version}}",
+            "reinstall": "Перевстановити {{name}} {{version}}"
+        },
+        "confirm": "Ви впевнені, що хочете застосувати такі модифікації?"
+    },
+    "PluginListIndex": {
+        "no_plugin": "Плагінів не встановлено!",
+        "plugin_actions": "Дії плагінів",
+        "reinstall": "Перевстановити",
+        "reload": "Перезавантажити",
+        "update_to": "Оновити {{name}}",
+        "show": "Швидкий доступ: Показати",
+        "hide": "Швидкий доступ: Приховати",
+        "uninstall": "Видалити",
+        "update_all_one": "Оновити 1 плагін",
+        "update_all_few": "Оновити {{count}} плагінів",
+        "update_all_many": "Оновити {{count}} плагінів"
+    },
+    "PluginLoader": {
+        "decky_title": "Decky",
+        "decky_update_available": "Доступне оновлення до {{tag_name}}!",
+        "error": "Помилка",
+        "plugin_load_error": {
+            "message": "Помилка завантаження плагіна {{name}}",
+            "toast": "Помилка завантаження {{name}}"
+        },
+        "plugin_uninstall": {
+            "desc": "Ви впевнені, що хочете видалити {{name}}?",
+            "title": "Видалити {{name}}",
+            "button": "Видалення"
+        },
+        "plugin_error_uninstall": "Завантаження {{name}} спровокувало помилку показану вище. Зазвичай це означає, що плагін вимагає оновлення до нової версії SteamUI. Перевірте чи таке оновлення доступне або виконайте його видалення у налаштуваннях Decky, у секції Плагіни.",
+        "plugin_update_one": "Доступне оновлення для 1 плагіна!",
+        "plugin_update_few": "Доступне оновлення для {{count}} плагінів!",
+        "plugin_update_many": "Доступне оновлення для {{count}} плагінів!"
+    },
+    "SettingsDeveloperIndex": {
+        "cef_console": {
+            "button": "Відкрити консоль",
+            "label": "CEF-консоль",
+            "desc": "Відкрити CEF-консоль. Корисно тільки для дебагу. Ця штука потенційно небезпечна і повинна використовувати виключно якщо ви розробник плагіна, або якщо розробник спрямував вас сюди."
+        },
+        "header": "Інше",
+        "react_devtools": {
+            "desc": "Вмикає доступ до компʼютера із запущеним React DevTools. Зміна цього налаштування перезавантажить Steam. Вкажіть IP перед увімкненням.",
+            "label": "Увімкнути React DevTools",
+            "ip_label": "IP"
+        },
+        "third_party_plugins": {
+            "button_install": "Встановити",
+            "header": "Сторонні плагіни",
+            "label_desc": "URL",
+            "label_url": "Встановити плагін з URL",
+            "label_zip": "Встановити плагін з ZIP-файлу",
+            "button_zip": "Огляд"
+        },
+        "valve_internal": {
+            "desc1": "Вмикає внутрішнє розробницьке меню Valve.",
+            "label": "Увімкнути Valve Internal",
+            "desc2": "Нічого не торкайтесь у цьому меню, якщо не розумієте, що ви робите."
+        }
+    },
+    "SettingsGeneralIndex": {
+        "about": {
+            "decky_version": "Версія Decky",
+            "header": "Про нас"
+        },
+        "beta": {
+            "header": "Участь у Beta"
+        },
+        "developer_mode": {
+            "label": "Розробницький режим"
+        },
+        "other": {
+            "header": "Інше"
+        },
+        "updates": {
+            "header": "Оновлення"
+        }
+    },
+    "SettingsIndex": {
+        "developer_title": "Розробник",
+        "general_title": "Загальне",
+        "plugins_title": "Плагіни"
+    },
+    "Store": {
+        "store_contrib": {
+            "label": "Зробити внесок",
+            "desc": "Якщо ви бажаєте додати щось у Decky Plugin Store, завітайте у репозиторій SteamDeckHomebrew/decky-plugin-template на GitHub. Інформація про розробку та поширення доступна у README."
+        },
+        "store_filter": {
+            "label": "Фільтр",
+            "label_def": "Усе"
+        },
+        "store_search": {
+            "label": "Пошук"
+        },
+        "store_sort": {
+            "label": "Сортування",
+            "label_def": "Востаннє оновлені (Найновіші)"
+        },
+        "store_source": {
+            "label": "Вихідний код",
+            "desc": "Код усіх плагінів доступний у репозиторії SteamDeckHomebrew/decky-plugin-database на GitHub."
+        },
+        "store_tabs": {
+            "about": "Інформація",
+            "alph_asce": "За алфавітом (Z до A)",
+            "alph_desc": "За алфавітом (A до Z)",
+            "title": "Огляд"
+        },
+        "store_testing_cta": "Розгляньте можливість тестування нових плагінів, щоб допомогти команді Decky Loader!"
+    },
+    "StoreSelect": {
+        "custom_store": {
+            "label": "Власний магазин",
+            "url_label": "URL"
+        },
+        "store_channel": {
+            "custom": "Власний",
+            "default": "За замовчуванням",
+            "testing": "Тестування",
+            "label": "Канал магазину"
+        }
+    },
+    "Updater": {
+        "decky_updates": "Оновлення Decky",
+        "no_patch_notes_desc": "Немає нотаток до цієї версії",
+        "patch_notes_desc": "Перелік змін",
+        "updates": {
+            "checking": "Перевірка",
+            "cur_version": "Поточна версія: {{ver}}",
+            "install_button": "Встановити оновлення",
+            "label": "Оновлення",
+            "reloading": "Перезавантаження",
+            "updating": "Оновлення",
+            "check_button": "Перевірити оновлення",
+            "lat_version": "Оновлено: використовується {{ver}}"
+        }
+    },
+    "PluginView": {
+        "hidden_one": "{{count}} плагін приховано з цього списку",
+        "hidden_few": "{{count}} плагінів приховано з цього списку",
+        "hidden_many": "{{count}} плагінів приховано з цього списку"
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "desc": "Дозволити доступ до CEF-дебагера без аутентифікації для будь-кого у вашій мережі",
+            "label": "Дозволити віддалений CEF-дебагінг"
+        }
+    }
+}

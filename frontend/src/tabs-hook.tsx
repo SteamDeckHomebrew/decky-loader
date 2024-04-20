@@ -1,5 +1,5 @@
 // TabsHook for versions after the Desktop merge
-import { Patch, QuickAccessTab, afterPatch, findInReactTree, sleep } from 'decky-frontend-lib';
+import { Patch, QuickAccessTab, afterPatch, findInReactTree, getReactRoot, sleep } from 'decky-frontend-lib';
 
 import { QuickAccessVisibleStateProvider } from './components/QuickAccessVisibleState';
 import Logger from './logger';
@@ -32,15 +32,16 @@ class TabsHook extends Logger {
   }
 
   init() {
-    const tree = (document.getElementById('root') as any)._reactRootContainer._internalRoot.current;
+    const tree = getReactRoot(document.getElementById('root') as any);
     let qAMRoot: any;
     const findQAMRoot = (currentNode: any, iters: number): any => {
-      if (iters >= 65) {
-        // currently 45
+      if (iters >= 80) {
+        // currently 67
         return null;
       }
       if (
-        typeof currentNode?.memoizedProps?.visible == 'boolean' &&
+        (typeof currentNode?.memoizedProps?.visible == 'boolean' ||
+          typeof currentNode?.memoizedProps?.active == 'boolean') &&
         currentNode?.type?.toString()?.includes('QuickAccessMenuBrowserView')
       ) {
         this.log(`QAM root was found in ${iters} recursion cycles`);
@@ -128,7 +129,13 @@ class TabsHook extends Logger {
     let deckyTabAmount = existingTabs.reduce((prev: any, cur: any) => (cur.decky ? prev + 1 : prev), 0);
     if (deckyTabAmount == this.tabs.length) {
       for (let tab of existingTabs) {
-        if (tab?.decky && tab?.qAMVisibilitySetter) tab?.qAMVisibilitySetter(visible);
+        if (tab?.decky) {
+          if (tab?.qAMVisibilitySetter) {
+            tab?.qAMVisibilitySetter(visible);
+          } else {
+            tab.initialVisibility = visible;
+          }
+        }
       }
       return;
     }
@@ -138,12 +145,9 @@ class TabsHook extends Logger {
         title,
         tab: icon,
         decky: true,
+        initialVisibility: visible,
       };
-      tab.panel = (
-        <QuickAccessVisibleStateProvider initial={visible} tab={tab}>
-          {content}
-        </QuickAccessVisibleStateProvider>
-      );
+      tab.panel = <QuickAccessVisibleStateProvider tab={tab}>{content}</QuickAccessVisibleStateProvider>;
       existingTabs.push(tab);
     }
   }

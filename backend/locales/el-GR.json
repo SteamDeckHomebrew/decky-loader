@@ -1,0 +1,260 @@
+{
+    "SettingsDeveloperIndex": {
+        "react_devtools": {
+            "desc": "Επιτρέπει την σύνδεση με υπολογιστή που τρέχει React DevTools. Η αλλαγή αυτής της ρύθμισης θα προκαλέσει επαναφόρτωση του Steam. Ωρίστε την διεύθυνση IP πριν την ενεργοποιήσετε.",
+            "ip_label": "IP",
+            "label": "Ενεργοποίηση React DevTools"
+        },
+        "third_party_plugins": {
+            "button_install": "Εγκατάσταση",
+            "button_zip": "Περιήγηση",
+            "header": "Επεκτάσεις τρίτων",
+            "label_desc": "URL",
+            "label_url": "Εγκατάσταση επέκτασης απο URL",
+            "label_zip": "Εγκατάσταση επέκτασης από αρχείο ZIP"
+        },
+        "valve_internal": {
+            "desc1": "Ενεργοποιεί το μενού προγραμματιστή της Valve.",
+            "desc2": "Μην αγγίξετε τίποτα σε αυτό το μενού εκτός και αν ξέρετε τι κάνει.",
+            "label": "Ενεργοποιήση εσωτερικού μενού Valve"
+        },
+        "cef_console": {
+            "button": "Άνοιγμα Κονσόλας",
+            "desc": "Ανοίγει την Κονσόλα CEF. Χρήσιμο μόνο για εντοπισμό σφαλμάτων. Τα πράγματα εδώ είναι δυνητικά επικίνδυνα και θα πρέπει να χρησιμοποιηθεί μόνο εάν είστε προγραμματιστής επεκτάσεων, ή κατευθυνθήκατε εδώ από έναν προγραμματιστή.",
+            "label": "Κονσόλα CEF"
+        },
+        "header": "Άλλα"
+    },
+    "BranchSelect": {
+        "update_channel": {
+            "prerelease": "Προ-κυκλοφορία",
+            "stable": "Σταθερό",
+            "label": "Κανάλι ενημερώσεων",
+            "testing": "Δοκιμαστικό"
+        }
+    },
+    "Developer": {
+        "5secreload": "Γίνεται επαναφόρτωση σε 5 δευτερόλεπτα",
+        "disabling": "Γίνεται απενεργοποίηση των React DevTools",
+        "enabling": "Γίνεται ενεργοποίηση των React DevTools"
+    },
+    "PluginCard": {
+        "plugin_no_desc": "Δεν υπάρχει περιγραφή.",
+        "plugin_full_access": "Αυτή η επέκταση έχει πλήρη πρόσβαση στο Steam Deck σας.",
+        "plugin_install": "Εγκατάσταση",
+        "plugin_version_label": "Έκδοση επέκτασης"
+    },
+    "PluginInstallModal": {
+        "install": {
+            "desc": "Σίγουρα θέλετε να εγκαταστήσετε το {{artifact}}{{version}};",
+            "button_idle": "Εγκατάσταση",
+            "button_processing": "Γίνεται εγκατάσταση",
+            "title": "Εγκατάσταση {{artifact}}"
+        },
+        "no_hash": "Αυτή η επέκταση δεν έχει υπογραφή, την εγκαθηστάτε με δικό σας ρίσκο.",
+        "reinstall": {
+            "button_idle": "Επανεγκατάσταση",
+            "button_processing": "Γίνεται επανεγκατάσταση",
+            "desc": "Σίγουρα θέλετε να επανεγκαταστήσετε το {{artifact}}{{version}};",
+            "title": "Επανεγκατάσταση {{artifact}}"
+        },
+        "update": {
+            "button_idle": "Ενημέρωση",
+            "desc": "Σίγουρα θέλετε να ενημερώσετε το {{artifact}} {{version}};",
+            "title": "Ενημέρωση {{artifact}}",
+            "button_processing": "Γίνεται ενημέρωση"
+        }
+    },
+    "PluginListIndex": {
+        "no_plugin": "Δεν υπάρχουν εγκατεστημένες επεκτάσεις!",
+        "plugin_actions": "Ενέργειες επεκτάσεων",
+        "reinstall": "Επανεγκατάσταση",
+        "reload": "Επαναφόρτωση",
+        "uninstall": "Απεγκατάσταση",
+        "update_to": "Ενημέρωση σε {{name}}",
+        "update_all_one": "Ενημέρωση 1 επέκτασης",
+        "update_all_other": "Ενημέρωση {{count}} επεκτάσεων",
+        "show": "Γρήγορη πρόσβαση: Εμφάνιση",
+        "hide": "Γρήγορη πρόσβαση: Απόκρυψη"
+    },
+    "PluginLoader": {
+        "decky_title": "Decky",
+        "decky_update_available": "Ενημέρωση σε {{tag_name}} διαθέσιμη!",
+        "error": "Σφάλμα",
+        "plugin_error_uninstall": "Η φόρτωση του {{name}} προκάλεσε το παραπάνω σφάλμα. Αυτό συνήθως σημαίνει ότι η επέκταση απαιτεί ενημέρωση για τη νέα έκδοση του SteamUI. Ελέγξτε εάν υπάρχει ενημέρωση ή αξιολογήστε την απεγκαταστήσετε της επέκτασης στις ρυθμίσεις του Decky, στην ενότητα Επεκτάσεις.",
+        "plugin_load_error": {
+            "message": "Σφάλμα στη φόρτωση της επέκτασης {{name}}",
+            "toast": "Σφάλμα φόρτωσης {{name}}"
+        },
+        "plugin_uninstall": {
+            "button": "Απεγκατάσταση",
+            "desc": "Σίγουρα θέλετε να απεγκαταστήσετε το {{name}};",
+            "title": "Απεγκατάσταση {{name}}"
+        },
+        "plugin_update_one": "Διαθέσιμη ενημέρωση για 1 επέκταση!",
+        "plugin_update_other": "Διαθέσιμες ενημερώσεις για {{count}} επεκτάσεις!"
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "label": "Να επιτρέπεται η απομακρυσμένη πρόσβαση στον CEF debugger",
+            "desc": "Να επιτρέπεται η ανεξέλεγκτη πρόσβαση στον CEF debugger σε οποιονδήποτε στο τοπικό δίκτυο"
+        }
+    },
+    "SettingsGeneralIndex": {
+        "about": {
+            "decky_version": "Έκδοση Decky",
+            "header": "Σχετικά"
+        },
+        "developer_mode": {
+            "label": "Λειτουργία προγραμματιστή"
+        },
+        "other": {
+            "header": "Άλλα"
+        },
+        "updates": {
+            "header": "Ενημερώσεις"
+        },
+        "beta": {
+            "header": "Συμμετοχή στη Beta"
+        },
+        "notifications": {
+            "decky_updates_label": "Διαθέσιμη ενημέρωση του Decky",
+            "header": "Ειδοποιήσεις",
+            "plugin_updates_label": "Διαθέσιμες ενημερώσεις επεκτάσεων"
+        }
+    },
+    "SettingsIndex": {
+        "plugins_title": "Επεκτάσεις",
+        "developer_title": "Προγραμματιστής",
+        "general_title": "Γενικά"
+    },
+    "Store": {
+        "store_contrib": {
+            "label": "Συνεισφέροντας",
+            "desc": "Αν θέλετε να συνεισφέρετε στο κατάστημα επεκτάσεων του Decky, τσεκάρετε το SteamDeckHomebrew/decky-plugin-template repository στο GitHub. Πληροφορίες σχετικά με τη δημιουργία και τη διανομή επεκτάσεων είναι διαθέσιμες στο README."
+        },
+        "store_filter": {
+            "label": "Φίλτρο",
+            "label_def": "Όλα"
+        },
+        "store_search": {
+            "label": "Αναζήτηση"
+        },
+        "store_sort": {
+            "label": "Ταξινόμηση",
+            "label_def": "Τελευταία ενημέρωση (Νεότερα)"
+        },
+        "store_source": {
+            "desc": "Ο πηγαίος κώδικας όλων των επεκτάσεων είναι διαθέσιμος στο SteamDeckHomebrew/decky-plugin-database repository στο GitHub.",
+            "label": "Πηγαίος κώδικας"
+        },
+        "store_tabs": {
+            "about": "Σχετικά",
+            "alph_asce": "Αλφαβητικά (Ζ σε Α)",
+            "alph_desc": "Αλφαβητικά (Α σε Ζ)",
+            "title": "Περιήγηση"
+        },
+        "store_testing_cta": "Παρακαλώ σκεφτείτε να τεστάρετε νέες επεκτάσεις για να βοηθήσετε την ομάδα του Decky Loader!",
+        "store_testing_warning": {
+            "desc": "Μπορείτε να χρησιμοποιήσετε αυτό το κανάλι του καταστήματος για να δοκιμάσετε τις νεότερες εκδόσεις των επεκτάσεων. Φροντίστε να αφήσετε σχόλια στο GitHub, ώστε να βοηθήσετε στην ενημέρωση της εκάστοτε επέκταση για όλους τους χρήστες.",
+            "label": "Καλώς ήρθατε στο Δοκιμαστικό Κανάλι τους Καταστήματος"
+        }
+    },
+    "StoreSelect": {
+        "custom_store": {
+            "label": "Προσαρμοσμένο κατάστημα",
+            "url_label": "URL"
+        },
+        "store_channel": {
+            "custom": "Προσαρμοσμένο",
+            "default": "Προεπιλεγμένο",
+            "label": "Κανάλι καταστήματος",
+            "testing": "Δοκιμαστικό"
+        }
+    },
+    "Updater": {
+        "no_patch_notes_desc": "Κανένα ενημερωτικό σημείωμα για αυτή την έκδοση",
+        "patch_notes_desc": "Σημειώσεις ενημέρωσης",
+        "updates": {
+            "check_button": "Έλεγχος για ενημερώσεις",
+            "checking": "Γίνεται έλεγχος",
+            "cur_version": "Τρέχουσα έκδοση: {{ver}}",
+            "install_button": "Εγκατάσταση ενημέρωσης",
+            "label": "Ενημερώσεις",
+            "updating": "Γίνεται ενημέρωση",
+            "lat_version": "Ενημερωμένο: τρέχουσα έκδοση {{ver}}",
+            "reloading": "Γίνεται επαναφόρτωση"
+        },
+        "decky_updates": "Ενημερώσεις Decky"
+    },
+    "FilePickerIndex": {
+        "folder": {
+            "select": "Χρησιμοποιήστε αυτό το φάκελο",
+            "label": "Φάκελος",
+            "show_more": "Εμφάνιση περισσότερων αρχείων"
+        },
+        "filter": {
+            "modified_asce": "Τροποποιήθηκε (Παλαιότερο)",
+            "modified_desc": "Τροποποιήθηκε (Νεότερο)",
+            "created_desc": "Δημιουργήθηκε (Νεότερο)",
+            "name_asce": "Z-A",
+            "name_desc": "A-Z",
+            "created_asce": "Δημιουργήθηκε (Παλαιότερο)",
+            "size_asce": "Μέγεθος (Μικρότερο)",
+            "size_desc": "Μέγεθος (Μεγαλύτερο)"
+        },
+        "file": {
+            "select": "Επιλογή αυτού του αρχείου"
+        },
+        "files": {
+            "show_hidden": "Εμφάνιση Κρυφών Αρχείων",
+            "all_files": "Όλα Τα Αρχεία",
+            "file_type": "Τύπος Αρχείου"
+        }
+    },
+    "PluginView": {
+        "hidden_one": "1 επέκταση είναι κρυμμένη σε αυτήν τη λίστα",
+        "hidden_other": "{{count}} επεκτάσεις είναι κρυμμένες σε αυτήν τη λίστα"
+    },
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "mixed_one": "Τροποποίηση 1 επέκτασης",
+            "mixed_other": "Τροποποίηση {{count}} επεκτάσεων",
+            "update_one": "Ενημέρωση 1 επέκτασης",
+            "update_other": "Ενημέρωση {{count}} επεκτάσεων",
+            "reinstall_one": "Επανεγκατάσταση 1 επέκτασης",
+            "reinstall_other": "Επανεγκατάσταση {{count}} επεκτάσεων",
+            "install_one": "Εγκατάσταση 1 επέκτασης",
+            "install_other": "Εγκατάσταση {{count}} επεκτάσεων"
+        },
+        "confirm": "Είστε βέβαιοι ότι θέλετε να κάνετε τις ακόλουθες τροποποιήσεις;",
+        "description": {
+            "reinstall": "Επανεγκατάσταση {{name}} {{version}}",
+            "update": "Ενημέρωση {{name}} to {{version}}",
+            "install": "Εγκατάσταση {{name}} {{version}}"
+        },
+        "ok_button": {
+            "idle": "Επιβεβαίωση",
+            "loading": "Φόρτωση"
+        }
+    },
+    "PluginListLabel": {
+        "hidden": "Κρυφό στο μενού γρήγορης πρόσβασης"
+    },
+    "TitleView": {
+        "settings_desc": "Άνοιγμα Ρυθμίσεων Decky",
+        "decky_store_desc": "Άνοιγμα Καταστήματος Decky"
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "Πίσω"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "Η καθορισμένη διαδρομή δεν είναι έγκυρη. Παρακαλούμε ελέγξτε τη και εισάγετέ τη ξανά σωστά.",
+            "perm_denied": "Δεν έχετε πρόσβαση στην καθορισμένη διαδρομή. Ελέγξτε εάν ο χρήστης σας (deck στο Steam Deck) έχει τα αντίστοιχα δικαιώματα πρόσβασης στον καθορισμένο φάκελο/αρχείο.",
+            "unknown": "Παρουσιάστηκε άγνωστο σφάλμα. Το σφάλμα είναι: {{raw_error}}"
+        }
+    }
+}

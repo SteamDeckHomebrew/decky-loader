@@ -1,0 +1,245 @@
+{
+    "BranchSelect": {
+        "update_channel": {
+            "testing": "測試版",
+            "label": "更新頻道",
+            "prerelease": "預發佈",
+            "stable": "穩定版"
+        }
+    },
+    "Developer": {
+        "5secreload": "5 秒後重新載入",
+        "disabling": "正在停用 React DevTools",
+        "enabling": "正在啟用 React DevTools"
+    },
+    "FilePickerIndex": {
+        "folder": {
+            "select": "使用此資料夾",
+            "show_more": "顯示更多檔案",
+            "label": "資料夾"
+        },
+        "filter": {
+            "modified_asce": "修改日期（舊到新）",
+            "created_desc": "建立日期（新到舊）",
+            "modified_desc": "修改日期（新到舊）",
+            "name_desc": "子母排序（A到Z）",
+            "name_asce": "子母排序（Z到A）",
+            "size_asce": "檔案大小（小到大）",
+            "size_desc": "檔案大小（大到小）",
+            "created_asce": "建立日期（舊到新）"
+        },
+        "file": {
+            "select": "選擇此檔案"
+        },
+        "files": {
+            "all_files": "所有檔案",
+            "file_type": "檔案類型",
+            "show_hidden": "顯示隱藏檔"
+        }
+    },
+    "PluginCard": {
+        "plugin_install": "安裝",
+        "plugin_no_desc": "未提示描述。",
+        "plugin_version_label": "外掛程式版本",
+        "plugin_full_access": "此外掛程式擁有您的 Steam Deck 的完整存取權。"
+    },
+    "PluginInstallModal": {
+        "install": {
+            "button_idle": "安裝",
+            "button_processing": "正在安裝",
+            "title": "安裝 {{artifact}}",
+            "desc": "您確定要安裝 {{artifact}} {{version}} 嗎？"
+        },
+        "reinstall": {
+            "button_idle": "重新安裝",
+            "button_processing": "正在重新安裝",
+            "desc": "您確定要重新安裝 {{artifact}} {{version}} 嗎？",
+            "title": "重新安裝 {{artifact}}"
+        },
+        "update": {
+            "button_idle": "更新",
+            "button_processing": "正在更新",
+            "desc": "您確定要更新 {{artifact}} {{version}} 嗎？",
+            "title": "更新 {{artifact}}"
+        },
+        "no_hash": "此外掛程式沒有提供 hash 驗證，安裝可能有風險。"
+    },
+    "PluginListIndex": {
+        "no_plugin": "未安裝外掛程式！",
+        "plugin_actions": "外掛程式操作",
+        "uninstall": "解除安裝",
+        "update_to": "更新到 {{name}}",
+        "reinstall": "重新安裝",
+        "reload": "重新載入",
+        "show": "快速存取：顯示",
+        "hide": "快速存取：隱藏",
+        "update_all_other": "更新 {{count}} 個外掛程式"
+    },
+    "PluginLoader": {
+        "decky_title": "Decky",
+        "error": "錯誤",
+        "plugin_error_uninstall": "載入 {{name}} 導致上述異常。這通常意味著該外掛程式需要針對新版本的 SteamUI 進行更新。在 Decky 設定中檢查是否存在更新，或評估刪除此外掛程式。",
+        "plugin_load_error": {
+            "message": "載入外掛程式 {{name}} 發生錯誤",
+            "toast": "{{name}} 載入出錯"
+        },
+        "plugin_uninstall": {
+            "button": "解除安裝",
+            "title": "解除安裝 {{name}}",
+            "desc": "您確定要解除安裝 {{name}} 嗎？"
+        },
+        "decky_update_available": "可更新至版本 {{tag_name}}！",
+        "plugin_update_other": "可更新 {{count}} 個外掛程式！"
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "desc": "允許您的網路中的任何人未經認證地存取 CEF 偵錯器",
+            "label": "允許 CEF 遠端偵錯"
+        }
+    },
+    "SettingsDeveloperIndex": {
+        "third_party_plugins": {
+            "button_zip": "開啟",
+            "label_desc": "網址",
+            "label_url": "從網址安裝外掛程式",
+            "label_zip": "從 ZIP 檔案安裝外掛程式",
+            "button_install": "安裝",
+            "header": "第三方外掛程式"
+        },
+        "valve_internal": {
+            "desc2": "除非您知道它的作用，否則不要碰這個選單中的任何東西。",
+            "desc1": "啟用 Valve 內建開發人員選單。",
+            "label": "啟用 Valve 內建"
+        },
+        "react_devtools": {
+            "desc": "啟用與執行 React DevTools 的電腦的連接。改變這個設定將重新載入 Steam。啟用前必須設定 IP 位址。",
+            "ip_label": "IP",
+            "label": "啟用 React DevTools"
+        },
+        "header": "其他",
+        "cef_console": {
+            "button": "開啟控制台",
+            "label": "CEF 控制台",
+            "desc": "開啟 CEF 控制台。僅用於偵錯。這裡的東西有潛在的風險，只有當您是一個外掛程式開發者或者被外掛程式開發者引導到這裡時，才應該使用。"
+        }
+    },
+    "SettingsGeneralIndex": {
+        "about": {
+            "header": "關於",
+            "decky_version": "Decky 版本"
+        },
+        "beta": {
+            "header": "參與測試"
+        },
+        "developer_mode": {
+            "label": "開發人員模式"
+        },
+        "other": {
+            "header": "其他"
+        },
+        "updates": {
+            "header": "更新"
+        },
+        "notifications": {
+            "decky_updates_label": "Decky 可更新",
+            "header": "通知",
+            "plugin_updates_label": "外掛程式有更新"
+        }
+    },
+    "SettingsIndex": {
+        "developer_title": "開發人員",
+        "general_title": "一般",
+        "plugins_title": "外掛程式"
+    },
+    "Store": {
+        "store_contrib": {
+            "label": "貢獻",
+            "desc": "如果您想為 Decky 外掛程式商店做貢獻，請查看 GitHub 上的 SteamDeckHomebrew/decky-plugin-template 儲存庫。README 中提供了有關開發和發佈的資訊。"
+        },
+        "store_filter": {
+            "label": "過濾",
+            "label_def": "全部"
+        },
+        "store_search": {
+            "label": "搜尋"
+        },
+        "store_sort": {
+            "label": "排序",
+            "label_def": "最後更新 (最新)"
+        },
+        "store_source": {
+            "label": "原始碼",
+            "desc": "所有外掛程式原始碼可以在 GitHub 的 SteamDeckHomebrew/decky-plugin-database 儲存庫查看。"
+        },
+        "store_tabs": {
+            "about": "關於",
+            "alph_asce": "依字母排序 (Z 到 A)",
+            "alph_desc": "依字母排序 (A 到 Z)",
+            "title": "瀏覽"
+        },
+        "store_testing_cta": "請考慮測試新的外掛程式來幫助 Decky Loader 團隊！"
+    },
+    "StoreSelect": {
+        "custom_store": {
+            "label": "自訂商店",
+            "url_label": "網址"
+        },
+        "store_channel": {
+            "custom": "自訂",
+            "default": "預設",
+            "label": "商店頻道",
+            "testing": "測試"
+        }
+    },
+    "Updater": {
+        "decky_updates": "Decky 更新",
+        "no_patch_notes_desc": "這個版本沒有更新日誌",
+        "patch_notes_desc": "更新日誌",
+        "updates": {
+            "checking": "正在檢查",
+            "install_button": "安裝更新",
+            "label": "更新",
+            "lat_version": "已是最新：執行 {{ver}}",
+            "reloading": "正在重新載入",
+            "check_button": "檢查更新",
+            "cur_version": "目前版本：{{ver}}",
+            "updating": "正在更新"
+        }
+    },
+    "PluginView": {
+        "hidden_other": "{{count}} 個外掛程式已隱藏"
+    },
+    "PluginListLabel": {
+        "hidden": "已從快速存取選單中移除"
+    },
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "mixed_other": "修改 {{count}} 個外掛程式",
+            "update_other": "更新 {{count}} 個外掛程式",
+            "reinstall_other": "重新安裝 {{count}} 個外掛程式",
+            "install_other": "安裝 {{count}} 個外掛程式"
+        },
+        "ok_button": {
+            "idle": "確定",
+            "loading": "執行中"
+        },
+        "confirm": "您確定要進行以下的修改嗎？",
+        "description": {
+            "install": "安裝 {{name}} {{version}}",
+            "update": "更新 {{name}} 到 {{version}}",
+            "reinstall": "重新安裝 {{name}} {{version}}"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "perm_denied": "您沒有瀏覽此目錄的權限。請檢查您的使用者（Steam Deck 中的 deck 帳號）有權限瀏覽特定的資料夾或檔案。",
+            "unknown": "發生未知錯誤。錯誤詳細資料：{{raw_error}}",
+            "file_not_found": "指定路徑無效。請檢查並輸入正確路徑。"
+        }
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "返回"
+        }
+    }
+}

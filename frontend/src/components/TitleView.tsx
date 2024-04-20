@@ -1,5 +1,6 @@
 import { DialogButton, Focusable, Router, staticClasses } from 'decky-frontend-lib';
 import { CSSProperties, VFC } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BsGearFill } from 'react-icons/bs';
 import { FaArrowLeft, FaStore } from 'react-icons/fa';
 
@@ -9,10 +10,13 @@ const titleStyles: CSSProperties = {
   display: 'flex',
   paddingTop: '3px',
   paddingRight: '16px',
+  position: 'sticky',
+  top: '0px',
 };
 
 const TitleView: VFC = () => {
   const { activePlugin, closeActivePlugin } = useDeckyState();
+  const { t } = useTranslation();
 
   const onSettingsClick = () => {
     Router.CloseSideMenus();
@@ -31,12 +35,14 @@ const TitleView: VFC = () => {
         <DialogButton
           style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
           onClick={onStoreClick}
+          onOKActionDescription={t('TitleView.decky_store_desc')}
         >
           <FaStore style={{ marginTop: '-4px', display: 'block' }} />
         </DialogButton>
         <DialogButton
           style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
           onClick={onSettingsClick}
+          onOKActionDescription={t('TitleView.settings_desc')}
         >
           <BsGearFill style={{ marginTop: '-4px', display: 'block' }} />
         </DialogButton>
@@ -45,15 +51,15 @@ const TitleView: VFC = () => {
   }
 
   return (
-    <div className={staticClasses.Title} style={titleStyles}>
+    <Focusable className={staticClasses.Title} style={titleStyles}>
       <DialogButton
         style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
         onClick={closeActivePlugin}
       >
         <FaArrowLeft style={{ marginTop: '-4px', display: 'block' }} />
       </DialogButton>
-      <div style={{ flex: 0.9 }}>{activePlugin.name}</div>
-    </div>
+      {activePlugin?.titleView || <div style={{ flex: 0.9 }}>{activePlugin.name}</div>}
+    </Focusable>
   );
 };
 

@@ -22,10 +22,10 @@
     "@types/react-router": "5.1.18",
     "@types/webpack": "^5.28.1",
     "husky": "^8.0.3",
-    "i18next-parser": "^7.7.0",
+    "i18next-parser": "^8.0.0",
     "import-sort-style-module": "^6.0.0",
     "inquirer": "^8.2.5",
-    "prettier": "^2.8.8",
+    "prettier": "^3.2.5",
     "prettier-plugin-import-sort": "^0.0.7",
     "react": "16.14.0",
     "react-dom": "16.14.0",
@@ -33,7 +33,8 @@
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-external-globals": "^0.6.1",
     "rollup-plugin-polyfill-node": "^0.10.2",
-    "tslib": "^2.5.0",
+    "rollup-plugin-visualizer": "^5.9.2",
+    "tslib": "^2.5.3",
     "typescript": "^4.9.5"
   },
   "importSort": {
@@ -43,12 +44,13 @@
     }
   },
   "dependencies": {
-    "decky-frontend-lib": "3.20.7",
-    "i18next": "^22.4.15",
-    "i18next-http-backend": "^2.2.0",
+    "decky-frontend-lib": "3.25.0",
+    "filesize": "^10.0.7",
+    "i18next": "^23.2.1",
+    "i18next-http-backend": "^2.2.1",
     "react-file-icon": "^1.3.0",
-    "react-i18next": "^12.2.2",
-    "react-icons": "^4.8.0",
+    "react-i18next": "^12.3.1",
+    "react-icons": "^4.9.0",
     "react-markdown": "^8.0.7",
     "remark-gfm": "^3.0.1"
   }

@@ -2,6 +2,7 @@ name: Lint
 
 on:
   push:
+  pull_request:
 
 jobs:
   lint:
@@ -9,9 +10,14 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2 # Check out the repository first.
-      - name: Run prettier (JavaScript & TypeScript)
+      - uses: actions/checkout@v3 # Check out the repository first.
+
+      - name: Install TypeScript dependencies
+        working-directory: frontend
         run: |
-          pushd frontend
-          npm install
-          npm run lint
+          npm i -g pnpm
+          pnpm i --frozen-lockfile
+
+      - name: Run prettier (TypeScript)
+        working-directory: frontend
+        run: pnpm run lint

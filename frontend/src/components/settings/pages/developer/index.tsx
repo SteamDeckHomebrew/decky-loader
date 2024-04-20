@@ -4,34 +4,43 @@ import {
   DialogControlsSection,
   DialogControlsSectionHeader,
   Field,
+  Navigation,
   TextField,
   Toggle,
 } from 'decky-frontend-lib';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaFileArchive, FaLink, FaReact, FaSteamSymbol } from 'react-icons/fa';
+import { FaFileArchive, FaLink, FaReact, FaSteamSymbol, FaTerminal } from 'react-icons/fa';
 
 import { setShouldConnectToReactDevTools, setShowValveInternal } from '../../../../developer';
+import Logger from '../../../../logger';
 import { installFromURL } from '../../../../store';
 import { useSetting } from '../../../../utils/hooks/useSetting';
+import { getSetting } from '../../../../utils/settings';
+import { FileSelectionType } from '../../../modals/filepicker';
 import RemoteDebuggingSettings from '../general/RemoteDebugging';
 
-const installFromZip = () => {
-  window.DeckyPluginLoader.openFilePicker('/home/deck', true).then((val) => {
+const logger = new Logger('DeveloperIndex');
+
+const installFromZip = async () => {
+  const path = await getSetting<string>('user_info.user_home', '');
+  if (path === '') {
+    logger.error('The default path has not been found!');
+    return;
+  }
+  window.DeckyPluginLoader.openFilePickerV2(
+    FileSelectionType.FILE,
+    path,
+    true,
+    true,
+    undefined,
+    ['zip'],
+    false,
+    false,
+  ).then((val) => {
     const url = `file://${val.path}`;
     console.log(`Installing plugin locally from ${url}`);
-
-    if (url.endsWith('.zip')) {
-      installFromURL(url);
-    } else {
-      window.DeckyPluginLoader.toaster.toast({
-        //title: t('SettingsDeveloperIndex.toast_zip.title'),
-        title: 'Decky',
-        //body: t('SettingsDeveloperIndex.toast_zip.body'),
-        body: 'Installation failed! Only ZIP files are supported.',
-        onClick: installFromZip,
-      });
-    }
+    installFromURL(url);
   });
 };
 
@@ -74,7 +83,28 @@ export default function DeveloperSettings() {
         </Field>
       </DialogControlsSection>
       <DialogControlsSection>
-        <DialogControlsSectionHeader>{t('SettingsDeveloperIndex.header_other')}</DialogControlsSectionHeader>
+        <DialogControlsSectionHeader>{t('SettingsDeveloperIndex.header')}</DialogControlsSectionHeader>
+        <Field
+          label={t('SettingsDeveloperIndex.cef_console.label')}
+          description={<span style={{ whiteSpace: 'pre-line' }}>{t('SettingsDeveloperIndex.cef_console.desc')}</span>}
+          icon={<FaTerminal style={{ display: 'block' }} />}
+        >
+          <DialogButton
+            onClick={async () => {
+              let res = await window.DeckyPluginLoader.callServerMethod('get_tab_id', { name: 'SharedJSContext' });
+              if (res.success) {
+                Navigation.NavigateToExternalWeb(
+                  'localhost:8080/devtools/inspector.html?ws=localhost:8080/devtools/page/' + res.result,
+                );
+              } else {
+                console.error('Unable to find ID for SharedJSContext tab ', res.result);
+                Navigation.NavigateToExternalWeb('localhost:8080');
+              }
+            }}
+          >
+            {t('SettingsDeveloperIndex.cef_console.button')}
+          </DialogButton>
+        </Field>
         <RemoteDebuggingSettings />
         <Field
           label={t('SettingsDeveloperIndex.valve_internal.label')}

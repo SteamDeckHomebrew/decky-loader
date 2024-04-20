@@ -1,5 +1,6 @@
 import { FC, createContext, useContext, useEffect, useState } from 'react';
 
+import { DEFAULT_NOTIFICATION_SETTINGS, NotificationSettings } from '../notification-service';
 import { Plugin } from '../plugin';
 import { PluginUpdateMapping } from '../store';
 import { VerInfo } from '../updater';
@@ -7,21 +8,34 @@ import { VerInfo } from '../updater';
 interface PublicDeckyState {
   plugins: Plugin[];
   pluginOrder: string[];
+  frozenPlugins: string[];
+  hiddenPlugins: string[];
   activePlugin: Plugin | null;
   updates: PluginUpdateMapping | null;
   hasLoaderUpdate?: boolean;
   isLoaderUpdating: boolean;
   versionInfo: VerInfo | null;
+  notificationSettings: NotificationSettings;
+  userInfo: UserInfo | null;
+}
+
+export interface UserInfo {
+  username: string;
+  path: string;
 }
 
 export class DeckyState {
   private _plugins: Plugin[] = [];
   private _pluginOrder: string[] = [];
+  private _frozenPlugins: string[] = [];
+  private _hiddenPlugins: string[] = [];
   private _activePlugin: Plugin | null = null;
   private _updates: PluginUpdateMapping | null = null;
   private _hasLoaderUpdate: boolean = false;
   private _isLoaderUpdating: boolean = false;
   private _versionInfo: VerInfo | null = null;
+  private _notificationSettings = DEFAULT_NOTIFICATION_SETTINGS;
+  private _userInfo: UserInfo | null = null;
 
   public eventBus = new EventTarget();
 
@@ -29,11 +43,15 @@ export class DeckyState {
     return {
       plugins: this._plugins,
       pluginOrder: this._pluginOrder,
+      frozenPlugins: this._frozenPlugins,
+      hiddenPlugins: this._hiddenPlugins,
       activePlugin: this._activePlugin,
       updates: this._updates,
       hasLoaderUpdate: this._hasLoaderUpdate,
       isLoaderUpdating: this._isLoaderUpdating,
       versionInfo: this._versionInfo,
+      notificationSettings: this._notificationSettings,
+      userInfo: this._userInfo,
     };
   }
 
@@ -49,6 +67,16 @@ export class DeckyState {
 
   setPluginOrder(pluginOrder: string[]) {
     this._pluginOrder = pluginOrder;
+    this.notifyUpdate();
+  }
+
+  setFrozenPlugins(frozenPlugins: string[]) {
+    this._frozenPlugins = frozenPlugins;
+    this.notifyUpdate();
+  }
+
+  setHiddenPlugins(hiddenPlugins: string[]) {
+    this._hiddenPlugins = hiddenPlugins;
     this.notifyUpdate();
   }
 
@@ -74,6 +102,16 @@ export class DeckyState {
 
   setIsLoaderUpdating(isUpdating: boolean) {
     this._isLoaderUpdating = isUpdating;
+    this.notifyUpdate();
+  }
+
+  setNotificationSettings(notificationSettings: NotificationSettings) {
+    this._notificationSettings = notificationSettings;
+    this.notifyUpdate();
+  }
+
+  setUserInfo(userInfo: UserInfo) {
+    this._userInfo = userInfo;
     this.notifyUpdate();
   }
 
@@ -111,11 +149,11 @@ export const DeckyStateContextProvider: FC<Props> = ({ children, deckyState }) =
     return () => deckyState.eventBus.removeEventListener('update', onUpdate);
   }, []);
 
-  const setIsLoaderUpdating = (hasUpdate: boolean) => deckyState.setIsLoaderUpdating(hasUpdate);
-  const setVersionInfo = (versionInfo: VerInfo) => deckyState.setVersionInfo(versionInfo);
-  const setActivePlugin = (name: string) => deckyState.setActivePlugin(name);
-  const closeActivePlugin = () => deckyState.closeActivePlugin();
-  const setPluginOrder = (pluginOrder: string[]) => deckyState.setPluginOrder(pluginOrder);
+  const setIsLoaderUpdating = deckyState.setIsLoaderUpdating.bind(deckyState);
+  const setVersionInfo = deckyState.setVersionInfo.bind(deckyState);
+  const setActivePlugin = deckyState.setActivePlugin.bind(deckyState);
+  const closeActivePlugin = deckyState.closeActivePlugin.bind(deckyState);
+  const setPluginOrder = deckyState.setPluginOrder.bind(deckyState);
 
   return (
     <DeckyStateContext.Provider

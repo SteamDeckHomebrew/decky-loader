@@ -1,0 +1,131 @@
+{
+    "SettingsDeveloperIndex": {
+        "react_devtools": {
+            "ip_label": "IP",
+            "label": "Aktivizo React DevTools"
+        },
+        "third_party_plugins": {
+            "button_zip": "Kërko",
+            "header": "Shtesa të Huaj",
+            "button_install": "Instalo",
+            "label_desc": "URL",
+            "label_url": "Instalo Shtes Nga URL",
+            "label_zip": "Instalo Shtes Nga ZIP"
+        }
+    },
+    "BranchSelect": {
+        "update_channel": {
+            "stable": "Fiksuar",
+            "label": "Kanali Përditësimet"
+        }
+    },
+    "FilePickerIndex": {
+        "folder": {
+            "select": "Përdore këtë folder"
+        }
+    },
+    "PluginCard": {
+        "plugin_install": "Instalo",
+        "plugin_version_label": "Versioni Shteses"
+    },
+    "PluginInstallModal": {
+        "install": {
+            "button_idle": "Instalo",
+            "button_processing": "Instalohet",
+            "desc": "Je i sigurt që don ta instalojsh {{artifact}} {{version}}?",
+            "title": "Instalo {{artifact}}"
+        },
+        "no_hash": "Ky shtesë nuk ka hash, ti e instalon me rrezikun tuaj.",
+        "reinstall": {
+            "button_idle": "Riinstalo",
+            "button_processing": "Riinstalohet",
+            "desc": "Je i sigurt a don ta riinstalojsh {{artifact}} {{version}}?",
+            "title": "Riinstalo {{artifact}}"
+        },
+        "update": {
+            "button_processing": "Përditësohet",
+            "desc": "Je i sigurt a don ta përditësojsh {{artifact}} {{version}}?",
+            "title": "Përditëso {{artifact}}"
+        }
+    },
+    "PluginLoader": {
+        "decky_title": "Decky",
+        "plugin_uninstall": {
+            "title": "Çinstalo {{name}}",
+            "button": "Çinstalo",
+            "desc": "Je i sigurt që don ta çinstalojsh {{name}}?"
+        },
+        "error": "Gabim",
+        "plugin_error_uninstall": "Ju lutem shko nga {{name}} në Decky menu nëse don ta çinstalojsh këtë shtese.",
+        "plugin_update_one": "",
+        "plugin_update_other": ""
+    },
+    "PluginListIndex": {
+        "no_plugin": "Nuk ka shtesa të instaluar!",
+        "uninstall": "Çinstalo",
+        "update_all_one": "",
+        "update_all_other": ""
+    },
+    "SettingsGeneralIndex": {
+        "other": {
+            "header": "Të Tjera"
+        },
+        "about": {
+            "decky_version": "Versioni Decky"
+        },
+        "updates": {
+            "header": "Përmirësimet"
+        }
+    },
+    "SettingsIndex": {
+        "developer_title": "Zhvillues",
+        "general_title": "Gjeneral"
+    },
+    "Store": {
+        "store_sort": {
+            "label": "Rendit"
+        },
+        "store_tabs": {
+            "title": "Kërko"
+        },
+        "store_contrib": {
+            "label": "Kontributi"
+        },
+        "store_filter": {
+            "label": "Filtro",
+            "label_def": "Të Gjitha"
+        },
+        "store_search": {
+            "label": "Kërko"
+        },
+        "store_source": {
+            "label": "Kodin Burimor"
+        }
+    },
+    "StoreSelect": {
+        "store_channel": {
+            "label": "Kanali Dyqanit"
+        }
+    },
+    "Updater": {
+        "updates": {
+            "cur_version": "Versioni e tanishëme: {{ver}}"
+        }
+    },
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "mixed_one": "",
+            "mixed_other": "",
+            "update_one": "",
+            "update_other": "",
+            "reinstall_one": "",
+            "reinstall_other": "",
+            "install_one": "",
+            "install_other": ""
+        }
+    },
+    "PluginView": {
+        "hidden_one": "",
+        "hidden_other": ""
+    }
+}

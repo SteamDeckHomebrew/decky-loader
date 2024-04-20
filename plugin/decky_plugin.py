@@ -17,6 +17,7 @@ __version__ = '0.1.0'
 import os
 import subprocess
 import logging
+import time
 
 """
 Constants
@@ -117,7 +118,8 @@ Environment variable: `DECKY_PLUGIN_AUTHOR`.
 e.g.: `John Doe`
 """
 
-DECKY_PLUGIN_LOG: str = os.path.join(DECKY_PLUGIN_LOG_DIR, "plugin.log")
+__cur_time = time.strftime("%Y-%m-%d %H.%M.%S")
+DECKY_PLUGIN_LOG: str = os.path.join(DECKY_PLUGIN_LOG_DIR, f"{__cur_time}.log")
 """
 The path to the plugin's main logfile.
 Environment variable: `DECKY_PLUGIN_LOG`.
@@ -191,6 +193,12 @@ def migrate_logs(*files_or_directories: str) -> dict[str, str]:
 """
 Logging
 """
+
+try:
+    for x in [entry.name for entry in sorted(os.scandir(DECKY_PLUGIN_LOG_DIR),key=lambda x: x.stat().st_mtime, reverse=True) if entry.name.endswith(".log")][4:]:
+        os.unlink(os.path.join(DECKY_PLUGIN_LOG_DIR, x))
+except Exception as e:
+    print(f"Failed to delete old logs: {str(e)}")
 
 logging.basicConfig(filename=DECKY_PLUGIN_LOG,
                     format='[%(asctime)s][%(levelname)s]: %(message)s',

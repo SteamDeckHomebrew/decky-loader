@@ -12,7 +12,7 @@ body:
         - label: I have searched existing issues
         - label: This issue is not a duplicate of an existing one
         - label: I have checked the [common issues section in the readme file](https://github.com/SteamDeckHomebrew/decky-loader#-common-issues)
-        - label: I have attached logs to this bug report (failure to include logs will mean your issue will not be responded too).
+        - label: I have attached logs to this bug report (failure to include logs will mean your issue may not be responded to).
 
   - type: textarea
     attributes:
@@ -42,7 +42,7 @@ body:
       label: SteamOS version
 #      description: Can be found with `uname -a`
 #      placeholder: "Linux steamdeck 5.13.0-valve36-1-neptune #1 SMP PREEMPT Mon, 19 Dec 2022 23:39:41 +0000 x86_64 GNU/Linux"
-      placeholder: "SteamOS 3.4.3 Stable"
+      placeholder: "SteamOS 3.5.7 Stable"
     validations:
       required: true
 
@@ -67,8 +67,18 @@ body:
 
   - type: textarea
     attributes:
-      label: Logs
+      label: Backend Logs
       description: Please reboot your deck (if possible) when attempting to recreate the issue, then run ``cd ~ && journalctl -b0  -u plugin_loader.service > deckylog.txt``. This will save the log file to ``~`` aka ``/home/deck``. Please upload the file here
       placeholder: deckylog.txt
     validations:
       required: true
+
+  - type: textarea
+    attributes:
+      label: Frontend Logs
+      description: Please copy from your deck ~/.steam/steam/logs/cef_log.txt and ~/.steam/steam/logs/cef_log.previous.txt. Make sure to scrub your Steam username as it may appear in these logs.
+      placeholder: cef_log.txt
+    validations:
+      required: true
+
+      

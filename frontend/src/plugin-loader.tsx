@@ -1,16 +1,32 @@
-import { ConfirmModal, ModalRoot, Patch, QuickAccessTab, Router, showModal, sleep } from 'decky-frontend-lib';
+import {
+  ModalRoot,
+  PanelSection,
+  PanelSectionRow,
+  Patch,
+  QuickAccessTab,
+  Router,
+  quickAccessMenuClasses,
+  showModal,
+  sleep,
+} from 'decky-frontend-lib';
 import { FC, lazy } from 'react';
-import { FaCog, FaExclamationCircle, FaPlug } from 'react-icons/fa';
+import { FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
-import { DeckyState, DeckyStateContextProvider, useDeckyState } from './components/DeckyState';
+import { DeckyState, DeckyStateContextProvider, UserInfo, useDeckyState } from './components/DeckyState';
 import LegacyPlugin from './components/LegacyPlugin';
+import { File, FileSelectionType } from './components/modals/filepicker';
 import { deinitFilepickerPatches, initFilepickerPatches } from './components/modals/filepicker/patches';
+import MultiplePluginsInstallModal from './components/modals/MultiplePluginsInstallModal';
 import PluginInstallModal from './components/modals/PluginInstallModal';
+import PluginUninstallModal from './components/modals/PluginUninstallModal';
 import NotificationBadge from './components/NotificationBadge';
 import PluginView from './components/PluginView';
 import WithSuspense from './components/WithSuspense';
+import { FrozenPluginService } from './frozen-plugins-service';
+import { HiddenPluginsService } from './hidden-plugins-service';
 import Logger from './logger';
-import { Plugin } from './plugin';
+import { NotificationService } from './notification-service';
+import { InstallType, Plugin } from './plugin';
 import RouterHook from './router-hook';
 import { deinitSteamFixes, initSteamFixes } from './steamfixes';
 import { checkForUpdates } from './store';
@@ -18,7 +34,8 @@ import TabsHook from './tabs-hook';
 import OldTabsHook from './tabs-hook.old';
 import Toaster from './toaster';
 import { VerInfo, callUpdaterMethod } from './updater';
-import { getSetting } from './utils/settings';
+import { getSetting, setSetting } from './utils/settings';
+import TranslationHelper, { TranslationClass } from './utils/TranslationHelper';
 
 const StorePage = lazy(() => import('./components/store/Store'));
 const SettingsPage = lazy(() => import('./components/settings'));
@@ -32,6 +49,10 @@ class PluginLoader extends Logger {
   private routerHook: RouterHook = new RouterHook();
   public toaster: Toaster = new Toaster();
   private deckyState: DeckyState = new DeckyState();
+
+  public frozenPluginsService = new FrozenPluginService(this.deckyState);
+  public hiddenPluginsService = new HiddenPluginsService(this.deckyState);
+  public notificationService = new NotificationService(this.deckyState);
 
   private reloadLock: boolean = false;
   // stores a list of plugin names which requested to be reloaded
@@ -84,7 +105,15 @@ class PluginLoader extends Logger {
 
     initFilepickerPatches();
 
+    this.getUserInfo();
+
     this.updateVersion();
+  }
+
+  public async getUserInfo() {
+    const userInfo = (await this.callServerMethod('get_user_info')).result as UserInfo;
+    setSetting('user_info.user_name', userInfo.username);
+    setSetting('user_info.user_home', userInfo.path);
   }
 
   public async updateVersion() {
@@ -97,33 +126,45 @@ class PluginLoader extends Logger {
   public async notifyUpdates() {
     const versionInfo = await this.updateVersion();
     if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
-      this.toaster.toast({
-        //title: t('PluginLoader.decky_title'),
-        title: 'Decky',
-        //body: t('PluginLoader.decky_update_available', { tag_name: versionInfo?.remote?.tag_name }),
-        body: `Update to ${versionInfo?.remote?.tag_name} available!`,
-        onClick: () => Router.Navigate('/decky/settings'),
-      });
       this.deckyState.setHasLoaderUpdate(true);
+      if (this.notificationService.shouldNotify('deckyUpdates')) {
+        this.toaster.toast({
+          title: <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="decky_title" />,
+          body: (
+            <TranslationHelper
+              trans_class={TranslationClass.PLUGIN_LOADER}
+              trans_text="decky_update_available"
+              i18n_args={{ tag_name: versionInfo?.remote?.tag_name }}
+            />
+          ),
+          onClick: () => Router.Navigate('/decky/settings'),
+        });
+      }
     }
     await sleep(7000);
     await this.notifyPluginUpdates();
   }
 
   public async checkPluginUpdates() {
-    const updates = await checkForUpdates(this.plugins);
+    const frozenPlugins = this.deckyState.publicState().frozenPlugins;
+
+    const updates = await checkForUpdates(this.plugins.filter((p) => !frozenPlugins.includes(p.name)));
     this.deckyState.setUpdates(updates);
     return updates;
   }
 
   public async notifyPluginUpdates() {
     const updates = await this.checkPluginUpdates();
-    if (updates?.size > 0) {
+    if (updates?.size > 0 && this.notificationService.shouldNotify('pluginUpdates')) {
       this.toaster.toast({
-        //title: t('PluginLoader.decky_title'),
-        title: 'Decky',
-        //body: t('PluginLoader.plugin_update', { count: updates.size }),
-        body: `Updates available for ${updates.size} plugin${updates.size > 1 ? 's' : ''}!`,
+        title: <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="decky_title" />,
+        body: (
+          <TranslationHelper
+            trans_class={TranslationClass.PLUGIN_LOADER}
+            trans_text="plugin_update"
+            i18n_args={{ count: updates.size }}
+          />
+        ),
         onClick: () => Router.Navigate('/decky/settings/plugins'),
       });
     }
@@ -148,21 +189,21 @@ class PluginLoader extends Logger {
     );
   }
 
-  public uninstallPlugin(name: string, title: string, button_text: string, description: string) {
+  public addMultiplePluginsInstallPrompt(
+    request_id: string,
+    requests: { name: string; version: string; hash: string; install_type: InstallType }[],
+  ) {
     showModal(
-      <ConfirmModal
-        onOK={async () => {
-          await this.callServerMethod('uninstall_plugin', { name });
-        }}
-        onCancel={() => {
-          // do nothing
-        }}
-        strTitle={title}
-        strOKButtonText={button_text}
-      >
-        {description}
-      </ConfirmModal>,
+      <MultiplePluginsInstallModal
+        requests={requests}
+        onOK={() => this.callServerMethod('confirm_plugin_install', { request_id })}
+        onCancel={() => this.callServerMethod('cancel_plugin_install', { request_id })}
+      />,
     );
+  }
+
+  public uninstallPlugin(name: string, title: string, buttonText: string, description: string) {
+    showModal(<PluginUninstallModal name={name} title={title} buttonText={buttonText} description={description} />);
   }
 
   public hasPlugin(name: string) {
@@ -186,6 +227,10 @@ class PluginLoader extends Logger {
       console.log(pluginOrder);
       this.deckyState.setPluginOrder(pluginOrder);
     });
+
+    this.frozenPluginsService.init();
+    this.hiddenPluginsService.init();
+    this.notificationService.init();
   }
 
   public deinit() {
@@ -243,6 +288,7 @@ class PluginLoader extends Logger {
         Authentication: window.deckyAuthToken,
       },
     });
+
     if (res.ok) {
       try {
         let plugin_export = await eval(await res.text());
@@ -253,28 +299,32 @@ class PluginLoader extends Logger {
           version: version,
         });
       } catch (e) {
-        //this.error(t('PluginLoader.plugin_load_error.message', { name: name }), e);
         this.error('Error loading plugin ' + name, e);
-        /*const TheError: FC<{}> = () => (
-          <>
-            {t('PluginLoader.error')}:{' '}
-            <pre>
-              <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
-            </pre>
-            <>{t('PluginLoader.plugin_error_uninstall', { icon: "<FaCog style={{ display: 'inline' }} />" })}</>
-          </>
-        );*/
         const TheError: FC<{}> = () => (
-          <>
-            Error:{' '}
-            <pre>
-              <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
-            </pre>
-            <>
-              Please go to <FaCog style={{ display: 'inline' }} /> in the Decky menu if you need to uninstall this
-              plugin.
-            </>
-          </>
+          <PanelSection>
+            <PanelSectionRow>
+              <div
+                className={quickAccessMenuClasses.FriendsTitle}
+                style={{ display: 'flex', justifyContent: 'center' }}
+              >
+                <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="error" />
+              </div>
+            </PanelSectionRow>
+            <PanelSectionRow>
+              <pre style={{ overflowX: 'scroll' }}>
+                <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
+              </pre>
+            </PanelSectionRow>
+            <PanelSectionRow>
+              <div className={quickAccessMenuClasses.Text}>
+                <TranslationHelper
+                  trans_class={TranslationClass.PLUGIN_LOADER}
+                  trans_text="plugin_error_uninstall"
+                  i18n_args={{ name: name }}
+                />
+              </div>
+            </PanelSectionRow>
+          </PanelSection>
         );
         this.plugins.push({
           name: name,
@@ -283,8 +333,13 @@ class PluginLoader extends Logger {
           icon: <FaExclamationCircle />,
         });
         this.toaster.toast({
-          //title: t('PluginLoader.plugin_load_error.toast', { name: name }),
-          title: 'Error loading ' + name,
+          title: (
+            <TranslationHelper
+              trans_class={TranslationClass.PLUGIN_LOADER}
+              trans_text="plugin_load_error.toast"
+              i18n_args={{ name: name }}
+            />
+          ),
           body: '' + e,
           icon: <FaExclamationCircle />,
         });
@@ -317,8 +372,26 @@ class PluginLoader extends Logger {
 
   openFilePicker(
     startPath: string,
-    includeFiles?: boolean,
+    selectFiles?: boolean,
     regex?: RegExp,
+  ): Promise<{ path: string; realpath: string }> {
+    if (selectFiles) {
+      return this.openFilePickerV2(FileSelectionType.FILE, startPath, true, true, regex);
+    } else {
+      return this.openFilePickerV2(FileSelectionType.FOLDER, startPath, false, true, regex);
+    }
+  }
+
+  openFilePickerV2(
+    select: FileSelectionType,
+    startPath: string,
+    includeFiles?: boolean,
+    includeFolders?: boolean,
+    filter?: RegExp | ((file: File) => boolean),
+    extensions?: string[],
+    showHiddenFiles?: boolean,
+    allowAllFiles?: boolean,
+    max?: number,
   ): Promise<{ path: string; realpath: string }> {
     return new Promise((resolve, reject) => {
       const Content = ({ closeModal }: { closeModal?: () => void }) => (
@@ -333,9 +406,15 @@ class PluginLoader extends Logger {
             <FilePicker
               startPath={startPath}
               includeFiles={includeFiles}
-              regex={regex}
+              includeFolders={includeFolders}
+              filter={filter}
+              validFileExtensions={extensions}
+              allowAllFiles={allowAllFiles}
+              defaultHidden={showHiddenFiles}
               onSubmit={resolve}
               closeModal={closeModal}
+              fileSelType={select}
+              max={max}
             />
           </WithSuspense>
         </ModalRoot>
@@ -350,6 +429,7 @@ class PluginLoader extends Logger {
       toaster: this.toaster,
       callServerMethod: this.callServerMethod,
       openFilePicker: this.openFilePicker,
+      openFilePickerV2: this.openFilePickerV2,
       async callPluginMethod(methodName: string, args = {}) {
         const response = await fetch(`http://127.0.0.1:1337/plugins/${pluginName}/methods/${methodName}`, {
           method: 'POST',

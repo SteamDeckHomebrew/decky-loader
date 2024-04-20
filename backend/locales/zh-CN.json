@@ -1,0 +1,253 @@
+{
+    "BranchSelect": {
+        "update_channel": {
+            "prerelease": "发布候选",
+            "stable": "稳定",
+            "testing": "测试",
+            "label": "更新通道"
+        }
+    },
+    "Developer": {
+        "5secreload": "5 秒钟后重新加载",
+        "disabling": "正在禁用 React DevTools",
+        "enabling": "正在启用 React DevTools"
+    },
+    "FilePickerIndex": {
+        "folder": {
+            "select": "使用这个文件夹",
+            "label": "文件夹",
+            "show_more": "显示更多文件"
+        },
+        "filter": {
+            "created_asce": "创建日期（最旧）",
+            "created_desc": "创建日期（最新）",
+            "modified_asce": "修改日期（最旧）",
+            "modified_desc": "修改日期（最新）",
+            "name_asce": "字母降序",
+            "name_desc": "字母升序",
+            "size_asce": "大小（最小）",
+            "size_desc": "大小（最大）"
+        },
+        "files": {
+            "all_files": "全部文件",
+            "file_type": "文件类型",
+            "show_hidden": "显示隐藏文件"
+        },
+        "file": {
+            "select": "选择此文件"
+        }
+    },
+    "PluginCard": {
+        "plugin_install": "安装",
+        "plugin_no_desc": "无描述提供。",
+        "plugin_version_label": "插件版本",
+        "plugin_full_access": "此插件可以完全访问你的 Steam Deck。"
+    },
+    "PluginInstallModal": {
+        "install": {
+            "button_idle": "安装",
+            "button_processing": "安装中",
+            "desc": "你确定要安装 {{artifact}} {{version}} 吗?",
+            "title": "安装 {{artifact}}"
+        },
+        "reinstall": {
+            "button_idle": "重新安装",
+            "button_processing": "正在重新安装",
+            "desc": "你确定要重新安装 {{artifact}} {{version}} 吗?",
+            "title": "重新安装 {{artifact}}"
+        },
+        "update": {
+            "button_idle": "更新",
+            "button_processing": "正在更新",
+            "desc": "你确定要更新 {{artifact}} {{version}} 吗?",
+            "title": "更新 {{artifact}}"
+        },
+        "no_hash": "此插件没有哈希校验值，你需要自行承担安装风险。"
+    },
+    "PluginListIndex": {
+        "no_plugin": "没有安装插件！",
+        "plugin_actions": "插件操作",
+        "reinstall": "重新安装",
+        "reload": "重新加载",
+        "uninstall": "卸载",
+        "update_to": "更新 {{name}}",
+        "update_all_other": "更新 {{count}} 个插件",
+        "show": "在快速访问菜单中显示",
+        "hide": "在快速访问菜单中隐藏"
+    },
+    "PluginLoader": {
+        "decky_title": "Decky",
+        "error": "错误",
+        "plugin_error_uninstall": "加载 {{name}} 时引起了上述异常。这通常意味着插件需要更新以适应 SteamUI 的新版本。请检查插件是否有更新，或在 Decky 设置中的插件部分将其移除。",
+        "plugin_load_error": {
+            "message": "加载插件 {{name}} 错误",
+            "toast": "加载插件 {{name}} 发生了错误"
+        },
+        "plugin_uninstall": {
+            "button": "卸载",
+            "title": "卸载 {{name}}",
+            "desc": "你确定要卸载 {{name}} 吗?"
+        },
+        "decky_update_available": "新版本 {{tag_name}} 可用！",
+        "plugin_update_other": "{{count}} 个插件有更新！"
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "desc": "允许你网络中的任何人无需身份验证即可访问CEF调试器",
+            "label": "允许远程访问CEF调试"
+        }
+    },
+    "SettingsDeveloperIndex": {
+        "react_devtools": {
+            "ip_label": "IP",
+            "label": "启用 React DevTools",
+            "desc": "允许连接到运行着 React DevTools 的计算机，更改此设置将重新加载Steam，请在启用前设置IP地址。"
+        },
+        "third_party_plugins": {
+            "button_install": "安装",
+            "button_zip": "浏览文件",
+            "header": "第三方插件",
+            "label_desc": "URL",
+            "label_url": "从 URL 安装插件",
+            "label_zip": "从 ZIP 压缩文件安装插件"
+        },
+        "valve_internal": {
+            "desc1": "启用 Valve 内部开发者菜单。",
+            "desc2": "除非你知道你在干什么，否则请不要修改此菜单中的任何内容。",
+            "label": "启用 Valve 内部开发者"
+        },
+        "cef_console": {
+            "button": "打开控制台",
+            "label": "CEF 控制台",
+            "desc": "打开 CEF 控制台。仅在调试目的下使用。这列选项均有风险，请仅在您是插件开发者或是在插件开发者指导时访问使用。"
+        },
+        "header": "其他"
+    },
+    "SettingsGeneralIndex": {
+        "about": {
+            "decky_version": "Decky 版本",
+            "header": "关于"
+        },
+        "beta": {
+            "header": "参与测试"
+        },
+        "developer_mode": {
+            "label": "开发者模式"
+        },
+        "other": {
+            "header": "其他"
+        },
+        "updates": {
+            "header": "更新"
+        },
+        "notifications": {
+            "header": "通知",
+            "decky_updates_label": "Decky 更新可用",
+            "plugin_updates_label": "插件更新可用"
+        }
+    },
+    "SettingsIndex": {
+        "developer_title": "开发者",
+        "general_title": "通用",
+        "plugins_title": "插件"
+    },
+    "Store": {
+        "store_contrib": {
+            "label": "贡献",
+            "desc": "如果你想要提交你的插件到 Decky 插件商店，请访问 GitHub 上的 SteamDeckHomebrew/decky-plugin-template 存储库，关于开发和分发的相关信息，请查看 README 文件。"
+        },
+        "store_filter": {
+            "label": "过滤器",
+            "label_def": "全部"
+        },
+        "store_search": {
+            "label": "搜索"
+        },
+        "store_sort": {
+            "label": "排序",
+            "label_def": "最后更新 (最新)"
+        },
+        "store_source": {
+            "label": "源代码",
+            "desc": "所有插件的源代码都可以在 GitHub 上的 SteamDeckHomebrew/decky-plugin-database 存储库中获得。"
+        },
+        "store_tabs": {
+            "about": "关于",
+            "alph_asce": "字母排序 (Z 到 A)",
+            "alph_desc": "字母排序 (A 到 Z)",
+            "title": "浏览"
+        },
+        "store_testing_cta": "请考虑测试新插件以帮助 Decky Loader 团队！",
+        "store_testing_warning": {
+            "desc": "你可以使用该商店频道以体验最新版本的插件。 请在插件 Github 页面留言以使插件可以正式面向所有用户。",
+            "label": "欢迎来到商店测试频道"
+        }
+    },
+    "StoreSelect": {
+        "store_channel": {
+            "default": "默认",
+            "label": "商店通道",
+            "testing": "测试",
+            "custom": "自定义"
+        },
+        "custom_store": {
+            "label": "自定义商店",
+            "url_label": "URL"
+        }
+    },
+    "Updater": {
+        "decky_updates": "Decky 更新",
+        "no_patch_notes_desc": "此版本没有补丁说明",
+        "patch_notes_desc": "补丁说明",
+        "updates": {
+            "check_button": "检查更新",
+            "checking": "检查中",
+            "cur_version": "当前版本: {{ver}}",
+            "install_button": "安装更新",
+            "label": "更新",
+            "lat_version": "已是最新版本: {{ver}} 运行中",
+            "reloading": "重新加载中",
+            "updating": "更新中"
+        }
+    },
+    "MultiplePluginsInstallModal": {
+        "title": {
+            "mixed_other": "更改 {{count}} 个插件",
+            "update_other": "更新 {{count}} 个插件",
+            "reinstall_other": "重装 {{count}} 个插件",
+            "install_other": "安装 {{count}} 个插件"
+        },
+        "ok_button": {
+            "idle": "确认",
+            "loading": "工作中"
+        },
+        "confirm": "确定要进行以下修改吗？",
+        "description": {
+            "install": "安装 {{name}} {{version}}",
+            "update": "更新 {{name}} to {{version}}",
+            "reinstall": "重装 {{name}} {{version}}"
+        }
+    },
+    "PluginListLabel": {
+        "hidden": "在快速访问菜单中已隐藏"
+    },
+    "PluginView": {
+        "hidden_other": "此列表隐藏了 {{count}} 个插件"
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "返回"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "指定路径无效。请检查并输入正确的路径。",
+            "unknown": "发生了一个未知错误。原始错误为：{{raw_error}}",
+            "perm_denied": "你没有访问特定目录的权限。请检查你的用户（Steam Deck 中的 deck 账户）有着相对应的权限以访问特定的文件夹或文件。"
+        }
+    },
+    "TitleView": {
+        "decky_store_desc": "打开 Decky 商店",
+        "settings_desc": "打开 Decky 设置"
+    }
+}

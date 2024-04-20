@@ -1,24 +1,40 @@
+from __future__ import annotations
+from os import stat_result
 import uuid
-import os
 from json.decoder import JSONDecodeError
+from os.path import splitext
+import re
 from traceback import format_exc
+from stat import FILE_ATTRIBUTE_HIDDEN # type: ignore
 
-from asyncio import sleep, start_server, gather, open_connection
+from asyncio import StreamReader, StreamWriter, start_server, gather, open_connection
 from aiohttp import ClientSession, web
+from typing import TYPE_CHECKING, Callable, Coroutine, Dict, Any, List, TypedDict
 
 from logging import getLogger
-from injector import inject_to_tab, get_gamepadui_tab, close_old_tabs
-import helpers
-import subprocess
-from localplatform import service_stop, service_start
+from pathlib import Path
+
+from .browser import PluginInstallRequest, PluginInstallType
+if TYPE_CHECKING:
+    from .main import PluginManager
+from .injector import inject_to_tab, get_gamepadui_tab, close_old_tabs, get_tab
+from .localplatform import ON_WINDOWS
+from . import helpers
+from .localplatform import service_stop, service_start, get_home_path, get_username
+
+class FilePickerObj(TypedDict):
+    file: Path
+    filest: stat_result
+    is_dir: bool
 
 class Utilities:
-    def __init__(self, context) -> None:
+    def __init__(self, context: PluginManager) -> None:
         self.context = context
-        self.util_methods = {
+        self.util_methods: Dict[str, Callable[..., Coroutine[Any, Any, Any]]] = {
             "ping": self.ping,
             "http_request": self.http_request,
             "install_plugin": self.install_plugin,
+            "install_plugins": self.install_plugins,
             "cancel_plugin_install": self.cancel_plugin_install,
             "confirm_plugin_install": self.confirm_plugin_install,
             "uninstall_plugin": self.uninstall_plugin,
@@ -31,7 +47,9 @@ class Utilities:
             "get_setting": self.get_setting,
             "filepicker_ls": self.filepicker_ls,
             "disable_rdt": self.disable_rdt,
-            "enable_rdt": self.enable_rdt
+            "enable_rdt": self.enable_rdt,
+            "get_tab_id": self.get_tab_id,
+            "get_user_info": self.get_user_info,
         }
 
         self.logger = getLogger("Utilities")
@@ -45,7 +63,7 @@ class Utilities:
                 web.post("/methods/{method_name}", self._handle_server_method_call)
             ])
 
-    async def _handle_server_method_call(self, request):
+    async def _handle_server_method_call(self, request: web.Request):
         method_name = request.match_info["method_name"]
         try:
             args = await request.json()
@@ -61,7 +79,7 @@ class Utilities:
             res["success"] = False
         return web.json_response(res)
 
-    async def install_plugin(self, artifact="", name="No name", version="dev", hash=False, install_type=0):
+    async def install_plugin(self, artifact: str="", name: str="No name", version: str="dev", hash: str="", install_type: PluginInstallType=PluginInstallType.INSTALL):
         return await self.context.plugin_browser.request_plugin_install(
             artifact=artifact,
             name=name,
@@ -70,16 +88,21 @@ class Utilities:
             install_type=install_type
         )
 
-    async def confirm_plugin_install(self, request_id):
+    async def install_plugins(self, requests: List[PluginInstallRequest]):
+        return await self.context.plugin_browser.request_multiple_plugin_installs(
+            requests=requests
+        )
+
+    async def confirm_plugin_install(self, request_id: str):
         return await self.context.plugin_browser.confirm_plugin_install(request_id)
 
-    def cancel_plugin_install(self, request_id):
+    async def cancel_plugin_install(self, request_id: str):
         return self.context.plugin_browser.cancel_plugin_install(request_id)
 
-    async def uninstall_plugin(self, name):
+    async def uninstall_plugin(self, name: str):
         return await self.context.plugin_browser.uninstall_plugin(name)
 
-    async def http_request(self, method="", url="", **kwargs):
+    async def http_request(self, method: str="", url: str="", **kwargs: Any):
         async with ClientSession() as web:
             res = await web.request(method, url, ssl=helpers.get_ssl_context(), **kwargs)
             text = await res.text()
@@ -89,12 +112,13 @@ class Utilities:
             "body": text
         }
 
-    async def ping(self, **kwargs):
+    async def ping(self, **kwargs: Any):
         return "pong"
 
-    async def execute_in_tab(self, tab, run_async, code):
+    async def execute_in_tab(self, tab: str, run_async: bool, code: str):
         try:
             result = await inject_to_tab(tab, code, run_async)
+            assert result
             if "exceptionDetails" in result["result"]:
                 return {
                     "success": False,
@@ -111,7 +135,7 @@ class Utilities:
               "result": e
             }
 
-    async def inject_css_into_tab(self, tab, style):
+    async def inject_css_into_tab(self, tab: str, style: str):
         try:
             css_id = str(uuid.uuid4())
 
@@ -125,7 +149,7 @@ class Utilities:
                 }})()
                 """, False)
 
-            if "exceptionDetails" in result["result"]:
+            if result and "exceptionDetails" in result["result"]:
                 return {
                     "success": False,
                     "result": result["result"]
@@ -141,7 +165,7 @@ class Utilities:
                 "result": e
             }
 
-    async def remove_css_from_tab(self, tab, css_id):
+    async def remove_css_from_tab(self, tab: str, css_id: str):
         try:
             result = await inject_to_tab(tab,
                 f"""
@@ -153,7 +177,7 @@ class Utilities:
                 }})()
                 """, False)
 
-            if "exceptionDetails" in result["result"]:
+            if result and "exceptionDetails" in result["result"]:
                 return {
                     "success": False,
                     "result": result
@@ -168,10 +192,10 @@ class Utilities:
                 "result": e
             }
 
-    async def get_setting(self, key, default):
+    async def get_setting(self, key: str, default: Any):
         return self.context.settings.getSetting(key, default)
 
-    async def set_setting(self, key, value):
+    async def set_setting(self, key: str, value: Any):
         return self.context.settings.setSetting(key, value)
 
     async def allow_remote_debugging(self):
@@ -182,41 +206,97 @@ class Utilities:
         await service_stop(helpers.REMOTE_DEBUGGER_UNIT)
         return True
 
-    async def filepicker_ls(self, path, include_files=True):
-        # def sorter(file): # Modification time
-        #     if os.path.isdir(os.path.join(path, file)) or os.path.isfile(os.path.join(path, file)):
-        #         return os.path.getmtime(os.path.join(path, file))
-        #     return 0
-        # file_names = sorted(os.listdir(path), key=sorter, reverse=True) # TODO provide more sort options
-        file_names = sorted(os.listdir(path)) # Alphabetical
+    async def filepicker_ls(self, 
+                            path : str | None = None, 
+                            include_files: bool = True,
+                            include_folders: bool = True,
+                            include_ext: list[str] = [],
+                            include_hidden: bool = False,
+                            order_by: str = "name_asc",
+                            filter_for: str | None = None,
+                            page: int = 1,
+                            max: int = 1000):
+        
+        if path == None:
+            path = get_home_path()
 
-        files = []
+        path_obj = Path(path).resolve()
 
-        for file in file_names:
-            full_path = os.path.join(path, file)
-            is_dir = os.path.isdir(full_path)
+        files: List[FilePickerObj] = []
+        folders: List[FilePickerObj] = []
 
-            if is_dir or include_files:
-                files.append({
-                    "isdir": is_dir,
-                    "name": file,
-                    "realpath": os.path.realpath(full_path)
-                })
+        #Resolving all files/folders in the requested directory
+        for file in path_obj.iterdir():
+            if file.exists():
+                filest = file.stat()
+                is_hidden = file.name.startswith('.')
+                if ON_WINDOWS and not is_hidden:
+                    is_hidden = bool(filest.st_file_attributes & FILE_ATTRIBUTE_HIDDEN) # type: ignore
+                if include_folders and file.is_dir():
+                    if (is_hidden and include_hidden) or not is_hidden:
+                        folders.append({"file": file, "filest": filest, "is_dir": True})
+                elif include_files:
+                    # Handle requested extensions if present
+                    if len(include_ext) == 0 or 'all_files' in include_ext \
+                        or splitext(file.name)[1].lstrip('.').upper() in (ext.upper() for ext in include_ext):
+                        if (is_hidden and include_hidden) or not is_hidden:
+                            files.append({"file": file, "filest": filest, "is_dir": False})
+        # Filter logic
+        if filter_for is not None:
+            try:
+                if re.compile(filter_for):
+                    files = list(filter(lambda file: re.search(filter_for, file["file"].name) != None, files))
+            except re.error:
+                files = list(filter(lambda file: file["file"].name.find(filter_for) != -1, files))
+        
+        # Ordering logic
+        ord_arg = order_by.split("_")
+        ord = ord_arg[0]
+        rev = True if ord_arg[1] == "asc" else False
+        match ord:
+            case 'name':
+                files.sort(key=lambda x: x['file'].name.casefold(), reverse = rev)
+                folders.sort(key=lambda x: x['file'].name.casefold(), reverse = rev)
+            case 'modified':
+                files.sort(key=lambda x: x['filest'].st_mtime, reverse = not rev)
+                folders.sort(key=lambda x: x['filest'].st_mtime, reverse = not rev)
+            case 'created':
+                files.sort(key=lambda x: x['filest'].st_ctime, reverse = not rev)
+                folders.sort(key=lambda x: x['filest'].st_ctime, reverse = not rev)
+            case 'size':
+                files.sort(key=lambda x: x['filest'].st_size, reverse = not rev)
+                # Folders has no file size, order by name instead
+                folders.sort(key=lambda x: x['file'].name.casefold())
+            case _:
+                files.sort(key=lambda x: x['file'].name.casefold(), reverse = rev)
+                folders.sort(key=lambda x: x['file'].name.casefold(), reverse = rev)
+        
+        #Constructing the final file list, folders first
+        all =   [{
+                    "isdir": x['is_dir'],
+                    "name": str(x['file'].name),
+                    "realpath": str(x['file']),
+                    "size": x['filest'].st_size,
+                    "modified": x['filest'].st_mtime,
+                    "created": x['filest'].st_ctime,
+                } for x in folders + files ]
 
         return {
-            "realpath": os.path.realpath(path),
-            "files": files
+            "realpath": str(path),
+            "files": all[(page-1)*max:(page)*max],
+            "total": len(all),
         }
+        
 
     # Based on https://stackoverflow.com/a/46422554/13174603
-    def start_rdt_proxy(self, ip, port):
-        async def pipe(reader, writer):
+    def start_rdt_proxy(self, ip: str, port: int):
+        async def pipe(reader: StreamReader, writer: StreamWriter):
             try:
                 while not reader.at_eof():
                     writer.write(await reader.read(2048))
             finally:
                 writer.close()
-        async def handle_client(local_reader, local_writer):
+        async def handle_client(local_reader: StreamReader, local_writer: StreamWriter):
             try:
                 remote_reader, remote_writer = await open_connection(
                     ip, port)
@@ -230,9 +310,10 @@ class Utilities:
         self.rdt_proxy_task = self.context.loop.create_task(self.rdt_proxy_server)
 
     def stop_rdt_proxy(self):
-        if self.rdt_proxy_server:
+        if self.rdt_proxy_server != None:
             self.rdt_proxy_server.close()
-            self.rdt_proxy_task.cancel()
+            if self.rdt_proxy_task:
+                self.rdt_proxy_task.cancel()
 
     async def _enable_rdt(self):
         # TODO un-hardcode port
@@ -266,7 +347,7 @@ class Utilities:
                 await close_old_tabs()
                 result = await tab.reload_and_evaluate(script)
                 self.logger.info(result)
-                        
+
         except Exception:
             self.logger.error("Failed to connect to React DevTools")
             self.logger.error(format_exc())
@@ -281,3 +362,12 @@ class Utilities:
         await close_old_tabs()
         await tab.evaluate_js("location.reload();", False, True, False)
         self.logger.info("React DevTools disabled")
+
+    async def get_user_info(self) -> Dict[str, str]:
+        return {
+            "username": get_username(),
+            "path": get_home_path()
+        }
+    
+    async def get_tab_id(self, name: str):
+        return (await get_tab(name)).id

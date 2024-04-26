@@ -1,84 +1,49 @@
 {
-    "BranchSelect": {
-        "update_channel": {
-            "testing": ""
-        }
-    },
     "DropdownMultiselect": {
         "button": {
             "back": ""
         }
     },
     "FilePickerIndex": {
-        "file": {
-            "select": ""
-        },
         "filter": {
-            "created_asce": "",
-            "name_asce": ""
+            "created_asce": ""
         },
         "folder": {
             "label": ""
         }
     },
     "MultiplePluginsInstallModal": {
-        "description": {
-            "install": ""
-        },
         "ok_button": {
             "loading": ""
-        },
-        "title": {
-            "update": ""
         }
     },
     "PluginCard": {
         "plugin_version_label": ""
     },
     "PluginInstallModal": {
-        "install": {
-            "title": ""
-        },
         "reinstall": {
-            "desc": ""
-        },
-        "update": {
             "desc": ""
         }
     },
     "PluginListIndex": {
         "no_plugin": "",
-        "show": "",
         "update_to": ""
     },
     "PluginLoader": {
-        "error": "",
         "plugin_uninstall": {
             "button": ""
         }
-    },
-    "PluginView": {
-        "hidden": ""
     },
     "SettingsDeveloperIndex": {
         "cef_console": {
             "desc": ""
         },
-        "react_devtools": {
-            "ip_label": ""
-        },
         "third_party_plugins": {
             "header": ""
-        },
-        "valve_internal": {
-            "desc1": ""
         }
     },
     "SettingsGeneralIndex": {
         "about": {
-            "header": ""
-        },
-        "notifications": {
             "header": ""
         }
     },
@@ -86,32 +51,21 @@
         "developer_title": ""
     },
     "Store": {
-        "store_contrib": {
-            "desc": ""
-        },
         "store_search": {
             "label": ""
         },
-        "store_source": {
-            "label": ""
-        },
         "store_tabs": {
-            "date_asce": "",
-            "title": ""
+            "date_asce": ""
         }
     },
     "StoreSelect": {
         "custom_store": {
-            "label": ""
-        },
-        "store_channel": {
             "label": ""
         }
     },
     "Updater": {
         "decky_updates": "",
         "updates": {
-            "checking": "",
             "lat_version": ""
         }
     }

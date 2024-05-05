@@ -14,7 +14,7 @@
   outputs = { self, nixpkgs, flake-utils, poetry2nix }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = import nixpkgs { inherit system; };
         p2n = (poetry2nix.lib.mkPoetry2Nix { inherit pkgs; });
       in {
         devShells.default = (p2n.mkPoetryEnv {

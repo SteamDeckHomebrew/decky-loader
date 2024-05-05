@@ -75,7 +75,7 @@ class UnixSocket:
             try:
                 line.extend(await reader.readuntil())
             except asyncio.LimitOverrunError:
-                line.extend(await reader.read(reader._limit)) # type: ignore
+                line.extend(await reader.read(reader._limit)) # pyright: ignore [reportUnknownMemberType, reportUnknownArgumentType, reportAttributeAccessIssue]
                 continue
             except asyncio.IncompleteReadError as err:
                 line.extend(err.partial)

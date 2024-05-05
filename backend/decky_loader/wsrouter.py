@@ -24,8 +24,8 @@ class MessageType(IntEnum):
 # WSMessage with slightly better typings
 class WSMessageExtra(WSMessage):
     # TODO message typings here too
-    data: Any # type: ignore yes you can extend it
-    type: WSMsgType # type: ignore
+    data: Any # pyright: ignore [reportIncompatibleVariableOverride]
+    type: WSMsgType # pyright: ignore [reportIncompatibleVariableOverride]
 
 # see wsrouter.ts for typings
 

@@ -6,7 +6,7 @@ from json.decoder import JSONDecodeError
 from os.path import splitext
 import re
 from traceback import format_exc
-from stat import FILE_ATTRIBUTE_HIDDEN # type: ignore
+from stat import FILE_ATTRIBUTE_HIDDEN # pyright: ignore [reportAttributeAccessIssue, reportUnknownVariableType]
 
 from asyncio import StreamReader, StreamWriter, start_server, gather, open_connection
 from aiohttp import ClientSession

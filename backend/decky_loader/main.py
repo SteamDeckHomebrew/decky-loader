@@ -14,10 +14,10 @@ from os import path
 from traceback import format_exc
 import multiprocessing
 
-import aiohttp_cors # type: ignore
+import aiohttp_cors # pyright: ignore [reportMissingTypeStubs]
 # Partial imports
 from aiohttp import client_exceptions
-from aiohttp.web import Application, Response, Request, get, run_app, static # type: ignore
+from aiohttp.web import Application, Response, Request, get, run_app, static # pyright: ignore [reportUnknownVariableType]
 from aiohttp_jinja2 import setup as jinja_setup
 
 # local modules
@@ -87,7 +87,7 @@ class PluginManager:
         self.web_app.add_routes([get("/auth/token", self.get_auth_token)])
 
         for route in list(self.web_app.router.routes()):
-            self.cors.add(route) # type: ignore
+            self.cors.add(route) # pyright: ignore [reportUnknownMemberType]
         self.web_app.add_routes([static("/static", path.join(path.dirname(__file__), '..', 'static'))])
 
     def exception_handler(self, loop: AbstractEventLoop, context: Dict[str, str]):

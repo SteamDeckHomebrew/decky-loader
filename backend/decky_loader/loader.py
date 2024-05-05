@@ -4,12 +4,12 @@ from logging import getLogger
 from os import listdir, path
 from pathlib import Path
 from traceback import format_exc, print_exc
-from typing import Any, Tuple, Dict
+from typing import Any, Tuple, Dict, cast
 
 from aiohttp import web
 from os.path import exists
-from watchdog.events import RegexMatchingEventHandler, DirCreatedEvent, DirModifiedEvent, FileCreatedEvent, FileModifiedEvent # type: ignore
-from watchdog.observers import Observer # type: ignore
+from watchdog.events import RegexMatchingEventHandler, DirCreatedEvent, DirModifiedEvent, FileCreatedEvent, FileModifiedEvent
+from watchdog.observers import Observer
 
 from typing import TYPE_CHECKING, List
 if TYPE_CHECKING:
@@ -24,7 +24,7 @@ ReloadQueue = Queue[Tuple[str, str, bool | None] | Tuple[str, str]]
 
 class FileChangeHandler(RegexMatchingEventHandler):
     def __init__(self, queue: ReloadQueue, plugin_path: str) -> None:
-        super().__init__(regexes=[r'^.*?dist\/index\.js$', r'^.*?main\.py$']) # type: ignore
+        super().__init__(regexes=[r'^.*?dist\/index\.js$', r'^.*?main\.py$']) # pyright: ignore [reportUnknownMemberType]
         self.logger = getLogger("file-watcher")
         self.plugin_path = plugin_path
         self.queue = queue
@@ -37,8 +37,8 @@ class FileChangeHandler(RegexMatchingEventHandler):
         if exists(path.join(self.plugin_path, plugin_dir, "plugin.json")):
             self.queue.put_nowait((path.join(self.plugin_path, plugin_dir, "main.py"), plugin_dir, True))
 
-    def on_created(self, event: DirCreatedEvent | FileCreatedEvent):
-        src_path = event.src_path
+    def on_created(self, event: DirCreatedEvent | FileCreatedEvent): # pyright: ignore [reportIncompatibleMethodOverride]
+        src_path = cast(str, event.src_path) # type: ignore the correct type for this is in later versions of watchdog
         if "__pycache__" in src_path:
             return
 
@@ -51,8 +51,8 @@ class FileChangeHandler(RegexMatchingEventHandler):
         self.logger.debug(f"file created: {src_path}")
         self.maybe_reload(src_path)
 
-    def on_modified(self, event: DirModifiedEvent | FileModifiedEvent):
-        src_path = event.src_path
+    def on_modified(self, event: DirModifiedEvent | FileModifiedEvent): # pyright: ignore [reportIncompatibleMethodOverride]
+        src_path = cast(str, event.src_path) # type: ignore
         if "__pycache__" in src_path:
             return
 
@@ -81,7 +81,7 @@ class Loader:
         if live_reload:
             self.observer = Observer()
             self.watcher = FileChangeHandler(self.reload_queue, plugin_path)
-            self.observer.schedule(self.watcher, self.plugin_path, recursive=True) # type: ignore
+            self.observer.schedule(self.watcher, self.plugin_path, recursive=True) # pyright: ignore [reportUnknownMemberType]
             self.observer.start()
             self.loop.create_task(self.enable_reload_wait())
 
@@ -179,7 +179,7 @@ class Loader:
     async def handle_reloads(self):
         while True:
             args = await self.reload_queue.get()
-            self.import_plugin(*args) # type: ignore
+            self.import_plugin(*args) # pyright: ignore [reportArgumentType]
 
     async def handle_plugin_method_call_legacy(self, plugin_name: str, method_name: str, kwargs: Dict[Any, Any]):
         res: Dict[Any, Any] = {}

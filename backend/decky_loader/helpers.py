@@ -1,4 +1,3 @@
-from platform import version
 import re
 import ssl
 import uuid
@@ -70,10 +69,10 @@ def get_loader_version() -> str:
 
         version_str = f'v{v.major}.{v.minor}.{v.micro}'
 
-        if v.pre: # type: ignore
+        if v.pre:
             version_str += f'-pre{v.pre[1]}'
 
-        if v.post: # type: ignore
+        if v.post:
             version_str += f'-dev{v.post}'
 
         return version_str
@@ -89,7 +88,7 @@ def get_system_pythonpaths() -> list[str]:
         # run as normal normal user if on linux to also include user python paths
         proc = subprocess.run(["python3" if localplatform.ON_LINUX else "python", "-c", "import sys; print('\\n'.join(x for x in sys.path if x))"],
         # TODO make this less insane
-                              capture_output=True, user=localplatform.localplatform._get_user_id() if localplatform.ON_LINUX else None, env={} if localplatform.ON_LINUX else None) # type: ignore
+                              capture_output=True, user=localplatform.localplatform._get_user_id() if localplatform.ON_LINUX else None, env={} if localplatform.ON_LINUX else None) # pyright: ignore [reportPrivateUsage]
         return [x.strip() for x in proc.stdout.decode().strip().split("\n")]
     except Exception as e:
         logger.warn(f"Failed to execute get_system_pythonpaths(): {str(e)}")

@@ -13,12 +13,13 @@ include = ["decky_loader/static/*"]
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
 
-aiohttp = "^3.8.5"
+aiohttp = "^3.9.5"
 aiohttp-jinja2 = "^1.5.1"
 aiohttp-cors = "^0.7.0"
 watchdog = "^2.1.7"
 certifi = "*"
 packaging = "^23.2"
+multidict = "^6.0.5"
 
 [tool.poetry.group.dev.dependencies]
 pyinstaller = "^5.13.0"

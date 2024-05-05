@@ -47,6 +47,7 @@ class PluginWrapper:
 
         self.emitted_event_callback: EmittedEventCallbackType = emit_callback
 
+        # TODO enable this after websocket release
         self.legacy_method_warning = False
 
     def __str__(self) -> str:

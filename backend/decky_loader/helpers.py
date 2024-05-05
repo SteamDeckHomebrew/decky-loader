@@ -1,3 +1,4 @@
+from platform import version
 import re
 import ssl
 import uuid
@@ -14,7 +15,7 @@ from aiohttp import ClientSession
 from .localplatform import localplatform
 from .enums import UserType
 from logging import getLogger
-from packaging.version import Version
+from packaging.version import Version # type: ignore
 
 REMOTE_DEBUGGER_UNIT = "steam-web-debug-portforward.service"
 
@@ -36,12 +37,13 @@ def get_csrf_token():
 @middleware
 async def csrf_middleware(request: Request, handler: Handler):
     if str(request.method) == "OPTIONS" or \
-        request.headers.get('Authentication') == csrf_token or \
+        request.headers.get('X-Decky-Auth') == csrf_token or \
         str(request.rel_url) == "/auth/token" or \
         str(request.rel_url).startswith("/plugins/load_main/") or \
         str(request.rel_url).startswith("/static/") or \
         str(request.rel_url).startswith("/steam_resource/") or \
         str(request.rel_url).startswith("/frontend/") or \
+        str(request.rel_url.path) == "/fetch" or \
         str(request.rel_url.path) == "/ws" or \
         assets_regex.match(str(request.rel_url)) or \
         dist_regex.match(str(request.rel_url)) or \
@@ -61,23 +63,26 @@ def mkdir_as_user(path: str):
     localplatform.chown(path)
 
 # Fetches the version of loader
+# TODO THIS IS ABSOLUTELY TERRIBLE AND NEVER SHOULDVE BEEN MERGED! packaging HAS NO TYPES AND WE COULD LITERALLY JUST USE A REGEX!!!!! REWRITE THIS!!!!!!!!!!!!!
 def get_loader_version() -> str:
     try:
         # Normalize Python-style version to conform to Decky style
-        v = Version(importlib.metadata.version("decky_loader"))
+        v = Version(importlib.metadata.version("decky_loader")) # type: ignore
 
-        version_str = f'v{v.major}.{v.minor}.{v.micro}'
+        version_str = f'v{v.major}.{v.minor}.{v.micro}' # type: ignore
 
-        if v.pre:
-            version_str += f'-pre{v.pre[1]}'
+        if v.pre: # type: ignore
+            version_str += f'-pre{v.pre[1]}' # type: ignore
 
-        if v.post:
-            version_str += f'-dev{v.post}'
+        if v.post: # type: ignore
+            version_str += f'-dev{v.post}' # type: ignore
 
         return version_str
     except Exception as e:
         logger.warn(f"Failed to execute get_loader_version(): {str(e)}")
         return "unknown"
+
+user_agent = f"Decky/{get_loader_version()} (https://decky.xyz)"
 
 # returns the appropriate system python paths
 def get_system_pythonpaths() -> list[str]:

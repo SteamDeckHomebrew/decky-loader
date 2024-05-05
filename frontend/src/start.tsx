@@ -32,7 +32,7 @@ declare global {
       backend: {
         loadPath: 'http://127.0.0.1:1337/locales/{{lng}}.json',
         customHeaders: {
-          Authentication: deckyAuthToken,
+          'X-Decky-Auth': deckyAuthToken,
         },
         requestOptions: {
           credentials: 'include',

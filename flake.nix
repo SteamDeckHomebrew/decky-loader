@@ -25,11 +25,21 @@
             pyright = null;
           });
         }).env.overrideAttrs (oldAttrs: {
+          shellHook = ''
+            set -o noclobber
+            PYTHONPATH=`which python`
+            FILE=.vscode/settings.json
+            if [ -f "$FILE" ]; then
+              echo "$FILE already exists, not writing interpreter path to it."
+            else
+              echo "{\"python.defaultInterpreterPath\": \"''${PYTHONPATH}\"}" > "$FILE"
+            fi
+          '';
           buildInputs = with pkgs; [
             nodejs_22
             nodePackages.pnpm
             poetry
-            # "temporary" "solution" to pyright not being able to see the pythonpath properly.
+            # fixes local pyright not being able to see the pythonpath properly.
             (pkgs.writeShellScriptBin "pyright" ''
               ${pkgs.pyright}/bin/pyright --pythonpath `which python3` "$@" '')
             (pkgs.writeShellScriptBin "pyright-langserver" ''

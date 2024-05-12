@@ -265,6 +265,10 @@
         }
     },
     "Testing": {
-        "download": "Download"
+        "download": "Download",
+        "header": "The following versions of Decky Loader are built from open third-party Pull Requests. The Decky Loader team has not verified their functionality or security, and they may be outdated.",
+        "loading": "Loading open Pull Requests...",
+        "error": "Error Installing PR",
+        "start_download_toast": "Downloading PR #{{id}}"
     }
 }

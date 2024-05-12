@@ -1,4 +1,4 @@
-import { DialogButton, Focusable, Router, staticClasses } from 'decky-frontend-lib';
+import { DialogButton, Focusable, Router, staticClasses } from '@decky/ui';
 import { CSSProperties, VFC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BsGearFill } from 'react-icons/bs';

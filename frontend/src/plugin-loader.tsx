@@ -8,7 +8,7 @@ import {
   quickAccessMenuClasses,
   showModal,
   sleep,
-} from 'decky-frontend-lib';
+} from '@decky/ui';
 import { FC, lazy } from 'react';
 import { FaExclamationCircle, FaPlug } from 'react-icons/fa';
 

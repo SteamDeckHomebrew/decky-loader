@@ -1,14 +1,14 @@
 import {
-  Module,
+  Export,
   Patch,
   ToastData,
   afterPatch,
   findClass,
   findInReactTree,
-  findModuleChild,
+  findModuleExport,
   getReactRoot,
   sleep,
-} from 'decky-frontend-lib';
+} from '@decky/ui';
 import { ReactNode } from 'react';
 
 import Toast from './components/Toast';
@@ -150,16 +150,7 @@ class Toaster extends Logger {
     this.rNode.stateNode.forceUpdate();
     delete this.rNode.stateNode.shouldComponentUpdate;
 
-    this.audioModule = findModuleChild((m: Module) => {
-      if (typeof m !== 'object') return undefined;
-      for (let prop in m) {
-        try {
-          if (m[prop].PlayNavSound && m[prop].RegisterCallbackOnPlaySound) return m[prop];
-        } catch {
-          return undefined;
-        }
-      }
-    });
+    this.audioModule = findModuleExport((e: Export) => e.PlayNavSound && e.RegisterCallbackOnPlaySound);
 
     this.log('Initialized');
     this.finishStartup?.();

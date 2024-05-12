@@ -2,24 +2,21 @@ import {
   DialogButton,
   DialogCheckbox,
   DialogCheckboxProps,
+  Export,
   Marquee,
   Menu,
   MenuItem,
-  findModuleChild,
+  findModuleExport,
   showContextMenu,
-} from 'decky-frontend-lib';
+} from '@decky/ui';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaChevronDown } from 'react-icons/fa';
 
-const dropDownControlButtonClass = findModuleChild((m) => {
-  if (typeof m !== 'object') return undefined;
-  for (const prop in m) {
-    if (m[prop]?.toString()?.includes('gamepaddropdown_DropDownControlButton')) {
-      return m[prop];
-    }
-  }
-});
+// TODO add to dfl
+const dropDownControlButtonClass = findModuleExport((e: Export) =>
+  e?.toString()?.includes('gamepaddropdown_DropDownControlButton'),
+);
 
 const DropdownMultiselectItem: FC<
   {

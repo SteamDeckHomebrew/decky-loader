@@ -1,4 +1,4 @@
-import { ToastData, joinClassNames } from 'decky-frontend-lib';
+import { ToastData, joinClassNames } from '@decky/ui';
 import { FC, useEffect, useState } from 'react';
 import { ReactElement } from 'react-markdown/lib/react-markdown';
 

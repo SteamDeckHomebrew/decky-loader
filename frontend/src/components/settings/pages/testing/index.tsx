@@ -7,7 +7,7 @@ import {
   Navigation,
   ProgressBar,
   SteamSpinner,
-} from 'decky-frontend-lib';
+} from '@decky/ui';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaDownload, FaInfo } from 'react-icons/fa';

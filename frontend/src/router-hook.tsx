@@ -1,4 +1,4 @@
-import { Patch, afterPatch, findModuleChild } from 'decky-frontend-lib';
+import { Export, Patch, afterPatch, findModuleExport } from '@decky/ui';
 import { FC, ReactElement, ReactNode, cloneElement, createElement, memo } from 'react';
 import type { Route } from 'react-router';
 
@@ -41,13 +41,9 @@ class RouterHook extends Logger {
     window.__ROUTER_HOOK_INSTANCE?.deinit?.();
     window.__ROUTER_HOOK_INSTANCE = this;
 
-    this.gamepadWrapper = findModuleChild((m) => {
-      if (typeof m !== 'object') return undefined;
-      for (let prop in m) {
-        if (m[prop]?.render?.toString()?.includes('["flow-children","onActivate","onCancel","focusClassName",'))
-          return m[prop];
-      }
-    });
+    this.gamepadWrapper = findModuleExport((e: Export) =>
+      e?.render?.toString()?.includes('["flow-children","onActivate","onCancel","focusClassName",'),
+    );
 
     let Route: new () => Route;
     // Used to store the new replicated routes we create to allow routes to be unpatched.

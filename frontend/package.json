@@ -1,6 +1,5 @@
 {
-  "name": "decky_frontend",
-  "version": "2.1.1",
+  "name": "@decky/loader-frontend",
   "private": true,
   "license": "GPLV2",
   "scripts": {

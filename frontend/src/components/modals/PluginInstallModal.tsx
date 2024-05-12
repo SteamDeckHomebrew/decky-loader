@@ -1,4 +1,4 @@
-import { ConfirmModal, Navigation, QuickAccessTab } from 'decky-frontend-lib';
+import { ConfirmModal, Navigation, QuickAccessTab } from '@decky/ui';
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

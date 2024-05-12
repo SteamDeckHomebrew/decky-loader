@@ -8,7 +8,7 @@ import {
   ReorderableEntry,
   ReorderableList,
   showContextMenu,
-} from 'decky-frontend-lib';
+} from '@decky/ui';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaDownload, FaEllipsisH, FaRecycle } from 'react-icons/fa';

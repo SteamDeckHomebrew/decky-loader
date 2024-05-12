@@ -1,4 +1,4 @@
-import { Focusable, updaterFieldClasses } from 'decky-frontend-lib';
+import { Focusable, updaterFieldClasses } from '@decky/ui';
 import { FunctionComponent, ReactNode } from 'react';
 
 interface InlinePatchNotesProps {

@@ -1,4 +1,4 @@
-import { SidebarNavigation } from 'decky-frontend-lib';
+import { SidebarNavigation } from '@decky/ui';
 import { lazy } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaCode, FaFlask, FaPlug } from 'react-icons/fa';

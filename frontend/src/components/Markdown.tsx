@@ -1,4 +1,4 @@
-import { Focusable, Navigation } from 'decky-frontend-lib';
+import { Focusable, Navigation } from '@decky/ui';
 import { FunctionComponent, useRef } from 'react';
 import ReactMarkdown, { Options as ReactMarkdownOptions } from 'react-markdown';
 import remarkGfm from 'remark-gfm';

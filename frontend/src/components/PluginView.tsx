@@ -1,4 +1,4 @@
-import { ButtonItem, Focusable, PanelSection, PanelSectionRow } from 'decky-frontend-lib';
+import { ButtonItem, Focusable, PanelSection, PanelSectionRow } from '@decky/ui';
 import { VFC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaEyeSlash } from 'react-icons/fa';

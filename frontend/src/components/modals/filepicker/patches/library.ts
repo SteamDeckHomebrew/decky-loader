@@ -1,4 +1,4 @@
-import { Patch, findModuleChild, replacePatch, sleep } from 'decky-frontend-lib';
+import { Export, Patch, findModuleExport, replacePatch, sleep } from '@decky/ui';
 
 import Logger from '../../../../logger';
 import { FileSelectionType } from '..';
@@ -39,12 +39,7 @@ export default async function libraryPatch() {
     let History: any;
 
     while (!History) {
-      History = findModuleChild((m) => {
-        if (typeof m !== 'object') return undefined;
-        for (let prop in m) {
-          if (m[prop]?.m_history) return m[prop].m_history;
-        }
-      });
+      History = findModuleExport((e: Export) => e.m_history)?.m_history;
       if (!History) {
         logger.debug('Waiting 5s for history to become available.');
         await sleep(5000);

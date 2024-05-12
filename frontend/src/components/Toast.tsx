@@ -1,4 +1,4 @@
-import { ToastData, findModule, joinClassNames } from 'decky-frontend-lib';
+import { ToastData, findModule, joinClassNames } from '@decky/ui';
 import { FunctionComponent } from 'react';
 
 interface ToastProps {

@@ -1,4 +1,4 @@
-import { getFocusNavController, sleep } from 'decky-frontend-lib';
+import { getFocusNavController, sleep } from '@decky/ui';
 
 import Logger from '../logger';
 

@@ -1,4 +1,4 @@
-import { ConfirmModal } from 'decky-frontend-lib';
+import { ConfirmModal } from '@decky/ui';
 import { FC } from 'react';
 
 import { uninstallPlugin } from '../../plugin';

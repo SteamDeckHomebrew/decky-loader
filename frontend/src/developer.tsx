@@ -1,4 +1,4 @@
-import { sleep } from 'decky-frontend-lib';
+import { sleep } from '@decky/ui';
 import { FaReact } from 'react-icons/fa';
 
 import Logger from './logger';

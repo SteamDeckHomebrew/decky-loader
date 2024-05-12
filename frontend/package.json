@@ -1,6 +1,5 @@
 {
-  "name": "decky_frontend",
-  "version": "2.1.1",
+  "name": "@decky/loader-frontend",
   "private": true,
   "license": "GPLV2",
   "scripts": {
@@ -44,7 +43,7 @@
     }
   },
   "dependencies": {
-    "decky-frontend-lib": "3.24.5",
+    "decky-frontend-lib": "3.25.0",
     "filesize": "^10.0.7",
     "i18next": "^23.2.1",
     "i18next-http-backend": "^2.2.1",

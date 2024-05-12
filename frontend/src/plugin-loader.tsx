@@ -8,7 +8,7 @@ import {
   quickAccessMenuClasses,
   showModal,
   sleep,
-} from 'decky-frontend-lib';
+} from '@decky/ui';
 import { FC, lazy } from 'react';
 import { FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
@@ -42,7 +42,7 @@ const FilePicker = lazy(() => import('./components/modals/filepicker'));
 
 declare global {
   interface Window {
-    __DECKY_SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED_deckyPluginBackendAPIInit?: {
+    __DECKY_SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED_deckyLoaderAPIInit?: {
       connect: (version: number, key: string) => any; // Returns the backend API used above, no real point adding types to this.
     };
   }
@@ -50,6 +50,10 @@ declare global {
 
 /** Map of event names to event listeners */
 type listenerMap = Map<string, Set<(...args: any) => any>>;
+
+interface DeckyRequestInit extends RequestInit {
+  excludedHeaders: string[];
+}
 
 const callPluginMethod = DeckyBackend.callable<[pluginName: string, method: string, ...args: any], any>(
   'loader/call_plugin_method',
@@ -357,7 +361,7 @@ class PluginLoader extends Logger {
           let res = await fetch(`http://127.0.0.1:1337/plugins/${name}/frontend_bundle`, {
             credentials: 'include',
             headers: {
-              Authentication: deckyAuthToken,
+              'X-Decky-Auth': deckyAuthToken,
             },
           });
           if (res.ok) {
@@ -484,12 +488,31 @@ class PluginLoader extends Logger {
     });
   }
 
-  /* TODO replace with the following flow (or similar) so we can reuse the JS Fetch API
-        frontend --request URL only--> backend (ws method)
-        backend --new temporary backend URL--> frontend (ws response)
-        frontend <--> backend <--> target URL (over http!)
-      */
-  async fetchNoCors(url: string, request: any = {}) {
+  // Useful for audio/video streams
+  getExternalResourceURL(url: string) {
+    return `http://127.0.0.1:1337/fetch?auth=${deckyAuthToken}&fetch_url=${encodeURIComponent(url)}`;
+  }
+
+  // Same syntax as fetch but only supports the url-based syntax and an object for headers since it's the most common usage pattern
+  fetch(input: string, init?: DeckyRequestInit | undefined): Promise<Response> {
+    const headers: { [name: string]: string } = {
+      ...(init?.headers as { [name: string]: string }),
+      'X-Decky-Auth': deckyAuthToken,
+      'X-Decky-Fetch-URL': input,
+    };
+
+    if (init?.excludedHeaders) {
+      headers['X-Decky-Fetch-Excluded-Headers'] = init.excludedHeaders.join(', ');
+    }
+
+    return fetch('http://127.0.0.1:1337/fetch', {
+      ...init,
+      credentials: 'include',
+      headers,
+    });
+  }
+
+  async legacyFetchNoCors(url: string, request: any = {}) {
     let method: string;
     const req = { headers: {}, ...request, data: request.body };
     req?.body && delete req.body;
@@ -513,10 +536,10 @@ class PluginLoader extends Logger {
 
   initPluginBackendAPI() {
     // Things will break *very* badly if plugin code touches this outside of @decky/backend, so lets make that clear.
-    window.__DECKY_SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED_deckyPluginBackendAPIInit = {
+    window.__DECKY_SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED_deckyLoaderAPIInit = {
       connect: (version: number, pluginName: string) => {
-        if (version <= 0) {
-          throw new Error(`Plugin ${pluginName} requested invalid backend api version ${version}.`);
+        if (version < 1 || version > 1) {
+          throw new Error(`Plugin ${pluginName} requested unsupported backend api version ${version}.`);
         }
 
         const eventListeners: listenerMap = new Map();
@@ -543,9 +566,22 @@ class PluginLoader extends Logger {
               set?.delete(listener);
             }
           },
+          openFilePicker: this.openFilePicker.bind(this),
+          executeInTab: DeckyBackend.callable<
+            [tab: String, runAsync: Boolean, code: string],
+            { success: boolean; result: any }
+          >('utilities/execute_in_tab'),
+          fetch: this.fetch.bind(this),
+          getExternalResourceURL: this.getExternalResourceURL.bind(this),
+          injectCssIntoTab: DeckyBackend.callable<[tab: string, style: string], string>(
+            'utilities/inject_css_into_tab',
+          ),
+          removeCssFromTab: DeckyBackend.callable<[tab: string, cssId: string]>('utilities/remove_css_from_tab'),
+          routerHook: this.routerHook,
+          toaster: this.toaster,
         };
 
-        this.debug(`${pluginName} connected to backend API.`);
+        this.debug(`${pluginName} connected to loader API.`);
         return backendAPI;
       },
     };
@@ -591,7 +627,7 @@ class PluginLoader extends Logger {
           args,
         );
       },
-      fetchNoCors: this.fetchNoCors,
+      fetchNoCors: this.legacyFetchNoCors,
       executeInTab: DeckyBackend.callable<
         [tab: String, runAsync: Boolean, code: string],
         { success: boolean; result: any }

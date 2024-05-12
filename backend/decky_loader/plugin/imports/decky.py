@@ -12,7 +12,7 @@ Some basic migration helpers are available: `migrate_any`, `migrate_settings`, `
 A logging facility `logger` is available which writes to the recommended location.
 """
 
-__version__ = '0.1.0'
+__version__ = '1.0.0'
 
 import os
 import subprocess

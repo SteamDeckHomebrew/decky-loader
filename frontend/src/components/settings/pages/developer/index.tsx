@@ -7,7 +7,7 @@ import {
   Navigation,
   TextField,
   Toggle,
-} from 'decky-frontend-lib';
+} from '@decky/ui';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaFileArchive, FaLink, FaReact, FaSteamSymbol, FaTerminal } from 'react-icons/fa';

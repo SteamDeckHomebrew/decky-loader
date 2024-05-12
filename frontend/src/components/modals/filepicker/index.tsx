@@ -10,7 +10,7 @@ import {
   SteamSpinner,
   TextField,
   ToggleField,
-} from 'decky-frontend-lib';
+} from '@decky/ui';
 import { filesize } from 'filesize';
 import { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react';
 import { DefaultExtensionType, FileIcon, defaultStyles } from 'react-file-icon';

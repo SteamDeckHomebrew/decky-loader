@@ -1,4 +1,4 @@
-import { sleep } from 'decky-frontend-lib';
+import { sleep } from '@decky/ui';
 
 import Logger from './logger';
 
@@ -30,7 +30,7 @@ interface ReplyMessage {
 
 interface ErrorMessage {
   type: MessageType.ERROR;
-  error: { name: string; message: string; traceback: string | null };
+  error: { name: string; error: string; traceback: string | null };
   id: number;
 }
 
@@ -40,8 +40,8 @@ interface ErrorMessage {
 export class PyError extends Error {
   pythonTraceback: string | null;
 
-  constructor(name: string, message: string, traceback: string | null) {
-    super(message);
+  constructor(name: string, error: string, traceback: string | null) {
+    super(error);
     this.name = `Python ${name}`;
     if (traceback) {
       // traceback will always start with `Traceback (most recent call last):`
@@ -142,7 +142,7 @@ export class WSRouter extends Logger {
 
         case MessageType.ERROR:
           if (this.runningCalls.has(data.id)) {
-            let err = new PyError(data.error.name, data.error.message, data.error.traceback);
+            let err = new PyError(data.error.name, data.error.error, data.error.traceback);
             this.runningCalls.get(data.id)!.reject(err);
             this.runningCalls.delete(data.id);
             this.debug(`Rejected PY call ${data.id} with error`, data.error);

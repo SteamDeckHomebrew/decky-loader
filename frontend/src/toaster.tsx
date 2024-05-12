@@ -1,13 +1,14 @@
 import {
-  Module,
+  Export,
   Patch,
   ToastData,
   afterPatch,
+  findClass,
   findInReactTree,
-  findModuleChild,
+  findModuleExport,
   getReactRoot,
   sleep,
-} from 'decky-frontend-lib';
+} from '@decky/ui';
 import { ReactNode } from 'react';
 
 import Toast from './components/Toast';
@@ -48,15 +49,20 @@ class Toaster extends Logger {
     // ));
     let instance: any;
     const tree = getReactRoot(document.getElementById('root') as any);
+    const toasterClass1 = findClass('GamepadToastPlaceholder');
+    const toasterClass2 = findClass('ToastPlaceholder');
+    const toasterClass3 = findClass('ToastPopup');
+    const toasterClass4 = findClass('GamepadToastPopup');
     const findToasterRoot = (currentNode: any, iters: number): any => {
       if (iters >= 80) {
         // currently 66
         return null;
       }
       if (
-        currentNode?.memoizedProps?.className?.startsWith?.('gamepadtoasts_GamepadToastPlaceholder') ||
-        currentNode?.memoizedProps?.className?.startsWith?.('toastmanager_ToastPlaceholder') ||
-        currentNode?.memoizedProps?.className?.startsWith?.('toastmanager_ToastPopup')
+        currentNode?.memoizedProps?.className?.startsWith?.(toasterClass1) ||
+        currentNode?.memoizedProps?.className?.startsWith?.(toasterClass2) ||
+        currentNode?.memoizedProps?.className?.startsWith?.(toasterClass3) ||
+        currentNode?.memoizedProps?.className?.startsWith?.(toasterClass4)
       ) {
         this.log(`Toaster root was found in ${iters} recursion cycles`);
         return currentNode;
@@ -144,16 +150,7 @@ class Toaster extends Logger {
     this.rNode.stateNode.forceUpdate();
     delete this.rNode.stateNode.shouldComponentUpdate;
 
-    this.audioModule = findModuleChild((m: Module) => {
-      if (typeof m !== 'object') return undefined;
-      for (let prop in m) {
-        try {
-          if (m[prop].PlayNavSound && m[prop].RegisterCallbackOnPlaySound) return m[prop];
-        } catch {
-          return undefined;
-        }
-      }
-    });
+    this.audioModule = findModuleExport((e: Export) => e.PlayNavSound && e.RegisterCallbackOnPlaySound);
 
     this.log('Initialized');
     this.finishStartup?.();

@@ -1,4 +1,4 @@
-import { Field, Toggle } from 'decky-frontend-lib';
+import { Field, Toggle } from '@decky/ui';
 import { useTranslation } from 'react-i18next';
 import { FaChrome } from 'react-icons/fa';
 

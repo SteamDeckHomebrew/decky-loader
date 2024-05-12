@@ -9,7 +9,7 @@ a = Analysis(
         ('locales', 'locales'),
         ('static', 'static'),
     ] + copy_metadata('decky_loader'),
-    hiddenimports=['logging.handlers', 'sqlite3', 'decky_plugin'],
+    hiddenimports=['logging.handlers', 'sqlite3', 'decky_plugin', 'decky'],
 )
 pyz = PYZ(a.pure, a.zipped_data)
 

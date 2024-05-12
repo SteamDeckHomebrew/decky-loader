@@ -33,7 +33,7 @@ class Tab:
 
     async def open_websocket(self):
         self.client = ClientSession()
-        self.websocket = await self.client.ws_connect(self.ws_url) # type: ignore
+        self.websocket = await self.client.ws_connect(self.ws_url)
 
     async def close_websocket(self):
         if self.websocket:

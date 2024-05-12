@@ -8,7 +8,7 @@ import {
   Spinner,
   findSP,
   showModal,
-} from 'decky-frontend-lib';
+} from '@decky/ui';
 import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaExclamation } from 'react-icons/fa';

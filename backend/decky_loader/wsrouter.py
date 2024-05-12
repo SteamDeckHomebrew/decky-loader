@@ -24,8 +24,8 @@ class MessageType(IntEnum):
 # WSMessage with slightly better typings
 class WSMessageExtra(WSMessage):
     # TODO message typings here too
-    data: Any # type: ignore yes you can extend it
-    type: WSMsgType # type: ignore
+    data: Any # pyright: ignore [reportIncompatibleVariableOverride]
+    type: WSMsgType # pyright: ignore [reportIncompatibleVariableOverride]
 
 # see wsrouter.ts for typings
 
@@ -117,7 +117,7 @@ class WSRouter:
                                     create_task(self._call_route(data["route"], data["args"], data["id"]))
                                 else:
                                     error = {"error":f'Route {data["route"]} does not exist.', "name": "RouteNotFoundError", "traceback": None}
-                                    create_task(self.write({"type": MessageType.ERROR.value, "id": data["id"], "message": error}))
+                                    create_task(self.write({"type": MessageType.ERROR.value, "id": data["id"], "error": error}))
                             case _:
                                 self.logger.error("Unknown message type", data)
         finally:

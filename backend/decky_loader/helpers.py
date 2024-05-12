@@ -36,12 +36,13 @@ def get_csrf_token():
 @middleware
 async def csrf_middleware(request: Request, handler: Handler):
     if str(request.method) == "OPTIONS" or \
-        request.headers.get('Authentication') == csrf_token or \
+        request.headers.get('X-Decky-Auth') == csrf_token or \
         str(request.rel_url) == "/auth/token" or \
         str(request.rel_url).startswith("/plugins/load_main/") or \
         str(request.rel_url).startswith("/static/") or \
         str(request.rel_url).startswith("/steam_resource/") or \
         str(request.rel_url).startswith("/frontend/") or \
+        str(request.rel_url.path) == "/fetch" or \
         str(request.rel_url.path) == "/ws" or \
         assets_regex.match(str(request.rel_url)) or \
         dist_regex.match(str(request.rel_url)) or \
@@ -79,13 +80,15 @@ def get_loader_version() -> str:
         logger.warn(f"Failed to execute get_loader_version(): {str(e)}")
         return "unknown"
 
+user_agent = f"Decky/{get_loader_version()} (https://decky.xyz)"
+
 # returns the appropriate system python paths
 def get_system_pythonpaths() -> list[str]:
     try:
         # run as normal normal user if on linux to also include user python paths
         proc = subprocess.run(["python3" if localplatform.ON_LINUX else "python", "-c", "import sys; print('\\n'.join(x for x in sys.path if x))"],
         # TODO make this less insane
-                              capture_output=True, user=localplatform.localplatform._get_user_id() if localplatform.ON_LINUX else None, env={} if localplatform.ON_LINUX else None) # type: ignore
+                              capture_output=True, user=localplatform.localplatform._get_user_id() if localplatform.ON_LINUX else None, env={} if localplatform.ON_LINUX else None) # pyright: ignore [reportPrivateUsage]
         return [x.strip() for x in proc.stdout.decode().strip().split("\n")]
     except Exception as e:
         logger.warn(f"Failed to execute get_system_pythonpaths(): {str(e)}")

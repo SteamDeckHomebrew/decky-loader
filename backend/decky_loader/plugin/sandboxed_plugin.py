@@ -76,7 +76,7 @@ class SandboxedPlugin:
 
             # append the plugin's `py_modules` to the recognized python paths
             syspath.append(path.join(environ["DECKY_PLUGIN_DIR"], "py_modules"))
-            
+
             #TODO: FIX IN A LESS CURSED WAY
             keys = [key for key in sysmodules if key.startswith("decky_loader.")]
             for key in keys:
@@ -138,12 +138,29 @@ class SandboxedPlugin:
             self.log.error("Failed to unload " + self.name + "!\n" + format_exc())
             exit(0)
 
-    async def on_new_message(self, message : str) -> str | None:
+    async def _uninstall(self):
+        try:
+            self.log.info("Attempting to uninstall with plugin " + self.name + "'s \"_uninstall\" function.\n")
+            if hasattr(self.Plugin, "_uninstall"):
+                await self.Plugin._uninstall(self.Plugin)
+                self.log.info("Uninstalled " + self.name + "\n")
+            else:
+                self.log.info("Could not find \"_uninstall\" in " + self.name + "'s main.py" + "\n")
+        except:
+            self.log.error("Failed to uninstall " + self.name + "!\n" + format_exc())
+            exit(0)
+
+    async def on_new_message(self, message : str) -> str|None:
         data = loads(message)
 
         if "stop" in data:
             self.log.info("Calling Loader unload function.")
             await self._unload()
+
+            if data.get('uninstall'):
+                self.log.info("Calling Loader uninstall function.")
+                await self._uninstall()
+
             get_event_loop().stop()
             while get_event_loop().is_running():
                 await sleep(0)

@@ -7,7 +7,7 @@ import {
   Tabs,
   TextField,
   findModule,
-} from 'decky-frontend-lib';
+} from '@decky/ui';
 import { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

@@ -151,6 +151,8 @@ class PluginBrowser:
             self.loader.watcher.disabled = False
 
     async def _install(self, artifact: str, name: str, version: str, hash: str):
+        await self.loader.ws.emit("loader/plugin_download_start", name)
+        await self.loader.ws.emit("loader/plugin_download_info", 5, "Store.download_progress_info.start")
         # Will be set later in code
         res_zip = None
 
@@ -164,12 +166,17 @@ class PluginBrowser:
         # Check if the file is a local file or a URL
         if artifact.startswith("file://"):
             logger.info(f"Installing {name} from local ZIP file (Version: {version})")
+            await self.loader.ws.emit("loader/plugin_download_info", 10, "Store.download_progress_info.open_zip")
             res_zip = BytesIO(open(artifact[7:], "rb").read())
         else:
             logger.info(f"Installing {name} from URL (Version: {version})")
+            await self.loader.ws.emit("loader/plugin_download_info", 10, "Store.download_progress_info.download_zip")
+
             async with ClientSession() as client:
                 logger.debug(f"Fetching {artifact}")
                 res = await client.get(artifact, ssl=get_ssl_context())
+                #TODO track progress of this download in chunks like with decky updates
+                #TODO but squish with min 15 and max 75
                 if res.status == 200:
                     logger.debug("Got 200. Reading...")
                     data = await res.read()
@@ -178,6 +185,7 @@ class PluginBrowser:
                 else:
                     logger.fatal(f"Could not fetch from URL. {await res.text()}")
 
+            await self.loader.ws.emit("loader/plugin_download_info", 80, "Store.download_progress_info.increment_count")
             storeUrl = ""
             match self.settings.getSetting("store", 0):
                 case 0: storeUrl = "https://plugins.deckbrew.xyz/plugins" # default
@@ -190,6 +198,7 @@ class PluginBrowser:
                 if res.status != 200:
                     logger.error(f"Server did not accept install count increment request. code: {res.status}")
 
+        await self.loader.ws.emit("loader/plugin_download_info", 85, "Store.download_progress_info.parse_zip")
         if res_zip and version == "dev":
             with ZipFile(res_zip) as plugin_zip:
                 plugin_json_list = [file for file in plugin_zip.namelist() if file.endswith("/plugin.json") and file.count("/") == 1]
@@ -219,12 +228,15 @@ class PluginBrowser:
 
         # If plugin is installed, uninstall it
         if isInstalled:
+            await self.loader.ws.emit("loader/plugin_download_info", 90, "Store.download_progress_info.uninstalling_previous")
             try:
                 logger.debug("Uninstalling existing plugin...")
                 await self.uninstall_plugin(name)
             except:
                 logger.error(f"Plugin {name} could not be uninstalled.")
 
+
+        await self.loader.ws.emit("loader/plugin_download_info", 95, "Store.download_progress_info.installing_plugin")
         # Install the plugin
         logger.debug("Unzipping...")
         ret = self._unzip_to_plugin_dir(res_zip, name, hash)
@@ -232,6 +244,7 @@ class PluginBrowser:
             plugin_folder = self.find_plugin_folder(name)
             assert plugin_folder is not None
             plugin_dir = path.join(self.plugin_path, plugin_folder)
+            #TODO count again from 0% to 100% quickly for this one if it does anything
             ret = await self._download_remote_binaries_for_plugin_with_name(plugin_dir)
             if ret:
                 logger.info(f"Installed {name} (Version: {version})")
@@ -251,6 +264,7 @@ class PluginBrowser:
             logger.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
         if self.loader.watcher:
             self.loader.watcher.disabled = False
+        await self.loader.ws.emit("loader/plugin_download_finish", name)
 
     async def request_plugin_install(self, artifact: str, name: str, version: str, hash: str, install_type: PluginInstallType):
         request_id = str(time())

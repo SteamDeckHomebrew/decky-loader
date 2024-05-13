@@ -1,5 +1,5 @@
-import { ConfirmModal, Navigation, QuickAccessTab } from '@decky/ui';
-import { FC, useState } from 'react';
+import { ConfirmModal, Navigation, ProgressBarWithInfo, QuickAccessTab } from '@decky/ui';
+import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import TranslationHelper, { TranslationClass } from '../../utils/TranslationHelper';
@@ -24,7 +24,25 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
   closeModal,
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [percentage, setPercentage] = useState<number>(0);
+  const [downloadInfo, setDownloadInfo] = useState<string | null>(null);
   const { t } = useTranslation();
+
+  function updateDownloadState(percent: number, trans_text: string | undefined, trans_info: Record<string, string>) {
+    setPercentage(percent);
+    if (trans_text === undefined) {
+      setDownloadInfo(null);
+    } else {
+      setDownloadInfo(t(trans_text, trans_info));
+    }
+  }
+
+  useEffect(() => {
+    DeckyBackend.addEventListener('loader/plugin_download_info', updateDownloadState);
+    return () => {
+      DeckyBackend.removeEventListener('loader/plugin_download_info', updateDownloadState);
+    };
+  }, []);
 
   return (
     <ConfirmModal
@@ -80,6 +98,14 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
           install_type={installType}
         />
       </div>
+      {loading && (
+        <ProgressBarWithInfo
+          layout="inline"
+          bottomSeparator="none"
+          nProgress={percentage}
+          sOperationText={downloadInfo}
+        />
+      )}
       {hash == 'False' && <span style={{ color: 'red' }}>{t('PluginInstallModal.no_hash')}</span>}
     </ConfirmModal>
   );

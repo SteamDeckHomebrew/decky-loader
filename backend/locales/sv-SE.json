@@ -1,1 +1,68 @@
-{}
+{
+    "BranchSelect": {
+        "update_channel": {
+            "prerelease": "Förhandsversion",
+            "stable": "Stabil",
+            "testing": "Testning",
+            "label": "Uppdateringskanal"
+        }
+    },
+    "Developer": {
+        "5secreload": "Omladdning på 5 sekunder",
+        "disabling": "Inaktivera React DevTools",
+        "enabling": "Aktivera React DevTools"
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "Tillbaka"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "Den angivna sökvägen är inte giltig. Kontrollera den och ange den korrekt igen.",
+            "unknown": "Ett okänt fel har inträffat. Det råa felet är: {{raw_error}}",
+            "perm_denied": "Du har inte tillgång till den angivna katalogen. Kontrollera om din användare (deck på Steam Deck) har motsvarande behörighet för att komma åt den angivna mappen/filen."
+        }
+    },
+    "FilePickerIndex": {
+        "file": {
+            "select": "Välj denna fil"
+        },
+        "files": {
+            "all_files": "Alla Filer",
+            "file_type": "Filtyp",
+            "show_hidden": "Visa dolda filer"
+        },
+        "filter": {
+            "created_asce": "Skapad (Äldst)",
+            "created_desc": "Skapad (nyast)",
+            "modified_asce": "Modifierad (Äldst)",
+            "modified_desc": "Modifierad (nyaste)",
+            "name_asce": "Z-A",
+            "name_desc": "A-Z",
+            "size_asce": "Storlek (minst)",
+            "size_desc": "Storlek (Störst)"
+        },
+        "folder": {
+            "label": "Mapp",
+            "select": "Använd denna mapp",
+            "show_more": "Visa fler filer"
+        }
+    },
+    "MultiplePluginsInstallModal": {
+        "description": {
+            "install": "Installera {{name}} {{version}}",
+            "reinstall": "Installera om {{name}} {{version}}",
+            "update": "Uppdatera {{name}} {{version}}"
+        },
+        "ok_button": {
+            "idle": "Bekräfta",
+            "loading": "Arbetar"
+        },
+        "title": {
+            "install_one": "Install 1 tillägg",
+            "install_other": "Installerar {{count}} tillägg"
+        },
+        "confirm": "Är du säker på att du vill göra följande ändringar?"
+    }
+}

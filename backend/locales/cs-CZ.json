@@ -109,7 +109,9 @@
         "hide": "Rychlý přístup: Skrýt",
         "update_all_one": "Aktualizovat 1 plugin",
         "update_all_few": "Aktualizovat {{count}} pluginů",
-        "update_all_other": "Aktualizovat {{count}} pluginů"
+        "update_all_other": "Aktualizovat {{count}} pluginů",
+        "freeze": "Pozastavit aktualizace",
+        "unfreeze": "Povolit aktualizace"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -187,7 +189,8 @@
     "SettingsIndex": {
         "developer_title": "Vývojář",
         "general_title": "Obecné",
-        "plugins_title": "Pluginy"
+        "plugins_title": "Pluginy",
+        "testing_title": "Testování"
     },
     "Store": {
         "store_contrib": {
@@ -213,7 +216,11 @@
             "about": "O Decky Plugin Store",
             "alph_asce": "Abecedně (Z do A)",
             "alph_desc": "Abecedně (A do Z)",
-            "title": "Procházet"
+            "title": "Procházet",
+            "date_asce": "Nejstarší",
+            "downloads_desc": "Nejvíce stažené",
+            "date_desc": "Nejnovější",
+            "downloads_asce": "Nejméně stažené"
         },
         "store_testing_cta": "Zvažte prosím testování nových pluginů, pomůžete tím týmu Decky Loader!",
         "store_testing_warning": {
@@ -263,5 +270,8 @@
     "TitleView": {
         "settings_desc": "Otevřít nastavení Decky",
         "decky_store_desc": "Otevřít obchod Decky"
+    },
+    "Testing": {
+        "download": "Stáhnout"
     }
 }

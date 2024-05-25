@@ -79,6 +79,8 @@ class Utilities:
             context.ws.add_route("utilities/remove_css_from_tab", self.remove_css_from_tab)
             context.ws.add_route("utilities/allow_remote_debugging", self.allow_remote_debugging)
             context.ws.add_route("utilities/disallow_remote_debugging", self.disallow_remote_debugging)
+            context.ws.add_route("utilities/start_ssh", self.allow_remote_debugging)
+            context.ws.add_route("utilities/stop_ssh", self.allow_remote_debugging)
             context.ws.add_route("utilities/filepicker_ls", self.filepicker_ls)
             context.ws.add_route("utilities/disable_rdt", self.disable_rdt)
             context.ws.add_route("utilities/enable_rdt", self.enable_rdt)
@@ -282,6 +284,14 @@ class Utilities:
 
     async def disallow_remote_debugging(self):
         await service_stop(helpers.REMOTE_DEBUGGER_UNIT)
+        return True
+
+    async def start_ssh(self):
+        await service_start(helpers.SSHD_UNIT)
+        return True
+
+    async def stop_ssh(self):
+        await service_stop(helpers.SSHD_UNIT)
         return True
 
     async def filepicker_ls(self, 

@@ -1,4 +1,4 @@
-#! /usr/bin/env bash
+#!/usr/bin/env bash
 # Usage: deckdebug.sh DECKIP:8081
 # Dependencies: websocat jq curl chromium
 

@@ -1,4 +1,4 @@
-import { ToastData } from '@decky/ui';
+import type { ToastData } from '@decky/api';
 import { FC, createContext, useContext, useEffect, useState } from 'react';
 
 interface PublicDeckyToasterState {

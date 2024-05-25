@@ -142,7 +142,10 @@ class SandboxedPlugin:
         try:
             self.log.info("Attempting to uninstall with plugin " + self.name + "'s \"_uninstall\" function.\n")
             if hasattr(self.Plugin, "_uninstall"):
-                await self.Plugin._uninstall(self.Plugin)
+                if self.api_version > 0:
+                    await self.Plugin._uninstall()
+                else:
+                    await self.Plugin._uninstall(self.Plugin)
                 self.log.info("Uninstalled " + self.name + "\n")
             else:
                 self.log.info("Could not find \"_uninstall\" in " + self.name + "'s main.py" + "\n")

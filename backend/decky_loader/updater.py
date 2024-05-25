@@ -6,7 +6,7 @@ from os import getcwd, path, remove
 from typing import TYPE_CHECKING, List, TypedDict
 if TYPE_CHECKING:
     from .main import PluginManager
-from .localplatform.localplatform import chmod, service_restart, ON_LINUX, ON_WINDOWS, get_keep_systemd_service, get_selinux
+from .localplatform.localplatform import chmod, service_restart, service_stop, ON_LINUX, ON_WINDOWS, get_keep_systemd_service, get_selinux
 import shutil
 from typing import List, TYPE_CHECKING, TypedDict
 import zipfile
@@ -53,6 +53,7 @@ class Updater:
             context.ws.add_route("updater/get_version_info", self.get_version_info);
             context.ws.add_route("updater/check_for_updates", self.check_for_updates);
             context.ws.add_route("updater/do_restart", self.do_restart);
+            context.ws.add_route("updater/do_shutdown", self.do_shutdown);
             context.ws.add_route("updater/do_update", self.do_update);
             context.ws.add_route("updater/get_testing_versions", self.get_testing_versions);
             context.ws.add_route("updater/download_testing_version", self.download_testing_version);
@@ -184,8 +185,8 @@ class Updater:
 
         logger.info("Updated loader installation.")
         await self.context.ws.emit("updater/finish_download")
-        await self.do_restart()
         await tab.close_websocket()
+        await self.do_restart()
 
     async def do_update(self):
         logger.debug("Starting update.")
@@ -241,6 +242,9 @@ class Updater:
 
     async def do_restart(self):
         await service_restart("plugin_loader")
+
+    async def do_shutdown(self):
+        await service_stop("plugin_loader")
 
     async def get_testing_versions(self) -> List[TestingVersion]:
         result: List[TestingVersion] = []

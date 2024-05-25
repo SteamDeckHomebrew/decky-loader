@@ -1,4 +1,5 @@
-import { ToastData, joinClassNames } from '@decky/ui';
+import type { ToastData } from '@decky/api';
+import { joinClassNames } from '@decky/ui';
 import { FC, useEffect, useState } from 'react';
 import { ReactElement } from 'react-markdown/lib/react-markdown';
 
@@ -28,7 +29,7 @@ const DeckyToaster: FC<DeckyToasterProps> = () => {
   }
   useEffect(() => {
     // not actually node but TS is shit
-    let interval: NodeJS.Timer | null;
+    let interval: NodeJS.Timeout | number | null;
     if (renderedToast) {
       interval = setTimeout(
         () => {

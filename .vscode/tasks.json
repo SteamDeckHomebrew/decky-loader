@@ -41,7 +41,7 @@
                 "deploy"
             ],
             "detail": "Check for local runs, create a plugins folder",
-            "command": "ssh ${config:deckuser}@${config:deckip} -p ${config:deckport} ${config:deckkey} 'python -m ensurepip && python -m pip install --user --upgrade poetry && cd ${config:deckdir}/homebrew/dev/pluginloader/backend && python -m poetry install'",
+            "command": "ssh ${config:deckuser}@${config:deckip} -p ${config:deckport} ${config:deckkey} 'python -m ensurepip --root / && python -m pip install --user --break-system-packages --upgrade poetry && cd ${config:deckdir}/homebrew/dev/pluginloader/backend && python -m poetry install'",
             "problemMatcher": []
         },
         {

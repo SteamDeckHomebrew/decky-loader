@@ -21,6 +21,7 @@ import PluginUninstallModal from './components/modals/PluginUninstallModal';
 import NotificationBadge from './components/NotificationBadge';
 import PluginView from './components/PluginView';
 import WithSuspense from './components/WithSuspense';
+import ErrorBoundaryHook from './errorboundary-hook';
 import { FrozenPluginService } from './frozen-plugins-service';
 import { HiddenPluginsService } from './hidden-plugins-service';
 import Logger from './logger';
@@ -61,6 +62,7 @@ const callPluginMethod = DeckyBackend.callable<[pluginName: string, method: stri
 
 class PluginLoader extends Logger {
   private plugins: Plugin[] = [];
+  private errorBoundaryHook: ErrorBoundaryHook = new ErrorBoundaryHook();
   private tabsHook: TabsHook = new TabsHook();
   private routerHook: RouterHook = new RouterHook();
   public toaster: Toaster = new Toaster();
@@ -78,6 +80,8 @@ class PluginLoader extends Logger {
 
   constructor() {
     super(PluginLoader.name);
+
+    this.errorBoundaryHook.init();
 
     DeckyBackend.addEventListener('loader/notify_updates', this.notifyUpdates.bind(this));
     DeckyBackend.addEventListener('loader/import_plugin', this.importPlugin.bind(this));
@@ -185,12 +189,12 @@ class PluginLoader extends Logger {
       this.deckyState.setHasLoaderUpdate(true);
       if (this.notificationService.shouldNotify('deckyUpdates')) {
         this.toaster.toast({
-          title: <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="decky_title" />,
+          title: <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="decky_title" />,
           body: (
             <TranslationHelper
-              trans_class={TranslationClass.PLUGIN_LOADER}
-              trans_text="decky_update_available"
-              i18n_args={{ tag_name: versionInfo?.remote?.tag_name }}
+              transClass={TranslationClass.PLUGIN_LOADER}
+              transText="decky_update_available"
+              i18nArgs={{ tag_name: versionInfo?.remote?.tag_name }}
             />
           ),
           onClick: () => Router.Navigate('/decky/settings'),
@@ -213,12 +217,12 @@ class PluginLoader extends Logger {
     const updates = await this.checkPluginUpdates();
     if (updates?.size > 0 && this.notificationService.shouldNotify('pluginUpdates')) {
       this.toaster.toast({
-        title: <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="decky_title" />,
+        title: <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="decky_title" />,
         body: (
           <TranslationHelper
-            trans_class={TranslationClass.PLUGIN_LOADER}
-            trans_text="plugin_update"
-            i18n_args={{ count: updates.size }}
+            transClass={TranslationClass.PLUGIN_LOADER}
+            transText="plugin_update"
+            i18nArgs={{ count: updates.size }}
           />
         ),
         onClick: () => Router.Navigate('/decky/settings/plugins'),
@@ -294,6 +298,10 @@ class PluginLoader extends Logger {
     this.routerHook.removeRoute('/decky/settings');
     deinitSteamFixes();
     deinitFilepickerPatches();
+    this.routerHook.deinit();
+    this.tabsHook.deinit();
+    this.toaster.deinit();
+    this.errorBoundaryHook.deinit();
   }
 
   public unloadPlugin(name: string) {
@@ -365,7 +373,9 @@ class PluginLoader extends Logger {
             },
           });
           if (res.ok) {
-            let plugin_export: (serverAPI: any) => Plugin = await eval(await res.text());
+            let plugin_export: (serverAPI: any) => Plugin = await eval(
+              (await res.text()) + `\n//# sourceURL=decky://decky/legacy_plugin/${encodeURIComponent(name)}/index.js`,
+            );
             let plugin = plugin_export(this.createLegacyPluginAPI(name));
             this.plugins.push({
               ...plugin,
@@ -384,7 +394,7 @@ class PluginLoader extends Logger {
         <PanelSection>
           <PanelSectionRow>
             <div className={quickAccessMenuClasses.FriendsTitle} style={{ display: 'flex', justifyContent: 'center' }}>
-              <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="error" />
+              <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="error" />
             </div>
           </PanelSectionRow>
           <PanelSectionRow>
@@ -395,9 +405,9 @@ class PluginLoader extends Logger {
           <PanelSectionRow>
             <div className={quickAccessMenuClasses.Text}>
               <TranslationHelper
-                trans_class={TranslationClass.PLUGIN_LOADER}
-                trans_text="plugin_error_uninstall"
-                i18n_args={{ name: name }}
+                transClass={TranslationClass.PLUGIN_LOADER}
+                transText="plugin_error_uninstall"
+                i18nArgs={{ name: name }}
               />
             </div>
           </PanelSectionRow>
@@ -412,9 +422,9 @@ class PluginLoader extends Logger {
       this.toaster.toast({
         title: (
           <TranslationHelper
-            trans_class={TranslationClass.PLUGIN_LOADER}
-            trans_text="plugin_load_error.toast"
-            i18n_args={{ name: name }}
+            transClass={TranslationClass.PLUGIN_LOADER}
+            transText="plugin_load_error.toast"
+            i18nArgs={{ name: name }}
           />
         ),
         body: '' + e,

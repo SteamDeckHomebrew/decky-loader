@@ -158,6 +158,7 @@ async def service_start(service_name : str) -> bool:
 
 async def restart_webhelper() -> bool:
     logger.info("Restarting steamwebhelper")
+    # TODO move to pkill
     res = run(["killall", "-s", "SIGTERM", "steamwebhelper"], stdout=DEVNULL, stderr=DEVNULL)
     return res.returncode == 0
 

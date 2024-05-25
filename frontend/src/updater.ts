@@ -25,9 +25,6 @@ export interface VerInfo {
 
 export const doUpdate = DeckyBackend.callable('updater/do_update');
 export const doRestart = DeckyBackend.callable('updater/do_restart');
+export const doShutdown = DeckyBackend.callable('updater/do_shutdown');
 export const getVersionInfo = DeckyBackend.callable<[], VerInfo>('updater/get_version_info');
 export const checkForUpdates = DeckyBackend.callable<[], VerInfo>('updater/check_for_updates');
-
-DeckyBackend.addEventListener('updater/finish_download', async () => {
-  await doRestart();
-});

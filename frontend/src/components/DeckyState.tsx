@@ -1,4 +1,4 @@
-import { FC, createContext, useContext, useEffect, useState } from 'react';
+import { FC, ReactNode, createContext, useContext, useEffect, useState } from 'react';
 
 import { DEFAULT_NOTIFICATION_SETTINGS, NotificationSettings } from '../notification-service';
 import { Plugin } from '../plugin';
@@ -134,6 +134,7 @@ export const useDeckyState = () => useContext(DeckyStateContext);
 
 interface Props {
   deckyState: DeckyState;
+  children?: ReactNode;
 }
 
 export const DeckyStateContextProvider: FC<Props> = ({ children, deckyState }) => {

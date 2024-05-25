@@ -16,6 +16,7 @@ from .enums import UserType
 from logging import getLogger
 from packaging.version import Version
 
+SSHD_UNIT = "sshd.service"
 REMOTE_DEBUGGER_UNIT = "steam-web-debug-portforward.service"
 
 # global vars

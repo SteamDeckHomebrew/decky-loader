@@ -160,7 +160,7 @@ class Loader:
             self.plugins[plugin.name] = plugin.start()
             self.logger.info(f"Loaded {plugin.name}")
             if not batch:
-                self.loop.create_task(self.dispatch_plugin(plugin.name, plugin.version))
+                self.loop.create_task(self.dispatch_plugin(plugin.name, plugin.version, plugin.load_type))
         except Exception as e:
             self.logger.error(f"Could not load {file}. {e}")
             print_exc()

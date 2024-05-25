@@ -59,7 +59,7 @@ const DropdownMultiselect: FC<{
   const [itemsSelected, setItemsSelected] = useState<any>(selected);
   const { t } = useTranslation();
 
-  const handleItemSelect = useCallback((checked, value) => {
+  const handleItemSelect = useCallback((checked: boolean, value: any) => {
     setItemsSelected((x: any) =>
       checked ? [...x.filter((y: any) => y !== value), value] : x.filter((y: any) => y !== value),
     );

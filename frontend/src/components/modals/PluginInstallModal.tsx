@@ -60,10 +60,10 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
       strTitle={
         <div>
           <TranslationHelper
-            trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
-            trans_text="title"
-            i18n_args={{ artifact: artifact }}
-            install_type={installType}
+            transClass={TranslationClass.PLUGIN_INSTALL_MODAL}
+            transText="title"
+            i18nArgs={{ artifact: artifact }}
+            installType={installType}
           />
         </div>
       }
@@ -71,17 +71,17 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
         loading ? (
           <div>
             <TranslationHelper
-              trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
-              trans_text="button_processing"
-              install_type={installType}
+              transClass={TranslationClass.PLUGIN_INSTALL_MODAL}
+              transText="button_processing"
+              installType={installType}
             />
           </div>
         ) : (
           <div>
             <TranslationHelper
-              trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
-              trans_text="button_idle"
-              install_type={installType}
+              transClass={TranslationClass.PLUGIN_INSTALL_MODAL}
+              transText="button_idle"
+              installType={installType}
             />
           </div>
         )
@@ -89,13 +89,13 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
     >
       <div>
         <TranslationHelper
-          trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
-          trans_text="desc"
-          i18n_args={{
+          transClass={TranslationClass.PLUGIN_INSTALL_MODAL}
+          transText="desc"
+          i18nArgs={{
             artifact: artifact,
             version: version,
           }}
-          install_type={installType}
+          installType={installType}
         />
       </div>
       {loading && (

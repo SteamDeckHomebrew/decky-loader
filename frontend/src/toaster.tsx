@@ -1,7 +1,7 @@
+import type { ToastData } from '@decky/api';
 import {
   Export,
   Patch,
-  ToastData,
   afterPatch,
   findClass,
   findInReactTree,
@@ -124,12 +124,12 @@ class Toaster extends Logger {
         this.node.alternate.type = this.node.type;
       }
     };
-    const oRender = this.rNode.stateNode.__proto__.render;
-    let int: NodeJS.Timer | undefined;
+    const oRender = Object.getPrototypeOf(this.rNode.stateNode).render;
+    let int: NodeJS.Timeout | undefined;
     this.rNode.stateNode.render = (...args: any[]) => {
       const ret = oRender.call(this.rNode.stateNode, ...args);
       if (ret && !this?.node?.return?.return) {
-        clearInterval(int);
+        int && clearInterval(int);
         int = setInterval(() => {
           const n = findToasterRoot(tree, 0);
           if (n?.return) {

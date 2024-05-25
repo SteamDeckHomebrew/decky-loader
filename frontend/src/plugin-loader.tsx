@@ -494,7 +494,7 @@ class PluginLoader extends Logger {
   }
 
   // Same syntax as fetch but only supports the url-based syntax and an object for headers since it's the most common usage pattern
-  fetch(input: string, init?: DeckyRequestInit | undefined): Promise<Response> {
+  fetchNoCors(input: string, init?: DeckyRequestInit | undefined): Promise<Response> {
     const headers: { [name: string]: string } = {
       ...(init?.headers as { [name: string]: string }),
       'X-Decky-Auth': deckyAuthToken,
@@ -571,7 +571,7 @@ class PluginLoader extends Logger {
             [tab: String, runAsync: Boolean, code: string],
             { success: boolean; result: any }
           >('utilities/execute_in_tab'),
-          fetch: this.fetch.bind(this),
+          fetchNoCors: this.fetchNoCors.bind(this),
           getExternalResourceURL: this.getExternalResourceURL.bind(this),
           injectCssIntoTab: DeckyBackend.callable<[tab: string, style: string], string>(
             'utilities/inject_css_into_tab',

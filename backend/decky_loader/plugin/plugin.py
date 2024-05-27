@@ -8,6 +8,7 @@ from .sandboxed_plugin import SandboxedPlugin
 from .messages import MethodCallRequest, SocketMessageType
 from ..enums import PluginLoadType
 from ..localplatform.localsocket import LocalSocket
+from ..helpers import get_homebrew_path, mkdir_as_user
 
 from typing import Any, Callable, Coroutine, Dict, List
 
@@ -49,6 +50,15 @@ class PluginWrapper:
 
         # TODO enable this after websocket release
         self.legacy_method_warning = False
+
+        home = get_homebrew_path()
+        mkdir_as_user(path.join(home, "settings", self.plugin_directory))
+        # TODO maybe dont chown this?
+        mkdir_as_user(path.join(home, "data"))
+        mkdir_as_user(path.join(home, "data", self.plugin_directory))
+        # TODO maybe dont chown this?
+        mkdir_as_user(path.join(home, "logs"))
+        mkdir_as_user(path.join(home, "logs", self.plugin_directory))
 
     def __str__(self) -> str:
         return self.name

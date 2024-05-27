@@ -7,10 +7,11 @@
     "build": "rollup -c",
     "watch": "rollup -c -w",
     "lint": "prettier -c src",
+    "typecheck": "tsc --noEmit",
     "format": "prettier -c src -w"
   },
   "devDependencies": {
-    "@decky/api": "^1.0.3",
+    "@decky/api": "^1.0.4",
     "@rollup/plugin-commonjs": "^21.1.0",
     "@rollup/plugin-image": "^3.0.3",
     "@rollup/plugin-json": "^4.1.0",

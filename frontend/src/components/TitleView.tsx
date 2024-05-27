@@ -1,5 +1,5 @@
 import { DialogButton, Focusable, Router, staticClasses } from '@decky/ui';
-import { CSSProperties, VFC } from 'react';
+import { CSSProperties, FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BsGearFill } from 'react-icons/bs';
 import { FaArrowLeft, FaStore } from 'react-icons/fa';
@@ -14,7 +14,7 @@ const titleStyles: CSSProperties = {
   top: '0px',
 };
 
-const TitleView: VFC = () => {
+const TitleView: FC = () => {
   const { activePlugin, closeActivePlugin } = useDeckyState();
   const { t } = useTranslation();
 

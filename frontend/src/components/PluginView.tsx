@@ -1,5 +1,5 @@
 import { ButtonItem, Focusable, PanelSection, PanelSectionRow } from '@decky/ui';
-import { VFC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaEyeSlash } from 'react-icons/fa';
 
@@ -9,7 +9,7 @@ import NotificationBadge from './NotificationBadge';
 import { useQuickAccessVisible } from './QuickAccessVisibleState';
 import TitleView from './TitleView';
 
-const PluginView: VFC = () => {
+const PluginView: FC = () => {
   const { hiddenPlugins } = useDeckyState();
   const { plugins, updates, activePlugin, pluginOrder, setActivePlugin, closeActivePlugin } = useDeckyState();
   const visible = useQuickAccessVisible();

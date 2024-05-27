@@ -1,17 +1,14 @@
 import { sleep } from '@decky/ui';
-import { ErrorInfo, FunctionComponent, useReducer, useState } from 'react';
+import { FunctionComponent, useEffect, useReducer, useState } from 'react';
 
 import { uninstallPlugin } from '../plugin';
-import { doRestart, doShutdown } from '../updater';
-
-interface ReactErrorInfo {
-  error: Error;
-  info: ErrorInfo;
-}
+import { VerInfo, doRestart, doShutdown } from '../updater';
+import { ValveReactErrorInfo, getLikelyErrorSourceFromValveReactError } from '../utils/errors';
 
 interface DeckyErrorBoundaryProps {
-  error: ReactErrorInfo;
+  error: ValveReactErrorInfo;
   errorKey: string;
+  identifier: string;
   reset: () => void;
 }
 
@@ -19,32 +16,6 @@ declare global {
   interface Window {
     SystemNetworkStore?: any;
   }
-}
-
-const pluginErrorRegex = /\(http:\/\/localhost:1337\/plugins\/(.*)\//;
-const pluginSourceMapErrorRegex = /\(decky:\/\/decky\/plugin\/(.*)\//;
-const legacyPluginErrorRegex = /\(decky:\/\/decky\/legacy_plugin\/(.*)\/index.js/;
-
-function getLikelyErrorSource(error: ReactErrorInfo): [source: string, wasPlugin: boolean] {
-  const pluginMatch = error.error.stack?.match(pluginErrorRegex);
-  if (pluginMatch) {
-    return [decodeURIComponent(pluginMatch[1]), true];
-  }
-
-  const pluginMatchViaMap = error.error.stack?.match(pluginSourceMapErrorRegex);
-  if (pluginMatchViaMap) {
-    return [decodeURIComponent(pluginMatchViaMap[1]), true];
-  }
-
-  const legacyPluginMatch = error.error.stack?.match(legacyPluginErrorRegex);
-  if (legacyPluginMatch) {
-    return [decodeURIComponent(legacyPluginMatch[1]), true];
-  }
-
-  if (error.error.stack?.includes('http://localhost:1337/')) {
-    return ['the Decky frontend', false];
-  }
-  return ['Steam', false];
 }
 
 export const startSSH = DeckyBackend.callable('utilities/start_ssh');
@@ -55,146 +26,171 @@ function ipToString(ip: number) {
 }
 
 // Intentionally not localized since we can't really trust React here
-const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error, reset }) => {
+const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error, identifier, reset }) => {
   const [actionLog, addLogLine] = useReducer((log: string, line: string) => (log += '\n' + line), '');
   const [actionsEnabled, setActionsEnabled] = useState<boolean>(true);
   const [debugAllowed, setDebugAllowed] = useState<boolean>(true);
-  const [errorSource, wasCausedByPlugin] = getLikelyErrorSource(error);
-
+  // Intentionally doesn't use DeckyState.
+  const [versionInfo, setVersionInfo] = useState<VerInfo>();
+  const [errorSource, wasCausedByPlugin] = getLikelyErrorSourceFromValveReactError(error);
+  useEffect(() => {
+    DeckyPluginLoader.updateVersion().then(setVersionInfo);
+  }, []);
   return (
-    <div
-      style={{
-        overflow: 'scroll',
-        marginLeft: '15px',
-        color: 'white',
-        fontSize: '16px',
-        userSelect: 'auto',
-        backgroundColor: 'black',
-        marginTop: '48px', // Incase this is a page
-      }}
-    >
-      <h1
+    <>
+      <style>
+        {`
+          *:has(> .deckyErrorBoundary) {
+            overflow: scroll !important;
+          }
+        `}
+      </style>
+      <div
         style={{
-          fontSize: '20px',
-          display: 'inline-block',
-          marginTop: '15px',
+          overflow: 'auto',
+          marginLeft: '15px',
+          color: 'white',
+          fontSize: '16px',
           userSelect: 'auto',
+          backgroundColor: 'black',
+          marginTop: '48px', // Incase this is a page
         }}
+        className="deckyErrorBoundary"
       >
-        ⚠️ An error occured rendering this content.
-      </h1>
-      <p>This error likely occured in {getLikelyErrorSource(error)}.</p>
-      {actionLog?.length > 0 && (
-        <pre>
+        <h1
+          style={{
+            fontSize: '20px',
+            display: 'inline-block',
+            userSelect: 'auto',
+          }}
+        >
+          ⚠️ An error occured rendering this content.
+        </h1>
+        <pre style={{}}>
           <code>
-            Running actions...
-            {actionLog}
+            {identifier && `Error Reference: ${identifier}`}
+            {versionInfo?.current && `\nDecky Version: ${versionInfo.current}`}
           </code>
         </pre>
-      )}
-      {actionsEnabled && (
-        <>
-          <h3>Actions: </h3>
-          <p>Use the touch screen.</p>
-          <div style={{ display: 'block', marginBottom: '5px' }}>
-            <button style={{ marginRight: '5px', padding: '5px' }} onClick={reset}>
-              Retry
-            </button>
-            <button style={{ marginRight: '5px', padding: '5px' }} onClick={() => SteamClient.User.StartRestart()}>
-              Restart Steam
-            </button>
-          </div>
-          <div style={{ display: 'block', marginBottom: '5px' }}>
-            <button
-              style={{ marginRight: '5px', padding: '5px' }}
-              onClick={async () => {
-                setActionsEnabled(false);
-                addLogLine('Restarting Decky...');
-                doRestart();
-                await sleep(2000);
-                addLogLine('Reloading UI...');
-              }}
-            >
-              Restart Decky
-            </button>
-            <button
-              style={{ marginRight: '5px', padding: '5px' }}
-              onClick={async () => {
-                setActionsEnabled(false);
-                addLogLine('Stopping Decky...');
-                doShutdown();
-                await sleep(5000);
-                addLogLine('Restarting Steam...');
-                SteamClient.User.StartRestart();
-              }}
-            >
-              Disable Decky until next boot
-            </button>
-          </div>
-          {debugAllowed && (
+        <p>This error likely occured in {errorSource}.</p>
+        {actionLog?.length > 0 && (
+          <pre>
+            <code>
+              Running actions...
+              {actionLog}
+            </code>
+          </pre>
+        )}
+        {actionsEnabled && (
+          <>
+            <h3>Actions: </h3>
+            <p>Use the touch screen.</p>
             <div style={{ display: 'block', marginBottom: '5px' }}>
+              <button style={{ marginRight: '5px', padding: '5px' }} onClick={reset}>
+                Retry
+              </button>
               <button
                 style={{ marginRight: '5px', padding: '5px' }}
-                onClick={async () => {
-                  setDebugAllowed(false);
-                  addLogLine('Enabling CEF debugger forwarding...');
-                  await starrCEFForwarding();
-                  addLogLine('Enabling SSH...');
-                  await startSSH();
-                  addLogLine('Ready for debugging!');
-                  if (window?.SystemNetworkStore?.wirelessNetworkDevice?.ip4?.addresses?.[0]?.ip) {
-                    const ip = ipToString(window.SystemNetworkStore.wirelessNetworkDevice.ip4.addresses[0].ip);
-                    addLogLine(`CEF Debugger: http://${ip}:8081`);
-                    addLogLine(`SSH: deck@${ip}`);
-                  }
+                onClick={() => {
+                  addLogLine('Restarting Steam...');
+                  SteamClient.User.StartRestart();
                 }}
               >
-                Allow remote debugging and SSH until next boot
+                Restart Steam
               </button>
             </div>
-          )}
-          {wasCausedByPlugin && (
             <div style={{ display: 'block', marginBottom: '5px' }}>
-              {'\n'}
               <button
                 style={{ marginRight: '5px', padding: '5px' }}
                 onClick={async () => {
                   setActionsEnabled(false);
-                  addLogLine(`Uninstalling ${errorSource}...`);
-                  await uninstallPlugin(errorSource);
-                  await DeckyPluginLoader.frozenPluginsService.invalidate();
-                  await DeckyPluginLoader.hiddenPluginsService.invalidate();
-                  await sleep(1000);
                   addLogLine('Restarting Decky...');
                   doRestart();
                   await sleep(2000);
+                  addLogLine('Reloading UI...');
+                }}
+              >
+                Restart Decky
+              </button>
+              <button
+                style={{ marginRight: '5px', padding: '5px' }}
+                onClick={async () => {
+                  setActionsEnabled(false);
+                  addLogLine('Stopping Decky...');
+                  doShutdown();
+                  await sleep(5000);
                   addLogLine('Restarting Steam...');
-                  await sleep(500);
                   SteamClient.User.StartRestart();
                 }}
               >
-                Uninstall {errorSource} and restart Decky
+                Disable Decky until next boot
               </button>
             </div>
-          )}
-        </>
-      )}
+            {debugAllowed && (
+              <div style={{ display: 'block', marginBottom: '5px' }}>
+                <button
+                  style={{ marginRight: '5px', padding: '5px' }}
+                  onClick={async () => {
+                    setDebugAllowed(false);
+                    addLogLine('Enabling CEF debugger forwarding...');
+                    await starrCEFForwarding();
+                    addLogLine('Enabling SSH...');
+                    await startSSH();
+                    addLogLine('Ready for debugging!');
+                    if (window?.SystemNetworkStore?.wirelessNetworkDevice?.ip4?.addresses?.[0]?.ip) {
+                      const ip = ipToString(window.SystemNetworkStore.wirelessNetworkDevice.ip4.addresses[0].ip);
+                      addLogLine(`CEF Debugger: http://${ip}:8081`);
+                      addLogLine(`SSH: deck@${ip}`);
+                    }
+                  }}
+                >
+                  Allow remote debugging and SSH until next boot
+                </button>
+              </div>
+            )}
+            {wasCausedByPlugin && (
+              <div style={{ display: 'block', marginBottom: '5px' }}>
+                {'\n'}
+                <button
+                  style={{ marginRight: '5px', padding: '5px' }}
+                  onClick={async () => {
+                    setActionsEnabled(false);
+                    addLogLine(`Uninstalling ${errorSource}...`);
+                    await uninstallPlugin(errorSource);
+                    await DeckyPluginLoader.frozenPluginsService.invalidate();
+                    await DeckyPluginLoader.hiddenPluginsService.invalidate();
+                    await sleep(1000);
+                    addLogLine('Restarting Decky...');
+                    doRestart();
+                    await sleep(2000);
+                    addLogLine('Restarting Steam...');
+                    await sleep(500);
+                    SteamClient.User.StartRestart();
+                  }}
+                >
+                  Uninstall {errorSource} and restart Decky
+                </button>
+              </div>
+            )}
+          </>
+        )}
 
-      <pre
-        style={{
-          marginTop: '15px',
-          opacity: 0.7,
-          userSelect: 'auto',
-        }}
-      >
-        <code>
-          {error.error.stack}
-          {'\n\n'}
-          Component Stack:
-          {error.info.componentStack}
-        </code>
-      </pre>
-    </div>
+        <pre
+          style={{
+            marginTop: '15px',
+            opacity: 0.7,
+            userSelect: 'auto',
+          }}
+        >
+          <code>
+            {error.error.stack}
+            {'\n\n'}
+            Component Stack:
+            {error.info.componentStack}
+          </code>
+        </pre>
+      </div>
+    </>
   );
 };
 

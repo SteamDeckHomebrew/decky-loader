@@ -1,5 +1,5 @@
 import type { ToastData } from '@decky/api';
-import { FC, createContext, useContext, useEffect, useState } from 'react';
+import { FC, ReactNode, createContext, useContext, useEffect, useState } from 'react';
 
 interface PublicDeckyToasterState {
   toasts: Set<ToastData>;
@@ -41,6 +41,7 @@ export const useDeckyToasterState = () => useContext(DeckyToasterContext);
 
 interface Props {
   deckyToasterState: DeckyToasterState;
+  children: ReactNode;
 }
 
 export const DeckyToasterStateContextProvider: FC<Props> = ({ children, deckyToasterState }) => {

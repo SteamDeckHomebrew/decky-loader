@@ -43,7 +43,7 @@ class ErrorBoundaryHook extends Logger {
     // errorReportingStore.m_bEnabled = false;
 
     // @ts-ignore
-    window.errorStore = errorReportingStore;
+    // window.errorStore = errorReportingStore;
 
     const react15069WorkaroundRegex = /    at .+\.componentDidCatch\..+\.callback /;
     this.errorCheckPatch = replacePatch(Object.getPrototypeOf(errorReportingStore), 'BIsBlacklisted', (args: any[]) => {

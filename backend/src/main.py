@@ -25,7 +25,7 @@ from .browser import PluginBrowser
 from .helpers import (REMOTE_DEBUGGER_UNIT, csrf_middleware, get_csrf_token,
                      mkdir_as_user, get_system_pythonpaths, get_effective_user_id)
                      
-from .injector import get_gamepadui_tab, Tab, close_old_tabs
+from .injector import get_gamepadui_tab, Tab
 from .loader import Loader
 from .settings import SettingsManager
 from .updater import Updater

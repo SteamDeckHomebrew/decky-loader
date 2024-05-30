@@ -1,4 +1,7 @@
 // Sets up DFL, then loads start.ts which starts up the loader
+interface Window {
+  SP_REACTDOM: any;
+}
 (async () => {
   if (!window.SP_REACT) {
     console.debug('Setting up React globals...');

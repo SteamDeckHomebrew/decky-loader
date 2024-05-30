@@ -2,9 +2,9 @@
 import sys
 from typing import Dict
 from .localplatform import (chmod, chown, service_stop, service_start,
-                            ON_WINDOWS, get_log_level, get_live_reload, 
+                            ON_WINDOWS, ON_LINUX, get_log_level, get_live_reload, 
                             get_server_port, get_server_host, get_chown_plugin_path,
-                            get_privileged_path)
+                            get_privileged_path, restart_webhelper)
 if hasattr(sys, '_MEIPASS'):
     chmod(sys._MEIPASS, 755) # type: ignore
 # Full imports
@@ -158,9 +158,9 @@ class PluginManager:
     async def inject_javascript(self, tab: Tab, first: bool=False, request: Request|None=None):
         logger.info("Loading Decky frontend!")
         try:
-            if first:
-                if await tab.has_global_var("deckyHasLoaded", False):
-                    await close_old_tabs()
+            # if first:
+            if ON_LINUX and await tab.has_global_var("deckyHasLoaded", False):
+                await restart_webhelper()
             await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => SteamClient.Browser.RestartJSContext(), 100)}else{window.deckyHasLoaded = true;(async()=>{try{while(!window.webpackChunksteamui){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js')}catch(e){console.error(e)};})();}}catch(e){console.error(e)}", False, False, False)
         except:
             logger.info("Failed to inject JavaScript into tab\n" + format_exc())

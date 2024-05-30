@@ -360,7 +360,7 @@ class Utilities:
         tab = await get_gamepadui_tab()
         self.rdt_script_id = None
         await close_old_tabs()
-        await tab.evaluate_js("location.reload();", False, True, False)
+        await tab.evaluate_js("SteamClient.Browser.RestartJSContext();", False, True, False)
         self.logger.info("React DevTools disabled")
 
     async def get_user_info(self) -> Dict[str, str]:

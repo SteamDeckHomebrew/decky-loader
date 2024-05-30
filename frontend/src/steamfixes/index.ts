@@ -1,4 +1,4 @@
-import reloadFix from './reload';
+// import reloadFix from './reload';
 import restartFix from './restart';
 let fixes: Function[] = [];
 
@@ -7,6 +7,6 @@ export function deinitSteamFixes() {
 }
 
 export async function initSteamFixes() {
-  fixes.push(await reloadFix());
+  // fixes.push(await reloadFix());
   fixes.push(await restartFix());
 }

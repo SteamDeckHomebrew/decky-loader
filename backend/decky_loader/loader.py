@@ -3,8 +3,8 @@ from asyncio import AbstractEventLoop, Queue, sleep
 from logging import getLogger
 from os import listdir, path
 from pathlib import Path
-from traceback import format_exc, print_exc
-from typing import Any, Tuple, Dict, cast
+from traceback import print_exc
+from typing import Any, Tuple
 
 from aiohttp import web
 from os.path import exists
@@ -37,8 +37,8 @@ class FileChangeHandler(RegexMatchingEventHandler):
         if exists(path.join(self.plugin_path, plugin_dir, "plugin.json")):
             self.queue.put_nowait((path.join(self.plugin_path, plugin_dir, "main.py"), plugin_dir, True))
 
-    def on_created(self, event: DirCreatedEvent | FileCreatedEvent): # pyright: ignore [reportIncompatibleMethodOverride]
-        src_path = cast(str, event.src_path) # type: ignore the correct type for this is in later versions of watchdog
+    def on_created(self, event: DirCreatedEvent | FileCreatedEvent):
+        src_path = event.src_path
         if "__pycache__" in src_path:
             return
 
@@ -51,8 +51,8 @@ class FileChangeHandler(RegexMatchingEventHandler):
         self.logger.debug(f"file created: {src_path}")
         self.maybe_reload(src_path)
 
-    def on_modified(self, event: DirModifiedEvent | FileModifiedEvent): # pyright: ignore [reportIncompatibleMethodOverride]
-        src_path = cast(str, event.src_path) # type: ignore
+    def on_modified(self, event: DirModifiedEvent | FileModifiedEvent):
+        src_path = event.src_path
         if "__pycache__" in src_path:
             return
 
@@ -209,3 +209,5 @@ class Loader:
         plugin = self.plugins[plugin_name]
 
         await self.reload_queue.put((plugin.file, plugin.plugin_directory))
+
+        return web.Response(status=200)

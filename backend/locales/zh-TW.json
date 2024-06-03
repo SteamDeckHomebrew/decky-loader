@@ -39,7 +39,7 @@
     },
     "PluginCard": {
         "plugin_install": "安裝",
-        "plugin_no_desc": "未提示描述。",
+        "plugin_no_desc": "未提供描述。",
         "plugin_version_label": "外掛程式版本",
         "plugin_full_access": "此外掛程式擁有您的 Steam Deck 的完整存取權。"
     },
@@ -73,7 +73,9 @@
         "reload": "重新載入",
         "show": "快速存取：顯示",
         "hide": "快速存取：隱藏",
-        "update_all_other": "更新 {{count}} 個外掛程式"
+        "update_all_other": "更新 {{count}} 個外掛程式",
+        "freeze": "禁止更新",
+        "unfreeze": "允許更新"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -99,7 +101,7 @@
     },
     "SettingsDeveloperIndex": {
         "third_party_plugins": {
-            "button_zip": "開啟",
+            "button_zip": "瀏覽",
             "label_desc": "網址",
             "label_url": "從網址安裝外掛程式",
             "label_zip": "從 ZIP 檔案安裝外掛程式",
@@ -149,7 +151,8 @@
     "SettingsIndex": {
         "developer_title": "開發人員",
         "general_title": "一般",
-        "plugins_title": "外掛程式"
+        "plugins_title": "外掛程式",
+        "testing_title": "測試"
     },
     "Store": {
         "store_contrib": {
@@ -175,9 +178,17 @@
             "about": "關於",
             "alph_asce": "依字母排序 (Z 到 A)",
             "alph_desc": "依字母排序 (A 到 Z)",
-            "title": "瀏覽"
+            "title": "瀏覽",
+            "downloads_desc": "下載量高到低",
+            "downloads_asce": "下載量低到高",
+            "date_asce": "日期舊到新",
+            "date_desc": "日期新到舊"
         },
-        "store_testing_cta": "請考慮測試新的外掛程式來幫助 Decky Loader 團隊！"
+        "store_testing_cta": "請考慮測試新的外掛程式來幫助 Decky Loader 團隊！",
+        "store_testing_warning": {
+            "label": "歡迎來到測試頻道",
+            "desc": "您可以使用此商店頻道來體驗測試外掛版本。請務必在 GitHub 上留下回饋，以便為所有用戶更新該外掛程式。"
+        }
     },
     "StoreSelect": {
         "custom_store": {
@@ -226,7 +237,7 @@
         "confirm": "您確定要進行以下的修改嗎？",
         "description": {
             "install": "安裝 {{name}} {{version}}",
-            "update": "更新 {{name}} 到 {{version}}",
+            "update": "更新 {{name}} 的版本到 {{version}}",
             "reinstall": "重新安裝 {{name}} {{version}}"
         }
     },
@@ -241,5 +252,12 @@
         "button": {
             "back": "返回"
         }
+    },
+    "TitleView": {
+        "decky_store_desc": "開啟 Decky 商店",
+        "settings_desc": "開啟 Decky 設定"
+    },
+    "Testing": {
+        "download": "下載"
     }
 }

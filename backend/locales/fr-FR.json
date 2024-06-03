@@ -17,7 +17,13 @@
             "desc1": "Active le menu développeur interne de Valve.",
             "desc2": "Ne touchez à rien dans ce menu à moins que vous ne sachiez ce qu'il fait.",
             "label": "Activer Valve Internal"
-        }
+        },
+        "cef_console": {
+            "button": "Ouvrir la console",
+            "label": "CEF Console",
+            "desc": "Ouvre la console CEF. Utile uniquement à des fins de débogage. Les éléments présentés ici sont potentiellement dangereux et ne doivent être utilisés que si vous êtes un développeur de plugins ou si vous êtes dirigé ici par un de ces développeurs."
+        },
+        "header": "Autre"
     },
     "BranchSelect": {
         "update_channel": {
@@ -122,7 +128,9 @@
         "update_all_many": "Mettre à jour {{count}} plugins",
         "update_all_other": "Mettre à jour {{count}} plugins",
         "show": "Accès Rapide : Afficher",
-        "hide": "Accès rapide : Cacher"
+        "hide": "Accès rapide : Cacher",
+        "unfreeze": "Autoriser les mises à jour",
+        "freeze": "Geler les mises à jour"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -164,12 +172,18 @@
         },
         "updates": {
             "header": "Mises à jour"
+        },
+        "notifications": {
+            "decky_updates_label": "Mise à jour Decky disponible",
+            "header": "Notifications",
+            "plugin_updates_label": "Mises à jour du plugin disponibles"
         }
     },
     "SettingsIndex": {
         "developer_title": "Développeur",
         "general_title": "Général",
-        "plugins_title": "Plugins"
+        "plugins_title": "Plugins",
+        "testing_title": "Essai"
     },
     "Store": {
         "store_contrib": {
@@ -195,14 +209,22 @@
             "about": "À propos",
             "alph_asce": "Alphabétique (Z à A)",
             "alph_desc": "Alphabétique (A à Z)",
-            "title": "Explorer"
+            "title": "Explorer",
+            "date_asce": "Plus ancien en premier",
+            "date_desc": "Le plus récent d'abord",
+            "downloads_asce": "Le moins téléchargé en premier",
+            "downloads_desc": "Les plus téléchargés en premier"
         },
-        "store_testing_cta": "Pensez à tester de nouveaux plugins pour aider l'équipe Decky Loader !"
+        "store_testing_cta": "Pensez à tester de nouveaux plugins pour aider l'équipe Decky Loader !",
+        "store_testing_warning": {
+            "label": "Bienvenue sur la chaîne du magasin de tests",
+            "desc": "Vous pouvez utiliser cette chaîne de magasin pour tester des versions de plugins. Assurez-vous de laisser des commentaires sur GitHub afin que le plugin puisse être mis à jour pour tous les utilisateurs."
+        }
     },
     "PluginView": {
-        "hidden_one": "",
-        "hidden_many": "",
-        "hidden_other": ""
+        "hidden_one": "1 plugin est masqué dans cette liste",
+        "hidden_many": "{{count}} plugins sont masqués de cette liste",
+        "hidden_other": "{{count}} plugins sont masqués de cette liste"
     },
     "MultiplePluginsInstallModal": {
         "title": {
@@ -244,5 +266,12 @@
         "button": {
             "back": "Retour"
         }
+    },
+    "TitleView": {
+        "decky_store_desc": "Ouvrir le magasin Decky",
+        "settings_desc": "Ouvrir les paramètres de Decky"
+    },
+    "Testing": {
+        "download": "Télécharger"
     }
 }

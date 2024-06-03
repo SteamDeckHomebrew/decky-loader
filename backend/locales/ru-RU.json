@@ -36,7 +36,9 @@
         "show": "Быстрый доступ: Показать",
         "plugin_actions": "Действия с плагинами",
         "no_plugin": "Не установлено ни одного плагина!",
-        "reinstall": "Переустановить"
+        "reinstall": "Переустановить",
+        "freeze": "Остановить обновления",
+        "unfreeze": "Разрешить обновления"
     },
     "PluginLoader": {
         "plugin_update_one": "Обновления доступны для {{count}} плагина!",
@@ -184,7 +186,11 @@
             "about": "Информация",
             "alph_desc": "По алфавиту (A - Z)",
             "title": "Обзор",
-            "alph_asce": "По алфавиту (Z - A)"
+            "alph_asce": "По алфавиту (Z - A)",
+            "date_asce": "Сначала старые",
+            "date_desc": "Сначала новые",
+            "downloads_asce": "Наименее загружаемые сначала",
+            "downloads_desc": "Наиболее загружаемые сначала"
         },
         "store_testing_cta": "Пожалуйста, рассмотрите возможность тестирования новых плагинов, чтобы помочь команде Decky Loader!",
         "store_contrib": {
@@ -258,10 +264,14 @@
     "SettingsIndex": {
         "developer_title": "Разработчик",
         "general_title": "Общее",
-        "plugins_title": "Плагины"
+        "plugins_title": "Плагины",
+        "testing_title": "Тестирование"
     },
     "TitleView": {
         "decky_store_desc": "Открыть магазин Decky",
         "settings_desc": "Открыть настройки Decky"
+    },
+    "Testing": {
+        "download": "Загрузить"
     }
 }

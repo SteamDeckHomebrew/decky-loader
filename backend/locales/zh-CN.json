@@ -73,7 +73,9 @@
         "update_to": "更新 {{name}}",
         "update_all_other": "更新 {{count}} 个插件",
         "show": "在快速访问菜单中显示",
-        "hide": "在快速访问菜单中隐藏"
+        "hide": "在快速访问菜单中隐藏",
+        "unfreeze": "允许更新",
+        "freeze": "暂停更新"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -93,15 +95,15 @@
     },
     "RemoteDebugging": {
         "remote_cef": {
-            "desc": "允许你网络中的任何人无需身份验证即可访问CEF调试器",
-            "label": "允许远程访问CEF调试"
+            "desc": "允许你的网络中的任何人无需身份验证即可访问 CEF 调试器",
+            "label": "允许 CEF 远程调试"
         }
     },
     "SettingsDeveloperIndex": {
         "react_devtools": {
             "ip_label": "IP",
             "label": "启用 React DevTools",
-            "desc": "允许连接到运行着 React DevTools 的计算机，更改此设置将重新加载Steam，请在启用前设置IP地址。"
+            "desc": "允许连接到运行着 React DevTools 的计算机。更改此设置将重新加载 Steam。请在启用前设置 IP 地址。"
         },
         "third_party_plugins": {
             "button_install": "安装",
@@ -149,12 +151,13 @@
     "SettingsIndex": {
         "developer_title": "开发者",
         "general_title": "通用",
-        "plugins_title": "插件"
+        "plugins_title": "插件",
+        "testing_title": "测试"
     },
     "Store": {
         "store_contrib": {
             "label": "贡献",
-            "desc": "如果你想要提交你的插件到 Decky 插件商店，请访问 GitHub 上的 SteamDeckHomebrew/decky-plugin-template 存储库，关于开发和分发的相关信息，请查看 README 文件。"
+            "desc": "如果你想要提交你的插件到 Decky 插件商店，请访问 GitHub 上的 SteamDeckHomebrew/decky-plugin-template 存储库。有关开发和分发插件的信息，请查看 README 文件。"
         },
         "store_filter": {
             "label": "过滤器",
@@ -169,13 +172,17 @@
         },
         "store_source": {
             "label": "源代码",
-            "desc": "所有插件的源代码都可以在 GitHub 上的 SteamDeckHomebrew/decky-plugin-database 存储库中获得。"
+            "desc": "所有插件的源代码都可从 GitHub 上的 SteamDeckHomebrew/decky-plugin-database 存储库中获得。"
         },
         "store_tabs": {
             "about": "关于",
             "alph_asce": "字母排序 (Z 到 A)",
             "alph_desc": "字母排序 (A 到 Z)",
-            "title": "浏览"
+            "title": "浏览",
+            "downloads_desc": "下载量倒序",
+            "date_asce": "更新时间正序",
+            "date_desc": "更新时间倒序",
+            "downloads_asce": "下载量正序"
         },
         "store_testing_cta": "请考虑测试新插件以帮助 Decky Loader 团队！",
         "store_testing_warning": {
@@ -243,11 +250,14 @@
         "errors": {
             "file_not_found": "指定路径无效。请检查并输入正确的路径。",
             "unknown": "发生了一个未知错误。原始错误为：{{raw_error}}",
-            "perm_denied": "你没有访问特定目录的权限。请检查你的用户（Steam Deck 中的 deck 账户）有着相对应的权限以访问特定的文件夹或文件。"
+            "perm_denied": "你没有访问特定目录的权限。请检查你的用户（Steam Deck 中的 deck 账户）是否有权访问特定的文件夹或文件。"
         }
     },
     "TitleView": {
         "decky_store_desc": "打开 Decky 商店",
         "settings_desc": "打开 Decky 设置"
+    },
+    "Testing": {
+        "download": "下载"
     }
 }

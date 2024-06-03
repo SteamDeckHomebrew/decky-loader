@@ -97,7 +97,9 @@
         "hide": "빠른 액세스 메뉴: 숨김",
         "update_all_other": "플러그인 {{count}}개 업데이트",
         "no_plugin": "설치된 플러그인이 없습니다!",
-        "update_to": "{{name}}(으)로 업데이트"
+        "update_to": "{{name}}(으)로 업데이트",
+        "freeze": "업데이트 일시 중지",
+        "unfreeze": "업데이트 허용"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -173,7 +175,8 @@
     "SettingsIndex": {
         "developer_title": "개발자",
         "general_title": "일반",
-        "plugins_title": "플러그인"
+        "plugins_title": "플러그인",
+        "testing_title": "테스트"
     },
     "Store": {
         "store_contrib": {
@@ -199,7 +202,11 @@
             "about": "정보",
             "alph_asce": "알파벳순 (Z-A)",
             "alph_desc": "알파벳순 (A-Z)",
-            "title": "검색"
+            "title": "검색",
+            "downloads_asce": "다운로드 수 낮은 순",
+            "date_desc": "최신 순",
+            "date_asce": "오래된 순",
+            "downloads_desc": "다운로드 많은 순"
         },
         "store_testing_cta": "새로운 플러그인을 테스트하여 Decky Loader 팀을 도와주세요!",
         "store_testing_warning": {
@@ -249,5 +256,8 @@
     "TitleView": {
         "settings_desc": "Decky 설정 열기",
         "decky_store_desc": "Decky 스토어 열기"
+    },
+    "Testing": {
+        "download": "다운로드"
     }
 }

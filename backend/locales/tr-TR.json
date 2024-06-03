@@ -1,0 +1,225 @@
+{
+    "BranchSelect": {
+        "update_channel": {
+            "prerelease": "Önsürüm",
+            "stable": "Stabil",
+            "testing": "Test",
+            "label": "Güncelleme Kanalı"
+        }
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "Geri"
+        }
+    },
+    "FilePickerIndex": {
+        "file": {
+            "select": "Bu dosyayı seçin"
+        },
+        "files": {
+            "all_files": "Tüm Dosyalar",
+            "file_type": "Dosya Türü",
+            "show_hidden": "Gizli Dosyaları Göster"
+        },
+        "filter": {
+            "created_asce": "Oluşturuldu (En Eski)",
+            "created_desc": "Oluşturuldu (En Yeni)",
+            "modified_asce": "Değiştirildi (En Eski)",
+            "modified_desc": "Değiştirildi (En Yeni)",
+            "name_asce": "Z-A",
+            "name_desc": "A-Z",
+            "size_asce": "Boyut (En Küçük)",
+            "size_desc": "Boyut (En Büyük)"
+        },
+        "folder": {
+            "label": "Klasör",
+            "select": "Bu klasörü kullan",
+            "show_more": "Daha fazla dosya göster"
+        }
+    },
+    "MultiplePluginsInstallModal": {
+        "confirm": "Aşağıdaki değişiklikleri yapmak istediğinizden emin misiniz?",
+        "description": {
+            "install": "Yükle {{name}} {{version}}",
+            "reinstall": "Yeniden yükle {{name}} {{version}}"
+        },
+        "ok_button": {
+            "idle": "Onayla",
+            "loading": "Çalışıyor"
+        },
+        "title": {
+            "reinstall_one": "1 eklentiyi yeniden yükle",
+            "reinstall_other": "{{count}} eklentiyi yeniden yükle",
+            "install_one": "1 eklenti yükle",
+            "install_other": "{{count}} eklenti yükle"
+        }
+    },
+    "PluginCard": {
+        "plugin_full_access": "Bu eklenti Steam Deck'inize tam erişime sahiptir.",
+        "plugin_install": "Yükle",
+        "plugin_version_label": "Eklenti Versiyonu"
+    },
+    "PluginInstallModal": {
+        "install": {
+            "button_idle": "Yükle",
+            "button_processing": "Yükleniyor",
+            "title": "Yükle {{artifact}}",
+            "desc": "Yüklemek istediğinizden emin misiniz {{artifact}} {{version}}?"
+        },
+        "reinstall": {
+            "button_idle": "Yeniden Yükle",
+            "desc": "Yeniden yüklemek istediğinizden emin misiniz {{artifact}} {{version}}?",
+            "title": "Yeniden Yükle {{artifact}}",
+            "button_processing": "Yeniden Yükleniyor"
+        },
+        "update": {
+            "button_idle": "Güncelle",
+            "button_processing": "Güncelleniyor",
+            "title": "Güncelle {{artifact}}",
+            "desc": "Güncellemek istediğinizden emin misiniz {{artifact}} {{version}}?"
+        }
+    },
+    "PluginListIndex": {
+        "freeze": "Güncellemeleri durdur",
+        "hide": "Hızlı erişim: Gizle",
+        "no_plugin": "Yüklü eklenti yok!",
+        "plugin_actions": "Eklenti İşlemleri",
+        "reinstall": "Yeniden Yükle",
+        "show": "Hızlı erişim: Göster",
+        "unfreeze": "Güncellemelere izin ver",
+        "uninstall": "Kaldır",
+        "update_all_one": "1 eklentiyi güncelle",
+        "update_all_other": "{{count}} eklentiyi güncelle"
+    },
+    "PluginListLabel": {
+        "hidden": "Hızlı erişim menüsünden gizlenmiş"
+    },
+    "PluginLoader": {
+        "decky_title": "Decky",
+        "decky_update_available": "{{tag_name}} güncellemesi mevcut!",
+        "error": "Hata",
+        "plugin_load_error": {
+            "toast": "{{name}} yüklenirken hata oluştu",
+            "message": "{{name}} eklentisi yüklenirken bir hata oluştu"
+        },
+        "plugin_uninstall": {
+            "button": "Kaldır",
+            "desc": "{{name}} kaldırmak istediğinizden emin misiniz?",
+            "title": "Kaldır {{name}}"
+        },
+        "plugin_update_one": "1 eklenti için güncelleme mevcut!",
+        "plugin_update_other": "{{count}} eklenti için güncelleme mevcut!"
+    },
+    "SettingsDeveloperIndex": {
+        "cef_console": {
+            "button": "Konsolu Aç"
+        },
+        "header": "Diğer",
+        "react_devtools": {
+            "ip_label": "IP"
+        },
+        "third_party_plugins": {
+            "button_install": "Yükle",
+            "button_zip": "Gözat",
+            "header": "Üçüncü Parti Eklentiler",
+            "label_desc": "URL",
+            "label_url": "URL'den Eklenti Yükle",
+            "label_zip": "ZIP Dosyasından Eklenti Yükle"
+        }
+    },
+    "SettingsGeneralIndex": {
+        "about": {
+            "decky_version": "Decky Versiyonu",
+            "header": "Hakkında"
+        },
+        "beta": {
+            "header": "Betaya katılım"
+        },
+        "developer_mode": {
+            "label": "Geliştirici modu"
+        },
+        "notifications": {
+            "decky_updates_label": "Decky güncellemesi mevcut",
+            "header": "Bildirimler",
+            "plugin_updates_label": "Eklenti güncellemesi mevcut"
+        },
+        "other": {
+            "header": "Diğer"
+        },
+        "updates": {
+            "header": "Güncellemeler"
+        }
+    },
+    "SettingsIndex": {
+        "developer_title": "Geliştirici",
+        "general_title": "Genel",
+        "plugins_title": "Eklentiler"
+    },
+    "Store": {
+        "store_contrib": {
+            "label": "Katkıda Bulunma"
+        },
+        "store_filter": {
+            "label": "Filtre",
+            "label_def": "Tümü"
+        },
+        "store_search": {
+            "label": "Ara"
+        },
+        "store_sort": {
+            "label": "Sırala",
+            "label_def": "Son Güncellenme (En Yeni)"
+        },
+        "store_source": {
+            "label": "Kaynak Kodu"
+        },
+        "store_tabs": {
+            "about": "Hakkında",
+            "alph_asce": "Alfabetik (Z'den A'ya)",
+            "alph_desc": "Alfabetik (A'dan Z'ye)",
+            "date_asce": "Önce En Eski",
+            "date_desc": "Önce En Yeni",
+            "downloads_desc": "Önce En Çok İndirilen",
+            "title": "Gözat",
+            "downloads_asce": "Önce En Az İndirilen"
+        }
+    },
+    "StoreSelect": {
+        "custom_store": {
+            "url_label": "URL"
+        },
+        "store_channel": {
+            "custom": "Özel",
+            "default": "Varsayılan"
+        }
+    },
+    "TitleView": {
+        "decky_store_desc": "Decky Mağazasını Aç",
+        "settings_desc": "Decky Ayarlarını Aç"
+    },
+    "Updater": {
+        "decky_updates": "Decky Güncellemeleri",
+        "patch_notes_desc": "Yama Notları",
+        "no_patch_notes_desc": "bu sürüm için yama notları mevcut değil",
+        "updates": {
+            "check_button": "Güncellemeleri Kontrol Et",
+            "checking": "Kontrol ediliyor",
+            "cur_version": "Mevcut Versiyon: {{ver}}",
+            "install_button": "Güncellemeyi Yükle",
+            "label": "Güncellemeler",
+            "updating": "Güncelleniyor"
+        }
+    },
+    "Testing": {
+        "download": "İndir"
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "Belirtilen yol geçerli değil. Lütfen yolu kontrol edin ve doğru şekilde yeniden girin."
+        }
+    },
+    "PluginView": {
+        "hidden_one": "1 eklenti bu listeden gizlenmiştir",
+        "hidden_other": "{{count}} eklenti bu listeden gizlenmiştir"
+    }
+}

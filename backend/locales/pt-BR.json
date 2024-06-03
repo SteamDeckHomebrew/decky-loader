@@ -104,7 +104,8 @@
         "update_all_one": "Atualizar 1 plugin",
         "update_all_many": "Atualizar {{count}} plugins",
         "update_all_other": "Atualizar {{count}} plugins",
-        "hide": "Acesso Rápido: Ocultar"
+        "hide": "Acesso Rápido: Ocultar",
+        "freeze": "Congelar updates"
     },
     "PluginLoader": {
         "decky_title": "Decky",

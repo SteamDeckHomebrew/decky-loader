@@ -183,3 +183,30 @@ class PluginWrapper:
                 if not res["success"]:
                     raise Exception(res["res"])
                 return res["res"]
+    
+    # rename plugin
+    async def rename(self, new_name):
+        old_path = os.path.join(self.plugin_path, self.plugin_directory)
+        new_path = os.path.join(self.plugin_path, new_name)
+        if os.path.exists(new_path):
+            raise Exception("A plugin with the new name already exists.")
+        
+        self.update_configuration(new_name)
+
+        os.rename(old_path, new_path)
+
+        self.name = new_name
+        self.plugin_directory = new_name
+
+        self.log.info(f"Plugin renamed from {self.plugin_directory} to {new_name}")
+
+    def update_configuration(self, new_name):
+        config_path = os.path.join(self.plugin_path, self.plugin_directory, 'config.json')
+        if os.path.exists(config_path):
+            with open(config_path, 'r+') as file:
+                config = json.load(file)
+                config['name'] = new_name
+                file.seek(0)
+                json.dump(config, file, indent=4)
+                file.truncate()
+    # end rename plugin

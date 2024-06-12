@@ -68,6 +68,7 @@ class PluginManager:
         self.plugin_browser = PluginBrowser(plugin_path, self.plugin_loader.plugins, self.plugin_loader, self.settings) 
         self.utilities = Utilities(self)
         self.updater = Updater(self)
+        self.web_app.add_routes([web.post('/plugins/{name}/rename', self.rename_plugin)])
 
         jinja_setup(self.web_app)
 
@@ -168,6 +169,32 @@ class PluginManager:
 
     def run(self):
         return run_app(self.web_app, host=get_server_host(), port=get_server_port(), loop=self.loop, access_log=None)
+    
+    # rename_plugin is a route that allows the user to rename a plugin
+    async def rename_plugin(self, request: web.Request):
+        original_name = request.match_info['name']
+        data = await request.json()
+        new_name = data.get('new_name')
+        
+        if not new_name:
+            return web.Response(status=400, text='New name is required.')
+
+        try:
+            await self.rename_plugin_logic(original_name, new_name)
+            return web.Response(text='Plugin renamed successfully.')
+        except Exception as e:
+            return web.Response(status=500, text=str(e))
+        
+    async def rename_plugin_logic(self, original_name, new_name):
+        import os
+        original_path = os.path.join('path_to_plugins', original_name)
+        new_path = os.path.join('path_to_plugins', new_name)
+        
+        if os.path.exists(new_path):
+            raise Exception("A plugin with the new name already exists.")
+        
+        os.rename(original_path, new_path)
+    # end of rename_plugin
 
 def main():
     if ON_WINDOWS:

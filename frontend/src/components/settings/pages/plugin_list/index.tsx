@@ -2,6 +2,7 @@ import {
   DialogBody,
   DialogButton,
   DialogControlsSection,
+  DialogInput,
   GamepadEvent,
   Menu,
   MenuItem,
@@ -46,6 +47,7 @@ type PluginTableData = PluginData & {
 
 function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }) {
   const { t } = useTranslation();
+  const DialogBody = useDialog();
 
   // nothing to display without this data...
   if (!props.entry.data) {
@@ -98,6 +100,8 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
         ) : (
           isDeveloper && <MenuItem onSelected={onFreeze}>{t('PluginListIndex.freeze')}</MenuItem>
         )}
+        {/* Rename plugin button */}
+        <MenuItem onSelected={() => promptRename(name)}>{t('PluginListIndex.rename')}</MenuItem>
       </Menu>,
       e.currentTarget ?? window,
     );
@@ -241,3 +245,47 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
     </DialogBody>
   );
 }
+
+// Rename plugin functionality
+const handleRename = async (originalName: string, newName: string) => {
+  try {
+      const response = await fetch(`http://127.0.0.1:1337/plugins/${originalName}/rename`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authentication': window.deckyAuthToken,
+          },
+          body: JSON.stringify({ newName }),
+      });
+      if (!response.ok) {
+          throw new Error('Failed to rename plugin');
+      }
+      console.log('Plugin renamed successfully');
+  } catch (error) {
+      console.error('Error renaming plugin:', error);
+  }
+};
+
+const promptRename = (originalName: string) => {
+  DialogBody.open(
+    <DialogBody>
+      <DialogBody title={t('PluginListIndex.rename_plugin')}>
+        <DialogInput
+          initialValue={originalName}
+          label={t('PluginListIndex.enter_new_name')}
+          onConfirm={(newName) => {
+            handleRename(originalName, newName);
+            DialogBody.close();
+          }}
+          onCancel={() => DialogBody.close()}
+        />
+      </DialogBody>
+      <DialogControlsSection>
+        <DialogButton label={t('common.ok')} onClick={() => {/* Confirm change of name */}} />
+        <DialogButton label={t('common.cancel')} onClick={() => DialogBody.close()} />
+      </DialogControlsSection>
+    </DialogBody>
+  );
+};
+// End of Rename plugin functionality
+

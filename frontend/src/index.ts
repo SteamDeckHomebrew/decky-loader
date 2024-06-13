@@ -8,7 +8,7 @@ interface Window {
   if (!window.SP_REACT) {
     console.debug('[Decky:Boot] Setting up React globals...');
     // deliberate partial import
-    const DFLWebpack = await import('decky-frontend-lib/dist/webpack');
+    const DFLWebpack = await import('@decky/ui/dist/webpack');
     window.SP_REACT = DFLWebpack.findModule((m) => m.Component && m.PureComponent && m.useLayoutEffect);
     window.SP_REACTDOM = DFLWebpack.findModule((m) => m.createPortal && m.createRoot);
   }

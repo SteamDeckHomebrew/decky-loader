@@ -59,7 +59,7 @@ class RouterHook extends Logger {
       if (routes) {
         if (!routeList[routerIndex - 1]?.length || routeList[routerIndex - 1]?.length !== routes.size) {
           if (routeList[routerIndex - 1]?.length && routeList[routerIndex - 1].length !== routes.size) routerIndex--;
-          const newRouterArray: ReactElement[] = [];
+          const newRouterArray: (ReactElement | JSX.Element)[] = [];
           routes.forEach(({ component, props }, path) => {
             newRouterArray.push(
               <Route path={path} {...props}>

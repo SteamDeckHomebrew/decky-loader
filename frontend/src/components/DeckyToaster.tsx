@@ -1,7 +1,6 @@
 import type { ToastData } from '@decky/api';
 import { joinClassNames } from '@decky/ui';
-import { FC, useEffect, useState } from 'react';
-import { ReactElement } from 'react-markdown/lib/react-markdown';
+import { FC, useEffect, useState, ReactElement } from 'react';
 
 import { useDeckyToasterState } from './DeckyToasterState';
 import Toast, { toastClasses } from './Toast';
@@ -20,7 +19,7 @@ const DeckyToaster: FC<DeckyToasterProps> = () => {
   if (toasts.size > 0) {
     const [activeToast] = toasts;
     if (!renderedToast || activeToast != renderedToast.data) {
-      // TODO play toast sound
+      // TODO play toast soundReactElement
       console.log('rendering toast', activeToast);
       setRenderedToast({ component: <Toast key={Math.random()} toast={activeToast} />, data: activeToast });
     }

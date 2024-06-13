@@ -35,6 +35,7 @@
               echo "{\"python.defaultInterpreterPath\": \"''${PYTHONPATH}\"}" > "$FILE"
             fi
           '';
+          UV_USE_IO_URING = 0; # work around node#48444
           buildInputs = with pkgs; [
             nodejs_22
             nodePackages.pnpm

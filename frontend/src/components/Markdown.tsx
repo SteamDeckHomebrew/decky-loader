@@ -13,8 +13,8 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
-          div: (nodeProps) => <Focusable {...nodeProps.node.properties}>{nodeProps.children}</Focusable>,
-          a: (nodeProps) => {
+          div: (nodeProps: any) => <Focusable {...nodeProps.node.properties}>{nodeProps.children}</Focusable>,
+          a: (nodeProps: any) => {
             const aRef = useRef<HTMLAnchorElement>(null);
             return (
               // TODO fix focus ring

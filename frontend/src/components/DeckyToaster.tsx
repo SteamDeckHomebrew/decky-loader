@@ -1,6 +1,6 @@
 import type { ToastData } from '@decky/api';
 import { joinClassNames } from '@decky/ui';
-import { FC, useEffect, useState, ReactElement } from 'react';
+import { FC, ReactElement, useEffect, useState } from 'react';
 
 import { useDeckyToasterState } from './DeckyToasterState';
 import Toast, { toastClasses } from './Toast';

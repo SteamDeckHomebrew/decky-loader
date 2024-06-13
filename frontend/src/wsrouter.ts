@@ -136,7 +136,7 @@ export class WSRouter extends Logger {
           if (this.runningCalls.has(data.id)) {
             this.runningCalls.get(data.id)!.resolve(data.result);
             this.runningCalls.delete(data.id);
-            this.debug(`Resolved PY call ${data.id} with value`, data.result);
+            this.debug(`[${data.id}] Resolved PY call with value`, data.result);
           }
           break;
 
@@ -145,7 +145,7 @@ export class WSRouter extends Logger {
             let err = new PyError(data.error.name, data.error.error, data.error.traceback);
             this.runningCalls.get(data.id)!.reject(err);
             this.runningCalls.delete(data.id);
-            this.debug(`Rejected PY call ${data.id} with error`, data.error);
+            this.debug(`[${data.id}] Rejected PY call with error`, data.error);
           }
           break;
 
@@ -183,7 +183,7 @@ export class WSRouter extends Logger {
 
     this.runningCalls.set(id, resolver);
 
-    this.debug(`Calling PY method ${route} with args`, args);
+    this.debug(`[${id}] Calling PY method ${route} with args`, args);
 
     this.write({ type: MessageType.CALL, route, args, id });
 

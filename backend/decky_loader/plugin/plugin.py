@@ -90,7 +90,7 @@ class PluginWrapper:
 
         return await request.wait_for_result()
 
-    async def execute_method(self, method_name: str, args: List[Any]):
+    async def execute_method(self, method_name: str, *args: List[Any]):
         if self.passive:
             raise RuntimeError("This plugin is passive (aka does not implement main.py)")
         

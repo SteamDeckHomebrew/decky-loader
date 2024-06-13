@@ -144,7 +144,7 @@ class Loader:
         try:
             async def plugin_emitted_event(event: str, args: Any):
                 self.logger.debug(f"PLUGIN EMITTED EVENT: {event} with args {args}")
-                await self.ws.emit(f"loader/plugin_event", {plugin:plugin.name, event:event, args:args})
+                await self.ws.emit(f"loader/plugin_event", {"plugin": plugin.name, "event": event, "args": args})
 
             plugin = PluginWrapper(file, plugin_directory, self.plugin_path, plugin_emitted_event)
             if plugin.name in self.plugins:

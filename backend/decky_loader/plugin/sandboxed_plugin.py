@@ -166,7 +166,7 @@ class SandboxedPlugin:
 
         d: SocketResponseDict = {"type": SocketMessageType.RESPONSE, "res": None, "success": True, "id": data["id"]}
         try:
-            if data["legacy"]:
+            if data.get("legacy"):
                 if self.api_version > 0:
                     raise Exception("Legacy methods may not be used on api_version > 0")
                 # Legacy kwargs

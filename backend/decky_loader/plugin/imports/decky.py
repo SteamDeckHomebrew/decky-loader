@@ -206,6 +206,8 @@ logging.basicConfig(filename=DECKY_PLUGIN_LOG,
                     format='[%(asctime)s][%(levelname)s]: %(message)s',
                     force=True)
 logger: logging.Logger = logging.getLogger()
+# Also log to stdout
+logger.addHandler(logging.StreamHandler())
 """The main plugin logger writing to `DECKY_PLUGIN_LOG`."""
 
 logger.setLevel(logging.INFO)

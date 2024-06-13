@@ -79,7 +79,7 @@ class Toaster extends Logger {
     };
     instance = findToasterRoot(tree, 0);
     while (!instance) {
-      this.error(
+      this.warn(
         'Failed to find Toaster root node, reattempting in 5 seconds. A developer may need to increase the recursion limit.',
       );
       await sleep(5000);

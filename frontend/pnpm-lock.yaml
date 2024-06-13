@@ -7,7 +7,7 @@ settings:
 dependencies:
   '@decky/ui':
     specifier: ^4.0.2
-    version: 4.0.2
+    version: link:../../lib
   filesize:
     specifier: ^10.1.2
     version: 10.1.2
@@ -334,10 +334,6 @@ packages:
   /@decky/api@1.0.4:
     resolution: {integrity: sha512-YChHjlk//lOiIM2tlNSd6Qk9aduFJOtG+uRv1JaTzLewPRj4dDeupC+mbJJfarMGYa4nsLnJ6BsubTqboeb+VQ==}
     dev: true
-
-  /@decky/ui@4.0.2:
-    resolution: {integrity: sha512-sU1Dz2dOyysEcXus3iix/7lgaR3V8H/0VPUHuQkiD7CibPw1ksUDYR2DUwNo48S0Pe4D4nDp9hOEOFyfrWWLDw==}
-    dev: false
 
   /@esbuild/aix-ppc64@0.20.2:
     resolution: {integrity: sha512-D+EBOJHXdNZcLJRBkhENNG8Wji2kgc9AZ9KiPr1JuZjsNtyHzrsfLRrY0tk2H2aoFu6RANO1y1iPPUCDYWkb5g==}

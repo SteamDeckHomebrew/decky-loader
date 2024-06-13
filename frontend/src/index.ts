@@ -1,12 +1,24 @@
 // Sets up DFL, then loads start.ts which starts up the loader
+interface Window {
+  // Shut up TS
+  SP_REACTDOM: any;
+}
+
 (async () => {
-  console.debug('Setting up @decky/ui...');
+  if (!window.SP_REACT) {
+    console.debug('[Decky:Boot] Setting up React globals...');
+    // deliberate partial import
+    const DFLWebpack = await import('decky-frontend-lib/dist/webpack');
+    window.SP_REACT = DFLWebpack.findModule((m) => m.Component && m.PureComponent && m.useLayoutEffect);
+    window.SP_REACTDOM = DFLWebpack.findModule((m) => m.createPortal && m.createRoot);
+  }
+  console.debug('[Decky:Boot] Setting up @decky/ui...');
   window.DFL = await import('@decky/ui');
-  console.debug('Authenticating with Decky backend...');
+  console.debug('[Decky:Boot] Authenticating with Decky backend...');
   window.deckyAuthToken = await fetch('http://127.0.0.1:1337/auth/token').then((r) => r.text());
-  console.debug('Connecting to Decky backend...');
+  console.debug('[Decky:Boot] Connecting to Decky backend...');
   window.DeckyBackend = new (await import('./wsrouter')).WSRouter();
   await DeckyBackend.connect();
-  console.debug('Starting Decky!');
+  console.debug('[Decky:Boot] Starting Decky!');
   await import('./start');
 })();

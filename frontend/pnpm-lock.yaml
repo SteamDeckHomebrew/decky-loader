@@ -7,7 +7,7 @@ settings:
 dependencies:
   '@decky/ui':
     specifier: ^4.0.2
-    version: link:../../lib
+    version: 4.0.2
   filesize:
     specifier: ^10.1.2
     version: 10.1.2
@@ -56,10 +56,10 @@ devDependencies:
     specifier: ^11.1.6
     version: 11.1.6(rollup@4.18.0)(tslib@2.6.3)(typescript@5.4.5)
   '@types/react':
-    specifier: ^18.2.37
+    specifier: 18.3.3
     version: 18.3.3
   '@types/react-dom':
-    specifier: ^18.2.15
+    specifier: 18.3.0
     version: 18.3.0
   '@types/react-file-icon':
     specifier: ^1.0.4
@@ -334,6 +334,10 @@ packages:
   /@decky/api@1.0.4:
     resolution: {integrity: sha512-YChHjlk//lOiIM2tlNSd6Qk9aduFJOtG+uRv1JaTzLewPRj4dDeupC+mbJJfarMGYa4nsLnJ6BsubTqboeb+VQ==}
     dev: true
+
+  /@decky/ui@4.0.2:
+    resolution: {integrity: sha512-sU1Dz2dOyysEcXus3iix/7lgaR3V8H/0VPUHuQkiD7CibPw1ksUDYR2DUwNo48S0Pe4D4nDp9hOEOFyfrWWLDw==}
+    dev: false
 
   /@esbuild/aix-ppc64@0.20.2:
     resolution: {integrity: sha512-D+EBOJHXdNZcLJRBkhENNG8Wji2kgc9AZ9KiPr1JuZjsNtyHzrsfLRrY0tk2H2aoFu6RANO1y1iPPUCDYWkb5g==}

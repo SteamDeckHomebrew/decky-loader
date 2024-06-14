@@ -28,7 +28,7 @@ const DeckyToaster: FC<DeckyToasterProps> = () => {
   }
   useEffect(() => {
     // not actually node but TS is shit
-    let interval: NodeJS.Timeout | number | null;
+    let interval: number | null;
     if (renderedToast) {
       interval = setTimeout(
         () => {

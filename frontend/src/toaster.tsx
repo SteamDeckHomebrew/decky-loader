@@ -125,7 +125,7 @@ class Toaster extends Logger {
       }
     };
     const oRender = Object.getPrototypeOf(this.rNode.stateNode).render;
-    let int: NodeJS.Timeout | undefined;
+    let int: number | undefined;
     this.rNode.stateNode.render = (...args: any[]) => {
       const ret = oRender.call(this.rNode.stateNode, ...args);
       if (ret && !this?.node?.return?.return) {

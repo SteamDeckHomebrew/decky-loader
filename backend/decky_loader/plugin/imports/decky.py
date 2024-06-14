@@ -215,9 +215,11 @@ logger.setLevel(logging.INFO)
 """
 Event handling
 """
-# TODO better docstring im lazy
+# This is overriden with an actual implementation before being passed to any plugins 
+# in ../sandboxed_plugin.py 's initialize function
 async def emit(event: str, *args: Any) -> None:
     """
-    Send an event to the frontend.
+    Triggers all event listeners in the frontend waiting for `event`, passing the remaining `*args` as the arguments to each listener function.
+    (Event listeners are set up in the frontend via the `addEventListener` function from `@decky/api`)
     """
     pass

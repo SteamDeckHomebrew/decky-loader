@@ -6,7 +6,6 @@ interface PublicDeckyToasterState {
 }
 
 export class DeckyToasterState {
-  // TODO a set would be better
   private _toasts: Set<ToastData> = new Set();
 
   public eventBus = new EventTarget();

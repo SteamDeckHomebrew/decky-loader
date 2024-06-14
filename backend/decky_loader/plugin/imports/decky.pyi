@@ -177,8 +177,9 @@ logger: logging.Logger
 """
 Event handling
 """
-# TODO better docstring im lazy
+
 async def emit(event: str, *args: Any) -> None:
     """
-    Send an event to the frontend.
+    Triggers all event listeners in the frontend waiting for `event`, passing the remaining `*args` as the arguments to each listener function.
+    (Event listeners are set up in the frontend via the `addEventListener` function from `@decky/api`)
     """

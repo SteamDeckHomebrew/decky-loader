@@ -49,7 +49,12 @@ class ErrorBoundaryHook extends Logger {
     const react15069WorkaroundRegex = /    at .+\.componentDidCatch\..+\.callback /;
     this.errorCheckPatch = replacePatch(Object.getPrototypeOf(errorReportingStore), 'BIsBlacklisted', (args: any[]) => {
       const [errorSource, wasPlugin, shouldReport] = getLikelyErrorSourceFromValveError(args[0]);
-      this.debug('Caught an error', args, { errorSource, wasPlugin, shouldReport, skipAllReporting: this.doNotReportErrors });
+      this.debug('Caught an error', args, {
+        errorSource,
+        wasPlugin,
+        shouldReport,
+        skipAllReporting: this.doNotReportErrors,
+      });
       // react#15069 workaround. this took 2 hours to figure out.
       if (
         args[0]?.message?.[3]?.[0] &&

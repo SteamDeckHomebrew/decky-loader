@@ -13,6 +13,7 @@ declare global {
 class ErrorBoundaryHook extends Logger {
   private errorBoundaryPatch?: Patch;
   private errorCheckPatch?: Patch;
+  public doNotReportErrors: boolean = false;
 
   constructor() {
     super('ErrorBoundaryHook');
@@ -48,7 +49,7 @@ class ErrorBoundaryHook extends Logger {
     const react15069WorkaroundRegex = /    at .+\.componentDidCatch\..+\.callback /;
     this.errorCheckPatch = replacePatch(Object.getPrototypeOf(errorReportingStore), 'BIsBlacklisted', (args: any[]) => {
       const [errorSource, wasPlugin, shouldReport] = getLikelyErrorSourceFromValveError(args[0]);
-      this.debug('Caught an error', args, { errorSource, wasPlugin, shouldReport });
+      this.debug('Caught an error', args, { errorSource, wasPlugin, shouldReport, skipAllReporting: this.doNotReportErrors });
       // react#15069 workaround. this took 2 hours to figure out.
       if (
         args[0]?.message?.[3]?.[0] &&
@@ -58,6 +59,7 @@ class ErrorBoundaryHook extends Logger {
         this.debug('ignoring early report caused by react#15069');
         return true;
       }
+      if (this.doNotReportErrors) return true;
       return shouldReport ? callOriginal : true;
     });
 

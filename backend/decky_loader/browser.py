@@ -255,8 +255,8 @@ class PluginBrowser:
                 if not isInstalled:
                     current_plugin_order = self.settings.getSetting("pluginOrder")
                     current_plugin_order.append(name)
-                self.settings.setSetting("pluginOrder", current_plugin_order)
-                logger.debug("Plugin %s was added to the pluginOrder setting", name)
+                    self.settings.setSetting("pluginOrder", current_plugin_order)
+                    logger.debug("Plugin %s was added to the pluginOrder setting", name)
                 self.loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_folder)
             else:
                 logger.fatal(f"Failed Downloading Remote Binaries")

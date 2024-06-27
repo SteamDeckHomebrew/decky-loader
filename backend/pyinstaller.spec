@@ -6,8 +6,8 @@ from PyInstaller.utils.hooks import copy_metadata
 a = Analysis(
     ['main.py'],
     datas=[
-        ('locales', 'locales'),
-        ('static', 'static'),
+        ('decky_loader/locales', 'decky_loader/locales'),
+        ('decky_loader/static', 'decky_loader/static'),
     ] + copy_metadata('decky_loader'),
     hiddenimports=['logging.handlers', 'sqlite3', 'decky_plugin', 'decky'],
 )

@@ -8,7 +8,10 @@ packages = [
     {include = "decky_loader"},
     {include = "decky_loader/main.py"}
 ]
-include = ["decky_loader/static/*"]
+include = [
+  "decky_loader/locales/*",
+  "decky_loader/static/*"
+]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"

@@ -16,13 +16,13 @@ python = ">=3.10,<3.13"
 aiohttp = "^3.9.5"
 aiohttp-jinja2 = "^1.5.1"
 aiohttp-cors = "^0.7.0"
-watchdog = "^2.1.7"
+watchdog = "^4"
 certifi = "*"
-packaging = "^23.2"
+packaging = "^24"
 multidict = "^6.0.5"
 
 [tool.poetry.group.dev.dependencies]
-pyinstaller = "^5.13.0"
+pyinstaller = "^6.8.0"
 pyright = "^1.1.335"
 
 [tool.poetry.scripts]

@@ -12,6 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3 # Check out the repository first.
 
+      - name: Set up NodeJS 20 💎
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
       - name: Set up Python 3.10.6 🐍
         uses: actions/setup-python@v4
         with:

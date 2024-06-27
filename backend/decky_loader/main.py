@@ -88,7 +88,7 @@ class PluginManager:
 
         for route in list(self.web_app.router.routes()):
             self.cors.add(route) # pyright: ignore [reportUnknownMemberType]
-        self.web_app.add_routes([static("/static", path.join(path.dirname(__file__), '..', 'static'))])
+        self.web_app.add_routes([static("/static", path.join(path.dirname(__file__), 'static'))])
 
     def exception_handler(self, loop: AbstractEventLoop, context: Dict[str, str]):
         if context["message"] == "Unclosed connection":

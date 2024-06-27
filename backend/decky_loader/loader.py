@@ -106,12 +106,12 @@ class Loader:
                 self.watcher.disabled = False
 
     async def handle_frontend_assets(self, request: web.Request):
-        file = Path(__file__).parents[1].joinpath("static").joinpath(request.match_info["path"])
+        file = Path(__file__).parent.joinpath("static").joinpath(request.match_info["path"])
         return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
 
     async def handle_frontend_locales(self, request: web.Request):
         req_lang = request.match_info["path"]
-        file = Path(__file__).parents[1].joinpath("locales").joinpath(req_lang)
+        file = Path(__file__).parent.joinpath("locales").joinpath(req_lang)
         if exists(file):
             return web.FileResponse(file, headers={"Cache-Control": "no-cache", "Content-Type": "application/json"})
         else:

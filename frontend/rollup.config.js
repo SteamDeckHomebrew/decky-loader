@@ -14,7 +14,7 @@ const hiddenWarnings = ['THIS_IS_UNDEFINED', 'EVAL'];
 export default defineConfig({
   input: 'src/index.ts',
   plugins: [
-    del({ targets: '../backend/static/*', force: true }),
+    del({ targets: '../backend/decky_loader/static/*', force: true }),
     commonjs(),
     nodeResolve({
       browser: true,
@@ -38,7 +38,7 @@ export default defineConfig({
   ],
   preserveEntrySignatures: false,
   output: {
-    dir: '../backend/static',
+    dir: '../backend/decky_loader/static',
     format: 'esm',
     chunkFileNames: (chunkInfo) => {
       return 'chunk-[hash].js';

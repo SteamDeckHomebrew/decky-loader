@@ -135,7 +135,7 @@ class PluginBrowser:
             # logger.debug("current plugins: %s", snapshot_string)
             if name in self.plugins:
                 logger.debug("Plugin %s was found", name)
-                self.plugins[name].stop(uninstall=True)
+                await self.plugins[name].stop(uninstall=True)
                 logger.debug("Plugin %s was stopped", name)
                 del self.plugins[name]
                 logger.debug("Plugin %s was removed from the dictionary", name)
@@ -249,7 +249,7 @@ class PluginBrowser:
             if ret:
                 logger.info(f"Installed {name} (Version: {version})")
                 if name in self.loader.plugins:
-                    self.loader.plugins[name].stop()
+                    await self.loader.plugins[name].stop()
                     self.loader.plugins.pop(name, None)
                 await sleep(1)
                 if not isInstalled:
@@ -257,7 +257,7 @@ class PluginBrowser:
                     current_plugin_order.append(name)
                     self.settings.setSetting("pluginOrder", current_plugin_order)
                     logger.debug("Plugin %s was added to the pluginOrder setting", name)
-                self.loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_folder)
+                await self.loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_folder)
             else:
                 logger.fatal(f"Failed Downloading Remote Binaries")
         else:

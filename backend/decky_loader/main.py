@@ -101,7 +101,7 @@ class PluginManager:
     async def load_plugins(self):
         # await self.wait_for_server()
         logger.debug("Loading plugins")
-        self.plugin_loader.import_plugins()
+        await self.plugin_loader.import_plugins()
         if self.settings.getSetting("pluginOrder", None) == None:
           self.settings.setSetting("pluginOrder", list(self.plugin_loader.plugins.keys()))
           logger.debug("Did not find pluginOrder setting, set it to default")

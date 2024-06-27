@@ -108,11 +108,9 @@ class PluginWrapper:
         self._listener_task = create_task(self._response_listener())
         return self
 
-    def stop(self, uninstall: bool = False):
+    async def stop(self, uninstall: bool = False):
+        if hasattr(self, "_socket"):
+            await self._socket.write_single_line(dumps({ "stop": True, "uninstall": uninstall }, ensure_ascii=False))
+            await self._socket.close_socket_connection()
         if hasattr(self, "_listener_task"):
             self._listener_task.cancel()
-        async def _(self: PluginWrapper):
-            if hasattr(self, "_socket"):
-                await self._socket.write_single_line(dumps({ "stop": True, "uninstall": uninstall }, ensure_ascii=False))
-                await self._socket.close_socket_connection()
-        create_task(_(self))

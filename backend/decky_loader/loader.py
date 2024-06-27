@@ -140,7 +140,7 @@ class Loader:
         with open(path.join(self.plugin_path, plugin.plugin_directory, "dist/index.js"), "r", encoding="utf-8") as bundle:
             return web.Response(text=bundle.read(), content_type="application/javascript")
 
-    def import_plugin(self, file: str, plugin_directory: str, refresh: bool | None = False, batch: bool | None = False):
+    async def import_plugin(self, file: str, plugin_directory: str, refresh: bool | None = False, batch: bool | None = False):
         try:
             async def plugin_emitted_event(event: str, args: Any):
                 self.logger.debug(f"PLUGIN EMITTED EVENT: {event} with args {args}")
@@ -152,7 +152,7 @@ class Loader:
                         self.logger.info(f"Plugin {plugin.name} is already loaded and has requested to not be re-loaded")
                         return
                     else:
-                        self.plugins[plugin.name].stop()
+                        await self.plugins[plugin.name].stop()
                         self.plugins.pop(plugin.name, None)
             if plugin.passive:
                 self.logger.info(f"Plugin {plugin.name} is passive")
@@ -168,18 +168,18 @@ class Loader:
     async def dispatch_plugin(self, name: str, version: str | None, load_type: int = PluginLoadType.ESMODULE_V1.value):
         await self.ws.emit("loader/import_plugin", name, version, load_type)        
 
-    def import_plugins(self):
+    async def import_plugins(self):
         self.logger.info(f"import plugins from {self.plugin_path}")
 
         directories = [i for i in listdir(self.plugin_path) if path.isdir(path.join(self.plugin_path, i)) and path.isfile(path.join(self.plugin_path, i, "plugin.json"))]
         for directory in directories:
             self.logger.info(f"found plugin: {directory}")
-            self.import_plugin(path.join(self.plugin_path, directory, "main.py"), directory, False, True)
+            await self.import_plugin(path.join(self.plugin_path, directory, "main.py"), directory, False, True)
 
     async def handle_reloads(self):
         while True:
             args = await self.reload_queue.get()
-            self.import_plugin(*args) # pyright: ignore [reportArgumentType]
+            await self.import_plugin(*args) # pyright: ignore [reportArgumentType]
 
     async def handle_plugin_method_call_legacy(self, plugin_name: str, method_name: str, kwargs: Dict[Any, Any]):
         res: Dict[Any, Any] = {}

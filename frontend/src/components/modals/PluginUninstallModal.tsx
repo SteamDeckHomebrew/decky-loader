@@ -21,6 +21,7 @@ const PluginUninstallModal: FC<PluginUninstallModalProps> = ({ name, title, butt
         // we invalidate here so if you re-install it, you won't have an out-of-date hidden filter
         await DeckyPluginLoader.frozenPluginsService.invalidate();
         await DeckyPluginLoader.hiddenPluginsService.invalidate();
+        closeModal?.();
       }}
       strTitle={title}
       strOKButtonText={buttonText}

@@ -1,5 +1,5 @@
 // TabsHook for versions after the Desktop merge
-import { Patch, QuickAccessTab, afterPatch, findInReactTree, getReactRoot, sleep } from '@decky/ui';
+import { ErrorBoundary, Patch, QuickAccessTab, afterPatch, findInReactTree, getReactRoot, sleep } from '@decky/ui';
 
 import { QuickAccessVisibleStateProvider } from './components/QuickAccessVisibleState';
 import Logger from './logger';
@@ -147,7 +147,7 @@ class TabsHook extends Logger {
         decky: true,
         initialVisibility: visible,
       };
-      tab.panel = <QuickAccessVisibleStateProvider tab={tab}>{content}</QuickAccessVisibleStateProvider>;
+      tab.panel = <ErrorBoundary><QuickAccessVisibleStateProvider tab={tab}>{content}</QuickAccessVisibleStateProvider></ErrorBoundary>;
       existingTabs.push(tab);
     }
   }

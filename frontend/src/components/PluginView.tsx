@@ -1,4 +1,4 @@
-import { ButtonItem, Focusable, PanelSection, PanelSectionRow } from '@decky/ui';
+import { ButtonItem, ErrorBoundary, Focusable, PanelSection, PanelSectionRow } from '@decky/ui';
 import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaEyeSlash } from 'react-icons/fa';
@@ -29,7 +29,9 @@ const PluginView: FC = () => {
       <Focusable onCancelButton={closeActivePlugin}>
         <TitleView />
         <div style={{ height: '100%', paddingTop: '16px' }}>
-          {(visible || activePlugin.alwaysRender) && activePlugin.content}
+          <ErrorBoundary>
+            {(visible || activePlugin.alwaysRender) && activePlugin.content}
+          </ErrorBoundary>
         </div>
       </Focusable>
     );

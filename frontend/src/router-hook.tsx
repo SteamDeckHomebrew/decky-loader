@@ -1,4 +1,4 @@
-import { Export, Patch, afterPatch, findModuleExport } from '@decky/ui';
+import { ErrorBoundary, Focusable, Patch, afterPatch } from '@decky/ui';
 import { FC, ReactElement, ReactNode, cloneElement, createElement, memo } from 'react';
 import type { Route } from 'react-router';
 
@@ -41,9 +41,7 @@ class RouterHook extends Logger {
     window.__ROUTER_HOOK_INSTANCE?.deinit?.();
     window.__ROUTER_HOOK_INSTANCE = this;
 
-    this.gamepadWrapper = findModuleExport((e: Export) =>
-      e?.render?.toString()?.includes('["flow-children","onActivate","onCancel","focusClassName",'),
-    );
+    this.gamepadWrapper = Focusable;
 
     let Route: new () => Route;
     // Used to store the new replicated routes we create to allow routes to be unpatched.
@@ -63,7 +61,9 @@ class RouterHook extends Logger {
           routes.forEach(({ component, props }, path) => {
             newRouterArray.push(
               <Route path={path} {...props}>
-                {createElement(component)}
+                <ErrorBoundary>
+                  {createElement(component)}
+                </ErrorBoundary>
               </Route>,
             );
           });

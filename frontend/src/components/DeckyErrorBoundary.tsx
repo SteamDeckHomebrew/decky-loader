@@ -32,8 +32,9 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
   const [debugAllowed, setDebugAllowed] = useState<boolean>(true);
   // Intentionally doesn't use DeckyState.
   const [versionInfo, setVersionInfo] = useState<VerInfo>();
-  const [errorSource, wasCausedByPlugin] = getLikelyErrorSourceFromValveReactError(error);
+  const [errorSource, wasCausedByPlugin, shouldReportToValve] = getLikelyErrorSourceFromValveReactError(error);
   useEffect(() => {
+    if (!shouldReportToValve) DeckyPluginLoader.errorBoundaryHook.temporarilyDisableReporting();
     DeckyPluginLoader.updateVersion().then(setVersionInfo);
   }, []);
   return (
@@ -64,7 +65,7 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
             userSelect: 'auto',
           }}
         >
-          ⚠️ An error occured rendering this content.
+          ⚠️ An error occured while rendering this content.
         </h1>
         <pre style={{}}>
           <code>

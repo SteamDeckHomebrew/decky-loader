@@ -147,7 +147,11 @@ class TabsHook extends Logger {
         decky: true,
         initialVisibility: visible,
       };
-      tab.panel = <ErrorBoundary><QuickAccessVisibleStateProvider tab={tab}>{content}</QuickAccessVisibleStateProvider></ErrorBoundary>;
+      tab.panel = (
+        <ErrorBoundary>
+          <QuickAccessVisibleStateProvider tab={tab}>{content}</QuickAccessVisibleStateProvider>
+        </ErrorBoundary>
+      );
       existingTabs.push(tab);
     }
   }

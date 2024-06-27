@@ -56,7 +56,7 @@ class ErrorBoundaryHook extends Logger {
         shouldReport,
         skipAllReporting: this.doNotReportErrors || this.disableReportingTimer,
       });
-    if (!shouldReport) this.temporarilyDisableReporting();
+      if (!shouldReport) this.temporarilyDisableReporting();
       // react#15069 workaround. this took 2 hours to figure out.
       if (
         args[0]?.message?.[3]?.[0] &&
@@ -95,14 +95,14 @@ class ErrorBoundaryHook extends Logger {
   }
 
   public temporarilyDisableReporting() {
-    this.debug("Reporting disabled for 30s due to a non-steam error.");
+    this.debug('Reporting disabled for 30s due to a non-steam error.');
     if (this.disableReportingTimer) {
       clearTimeout(this.disableReportingTimer);
     }
     this.disableReportingTimer = setTimeout(() => {
-      this.debug("Reporting re-enabled after 30s timeout.");
+      this.debug('Reporting re-enabled after 30s timeout.');
       this.disableReportingTimer = 0;
-    }, 30000)
+    }, 30000);
   }
 
   deinit() {

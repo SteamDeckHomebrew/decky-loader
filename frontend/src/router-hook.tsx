@@ -61,9 +61,7 @@ class RouterHook extends Logger {
           routes.forEach(({ component, props }, path) => {
             newRouterArray.push(
               <Route path={path} {...props}>
-                <ErrorBoundary>
-                  {createElement(component)}
-                </ErrorBoundary>
+                <ErrorBoundary>{createElement(component)}</ErrorBoundary>
               </Route>,
             );
           });

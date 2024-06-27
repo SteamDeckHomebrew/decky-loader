@@ -22,7 +22,7 @@ export function getLikelyErrorSourceFromValveError(error: ValveError): ErrorSour
 }
 
 export function getLikelyErrorSourceFromValveReactError(error: ValveReactErrorInfo): ErrorSource {
-  return getLikelyErrorSource(error?.error?.stack + "\n" + error.info.componentStack);
+  return getLikelyErrorSource(error?.error?.stack + '\n' + error.info.componentStack);
 }
 
 export function getLikelyErrorSource(error?: string): ErrorSource {

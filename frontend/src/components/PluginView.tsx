@@ -29,9 +29,7 @@ const PluginView: FC = () => {
       <Focusable onCancelButton={closeActivePlugin}>
         <TitleView />
         <div style={{ height: '100%', paddingTop: '16px' }}>
-          <ErrorBoundary>
-            {(visible || activePlugin.alwaysRender) && activePlugin.content}
-          </ErrorBoundary>
+          <ErrorBoundary>{(visible || activePlugin.alwaysRender) && activePlugin.content}</ErrorBoundary>
         </div>
       </Focusable>
     );

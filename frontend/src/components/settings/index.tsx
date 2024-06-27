@@ -1,13 +1,14 @@
 import { SidebarNavigation } from 'decky-frontend-lib';
 import { lazy } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaCode, FaFlask, FaPlug } from 'react-icons/fa';
+import { FaCode, FaFileCode, FaFlask, FaPlug } from 'react-icons/fa';
 
 import { useSetting } from '../../utils/hooks/useSetting';
 import DeckyIcon from '../DeckyIcon';
 import WithSuspense from '../WithSuspense';
 import GeneralSettings from './pages/general';
 import PluginList from './pages/plugin_list';
+import LogViewerPage from '../logviewer';
 
 const DeveloperSettings = lazy(() => import('./pages/developer'));
 const TestingMenu = lazy(() => import('./pages/testing'));
@@ -30,6 +31,16 @@ export default function SettingsPage() {
       icon: <FaPlug />,
     },
     {
+      title: t('SettingsIndex.log_viewer', "Log Viewer"),
+      content: (
+        <WithSuspense>
+          <LogViewerPage/>
+        </WithSuspense>
+      ),
+      route: '/decky/settings/logs',
+      icon: <FaFileCode />
+    },
+    {
       title: t('SettingsIndex.developer_title'),
       content: (
         <WithSuspense>
@@ -50,7 +61,7 @@ export default function SettingsPage() {
       route: '/decky/settings/testing',
       icon: <FaFlask />,
       visible: isDeveloper,
-    },
+    }
   ];
 
   return <SidebarNavigation pages={pages} />;

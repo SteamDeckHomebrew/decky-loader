@@ -159,7 +159,7 @@ class PluginManager:
             if ON_LINUX and await tab.has_global_var("deckyHasLoaded", False):
                 await restart_webhelper()
                 return # We'll catch the next tab in the main loop
-            await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => SteamClient.Browser.RestartJSContext(), 100)}else{window.deckyHasLoaded = true;(async()=>{try{while(!window.webpackChunksteamui){await new Promise(r => setTimeout(r, 10))};await import('http://localhost:1337/frontend/index.js?v=%s')}catch(e){console.error(e)};})();}}catch(e){console.error(e)}" % (get_loader_version(), ), False, False, False)
+            await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => SteamClient.Browser.RestartJSContext(), 100)}else{window.deckyHasLoaded = true;(async()=>{try{await import('http://localhost:1337/frontend/index.js?v=%s')}catch(e){console.error(e)};})();}}catch(e){console.error(e)}" % (get_loader_version(), ), False, False, False)
         except:
             logger.info("Failed to inject JavaScript into tab\n" + format_exc())
             pass

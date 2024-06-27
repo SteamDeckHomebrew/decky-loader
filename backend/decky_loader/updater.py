@@ -266,7 +266,7 @@ class Updater:
         #Get all the associated workflow run for the given sha_id code hash
         async with ClientSession() as web:
             async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/actions/runs", 
-                    headers={'X-GitHub-Api-Version': '2022-11-28'}, params={'event':'pull_request', 'head_sha': sha_id}, ssl=helpers.get_ssl_context()) as res:
+                    headers={'X-GitHub-Api-Version': '2022-11-28'}, params={'head_sha': sha_id}, ssl=helpers.get_ssl_context()) as res:
                 works = await res.json()
         #Iterate over the workflow_run to get the two builds if they exists
         for work in works['workflow_runs']:

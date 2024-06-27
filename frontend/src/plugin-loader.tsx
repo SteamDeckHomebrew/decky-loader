@@ -62,9 +62,9 @@ const callPluginMethod = DeckyBackend.callable<[pluginName: string, method: stri
 
 class PluginLoader extends Logger {
   private plugins: Plugin[] = [];
-  private errorBoundaryHook: ErrorBoundaryHook = new ErrorBoundaryHook();
+  public errorBoundaryHook: ErrorBoundaryHook = new ErrorBoundaryHook();
   private tabsHook: TabsHook = new TabsHook();
-  private routerHook: RouterHook = new RouterHook();
+  public routerHook: RouterHook = new RouterHook();
   public toaster: Toaster = new Toaster();
   private deckyState: DeckyState = new DeckyState();
   // stores a map of plugin names to all their event listeners
@@ -324,7 +324,7 @@ class PluginLoader extends Logger {
     }
 
     try {
-      this.reloadLock = true;
+      if (useQueue) this.reloadLock = true;
       this.log(`Trying to load ${name}`);
 
       this.unloadPlugin(name);

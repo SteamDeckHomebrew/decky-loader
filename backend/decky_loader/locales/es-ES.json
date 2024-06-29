@@ -68,9 +68,6 @@
     "FilePickerIndex": {
         "folder": {
             "select": "Usar esta carpeta"
-        },
-        "filter": {
-            "modified_desc": ""
         }
     },
     "PluginListIndex": {
@@ -216,10 +213,5 @@
         "hidden_one": "",
         "hidden_many": "",
         "hidden_other": ""
-    },
-    "DropdownMultiselect": {
-        "button": {
-            "back": ""
-        }
     }
 }

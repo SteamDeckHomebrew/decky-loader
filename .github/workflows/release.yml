@@ -132,7 +132,7 @@ jobs:
     needs: [create_tag, build]
     steps:
       - name: Fetch package artifact ⬇️
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: PluginLoader
 

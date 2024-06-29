@@ -65,16 +65,8 @@
         },
         "confirm": "Är du säker på att du vill göra följande ändringar?"
     },
-    "PluginInstallModal": {
-        "reinstall": {
-            "desc": ""
-        }
-    },
     "PluginListIndex": {
         "no_plugin": ""
-    },
-    "PluginListLabel": {
-        "hidden": ""
     },
     "PluginLoader": {
         "plugin_uninstall": {
@@ -82,40 +74,21 @@
         }
     },
     "SettingsDeveloperIndex": {
-        "react_devtools": {
-            "desc": ""
-        },
         "third_party_plugins": {
             "label_desc": ""
-        }
-    },
-    "SettingsGeneralIndex": {
-        "notifications": {
-            "header": ""
         }
     },
     "SettingsIndex": {
         "testing_title": ""
     },
     "Store": {
-        "store_source": {
-            "desc": ""
-        },
         "store_tabs": {
             "downloads_desc": ""
-        }
-    },
-    "StoreSelect": {
-        "store_channel": {
-            "default": ""
         }
     },
     "Updater": {
         "updates": {
             "check_button": ""
         }
-    },
-    "Testing": {
-        "download": ""
     }
 }

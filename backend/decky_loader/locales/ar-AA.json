@@ -107,35 +107,17 @@
     "Developer": {
         "5secreload": "إعادة التحميل في 5 ثواني"
     },
-    "SettingsGeneralIndex": {
-        "notifications": {
-            "header": ""
-        }
-    },
     "Store": {
         "store_contrib": {
             "desc": ""
-        },
-        "store_source": {
-            "label": ""
         },
         "store_tabs": {
             "title": ""
         }
     },
-    "StoreSelect": {
-        "store_channel": {
-            "label": ""
-        }
-    },
     "Updater": {
         "updates": {
             "checking": ""
-        }
-    },
-    "FilePickerError": {
-        "errors": {
-            "file_not_found": ""
         }
     }
 }

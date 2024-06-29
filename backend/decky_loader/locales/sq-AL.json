@@ -22,9 +22,6 @@
     "FilePickerIndex": {
         "folder": {
             "select": "Përdore këtë folder"
-        },
-        "filter": {
-            "size_desc": ""
         }
     },
     "PluginCard": {
@@ -67,8 +64,7 @@
         "no_plugin": "Nuk ka shtesa të instaluar!",
         "uninstall": "Çinstalo",
         "update_all_one": "",
-        "update_all_other": "",
-        "reload": ""
+        "update_all_other": ""
     },
     "SettingsGeneralIndex": {
         "other": {
@@ -114,8 +110,7 @@
     "Updater": {
         "updates": {
             "cur_version": "Versioni e tanishëme: {{ver}}"
-        },
-        "decky_updates": ""
+        }
     },
     "MultiplePluginsInstallModal": {
         "title": {
@@ -132,10 +127,5 @@
     "PluginView": {
         "hidden_one": "",
         "hidden_other": ""
-    },
-    "FilePickerError": {
-        "errors": {
-            "perm_denied": ""
-        }
     }
 }

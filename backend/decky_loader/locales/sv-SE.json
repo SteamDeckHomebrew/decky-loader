@@ -66,49 +66,31 @@
         "confirm": "Är du säker på att du vill göra följande ändringar?"
     },
     "PluginInstallModal": {
-        "update": {
-            "button_idle": ""
-        },
         "reinstall": {
-            "desc": ""
-        },
-        "install": {
             "desc": ""
         }
     },
     "PluginListIndex": {
-        "no_plugin": "",
-        "show": ""
+        "no_plugin": ""
     },
     "PluginListLabel": {
         "hidden": ""
     },
     "PluginLoader": {
-        "plugin_error_uninstall": "",
         "plugin_uninstall": {
             "desc": ""
         }
     },
     "SettingsDeveloperIndex": {
-        "cef_console": {
-            "button": ""
-        },
         "react_devtools": {
             "desc": ""
         },
         "third_party_plugins": {
-            "button_zip": "",
             "label_desc": ""
         }
     },
     "SettingsGeneralIndex": {
-        "about": {
-            "header": ""
-        },
         "notifications": {
-            "header": ""
-        },
-        "beta": {
             "header": ""
         }
     },
@@ -116,18 +98,11 @@
         "testing_title": ""
     },
     "Store": {
-        "store_filter": {
-            "label_def": ""
-        },
         "store_source": {
             "desc": ""
         },
         "store_tabs": {
-            "alph_desc": "",
             "downloads_desc": ""
-        },
-        "store_testing_warning": {
-            "label": ""
         }
     },
     "StoreSelect": {
@@ -135,19 +110,12 @@
             "default": ""
         }
     },
-    "TitleView": {
-        "settings_desc": ""
-    },
     "Updater": {
         "updates": {
-            "check_button": "",
-            "label": ""
+            "check_button": ""
         }
     },
     "Testing": {
         "download": ""
-    },
-    "PluginCard": {
-        "plugin_version_label": ""
     }
 }

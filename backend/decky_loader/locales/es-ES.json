@@ -69,12 +69,8 @@
         "folder": {
             "select": "Usar esta carpeta"
         },
-        "files": {
-            "file_type": ""
-        },
         "filter": {
-            "modified_desc": "",
-            "size_desc": ""
+            "modified_desc": ""
         }
     },
     "PluginListIndex": {
@@ -86,8 +82,7 @@
         "update_all_one": "Actualizar 1 plugin",
         "update_all_many": "Actualizar {{count}} plugins",
         "update_all_other": "Actualizar {{count}} plugins",
-        "update_to": "Actualizar a {{name}}",
-        "unfreeze": ""
+        "update_to": "Actualizar a {{name}}"
     },
     "PluginLoader": {
         "error": "Error",
@@ -152,8 +147,7 @@
             "about": "Información",
             "title": "Navegar",
             "alph_asce": "Alfabéticamente (Z-A)",
-            "alph_desc": "Alfabéticamente (A-Z)",
-            "downloads_desc": ""
+            "alph_desc": "Alfabéticamente (A-Z)"
         },
         "store_testing_cta": "¡Por favor considera probar plugins nuevos para ayudar al equipo de Decky Loader!",
         "store_source": {
@@ -222,9 +216,6 @@
         "hidden_one": "",
         "hidden_many": "",
         "hidden_other": ""
-    },
-    "PluginListLabel": {
-        "hidden": ""
     },
     "DropdownMultiselect": {
         "button": {

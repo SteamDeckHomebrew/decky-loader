@@ -625,9 +625,9 @@ class PluginLoader extends Logger {
       routerHook: this.routerHook,
       toaster: this.toaster,
       // Legacy
-      callServerMethod: this.callServerMethod,
-      openFilePicker: this.openFilePickerLegacy,
-      openFilePickerV2: this.openFilePicker,
+      callServerMethod: this.callServerMethod.bind(this),
+      openFilePicker: this.openFilePickerLegacy.bind(this),
+      openFilePickerV2: this.openFilePicker.bind(this),
       // Legacy
       async callPluginMethod(methodName: string, args = {}) {
         return DeckyBackend.call<[pluginName: string, methodName: string, kwargs: any], any>(
@@ -637,7 +637,7 @@ class PluginLoader extends Logger {
           args,
         );
       },
-      fetchNoCors: this.legacyFetchNoCors,
+      fetchNoCors: this.legacyFetchNoCors.bind(this),
       executeInTab: DeckyBackend.callable<
         [tab: String, runAsync: Boolean, code: string],
         { success: boolean; result: any }

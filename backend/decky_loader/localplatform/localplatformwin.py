@@ -53,3 +53,6 @@ def get_unprivileged_path() -> str:
 
 def get_unprivileged_user() -> str:
     return os.getenv("UNPRIVILEGED_USER", os.getlogin())
+
+async def restart_webhelper() -> bool:
+    return True # Stubbed

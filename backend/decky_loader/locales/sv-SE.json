@@ -65,17 +65,7 @@
         },
         "confirm": "Är du säker på att du vill göra följande ändringar?"
     },
-    "PluginLoader": {
-        "plugin_uninstall": {
-            "desc": ""
-        }
-    },
     "SettingsIndex": {
         "testing_title": ""
-    },
-    "Updater": {
-        "updates": {
-            "check_button": ""
-        }
     }
 }

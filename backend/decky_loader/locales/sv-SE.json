@@ -65,26 +65,13 @@
         },
         "confirm": "Är du säker på att du vill göra följande ändringar?"
     },
-    "PluginListIndex": {
-        "no_plugin": ""
-    },
     "PluginLoader": {
         "plugin_uninstall": {
             "desc": ""
         }
     },
-    "SettingsDeveloperIndex": {
-        "third_party_plugins": {
-            "label_desc": ""
-        }
-    },
     "SettingsIndex": {
         "testing_title": ""
-    },
-    "Store": {
-        "store_tabs": {
-            "downloads_desc": ""
-        }
     },
     "Updater": {
         "updates": {

@@ -108,16 +108,8 @@
         "5secreload": "إعادة التحميل في 5 ثواني"
     },
     "Store": {
-        "store_contrib": {
-            "desc": ""
-        },
         "store_tabs": {
             "title": ""
-        }
-    },
-    "Updater": {
-        "updates": {
-            "checking": ""
         }
     }
 }

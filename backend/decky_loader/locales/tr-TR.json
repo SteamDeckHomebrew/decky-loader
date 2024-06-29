@@ -41,8 +41,7 @@
         "confirm": "Aşağıdaki değişiklikleri yapmak istediğinizden emin misiniz?",
         "description": {
             "install": "Yükle {{name}} {{version}}",
-            "reinstall": "Yeniden yükle {{name}} {{version}}",
-            "update": ""
+            "reinstall": "Yeniden yükle {{name}} {{version}}"
         },
         "ok_button": {
             "idle": "Onayla",
@@ -58,8 +57,7 @@
     "PluginCard": {
         "plugin_full_access": "Bu eklenti Steam Deck'inize tam erişime sahiptir.",
         "plugin_install": "Yükle",
-        "plugin_version_label": "Eklenti Versiyonu",
-        "plugin_no_desc": ""
+        "plugin_version_label": "Eklenti Versiyonu"
     },
     "PluginInstallModal": {
         "install": {
@@ -79,8 +77,7 @@
             "button_processing": "Güncelleniyor",
             "title": "Güncelle {{artifact}}",
             "desc": "Güncellemek istediğinizden emin misiniz {{artifact}} {{version}}?"
-        },
-        "no_hash": ""
+        }
     },
     "PluginListIndex": {
         "freeze": "Güncellemeleri durdur",
@@ -93,7 +90,6 @@
         "uninstall": "Kaldır",
         "update_all_one": "1 eklentiyi güncelle",
         "update_all_other": "{{count}} eklentiyi güncelle",
-        "reload": "",
         "update_to": ""
     },
     "PluginListLabel": {
@@ -113,19 +109,16 @@
             "title": "Kaldır {{name}}"
         },
         "plugin_update_one": "1 eklenti için güncelleme mevcut!",
-        "plugin_update_other": "{{count}} eklenti için güncelleme mevcut!",
-        "plugin_error_uninstall": ""
+        "plugin_update_other": "{{count}} eklenti için güncelleme mevcut!"
     },
     "SettingsDeveloperIndex": {
         "cef_console": {
             "button": "Konsolu Aç",
-            "desc": "",
             "label": ""
         },
         "header": "Diğer",
         "react_devtools": {
             "ip_label": "IP",
-            "desc": "",
             "label": ""
         },
         "third_party_plugins": {
@@ -137,9 +130,7 @@
             "label_zip": "ZIP Dosyasından Eklenti Yükle"
         },
         "valve_internal": {
-            "desc1": "",
-            "desc2": "",
-            "label": ""
+            "desc2": ""
         }
     },
     "SettingsGeneralIndex": {
@@ -168,13 +159,11 @@
     "SettingsIndex": {
         "developer_title": "Geliştirici",
         "general_title": "Genel",
-        "plugins_title": "Eklentiler",
-        "testing_title": ""
+        "plugins_title": "Eklentiler"
     },
     "Store": {
         "store_contrib": {
-            "label": "Katkıda Bulunma",
-            "desc": ""
+            "label": "Katkıda Bulunma"
         },
         "store_filter": {
             "label": "Filtre",
@@ -188,8 +177,7 @@
             "label_def": "Son Güncellenme (En Yeni)"
         },
         "store_source": {
-            "label": "Kaynak Kodu",
-            "desc": ""
+            "label": "Kaynak Kodu"
         },
         "store_tabs": {
             "about": "Hakkında",
@@ -202,20 +190,16 @@
             "downloads_asce": "Önce En Az İndirilen"
         },
         "store_testing_warning": {
-            "desc": "",
             "label": ""
-        },
-        "store_testing_cta": ""
+        }
     },
     "StoreSelect": {
         "custom_store": {
-            "url_label": "URL",
-            "label": ""
+            "url_label": "URL"
         },
         "store_channel": {
             "custom": "Özel",
             "default": "Varsayılan",
-            "label": "",
             "testing": ""
         }
     },
@@ -234,7 +218,6 @@
             "install_button": "Güncellemeyi Yükle",
             "label": "Güncellemeler",
             "updating": "Güncelleniyor",
-            "lat_version": "",
             "reloading": ""
         }
     },
@@ -244,7 +227,6 @@
     "FilePickerError": {
         "errors": {
             "file_not_found": "Belirtilen yol geçerli değil. Lütfen yolu kontrol edin ve doğru şekilde yeniden girin.",
-            "perm_denied": "",
             "unknown": ""
         }
     },
@@ -254,13 +236,10 @@
     },
     "RemoteDebugging": {
         "remote_cef": {
-            "desc": "",
             "label": ""
         }
     },
     "Developer": {
-        "5secreload": "",
-        "disabling": "",
-        "enabling": ""
+        "disabling": ""
     }
 }

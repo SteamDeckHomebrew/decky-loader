@@ -76,7 +76,6 @@
         "update_all_other": "Ενημέρωση {{count}} επεκτάσεων",
         "show": "Γρήγορη πρόσβαση: Εμφάνιση",
         "hide": "Γρήγορη πρόσβαση: Απόκρυψη",
-        "freeze": "",
         "unfreeze": ""
     },
     "PluginLoader": {
@@ -128,8 +127,7 @@
     "SettingsIndex": {
         "plugins_title": "Επεκτάσεις",
         "developer_title": "Προγραμματιστής",
-        "general_title": "Γενικά",
-        "testing_title": ""
+        "general_title": "Γενικά"
     },
     "Store": {
         "store_contrib": {
@@ -156,9 +154,7 @@
             "alph_asce": "Αλφαβητικά (Ζ σε Α)",
             "alph_desc": "Αλφαβητικά (Α σε Ζ)",
             "title": "Περιήγηση",
-            "date_asce": "",
             "date_desc": "",
-            "downloads_asce": "",
             "downloads_desc": ""
         },
         "store_testing_cta": "Παρακαλώ σκεφτείτε να τεστάρετε νέες επεκτάσεις για να βοηθήσετε την ομάδα του Decky Loader!",
@@ -263,8 +259,5 @@
             "perm_denied": "Δεν έχετε πρόσβαση στην καθορισμένη διαδρομή. Ελέγξτε εάν ο χρήστης σας (deck στο Steam Deck) έχει τα αντίστοιχα δικαιώματα πρόσβασης στον καθορισμένο φάκελο/αρχείο.",
             "unknown": "Παρουσιάστηκε άγνωστο σφάλμα. Το σφάλμα είναι: {{raw_error}}"
         }
-    },
-    "Testing": {
-        "download": ""
     }
 }

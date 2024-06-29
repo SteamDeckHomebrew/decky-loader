@@ -91,7 +91,6 @@
         "update_all_other": "{{count}} 個のプラグインをアップデート",
         "show": "クイックアクセス: 表示",
         "update_to": "{{name}} を更新",
-        "unfreeze": "",
         "freeze": ""
     },
     "PluginListLabel": {
@@ -168,8 +167,7 @@
     "SettingsIndex": {
         "developer_title": "開発者",
         "plugins_title": "プラグイン",
-        "general_title": "一般",
-        "testing_title": ""
+        "general_title": "一般"
     },
     "Store": {
         "store_filter": {
@@ -192,9 +190,7 @@
             "alph_desc": "アルファベット(A to Z)",
             "title": "閲覧",
             "about": "概要",
-            "date_asce": "",
             "date_desc": "",
-            "downloads_asce": "",
             "downloads_desc": ""
         },
         "store_testing_warning": {
@@ -256,8 +252,5 @@
             "label": "リモート CEF デバッグを許可する",
             "desc": "ネットワーク上のすべてのユーザーにCEFデバッガへの非認証アクセスを許可します"
         }
-    },
-    "Testing": {
-        "download": ""
     }
 }

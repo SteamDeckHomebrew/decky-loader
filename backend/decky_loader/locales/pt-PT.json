@@ -94,7 +94,6 @@
         "reload": "Recarregar",
         "show": "Acesso rápido: Mostrar",
         "hide": "Acesso rápido: Ocultar",
-        "freeze": "",
         "unfreeze": ""
     },
     "BranchSelect": {
@@ -189,8 +188,7 @@
     "SettingsIndex": {
         "developer_title": "Programador",
         "general_title": "Geral",
-        "plugins_title": "Plugins",
-        "testing_title": ""
+        "plugins_title": "Plugins"
     },
     "Store": {
         "store_contrib": {
@@ -217,9 +215,7 @@
             "alph_asce": "Alfabeticamente (Z-A)",
             "alph_desc": "Alfabeticamente (A-Z)",
             "title": "Navegar",
-            "date_asce": "",
             "date_desc": "",
-            "downloads_asce": "",
             "downloads_desc": ""
         },
         "store_testing_cta": "Testa novos plugins e ajuda a equipa do Decky Loader!",
@@ -270,8 +266,5 @@
         "button": {
             "back": "Voltar"
         }
-    },
-    "Testing": {
-        "download": ""
     }
 }

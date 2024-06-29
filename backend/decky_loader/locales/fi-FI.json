@@ -109,7 +109,6 @@
         "update_to": "Päivitä versioon {{name}}",
         "hide": "Pikavalikko: Piilota",
         "show": "Pikavalikko: Näytä",
-        "freeze": "",
         "unfreeze": ""
     },
     "PluginListLabel": {
@@ -190,8 +189,7 @@
     "SettingsIndex": {
         "developer_title": "Kehittäjä",
         "general_title": "Yleinen",
-        "plugins_title": "Laajennukset",
-        "testing_title": ""
+        "plugins_title": "Laajennukset"
     },
     "Store": {
         "store_contrib": {
@@ -218,9 +216,7 @@
             "alph_asce": "Aakkosjärjestyksessä (Z–A)",
             "alph_desc": "Aakkosjärjestyksessä (A–Z)",
             "title": "Selaa",
-            "date_asce": "",
             "date_desc": "",
-            "downloads_asce": "",
             "downloads_desc": ""
         },
         "store_testing_cta": "Harkitse uusien lisäosien testaamista auttaaksesi Decky Loader -tiimiä!",
@@ -263,8 +259,5 @@
     "PluginView": {
         "hidden_one": "Yksi laajennus on piilotettu tästä luettelosta",
         "hidden_other": "{{count}} laajennusta on piilotettu tästä luettelosta"
-    },
-    "Testing": {
-        "download": ""
     }
 }

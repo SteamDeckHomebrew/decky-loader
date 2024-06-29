@@ -109,7 +109,6 @@
         "show": "Бърз достъп: Показване",
         "update_all_one": "Обновяване на 1 добавка",
         "update_all_other": "Обновяване на {{count}} добавки",
-        "freeze": "",
         "unfreeze": ""
     },
     "PluginListLabel": {
@@ -190,8 +189,7 @@
     "SettingsIndex": {
         "developer_title": "Разработчик",
         "general_title": "Общи",
-        "plugins_title": "Добавки",
-        "testing_title": ""
+        "plugins_title": "Добавки"
     },
     "Store": {
         "store_contrib": {
@@ -218,14 +216,11 @@
             "alph_asce": "По азбучен ред (Я -> А)",
             "alph_desc": "По азбучен ред (А -> Я)",
             "title": "Разглеждане",
-            "date_asce": "",
             "date_desc": "",
-            "downloads_asce": "",
             "downloads_desc": ""
         },
         "store_testing_cta": "Помислете дали искате да тествате новите добавки, за да помогнете на екипа на Decky Loader!",
         "store_testing_warning": {
-            "desc": "",
             "label": ""
         }
     },
@@ -261,10 +256,6 @@
         "hidden_other": "{{count}} добавки са скрити от този списък"
     },
     "TitleView": {
-        "decky_store_desc": "",
         "settings_desc": ""
-    },
-    "Testing": {
-        "download": ""
     }
 }

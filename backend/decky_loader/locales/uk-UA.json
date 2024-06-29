@@ -15,25 +15,16 @@
     "FilePickerIndex": {
         "folder": {
             "select": "Використовувати цю папку",
-            "label": "",
             "show_more": ""
         },
         "filter": {
-            "created_asce": "",
             "created_desc": "",
-            "modified_asce": "",
             "modified_desc": "",
-            "name_asce": "",
             "name_desc": "",
-            "size_asce": "",
             "size_desc": ""
-        },
-        "file": {
-            "select": ""
         },
         "files": {
             "all_files": "",
-            "file_type": "",
             "show_hidden": ""
         }
     },
@@ -105,7 +96,6 @@
         "update_all_one": "Оновити 1 плагін",
         "update_all_few": "Оновити {{count}} плагінів",
         "update_all_many": "Оновити {{count}} плагінів",
-        "unfreeze": "",
         "freeze": ""
     },
     "PluginLoader": {
@@ -170,16 +160,13 @@
             "header": "Оновлення"
         },
         "notifications": {
-            "decky_updates_label": "",
-            "header": "",
-            "plugin_updates_label": ""
+            "header": ""
         }
     },
     "SettingsIndex": {
         "developer_title": "Розробник",
         "general_title": "Загальне",
-        "plugins_title": "Плагіни",
-        "testing_title": ""
+        "plugins_title": "Плагіни"
     },
     "Store": {
         "store_contrib": {
@@ -206,14 +193,11 @@
             "alph_asce": "За алфавітом (Z до A)",
             "alph_desc": "За алфавітом (A до Z)",
             "title": "Огляд",
-            "date_asce": "",
             "date_desc": "",
-            "downloads_asce": "",
             "downloads_desc": ""
         },
         "store_testing_cta": "Розгляньте можливість тестування нових плагінів, щоб допомогти команді Decky Loader!",
         "store_testing_warning": {
-            "label": "",
             "desc": ""
         }
     },
@@ -256,22 +240,12 @@
         }
     },
     "TitleView": {
-        "settings_desc": "",
         "decky_store_desc": ""
-    },
-    "Testing": {
-        "download": ""
     },
     "FilePickerError": {
         "errors": {
             "perm_denied": "",
-            "file_not_found": "",
             "unknown": ""
-        }
-    },
-    "DropdownMultiselect": {
-        "button": {
-            "back": ""
         }
     }
 }

@@ -64,8 +64,5 @@
             "install_other": "Installerar {{count}} tillägg"
         },
         "confirm": "Är du säker på att du vill göra följande ändringar?"
-    },
-    "SettingsIndex": {
-        "testing_title": ""
     }
 }

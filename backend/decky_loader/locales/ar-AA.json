@@ -92,9 +92,6 @@
         "plugin_uninstall": {
             "button": "إزالة التنصيب",
             "title": "إزالة التنصيب {{name}}"
-        },
-        "plugin_load_error": {
-            "toast": ""
         }
     },
     "SettingsDeveloperIndex": {
@@ -103,66 +100,42 @@
         },
         "third_party_plugins": {
             "button_zip": "تصفح",
-            "button_install": "تنصيب",
-            "label_zip": ""
+            "button_install": "تنصيب"
         },
-        "header": "أخرى",
-        "valve_internal": {
-            "desc1": ""
-        }
+        "header": "أخرى"
     },
     "Developer": {
         "5secreload": "إعادة التحميل في 5 ثواني"
     },
     "SettingsGeneralIndex": {
-        "about": {
-            "header": ""
-        },
         "notifications": {
             "header": ""
         }
-    },
-    "SettingsIndex": {
-        "testing_title": ""
     },
     "Store": {
         "store_contrib": {
             "desc": ""
         },
-        "store_search": {
-            "label": ""
-        },
         "store_source": {
             "label": ""
         },
         "store_tabs": {
-            "date_asce": "",
             "title": ""
         }
     },
     "StoreSelect": {
-        "custom_store": {
-            "label": ""
-        },
         "store_channel": {
             "label": ""
         }
     },
     "Updater": {
-        "decky_updates": "",
         "updates": {
-            "checking": "",
-            "lat_version": ""
+            "checking": ""
         }
     },
     "FilePickerError": {
         "errors": {
             "file_not_found": ""
-        }
-    },
-    "RemoteDebugging": {
-        "remote_cef": {
-            "label": ""
         }
     }
 }

@@ -209,8 +209,7 @@
             "about": "Sobre",
             "alph_desc": "Alfabética (A - Z)",
             "title": "Navegar",
-            "alph_asce": "Alfabética (Z - A)",
-            "downloads_desc": ""
+            "alph_asce": "Alfabética (Z - A)"
         },
         "store_testing_cta": "Por favor, considere testar os novos plugins para ajudar o time do Decky Loader!",
         "store_testing_warning": {

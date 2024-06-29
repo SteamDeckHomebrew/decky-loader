@@ -221,8 +221,5 @@
     "PluginView": {
         "hidden_one": "1 eklenti bu listeden gizlenmiştir",
         "hidden_other": "{{count}} eklenti bu listeden gizlenmiştir"
-    },
-    "Developer": {
-        "disabling": ""
     }
 }

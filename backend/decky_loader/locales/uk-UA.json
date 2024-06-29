@@ -17,11 +17,7 @@
             "select": "Використовувати цю папку"
         },
         "filter": {
-            "created_desc": "",
             "name_desc": ""
-        },
-        "files": {
-            "all_files": ""
         }
     },
     "PluginListLabel": {
@@ -184,8 +180,7 @@
             "about": "Інформація",
             "alph_asce": "За алфавітом (Z до A)",
             "alph_desc": "За алфавітом (A до Z)",
-            "title": "Огляд",
-            "downloads_desc": ""
+            "title": "Огляд"
         },
         "store_testing_cta": "Розгляньте можливість тестування нових плагінів, щоб допомогти команді Decky Loader!"
     },
@@ -225,11 +220,6 @@
         "remote_cef": {
             "desc": "Дозволити доступ до CEF-дебагера без аутентифікації для будь-кого у вашій мережі",
             "label": "Дозволити віддалений CEF-дебагінг"
-        }
-    },
-    "FilePickerError": {
-        "errors": {
-            "perm_denied": ""
         }
     }
 }

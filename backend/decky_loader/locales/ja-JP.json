@@ -188,8 +188,7 @@
             "alph_asce": "アルファベット(Z to A)",
             "alph_desc": "アルファベット(A to Z)",
             "title": "閲覧",
-            "about": "概要",
-            "downloads_desc": ""
+            "about": "概要"
         },
         "store_testing_warning": {
             "label": "テストストア チャンネルへようこそ",

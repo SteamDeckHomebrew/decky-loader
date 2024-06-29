@@ -11,8 +11,7 @@
             "label_desc": "URL",
             "label_url": "Instalo Shtes Nga URL",
             "label_zip": "Instalo Shtes Nga ZIP"
-        },
-        "header": ""
+        }
     },
     "BranchSelect": {
         "update_channel": {
@@ -24,12 +23,8 @@
         "folder": {
             "select": "Përdore këtë folder"
         },
-        "files": {
-            "all_files": ""
-        },
         "filter": {
-            "size_desc": "",
-            "size_asce": ""
+            "size_desc": ""
         }
     },
     "PluginCard": {
@@ -73,7 +68,6 @@
         "uninstall": "Çinstalo",
         "update_all_one": "",
         "update_all_other": "",
-        "reinstall": "",
         "reload": ""
     },
     "SettingsGeneralIndex": {
@@ -85,9 +79,6 @@
         },
         "updates": {
             "header": "Përmirësimet"
-        },
-        "notifications": {
-            "header": ""
         }
     },
     "SettingsIndex": {
@@ -99,8 +90,7 @@
             "label": "Rendit"
         },
         "store_tabs": {
-            "title": "Kërko",
-            "date_asce": ""
+            "title": "Kërko"
         },
         "store_contrib": {
             "label": "Kontributi"
@@ -114,23 +104,16 @@
         },
         "store_source": {
             "label": "Kodin Burimor"
-        },
-        "store_testing_warning": {
-            "label": ""
         }
     },
     "StoreSelect": {
         "store_channel": {
             "label": "Kanali Dyqanit"
-        },
-        "custom_store": {
-            "label": ""
         }
     },
     "Updater": {
         "updates": {
-            "cur_version": "Versioni e tanishëme: {{ver}}",
-            "label": ""
+            "cur_version": "Versioni e tanishëme: {{ver}}"
         },
         "decky_updates": ""
     },
@@ -144,26 +127,15 @@
             "reinstall_other": "",
             "install_one": "",
             "install_other": ""
-        },
-        "description": {
-            "update": ""
         }
     },
     "PluginView": {
         "hidden_one": "",
         "hidden_other": ""
     },
-    "Developer": {
-        "enabling": ""
-    },
     "FilePickerError": {
         "errors": {
             "perm_denied": ""
-        }
-    },
-    "RemoteDebugging": {
-        "remote_cef": {
-            "desc": ""
         }
     }
 }

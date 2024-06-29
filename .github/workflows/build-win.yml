@@ -16,15 +16,15 @@ jobs:
     - name: Checkout 🧰
       uses: actions/checkout@v3
 
-    - name: Set up NodeJS 18 💎
+    - name: Set up NodeJS 20 💎
       uses: actions/setup-node@v3
       with:
-        node-version: 18
+        node-version: 20
       
-    - name: Set up Python 3.11.4 🐍
+    - name: Set up Python 3.11.7 🐍
       uses: actions/setup-python@v4
       with:
-        python-version: "3.11.4"
+        python-version: "3.11.7"
 
     - name: Install Poetry
       uses: snok/install-poetry@v1

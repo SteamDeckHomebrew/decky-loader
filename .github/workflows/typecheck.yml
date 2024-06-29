@@ -7,7 +7,7 @@ on:
 jobs:
   typecheck:
     name: Run type checkers
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v3 # Check out the repository first.
@@ -17,10 +17,10 @@ jobs:
         with:
           node-version: 20
 
-      - name: Set up Python 3.10.6 🐍
+      - name: Set up Python 3.11.7 🐍
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10.6"
+          python-version: "3.11.7"
 
       - name: Install Poetry
         uses: snok/install-poetry@v1

@@ -27,7 +27,7 @@ permissions:
 jobs:
   create_tag:
     name: Tag a new version of the package
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       tag_name: ${{ steps.ready_tag.outputs.tag_name }}
 
@@ -128,7 +128,7 @@ jobs:
 
   release:
     name: Release tagged artifact
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [create_tag, build]
     steps:
       - name: Fetch package artifact ⬇️

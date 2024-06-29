@@ -32,7 +32,8 @@
             "install": "تنصيب {{name}} {{version}}"
         },
         "ok_button": {
-            "idle": "تأكيد"
+            "idle": "تأكيد",
+            "loading": ""
         }
     },
     "DropdownMultiselect": {
@@ -72,7 +73,8 @@
             "button_processing": "يتم التحديث",
             "title": "تحديث {{artifact}}",
             "desc": "هل أنت متأكد من رغبتك في تحديث {{artifact}} {{version}}؟"
-        }
+        },
+        "no_hash": ""
     },
     "PluginListIndex": {
         "hide": "إخفاء من قائمة الوصول السريع",
@@ -81,7 +83,10 @@
         "show": "إظهار في قائمة الوصول السريع",
         "unfreeze": "السماح بالتحديثات",
         "uninstall": "إزالة التنصيب",
-        "update_to": "التحديث إلى {{name}}"
+        "update_to": "التحديث إلى {{name}}",
+        "freeze": "",
+        "no_plugin": "",
+        "plugin_actions": ""
     },
     "PluginListLabel": {
         "hidden": "مخفي من قائمة الوصول السريع"
@@ -91,20 +96,157 @@
         "error": "خطا",
         "plugin_uninstall": {
             "button": "إزالة التنصيب",
-            "title": "إزالة التنصيب {{name}}"
-        }
+            "title": "إزالة التنصيب {{name}}",
+            "desc": ""
+        },
+        "plugin_error_uninstall": "",
+        "plugin_load_error": {
+            "message": "",
+            "toast": ""
+        },
+        "decky_update_available": ""
     },
     "SettingsDeveloperIndex": {
         "react_devtools": {
-            "ip_label": "عنوان الشبكة"
+            "ip_label": "عنوان الشبكة",
+            "desc": "",
+            "label": ""
         },
         "third_party_plugins": {
             "button_zip": "تصفح",
-            "button_install": "تنصيب"
+            "button_install": "تنصيب",
+            "header": "",
+            "label_desc": "",
+            "label_url": "",
+            "label_zip": ""
         },
-        "header": "أخرى"
+        "header": "أخرى",
+        "cef_console": {
+            "button": "",
+            "desc": "",
+            "label": ""
+        },
+        "valve_internal": {
+            "desc1": "",
+            "desc2": "",
+            "label": ""
+        }
     },
     "Developer": {
-        "5secreload": "إعادة التحميل في 5 ثواني"
+        "5secreload": "إعادة التحميل في 5 ثواني",
+        "disabling": "",
+        "enabling": ""
+    },
+    "SettingsGeneralIndex": {
+        "about": {
+            "decky_version": "",
+            "header": ""
+        },
+        "beta": {
+            "header": ""
+        },
+        "developer_mode": {
+            "label": ""
+        },
+        "notifications": {
+            "decky_updates_label": "",
+            "header": "",
+            "plugin_updates_label": ""
+        },
+        "other": {
+            "header": ""
+        },
+        "updates": {
+            "header": ""
+        }
+    },
+    "SettingsIndex": {
+        "testing_title": "",
+        "developer_title": "",
+        "plugins_title": "",
+        "general_title": ""
+    },
+    "Store": {
+        "store_contrib": {
+            "desc": "",
+            "label": ""
+        },
+        "store_filter": {
+            "label": "",
+            "label_def": ""
+        },
+        "store_search": {
+            "label": ""
+        },
+        "store_sort": {
+            "label_def": "",
+            "label": ""
+        },
+        "store_source": {
+            "desc": "",
+            "label": ""
+        },
+        "store_tabs": {
+            "about": "",
+            "alph_asce": "",
+            "alph_desc": "",
+            "date_asce": "",
+            "date_desc": "",
+            "downloads_asce": "",
+            "downloads_desc": "",
+            "title": ""
+        },
+        "store_testing_cta": "",
+        "store_testing_warning": {
+            "desc": "",
+            "label": ""
+        }
+    },
+    "StoreSelect": {
+        "custom_store": {
+            "label": "",
+            "url_label": ""
+        },
+        "store_channel": {
+            "custom": "",
+            "default": "",
+            "label": "",
+            "testing": ""
+        }
+    },
+    "TitleView": {
+        "decky_store_desc": "",
+        "settings_desc": ""
+    },
+    "Updater": {
+        "decky_updates": "",
+        "no_patch_notes_desc": "",
+        "patch_notes_desc": "",
+        "updates": {
+            "check_button": "",
+            "checking": "",
+            "cur_version": "",
+            "install_button": "",
+            "label": "",
+            "lat_version": "",
+            "reloading": "",
+            "updating": ""
+        }
+    },
+    "Testing": {
+        "download": ""
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "",
+            "perm_denied": "",
+            "unknown": ""
+        }
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "desc": "",
+            "label": ""
+        }
     }
 }

@@ -57,13 +57,13 @@ jobs:
 
     - name: Upload package artifact ⬆️
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v4
       with:
         name: PluginLoader
         path: ./backend/dist/PluginLoader
 
     - name: Download package artifact locally
       if: ${{ env.ACT }}
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v4
       with:
         path: ./backend/dist/PluginLoader

@@ -58,7 +58,7 @@ jobs:
       run: $env:DECKY_NOCONSOLE = 1; C:\Users\runneradmin\.local\bin\poetry run pyinstaller pyinstaller.spec
 
     - name: Upload package artifact ⬆️
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v4
       with:
         name: PluginLoader Win
         path: |

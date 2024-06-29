@@ -41,7 +41,8 @@
         "confirm": "Aşağıdaki değişiklikleri yapmak istediğinizden emin misiniz?",
         "description": {
             "install": "Yükle {{name}} {{version}}",
-            "reinstall": "Yeniden yükle {{name}} {{version}}"
+            "reinstall": "Yeniden yükle {{name}} {{version}}",
+            "update": ""
         },
         "ok_button": {
             "idle": "Onayla",
@@ -57,7 +58,8 @@
     "PluginCard": {
         "plugin_full_access": "Bu eklenti Steam Deck'inize tam erişime sahiptir.",
         "plugin_install": "Yükle",
-        "plugin_version_label": "Eklenti Versiyonu"
+        "plugin_version_label": "Eklenti Versiyonu",
+        "plugin_no_desc": ""
     },
     "PluginInstallModal": {
         "install": {
@@ -77,7 +79,8 @@
             "button_processing": "Güncelleniyor",
             "title": "Güncelle {{artifact}}",
             "desc": "Güncellemek istediğinizden emin misiniz {{artifact}} {{version}}?"
-        }
+        },
+        "no_hash": ""
     },
     "PluginListIndex": {
         "freeze": "Güncellemeleri durdur",
@@ -89,7 +92,9 @@
         "unfreeze": "Güncellemelere izin ver",
         "uninstall": "Kaldır",
         "update_all_one": "1 eklentiyi güncelle",
-        "update_all_other": "{{count}} eklentiyi güncelle"
+        "update_all_other": "{{count}} eklentiyi güncelle",
+        "reload": "",
+        "update_to": ""
     },
     "PluginListLabel": {
         "hidden": "Hızlı erişim menüsünden gizlenmiş"
@@ -108,15 +113,20 @@
             "title": "Kaldır {{name}}"
         },
         "plugin_update_one": "1 eklenti için güncelleme mevcut!",
-        "plugin_update_other": "{{count}} eklenti için güncelleme mevcut!"
+        "plugin_update_other": "{{count}} eklenti için güncelleme mevcut!",
+        "plugin_error_uninstall": ""
     },
     "SettingsDeveloperIndex": {
         "cef_console": {
-            "button": "Konsolu Aç"
+            "button": "Konsolu Aç",
+            "desc": "",
+            "label": ""
         },
         "header": "Diğer",
         "react_devtools": {
-            "ip_label": "IP"
+            "ip_label": "IP",
+            "desc": "",
+            "label": ""
         },
         "third_party_plugins": {
             "button_install": "Yükle",
@@ -125,6 +135,11 @@
             "label_desc": "URL",
             "label_url": "URL'den Eklenti Yükle",
             "label_zip": "ZIP Dosyasından Eklenti Yükle"
+        },
+        "valve_internal": {
+            "desc1": "",
+            "desc2": "",
+            "label": ""
         }
     },
     "SettingsGeneralIndex": {
@@ -153,11 +168,13 @@
     "SettingsIndex": {
         "developer_title": "Geliştirici",
         "general_title": "Genel",
-        "plugins_title": "Eklentiler"
+        "plugins_title": "Eklentiler",
+        "testing_title": ""
     },
     "Store": {
         "store_contrib": {
-            "label": "Katkıda Bulunma"
+            "label": "Katkıda Bulunma",
+            "desc": ""
         },
         "store_filter": {
             "label": "Filtre",
@@ -171,7 +188,8 @@
             "label_def": "Son Güncellenme (En Yeni)"
         },
         "store_source": {
-            "label": "Kaynak Kodu"
+            "label": "Kaynak Kodu",
+            "desc": ""
         },
         "store_tabs": {
             "about": "Hakkında",
@@ -182,15 +200,23 @@
             "downloads_desc": "Önce En Çok İndirilen",
             "title": "Gözat",
             "downloads_asce": "Önce En Az İndirilen"
-        }
+        },
+        "store_testing_warning": {
+            "desc": "",
+            "label": ""
+        },
+        "store_testing_cta": ""
     },
     "StoreSelect": {
         "custom_store": {
-            "url_label": "URL"
+            "url_label": "URL",
+            "label": ""
         },
         "store_channel": {
             "custom": "Özel",
-            "default": "Varsayılan"
+            "default": "Varsayılan",
+            "label": "",
+            "testing": ""
         }
     },
     "TitleView": {
@@ -207,7 +233,9 @@
             "cur_version": "Mevcut Versiyon: {{ver}}",
             "install_button": "Güncellemeyi Yükle",
             "label": "Güncellemeler",
-            "updating": "Güncelleniyor"
+            "updating": "Güncelleniyor",
+            "lat_version": "",
+            "reloading": ""
         }
     },
     "Testing": {
@@ -215,11 +243,24 @@
     },
     "FilePickerError": {
         "errors": {
-            "file_not_found": "Belirtilen yol geçerli değil. Lütfen yolu kontrol edin ve doğru şekilde yeniden girin."
+            "file_not_found": "Belirtilen yol geçerli değil. Lütfen yolu kontrol edin ve doğru şekilde yeniden girin.",
+            "perm_denied": "",
+            "unknown": ""
         }
     },
     "PluginView": {
         "hidden_one": "1 eklenti bu listeden gizlenmiştir",
         "hidden_other": "{{count}} eklenti bu listeden gizlenmiştir"
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "desc": "",
+            "label": ""
+        }
+    },
+    "Developer": {
+        "5secreload": "",
+        "disabling": "",
+        "enabling": ""
     }
 }

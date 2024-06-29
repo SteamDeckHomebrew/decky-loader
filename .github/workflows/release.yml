@@ -33,7 +33,7 @@ jobs:
 
     steps:
     - name: Checkout 🧰
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install semver-tool asdf
       uses: asdf-vm/actions/install@v1

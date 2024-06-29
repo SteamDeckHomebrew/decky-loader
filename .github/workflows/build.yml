@@ -14,17 +14,17 @@ jobs:
 
     steps:
     - name: Checkout 🧰
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     - name: Set up NodeJS 20 💎
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: 20
       
     - name: Set up Python 3.11.7 🐍
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: "3.11.7"
     
@@ -57,13 +57,13 @@ jobs:
 
     - name: Upload package artifact ⬆️
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v5
       with:
         name: PluginLoader
         path: ./backend/dist/PluginLoader
 
     - name: Download package artifact locally
       if: ${{ env.ACT }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v5
       with:
         path: ./backend/dist/PluginLoader

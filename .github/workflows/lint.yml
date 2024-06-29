@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v3 # Check out the repository first.
+      - uses: actions/checkout@v4 # Check out the repository first.
 
       - name: Install TypeScript dependencies
         working-directory: frontend

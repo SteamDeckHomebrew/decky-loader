@@ -89,8 +89,7 @@
         "unfreeze": "Güncellemelere izin ver",
         "uninstall": "Kaldır",
         "update_all_one": "1 eklentiyi güncelle",
-        "update_all_other": "{{count}} eklentiyi güncelle",
-        "update_to": ""
+        "update_all_other": "{{count}} eklentiyi güncelle"
     },
     "PluginListLabel": {
         "hidden": "Hızlı erişim menüsünden gizlenmiş"
@@ -113,13 +112,11 @@
     },
     "SettingsDeveloperIndex": {
         "cef_console": {
-            "button": "Konsolu Aç",
-            "label": ""
+            "button": "Konsolu Aç"
         },
         "header": "Diğer",
         "react_devtools": {
-            "ip_label": "IP",
-            "label": ""
+            "ip_label": "IP"
         },
         "third_party_plugins": {
             "button_install": "Yükle",
@@ -128,9 +125,6 @@
             "label_desc": "URL",
             "label_url": "URL'den Eklenti Yükle",
             "label_zip": "ZIP Dosyasından Eklenti Yükle"
-        },
-        "valve_internal": {
-            "desc2": ""
         }
     },
     "SettingsGeneralIndex": {
@@ -188,9 +182,6 @@
             "downloads_desc": "Önce En Çok İndirilen",
             "title": "Gözat",
             "downloads_asce": "Önce En Az İndirilen"
-        },
-        "store_testing_warning": {
-            "label": ""
         }
     },
     "StoreSelect": {
@@ -199,8 +190,7 @@
         },
         "store_channel": {
             "custom": "Özel",
-            "default": "Varsayılan",
-            "testing": ""
+            "default": "Varsayılan"
         }
     },
     "TitleView": {
@@ -217,8 +207,7 @@
             "cur_version": "Mevcut Versiyon: {{ver}}",
             "install_button": "Güncellemeyi Yükle",
             "label": "Güncellemeler",
-            "updating": "Güncelleniyor",
-            "reloading": ""
+            "updating": "Güncelleniyor"
         }
     },
     "Testing": {
@@ -226,18 +215,12 @@
     },
     "FilePickerError": {
         "errors": {
-            "file_not_found": "Belirtilen yol geçerli değil. Lütfen yolu kontrol edin ve doğru şekilde yeniden girin.",
-            "unknown": ""
+            "file_not_found": "Belirtilen yol geçerli değil. Lütfen yolu kontrol edin ve doğru şekilde yeniden girin."
         }
     },
     "PluginView": {
         "hidden_one": "1 eklenti bu listeden gizlenmiştir",
         "hidden_other": "{{count}} eklenti bu listeden gizlenmiştir"
-    },
-    "RemoteDebugging": {
-        "remote_cef": {
-            "label": ""
-        }
     },
     "Developer": {
         "disabling": ""

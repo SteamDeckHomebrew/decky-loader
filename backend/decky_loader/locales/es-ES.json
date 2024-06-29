@@ -67,20 +67,14 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Usar esta carpeta",
-            "label": ""
+            "select": "Usar esta carpeta"
         },
         "files": {
             "file_type": ""
         },
         "filter": {
-            "created_desc": "",
             "modified_desc": "",
-            "name_desc": "",
             "size_desc": ""
-        },
-        "file": {
-            "select": ""
         }
     },
     "PluginListIndex": {
@@ -93,7 +87,6 @@
         "update_all_many": "Actualizar {{count}} plugins",
         "update_all_other": "Actualizar {{count}} plugins",
         "update_to": "Actualizar a {{name}}",
-        "hide": "",
         "unfreeze": ""
     },
     "PluginLoader": {
@@ -136,9 +129,6 @@
         },
         "other": {
             "header": "Otros"
-        },
-        "notifications": {
-            "header": ""
         }
     },
     "SettingsIndex": {
@@ -163,7 +153,6 @@
             "title": "Navegar",
             "alph_asce": "Alfabéticamente (Z-A)",
             "alph_desc": "Alfabéticamente (A-Z)",
-            "date_desc": "",
             "downloads_desc": ""
         },
         "store_testing_cta": "¡Por favor considera probar plugins nuevos para ayudar al equipo de Decky Loader!",
@@ -174,9 +163,6 @@
         "store_filter": {
             "label_def": "Todos",
             "label": "Filtrar"
-        },
-        "store_testing_warning": {
-            "desc": ""
         }
     },
     "Updater": {
@@ -237,16 +223,8 @@
         "hidden_many": "",
         "hidden_other": ""
     },
-    "FilePickerError": {
-        "errors": {
-            "file_not_found": ""
-        }
-    },
     "PluginListLabel": {
         "hidden": ""
-    },
-    "TitleView": {
-        "settings_desc": ""
     },
     "DropdownMultiselect": {
         "button": {

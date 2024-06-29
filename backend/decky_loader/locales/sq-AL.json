@@ -12,41 +12,29 @@
             "label_url": "Instalo Shtes Nga URL",
             "label_zip": "Instalo Shtes Nga ZIP"
         },
-        "cef_console": {
-            "desc": ""
-        },
-        "header": "",
-        "valve_internal": {
-            "desc2": ""
-        }
+        "header": ""
     },
     "BranchSelect": {
         "update_channel": {
             "stable": "Fiksuar",
-            "label": "Kanali Përditësimet",
-            "testing": ""
+            "label": "Kanali Përditësimet"
         }
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Përdore këtë folder",
-            "show_more": ""
+            "select": "Përdore këtë folder"
         },
         "files": {
-            "all_files": "",
-            "show_hidden": ""
+            "all_files": ""
         },
         "filter": {
             "size_desc": "",
-            "name_asce": "",
-            "size_asce": "",
-            "modified_asce": ""
+            "size_asce": ""
         }
     },
     "PluginCard": {
         "plugin_install": "Instalo",
-        "plugin_version_label": "Versioni Shteses",
-        "plugin_no_desc": ""
+        "plugin_version_label": "Versioni Shteses"
     },
     "PluginInstallModal": {
         "install": {
@@ -78,19 +66,14 @@
         "error": "Gabim",
         "plugin_error_uninstall": "Ju lutem shko nga {{name}} në Decky menu nëse don ta çinstalojsh këtë shtese.",
         "plugin_update_one": "",
-        "plugin_update_other": "",
-        "plugin_load_error": {
-            "message": ""
-        }
+        "plugin_update_other": ""
     },
     "PluginListIndex": {
         "no_plugin": "Nuk ka shtesa të instaluar!",
         "uninstall": "Çinstalo",
         "update_all_one": "",
         "update_all_other": "",
-        "hide": "",
         "reinstall": "",
-        "update_to": "",
         "reload": ""
     },
     "SettingsGeneralIndex": {
@@ -103,17 +86,13 @@
         "updates": {
             "header": "Përmirësimet"
         },
-        "developer_mode": {
-            "label": ""
-        },
         "notifications": {
             "header": ""
         }
     },
     "SettingsIndex": {
         "developer_title": "Zhvillues",
-        "general_title": "Gjeneral",
-        "testing_title": ""
+        "general_title": "Gjeneral"
     },
     "Store": {
         "store_sort": {
@@ -121,9 +100,7 @@
         },
         "store_tabs": {
             "title": "Kërko",
-            "alph_asce": "",
-            "date_asce": "",
-            "downloads_asce": ""
+            "date_asce": ""
         },
         "store_contrib": {
             "label": "Kontributi"
@@ -138,15 +115,13 @@
         "store_source": {
             "label": "Kodin Burimor"
         },
-        "store_testing_cta": "",
         "store_testing_warning": {
             "label": ""
         }
     },
     "StoreSelect": {
         "store_channel": {
-            "label": "Kanali Dyqanit",
-            "default": ""
+            "label": "Kanali Dyqanit"
         },
         "custom_store": {
             "label": ""
@@ -155,12 +130,9 @@
     "Updater": {
         "updates": {
             "cur_version": "Versioni e tanishëme: {{ver}}",
-            "checking": "",
-            "label": "",
-            "reloading": ""
+            "label": ""
         },
-        "decky_updates": "",
-        "patch_notes_desc": ""
+        "decky_updates": ""
     },
     "MultiplePluginsInstallModal": {
         "title": {
@@ -174,11 +146,7 @@
             "install_other": ""
         },
         "description": {
-            "install": "",
             "update": ""
-        },
-        "ok_button": {
-            "loading": ""
         }
     },
     "PluginView": {
@@ -186,17 +154,12 @@
         "hidden_other": ""
     },
     "Developer": {
-        "5secreload": "",
         "enabling": ""
     },
     "FilePickerError": {
         "errors": {
-            "file_not_found": "",
             "perm_denied": ""
         }
-    },
-    "TitleView": {
-        "settings_desc": ""
     },
     "RemoteDebugging": {
         "remote_cef": {

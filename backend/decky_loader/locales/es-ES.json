@@ -67,7 +67,27 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Usar esta carpeta"
+            "select": "Usar esta carpeta",
+            "show_more": "",
+            "label": ""
+        },
+        "files": {
+            "all_files": "",
+            "file_type": "",
+            "show_hidden": ""
+        },
+        "filter": {
+            "created_desc": "",
+            "modified_asce": "",
+            "modified_desc": "",
+            "name_asce": "",
+            "name_desc": "",
+            "size_asce": "",
+            "size_desc": "",
+            "created_asce": ""
+        },
+        "file": {
+            "select": ""
         }
     },
     "PluginListIndex": {
@@ -79,7 +99,11 @@
         "update_all_one": "Actualizar 1 plugin",
         "update_all_many": "Actualizar {{count}} plugins",
         "update_all_other": "Actualizar {{count}} plugins",
-        "update_to": "Actualizar a {{name}}"
+        "update_to": "Actualizar a {{name}}",
+        "freeze": "",
+        "hide": "",
+        "show": "",
+        "unfreeze": ""
     },
     "PluginLoader": {
         "error": "Error",
@@ -121,12 +145,18 @@
         },
         "other": {
             "header": "Otros"
+        },
+        "notifications": {
+            "decky_updates_label": "",
+            "header": "",
+            "plugin_updates_label": ""
         }
     },
     "SettingsIndex": {
         "developer_title": "Desarrollador",
         "general_title": "General",
-        "plugins_title": "Plugins"
+        "plugins_title": "Plugins",
+        "testing_title": ""
     },
     "Store": {
         "store_search": {
@@ -144,7 +174,11 @@
             "about": "Información",
             "title": "Navegar",
             "alph_asce": "Alfabéticamente (Z-A)",
-            "alph_desc": "Alfabéticamente (A-Z)"
+            "alph_desc": "Alfabéticamente (A-Z)",
+            "date_asce": "",
+            "date_desc": "",
+            "downloads_asce": "",
+            "downloads_desc": ""
         },
         "store_testing_cta": "¡Por favor considera probar plugins nuevos para ayudar al equipo de Decky Loader!",
         "store_source": {
@@ -154,6 +188,10 @@
         "store_filter": {
             "label_def": "Todos",
             "label": "Filtrar"
+        },
+        "store_testing_warning": {
+            "label": "",
+            "desc": ""
         }
     },
     "Updater": {
@@ -213,5 +251,27 @@
         "hidden_one": "",
         "hidden_many": "",
         "hidden_other": ""
+    },
+    "FilePickerError": {
+        "errors": {
+            "perm_denied": "",
+            "file_not_found": "",
+            "unknown": ""
+        }
+    },
+    "PluginListLabel": {
+        "hidden": ""
+    },
+    "TitleView": {
+        "decky_store_desc": "",
+        "settings_desc": ""
+    },
+    "Testing": {
+        "download": ""
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": ""
+        }
     }
 }

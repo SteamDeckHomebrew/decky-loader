@@ -90,8 +90,7 @@
         "plugin_actions": "プラグインアクション",
         "update_all_other": "{{count}} 個のプラグインをアップデート",
         "show": "クイックアクセス: 表示",
-        "update_to": "{{name}} を更新",
-        "freeze": ""
+        "update_to": "{{name}} を更新"
     },
     "PluginListLabel": {
         "hidden": "クイックアクセスメニューから表示されません"
@@ -190,7 +189,6 @@
             "alph_desc": "アルファベット(A to Z)",
             "title": "閲覧",
             "about": "概要",
-            "date_desc": "",
             "downloads_desc": ""
         },
         "store_testing_warning": {

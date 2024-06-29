@@ -108,8 +108,7 @@
         "update_all_other": "Päivitä {{count}} laajennusta",
         "update_to": "Päivitä versioon {{name}}",
         "hide": "Pikavalikko: Piilota",
-        "show": "Pikavalikko: Näytä",
-        "unfreeze": ""
+        "show": "Pikavalikko: Näytä"
     },
     "PluginListLabel": {
         "hidden": "Piilotettu pikavalikosta"
@@ -216,7 +215,6 @@
             "alph_asce": "Aakkosjärjestyksessä (Z–A)",
             "alph_desc": "Aakkosjärjestyksessä (A–Z)",
             "title": "Selaa",
-            "date_desc": "",
             "downloads_desc": ""
         },
         "store_testing_cta": "Harkitse uusien lisäosien testaamista auttaaksesi Decky Loader -tiimiä!",

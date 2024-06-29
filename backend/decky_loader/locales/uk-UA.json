@@ -14,18 +14,14 @@
     },
     "FilePickerIndex": {
         "folder": {
-            "select": "Використовувати цю папку",
-            "show_more": ""
+            "select": "Використовувати цю папку"
         },
         "filter": {
             "created_desc": "",
-            "modified_desc": "",
-            "name_desc": "",
-            "size_desc": ""
+            "name_desc": ""
         },
         "files": {
-            "all_files": "",
-            "show_hidden": ""
+            "all_files": ""
         }
     },
     "PluginListLabel": {
@@ -95,8 +91,7 @@
         "uninstall": "Видалити",
         "update_all_one": "Оновити 1 плагін",
         "update_all_few": "Оновити {{count}} плагінів",
-        "update_all_many": "Оновити {{count}} плагінів",
-        "freeze": ""
+        "update_all_many": "Оновити {{count}} плагінів"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -158,9 +153,6 @@
         },
         "updates": {
             "header": "Оновлення"
-        },
-        "notifications": {
-            "header": ""
         }
     },
     "SettingsIndex": {
@@ -193,13 +185,9 @@
             "alph_asce": "За алфавітом (Z до A)",
             "alph_desc": "За алфавітом (A до Z)",
             "title": "Огляд",
-            "date_desc": "",
             "downloads_desc": ""
         },
-        "store_testing_cta": "Розгляньте можливість тестування нових плагінів, щоб допомогти команді Decky Loader!",
-        "store_testing_warning": {
-            "desc": ""
-        }
+        "store_testing_cta": "Розгляньте можливість тестування нових плагінів, щоб допомогти команді Decky Loader!"
     },
     "StoreSelect": {
         "custom_store": {
@@ -239,13 +227,9 @@
             "label": "Дозволити віддалений CEF-дебагінг"
         }
     },
-    "TitleView": {
-        "decky_store_desc": ""
-    },
     "FilePickerError": {
         "errors": {
-            "perm_denied": "",
-            "unknown": ""
+            "perm_denied": ""
         }
     }
 }

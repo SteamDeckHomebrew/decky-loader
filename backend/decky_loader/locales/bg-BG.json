@@ -108,8 +108,7 @@
         "reload": "Презареждане",
         "show": "Бърз достъп: Показване",
         "update_all_one": "Обновяване на 1 добавка",
-        "update_all_other": "Обновяване на {{count}} добавки",
-        "unfreeze": ""
+        "update_all_other": "Обновяване на {{count}} добавки"
     },
     "PluginListLabel": {
         "hidden": "Скрито от менюто за бърз достъп"
@@ -216,13 +215,9 @@
             "alph_asce": "По азбучен ред (Я -> А)",
             "alph_desc": "По азбучен ред (А -> Я)",
             "title": "Разглеждане",
-            "date_desc": "",
             "downloads_desc": ""
         },
-        "store_testing_cta": "Помислете дали искате да тествате новите добавки, за да помогнете на екипа на Decky Loader!",
-        "store_testing_warning": {
-            "label": ""
-        }
+        "store_testing_cta": "Помислете дали искате да тествате новите добавки, за да помогнете на екипа на Decky Loader!"
     },
     "StoreSelect": {
         "custom_store": {
@@ -254,8 +249,5 @@
     "PluginView": {
         "hidden_one": "1 добавка е скрита от този списък",
         "hidden_other": "{{count}} добавки са скрити от този списък"
-    },
-    "TitleView": {
-        "settings_desc": ""
     }
 }

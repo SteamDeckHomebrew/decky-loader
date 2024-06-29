@@ -93,8 +93,7 @@
         "plugin_actions": "Operações de plugin",
         "reload": "Recarregar",
         "show": "Acesso rápido: Mostrar",
-        "hide": "Acesso rápido: Ocultar",
-        "unfreeze": ""
+        "hide": "Acesso rápido: Ocultar"
     },
     "BranchSelect": {
         "update_channel": {
@@ -215,7 +214,6 @@
             "alph_asce": "Alfabeticamente (Z-A)",
             "alph_desc": "Alfabeticamente (A-Z)",
             "title": "Navegar",
-            "date_desc": "",
             "downloads_desc": ""
         },
         "store_testing_cta": "Testa novos plugins e ajuda a equipa do Decky Loader!",

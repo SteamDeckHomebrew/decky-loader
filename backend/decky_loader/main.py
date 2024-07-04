@@ -214,7 +214,7 @@ class PluginManager:
             pass
 
     def run(self):
-        run_app(self.web_app, host=get_server_host(), port=get_server_port(), loop=self.loop, access_log=None, handle_signals=False, shutdown_timeout=15)
+        run_app(self.web_app, host=get_server_host(), port=get_server_port(), loop=self.loop, access_log=None, handle_signals=True, shutdown_timeout=40)
 
 def main():
     setproctitle(f"Decky Loader {get_loader_version()} ({getproctitle()})")

@@ -222,7 +222,7 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
       <div>
         {!pluginList ? (
           <div style={{ height: '100%' }}>
-            <SteamSpinner />
+            <SteamSpinner background="transparent" />
           </div>
         ) : (
           pluginList

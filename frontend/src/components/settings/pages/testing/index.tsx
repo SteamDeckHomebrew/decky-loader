@@ -58,7 +58,7 @@ export default function TestingVersionList() {
   if (loading) {
     return (
       <>
-        <SteamSpinner>{t('Testing.loading')}</SteamSpinner>
+        <SteamSpinner background="transparent">{t('Testing.loading')}</SteamSpinner>
       </>
     );
   }

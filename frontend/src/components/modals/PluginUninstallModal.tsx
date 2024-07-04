@@ -27,10 +27,12 @@ const PluginUninstallModal: FC<PluginUninstallModalProps> = ({ name, title, butt
       }}
       bOKDisabled={uninstalling}
       bCancelDisabled={uninstalling}
-      strTitle={<div style={{display: "flex", flexDirection: "row", alignItems: "center", width: "100%"}}>
-        {title}
-        {uninstalling && <Spinner width="24px" height="24px" style={{marginLeft: "auto"}}/>}
-      </div>}
+      strTitle={
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
+          {title}
+          {uninstalling && <Spinner width="24px" height="24px" style={{ marginLeft: 'auto' }} />}
+        </div>
+      }
       strOKButtonText={buttonText}
     >
       {description}

@@ -58,7 +58,7 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
         await onCancel();
       }}
       strTitle={
-        <div style={{display: "flex", flexDirection: "row", alignItems: "center", width: "100%"}}>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
           <TranslationHelper
             transClass={TranslationClass.PLUGIN_INSTALL_MODAL}
             transText="title"
@@ -66,10 +66,9 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
             installType={installType}
           />
           {loading && (
-            <div style={{marginLeft: "auto"}}>
+            <div style={{ marginLeft: 'auto' }}>
               <ProgressBarWithInfo
                 layout="inline"
-                
                 bottomSeparator="none"
                 nProgress={percentage}
                 sOperationText={downloadInfo}

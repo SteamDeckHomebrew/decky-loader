@@ -26,7 +26,7 @@ const WithSuspense: FunctionComponent<WithSuspenseProps> = (props) => {
             }),
           }}
         >
-          <SteamSpinner />
+          <SteamSpinner background="transparent" />
         </Focusable>
       }
     >

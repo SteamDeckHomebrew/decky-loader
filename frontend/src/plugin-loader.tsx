@@ -115,6 +115,25 @@ class PluginLoader extends Logger {
         <DeckyStateContextProvider deckyState={this.deckyState}>
           <FaPlug />
           <TabBadge />
+          <style>
+            {`
+              /* fixes random overscrolling in QAM */
+              .${quickAccessMenuClasses?.TabContentColumn} {
+                flex-grow: 1;
+                margin-top: 0 !important;
+                margin-bottom: 0 !important;
+              }
+              .${quickAccessMenuClasses?.Tab} {
+                flex-grow: 1;
+                height: unset !important;
+              }
+              /* they broke the footer a while ago and forgot to update the styles LOL */
+              .${quickAccessMenuClasses?.Tabs}.${quickAccessMenuClasses.TabsWithFooter} {
+                margin-bottom: 0 !important;
+                padding-bottom: 0 !important;
+              }
+            `}
+          </style>
         </DeckyStateContextProvider>
       ),
     });

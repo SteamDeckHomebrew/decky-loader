@@ -21,8 +21,12 @@ class UnixSocket:
         self.server_writer = None
 
     async def setup_server(self):
-        self.socket = await asyncio.start_unix_server(self._listen_for_method_call, path=self.socket_addr, limit=BUFFER_LIMIT)
-    
+        try:
+            self.socket = await asyncio.start_unix_server(self._listen_for_method_call, path=self.socket_addr, limit=BUFFER_LIMIT)
+        except asyncio.CancelledError:
+            await self.close_socket_connection()
+            raise
+
     async def _open_socket_if_not_exists(self):
         if not self.reader:
             retries = 0
@@ -48,6 +52,10 @@ class UnixSocket:
             self.writer.close()
 
         self.reader = None
+
+        if self.socket:
+            self.socket.close()
+            await self.socket.wait_closed()
 
     async def read_single_line(self) -> str|None:
         reader, _ = await self.get_socket_connection()
@@ -121,8 +129,12 @@ class PortSocket (UnixSocket):
         self.port = random.sample(range(40000, 60000), 1)[0]
     
     async def setup_server(self):
-        self.socket = await asyncio.start_server(self._listen_for_method_call, host=self.host, port=self.port, limit=BUFFER_LIMIT)
-    
+        try:
+            self.socket = await asyncio.start_server(self._listen_for_method_call, host=self.host, port=self.port, limit=BUFFER_LIMIT)
+        except asyncio.CancelledError:
+            await self.close_socket_connection()
+            raise
+
     async def _open_socket_if_not_exists(self):
         if not self.reader:
             retries = 0

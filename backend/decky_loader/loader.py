@@ -1,5 +1,5 @@
 from __future__ import annotations
-from asyncio import AbstractEventLoop, Queue, sleep
+from asyncio import AbstractEventLoop, Queue, gather, sleep
 from logging import getLogger
 from os import listdir, path
 from pathlib import Path
@@ -97,6 +97,9 @@ class Loader:
         server_instance.ws.add_route("loader/reload_plugin", self.handle_plugin_backend_reload)
         server_instance.ws.add_route("loader/call_plugin_method", self.handle_plugin_method_call)
         server_instance.ws.add_route("loader/call_legacy_plugin_method", self.handle_plugin_method_call_legacy)
+
+    async def shutdown_plugins(self):
+        await gather(*[self.plugins[plugin_name].stop() for plugin_name in self.plugins])
 
     async def enable_reload_wait(self):
         if self.live_reload:

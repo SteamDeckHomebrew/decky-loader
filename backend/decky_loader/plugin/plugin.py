@@ -1,4 +1,4 @@
-from asyncio import Task, create_task
+from asyncio import CancelledError, Task, create_task, sleep
 from json import dumps, load, loads
 from logging import getLogger
 from os import path
@@ -41,6 +41,7 @@ class PluginWrapper:
         self.log = getLogger("plugin")
 
         self.sandboxed_plugin = SandboxedPlugin(self.name, self.passive, self.flags, self.file, self.plugin_directory, self.plugin_path, self.version, self.author, self.api_version)
+        self.proc: Process | None = None
         # TODO: Maybe make LocalSocket not require on_new_message to make this cleaner
         self._socket = LocalSocket(self.sandboxed_plugin.on_new_message)
         self._listener_task: Task[Any]
@@ -73,6 +74,10 @@ class PluginWrapper:
                         create_task(self.emitted_event_callback(res["event"], res["args"]))
                     elif res["type"] == SocketMessageType.RESPONSE.value:
                         self._method_call_requests.pop(res["id"]).set_result(res)
+            except CancelledError:
+                self.log.info(f"Stopping response listener for {self.name}")
+                await self._socket.close_socket_connection()
+                raise
             except:
                 pass
 
@@ -104,13 +109,37 @@ class PluginWrapper:
     def start(self):
         if self.passive:
             return self
-        Process(target=self.sandboxed_plugin.initialize, args=[self._socket]).start()
+        self.proc = Process(target=self.sandboxed_plugin.initialize, args=[self._socket], daemon=True)
+        self.proc.start()
         self._listener_task = create_task(self._response_listener())
         return self
 
     async def stop(self, uninstall: bool = False):
+        self.log.info(f"Stopping plugin {self.name}")
+        if self.passive:
+            return
         if hasattr(self, "_socket"):
             await self._socket.write_single_line(dumps({ "stop": True, "uninstall": uninstall }, ensure_ascii=False))
             await self._socket.close_socket_connection()
         if hasattr(self, "_listener_task"):
             self._listener_task.cancel()
+        await self.kill_if_still_running()
+
+    async def kill_if_still_running(self):
+        time = 0
+        while self.proc and self.proc.is_alive():
+            await sleep(0.1)
+            time += 1
+            if time == 100:
+                self.log.warn(f"Plugin {self.name} still alive 10 seconds after stop request! Sending SIGTERM!")
+                self.terminate()
+            elif time == 200:
+                self.log.warn(f"Plugin {self.name} still alive 20 seconds after stop request! Sending SIGKILL!")
+                self.terminate(True)
+
+    def terminate(self, kill: bool = False):
+        if self.proc and self.proc.is_alive():
+            if kill:
+                self.proc.kill()
+            else:
+                self.proc.terminate()

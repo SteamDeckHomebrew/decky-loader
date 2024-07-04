@@ -1,6 +1,6 @@
 # Change PyInstaller files permissions
 import sys
-from typing import Dict
+from typing import Any, Dict
 from .localplatform.localplatform import (chmod, chown, service_stop, service_start,
                             ON_WINDOWS, ON_LINUX, get_log_level, get_live_reload, 
                             get_server_port, get_server_host, get_chown_plugin_path,
@@ -8,7 +8,7 @@ from .localplatform.localplatform import (chmod, chown, service_stop, service_st
 if hasattr(sys, '_MEIPASS'):
     chmod(sys._MEIPASS, 755) # type: ignore
 # Full imports
-from asyncio import AbstractEventLoop, new_event_loop, set_event_loop, sleep
+from asyncio import AbstractEventLoop, CancelledError, Task, all_tasks, current_task, gather, new_event_loop, set_event_loop, sleep
 from logging import basicConfig, getLogger
 from os import path
 from traceback import format_exc
@@ -55,6 +55,8 @@ if get_chown_plugin_path() == True:
 class PluginManager:
     def __init__(self, loop: AbstractEventLoop) -> None:
         self.loop = loop
+        self.reinject: bool = True
+        self.js_ctx_tab: Tab | None = None
         self.web_app = Application()
         self.web_app.middlewares.append(csrf_middleware)
         self.cors = aiohttp_cors.setup(self.web_app, defaults={
@@ -82,6 +84,7 @@ class PluginManager:
             self.loop.create_task(self.load_plugins())
 
         self.web_app.on_startup.append(startup)
+        self.web_app.on_shutdown.append(self.shutdown)
 
         self.loop.set_exception_handler(self.exception_handler)
         self.web_app.add_routes([get("/auth/token", self.get_auth_token)])
@@ -89,6 +92,40 @@ class PluginManager:
         for route in list(self.web_app.router.routes()):
             self.cors.add(route) # pyright: ignore [reportUnknownMemberType]
         self.web_app.add_routes([static("/static", path.join(path.dirname(__file__), 'static'))])
+
+    async def shutdown(self, _: Application):
+        try:
+            logger.info(f"Shutting down...")
+            await self.plugin_loader.shutdown_plugins()
+            await self.ws.disconnect()
+            self.reinject = False
+            if self.js_ctx_tab:
+                await self.js_ctx_tab.close_websocket()
+                self.js_ctx_tab = None
+        except:
+            logger.info("Error during shutdown:\n" + format_exc())
+            pass
+        finally:
+            logger.info("Cancelling tasks...")
+            tasks = all_tasks()
+            current = current_task()
+            async def cancel_task(task: Task[Any]):
+                logger.debug(f"Cancelling task {task}")
+                try:
+                    task.cancel()
+                    try:
+                        await task
+                    except CancelledError:
+                        pass
+                    logger.debug(f"Task {task} finished")
+                except:
+                    logger.warn(f"Failed to cancel task {task}:\n" + format_exc())
+                    pass
+            if current:
+                tasks.remove(current)
+            await gather(*[cancel_task(task) for task in tasks])
+
+            logger.info("Shutdown finished.")
 
     def exception_handler(self, loop: AbstractEventLoop, context: Dict[str, str]):
         if context["message"] == "Unclosed connection":
@@ -107,11 +144,13 @@ class PluginManager:
           logger.debug("Did not find pluginOrder setting, set it to default")
 
     async def loader_reinjector(self):
-        while True:
+        while self.reinject:
             tab = None
             nf = False
             dc = False
             while not tab:
+                if not self.reinject:
+                    return
                 try:
                     tab = await get_gamepadui_tab()
                 except (client_exceptions.ClientConnectorError, client_exceptions.ServerDisconnectedError):
@@ -127,6 +166,7 @@ class PluginManager:
                 if not tab:
                     await sleep(5)
             await tab.open_websocket()
+            self.js_ctx_tab = tab
             await tab.enable()
             await self.inject_javascript(tab, True)
             try:
@@ -135,16 +175,22 @@ class PluginManager:
                         if not await tab.has_global_var("deckyHasLoaded", False):
                             await self.inject_javascript(tab)
                     elif msg.get("method", None) == "Inspector.detached":
+                        if not self.reinject:
+                            return
                         logger.info("CEF has requested that we detach.")
                         await tab.close_websocket()
+                        self.js_ctx_tab = None
                         break
                 # If this is a forceful disconnect the loop will just stop without any failure message. In this case, injector.py will handle this for us so we don't need to close the socket.
                 # This is because of https://github.com/aio-libs/aiohttp/blob/3ee7091b40a1bc58a8d7846e7878a77640e96996/aiohttp/client_ws.py#L321
                 logger.info("CEF has disconnected...")
                 # At this point the loop starts again and we connect to the freshly started Steam client once it is ready.
             except Exception:
+                if not self.reinject:
+                    return
                 logger.error("Exception while reading page events " + format_exc())
                 await tab.close_websocket()
+                self.js_ctx_tab = None
                 pass
         # while True:
         #     await sleep(5)
@@ -157,6 +203,8 @@ class PluginManager:
         try:
             # if first:
             if ON_LINUX and await tab.has_global_var("deckyHasLoaded", False):
+                await tab.close_websocket()
+                self.js_ctx_tab = None
                 await restart_webhelper()
                 return # We'll catch the next tab in the main loop
             await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => SteamClient.Browser.RestartJSContext(), 100)}else{window.deckyHasLoaded = true;(async()=>{try{await import('http://localhost:1337/frontend/index.js?v=%s')}catch(e){console.error(e)};})();}}catch(e){console.error(e)}" % (get_loader_version(), ), False, False, False)
@@ -165,7 +213,7 @@ class PluginManager:
             pass
 
     def run(self):
-        return run_app(self.web_app, host=get_server_host(), port=get_server_port(), loop=self.loop, access_log=None)
+        run_app(self.web_app, host=get_server_host(), port=get_server_port(), loop=self.loop, access_log=None, handle_signals=False, shutdown_timeout=15)
 
 def main():
     if ON_WINDOWS:

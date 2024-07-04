@@ -2,7 +2,7 @@ from logging import getLogger
 
 from asyncio import AbstractEventLoop, create_task
 
-from aiohttp import WSMsgType, WSMessage
+from aiohttp import WSCloseCode, WSMsgType, WSMessage
 from aiohttp.web import Application, WebSocketResponse, Request, Response, get
 
 from enum import IntEnum
@@ -133,3 +133,7 @@ class WSRouter:
     async def emit(self, event: str, *args: Any):
         self.logger.debug(f'Firing frontend event {event} with args {args}')
         await self.write({ "type": MessageType.EVENT.value, "event": event, "args": args })
+
+    async def disconnect(self):
+        if self.ws:
+            await self.ws.close(code=WSCloseCode.GOING_AWAY, message=b"Loader is shutting down")

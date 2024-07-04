@@ -19,6 +19,7 @@ import aiohttp_cors # pyright: ignore [reportMissingTypeStubs]
 from aiohttp import client_exceptions
 from aiohttp.web import Application, Response, Request, get, run_app, static # pyright: ignore [reportUnknownVariableType]
 from aiohttp_jinja2 import setup as jinja_setup
+from setproctitle import getproctitle, setproctitle, setthreadtitle
 
 # local modules
 from .browser import PluginBrowser
@@ -216,6 +217,8 @@ class PluginManager:
         run_app(self.web_app, host=get_server_host(), port=get_server_port(), loop=self.loop, access_log=None, handle_signals=False, shutdown_timeout=15)
 
 def main():
+    setproctitle(f"Decky Loader {get_loader_version()} ({getproctitle()})")
+    setthreadtitle("Decky Loader")
     if ON_WINDOWS:
         # Fix windows/flask not recognising that .js means 'application/javascript'
         import mimetypes
@@ -224,8 +227,8 @@ def main():
         # Required for multiprocessing support in frozen files
         multiprocessing.freeze_support()
     else:
-      if get_effective_user_id() != 0:
-        logger.warning(f"decky is running as an unprivileged user, this is not officially supported and may cause issues")
+        if get_effective_user_id() != 0:
+            logger.warning(f"decky is running as an unprivileged user, this is not officially supported and may cause issues")
 
     # Append the system and user python paths
     sys.path.extend(get_system_pythonpaths())

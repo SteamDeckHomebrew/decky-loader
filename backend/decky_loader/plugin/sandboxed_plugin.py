@@ -7,6 +7,7 @@ from sys import exit, path as syspath, modules as sysmodules
 from traceback import format_exc
 from asyncio import (get_event_loop, new_event_loop,
                      set_event_loop, sleep)
+from setproctitle import setproctitle, setthreadtitle
 
 from .messages import SocketResponseDict, SocketMessageType
 from ..localplatform.localsocket import LocalSocket
@@ -47,6 +48,9 @@ class SandboxedPlugin:
         try:
             signal(SIGINT, SIG_IGN)
             signal(SIGTERM, SIG_IGN)
+
+            setproctitle(f"{self.name} ({self.file})")
+            setthreadtitle(self.name)
 
             set_event_loop(new_event_loop())
             if self.passive:

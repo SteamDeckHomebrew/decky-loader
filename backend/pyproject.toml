@@ -23,6 +23,7 @@ watchdog = "^4"
 certifi = "*"
 packaging = "^24"
 multidict = "^6.0.5"
+setproctitle = "^1.3.3"
 
 [tool.poetry.group.dev.dependencies]
 pyinstaller = "^6.8.0"

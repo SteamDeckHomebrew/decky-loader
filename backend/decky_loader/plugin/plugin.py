@@ -109,7 +109,7 @@ class PluginWrapper:
     def start(self):
         if self.passive:
             return self
-        self.proc = Process(target=self.sandboxed_plugin.initialize, args=[self._socket], daemon=True)
+        self.proc = Process(target=self.sandboxed_plugin.initialize, args=[self._socket])
         self.proc.start()
         self._listener_task = create_task(self._response_listener())
         return self
@@ -121,9 +121,11 @@ class PluginWrapper:
         if hasattr(self, "_socket"):
             await self._socket.write_single_line(dumps({ "stop": True, "uninstall": uninstall }, ensure_ascii=False))
             await self._socket.close_socket_connection()
+        if self.proc:
+            self.proc.join()
+        await self.kill_if_still_running()
         if hasattr(self, "_listener_task"):
             self._listener_task.cancel()
-        await self.kill_if_still_running()
 
     async def kill_if_still_running(self):
         time = 0

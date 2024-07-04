@@ -58,13 +58,24 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
         await onCancel();
       }}
       strTitle={
-        <div>
+        <div style={{display: "flex", flexDirection: "row", alignItems: "center", width: "100%"}}>
           <TranslationHelper
             transClass={TranslationClass.PLUGIN_INSTALL_MODAL}
             transText="title"
             i18nArgs={{ artifact: artifact }}
             installType={installType}
           />
+          {loading && (
+            <div style={{marginLeft: "auto"}}>
+              <ProgressBarWithInfo
+                layout="inline"
+                
+                bottomSeparator="none"
+                nProgress={percentage}
+                sOperationText={downloadInfo}
+              />
+            </div>
+          )}
         </div>
       }
       strOKButtonText={
@@ -98,14 +109,6 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
           installType={installType}
         />
       </div>
-      {loading && (
-        <ProgressBarWithInfo
-          layout="inline"
-          bottomSeparator="none"
-          nProgress={percentage}
-          sOperationText={downloadInfo}
-        />
-      )}
       {hash == 'False' && <span style={{ color: 'red' }}>{t('PluginInstallModal.no_hash')}</span>}
     </ConfirmModal>
   );

@@ -1,6 +1,6 @@
 from logging import getLogger
 
-from asyncio import AbstractEventLoop, create_task
+from asyncio import AbstractEventLoop
 
 from aiohttp import WSCloseCode, WSMsgType, WSMessage
 from aiohttp.web import Application, WebSocketResponse, Request, Response, get
@@ -114,10 +114,10 @@ class WSRouter:
                                 # do stuff with the message
                                 if data["route"] in self.routes:
                                     self.logger.debug(f'Started PY call {data["route"]} ID {data["id"]}')
-                                    create_task(self._call_route(data["route"], data["args"], data["id"]))
+                                    self.loop.create_task(self._call_route(data["route"], data["args"], data["id"]))
                                 else:
                                     error = {"error":f'Route {data["route"]} does not exist.', "name": "RouteNotFoundError", "traceback": None}
-                                    create_task(self.write({"type": MessageType.ERROR.value, "id": data["id"], "error": error}))
+                                    self.loop.create_task(self.write({"type": MessageType.ERROR.value, "id": data["id"], "error": error}))
                             case _:
                                 self.logger.error("Unknown message type", data)
         finally:

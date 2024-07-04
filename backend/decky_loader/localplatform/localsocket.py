@@ -88,6 +88,8 @@ class UnixSocket:
             except asyncio.IncompleteReadError as err:
                 line.extend(err.partial)
                 break
+            except asyncio.CancelledError:
+                break
             else:
                 break
 

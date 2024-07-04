@@ -147,8 +147,9 @@ class PluginBrowser:
         except Exception as e:
             logger.error(f"Plugin {name} in {plugin_dir} was not uninstalled")
             logger.error(f"Error at {str(e)}", exc_info=e)
-        if self.loader.watcher:
-            self.loader.watcher.disabled = False
+        finally:
+            if self.loader.watcher:
+                self.loader.watcher.disabled = False
 
     async def _install(self, artifact: str, name: str, version: str, hash: str):
         await self.loader.ws.emit("loader/plugin_download_start", name)

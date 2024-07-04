@@ -26,13 +26,12 @@
           });
         }).env.overrideAttrs (oldAttrs: {
           shellHook = ''
-            set -o noclobber
             PYTHONPATH=`which python`
             FILE=.vscode/settings.json
             if [ -f "$FILE" ]; then
-              echo "$FILE already exists, not writing interpreter path to it."
+              jq --arg pythonpath "$PYTHONPATH" '.["python.defaultInterpreterPath"] = $pythonpath' $FILE > "$FILE.tmp" && mv "$FILE.tmp" "$FILE"
             else
-              echo "{\"python.defaultInterpreterPath\": \"''${PYTHONPATH}\"}" > "$FILE"
+              echo "{\"python.defaultInterpreterPath\": \"$PYTHONPATH\"}" > "$FILE"
             fi
           '';
           UV_USE_IO_URING = 0; # work around node#48444
@@ -40,6 +39,7 @@
             nodejs_22
             nodePackages.pnpm
             poetry
+            jq
             # fixes local pyright not being able to see the pythonpath properly.
             (pkgs.writeShellScriptBin "pyright" ''
               ${pkgs.pyright}/bin/pyright --pythonpath `which python3` "$@" '')

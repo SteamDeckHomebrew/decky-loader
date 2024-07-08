@@ -1,4 +1,4 @@
-import { readdir } from "fs/promises";
+// import { readdir } from "fs/promises";
 
 export default {
   contextSeparator: '_',
@@ -38,7 +38,8 @@ export default {
   lineEnding: 'auto',
   // Control the line ending. See options at https://github.com/ryanve/eol
 
-  locales: (await readdir('../backend/decky_loader/locales/')).map(lang => lang.replace(".json", "")),
+  // locales: (await readdir('../backend/decky_loader/locales/')).map(lang => lang.replace(".json", "")),
+  locales: ["en-US"],
   // An array of the locales in your applications
 
   namespaceSeparator: false,

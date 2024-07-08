@@ -231,6 +231,15 @@
         "store_testing_warning": {
             "desc": "Je kunt dit winkelkanaal gebruiken om nog in ontwikkeling zijnde plug-inversies te testen. Zorg ervoor dat je feedback geeft op GitHub, zodat de plug-in voor alle gebruikers kan worden bijgewerkt.",
             "label": "Welkom bij het Testing-winkelkanaal"
+        },
+        "download_progress_info": {
+            "start": "",
+            "open_zip": "",
+            "download_zip": "",
+            "increment_count": "",
+            "parse_zip": "",
+            "uninstalling_previous": "",
+            "installing_plugin": ""
         }
     },
     "StoreSelect": {

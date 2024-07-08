@@ -19,6 +19,7 @@ class UnixSocket:
         self.reader = None
         self.writer = None
         self.server_writer = None
+        self.open_lock = asyncio.Lock()
 
     async def setup_server(self):
         try:
@@ -42,10 +43,11 @@ class UnixSocket:
             return True
 
     async def get_socket_connection(self):
-        if not await self._open_socket_if_not_exists():
-            return None, None
-        
-        return self.reader, self.writer
+        async with self.open_lock:
+            if not await self._open_socket_if_not_exists():
+                return None, None
+            
+            return self.reader, self.writer
     
     async def close_socket_connection(self):
         if self.writer != None:

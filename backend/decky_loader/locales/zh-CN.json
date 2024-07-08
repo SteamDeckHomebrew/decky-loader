@@ -239,11 +239,7 @@
         }
     },
     "Testing": {
-        "download": "下载",
-        "error": "",
-        "header": "",
-        "loading": "",
-        "start_download_toast": ""
+        "download": "下载"
     },
     "TitleView": {
         "decky_store_desc": "打开 Decky 商店",

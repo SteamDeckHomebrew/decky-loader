@@ -95,14 +95,12 @@
         }
     },
     "PluginListIndex": {
-        "freeze": "",
         "hide": "クイックアクセス: 非表示",
         "no_plugin": "プラグインがインストールされていません!",
         "plugin_actions": "プラグインアクション",
         "reinstall": "再インストール",
         "reload": "再読み込み",
         "show": "クイックアクセス: 表示",
-        "unfreeze": "",
         "uninstall": "アンインストール",
         "update_all_other": "{{count}} 個のプラグインをアップデート",
         "update_to": "{{name}} を更新"
@@ -187,8 +185,7 @@
     "SettingsIndex": {
         "developer_title": "開発者",
         "general_title": "一般",
-        "plugins_title": "プラグイン",
-        "testing_title": ""
+        "plugins_title": "プラグイン"
     },
     "Store": {
         "store_contrib": {
@@ -214,10 +211,6 @@
             "about": "概要",
             "alph_asce": "アルファベット(Z to A)",
             "alph_desc": "アルファベット(A to Z)",
-            "date_asce": "",
-            "date_desc": "",
-            "downloads_asce": "",
-            "downloads_desc": "",
             "title": "閲覧"
         },
         "store_testing_cta": "Decky Loaderチームを支援するために、新しいプラグインのテストを検討してください!",
@@ -237,13 +230,6 @@
             "label": "ストアチャンネル",
             "testing": "テスト"
         }
-    },
-    "Testing": {
-        "download": "",
-        "error": "",
-        "header": "",
-        "loading": "",
-        "start_download_toast": ""
     },
     "TitleView": {
         "decky_store_desc": "Deckyストアを開く",

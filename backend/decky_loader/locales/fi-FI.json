@@ -99,14 +99,12 @@
         }
     },
     "PluginListIndex": {
-        "freeze": "",
         "hide": "Pikavalikko: Piilota",
         "no_plugin": "Ei asennettuja laajennuksia!",
         "plugin_actions": "Laajennustoiminnot",
         "reinstall": "Uudelleenasenna",
         "reload": "Lataa uudelleen",
         "show": "Pikavalikko: Näytä",
-        "unfreeze": "",
         "uninstall": "Poista asennus",
         "update_all_one": "Päivitä yksi laajennus",
         "update_all_other": "Päivitä {{count}} laajennusta",
@@ -194,8 +192,7 @@
     "SettingsIndex": {
         "developer_title": "Kehittäjä",
         "general_title": "Yleinen",
-        "plugins_title": "Laajennukset",
-        "testing_title": ""
+        "plugins_title": "Laajennukset"
     },
     "Store": {
         "store_contrib": {
@@ -221,10 +218,6 @@
             "about": "Tietoja",
             "alph_asce": "Aakkosjärjestyksessä (Z–A)",
             "alph_desc": "Aakkosjärjestyksessä (A–Z)",
-            "date_asce": "",
-            "date_desc": "",
-            "downloads_asce": "",
-            "downloads_desc": "",
             "title": "Selaa"
         },
         "store_testing_cta": "Harkitse uusien lisäosien testaamista auttaaksesi Decky Loader -tiimiä!",
@@ -244,13 +237,6 @@
             "label": "Myymäläkanava",
             "testing": "Testaus"
         }
-    },
-    "Testing": {
-        "download": "",
-        "error": "",
-        "header": "",
-        "loading": "",
-        "start_download_toast": ""
     },
     "TitleView": {
         "decky_store_desc": "Avaa Decky-myymälä",

@@ -246,11 +246,7 @@
         }
     },
     "Testing": {
-        "download": "Downloaden",
-        "error": "",
-        "header": "",
-        "loading": "",
-        "start_download_toast": ""
+        "download": "Downloaden"
     },
     "TitleView": {
         "decky_store_desc": "Decky Store openen",

@@ -15,13 +15,6 @@
             "back": "الخلف"
         }
     },
-    "FilePickerError": {
-        "errors": {
-            "file_not_found": "",
-            "perm_denied": "",
-            "unknown": ""
-        }
-    },
     "FilePickerIndex": {
         "file": {
             "select": "إختر هذا الملف"
@@ -56,6 +49,32 @@
         },
         "ok_button": {
             "idle": "تأكيد"
+        },
+        "title": {
+            "update_zero": "",
+            "update_one": "",
+            "update_two": "",
+            "update_few": "",
+            "update_many": "",
+            "update_other": "",
+            "install_zero": "",
+            "install_one": "",
+            "install_two": "",
+            "install_few": "",
+            "install_many": "",
+            "install_other": "",
+            "mixed_zero": "",
+            "mixed_one": "",
+            "mixed_two": "",
+            "mixed_few": "",
+            "mixed_many": "",
+            "mixed_other": "",
+            "reinstall_zero": "",
+            "reinstall_one": "",
+            "reinstall_two": "",
+            "reinstall_few": "",
+            "reinstall_many": "",
+            "reinstall_other": ""
         }
     },
     "PluginCard": {
@@ -71,7 +90,6 @@
             "desc": "هل أنت متأكد من رغبتك في تنصيب {{artifact}} {{version}}؟",
             "title": "تنصيب {{artifact}}"
         },
-        "no_hash": "",
         "reinstall": {
             "button_idle": "إعادة تنصيب",
             "button_processing": "تتم إعادة التنصيب",
@@ -86,10 +104,7 @@
         }
     },
     "PluginListIndex": {
-        "freeze": "",
         "hide": "إخفاء من قائمة الوصول السريع",
-        "no_plugin": "",
-        "plugin_actions": "",
         "reinstall": "إعادة التنصيب",
         "reload": "إعادة التحميل",
         "show": "إظهار في قائمة الوصول السريع",
@@ -111,9 +126,14 @@
         "error": "خطا",
         "plugin_uninstall": {
             "button": "إزالة التنصيب",
-            "desc": "",
             "title": "إزالة التنصيب {{name}}"
-        }
+        },
+        "plugin_update_zero": "",
+        "plugin_update_one": "",
+        "plugin_update_two": "",
+        "plugin_update_few": "",
+        "plugin_update_many": "",
+        "plugin_update_other": ""
     },
     "PluginView": {
         "hidden_zero": "",
@@ -123,134 +143,14 @@
         "hidden_many": "",
         "hidden_other": ""
     },
-    "RemoteDebugging": {
-        "remote_cef": {
-            "desc": "",
-            "label": ""
-        }
-    },
     "SettingsDeveloperIndex": {
-        "cef_console": {
-            "button": "",
-            "desc": "",
-            "label": ""
-        },
         "header": "أخرى",
         "react_devtools": {
-            "desc": "",
-            "ip_label": "عنوان الشبكة",
-            "label": ""
+            "ip_label": "عنوان الشبكة"
         },
         "third_party_plugins": {
             "button_install": "تنصيب",
-            "button_zip": "تصفح",
-            "header": "",
-            "label_desc": "",
-            "label_url": "",
-            "label_zip": ""
-        },
-        "valve_internal": {
-            "desc1": "",
-            "desc2": "",
-            "label": ""
-        }
-    },
-    "SettingsGeneralIndex": {
-        "about": {
-            "decky_version": "",
-            "header": ""
-        },
-        "beta": {
-            "header": ""
-        },
-        "developer_mode": {
-            "label": ""
-        },
-        "notifications": {
-            "decky_updates_label": "",
-            "header": "",
-            "plugin_updates_label": ""
-        },
-        "other": {
-            "header": ""
-        },
-        "updates": {
-            "header": ""
-        }
-    },
-    "SettingsIndex": {
-        "developer_title": "",
-        "general_title": "",
-        "plugins_title": "",
-        "testing_title": ""
-    },
-    "Store": {
-        "store_contrib": {
-            "desc": "",
-            "label": ""
-        },
-        "store_search": {
-            "label": ""
-        },
-        "store_sort": {
-            "label": "",
-            "label_def": ""
-        },
-        "store_source": {
-            "desc": "",
-            "label": ""
-        },
-        "store_tabs": {
-            "about": "",
-            "alph_asce": "",
-            "alph_desc": "",
-            "date_asce": "",
-            "date_desc": "",
-            "downloads_asce": "",
-            "downloads_desc": "",
-            "title": ""
-        },
-        "store_testing_cta": "",
-        "store_testing_warning": {
-            "desc": "",
-            "label": ""
-        }
-    },
-    "StoreSelect": {
-        "custom_store": {
-            "label": "",
-            "url_label": ""
-        },
-        "store_channel": {
-            "custom": "",
-            "default": "",
-            "label": "",
-            "testing": ""
-        }
-    },
-    "Testing": {
-        "download": "",
-        "error": "",
-        "header": "",
-        "loading": "",
-        "start_download_toast": ""
-    },
-    "TitleView": {
-        "decky_store_desc": "",
-        "settings_desc": ""
-    },
-    "Updater": {
-        "decky_updates": "",
-        "no_patch_notes_desc": "",
-        "patch_notes_desc": "",
-        "updates": {
-            "check_button": "",
-            "checking": "",
-            "install_button": "",
-            "label": "",
-            "lat_version": "",
-            "reloading": "",
-            "updating": ""
+            "button_zip": "تصفح"
         }
     }
 }

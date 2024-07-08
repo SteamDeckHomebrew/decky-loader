@@ -238,6 +238,15 @@
         "store_testing_warning": {
             "desc": "Pode usar esta versão da loja para testar versões experimentais de plugins. Certifique-se de deixar feedback no GitHub para que o plugin possa ser atualizado para todos os utilizadores.",
             "label": "Bem-vindo ao Canal de Testes da Loja"
+        },
+        "download_progress_info": {
+            "start": "",
+            "open_zip": "",
+            "download_zip": "",
+            "increment_count": "",
+            "parse_zip": "",
+            "uninstalling_previous": "",
+            "installing_plugin": ""
         }
     },
     "StoreSelect": {

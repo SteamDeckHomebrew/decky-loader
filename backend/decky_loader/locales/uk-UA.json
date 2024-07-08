@@ -238,6 +238,15 @@
         "store_testing_warning": {
             "desc": "",
             "label": ""
+        },
+        "download_progress_info": {
+            "uninstalling_previous": "",
+            "installing_plugin": "",
+            "increment_count": "",
+            "parse_zip": "",
+            "download_zip": "",
+            "start": "",
+            "open_zip": ""
         }
     },
     "StoreSelect": {

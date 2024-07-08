@@ -231,6 +231,15 @@
         "store_testing_warning": {
             "desc": "Du kannst diesen Store Kanal nutzen, um brandneue Testversionen von Plugins auszuprobieren. Denk daran Feedback auf GitHub zu hinterlassen, sodass das Plugin für alle Nutzer verbessert werden kann.",
             "label": "Willkommen zum Test Store Kanal"
+        },
+        "download_progress_info": {
+            "download_zip": "",
+            "increment_count": "",
+            "installing_plugin": "",
+            "open_zip": "",
+            "parse_zip": "",
+            "start": "",
+            "uninstalling_previous": ""
         }
     },
     "StoreSelect": {

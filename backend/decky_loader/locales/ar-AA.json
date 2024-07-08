@@ -8,7 +8,9 @@
         }
     },
     "Developer": {
-        "5secreload": "إعادة التحميل في 5 ثواني"
+        "5secreload": "إعادة التحميل في 5 ثواني",
+        "disabling": "",
+        "enabling": ""
     },
     "DropdownMultiselect": {
         "button": {
@@ -55,7 +57,34 @@
             "update": "تحديث {{name}} إلى {{version}}"
         },
         "ok_button": {
-            "idle": "تأكيد"
+            "idle": "تأكيد",
+            "loading": ""
+        },
+        "title": {
+            "update_zero": "",
+            "update_one": "",
+            "update_two": "",
+            "update_few": "",
+            "update_many": "",
+            "update_other": "",
+            "install_zero": "",
+            "install_one": "",
+            "install_two": "",
+            "install_few": "",
+            "install_many": "",
+            "install_other": "",
+            "mixed_zero": "",
+            "mixed_one": "",
+            "mixed_two": "",
+            "mixed_few": "",
+            "mixed_many": "",
+            "mixed_other": "",
+            "reinstall_zero": "",
+            "reinstall_one": "",
+            "reinstall_two": "",
+            "reinstall_few": "",
+            "reinstall_many": "",
+            "reinstall_other": ""
         }
     },
     "PluginCard": {
@@ -113,7 +142,19 @@
             "button": "إزالة التنصيب",
             "desc": "",
             "title": "إزالة التنصيب {{name}}"
-        }
+        },
+        "plugin_error_uninstall": "",
+        "plugin_load_error": {
+            "message": "",
+            "toast": ""
+        },
+        "decky_update_available": "",
+        "plugin_update_zero": "",
+        "plugin_update_one": "",
+        "plugin_update_two": "",
+        "plugin_update_few": "",
+        "plugin_update_many": "",
+        "plugin_update_other": ""
     },
     "PluginView": {
         "hidden_zero": "",
@@ -214,6 +255,19 @@
         "store_testing_warning": {
             "desc": "",
             "label": ""
+        },
+        "download_progress_info": {
+            "start": "",
+            "open_zip": "",
+            "download_zip": "",
+            "increment_count": "",
+            "parse_zip": "",
+            "uninstalling_previous": "",
+            "installing_plugin": ""
+        },
+        "store_filter": {
+            "label": "",
+            "label_def": ""
         }
     },
     "StoreSelect": {
@@ -250,7 +304,8 @@
             "label": "",
             "lat_version": "",
             "reloading": "",
-            "updating": ""
+            "updating": "",
+            "cur_version": ""
         }
     }
 }

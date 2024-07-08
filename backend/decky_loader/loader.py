@@ -212,5 +212,3 @@ class Loader:
         plugin = self.plugins[plugin_name]
 
         await self.reload_queue.put((plugin.file, plugin.plugin_directory))
-
-        return web.Response(status=200)

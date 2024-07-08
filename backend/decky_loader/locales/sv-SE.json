@@ -62,7 +62,13 @@
         },
         "title": {
             "install_one": "Install 1 tillägg",
-            "install_other": "Installerar {{count}} tillägg"
+            "install_other": "Installerar {{count}} tillägg",
+            "mixed_one": "",
+            "mixed_other": "",
+            "reinstall_one": "",
+            "reinstall_other": "",
+            "update_one": "",
+            "update_other": ""
         }
     },
     "PluginCard": {
@@ -72,7 +78,25 @@
         "plugin_version_label": ""
     },
     "PluginInstallModal": {
-        "no_hash": ""
+        "no_hash": "",
+        "update": {
+            "button_processing": "",
+            "button_idle": "",
+            "desc": "",
+            "title": ""
+        },
+        "install": {
+            "button_idle": "",
+            "button_processing": "",
+            "desc": "",
+            "title": ""
+        },
+        "reinstall": {
+            "button_idle": "",
+            "button_processing": "",
+            "desc": "",
+            "title": ""
+        }
     },
     "PluginListIndex": {
         "freeze": "",
@@ -96,7 +120,17 @@
             "button": "",
             "desc": "",
             "title": ""
-        }
+        },
+        "error": "",
+        "decky_title": "",
+        "decky_update_available": "",
+        "plugin_error_uninstall": "",
+        "plugin_load_error": {
+            "message": "",
+            "toast": ""
+        },
+        "plugin_update_one": "",
+        "plugin_update_other": ""
     },
     "PluginView": {
         "hidden_one": "",
@@ -193,6 +227,19 @@
         "store_testing_warning": {
             "desc": "",
             "label": ""
+        },
+        "store_filter": {
+            "label_def": "",
+            "label": ""
+        },
+        "download_progress_info": {
+            "start": "",
+            "open_zip": "",
+            "download_zip": "",
+            "increment_count": "",
+            "parse_zip": "",
+            "uninstalling_previous": "",
+            "installing_plugin": ""
         }
     },
     "StoreSelect": {
@@ -229,7 +276,8 @@
             "label": "",
             "lat_version": "",
             "reloading": "",
-            "updating": ""
+            "updating": "",
+            "cur_version": ""
         }
     }
 }

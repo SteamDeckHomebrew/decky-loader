@@ -99,14 +99,12 @@
         }
     },
     "PluginListIndex": {
-        "freeze": "",
         "hide": "Γρήγορη πρόσβαση: Απόκρυψη",
         "no_plugin": "Δεν υπάρχουν εγκατεστημένες επεκτάσεις!",
         "plugin_actions": "Ενέργειες επεκτάσεων",
         "reinstall": "Επανεγκατάσταση",
         "reload": "Επαναφόρτωση",
         "show": "Γρήγορη πρόσβαση: Εμφάνιση",
-        "unfreeze": "",
         "uninstall": "Απεγκατάσταση",
         "update_all_one": "Ενημέρωση 1 επέκτασης",
         "update_all_other": "Ενημέρωση {{count}} επεκτάσεων",
@@ -194,8 +192,7 @@
     "SettingsIndex": {
         "developer_title": "Προγραμματιστής",
         "general_title": "Γενικά",
-        "plugins_title": "Επεκτάσεις",
-        "testing_title": ""
+        "plugins_title": "Επεκτάσεις"
     },
     "Store": {
         "store_contrib": {
@@ -221,9 +218,7 @@
             "about": "Σχετικά",
             "alph_asce": "Αλφαβητικά (Ζ σε Α)",
             "alph_desc": "Αλφαβητικά (Α σε Ζ)",
-            "date_asce": "",
             "date_desc": "",
-            "downloads_asce": "",
             "downloads_desc": "",
             "title": "Περιήγηση"
         },
@@ -233,13 +228,9 @@
             "label": "Καλώς ήρθατε στο Δοκιμαστικό Κανάλι τους Καταστήματος"
         },
         "download_progress_info": {
-            "start": "",
             "open_zip": "",
-            "download_zip": "",
             "increment_count": "",
-            "parse_zip": "",
-            "uninstalling_previous": "",
-            "installing_plugin": ""
+            "uninstalling_previous": ""
         }
     },
     "StoreSelect": {
@@ -255,11 +246,8 @@
         }
     },
     "Testing": {
-        "download": "",
         "error": "",
-        "header": "",
-        "loading": "",
-        "start_download_toast": ""
+        "loading": ""
     },
     "TitleView": {
         "decky_store_desc": "Άνοιγμα Καταστήματος Decky",

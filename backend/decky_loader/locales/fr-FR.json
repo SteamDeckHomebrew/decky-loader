@@ -240,13 +240,9 @@
             "label": "Bienvenue sur la chaîne du magasin de tests"
         },
         "download_progress_info": {
-            "increment_count": "",
             "parse_zip": "",
-            "uninstalling_previous": "",
             "download_zip": "",
-            "open_zip": "",
-            "start": "",
-            "installing_plugin": ""
+            "start": ""
         }
     },
     "StoreSelect": {
@@ -263,9 +259,7 @@
     },
     "Testing": {
         "download": "Télécharger",
-        "error": "",
         "header": "",
-        "loading": "",
         "start_download_toast": ""
     },
     "TitleView": {

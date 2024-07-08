@@ -2,9 +2,7 @@
     "BranchSelect": {
         "update_channel": {
             "label": "Kanali Përditësimet",
-            "prerelease": "",
-            "stable": "Fiksuar",
-            "testing": ""
+            "stable": "Fiksuar"
         }
     },
     "DropdownMultiselect": {
@@ -14,9 +12,7 @@
     },
     "FilePickerError": {
         "errors": {
-            "file_not_found": "",
-            "perm_denied": "",
-            "unknown": ""
+            "perm_denied": ""
         }
     },
     "FilePickerIndex": {
@@ -24,24 +20,17 @@
             "select": ""
         },
         "files": {
-            "all_files": "",
-            "file_type": "",
-            "show_hidden": ""
+            "file_type": ""
         },
         "filter": {
             "created_asce": "",
-            "created_desc": "",
             "modified_asce": "",
-            "modified_desc": "",
             "name_asce": "",
-            "name_desc": "",
-            "size_asce": "",
-            "size_desc": ""
+            "size_asce": ""
         },
         "folder": {
             "label": "",
-            "select": "Përdore këtë folder",
-            "show_more": ""
+            "select": "Përdore këtë folder"
         }
     },
     "MultiplePluginsInstallModal": {
@@ -57,19 +46,15 @@
             "update_other": ""
         },
         "description": {
-            "install": "",
-            "reinstall": "",
-            "update": ""
+            "reinstall": ""
         },
         "ok_button": {
-            "idle": "",
-            "loading": ""
+            "idle": ""
         }
     },
     "PluginCard": {
         "plugin_full_access": "",
         "plugin_install": "Instalo",
-        "plugin_no_desc": "",
         "plugin_version_label": "Versioni Shteses"
     },
     "PluginInstallModal": {
@@ -89,23 +74,17 @@
         "update": {
             "button_processing": "Përditësohet",
             "desc": "Je i sigurt a don ta përditësojsh {{artifact}} {{version}}?",
-            "title": "Përditëso {{artifact}}",
-            "button_idle": ""
+            "title": "Përditëso {{artifact}}"
         }
     },
     "PluginListIndex": {
         "freeze": "",
-        "hide": "",
         "no_plugin": "Nuk ka shtesa të instaluar!",
-        "plugin_actions": "",
         "reinstall": "",
-        "reload": "",
         "show": "",
-        "unfreeze": "",
         "uninstall": "Çinstalo",
         "update_all_one": "",
-        "update_all_other": "",
-        "update_to": ""
+        "update_all_other": ""
     },
     "PluginListLabel": {
         "hidden": ""
@@ -121,10 +100,8 @@
         },
         "plugin_update_one": "",
         "plugin_update_other": "",
-        "decky_update_available": "",
         "plugin_load_error": {
-            "message": "",
-            "toast": ""
+            "message": ""
         }
     },
     "PluginView": {
@@ -133,19 +110,15 @@
     },
     "RemoteDebugging": {
         "remote_cef": {
-            "desc": "",
             "label": ""
         }
     },
     "SettingsDeveloperIndex": {
         "cef_console": {
-            "button": "",
-            "desc": "",
-            "label": ""
+            "desc": ""
         },
         "header": "",
         "react_devtools": {
-            "desc": "",
             "ip_label": "IP",
             "label": "Aktivizo React DevTools"
         },
@@ -158,25 +131,18 @@
             "label_zip": "Instalo Shtes Nga ZIP"
         },
         "valve_internal": {
-            "desc1": "",
-            "desc2": "",
-            "label": ""
+            "desc2": ""
         }
     },
     "SettingsGeneralIndex": {
         "about": {
-            "decky_version": "Versioni Decky",
-            "header": ""
+            "decky_version": "Versioni Decky"
         },
         "beta": {
             "header": ""
         },
-        "developer_mode": {
-            "label": ""
-        },
         "notifications": {
             "decky_updates_label": "",
-            "header": "",
             "plugin_updates_label": ""
         },
         "other": {
@@ -189,12 +155,10 @@
     "SettingsIndex": {
         "developer_title": "Zhvillues",
         "general_title": "Gjeneral",
-        "plugins_title": "",
         "testing_title": ""
     },
     "Store": {
         "store_contrib": {
-            "desc": "",
             "label": "Kontributi"
         },
         "store_filter": {
@@ -205,79 +169,56 @@
             "label": "Kërko"
         },
         "store_sort": {
-            "label": "Rendit",
-            "label_def": ""
+            "label": "Rendit"
         },
         "store_source": {
             "desc": "",
             "label": "Kodin Burimor"
         },
         "store_tabs": {
-            "about": "",
             "alph_asce": "",
-            "alph_desc": "",
             "date_asce": "",
-            "date_desc": "",
             "downloads_asce": "",
-            "downloads_desc": "",
             "title": "Kërko"
         },
-        "store_testing_cta": "",
         "store_testing_warning": {
-            "desc": "",
-            "label": ""
+            "desc": ""
         },
         "download_progress_info": {
             "installing_plugin": "",
-            "open_zip": "",
             "parse_zip": "",
-            "start": "",
             "uninstalling_previous": "",
-            "download_zip": "",
             "increment_count": ""
         }
     },
     "StoreSelect": {
         "custom_store": {
-            "label": "",
             "url_label": ""
         },
         "store_channel": {
-            "custom": "",
             "default": "",
-            "label": "Kanali Dyqanit",
-            "testing": ""
+            "label": "Kanali Dyqanit"
         }
     },
     "Testing": {
         "download": "",
-        "error": "",
         "header": "",
-        "loading": "",
         "start_download_toast": ""
     },
     "TitleView": {
-        "decky_store_desc": "",
         "settings_desc": ""
     },
     "Updater": {
-        "decky_updates": "",
         "no_patch_notes_desc": "",
-        "patch_notes_desc": "",
         "updates": {
             "check_button": "",
-            "checking": "",
             "cur_version": "Versioni e tanishëme: {{ver}}",
-            "install_button": "",
             "label": "",
-            "lat_version": "",
-            "reloading": "",
-            "updating": ""
+            "reloading": ""
         }
     },
     "Developer": {
         "5secreload": "",
-        "disabling": "",
         "enabling": ""
     }
 }

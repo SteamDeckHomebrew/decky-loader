@@ -240,13 +240,9 @@
             "label": "Добро пожаловать в тестовый канал магазина"
         },
         "download_progress_info": {
-            "start": "",
             "open_zip": "",
-            "download_zip": "",
             "increment_count": "",
-            "parse_zip": "",
-            "uninstalling_previous": "",
-            "installing_plugin": ""
+            "uninstalling_previous": ""
         }
     },
     "StoreSelect": {
@@ -263,9 +259,7 @@
     },
     "Testing": {
         "download": "Загрузить",
-        "error": "",
         "header": "",
-        "loading": "",
         "start_download_toast": ""
     },
     "TitleView": {

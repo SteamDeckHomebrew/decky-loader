@@ -226,13 +226,9 @@
             "label": "테스트 스토어 채널에 오신 것을 환영합니다"
         },
         "download_progress_info": {
-            "start": "",
             "open_zip": "",
-            "download_zip": "",
             "increment_count": "",
-            "parse_zip": "",
-            "uninstalling_previous": "",
-            "installing_plugin": ""
+            "uninstalling_previous": ""
         }
     },
     "StoreSelect": {
@@ -249,9 +245,7 @@
     },
     "Testing": {
         "download": "다운로드",
-        "error": "",
         "header": "",
-        "loading": "",
         "start_download_toast": ""
     },
     "TitleView": {

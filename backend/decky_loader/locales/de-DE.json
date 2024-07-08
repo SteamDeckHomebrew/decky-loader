@@ -233,13 +233,9 @@
             "label": "Willkommen zum Test Store Kanal"
         },
         "download_progress_info": {
-            "download_zip": "",
             "increment_count": "",
-            "installing_plugin": "",
             "open_zip": "",
-            "parse_zip": "",
-            "start": "",
-            "uninstalling_previous": ""
+            "start": ""
         }
     },
     "StoreSelect": {
@@ -256,9 +252,7 @@
     },
     "Testing": {
         "download": "Download",
-        "error": "",
         "header": "",
-        "loading": "",
         "start_download_toast": ""
     },
     "TitleView": {

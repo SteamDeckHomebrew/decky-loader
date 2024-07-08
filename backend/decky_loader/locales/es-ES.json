@@ -12,41 +12,25 @@
         "disabling": "Desactivando DevTools de React",
         "enabling": "Activando DevTools de React"
     },
-    "DropdownMultiselect": {
-        "button": {
-            "back": ""
-        }
-    },
     "FilePickerError": {
         "errors": {
             "file_not_found": "",
-            "perm_denied": "",
             "unknown": ""
         }
     },
     "FilePickerIndex": {
-        "file": {
-            "select": ""
-        },
         "files": {
             "all_files": "",
-            "file_type": "",
             "show_hidden": ""
         },
         "filter": {
-            "created_asce": "",
             "created_desc": "",
-            "modified_asce": "",
             "modified_desc": "",
-            "name_asce": "",
             "name_desc": "",
-            "size_asce": "",
             "size_desc": ""
         },
         "folder": {
-            "label": "",
-            "select": "Usar esta carpeta",
-            "show_more": ""
+            "select": "Usar esta carpeta"
         }
     },
     "MultiplePluginsInstallModal": {
@@ -103,22 +87,17 @@
         }
     },
     "PluginListIndex": {
-        "freeze": "",
         "hide": "",
         "no_plugin": "¡No hay plugins instalados!",
         "plugin_actions": "Acciones de plugin",
         "reinstall": "Reinstalar",
         "reload": "Recargar",
-        "show": "",
         "unfreeze": "",
         "uninstall": "Desinstalar",
         "update_all_one": "Actualizar 1 plugin",
         "update_all_many": "Actualizar {{count}} plugins",
         "update_all_other": "Actualizar {{count}} plugins",
         "update_to": "Actualizar a {{name}}"
-    },
-    "PluginListLabel": {
-        "hidden": ""
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -187,9 +166,7 @@
             "label": "Modo desarrollador"
         },
         "notifications": {
-            "decky_updates_label": "",
-            "header": "",
-            "plugin_updates_label": ""
+            "header": ""
         },
         "other": {
             "header": "Otros"
@@ -201,8 +178,7 @@
     "SettingsIndex": {
         "developer_title": "Desarrollador",
         "general_title": "General",
-        "plugins_title": "Plugins",
-        "testing_title": ""
+        "plugins_title": "Plugins"
     },
     "Store": {
         "store_contrib": {
@@ -228,25 +204,18 @@
             "about": "Información",
             "alph_asce": "Alfabéticamente (Z-A)",
             "alph_desc": "Alfabéticamente (A-Z)",
-            "date_asce": "",
             "date_desc": "",
-            "downloads_asce": "",
             "downloads_desc": "",
             "title": "Navegar"
         },
         "store_testing_cta": "¡Por favor considera probar plugins nuevos para ayudar al equipo de Decky Loader!",
         "store_testing_warning": {
-            "desc": "",
             "label": ""
         },
         "download_progress_info": {
-            "installing_plugin": "",
             "download_zip": "",
-            "increment_count": "",
             "open_zip": "",
-            "parse_zip": "",
-            "start": "",
-            "uninstalling_previous": ""
+            "start": ""
         }
     },
     "StoreSelect": {
@@ -262,15 +231,11 @@
         }
     },
     "Testing": {
-        "download": "",
         "error": "",
-        "header": "",
-        "loading": "",
-        "start_download_toast": ""
+        "loading": ""
     },
     "TitleView": {
-        "decky_store_desc": "",
-        "settings_desc": ""
+        "decky_store_desc": ""
     },
     "Updater": {
         "decky_updates": "Actualizaciones de Decky",

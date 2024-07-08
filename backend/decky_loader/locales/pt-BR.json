@@ -110,7 +110,6 @@
         "reinstall": "Reinstalar",
         "reload": "Recarregar",
         "show": "Acesso Rápido: Mostrar",
-        "unfreeze": "",
         "uninstall": "Desinstalar",
         "update_all_one": "Atualizar 1 plugin",
         "update_all_many": "Atualizar {{count}} plugins",
@@ -201,8 +200,7 @@
     "SettingsIndex": {
         "developer_title": "Desenvolvedor",
         "general_title": "Geral",
-        "plugins_title": "Plugins",
-        "testing_title": ""
+        "plugins_title": "Plugins"
     },
     "Store": {
         "store_contrib": {
@@ -228,9 +226,7 @@
             "about": "Sobre",
             "alph_asce": "Alfabética (Z - A)",
             "alph_desc": "Alfabética (A - Z)",
-            "date_asce": "",
             "date_desc": "",
-            "downloads_asce": "",
             "downloads_desc": "",
             "title": "Navegar"
         },
@@ -240,13 +236,9 @@
             "label": "Bem-vindo ao Canal de Testes da Loja"
         },
         "download_progress_info": {
-            "start": "",
             "open_zip": "",
-            "download_zip": "",
             "increment_count": "",
-            "parse_zip": "",
-            "uninstalling_previous": "",
-            "installing_plugin": ""
+            "uninstalling_previous": ""
         }
     },
     "StoreSelect": {
@@ -262,11 +254,8 @@
         }
     },
     "Testing": {
-        "download": "",
         "error": "",
-        "header": "",
-        "loading": "",
-        "start_download_toast": ""
+        "loading": ""
     },
     "TitleView": {
         "decky_store_desc": "Abrir Loja Decky",

@@ -14,19 +14,15 @@
     },
     "FilePickerError": {
         "errors": {
-            "file_not_found": "",
             "unknown": ""
         }
     },
     "FilePickerIndex": {
         "files": {
-            "all_files": "",
             "show_hidden": ""
         },
         "filter": {
-            "created_desc": "",
             "modified_desc": "",
-            "name_desc": "",
             "size_desc": ""
         },
         "folder": {
@@ -168,9 +164,6 @@
         "developer_mode": {
             "label": "Розробницький режим"
         },
-        "notifications": {
-            "header": ""
-        },
         "other": {
             "header": "Інше"
         },
@@ -207,17 +200,12 @@
             "about": "Інформація",
             "alph_asce": "За алфавітом (Z до A)",
             "alph_desc": "За алфавітом (A до Z)",
-            "date_desc": "",
             "downloads_desc": "",
             "title": "Огляд"
         },
         "store_testing_cta": "Розгляньте можливість тестування нових плагінів, щоб допомогти команді Decky Loader!",
-        "store_testing_warning": {
-            "label": ""
-        },
         "download_progress_info": {
             "installing_plugin": "",
-            "parse_zip": "",
             "open_zip": ""
         }
     },
@@ -234,11 +222,7 @@
         }
     },
     "Testing": {
-        "error": "",
         "loading": ""
-    },
-    "TitleView": {
-        "decky_store_desc": ""
     },
     "Updater": {
         "decky_updates": "Оновлення Decky",

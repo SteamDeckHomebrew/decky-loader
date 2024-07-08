@@ -218,17 +218,12 @@
             "about": "Относно",
             "alph_asce": "По азбучен ред (Я -> А)",
             "alph_desc": "По азбучен ред (А -> Я)",
-            "date_desc": "",
             "downloads_desc": "",
             "title": "Разглеждане"
         },
         "store_testing_cta": "Помислете дали искате да тествате новите добавки, за да помогнете на екипа на Decky Loader!",
-        "store_testing_warning": {
-            "label": ""
-        },
         "download_progress_info": {
             "open_zip": "",
-            "increment_count": "",
             "uninstalling_previous": ""
         }
     },
@@ -245,11 +240,7 @@
         }
     },
     "Testing": {
-        "error": "",
         "loading": ""
-    },
-    "TitleView": {
-        "decky_store_desc": ""
     },
     "Updater": {
         "decky_updates": "Обновления на Decky",

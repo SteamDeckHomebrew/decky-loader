@@ -211,7 +211,6 @@
             "about": "概要",
             "alph_asce": "アルファベット(Z to A)",
             "alph_desc": "アルファベット(A to Z)",
-            "date_desc": "",
             "downloads_desc": "",
             "title": "閲覧"
         },
@@ -221,9 +220,7 @@
             "label": "テストストア チャンネルへようこそ"
         },
         "download_progress_info": {
-            "increment_count": "",
-            "open_zip": "",
-            "start": ""
+            "open_zip": ""
         }
     },
     "StoreSelect": {
@@ -239,7 +236,6 @@
         }
     },
     "Testing": {
-        "error": "",
         "loading": ""
     },
     "TitleView": {

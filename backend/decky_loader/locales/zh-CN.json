@@ -226,9 +226,7 @@
             "label": "欢迎来到商店测试频道"
         },
         "download_progress_info": {
-            "start": "",
-            "open_zip": "",
-            "increment_count": ""
+            "open_zip": ""
         }
     },
     "StoreSelect": {
@@ -245,7 +243,6 @@
     },
     "Testing": {
         "download": "下载",
-        "header": "",
         "start_download_toast": ""
     },
     "TitleView": {

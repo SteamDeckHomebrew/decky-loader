@@ -8,17 +8,11 @@
         }
     },
     "Developer": {
-        "5secreload": "إعادة التحميل في 5 ثواني",
-        "enabling": ""
+        "5secreload": "إعادة التحميل في 5 ثواني"
     },
     "DropdownMultiselect": {
         "button": {
             "back": "الخلف"
-        }
-    },
-    "FilePickerError": {
-        "errors": {
-            "perm_denied": ""
         }
     },
     "FilePickerIndex": {
@@ -111,7 +105,6 @@
     },
     "PluginListIndex": {
         "hide": "إخفاء من قائمة الوصول السريع",
-        "plugin_actions": "",
         "reinstall": "إعادة التنصيب",
         "reload": "إعادة التحميل",
         "show": "إظهار في قائمة الوصول السريع",
@@ -135,9 +128,6 @@
             "button": "إزالة التنصيب",
             "title": "إزالة التنصيب {{name}}"
         },
-        "plugin_load_error": {
-            "message": ""
-        },
         "decky_update_available": "",
         "plugin_update_zero": "",
         "plugin_update_one": "",
@@ -154,11 +144,6 @@
         "hidden_many": "",
         "hidden_other": ""
     },
-    "RemoteDebugging": {
-        "remote_cef": {
-            "label": ""
-        }
-    },
     "SettingsDeveloperIndex": {
         "cef_console": {
             "desc": ""
@@ -170,59 +155,35 @@
         "third_party_plugins": {
             "button_install": "تنصيب",
             "button_zip": "تصفح",
-            "label_desc": "",
             "label_zip": ""
-        },
-        "valve_internal": {
-            "desc2": ""
         }
     },
     "SettingsGeneralIndex": {
         "about": {
             "decky_version": ""
         },
-        "beta": {
-            "header": ""
-        },
         "notifications": {
-            "decky_updates_label": "",
-            "plugin_updates_label": ""
+            "decky_updates_label": ""
         },
         "updates": {
             "header": ""
         }
     },
     "SettingsIndex": {
-        "general_title": "",
         "testing_title": ""
     },
     "Store": {
-        "store_contrib": {
-            "label": ""
-        },
         "store_sort": {
             "label": ""
         },
-        "store_source": {
-            "desc": ""
-        },
         "store_tabs": {
             "about": "",
-            "alph_desc": "",
-            "date_desc": "",
-            "downloads_desc": ""
+            "date_desc": ""
         },
         "store_testing_cta": "",
-        "store_testing_warning": {
-            "label": ""
-        },
         "download_progress_info": {
             "open_zip": "",
-            "increment_count": "",
             "uninstalling_previous": ""
-        },
-        "store_filter": {
-            "label": ""
         }
     },
     "StoreSelect": {
@@ -230,25 +191,19 @@
             "label": ""
         },
         "store_channel": {
-            "custom": "",
             "label": ""
         }
     },
     "Testing": {
-        "download": "",
-        "header": "",
-        "start_download_toast": ""
+        "header": ""
     },
     "TitleView": {
         "settings_desc": ""
     },
     "Updater": {
-        "no_patch_notes_desc": "",
         "updates": {
             "check_button": "",
-            "install_button": "",
-            "lat_version": "",
-            "updating": ""
+            "lat_version": ""
         }
     }
 }

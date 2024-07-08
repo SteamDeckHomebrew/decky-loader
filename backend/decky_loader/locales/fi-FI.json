@@ -218,7 +218,6 @@
             "about": "Tietoja",
             "alph_asce": "Aakkosjärjestyksessä (Z–A)",
             "alph_desc": "Aakkosjärjestyksessä (A–Z)",
-            "date_desc": "",
             "downloads_desc": "",
             "title": "Selaa"
         },
@@ -228,9 +227,7 @@
             "label": "Tervetuloa testausmyymälä-kanavalle"
         },
         "download_progress_info": {
-            "increment_count": "",
-            "open_zip": "",
-            "uninstalling_previous": ""
+            "open_zip": ""
         }
     },
     "StoreSelect": {
@@ -246,7 +243,6 @@
         }
     },
     "Testing": {
-        "error": "",
         "loading": ""
     },
     "TitleView": {

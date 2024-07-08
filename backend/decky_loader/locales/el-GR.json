@@ -218,7 +218,6 @@
             "about": "Σχετικά",
             "alph_asce": "Αλφαβητικά (Ζ σε Α)",
             "alph_desc": "Αλφαβητικά (Α σε Ζ)",
-            "date_desc": "",
             "downloads_desc": "",
             "title": "Περιήγηση"
         },
@@ -228,9 +227,7 @@
             "label": "Καλώς ήρθατε στο Δοκιμαστικό Κανάλι τους Καταστήματος"
         },
         "download_progress_info": {
-            "open_zip": "",
-            "increment_count": "",
-            "uninstalling_previous": ""
+            "increment_count": ""
         }
     },
     "StoreSelect": {
@@ -246,7 +243,6 @@
         }
     },
     "Testing": {
-        "error": "",
         "loading": ""
     },
     "TitleView": {

@@ -240,9 +240,7 @@
             "label": "Vítejte na testovacím kanálu obchodu"
         },
         "download_progress_info": {
-            "open_zip": "",
-            "increment_count": "",
-            "parse_zip": ""
+            "increment_count": ""
         }
     },
     "StoreSelect": {
@@ -259,7 +257,6 @@
     },
     "Testing": {
         "download": "Stáhnout",
-        "header": "",
         "start_download_toast": ""
     },
     "TitleView": {

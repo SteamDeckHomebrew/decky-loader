@@ -14,8 +14,7 @@
     },
     "FilePickerError": {
         "errors": {
-            "file_not_found": "Belirtilen yol geçerli değil. Lütfen yolu kontrol edin ve doğru şekilde yeniden girin.",
-            "unknown": ""
+            "file_not_found": "Belirtilen yol geçerli değil. Lütfen yolu kontrol edin ve doğru şekilde yeniden girin."
         }
     },
     "FilePickerIndex": {
@@ -124,15 +123,9 @@
         "hidden_one": "1 eklenti bu listeden gizlenmiştir",
         "hidden_other": "{{count}} eklenti bu listeden gizlenmiştir"
     },
-    "RemoteDebugging": {
-        "remote_cef": {
-            "label": ""
-        }
-    },
     "SettingsDeveloperIndex": {
         "cef_console": {
-            "button": "Konsolu Aç",
-            "label": ""
+            "button": "Konsolu Aç"
         },
         "header": "Diğer",
         "react_devtools": {
@@ -145,9 +138,6 @@
             "label_desc": "URL",
             "label_url": "URL'den Eklenti Yükle",
             "label_zip": "ZIP Dosyasından Eklenti Yükle"
-        },
-        "valve_internal": {
-            "desc2": ""
         }
     },
     "SettingsGeneralIndex": {
@@ -180,7 +170,6 @@
     },
     "Store": {
         "store_contrib": {
-            "desc": "",
             "label": "Katkıda Bulunma"
         },
         "store_filter": {
@@ -207,14 +196,9 @@
             "downloads_desc": "Önce En Çok İndirilen",
             "title": "Gözat"
         },
-        "store_testing_warning": {
-            "desc": ""
-        },
         "download_progress_info": {
             "increment_count": "",
-            "parse_zip": "",
-            "start": "",
-            "download_zip": ""
+            "start": ""
         }
     },
     "StoreSelect": {
@@ -223,13 +207,11 @@
         },
         "store_channel": {
             "custom": "Özel",
-            "default": "Varsayılan",
-            "testing": ""
+            "default": "Varsayılan"
         }
     },
     "Testing": {
         "download": "İndir",
-        "header": "",
         "start_download_toast": ""
     },
     "TitleView": {
@@ -246,11 +228,7 @@
             "cur_version": "Mevcut Versiyon: {{ver}}",
             "install_button": "Güncellemeyi Yükle",
             "label": "Güncellemeler",
-            "reloading": "",
             "updating": "Güncelleniyor"
         }
-    },
-    "Developer": {
-        "disabling": ""
     }
 }

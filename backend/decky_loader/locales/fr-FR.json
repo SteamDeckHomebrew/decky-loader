@@ -240,9 +240,7 @@
             "label": "Bienvenue sur la chaîne du magasin de tests"
         },
         "download_progress_info": {
-            "parse_zip": "",
-            "download_zip": "",
-            "start": ""
+            "download_zip": ""
         }
     },
     "StoreSelect": {
@@ -259,7 +257,6 @@
     },
     "Testing": {
         "download": "Télécharger",
-        "header": "",
         "start_download_toast": ""
     },
     "TitleView": {

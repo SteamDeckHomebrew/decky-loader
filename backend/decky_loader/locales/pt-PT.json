@@ -225,7 +225,6 @@
             "about": "Sobre",
             "alph_asce": "Alfabeticamente (Z-A)",
             "alph_desc": "Alfabeticamente (A-Z)",
-            "date_desc": "",
             "downloads_desc": "",
             "title": "Navegar"
         },
@@ -235,9 +234,7 @@
             "label": "Bem-vindo ao Canal de Testes da Loja"
         },
         "download_progress_info": {
-            "open_zip": "",
-            "increment_count": "",
-            "uninstalling_previous": ""
+            "increment_count": ""
         }
     },
     "StoreSelect": {
@@ -253,7 +250,6 @@
         }
     },
     "Testing": {
-        "error": "",
         "loading": ""
     },
     "TitleView": {

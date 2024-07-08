@@ -152,10 +152,5 @@
             "button_install": "تنصيب",
             "button_zip": "تصفح"
         }
-    },
-    "Updater": {
-        "updates": {
-            "check_button": ""
-        }
     }
 }

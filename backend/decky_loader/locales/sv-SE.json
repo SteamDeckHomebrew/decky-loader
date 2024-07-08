@@ -83,11 +83,6 @@
         "hidden_one": "",
         "hidden_other": ""
     },
-    "Store": {
-        "download_progress_info": {
-            "download_zip": ""
-        }
-    },
     "StoreSelect": {
         "store_channel": {
             "testing": ""

@@ -6,9 +6,6 @@
         }
     },
     "FilePickerIndex": {
-        "files": {
-            "file_type": ""
-        },
         "filter": {
             "size_asce": ""
         },
@@ -122,9 +119,6 @@
         },
         "store_tabs": {
             "title": "Kërko"
-        },
-        "download_progress_info": {
-            "uninstalling_previous": ""
         }
     },
     "StoreSelect": {
@@ -132,15 +126,9 @@
             "label": "Kanali Dyqanit"
         }
     },
-    "TitleView": {
-        "settings_desc": ""
-    },
     "Updater": {
         "updates": {
             "cur_version": "Versioni e tanishëme: {{ver}}"
         }
-    },
-    "Developer": {
-        "enabling": ""
     }
 }

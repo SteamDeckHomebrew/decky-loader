@@ -13,9 +13,6 @@
         "enabling": "Activando DevTools de React"
     },
     "FilePickerIndex": {
-        "files": {
-            "show_hidden": ""
-        },
         "filter": {
             "size_desc": ""
         },
@@ -191,10 +188,7 @@
             "alph_desc": "Alfabéticamente (A-Z)",
             "title": "Navegar"
         },
-        "store_testing_cta": "¡Por favor considera probar plugins nuevos para ayudar al equipo de Decky Loader!",
-        "download_progress_info": {
-            "start": ""
-        }
+        "store_testing_cta": "¡Por favor considera probar plugins nuevos para ayudar al equipo de Decky Loader!"
     },
     "StoreSelect": {
         "custom_store": {

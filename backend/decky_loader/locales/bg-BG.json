@@ -220,10 +220,7 @@
             "alph_desc": "По азбучен ред (А -> Я)",
             "title": "Разглеждане"
         },
-        "store_testing_cta": "Помислете дали искате да тествате новите добавки, за да помогнете на екипа на Decky Loader!",
-        "download_progress_info": {
-            "uninstalling_previous": ""
-        }
+        "store_testing_cta": "Помислете дали искате да тествате новите добавки, за да помогнете на екипа на Decky Loader!"
     },
     "StoreSelect": {
         "custom_store": {

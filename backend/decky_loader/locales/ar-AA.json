@@ -144,69 +144,45 @@
         "hidden_zero": ""
     },
     "SettingsDeveloperIndex": {
-        "cef_console": {
-            "desc": ""
-        },
         "header": "أخرى",
         "react_devtools": {
             "ip_label": "عنوان الشبكة"
         },
         "third_party_plugins": {
             "button_install": "تنصيب",
-            "button_zip": "تصفح",
-            "label_zip": ""
+            "button_zip": "تصفح"
         }
     },
     "SettingsGeneralIndex": {
         "about": {
             "decky_version": ""
         },
-        "notifications": {
-            "decky_updates_label": ""
-        },
         "updates": {
             "header": ""
         }
-    },
-    "SettingsIndex": {
-        "testing_title": ""
     },
     "Store": {
         "download_progress_info": {
             "open_zip": ""
         },
-        "store_contrib": {
-            "desc": ""
-        },
         "store_search": {
             "label": ""
         },
-        "store_source": {
-            "label": ""
-        },
         "store_tabs": {
-            "date_asce": "",
-            "title": ""
+            "date_asce": ""
         }
     },
     "StoreSelect": {
         "custom_store": {
-            "label": ""
-        },
-        "store_channel": {
             "label": ""
         }
     },
     "Testing": {
         "header": ""
     },
-    "TitleView": {
-        "settings_desc": ""
-    },
     "Updater": {
         "updates": {
-            "check_button": "",
-            "label": ""
+            "check_button": ""
         }
     }
 }

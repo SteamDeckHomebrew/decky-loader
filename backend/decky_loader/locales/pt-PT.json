@@ -203,7 +203,6 @@
     },
     "Store": {
         "download_progress_info": {
-            "installing_plugin": "",
             "uninstalling_previous": ""
         },
         "store_contrib": {
@@ -229,7 +228,6 @@
             "about": "Sobre",
             "alph_asce": "Alfabeticamente (Z-A)",
             "alph_desc": "Alfabeticamente (A-Z)",
-            "downloads_desc": "",
             "title": "Navegar"
         },
         "store_testing_cta": "Testa novos plugins e ajuda a equipa do Decky Loader!",
@@ -249,9 +247,6 @@
             "label": "Canal de loja",
             "testing": "Em teste"
         }
-    },
-    "Testing": {
-        "loading": ""
     },
     "TitleView": {
         "decky_store_desc": "Abrir a Loja Decky",

@@ -205,9 +205,6 @@
         "testing_title": "Testování"
     },
     "Store": {
-        "download_progress_info": {
-            "open_zip": ""
-        },
         "store_contrib": {
             "desc": "Pokud byste chtěli přispět do obchodu Decky Plugin Store, podívejte se na repozitář SteamDeckHomebrew/decky-plugin-template na GitHubu. Informace o vývoji a distribuci jsou k dispozici v README.",
             "label": "Přispívání"
@@ -256,8 +253,7 @@
         }
     },
     "Testing": {
-        "download": "Stáhnout",
-        "start_download_toast": ""
+        "download": "Stáhnout"
     },
     "TitleView": {
         "decky_store_desc": "Otevřít obchod Decky",

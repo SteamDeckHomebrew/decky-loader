@@ -196,7 +196,6 @@
     },
     "Store": {
         "download_progress_info": {
-            "installing_plugin": "",
             "uninstalling_previous": ""
         },
         "store_contrib": {
@@ -222,7 +221,6 @@
             "about": "Σχετικά",
             "alph_asce": "Αλφαβητικά (Ζ σε Α)",
             "alph_desc": "Αλφαβητικά (Α σε Ζ)",
-            "downloads_desc": "",
             "title": "Περιήγηση"
         },
         "store_testing_cta": "Παρακαλώ σκεφτείτε να τεστάρετε νέες επεκτάσεις για να βοηθήσετε την ομάδα του Decky Loader!",
@@ -242,9 +240,6 @@
             "label": "Κανάλι καταστήματος",
             "testing": "Δοκιμαστικό"
         }
-    },
-    "Testing": {
-        "loading": ""
     },
     "TitleView": {
         "decky_store_desc": "Άνοιγμα Καταστήματος Decky",

@@ -196,7 +196,6 @@
     },
     "Store": {
         "download_progress_info": {
-            "installing_plugin": "",
             "uninstalling_previous": ""
         },
         "store_contrib": {
@@ -222,7 +221,6 @@
             "about": "Относно",
             "alph_asce": "По азбучен ред (Я -> А)",
             "alph_desc": "По азбучен ред (А -> Я)",
-            "downloads_desc": "",
             "title": "Разглеждане"
         },
         "store_testing_cta": "Помислете дали искате да тествате новите добавки, за да помогнете на екипа на Decky Loader!"
@@ -238,9 +236,6 @@
             "label": "Канал за магазина",
             "testing": "Тестване"
         }
-    },
-    "Testing": {
-        "loading": ""
     },
     "Updater": {
         "decky_updates": "Обновления на Decky",

@@ -189,7 +189,6 @@
     },
     "Store": {
         "download_progress_info": {
-            "installing_plugin": "",
             "uninstalling_previous": ""
         },
         "store_contrib": {
@@ -215,7 +214,6 @@
             "about": "概要",
             "alph_asce": "アルファベット(Z to A)",
             "alph_desc": "アルファベット(A to Z)",
-            "downloads_desc": "",
             "title": "閲覧"
         },
         "store_testing_cta": "Decky Loaderチームを支援するために、新しいプラグインのテストを検討してください!",
@@ -235,9 +233,6 @@
             "label": "ストアチャンネル",
             "testing": "テスト"
         }
-    },
-    "Testing": {
-        "loading": ""
     },
     "TitleView": {
         "decky_store_desc": "Deckyストアを開く",

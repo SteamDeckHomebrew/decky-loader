@@ -5,30 +5,20 @@
             "stable": "Fiksuar"
         }
     },
-    "Developer": {
-        "enabling": ""
-    },
     "FilePickerError": {
         "errors": {
             "unknown": ""
         }
     },
     "FilePickerIndex": {
-        "files": {
-            "show_hidden": ""
-        },
         "filter": {
-            "modified_desc": "",
-            "size_desc": ""
+            "modified_desc": ""
         },
         "folder": {
             "select": "Përdore këtë folder"
         }
     },
     "MultiplePluginsInstallModal": {
-        "description": {
-            "reinstall": ""
-        },
         "title": {
             "install_one": "",
             "install_other": "",
@@ -66,7 +56,6 @@
     },
     "PluginListIndex": {
         "no_plugin": "Nuk ka shtesa të instaluar!",
-        "show": "",
         "uninstall": "Çinstalo",
         "update_all_one": "",
         "update_all_other": ""
@@ -88,9 +77,6 @@
         "hidden_other": ""
     },
     "SettingsDeveloperIndex": {
-        "cef_console": {
-            "desc": ""
-        },
         "react_devtools": {
             "ip_label": "IP",
             "label": "Aktivizo React DevTools"
@@ -108,9 +94,6 @@
         "about": {
             "decky_version": "Versioni Decky"
         },
-        "notifications": {
-            "decky_updates_label": ""
-        },
         "other": {
             "header": "Të Tjera"
         },
@@ -124,7 +107,6 @@
     },
     "Store": {
         "download_progress_info": {
-            "increment_count": "",
             "start": ""
         },
         "store_contrib": {
@@ -144,29 +126,20 @@
             "label": "Kodin Burimor"
         },
         "store_tabs": {
-            "date_asce": "",
             "title": "Kërko"
         }
     },
     "StoreSelect": {
-        "custom_store": {
-            "label": ""
-        },
         "store_channel": {
             "label": "Kanali Dyqanit"
         }
-    },
-    "Testing": {
-        "header": ""
     },
     "TitleView": {
         "settings_desc": ""
     },
     "Updater": {
         "updates": {
-            "check_button": "",
-            "cur_version": "Versioni e tanishëme: {{ver}}",
-            "reloading": ""
+            "cur_version": "Versioni e tanishëme: {{ver}}"
         }
     }
 }

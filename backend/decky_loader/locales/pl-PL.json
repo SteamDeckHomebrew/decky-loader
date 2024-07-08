@@ -1,16 +1,16 @@
 {
     "BranchSelect": {
         "update_channel": {
-            "testing": "Testowy",
             "label": "Kanał aktualizacji",
+            "prerelease": "Przedpremierowy",
             "stable": "Stabilny",
-            "prerelease": "Przedpremierowy"
+            "testing": "Testowy"
         }
     },
     "Developer": {
-        "enabling": "Włączanie React DevTools",
         "5secreload": "Ponowne załadowanie za 5 sekund",
-        "disabling": "Wyłączanie React DevTools"
+        "disabling": "Wyłączanie React DevTools",
+        "enabling": "Włączanie React DevTools"
     },
     "DropdownMultiselect": {
         "button": {
@@ -19,9 +19,9 @@
     },
     "FilePickerError": {
         "errors": {
+            "file_not_found": "Podana ścieżka jest nieprawidłowa. Sprawdź ją i wprowadź ponownie poprawnie.",
             "perm_denied": "Nie masz dostępu do podanego katalogu. Sprawdź, czy twój użytkownik (deck na Steam Deck) ma odpowiednie uprawnienia dostępu do określonego katalogu/pliku.",
-            "unknown": "Wystąpił nieznany błąd. Surowy błąd to {{raw_error}}",
-            "file_not_found": "Podana ścieżka jest nieprawidłowa. Sprawdź ją i wprowadź ponownie poprawnie."
+            "unknown": "Wystąpił nieznany błąd. Surowy błąd to {{raw_error}}"
         }
     },
     "FilePickerIndex": {
@@ -50,20 +50,6 @@
         }
     },
     "MultiplePluginsInstallModal": {
-        "title": {
-            "mixed_one": "Zmodyfikuj {{count}} plugin",
-            "mixed_few": "Zmodyfikuj {{count}} pluginy",
-            "mixed_many": "Zmodyfikuj {{count}} pluginów",
-            "reinstall_one": "Reinstaluj 1 plugin",
-            "reinstall_few": "Reinstaluj {{count}} pluginy",
-            "reinstall_many": "Reinstaluj {{count}} pluginów",
-            "install_one": "Zainstaluj 1 plugin",
-            "install_few": "Zainstaluj {{count}} pluginy",
-            "install_many": "Zainstaluj {{count}} pluginów",
-            "update_one": "Zaktualizuj 1 plugin",
-            "update_few": "Zaktualizuj {{count}} pluginy",
-            "update_many": "Zaktualizuj {{count}} pluginów"
-        },
         "confirm": "Czy na pewno chcesz wprowadzić następujące modyfikacje?",
         "description": {
             "install": "Zainstaluj {{name}} {{version}}",
@@ -73,13 +59,27 @@
         "ok_button": {
             "idle": "Potwierdź",
             "loading": "W toku"
+        },
+        "title": {
+            "install_one": "Zainstaluj 1 plugin",
+            "install_few": "Zainstaluj {{count}} pluginy",
+            "install_many": "Zainstaluj {{count}} pluginów",
+            "mixed_one": "Zmodyfikuj {{count}} plugin",
+            "mixed_few": "Zmodyfikuj {{count}} pluginy",
+            "mixed_many": "Zmodyfikuj {{count}} pluginów",
+            "reinstall_one": "Reinstaluj 1 plugin",
+            "reinstall_few": "Reinstaluj {{count}} pluginy",
+            "reinstall_many": "Reinstaluj {{count}} pluginów",
+            "update_one": "Zaktualizuj 1 plugin",
+            "update_few": "Zaktualizuj {{count}} pluginy",
+            "update_many": "Zaktualizuj {{count}} pluginów"
         }
     },
     "PluginCard": {
+        "plugin_full_access": "Ten plugin ma pełny dostęp do twojego Steam Decka.",
         "plugin_install": "Zainstaluj",
         "plugin_no_desc": "Brak opisu.",
-        "plugin_version_label": "Wersja pluginu",
-        "plugin_full_access": "Ten plugin ma pełny dostęp do twojego Steam Decka."
+        "plugin_version_label": "Wersja pluginu"
     },
     "PluginInstallModal": {
         "install": {
@@ -88,6 +88,7 @@
             "desc": "Czy na pewno chcesz zainstalować {{artifact}} {{version}}?",
             "title": "Zainstaluj {{artifact}}"
         },
+        "no_hash": "Ten plugin nie ma hasha, instalujesz go na własne ryzyko.",
         "reinstall": {
             "button_idle": "Reinstaluj",
             "button_processing": "Reinstalowanie",
@@ -99,23 +100,26 @@
             "button_processing": "Aktualizowanie",
             "desc": "Czy na pewno chcesz zaktualizować {{artifact}} {{version}}?",
             "title": "Zaktualizuj {{artifact}}"
-        },
-        "no_hash": "Ten plugin nie ma hasha, instalujesz go na własne ryzyko."
+        }
     },
     "PluginListIndex": {
+        "freeze": "Zablokuj aktualizacje",
         "hide": "Szybki dostęp: Ukryj",
         "no_plugin": "Brak zainstalowanych pluginów!",
+        "plugin_actions": "Akcje pluginów",
+        "reinstall": "Reinstalacja",
         "reload": "Załaduj ponownie",
+        "show": "Szybki dostęp: Pokaż",
+        "unfreeze": "Odblokuj aktualizacje",
+        "uninstall": "Odinstaluj",
         "update_all_one": "Zaktualizuj 1 plugin",
         "update_all_few": "Zaktualizuj {{count}} pluginy",
         "update_all_many": "Zaktualizuj {{count}} pluginów",
-        "plugin_actions": "Akcje pluginów",
-        "reinstall": "Reinstalacja",
-        "show": "Szybki dostęp: Pokaż",
-        "uninstall": "Odinstaluj",
-        "update_to": "Zaktualizuj do {{name}}",
-        "unfreeze": "Odblokuj aktualizacje",
-        "freeze": "Zablokuj aktualizacje"
+        "update_all_other": "",
+        "update_to": "Zaktualizuj do {{name}}"
+    },
+    "PluginListLabel": {
+        "hidden": "Ukryty w menu szybkiego dostępu"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -128,20 +132,18 @@
         },
         "plugin_uninstall": {
             "button": "Odinstaluj",
-            "title": "Odinstaluj {{name}}",
-            "desc": "Czy na pewno chcesz odinstalować {{name}}?"
+            "desc": "Czy na pewno chcesz odinstalować {{name}}?",
+            "title": "Odinstaluj {{name}}"
         },
         "plugin_update_one": "Aktualizacje dostępne dla 1 pluginu!",
         "plugin_update_few": "Aktualizacje dostępne dla {{count}} pluginów!",
         "plugin_update_many": "Aktualizacje dostępne dla {{count}} pluginów!"
     },
-    "PluginListLabel": {
-        "hidden": "Ukryty w menu szybkiego dostępu"
-    },
     "PluginView": {
         "hidden_one": "1 plugin jest ukryty na tej liście",
         "hidden_few": "{{count}} pluginy jest ukryty na tej liście",
-        "hidden_many": "{{count}} pluginów jest ukryty na tej liście"
+        "hidden_many": "{{count}} pluginów jest ukryty na tej liście",
+        "hidden_other": ""
     },
     "RemoteDebugging": {
         "remote_cef": {
@@ -176,6 +178,16 @@
         }
     },
     "SettingsGeneralIndex": {
+        "about": {
+            "decky_version": "Wersja Decky",
+            "header": "Informacje"
+        },
+        "beta": {
+            "header": "Udział w becie"
+        },
+        "developer_mode": {
+            "label": "Tryb dewelopera"
+        },
         "notifications": {
             "decky_updates_label": "Dostępna aktualizacja Decky",
             "header": "Powiadomienia",
@@ -186,16 +198,6 @@
         },
         "updates": {
             "header": "Aktualizacje"
-        },
-        "about": {
-            "header": "Informacje",
-            "decky_version": "Wersja Decky"
-        },
-        "beta": {
-            "header": "Udział w becie"
-        },
-        "developer_mode": {
-            "label": "Tryb dewelopera"
         }
     },
     "SettingsIndex": {
@@ -225,19 +227,19 @@
             "label": "Kod źródłowy"
         },
         "store_tabs": {
+            "about": "Informacje",
             "alph_asce": "Alfabetycznie (od Z do A)",
             "alph_desc": "Alfabetycznie (od A do Z)",
-            "title": "Przeglądaj",
-            "about": "Informacje",
+            "date_asce": "Od najstarszych",
             "date_desc": "Od najnowszych",
-            "downloads_desc": "Najwięcej pobrań",
             "downloads_asce": "Najmniej pobrań",
-            "date_asce": "Od najstarszych"
+            "downloads_desc": "Najwięcej pobrań",
+            "title": "Przeglądaj"
         },
         "store_testing_cta": "Rozważ przetestowanie nowych pluginów, aby pomóc zespołowi Decky Loader!",
         "store_testing_warning": {
-            "label": "Witamy w Testowym Kanale Sklepu",
-            "desc": "Możesz użyć tego kanału sklepu do testowania najnowszych wersji pluginów. Pamiętaj, aby zostawić opinię na GitHub, aby plugin mogła zostać zaktualizowana dla wszystkich użytkowników."
+            "desc": "Możesz użyć tego kanału sklepu do testowania najnowszych wersji pluginów. Pamiętaj, aby zostawić opinię na GitHub, aby plugin mogła zostać zaktualizowana dla wszystkich użytkowników.",
+            "label": "Witamy w Testowym Kanale Sklepu"
         }
     },
     "StoreSelect": {
@@ -251,6 +253,17 @@
             "label": "Kanał sklepu",
             "testing": "Testowy"
         }
+    },
+    "Testing": {
+        "download": "Pobierz",
+        "error": "",
+        "header": "",
+        "loading": "",
+        "start_download_toast": ""
+    },
+    "TitleView": {
+        "decky_store_desc": "Otwórz sklep Decky",
+        "settings_desc": "Otwórz ustawienia Decky"
     },
     "Updater": {
         "decky_updates": "Aktualizacje Decky",
@@ -266,12 +279,5 @@
             "reloading": "Ponowne ładowanie",
             "updating": "Aktualizowanie"
         }
-    },
-    "TitleView": {
-        "settings_desc": "Otwórz ustawienia Decky",
-        "decky_store_desc": "Otwórz sklep Decky"
-    },
-    "Testing": {
-        "download": "Pobierz"
     }
 }

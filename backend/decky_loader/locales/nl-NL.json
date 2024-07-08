@@ -1,9 +1,9 @@
 {
     "BranchSelect": {
         "update_channel": {
+            "label": "Updatekanaal",
             "prerelease": "Prerelease",
             "stable": "Stabiel",
-            "label": "Updatekanaal",
             "testing": "Testing"
         }
     },
@@ -19,55 +19,70 @@
     },
     "FilePickerError": {
         "errors": {
-            "unknown": "Er is een onbekende fout opgetreden. De foutmelding is: {{raw_error}}",
             "file_not_found": "Het opgegeven pad is niet geldig. Controleer het en voer het opnieuw correct in.",
-            "perm_denied": "U heeft geen toegang tot de opgegeven map. Controleer of uw gebruiker (deck op Steam Deck) de juiste permissies heeft om toegang te krijgen tot de opgegeven map/het opgegeven bestand."
+            "perm_denied": "U heeft geen toegang tot de opgegeven map. Controleer of uw gebruiker (deck op Steam Deck) de juiste permissies heeft om toegang te krijgen tot de opgegeven map/het opgegeven bestand.",
+            "unknown": "Er is een onbekende fout opgetreden. De foutmelding is: {{raw_error}}"
         }
     },
     "FilePickerIndex": {
+        "file": {
+            "select": "Dit bestand selecteren"
+        },
         "files": {
             "all_files": "Alle bestanden",
             "file_type": "Bestandstype",
             "show_hidden": "Verborgen bestanden tonen"
         },
         "filter": {
+            "created_asce": "Aanmaakdatum (oudste)",
             "created_desc": "Aanmaakdatum (nieuwste)",
             "modified_asce": "Gewijzigd op (oudste)",
             "modified_desc": "Gewijzigd op (nieuwste)",
             "name_asce": "Naam (Z-A)",
             "name_desc": "Naam (A-Z)",
             "size_asce": "Grootte (kleinste)",
-            "size_desc": "Grootte (grootste)",
-            "created_asce": "Aanmaakdatum (oudste)"
+            "size_desc": "Grootte (grootste)"
         },
         "folder": {
             "label": "Map",
             "select": "Deze map gebruiken",
             "show_more": "Meer bestanden tonen"
-        },
-        "file": {
-            "select": "Dit bestand selecteren"
         }
     },
-    "PluginView": {
-        "hidden_one": "1 plug-in is verborgen in deze lijst",
-        "hidden_other": "{{count}} plug-ins zijn verborgen in deze lijst"
-    },
-    "PluginListLabel": {
-        "hidden": "Verborgen in snelle toegang"
+    "MultiplePluginsInstallModal": {
+        "confirm": "Weet je zeker dat je de volgende wijzigingen wilt aanbrengen?",
+        "description": {
+            "install": "Installeer {{name}} {{version}}",
+            "reinstall": "Installeer {{name}} {{version}} opnieuw",
+            "update": "Werk {{name}} bij naar {{version}}"
+        },
+        "ok_button": {
+            "idle": "Bevestigen",
+            "loading": "Bezig"
+        },
+        "title": {
+            "install_one": "Installeer 1 plug-in",
+            "install_other": "Installeer {{count}} plug-ins",
+            "mixed_one": "Wijzig 1 plug-in",
+            "mixed_other": "Wijzig {{count}} plug-ins",
+            "reinstall_one": "Installeer 1 plug-in opnieuw",
+            "reinstall_other": "Installeer {{count}} plug-ins opnieuw",
+            "update_one": "Werk 1 plug-in bij",
+            "update_other": "Werk {{count}} plug-ins bij"
+        }
     },
     "PluginCard": {
+        "plugin_full_access": "Deze plug-in heeft volledige toegang tot uw Steam Deck.",
         "plugin_install": "Installeren",
         "plugin_no_desc": "Geen beschrijving gegeven.",
-        "plugin_version_label": "Plug-inversie",
-        "plugin_full_access": "Deze plug-in heeft volledige toegang tot uw Steam Deck."
+        "plugin_version_label": "Plug-inversie"
     },
     "PluginInstallModal": {
         "install": {
             "button_idle": "Installeren",
             "button_processing": "Bezig met installeren",
-            "title": "Installeer {{artifact}}",
-            "desc": "Weet je zeker dat je {{artifact}} {{version}} wilt installeren?"
+            "desc": "Weet je zeker dat je {{artifact}} {{version}} wilt installeren?",
+            "title": "Installeer {{artifact}}"
         },
         "no_hash": "Deze plug-in heeft geen hash, je installeert deze op eigen risico.",
         "reinstall": {
@@ -79,49 +94,32 @@
         "update": {
             "button_idle": "Bijwerken",
             "button_processing": "Bezig met bijwerken",
-            "title": "{{artifact}} bijwerken",
-            "desc": "Weet je zeker dat je {{artifact}} {{version}} wilt bijwerken?"
-        }
-    },
-    "MultiplePluginsInstallModal": {
-        "title": {
-            "mixed_one": "Wijzig 1 plug-in",
-            "mixed_other": "Wijzig {{count}} plug-ins",
-            "update_one": "Werk 1 plug-in bij",
-            "update_other": "Werk {{count}} plug-ins bij",
-            "install_one": "Installeer 1 plug-in",
-            "install_other": "Installeer {{count}} plug-ins",
-            "reinstall_one": "Installeer 1 plug-in opnieuw",
-            "reinstall_other": "Installeer {{count}} plug-ins opnieuw"
-        },
-        "ok_button": {
-            "idle": "Bevestigen",
-            "loading": "Bezig"
-        },
-        "confirm": "Weet je zeker dat je de volgende wijzigingen wilt aanbrengen?",
-        "description": {
-            "install": "Installeer {{name}} {{version}}",
-            "update": "Werk {{name}} bij naar {{version}}",
-            "reinstall": "Installeer {{name}} {{version}} opnieuw"
+            "desc": "Weet je zeker dat je {{artifact}} {{version}} wilt bijwerken?",
+            "title": "{{artifact}} bijwerken"
         }
     },
     "PluginListIndex": {
+        "freeze": "Updates bevriezen",
+        "hide": "Verberg in snelle toegang",
         "no_plugin": "Geen plug-ins geïnstalleerd!",
         "plugin_actions": "Plug-inacties",
-        "reload": "Herstarten",
-        "uninstall": "Verwijderen",
-        "update_to": "Bijwerken naar {{name}}",
-        "hide": "Verberg in snelle toegang",
-        "update_all_one": "Werk 1 plug-in bij",
-        "update_all_other": "Werk {{count}} plug-ins bij",
         "reinstall": "Opnieuw installeren",
+        "reload": "Herstarten",
         "show": "Toon in snelle toegang",
         "unfreeze": "Updates toestaan",
-        "freeze": "Updates bevriezen"
+        "uninstall": "Verwijderen",
+        "update_all_one": "Werk 1 plug-in bij",
+        "update_all_other": "Werk {{count}} plug-ins bij",
+        "update_to": "Bijwerken naar {{name}}"
+    },
+    "PluginListLabel": {
+        "hidden": "Verborgen in snelle toegang"
     },
     "PluginLoader": {
         "decky_title": "Decky",
+        "decky_update_available": "Update naar {{tag_name}} beschikbaar!",
         "error": "Fout",
+        "plugin_error_uninstall": "Het laden van {{name}} veroorzaakte een fout zoals hierboven weergegeven. Dit betekent meestal dat de plug-in moet worden bijgewerkt voor de nieuwe versie van SteamUI. Controleer of er een update aanwezig is of evalueer de verwijdering ervan in de Decky-instellingen, in het gedeelte Plug-ins.",
         "plugin_load_error": {
             "message": "Fout bij het laden van plug-in {{name}}",
             "toast": "Fout bij het laden van {{name}}"
@@ -132,9 +130,11 @@
             "title": "Verwijder {{name}}"
         },
         "plugin_update_one": "Updates beschikbaar voor 1 plug-in!",
-        "plugin_update_other": "Updates beschikbaar voor {{count}} plug-ins!",
-        "decky_update_available": "Update naar {{tag_name}} beschikbaar!",
-        "plugin_error_uninstall": "Het laden van {{name}} veroorzaakte een fout zoals hierboven weergegeven. Dit betekent meestal dat de plug-in moet worden bijgewerkt voor de nieuwe versie van SteamUI. Controleer of er een update aanwezig is of evalueer de verwijdering ervan in de Decky-instellingen, in het gedeelte Plug-ins."
+        "plugin_update_other": "Updates beschikbaar voor {{count}} plug-ins!"
+    },
+    "PluginView": {
+        "hidden_one": "1 plug-in is verborgen in deze lijst",
+        "hidden_other": "{{count}} plug-ins zijn verborgen in deze lijst"
     },
     "RemoteDebugging": {
         "remote_cef": {
@@ -145,22 +145,22 @@
     "SettingsDeveloperIndex": {
         "cef_console": {
             "button": "Console openen",
-            "label": "CEF-console",
-            "desc": "Opent de CEF-console. Alleen nuttig voor foutopsporingsdoeleinden. Dingen hier zijn potentieel gevaarlijk en mogen alleen worden gebruikt als je een ontwikkelaar van plug-ins bent, of hier door een ontwikkelaar naartoe wordt geleid."
+            "desc": "Opent de CEF-console. Alleen nuttig voor foutopsporingsdoeleinden. Dingen hier zijn potentieel gevaarlijk en mogen alleen worden gebruikt als je een ontwikkelaar van plug-ins bent, of hier door een ontwikkelaar naartoe wordt geleid.",
+            "label": "CEF-console"
         },
         "header": "Overige",
         "react_devtools": {
+            "desc": "Maakt verbinding met een computer met React DevTools mogelijk. Als je deze instelling wijzigt, wordt Steam opnieuw geladen. Stel het IP-adres in voordat je het inschakelt.",
             "ip_label": "IP-adres",
-            "label": "React DevTools inschakelen",
-            "desc": "Maakt verbinding met een computer met React DevTools mogelijk. Als je deze instelling wijzigt, wordt Steam opnieuw geladen. Stel het IP-adres in voordat je het inschakelt."
+            "label": "React DevTools inschakelen"
         },
         "third_party_plugins": {
+            "button_install": "Installeren",
+            "button_zip": "Bladeren",
             "header": "Plug-ins van derden",
             "label_desc": "URL",
             "label_url": "Installeer plug-in via een URL",
-            "label_zip": "Installeer plug-in via een ZIP-bestand",
-            "button_install": "Installeren",
-            "button_zip": "Bladeren"
+            "label_zip": "Installeer plug-in via een ZIP-bestand"
         },
         "valve_internal": {
             "desc1": "Schakelt het interne ontwikkelaarsmenu van Valve in.",
@@ -179,16 +179,16 @@
         "developer_mode": {
             "label": "Ontwikkelaarsmodus"
         },
+        "notifications": {
+            "decky_updates_label": "Wanneer er een Decky-update beschikbaar is",
+            "header": "Meldingen",
+            "plugin_updates_label": "Wanneer er plug-in-updates beschikbaar zijn"
+        },
         "other": {
             "header": "Overige"
         },
         "updates": {
             "header": "Updates"
-        },
-        "notifications": {
-            "decky_updates_label": "Wanneer er een Decky-update beschikbaar is",
-            "header": "Meldingen",
-            "plugin_updates_label": "Wanneer er plug-in-updates beschikbaar zijn"
         }
     },
     "SettingsIndex": {
@@ -198,6 +198,10 @@
         "testing_title": "Testen"
     },
     "Store": {
+        "store_contrib": {
+            "desc": "Als je wilt bijdragen aan de Decky Plugin Store, kijk dan in de SteamDeckHomebrew/decky-plugin-template repository op GitHub. Informatie over ontwikkeling en distributie is beschikbaar in de README.",
+            "label": "Bijdragen"
+        },
         "store_filter": {
             "label": "Filter",
             "label_def": "Alles"
@@ -210,27 +214,23 @@
             "label_def": "Laatst bijgewerkt (nieuwste)"
         },
         "store_source": {
-            "label": "Broncode",
-            "desc": "Alle broncode van de plug-in is beschikbaar in de SteamDeckHomebrew/decky-plugin-database-repository op GitHub."
+            "desc": "Alle broncode van de plug-in is beschikbaar in de SteamDeckHomebrew/decky-plugin-database-repository op GitHub.",
+            "label": "Broncode"
         },
         "store_tabs": {
             "about": "Over",
             "alph_asce": "Alfabetisch (Z naar A)",
             "alph_desc": "Alfabetisch (A naar Z)",
-            "title": "Bladeren",
+            "date_asce": "Oudste eerst",
             "date_desc": "Nieuwste eerst",
             "downloads_asce": "Minste gedownload eerst",
             "downloads_desc": "Meeste gedownload eerst",
-            "date_asce": "Oudste eerst"
+            "title": "Bladeren"
         },
         "store_testing_cta": "Overweeg om nieuwe plug-ins te testen om het Decky Loader-team te helpen!",
-        "store_contrib": {
-            "desc": "Als je wilt bijdragen aan de Decky Plugin Store, kijk dan in de SteamDeckHomebrew/decky-plugin-template repository op GitHub. Informatie over ontwikkeling en distributie is beschikbaar in de README.",
-            "label": "Bijdragen"
-        },
         "store_testing_warning": {
-            "label": "Welkom bij het Testing-winkelkanaal",
-            "desc": "Je kunt dit winkelkanaal gebruiken om nog in ontwikkeling zijnde plug-inversies te testen. Zorg ervoor dat je feedback geeft op GitHub, zodat de plug-in voor alle gebruikers kan worden bijgewerkt."
+            "desc": "Je kunt dit winkelkanaal gebruiken om nog in ontwikkeling zijnde plug-inversies te testen. Zorg ervoor dat je feedback geeft op GitHub, zodat de plug-in voor alle gebruikers kan worden bijgewerkt.",
+            "label": "Welkom bij het Testing-winkelkanaal"
         }
     },
     "StoreSelect": {
@@ -245,7 +245,20 @@
             "testing": "Testing"
         }
     },
+    "Testing": {
+        "download": "Downloaden",
+        "error": "",
+        "header": "",
+        "loading": "",
+        "start_download_toast": ""
+    },
+    "TitleView": {
+        "decky_store_desc": "Decky Store openen",
+        "settings_desc": "Decky-instellingen openen"
+    },
     "Updater": {
+        "decky_updates": "Decky-updates",
+        "no_patch_notes_desc": "geen patch-opmerkingen voor deze versie",
         "patch_notes_desc": "Patch-opmerkingen",
         "updates": {
             "check_button": "Op updates controleren",
@@ -256,15 +269,6 @@
             "lat_version": "Bijwerkt: versie {{ver}}",
             "reloading": "Bezig met herstarten",
             "updating": "Bezig met bijwerken"
-        },
-        "decky_updates": "Decky-updates",
-        "no_patch_notes_desc": "geen patch-opmerkingen voor deze versie"
-    },
-    "TitleView": {
-        "decky_store_desc": "Decky Store openen",
-        "settings_desc": "Decky-instellingen openen"
-    },
-    "Testing": {
-        "download": "Downloaden"
+        }
     }
 }

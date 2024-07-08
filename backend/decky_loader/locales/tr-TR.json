@@ -1,15 +1,22 @@
 {
     "BranchSelect": {
         "update_channel": {
+            "label": "Güncelleme Kanalı",
             "prerelease": "Önsürüm",
             "stable": "Stabil",
-            "testing": "Test",
-            "label": "Güncelleme Kanalı"
+            "testing": "Test"
         }
     },
     "DropdownMultiselect": {
         "button": {
             "back": "Geri"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "Belirtilen yol geçerli değil. Lütfen yolu kontrol edin ve doğru şekilde yeniden girin.",
+            "perm_denied": "",
+            "unknown": ""
         }
     },
     "FilePickerIndex": {
@@ -48,35 +55,37 @@
             "loading": "Çalışıyor"
         },
         "title": {
-            "reinstall_one": "1 eklentiyi yeniden yükle",
-            "reinstall_other": "{{count}} eklentiyi yeniden yükle",
             "install_one": "1 eklenti yükle",
-            "install_other": "{{count}} eklenti yükle"
+            "install_other": "{{count}} eklenti yükle",
+            "reinstall_one": "1 eklentiyi yeniden yükle",
+            "reinstall_other": "{{count}} eklentiyi yeniden yükle"
         }
     },
     "PluginCard": {
         "plugin_full_access": "Bu eklenti Steam Deck'inize tam erişime sahiptir.",
         "plugin_install": "Yükle",
+        "plugin_no_desc": "",
         "plugin_version_label": "Eklenti Versiyonu"
     },
     "PluginInstallModal": {
         "install": {
             "button_idle": "Yükle",
             "button_processing": "Yükleniyor",
-            "title": "Yükle {{artifact}}",
-            "desc": "Yüklemek istediğinizden emin misiniz {{artifact}} {{version}}?"
+            "desc": "Yüklemek istediğinizden emin misiniz {{artifact}} {{version}}?",
+            "title": "Yükle {{artifact}}"
         },
+        "no_hash": "",
         "reinstall": {
             "button_idle": "Yeniden Yükle",
+            "button_processing": "Yeniden Yükleniyor",
             "desc": "Yeniden yüklemek istediğinizden emin misiniz {{artifact}} {{version}}?",
-            "title": "Yeniden Yükle {{artifact}}",
-            "button_processing": "Yeniden Yükleniyor"
+            "title": "Yeniden Yükle {{artifact}}"
         },
         "update": {
             "button_idle": "Güncelle",
             "button_processing": "Güncelleniyor",
-            "title": "Güncelle {{artifact}}",
-            "desc": "Güncellemek istediğinizden emin misiniz {{artifact}} {{version}}?"
+            "desc": "Güncellemek istediğinizden emin misiniz {{artifact}} {{version}}?",
+            "title": "Güncelle {{artifact}}"
         }
     },
     "PluginListIndex": {
@@ -85,11 +94,13 @@
         "no_plugin": "Yüklü eklenti yok!",
         "plugin_actions": "Eklenti İşlemleri",
         "reinstall": "Yeniden Yükle",
+        "reload": "",
         "show": "Hızlı erişim: Göster",
         "unfreeze": "Güncellemelere izin ver",
         "uninstall": "Kaldır",
         "update_all_one": "1 eklentiyi güncelle",
-        "update_all_other": "{{count}} eklentiyi güncelle"
+        "update_all_other": "{{count}} eklentiyi güncelle",
+        "update_to": ""
     },
     "PluginListLabel": {
         "hidden": "Hızlı erişim menüsünden gizlenmiş"
@@ -99,8 +110,8 @@
         "decky_update_available": "{{tag_name}} güncellemesi mevcut!",
         "error": "Hata",
         "plugin_load_error": {
-            "toast": "{{name}} yüklenirken hata oluştu",
-            "message": "{{name}} eklentisi yüklenirken bir hata oluştu"
+            "message": "{{name}} eklentisi yüklenirken bir hata oluştu",
+            "toast": "{{name}} yüklenirken hata oluştu"
         },
         "plugin_uninstall": {
             "button": "Kaldır",
@@ -110,13 +121,27 @@
         "plugin_update_one": "1 eklenti için güncelleme mevcut!",
         "plugin_update_other": "{{count}} eklenti için güncelleme mevcut!"
     },
+    "PluginView": {
+        "hidden_one": "1 eklenti bu listeden gizlenmiştir",
+        "hidden_other": "{{count}} eklenti bu listeden gizlenmiştir"
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "desc": "",
+            "label": ""
+        }
+    },
     "SettingsDeveloperIndex": {
         "cef_console": {
-            "button": "Konsolu Aç"
+            "button": "Konsolu Aç",
+            "desc": "",
+            "label": ""
         },
         "header": "Diğer",
         "react_devtools": {
-            "ip_label": "IP"
+            "desc": "",
+            "ip_label": "IP",
+            "label": ""
         },
         "third_party_plugins": {
             "button_install": "Yükle",
@@ -125,6 +150,11 @@
             "label_desc": "URL",
             "label_url": "URL'den Eklenti Yükle",
             "label_zip": "ZIP Dosyasından Eklenti Yükle"
+        },
+        "valve_internal": {
+            "desc1": "",
+            "desc2": "",
+            "label": ""
         }
     },
     "SettingsGeneralIndex": {
@@ -153,10 +183,12 @@
     "SettingsIndex": {
         "developer_title": "Geliştirici",
         "general_title": "Genel",
-        "plugins_title": "Eklentiler"
+        "plugins_title": "Eklentiler",
+        "testing_title": ""
     },
     "Store": {
         "store_contrib": {
+            "desc": "",
             "label": "Katkıda Bulunma"
         },
         "store_filter": {
@@ -171,6 +203,7 @@
             "label_def": "Son Güncellenme (En Yeni)"
         },
         "store_source": {
+            "desc": "",
             "label": "Kaynak Kodu"
         },
         "store_tabs": {
@@ -179,19 +212,34 @@
             "alph_desc": "Alfabetik (A'dan Z'ye)",
             "date_asce": "Önce En Eski",
             "date_desc": "Önce En Yeni",
+            "downloads_asce": "Önce En Az İndirilen",
             "downloads_desc": "Önce En Çok İndirilen",
-            "title": "Gözat",
-            "downloads_asce": "Önce En Az İndirilen"
+            "title": "Gözat"
+        },
+        "store_testing_cta": "",
+        "store_testing_warning": {
+            "desc": "",
+            "label": ""
         }
     },
     "StoreSelect": {
         "custom_store": {
+            "label": "",
             "url_label": "URL"
         },
         "store_channel": {
             "custom": "Özel",
-            "default": "Varsayılan"
+            "default": "Varsayılan",
+            "label": "",
+            "testing": ""
         }
+    },
+    "Testing": {
+        "download": "İndir",
+        "error": "",
+        "header": "",
+        "loading": "",
+        "start_download_toast": ""
     },
     "TitleView": {
         "decky_store_desc": "Decky Mağazasını Aç",
@@ -199,27 +247,17 @@
     },
     "Updater": {
         "decky_updates": "Decky Güncellemeleri",
-        "patch_notes_desc": "Yama Notları",
         "no_patch_notes_desc": "bu sürüm için yama notları mevcut değil",
+        "patch_notes_desc": "Yama Notları",
         "updates": {
             "check_button": "Güncellemeleri Kontrol Et",
             "checking": "Kontrol ediliyor",
             "cur_version": "Mevcut Versiyon: {{ver}}",
             "install_button": "Güncellemeyi Yükle",
             "label": "Güncellemeler",
+            "lat_version": "",
+            "reloading": "",
             "updating": "Güncelleniyor"
         }
-    },
-    "Testing": {
-        "download": "İndir"
-    },
-    "FilePickerError": {
-        "errors": {
-            "file_not_found": "Belirtilen yol geçerli değil. Lütfen yolu kontrol edin ve doğru şekilde yeniden girin."
-        }
-    },
-    "PluginView": {
-        "hidden_one": "1 eklenti bu listeden gizlenmiştir",
-        "hidden_other": "{{count}} eklenti bu listeden gizlenmiştir"
     }
 }

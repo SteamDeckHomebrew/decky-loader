@@ -1,10 +1,10 @@
 {
     "BranchSelect": {
         "update_channel": {
-            "stable": "Стабилен",
-            "testing": "Тестване",
             "label": "Канал за обновления",
-            "prerelease": "Предварителни издания"
+            "prerelease": "Предварителни издания",
+            "stable": "Стабилен",
+            "testing": "Тестване"
         }
     },
     "Developer": {
@@ -19,9 +19,9 @@
     },
     "FilePickerError": {
         "errors": {
-            "unknown": "Възникна неизвестна грешка. Грешката в суров вид е: {{raw_error}}",
             "file_not_found": "Посоченият път е неправилен. Проверете го и го въведете правилно.",
-            "perm_denied": "Нямате достъп до посочената папка. Проверете дали потребителят (deck на Steam Deck) има съответните правомощия за достъп до посочената папка/файл."
+            "perm_denied": "Нямате достъп до посочената папка. Проверете дали потребителят (deck на Steam Deck) има съответните правомощия за достъп до посочената папка/файл.",
+            "unknown": "Възникна неизвестна грешка. Грешката в суров вид е: {{raw_error}}"
         }
     },
     "FilePickerIndex": {
@@ -45,11 +45,12 @@
         },
         "folder": {
             "label": "Папка",
-            "show_more": "Показване на още файлове",
-            "select": "Използване на тази папка"
+            "select": "Използване на тази папка",
+            "show_more": "Показване на още файлове"
         }
     },
     "MultiplePluginsInstallModal": {
+        "confirm": "Наистина ли искате да направите следните промени?",
         "description": {
             "install": "Инсталиране на {{name}} {{version}}",
             "reinstall": "Преинсталиране на {{name}} {{version}}",
@@ -60,16 +61,15 @@
             "loading": "В процес на работа"
         },
         "title": {
-            "mixed_one": "Промяна на {{count}} добавка",
-            "mixed_other": "Промяна на {{count}} добавки",
-            "update_one": "Обновяване на 1 добавка",
-            "update_other": "Обновяване на {{count}} добавки",
             "install_one": "Инсталиране на 1 добавка",
             "install_other": "Инсталиране на {{count}} добавки",
+            "mixed_one": "Промяна на {{count}} добавка",
+            "mixed_other": "Промяна на {{count}} добавки",
             "reinstall_one": "Преинсталиране на 1 добавка",
-            "reinstall_other": "Преинсталиране на {{count}} добавки"
-        },
-        "confirm": "Наистина ли искате да направите следните промени?"
+            "reinstall_other": "Преинсталиране на {{count}} добавки",
+            "update_one": "Обновяване на 1 добавка",
+            "update_other": "Обновяване на {{count}} добавки"
+        }
     },
     "PluginCard": {
         "plugin_full_access": "Тази добавка има пълен достъп до Вашия Steam Deck.",
@@ -80,10 +80,11 @@
     "PluginInstallModal": {
         "install": {
             "button_idle": "Инсталиране",
+            "button_processing": "Инсталиране",
             "desc": "Наистина ли искате да инсталирате {{artifact}} {{version}}?",
-            "title": "Инсталиране на {{artifact}}",
-            "button_processing": "Инсталиране"
+            "title": "Инсталиране на {{artifact}}"
         },
+        "no_hash": "Тази добавка няма хеш. Инсталирате я на свой собствен риск.",
         "reinstall": {
             "button_idle": "Преинсталиране",
             "button_processing": "Преинсталиране",
@@ -92,30 +93,33 @@
         },
         "update": {
             "button_idle": "Обновяване",
-            "title": "Обновяване на {{artifact}}",
             "button_processing": "Обновяване",
-            "desc": "Наистина ли искате да обновите {{artifact}} {{version}}?"
-        },
-        "no_hash": "Тази добавка няма хеш. Инсталирате я на свой собствен риск."
+            "desc": "Наистина ли искате да обновите {{artifact}} {{version}}?",
+            "title": "Обновяване на {{artifact}}"
+        }
     },
     "PluginListIndex": {
+        "freeze": "",
         "hide": "Бърз достъп: Скриване",
         "no_plugin": "Няма инсталирани добавки!",
         "plugin_actions": "Действия с добавката",
         "reinstall": "Преинсталиране",
-        "uninstall": "Деинсталиране",
-        "update_to": "Обновяване до {{name}}",
         "reload": "Презареждане",
         "show": "Бърз достъп: Показване",
+        "unfreeze": "",
+        "uninstall": "Деинсталиране",
         "update_all_one": "Обновяване на 1 добавка",
-        "update_all_other": "Обновяване на {{count}} добавки"
+        "update_all_other": "Обновяване на {{count}} добавки",
+        "update_to": "Обновяване до {{name}}"
     },
     "PluginListLabel": {
         "hidden": "Скрито от менюто за бърз достъп"
     },
     "PluginLoader": {
         "decky_title": "Decky",
+        "decky_update_available": "Има налично обновление до {{tag_name}}!",
         "error": "Грешка",
+        "plugin_error_uninstall": "Зареждането на {{name}} предизвика грешка, както се вижда по-горе. Това обикновено означава, че добавката изисква обновяване на новата версия на SteamUI. Проверете дали има обновление или изберете да я премахнете в настройките на Decky, в раздела с добавките.",
         "plugin_load_error": {
             "message": "Грешка при зареждането на добавката {{name}}",
             "toast": "Грешка при зареждането на {{name}}"
@@ -126,9 +130,11 @@
             "title": "Деинсталиране на {{name}}"
         },
         "plugin_update_one": "Има налично обновление за 1 добавка!",
-        "plugin_update_other": "Има налични обновления за {{count}} добавки!",
-        "decky_update_available": "Има налично обновление до {{tag_name}}!",
-        "plugin_error_uninstall": "Зареждането на {{name}} предизвика грешка, както се вижда по-горе. Това обикновено означава, че добавката изисква обновяване на новата версия на SteamUI. Проверете дали има обновление или изберете да я премахнете в настройките на Decky, в раздела с добавките."
+        "plugin_update_other": "Има налични обновления за {{count}} добавки!"
+    },
+    "PluginView": {
+        "hidden_one": "1 добавка е скрита от този списък",
+        "hidden_other": "{{count}} добавки са скрити от този списък"
     },
     "RemoteDebugging": {
         "remote_cef": {
@@ -139,33 +145,36 @@
     "SettingsDeveloperIndex": {
         "cef_console": {
             "button": "Отваряне на конзолата",
-            "label": "Конзола на CEF",
-            "desc": "Отваря конзолата на CEF. Това има смисъл единствено за дебъгване. Нещата тук може да са опасни и трябва да бъдат използвани само ако Вие сте разработчик на добавка, или получавате насоки от такъв."
+            "desc": "Отваря конзолата на CEF. Това има смисъл единствено за дебъгване. Нещата тук може да са опасни и трябва да бъдат използвани само ако Вие сте разработчик на добавка, или получавате насоки от такъв.",
+            "label": "Конзола на CEF"
         },
         "header": "Други",
         "react_devtools": {
+            "desc": "Включва свързването към компютър, на който работи React DevTools. Промяната на тази настройка ще презареди Steam. Задайте IP адреса преди да включите това.",
             "ip_label": "IP",
-            "label": "Включване на React DevTools",
-            "desc": "Включва свързването към компютър, на който работи React DevTools. Промяната на тази настройка ще презареди Steam. Задайте IP адреса преди да включите това."
+            "label": "Включване на React DevTools"
         },
         "third_party_plugins": {
             "button_install": "Инсталиране",
             "button_zip": "Разглеждане",
             "header": "Добавки от външен източник",
             "label_desc": "Адрес",
-            "label_zip": "Инсталиране на добавка от файл ZIP",
-            "label_url": "Инсталиране на добавка от адрес в Интернет"
+            "label_url": "Инсталиране на добавка от адрес в Интернет",
+            "label_zip": "Инсталиране на добавка от файл ZIP"
         },
         "valve_internal": {
+            "desc1": "Включва вътрешното меню за разработчици на Valve.",
             "desc2": "Не пипайте нищо в това меню, освен ако не знаете какво правите.",
-            "label": "Включване на вътрешното меню на Valve",
-            "desc1": "Включва вътрешното меню за разработчици на Valve."
+            "label": "Включване на вътрешното меню на Valve"
         }
     },
     "SettingsGeneralIndex": {
         "about": {
             "decky_version": "Версия на Decky",
             "header": "Относно"
+        },
+        "beta": {
+            "header": "Участие в бета-версии"
         },
         "developer_mode": {
             "label": "Режим за разработчици"
@@ -180,20 +189,18 @@
         },
         "updates": {
             "header": "Обновления"
-        },
-        "beta": {
-            "header": "Участие в бета-версии"
         }
     },
     "SettingsIndex": {
         "developer_title": "Разработчик",
         "general_title": "Общи",
-        "plugins_title": "Добавки"
+        "plugins_title": "Добавки",
+        "testing_title": ""
     },
     "Store": {
         "store_contrib": {
-            "label": "Допринасяне",
-            "desc": "Ако искате да допринесете към магазина за добавки на Decky, разгледайте хранилището SteamDeckHomebrew/decky-plugin-template в GitHub. Може да намерите информация относно разработката и разпространението във файла README."
+            "desc": "Ако искате да допринесете към магазина за добавки на Decky, разгледайте хранилището SteamDeckHomebrew/decky-plugin-template в GitHub. Може да намерите информация относно разработката и разпространението във файла README.",
+            "label": "Допринасяне"
         },
         "store_filter": {
             "label": "Филтър",
@@ -207,16 +214,24 @@
             "label_def": "Последно обновление (първо най-новите)"
         },
         "store_source": {
-            "label": "Изходен код",
-            "desc": "Целият изходен код е наличен в хранилището SteamDeckHomebrew/decky-plugin-database в GitHub."
+            "desc": "Целият изходен код е наличен в хранилището SteamDeckHomebrew/decky-plugin-database в GitHub.",
+            "label": "Изходен код"
         },
         "store_tabs": {
             "about": "Относно",
             "alph_asce": "По азбучен ред (Я -> А)",
             "alph_desc": "По азбучен ред (А -> Я)",
+            "date_asce": "",
+            "date_desc": "",
+            "downloads_asce": "",
+            "downloads_desc": "",
             "title": "Разглеждане"
         },
-        "store_testing_cta": "Помислете дали искате да тествате новите добавки, за да помогнете на екипа на Decky Loader!"
+        "store_testing_cta": "Помислете дали искате да тествате новите добавки, за да помогнете на екипа на Decky Loader!",
+        "store_testing_warning": {
+            "desc": "",
+            "label": ""
+        }
     },
     "StoreSelect": {
         "custom_store": {
@@ -230,23 +245,30 @@
             "testing": "Тестване"
         }
     },
+    "Testing": {
+        "download": "",
+        "error": "",
+        "header": "",
+        "loading": "",
+        "start_download_toast": ""
+    },
+    "TitleView": {
+        "decky_store_desc": "",
+        "settings_desc": ""
+    },
     "Updater": {
         "decky_updates": "Обновления на Decky",
+        "no_patch_notes_desc": "няма бележки за промените в тази версия",
         "patch_notes_desc": "Бележки за промените",
         "updates": {
             "check_button": "Проверка за обновления",
             "checking": "Проверяване",
             "cur_version": "Текуща версия: {{ver}}",
+            "install_button": "Инсталиране на обновлението",
             "label": "Обновления",
             "lat_version": "Използвате най-новата версия: {{ver}}",
             "reloading": "Презареждане",
-            "updating": "Обновяване",
-            "install_button": "Инсталиране на обновлението"
-        },
-        "no_patch_notes_desc": "няма бележки за промените в тази версия"
-    },
-    "PluginView": {
-        "hidden_one": "1 добавка е скрита от този списък",
-        "hidden_other": "{{count}} добавки са скрити от този списък"
+            "updating": "Обновяване"
+        }
     }
 }

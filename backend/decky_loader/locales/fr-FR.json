@@ -1,5 +1,161 @@
 {
+    "BranchSelect": {
+        "update_channel": {
+            "label": "Canal de mise à jour",
+            "prerelease": "Avant-première",
+            "stable": "Stable",
+            "testing": "Test"
+        }
+    },
+    "Developer": {
+        "5secreload": "Rechargement dans 5 secondes",
+        "disabling": "Désactivation des React DevTools",
+        "enabling": "Activation des React DevTools"
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "Retour"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "Le chemin spécifié n'est pas valide. Veuillez vérifier et essayer à nouveau.",
+            "perm_denied": "Vous n'avez pas accès au dossier spécifié. Veuillez vérifier que votre utilisateur (deck sur un Steam Deck) possède les permissions requises pour accéder au dossier/fichier spécifié.",
+            "unknown": "Une erreur inconnue est survenue. L'erreur est : {{raw_error}}"
+        }
+    },
+    "FilePickerIndex": {
+        "file": {
+            "select": "Sélectionner ce fichier"
+        },
+        "files": {
+            "all_files": "Tout les fichiers",
+            "file_type": "Type de fichier",
+            "show_hidden": "Afficher les fichiers cachés"
+        },
+        "filter": {
+            "created_asce": "Création (Plus vieux)",
+            "created_desc": "Création (Plus récent)",
+            "modified_asce": "Modifié (Plus vieux)",
+            "modified_desc": "Modifié (Plus récent)",
+            "name_asce": "Z-A",
+            "name_desc": "A-Z",
+            "size_asce": "Taille (Plus petit)",
+            "size_desc": "Taille (Plus grand)"
+        },
+        "folder": {
+            "label": "Dossier",
+            "select": "Utiliser ce dossier",
+            "show_more": "Afficher plus de fichiers"
+        }
+    },
+    "MultiplePluginsInstallModal": {
+        "confirm": "Êtes-vous sûr de vouloir apporter les modifications suivantes ?",
+        "description": {
+            "install": "Installer {{name}} {{version}}",
+            "reinstall": "Réinstaller {{name}} {{version}}",
+            "update": "Mettre à jour {{name}} à {{version}}"
+        },
+        "ok_button": {
+            "idle": "Confirmer",
+            "loading": "En cours"
+        },
+        "title": {
+            "install_one": "Installer 1 plugin",
+            "install_many": "Installer {{count}} plugins",
+            "install_other": "Installer {{count}} plugins",
+            "mixed_one": "Modifier {{count}} plugin",
+            "mixed_many": "Modifier {{count}} plugins",
+            "mixed_other": "Modifier {{count}} plugins",
+            "reinstall_one": "Réinstaller 1 plugin",
+            "reinstall_many": "Réinstaller {{count}} plugins",
+            "reinstall_other": "Réinstaller {{count}} plugins",
+            "update_one": "Mettre à jour 1 plugin",
+            "update_many": "Mettre à jour {{count}} plugins",
+            "update_other": "Mettre à jour {{count}} plugins"
+        }
+    },
+    "PluginCard": {
+        "plugin_full_access": "Ce plugin a un accès complet à votre Steam Deck.",
+        "plugin_install": "Installer",
+        "plugin_no_desc": "Aucune description fournie.",
+        "plugin_version_label": "Version du plugin"
+    },
+    "PluginInstallModal": {
+        "install": {
+            "button_idle": "Installer",
+            "button_processing": "Installation en cours",
+            "desc": "Êtes-vous sûr de vouloir installer {{artifact}} {{version}}\u202f?",
+            "title": "Installer {{artifact}}"
+        },
+        "no_hash": "Ce plugin n'a pas de somme de contrôle, vous l'installez à vos risques et périls.",
+        "reinstall": {
+            "button_idle": "Réinstaller",
+            "button_processing": "Réinstallation en cours",
+            "desc": "Êtes-vous sûr de vouloir réinstaller {{artifact}} {{version}}\u202f?",
+            "title": "Réinstaller {{artifact}}"
+        },
+        "update": {
+            "button_idle": "Mettre à jour",
+            "button_processing": "Mise à jour",
+            "desc": "Êtes-vous sûr de vouloir mettre à jour {{artifact}} {{version}}\u202f?",
+            "title": "Mettre à jour {{artifact}}"
+        }
+    },
+    "PluginListIndex": {
+        "freeze": "Geler les mises à jour",
+        "hide": "Accès rapide : Cacher",
+        "no_plugin": "Aucun plugin installé !",
+        "plugin_actions": "Plugin Actions",
+        "reinstall": "Réinstaller",
+        "reload": "Recharger",
+        "show": "Accès Rapide : Afficher",
+        "unfreeze": "Autoriser les mises à jour",
+        "uninstall": "Désinstaller",
+        "update_all_one": "Mettre à jour 1 plugin",
+        "update_all_many": "Mettre à jour {{count}} plugins",
+        "update_all_other": "Mettre à jour {{count}} plugins",
+        "update_to": "Mettre à jour vers {{name}}"
+    },
+    "PluginListLabel": {
+        "hidden": "Caché du menu d'accès rapide"
+    },
+    "PluginLoader": {
+        "decky_title": "Decky",
+        "decky_update_available": "Mise à jour vers {{tag_name}} disponible !",
+        "error": "Erreur",
+        "plugin_error_uninstall": "Allez sur {{name}} dans le menu de Decky si vous voulez désinstaller ce plugin.",
+        "plugin_load_error": {
+            "message": "Erreur lors du chargement du plugin {{name}}",
+            "toast": "Erreur lors du chargement de {{name}}"
+        },
+        "plugin_uninstall": {
+            "button": "Désinstaller",
+            "desc": "Êtes-vous sûr.e de vouloir désinstaller {{name}} ?",
+            "title": "Désinstaller {{name}}"
+        },
+        "plugin_update_one": "Mise à jour disponible pour 1 plugin !",
+        "plugin_update_many": "Mises à jour disponible pour {{count}} plugins !",
+        "plugin_update_other": "Mises à jour disponible pour {{count}} plugins !"
+    },
+    "PluginView": {
+        "hidden_one": "1 plugin est masqué dans cette liste",
+        "hidden_many": "{{count}} plugins sont masqués de cette liste",
+        "hidden_other": "{{count}} plugins sont masqués de cette liste"
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "desc": "Autoriser l'accès non authentifié au débogueur CEF à toute personne de votre réseau",
+            "label": "Autoriser le débogage CEF à distance"
+        }
+    },
     "SettingsDeveloperIndex": {
+        "cef_console": {
+            "button": "Ouvrir la console",
+            "desc": "Ouvre la console CEF. Utile uniquement à des fins de débogage. Les éléments présentés ici sont potentiellement dangereux et ne doivent être utilisés que si vous êtes un développeur de plugins ou si vous êtes dirigé ici par un de ces développeurs.",
+            "label": "CEF Console"
+        },
+        "header": "Autre",
         "react_devtools": {
             "desc": "Permet la connexion à un ordinateur exécutant React DevTools. Changer ce paramètre rechargera Steam. Définissez l'adresse IP avant l'activation.",
             "ip_label": "IP",
@@ -17,143 +173,6 @@
             "desc1": "Active le menu développeur interne de Valve.",
             "desc2": "Ne touchez à rien dans ce menu à moins que vous ne sachiez ce qu'il fait.",
             "label": "Activer Valve Internal"
-        },
-        "cef_console": {
-            "button": "Ouvrir la console",
-            "label": "CEF Console",
-            "desc": "Ouvre la console CEF. Utile uniquement à des fins de débogage. Les éléments présentés ici sont potentiellement dangereux et ne doivent être utilisés que si vous êtes un développeur de plugins ou si vous êtes dirigé ici par un de ces développeurs."
-        },
-        "header": "Autre"
-    },
-    "BranchSelect": {
-        "update_channel": {
-            "prerelease": "Avant-première",
-            "label": "Canal de mise à jour",
-            "stable": "Stable",
-            "testing": "Test"
-        }
-    },
-    "StoreSelect": {
-        "store_channel": {
-            "label": "Canal du Plugin Store",
-            "testing": "Test",
-            "custom": "Personnalisé",
-            "default": "Par défaut"
-        },
-        "custom_store": {
-            "label": "Plugin Store personnalisé",
-            "url_label": "URL"
-        }
-    },
-    "Updater": {
-        "decky_updates": "Mises à jour de Decky",
-        "no_patch_notes_desc": "pas de notes de mise à jour pour cette version",
-        "patch_notes_desc": "Notes de mise à jour",
-        "updates": {
-            "check_button": "Chercher les mises à jour",
-            "checking": "Recherche",
-            "cur_version": "Version actuelle: {{ver}}",
-            "install_button": "Installer la mise à jour",
-            "label": "Mises à jour",
-            "lat_version": "À jour: version {{ver}}",
-            "reloading": "Rechargement",
-            "updating": "Mise à jour en cours"
-        }
-    },
-    "Developer": {
-        "5secreload": "Rechargement dans 5 secondes",
-        "disabling": "Désactivation des React DevTools",
-        "enabling": "Activation des React DevTools"
-    },
-    "FilePickerIndex": {
-        "folder": {
-            "select": "Utiliser ce dossier",
-            "label": "Dossier",
-            "show_more": "Afficher plus de fichiers"
-        },
-        "files": {
-            "show_hidden": "Afficher les fichiers cachés",
-            "all_files": "Tout les fichiers",
-            "file_type": "Type de fichier"
-        },
-        "file": {
-            "select": "Sélectionner ce fichier"
-        },
-        "filter": {
-            "created_desc": "Création (Plus récent)",
-            "modified_asce": "Modifié (Plus vieux)",
-            "modified_desc": "Modifié (Plus récent)",
-            "created_asce": "Création (Plus vieux)",
-            "name_asce": "Z-A",
-            "name_desc": "A-Z",
-            "size_asce": "Taille (Plus petit)",
-            "size_desc": "Taille (Plus grand)"
-        }
-    },
-    "PluginCard": {
-        "plugin_full_access": "Ce plugin a un accès complet à votre Steam Deck.",
-        "plugin_install": "Installer",
-        "plugin_no_desc": "Aucune description fournie.",
-        "plugin_version_label": "Version du plugin"
-    },
-    "PluginInstallModal": {
-        "install": {
-            "button_idle": "Installer",
-            "button_processing": "Installation en cours",
-            "title": "Installer {{artifact}}",
-            "desc": "Êtes-vous sûr de vouloir installer {{artifact}} {{version}} ?"
-        },
-        "no_hash": "Ce plugin n'a pas de somme de contrôle, vous l'installez à vos risques et périls.",
-        "reinstall": {
-            "button_idle": "Réinstaller",
-            "button_processing": "Réinstallation en cours",
-            "desc": "Êtes-vous sûr de vouloir réinstaller {{artifact}} {{version}} ?",
-            "title": "Réinstaller {{artifact}}"
-        },
-        "update": {
-            "button_idle": "Mettre à jour",
-            "button_processing": "Mise à jour",
-            "title": "Mettre à jour {{artifact}}",
-            "desc": "Êtes-vous sûr de vouloir mettre à jour {{artifact}} {{version}} ?"
-        }
-    },
-    "PluginListIndex": {
-        "plugin_actions": "Plugin Actions",
-        "reinstall": "Réinstaller",
-        "reload": "Recharger",
-        "uninstall": "Désinstaller",
-        "update_to": "Mettre à jour vers {{name}}",
-        "no_plugin": "Aucun plugin installé !",
-        "update_all_one": "Mettre à jour 1 plugin",
-        "update_all_many": "Mettre à jour {{count}} plugins",
-        "update_all_other": "Mettre à jour {{count}} plugins",
-        "show": "Accès Rapide : Afficher",
-        "hide": "Accès rapide : Cacher",
-        "unfreeze": "Autoriser les mises à jour",
-        "freeze": "Geler les mises à jour"
-    },
-    "PluginLoader": {
-        "decky_title": "Decky",
-        "error": "Erreur",
-        "plugin_error_uninstall": "Allez sur {{name}} dans le menu de Decky si vous voulez désinstaller ce plugin.",
-        "plugin_load_error": {
-            "message": "Erreur lors du chargement du plugin {{name}}",
-            "toast": "Erreur lors du chargement de {{name}}"
-        },
-        "decky_update_available": "Mise à jour vers {{tag_name}} disponible !",
-        "plugin_uninstall": {
-            "button": "Désinstaller",
-            "title": "Désinstaller {{name}}",
-            "desc": "Êtes-vous sûr.e de vouloir désinstaller {{name}} ?"
-        },
-        "plugin_update_one": "Mise à jour disponible pour 1 plugin !",
-        "plugin_update_many": "Mises à jour disponible pour {{count}} plugins !",
-        "plugin_update_other": "Mises à jour disponible pour {{count}} plugins !"
-    },
-    "RemoteDebugging": {
-        "remote_cef": {
-            "desc": "Autoriser l'accès non authentifié au débogueur CEF à toute personne de votre réseau",
-            "label": "Autoriser le débogage CEF à distance"
         }
     },
     "SettingsGeneralIndex": {
@@ -167,16 +186,16 @@
         "developer_mode": {
             "label": "Mode développeur"
         },
+        "notifications": {
+            "decky_updates_label": "Mise à jour Decky disponible",
+            "header": "Notifications",
+            "plugin_updates_label": "Mises à jour du plugin disponibles"
+        },
         "other": {
             "header": "Autre"
         },
         "updates": {
             "header": "Mises à jour"
-        },
-        "notifications": {
-            "decky_updates_label": "Mise à jour Decky disponible",
-            "header": "Notifications",
-            "plugin_updates_label": "Mises à jour du plugin disponibles"
         }
     },
     "SettingsIndex": {
@@ -209,69 +228,54 @@
             "about": "À propos",
             "alph_asce": "Alphabétique (Z à A)",
             "alph_desc": "Alphabétique (A à Z)",
-            "title": "Explorer",
             "date_asce": "Plus ancien en premier",
             "date_desc": "Le plus récent d'abord",
             "downloads_asce": "Le moins téléchargé en premier",
-            "downloads_desc": "Les plus téléchargés en premier"
+            "downloads_desc": "Les plus téléchargés en premier",
+            "title": "Explorer"
         },
         "store_testing_cta": "Pensez à tester de nouveaux plugins pour aider l'équipe Decky Loader !",
         "store_testing_warning": {
-            "label": "Bienvenue sur la chaîne du magasin de tests",
-            "desc": "Vous pouvez utiliser cette chaîne de magasin pour tester des versions de plugins. Assurez-vous de laisser des commentaires sur GitHub afin que le plugin puisse être mis à jour pour tous les utilisateurs."
+            "desc": "Vous pouvez utiliser cette chaîne de magasin pour tester des versions de plugins. Assurez-vous de laisser des commentaires sur GitHub afin que le plugin puisse être mis à jour pour tous les utilisateurs.",
+            "label": "Bienvenue sur la chaîne du magasin de tests"
         }
     },
-    "PluginView": {
-        "hidden_one": "1 plugin est masqué dans cette liste",
-        "hidden_many": "{{count}} plugins sont masqués de cette liste",
-        "hidden_other": "{{count}} plugins sont masqués de cette liste"
-    },
-    "MultiplePluginsInstallModal": {
-        "title": {
-            "reinstall_one": "Réinstaller 1 plugin",
-            "reinstall_many": "Réinstaller {{count}} plugins",
-            "reinstall_other": "Réinstaller {{count}} plugins",
-            "install_one": "Installer 1 plugin",
-            "install_many": "Installer {{count}} plugins",
-            "install_other": "Installer {{count}} plugins",
-            "mixed_one": "Modifier {{count}} plugin",
-            "mixed_many": "Modifier {{count}} plugins",
-            "mixed_other": "Modifier {{count}} plugins",
-            "update_one": "Mettre à jour 1 plugin",
-            "update_many": "Mettre à jour {{count}} plugins",
-            "update_other": "Mettre à jour {{count}} plugins"
+    "StoreSelect": {
+        "custom_store": {
+            "label": "Plugin Store personnalisé",
+            "url_label": "URL"
         },
-        "confirm": "Êtes-vous sûr de vouloir apporter les modifications suivantes ?",
-        "description": {
-            "install": "Installer {{name}} {{version}}",
-            "update": "Mettre à jour {{name}} à {{version}}",
-            "reinstall": "Réinstaller {{name}} {{version}}"
-        },
-        "ok_button": {
-            "idle": "Confirmer",
-            "loading": "En cours"
+        "store_channel": {
+            "custom": "Personnalisé",
+            "default": "Par défaut",
+            "label": "Canal du Plugin Store",
+            "testing": "Test"
         }
     },
-    "PluginListLabel": {
-        "hidden": "Caché du menu d'accès rapide"
-    },
-    "FilePickerError": {
-        "errors": {
-            "perm_denied": "Vous n'avez pas accès au dossier spécifié. Veuillez vérifier que votre utilisateur (deck sur un Steam Deck) possède les permissions requises pour accéder au dossier/fichier spécifié.",
-            "file_not_found": "Le chemin spécifié n'est pas valide. Veuillez vérifier et essayer à nouveau.",
-            "unknown": "Une erreur inconnue est survenue. L'erreur est : {{raw_error}}"
-        }
-    },
-    "DropdownMultiselect": {
-        "button": {
-            "back": "Retour"
-        }
+    "Testing": {
+        "download": "Télécharger",
+        "error": "",
+        "header": "",
+        "loading": "",
+        "start_download_toast": ""
     },
     "TitleView": {
         "decky_store_desc": "Ouvrir le magasin Decky",
         "settings_desc": "Ouvrir les paramètres de Decky"
     },
-    "Testing": {
-        "download": "Télécharger"
+    "Updater": {
+        "decky_updates": "Mises à jour de Decky",
+        "no_patch_notes_desc": "pas de notes de mise à jour pour cette version",
+        "patch_notes_desc": "Notes de mise à jour",
+        "updates": {
+            "check_button": "Chercher les mises à jour",
+            "checking": "Recherche",
+            "cur_version": "Version actuelle: {{ver}}",
+            "install_button": "Installer la mise à jour",
+            "label": "Mises à jour",
+            "lat_version": "À jour: version {{ver}}",
+            "reloading": "Rechargement",
+            "updating": "Mise à jour en cours"
+        }
     }
 }

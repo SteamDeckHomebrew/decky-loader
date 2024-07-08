@@ -8,15 +8,30 @@
         }
     },
     "Developer": {
+        "5secreload": "Znovu načtení za 5 vteřin",
         "disabling": "Vypínám React DevTools",
-        "enabling": "Zapínám React DevTools",
-        "5secreload": "Znovu načtení za 5 vteřin"
+        "enabling": "Zapínám React DevTools"
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "Zpět"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "Zadaná cesta není platná. Zkontrolujte ji a zadejte znovu správně.",
+            "perm_denied": "Nemáte přístup k zadanému adresáři. Zkontrolujte, zda jako uživatel (deck na Steam Decku) máte odpovídající oprávnění pro přístup k dané složce/souboru.",
+            "unknown": "Nastala neznámá chyba. Nezpracovaná chyba je: {{raw_error}}"
+        }
     },
     "FilePickerIndex": {
-        "folder": {
-            "select": "Použít tuto složku",
-            "label": "Složka",
-            "show_more": "Zobrazit více souborů"
+        "file": {
+            "select": "Vybrat tento soubor"
+        },
+        "files": {
+            "all_files": "Všechny soubory",
+            "file_type": "Typ souboru",
+            "show_hidden": "Zobrazit skryté soubory"
         },
         "filter": {
             "created_asce": "Vytvořeno (Nejstarší)",
@@ -28,22 +43,37 @@
             "size_asce": "Velikost (Nejmenší)",
             "size_desc": "Velikost (Největší)"
         },
-        "files": {
-            "show_hidden": "Zobrazit skryté soubory",
-            "all_files": "Všechny soubory",
-            "file_type": "Typ souboru"
-        },
-        "file": {
-            "select": "Vybrat tento soubor"
+        "folder": {
+            "label": "Složka",
+            "select": "Použít tuto složku",
+            "show_more": "Zobrazit více souborů"
         }
     },
-    "PluginView": {
-        "hidden_one": "1 plugin je v tomto seznamu skrytý",
-        "hidden_few": "{{count}} pluginů je v tomto seznamu skryto",
-        "hidden_other": "{{count}} pluginů je v tomto seznamu skryto"
-    },
-    "PluginListLabel": {
-        "hidden": "Skryto z nabídky rychlého přístupu"
+    "MultiplePluginsInstallModal": {
+        "confirm": "Jste si jisti, že chcete udělat následující úpravy?",
+        "description": {
+            "install": "Instalovat {{name}} {{version}}",
+            "reinstall": "Přeinstalovat {{name}} {{version}}",
+            "update": "Aktualizovat {{name}} na {{version}}"
+        },
+        "ok_button": {
+            "idle": "Potvrdit",
+            "loading": "Probíhá"
+        },
+        "title": {
+            "install_one": "Instalovat 1 plugin",
+            "install_few": "Instalovat {{count}} pluginů",
+            "install_other": "Instalovat {{count}} pluginů",
+            "mixed_one": "Upravit {{count}} plugin",
+            "mixed_few": "Upravit {{count}} pluginů",
+            "mixed_other": "Upravit {{count}} pluginů",
+            "reinstall_one": "Přeinstalovat 1 plugin",
+            "reinstall_few": "Přeinstalovat {{count}} pluginů",
+            "reinstall_other": "Přeinstalovat {{count}} pluginů",
+            "update_one": "Aktualizovat 1 plugin",
+            "update_few": "Aktualizovat {{count}} pluginů",
+            "update_other": "Aktualizovat {{count}} pluginů"
+        }
     },
     "PluginCard": {
         "plugin_full_access": "Tento plugin má plný přístup k vašemu Steam Decku.",
@@ -55,15 +85,15 @@
         "install": {
             "button_idle": "Instalovat",
             "button_processing": "Instalování",
-            "title": "Instalovat {{artifact}}",
-            "desc": "Jste si jisti, že chcete nainstalovat {{artifact}} {{version}}?"
+            "desc": "Jste si jisti, že chcete nainstalovat {{artifact}} {{version}}?",
+            "title": "Instalovat {{artifact}}"
         },
         "no_hash": "Tento plugin nemá hash, instalujete jej na vlastní nebezpečí.",
         "reinstall": {
             "button_idle": "Přeinstalovat",
             "button_processing": "Přeinstalování",
-            "title": "Přeinstalovat {{artifact}}",
-            "desc": "Jste si jisti, že chcete přeinstalovat {{artifact}} {{version}}?"
+            "desc": "Jste si jisti, že chcete přeinstalovat {{artifact}} {{version}}?",
+            "title": "Přeinstalovat {{artifact}}"
         },
         "update": {
             "button_idle": "Aktualizovat",
@@ -72,51 +102,30 @@
             "title": "Aktualizovat {{artifact}}"
         }
     },
-    "MultiplePluginsInstallModal": {
-        "title": {
-            "mixed_one": "Upravit {{count}} plugin",
-            "mixed_few": "Upravit {{count}} pluginů",
-            "mixed_other": "Upravit {{count}} pluginů",
-            "reinstall_one": "Přeinstalovat 1 plugin",
-            "reinstall_few": "Přeinstalovat {{count}} pluginů",
-            "reinstall_other": "Přeinstalovat {{count}} pluginů",
-            "install_one": "Instalovat 1 plugin",
-            "install_few": "Instalovat {{count}} pluginů",
-            "install_other": "Instalovat {{count}} pluginů",
-            "update_one": "Aktualizovat 1 plugin",
-            "update_few": "Aktualizovat {{count}} pluginů",
-            "update_other": "Aktualizovat {{count}} pluginů"
-        },
-        "ok_button": {
-            "idle": "Potvrdit",
-            "loading": "Probíhá"
-        },
-        "description": {
-            "install": "Instalovat {{name}} {{version}}",
-            "update": "Aktualizovat {{name}} na {{version}}",
-            "reinstall": "Přeinstalovat {{name}} {{version}}"
-        },
-        "confirm": "Jste si jisti, že chcete udělat následující úpravy?"
-    },
     "PluginListIndex": {
+        "freeze": "Pozastavit aktualizace",
+        "hide": "Rychlý přístup: Skrýt",
         "no_plugin": "Nejsou nainstalovány žádné pluginy!",
         "plugin_actions": "Akce pluginu",
         "reinstall": "Přeinstalovat",
         "reload": "Znovu načíst",
-        "uninstall": "Odinstalovat",
-        "update_to": "Aktualizovat na {{name}}",
         "show": "Rychlý přístup: Zobrazit",
-        "hide": "Rychlý přístup: Skrýt",
+        "unfreeze": "Povolit aktualizace",
+        "uninstall": "Odinstalovat",
         "update_all_one": "Aktualizovat 1 plugin",
         "update_all_few": "Aktualizovat {{count}} pluginů",
+        "update_all_many": "",
         "update_all_other": "Aktualizovat {{count}} pluginů",
-        "freeze": "Pozastavit aktualizace",
-        "unfreeze": "Povolit aktualizace"
+        "update_to": "Aktualizovat na {{name}}"
+    },
+    "PluginListLabel": {
+        "hidden": "Skryto z nabídky rychlého přístupu"
     },
     "PluginLoader": {
         "decky_title": "Decky",
         "decky_update_available": "Aktualizace na {{tag_name}} dostupná!",
         "error": "Chyba",
+        "plugin_error_uninstall": "Načítání {{name}} způsobilo chybu uvedenou výše. To obvykle znamená, že plugin vyžaduje aktualizaci SteamUI. Zkontrolujte, zda je aktualizace k dispozici, nebo zvažte odstranění pluginu v nastavení Decky v sekci Pluginy.",
         "plugin_load_error": {
             "message": "Chyba při načítání pluginu {{name}}",
             "toast": "Chyba při načítání {{name}}"
@@ -128,14 +137,25 @@
         },
         "plugin_update_one": "Je dostupná aktualizace pro 1 plugin!",
         "plugin_update_few": "Jsou dostupné aktualizace pro {{count}} pluginů!",
-        "plugin_update_other": "Jsou dostupné aktualizace pro {{count}} pluginů!",
-        "plugin_error_uninstall": "Načítání {{name}} způsobilo chybu uvedenou výše. To obvykle znamená, že plugin vyžaduje aktualizaci SteamUI. Zkontrolujte, zda je aktualizace k dispozici, nebo zvažte odstranění pluginu v nastavení Decky v sekci Pluginy."
+        "plugin_update_other": "Jsou dostupné aktualizace pro {{count}} pluginů!"
+    },
+    "PluginView": {
+        "hidden_one": "1 plugin je v tomto seznamu skrytý",
+        "hidden_few": "{{count}} pluginů je v tomto seznamu skryto",
+        "hidden_many": "",
+        "hidden_other": "{{count}} pluginů je v tomto seznamu skryto"
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "desc": "Umožní neověřený přístup k CEF ladění komukoli ve vaší síti",
+            "label": "Povolit vzdálené CEF ladění"
+        }
     },
     "SettingsDeveloperIndex": {
         "cef_console": {
             "button": "Otevřít konzoli",
-            "label": "CEF konzole",
-            "desc": "Otevře CEF konzoli. Užitečné pouze pro účely ladění. Věci zde jsou potenciálně nebezpečné a měly by být používány pouze v případě, že jste vývojář pluginů, nebo vás sem nějaký nasměroval."
+            "desc": "Otevře CEF konzoli. Užitečné pouze pro účely ladění. Věci zde jsou potenciálně nebezpečné a měly by být používány pouze v případě, že jste vývojář pluginů, nebo vás sem nějaký nasměroval.",
+            "label": "CEF konzole"
         },
         "header": "Ostatní",
         "react_devtools": {
@@ -157,12 +177,6 @@
             "label": "Zapnout Valve Internal"
         }
     },
-    "RemoteDebugging": {
-        "remote_cef": {
-            "label": "Povolit vzdálené CEF ladění",
-            "desc": "Umožní neověřený přístup k CEF ladění komukoli ve vaší síti"
-        }
-    },
     "SettingsGeneralIndex": {
         "about": {
             "decky_version": "Decky verze",
@@ -174,16 +188,16 @@
         "developer_mode": {
             "label": "Vývojářský režim"
         },
+        "notifications": {
+            "decky_updates_label": "Dostupná aktualizace Decky",
+            "header": "Notifikace",
+            "plugin_updates_label": "Dostupná aktualizace pluginu"
+        },
         "other": {
             "header": "Ostatní"
         },
         "updates": {
             "header": "Aktualizace"
-        },
-        "notifications": {
-            "decky_updates_label": "Dostupná aktualizace Decky",
-            "header": "Notifikace",
-            "plugin_updates_label": "Dostupná aktualizace pluginu"
         }
     },
     "SettingsIndex": {
@@ -194,8 +208,8 @@
     },
     "Store": {
         "store_contrib": {
-            "label": "Přispívání",
-            "desc": "Pokud byste chtěli přispět do obchodu Decky Plugin Store, podívejte se na repozitář SteamDeckHomebrew/decky-plugin-template na GitHubu. Informace o vývoji a distribuci jsou k dispozici v README."
+            "desc": "Pokud byste chtěli přispět do obchodu Decky Plugin Store, podívejte se na repozitář SteamDeckHomebrew/decky-plugin-template na GitHubu. Informace o vývoji a distribuci jsou k dispozici v README.",
+            "label": "Přispívání"
         },
         "store_filter": {
             "label": "Filtr",
@@ -216,11 +230,11 @@
             "about": "O Decky Plugin Store",
             "alph_asce": "Abecedně (Z do A)",
             "alph_desc": "Abecedně (A do Z)",
-            "title": "Procházet",
             "date_asce": "Nejstarší",
-            "downloads_desc": "Nejvíce stažené",
             "date_desc": "Nejnovější",
-            "downloads_asce": "Nejméně stažené"
+            "downloads_asce": "Nejméně stažené",
+            "downloads_desc": "Nejvíce stažené",
+            "title": "Procházet"
         },
         "store_testing_cta": "Zvažte prosím testování nových pluginů, pomůžete tím týmu Decky Loader!",
         "store_testing_warning": {
@@ -240,38 +254,30 @@
             "testing": "Testování"
         }
     },
+    "Testing": {
+        "download": "Stáhnout",
+        "error": "",
+        "header": "",
+        "loading": "",
+        "start_download_toast": ""
+    },
+    "TitleView": {
+        "decky_store_desc": "Otevřít obchod Decky",
+        "settings_desc": "Otevřít nastavení Decky"
+    },
     "Updater": {
+        "decky_updates": "Aktualizace Decky",
+        "no_patch_notes_desc": "žádné poznámky pro tuto verzi",
+        "patch_notes_desc": "Poznámky k verzi",
         "updates": {
-            "lat_version": "Aktuální: běží na verzi {{ver}}",
-            "reloading": "Znovu načítání",
-            "updating": "Aktualizování",
             "check_button": "Zkontrolovat aktualizace",
             "checking": "Kontrolování",
             "cur_version": "Aktuální verze: {{ver}}",
             "install_button": "Instalovat aktualizaci",
-            "label": "Aktualizace"
-        },
-        "decky_updates": "Aktualizace Decky",
-        "patch_notes_desc": "Poznámky k verzi",
-        "no_patch_notes_desc": "žádné poznámky pro tuto verzi"
-    },
-    "DropdownMultiselect": {
-        "button": {
-            "back": "Zpět"
+            "label": "Aktualizace",
+            "lat_version": "Aktuální: běží na verzi {{ver}}",
+            "reloading": "Znovu načítání",
+            "updating": "Aktualizování"
         }
-    },
-    "FilePickerError": {
-        "errors": {
-            "file_not_found": "Zadaná cesta není platná. Zkontrolujte ji a zadejte znovu správně.",
-            "unknown": "Nastala neznámá chyba. Nezpracovaná chyba je: {{raw_error}}",
-            "perm_denied": "Nemáte přístup k zadanému adresáři. Zkontrolujte, zda jako uživatel (deck na Steam Decku) máte odpovídající oprávnění pro přístup k dané složce/souboru."
-        }
-    },
-    "TitleView": {
-        "settings_desc": "Otevřít nastavení Decky",
-        "decky_store_desc": "Otevřít obchod Decky"
-    },
-    "Testing": {
-        "download": "Stáhnout"
     }
 }

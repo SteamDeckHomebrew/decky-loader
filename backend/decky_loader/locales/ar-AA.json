@@ -1,45 +1,4 @@
 {
-    "FilePickerIndex": {
-        "files": {
-            "file_type": "نوع الملف",
-            "show_hidden": "أظهر الملفات المخفية",
-            "all_files": "جميع الملفات"
-        },
-        "filter": {
-            "created_asce": "المنشئة (الأقدم)",
-            "modified_asce": "المعدلة (الأقدم)",
-            "modified_desc": "المعدلة (الأحدث)",
-            "name_asce": "أ-ي",
-            "name_desc": "أ-ي",
-            "size_asce": "الحجم ( الأصغر)",
-            "size_desc": "الحجم ( الأكبر)",
-            "created_desc": "المنشئة (الأحدث)"
-        },
-        "folder": {
-            "label": "المجلد",
-            "show_more": "أظهر المزيد من الملفات",
-            "select": "إستخدم هذا المجلد"
-        },
-        "file": {
-            "select": "إختر هذا الملف"
-        }
-    },
-    "MultiplePluginsInstallModal": {
-        "confirm": "هل أنت متأكد من التعديلات التالية؟",
-        "description": {
-            "reinstall": "إعادة تنصيب {{name}} {{version}}",
-            "update": "تحديث {{name}} إلى {{version}}",
-            "install": "تنصيب {{name}} {{version}}"
-        },
-        "ok_button": {
-            "idle": "تأكيد"
-        }
-    },
-    "DropdownMultiselect": {
-        "button": {
-            "back": "الخلف"
-        }
-    },
     "BranchSelect": {
         "update_channel": {
             "label": "قناة التحديثات",
@@ -48,19 +7,71 @@
             "testing": "إصدار تحت الإختبار"
         }
     },
+    "Developer": {
+        "5secreload": "إعادة التحميل في 5 ثواني"
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "الخلف"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "",
+            "perm_denied": "",
+            "unknown": ""
+        }
+    },
+    "FilePickerIndex": {
+        "file": {
+            "select": "إختر هذا الملف"
+        },
+        "files": {
+            "all_files": "جميع الملفات",
+            "file_type": "نوع الملف",
+            "show_hidden": "أظهر الملفات المخفية"
+        },
+        "filter": {
+            "created_asce": "المنشئة (الأقدم)",
+            "created_desc": "المنشئة (الأحدث)",
+            "modified_asce": "المعدلة (الأقدم)",
+            "modified_desc": "المعدلة (الأحدث)",
+            "name_asce": "أ-ي",
+            "name_desc": "أ-ي",
+            "size_asce": "الحجم ( الأصغر)",
+            "size_desc": "الحجم ( الأكبر)"
+        },
+        "folder": {
+            "label": "المجلد",
+            "select": "إستخدم هذا المجلد",
+            "show_more": "أظهر المزيد من الملفات"
+        }
+    },
+    "MultiplePluginsInstallModal": {
+        "confirm": "هل أنت متأكد من التعديلات التالية؟",
+        "description": {
+            "install": "تنصيب {{name}} {{version}}",
+            "reinstall": "إعادة تنصيب {{name}} {{version}}",
+            "update": "تحديث {{name}} إلى {{version}}"
+        },
+        "ok_button": {
+            "idle": "تأكيد"
+        }
+    },
     "PluginCard": {
         "plugin_full_access": "هذه الإضافة لديها الصلاحية للوصول لمحتويات Steam Deck.",
         "plugin_install": "تنصيب",
-        "plugin_version_label": "رقم إصدار الإضافة",
-        "plugin_no_desc": "لا يوجد وصف متاح."
+        "plugin_no_desc": "لا يوجد وصف متاح.",
+        "plugin_version_label": "رقم إصدار الإضافة"
     },
     "PluginInstallModal": {
         "install": {
             "button_idle": "تنصيب",
             "button_processing": "يتم التنصيب",
-            "title": "تنصيب {{artifact}}",
-            "desc": "هل أنت متأكد من رغبتك في تنصيب {{artifact}} {{version}}؟"
+            "desc": "هل أنت متأكد من رغبتك في تنصيب {{artifact}} {{version}}؟",
+            "title": "تنصيب {{artifact}}"
         },
+        "no_hash": "",
         "reinstall": {
             "button_idle": "إعادة تنصيب",
             "button_processing": "تتم إعادة التنصيب",
@@ -70,17 +81,26 @@
         "update": {
             "button_idle": "تحديث",
             "button_processing": "يتم التحديث",
-            "title": "تحديث {{artifact}}",
-            "desc": "هل أنت متأكد من رغبتك في تحديث {{artifact}} {{version}}؟"
+            "desc": "هل أنت متأكد من رغبتك في تحديث {{artifact}} {{version}}؟",
+            "title": "تحديث {{artifact}}"
         }
     },
     "PluginListIndex": {
+        "freeze": "",
         "hide": "إخفاء من قائمة الوصول السريع",
+        "no_plugin": "",
+        "plugin_actions": "",
         "reinstall": "إعادة التنصيب",
         "reload": "إعادة التحميل",
         "show": "إظهار في قائمة الوصول السريع",
         "unfreeze": "السماح بالتحديثات",
         "uninstall": "إزالة التنصيب",
+        "update_all_zero": "",
+        "update_all_one": "",
+        "update_all_two": "",
+        "update_all_few": "",
+        "update_all_many": "",
+        "update_all_other": "",
         "update_to": "التحديث إلى {{name}}"
     },
     "PluginListLabel": {
@@ -91,20 +111,146 @@
         "error": "خطا",
         "plugin_uninstall": {
             "button": "إزالة التنصيب",
+            "desc": "",
             "title": "إزالة التنصيب {{name}}"
         }
     },
+    "PluginView": {
+        "hidden_zero": "",
+        "hidden_one": "",
+        "hidden_two": "",
+        "hidden_few": "",
+        "hidden_many": "",
+        "hidden_other": ""
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "desc": "",
+            "label": ""
+        }
+    },
     "SettingsDeveloperIndex": {
+        "cef_console": {
+            "button": "",
+            "desc": "",
+            "label": ""
+        },
+        "header": "أخرى",
         "react_devtools": {
-            "ip_label": "عنوان الشبكة"
+            "desc": "",
+            "ip_label": "عنوان الشبكة",
+            "label": ""
         },
         "third_party_plugins": {
+            "button_install": "تنصيب",
             "button_zip": "تصفح",
-            "button_install": "تنصيب"
+            "header": "",
+            "label_desc": "",
+            "label_url": "",
+            "label_zip": ""
         },
-        "header": "أخرى"
+        "valve_internal": {
+            "desc1": "",
+            "desc2": "",
+            "label": ""
+        }
     },
-    "Developer": {
-        "5secreload": "إعادة التحميل في 5 ثواني"
+    "SettingsGeneralIndex": {
+        "about": {
+            "decky_version": "",
+            "header": ""
+        },
+        "beta": {
+            "header": ""
+        },
+        "developer_mode": {
+            "label": ""
+        },
+        "notifications": {
+            "decky_updates_label": "",
+            "header": "",
+            "plugin_updates_label": ""
+        },
+        "other": {
+            "header": ""
+        },
+        "updates": {
+            "header": ""
+        }
+    },
+    "SettingsIndex": {
+        "developer_title": "",
+        "general_title": "",
+        "plugins_title": "",
+        "testing_title": ""
+    },
+    "Store": {
+        "store_contrib": {
+            "desc": "",
+            "label": ""
+        },
+        "store_search": {
+            "label": ""
+        },
+        "store_sort": {
+            "label": "",
+            "label_def": ""
+        },
+        "store_source": {
+            "desc": "",
+            "label": ""
+        },
+        "store_tabs": {
+            "about": "",
+            "alph_asce": "",
+            "alph_desc": "",
+            "date_asce": "",
+            "date_desc": "",
+            "downloads_asce": "",
+            "downloads_desc": "",
+            "title": ""
+        },
+        "store_testing_cta": "",
+        "store_testing_warning": {
+            "desc": "",
+            "label": ""
+        }
+    },
+    "StoreSelect": {
+        "custom_store": {
+            "label": "",
+            "url_label": ""
+        },
+        "store_channel": {
+            "custom": "",
+            "default": "",
+            "label": "",
+            "testing": ""
+        }
+    },
+    "Testing": {
+        "download": "",
+        "error": "",
+        "header": "",
+        "loading": "",
+        "start_download_toast": ""
+    },
+    "TitleView": {
+        "decky_store_desc": "",
+        "settings_desc": ""
+    },
+    "Updater": {
+        "decky_updates": "",
+        "no_patch_notes_desc": "",
+        "patch_notes_desc": "",
+        "updates": {
+            "check_button": "",
+            "checking": "",
+            "install_button": "",
+            "label": "",
+            "lat_version": "",
+            "reloading": "",
+            "updating": ""
+        }
     }
 }

@@ -20,8 +20,8 @@
     "FilePickerError": {
         "errors": {
             "file_not_found": "Il percorso specificato non è valido. Controllalo e prova a reinserirlo di nuovo.",
-            "unknown": "È avvenuto un'errore sconosciuto. L'errore segnalato è {{raw_error}}",
-            "perm_denied": "Il tuo utente non ha accesso alla directory specificata. Verifica se l'utente corrente (è deck su Steam Deck di default) ha i permessi corrispondenti per accedere alla cartella/file desiderato."
+            "perm_denied": "Il tuo utente non ha accesso alla directory specificata. Verifica se l'utente corrente (è deck su Steam Deck di default) ha i permessi corrispondenti per accedere alla cartella/file desiderato.",
+            "unknown": "È avvenuto un'errore sconosciuto. L'errore segnalato è {{raw_error}}"
         }
     },
     "FilePickerIndex": {
@@ -103,19 +103,19 @@
         }
     },
     "PluginListIndex": {
+        "freeze": "Congela aggiornamenti",
         "hide": "Accesso rapido: Nascondi",
         "no_plugin": "Nessun plugin installato!",
         "plugin_actions": "Operazioni sui plugins",
         "reinstall": "Reinstalla",
         "reload": "Ricarica",
         "show": "Accesso rapido: Mostra",
+        "unfreeze": "Permetti aggiornamenti",
         "uninstall": "Rimuovi",
         "update_all_one": "Aggiorna un plugin",
         "update_all_many": "Aggiorna {{count}} plugins",
         "update_all_other": "Aggiorna {{count}} plugins",
-        "update_to": "Aggiorna a {{name}}",
-        "unfreeze": "Permetti aggiornamenti",
-        "freeze": "Congela aggiornamenti"
+        "update_to": "Aggiorna a {{name}}"
     },
     "PluginListLabel": {
         "hidden": "Nascosto dal menu di accesso rapido"
@@ -186,16 +186,16 @@
         "developer_mode": {
             "label": "Modalità sviluppatore"
         },
+        "notifications": {
+            "decky_updates_label": "Aggiornamenti di Decky",
+            "header": "Notifiche",
+            "plugin_updates_label": "Aggiornamenti dei plugins"
+        },
         "other": {
             "header": "Altro"
         },
         "updates": {
             "header": "Aggiornamenti"
-        },
-        "notifications": {
-            "header": "Notifiche",
-            "decky_updates_label": "Aggiornamenti di Decky",
-            "plugin_updates_label": "Aggiornamenti dei plugins"
         }
     },
     "SettingsIndex": {
@@ -228,16 +228,16 @@
             "about": "Riguardo a",
             "alph_asce": "Alfabetico (Z a A)",
             "alph_desc": "Alfabetico (A a Z)",
-            "title": "Sfoglia",
-            "date_desc": "Per più recente",
             "date_asce": "Per più vecchio",
+            "date_desc": "Per più recente",
+            "downloads_asce": "Per meno scaricato",
             "downloads_desc": "Per più scaricato",
-            "downloads_asce": "Per meno scaricato"
+            "title": "Sfoglia"
         },
         "store_testing_cta": "Valuta la possibilità di testare nuovi plugin per aiutare il team di Decky Loader!",
         "store_testing_warning": {
-            "label": "Benvenuto nel Negozio di Test dei Plugins",
-            "desc": "Puoi usare questo canale del negozio per testare versioni di plugin sperimentali. Assicurati di lasciare un feedback su Github dopo averlo testato in modo che il plugin possa essere promosso a stabile per tutti gli altri utenti o per permettere allo sviluppatore di plugin di correggere eventuali errori."
+            "desc": "Puoi usare questo canale del negozio per testare versioni di plugin sperimentali. Assicurati di lasciare un feedback su Github dopo averlo testato in modo che il plugin possa essere promosso a stabile per tutti gli altri utenti o per permettere allo sviluppatore di plugin di correggere eventuali errori.",
+            "label": "Benvenuto nel Negozio di Test dei Plugins"
         }
     },
     "StoreSelect": {
@@ -251,6 +251,17 @@
             "label": "Canale del negozio",
             "testing": "In prova"
         }
+    },
+    "Testing": {
+        "download": "Scarica",
+        "error": "",
+        "header": "",
+        "loading": "",
+        "start_download_toast": ""
+    },
+    "TitleView": {
+        "decky_store_desc": "Apri lo store di Decky",
+        "settings_desc": "Apri le impostazioni di Decky"
     },
     "Updater": {
         "decky_updates": "Aggiornamento di Decky",
@@ -266,12 +277,5 @@
             "reloading": "Ricaricando",
             "updating": "Aggiornando"
         }
-    },
-    "TitleView": {
-        "settings_desc": "Apri le impostazioni di Decky",
-        "decky_store_desc": "Apri lo store di Decky"
-    },
-    "Testing": {
-        "download": "Scarica"
     }
 }

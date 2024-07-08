@@ -8,26 +8,23 @@
         }
     },
     "Developer": {
+        "5secreload": "Neu laden in 5 Sekunden",
         "disabling": "Deaktiviere React DevTools",
-        "enabling": "Aktiviere React DevTools",
-        "5secreload": "Neu laden in 5 Sekunden"
+        "enabling": "Aktiviere React DevTools"
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "Zurück"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "Der Pfad ist ungültig. Bitte prüfen und erneut eingeben.",
+            "perm_denied": "Kein Zugriff auf den angegebenen Dateipfad. Bitte prüfen, ob der Nutzer (deck auf dem Steam Deck) die entsprechenden Zugriffsrechte auf den angegebenen Ordner/die angegebene Datei hat.",
+            "unknown": "Ein unbekannter Fehler ist aufgetreten. Die ursprüngliche Fehlermeldung ist: {{raw_error}}"
+        }
     },
     "FilePickerIndex": {
-        "folder": {
-            "select": "Diesen Ordner verwenden",
-            "label": "Ordner",
-            "show_more": "Mehr Dateien anzeigen"
-        },
-        "filter": {
-            "name_desc": "A-Z",
-            "size_asce": "Größe (Kleinste)",
-            "size_desc": "Größe (Größte)",
-            "created_asce": "Erstellt (Älteste)",
-            "created_desc": "Erstellt (Neuste)",
-            "modified_asce": "Geändert (Älteste)",
-            "modified_desc": "Geändert (Neuste)",
-            "name_asce": "Z-A"
-        },
         "file": {
             "select": "Diese Datei auswählen"
         },
@@ -35,13 +32,50 @@
             "all_files": "Alle Dateien",
             "file_type": "Dateityp",
             "show_hidden": "Versteckte Dateien anzeigen"
+        },
+        "filter": {
+            "created_asce": "Erstellt (Älteste)",
+            "created_desc": "Erstellt (Neuste)",
+            "modified_asce": "Geändert (Älteste)",
+            "modified_desc": "Geändert (Neuste)",
+            "name_asce": "Z-A",
+            "name_desc": "A-Z",
+            "size_asce": "Größe (Kleinste)",
+            "size_desc": "Größe (Größte)"
+        },
+        "folder": {
+            "label": "Ordner",
+            "select": "Diesen Ordner verwenden",
+            "show_more": "Mehr Dateien anzeigen"
+        }
+    },
+    "MultiplePluginsInstallModal": {
+        "confirm": "Bist du sicher, dass du die folgenden Änderungen vornehmen möchtest?",
+        "description": {
+            "install": "{{name}} {{version}} installieren",
+            "reinstall": "{{name}} {{version}} neu installieren",
+            "update": "{{name}} auf {{version}} aktualisieren"
+        },
+        "ok_button": {
+            "idle": "Bestätigen",
+            "loading": "An der Arbeit"
+        },
+        "title": {
+            "install_one": "{{count}} Plugin installieren",
+            "install_other": "{{count}} Plugins installieren",
+            "mixed_one": "{{count}} Plugin bearbeiten",
+            "mixed_other": "{{count}} Plugins bearbeiten",
+            "reinstall_one": "{{count}} Plugin neu installieren",
+            "reinstall_other": "{{count}} Plugins neu installieren",
+            "update_one": "{{count}} Plugin aktualisieren",
+            "update_other": "{{count}} Plugins aktualisieren"
         }
     },
     "PluginCard": {
+        "plugin_full_access": "Diese Erweiterung hat uneingeschränkten Zugriff auf dein Steam Deck.",
         "plugin_install": "Installieren",
         "plugin_no_desc": "Keine Beschreibung angegeben.",
-        "plugin_version_label": "Erweiterungs Version",
-        "plugin_full_access": "Diese Erweiterung hat uneingeschränkten Zugriff auf dein Steam Deck."
+        "plugin_version_label": "Erweiterungs Version"
     },
     "PluginInstallModal": {
         "install": {
@@ -50,6 +84,7 @@
             "desc": "Bist du dir sicher, dass du {{artifact}} {{version}} installieren willst?",
             "title": "Installiere {{artifact}}"
         },
+        "no_hash": "Diese Erweiterung besitzt keine Prüfsumme, Installation auf eigene Gefahr.",
         "reinstall": {
             "button_idle": "Neu installieren",
             "button_processing": "Wird neu installiert",
@@ -59,72 +94,78 @@
         "update": {
             "button_idle": "Aktualisieren",
             "button_processing": "Wird aktualisiert",
-            "title": "Aktualisiere {{artifact}}",
-            "desc": "Bist du dir sicher, dass du {{artifact}} {{version}} aktualisieren willst?"
-        },
-        "no_hash": "Diese Erweiterung besitzt keine Prüfsumme, Installation auf eigene Gefahr."
+            "desc": "Bist du dir sicher, dass du {{artifact}} {{version}} aktualisieren willst?",
+            "title": "Aktualisiere {{artifact}}"
+        }
     },
     "PluginListIndex": {
+        "freeze": "Updates einfrieren",
+        "hide": "Schnellzugriff: Ausblenden",
         "no_plugin": "Keine Erweiterungen installiert!",
         "plugin_actions": "Erweiterungs Aktionen",
         "reinstall": "Neu installieren",
         "reload": "Neu laden",
+        "show": "Schnellzugriff: Anzeigen",
+        "unfreeze": "Updates erlauben",
         "uninstall": "Deinstallieren",
-        "update_to": "Aktualisieren zu {{name}}",
         "update_all_one": "{{count}} Plugin aktualisieren",
         "update_all_other": "{{count}} Plugins aktualisieren",
-        "show": "Schnellzugriff: Anzeigen",
-        "hide": "Schnellzugriff: Ausblenden",
-        "freeze": "Updates einfrieren",
-        "unfreeze": "Updates erlauben"
+        "update_to": "Aktualisieren zu {{name}}"
+    },
+    "PluginListLabel": {
+        "hidden": "Im Schnellzugriff-Menu ausgeblendet"
     },
     "PluginLoader": {
         "decky_title": "Decky",
         "decky_update_available": "Eine neue Version ({{tag_name}}) ist verfügbar!",
         "error": "Fehler",
+        "plugin_error_uninstall": "Das Laden von {{name}} hat einen Fehler verursacht. Dies bedeutet normalerweise, dass die Erweiterung ein Update für die neue Version von SteamUI benötigt. Prüfe in den Decky-Einstellungen im Bereich Erweiterungen, ob ein Update vorhanden ist.",
         "plugin_load_error": {
-            "toast": "Fehler beim Laden von {{name}}",
-            "message": "Fehler beim Laden von {{name}}"
+            "message": "Fehler beim Laden von {{name}}",
+            "toast": "Fehler beim Laden von {{name}}"
         },
         "plugin_uninstall": {
             "button": "Deinstallieren",
             "desc": "Bist du dir sicher, dass du {{name}} deinstallieren willst?",
             "title": "Deinstalliere {{name}}"
         },
-        "plugin_error_uninstall": "Das Laden von {{name}} hat einen Fehler verursacht. Dies bedeutet normalerweise, dass die Erweiterung ein Update für die neue Version von SteamUI benötigt. Prüfe in den Decky-Einstellungen im Bereich Erweiterungen, ob ein Update vorhanden ist.",
         "plugin_update_one": "1 Erweiterung kann aktualisiert werden!",
         "plugin_update_other": "{{count}} Erweiterungen können aktualisiert werden!"
     },
+    "PluginView": {
+        "hidden_one": "{{count}} Plugin ist in dieser Liste ausgeblendet",
+        "hidden_other": "{{count}} Plugins sind in dieser Liste ausgeblendet"
+    },
     "RemoteDebugging": {
         "remote_cef": {
-            "label": "Remote CEF Debugging Zugriff",
-            "desc": "Erlaubt jedem aus dem Neztwerk unautorisierten Zugriff auf den CEF Debugger"
+            "desc": "Erlaubt jedem aus dem Neztwerk unautorisierten Zugriff auf den CEF Debugger",
+            "label": "Remote CEF Debugging Zugriff"
         }
     },
     "SettingsDeveloperIndex": {
+        "cef_console": {
+            "button": "Konsole öffnen",
+            "desc": "Öffnet die CEF Konsole. Nur für Debugzwecke. Dinge hier sind potentiell gefährlich und sollten nur durch oder unter Anleitung von Pluginentwickler/innen geschehen.",
+            "label": "CEF Konsole"
+        },
         "header": "Sonstiges",
         "react_devtools": {
+            "desc": "Erlaubt die Verbindung mit einem anderen Rechner, auf welchem React DevTools läuft. Eine Änderung startet Steam neu. Die IP Adresse muss vor Aktivierung ausgefüllt sein.",
             "ip_label": "IP",
-            "label": "Aktiviere React DevTools",
-            "desc": "Erlaubt die Verbindung mit einem anderen Rechner, auf welchem React DevTools läuft. Eine Änderung startet Steam neu. Die IP Adresse muss vor Aktivierung ausgefüllt sein."
+            "label": "Aktiviere React DevTools"
         },
         "third_party_plugins": {
+            "button_install": "Installieren",
             "button_zip": "Durchsuchen",
             "header": "Erweiterungen von Drittanbietern",
             "label_desc": "URL",
-            "label_zip": "Installiere Erweiterung via ZIP Datei",
-            "button_install": "Installieren",
-            "label_url": "Installiere Erweiterung via URL"
+            "label_url": "Installiere Erweiterung via URL",
+            "label_zip": "Installiere Erweiterung via ZIP Datei"
         },
         "valve_internal": {
+            "desc1": "Aktiviert das Valve-interne Entwickler Menü.",
             "desc2": "Fasse in diesem Menü nichts an, es sei denn, du weißt was du tust.",
-            "label": "Aktiviere Valve-internes Menü",
-            "desc1": "Aktiviert das Valve-interne Entwickler Menü."
-        },
-        "cef_console": {
-            "button": "Konsole öffnen",
-            "label": "CEF Konsole",
-            "desc": "Öffnet die CEF Konsole. Nur für Debugzwecke. Dinge hier sind potentiell gefährlich und sollten nur durch oder unter Anleitung von Pluginentwickler/innen geschehen."
+            "label": "Aktiviere Valve-internes Menü"
         }
     },
     "SettingsGeneralIndex": {
@@ -138,16 +179,16 @@
         "developer_mode": {
             "label": "Entwickleroptionen"
         },
+        "notifications": {
+            "decky_updates_label": "Decky Update verfügbar",
+            "header": "Benachrichtigungen",
+            "plugin_updates_label": "Plugin Updates verfügbar"
+        },
         "other": {
             "header": "Sonstiges"
         },
         "updates": {
             "header": "Aktualisierungen"
-        },
-        "notifications": {
-            "decky_updates_label": "Decky Update verfügbar",
-            "header": "Benachrichtigungen",
-            "plugin_updates_label": "Plugin Updates verfügbar"
         }
     },
     "SettingsIndex": {
@@ -158,8 +199,8 @@
     },
     "Store": {
         "store_contrib": {
-            "label": "Mitwirken",
-            "desc": "Wenn du Erweiterungen im Decky Store veröffentlichen willst, besuche die SteamDeckHomebrew/decky-plugin-template Repository auf GitHub. Informationen rund um Entwicklung und Veröffentlichung findest du in der README."
+            "desc": "Wenn du Erweiterungen im Decky Store veröffentlichen willst, besuche die SteamDeckHomebrew/decky-plugin-template Repository auf GitHub. Informationen rund um Entwicklung und Veröffentlichung findest du in der README.",
+            "label": "Mitwirken"
         },
         "store_filter": {
             "label": "Filter",
@@ -180,16 +221,16 @@
             "about": "Über",
             "alph_asce": "Alphabetisch (Z zu A)",
             "alph_desc": "Alphabetisch (A zu Z)",
-            "title": "Durchstöbern",
+            "date_asce": "Älteste Zuerst",
             "date_desc": "Neuste Zuerst",
             "downloads_asce": "Wenigste Downloads Zuerst",
             "downloads_desc": "Meiste Downloads Zuerst",
-            "date_asce": "Älteste Zuerst"
+            "title": "Durchstöbern"
         },
         "store_testing_cta": "Unterstütze das Decky Loader Team mit dem Testen von neuen Erweiterungen!",
         "store_testing_warning": {
-            "label": "Willkommen zum Test Store Kanal",
-            "desc": "Du kannst diesen Store Kanal nutzen, um brandneue Testversionen von Plugins auszuprobieren. Denk daran Feedback auf GitHub zu hinterlassen, sodass das Plugin für alle Nutzer verbessert werden kann."
+            "desc": "Du kannst diesen Store Kanal nutzen, um brandneue Testversionen von Plugins auszuprobieren. Denk daran Feedback auf GitHub zu hinterlassen, sodass das Plugin für alle Nutzer verbessert werden kann.",
+            "label": "Willkommen zum Test Store Kanal"
         }
     },
     "StoreSelect": {
@@ -204,8 +245,20 @@
             "testing": "Test"
         }
     },
+    "Testing": {
+        "download": "Download",
+        "error": "",
+        "header": "",
+        "loading": "",
+        "start_download_toast": ""
+    },
+    "TitleView": {
+        "decky_store_desc": "Decky Store Öffnen",
+        "settings_desc": "Decky Einstellungen Öffnen"
+    },
     "Updater": {
         "decky_updates": "Decky Aktualisierungen",
+        "no_patch_notes_desc": "Für diese Version gibt es keine Patchnotizen",
         "patch_notes_desc": "Patchnotizen",
         "updates": {
             "check_button": "Auf Aktualisierungen prüfen",
@@ -216,55 +269,6 @@
             "lat_version": "{{ver}} ist die aktuellste",
             "reloading": "Lade neu",
             "updating": "Aktualisiere"
-        },
-        "no_patch_notes_desc": "Für diese Version gibt es keine Patchnotizen"
-    },
-    "PluginView": {
-        "hidden_one": "{{count}} Plugin ist in dieser Liste ausgeblendet",
-        "hidden_other": "{{count}} Plugins sind in dieser Liste ausgeblendet"
-    },
-    "MultiplePluginsInstallModal": {
-        "title": {
-            "install_one": "{{count}} Plugin installieren",
-            "install_other": "{{count}} Plugins installieren",
-            "mixed_one": "{{count}} Plugin bearbeiten",
-            "mixed_other": "{{count}} Plugins bearbeiten",
-            "update_one": "{{count}} Plugin aktualisieren",
-            "update_other": "{{count}} Plugins aktualisieren",
-            "reinstall_one": "{{count}} Plugin neu installieren",
-            "reinstall_other": "{{count}} Plugins neu installieren"
-        },
-        "description": {
-            "install": "{{name}} {{version}} installieren",
-            "update": "{{name}} auf {{version}} aktualisieren",
-            "reinstall": "{{name}} {{version}} neu installieren"
-        },
-        "confirm": "Bist du sicher, dass du die folgenden Änderungen vornehmen möchtest?",
-        "ok_button": {
-            "loading": "An der Arbeit",
-            "idle": "Bestätigen"
         }
-    },
-    "PluginListLabel": {
-        "hidden": "Im Schnellzugriff-Menu ausgeblendet"
-    },
-    "TitleView": {
-        "decky_store_desc": "Decky Store Öffnen",
-        "settings_desc": "Decky Einstellungen Öffnen"
-    },
-    "DropdownMultiselect": {
-        "button": {
-            "back": "Zurück"
-        }
-    },
-    "FilePickerError": {
-        "errors": {
-            "unknown": "Ein unbekannter Fehler ist aufgetreten. Die ursprüngliche Fehlermeldung ist: {{raw_error}}",
-            "file_not_found": "Der Pfad ist ungültig. Bitte prüfen und erneut eingeben.",
-            "perm_denied": "Kein Zugriff auf den angegebenen Dateipfad. Bitte prüfen, ob der Nutzer (deck auf dem Steam Deck) die entsprechenden Zugriffsrechte auf den angegebenen Ordner/die angegebene Datei hat."
-        }
-    },
-    "Testing": {
-        "download": "Download"
     }
 }

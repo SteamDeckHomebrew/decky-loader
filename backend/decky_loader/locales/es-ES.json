@@ -1,37 +1,94 @@
 {
-    "SettingsDeveloperIndex": {
-        "third_party_plugins": {
-            "button_install": "Instalar",
-            "button_zip": "Navegar",
-            "label_desc": "URL",
-            "label_url": "Instalar plugin desde URL",
-            "label_zip": "Instalar plugin desde archivo ZIP",
-            "header": "Plugins de terceros"
+    "BranchSelect": {
+        "update_channel": {
+            "label": "Canal de actualización",
+            "prerelease": "Prelanzamiento",
+            "stable": "Estable",
+            "testing": "Pruebas"
+        }
+    },
+    "Developer": {
+        "5secreload": "Recargando en 5 segundos",
+        "disabling": "Desactivando DevTools de React",
+        "enabling": "Activando DevTools de React"
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": ""
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "",
+            "perm_denied": "",
+            "unknown": ""
+        }
+    },
+    "FilePickerIndex": {
+        "file": {
+            "select": ""
         },
-        "valve_internal": {
-            "desc2": "No toques nada en este menú a menos que sepas lo que haces.",
-            "label": "Activar menú interno de Valve",
-            "desc1": "Activa el menú interno de desarrollo de Valve."
+        "files": {
+            "all_files": "",
+            "file_type": "",
+            "show_hidden": ""
         },
-        "cef_console": {
-            "button": "Abrir consola",
-            "label": "Consola CEF",
-            "desc": "Abre la consola del CEF. Solamente es útil para propósitos de depuración. Las cosas que hagas aquí pueden ser potencialmente peligrosas y solo se debería usar si eres un desarrollador de plugins, o uno te ha dirigido aquí."
+        "filter": {
+            "created_asce": "",
+            "created_desc": "",
+            "modified_asce": "",
+            "modified_desc": "",
+            "name_asce": "",
+            "name_desc": "",
+            "size_asce": "",
+            "size_desc": ""
         },
-        "react_devtools": {
-            "ip_label": "IP",
-            "label": "Activar DevTools de React",
-            "desc": "Permite la conexión a un ordenador ejecutando las DevTools de React. Cambiar este ajuste recargará Steam. Configura la dirección IP antes de activarlo."
+        "folder": {
+            "label": "",
+            "select": "Usar esta carpeta",
+            "show_more": ""
+        }
+    },
+    "MultiplePluginsInstallModal": {
+        "confirm": "¿Estás seguro de que quieres hacer las siguientes modificaciones?",
+        "description": {
+            "install": "Instalar {{name}} {{version}}",
+            "reinstall": "Reinstalar {{name}} {{version}}",
+            "update": "Actualizar {{name}} a {{version}}"
         },
-        "header": "Otros"
+        "ok_button": {
+            "idle": "Confirmar",
+            "loading": "Trabajando"
+        },
+        "title": {
+            "install_one": "Instalar 1 plugin",
+            "install_many": "Instalar {{count}} plugins",
+            "install_other": "Instalar {{count}} plugins",
+            "mixed_one": "Modificar 1 plugin",
+            "mixed_many": "Modificar {{count}} plugins",
+            "mixed_other": "Modificar {{count}} plugins",
+            "reinstall_one": "Reinstalar 1 plugin",
+            "reinstall_many": "Reinstalar {{count}} plugins",
+            "reinstall_other": "Reinstalar {{count}} plugins",
+            "update_one": "Actualizar 1 plugin",
+            "update_many": "Actualizar {{count}} plugins",
+            "update_other": "Actualizar {{count}} plugins"
+        }
+    },
+    "PluginCard": {
+        "plugin_full_access": "Este plugin tiene acceso completo a su Steam Deck.",
+        "plugin_install": "Instalar",
+        "plugin_no_desc": "No se proporcionó una descripción.",
+        "plugin_version_label": "Versión de Plugin"
     },
     "PluginInstallModal": {
         "install": {
             "button_idle": "Instalar",
             "button_processing": "Instalando",
-            "title": "Instalar {{artifact}}",
-            "desc": "¿Estás seguro de que quieres instalar {{artifact}} {{version}}?"
+            "desc": "¿Estás seguro de que quieres instalar {{artifact}} {{version}}?",
+            "title": "Instalar {{artifact}}"
         },
+        "no_hash": "Este plugin no tiene un hash, lo estás instalando bajo tu propia responsabilidad.",
         "reinstall": {
             "button_idle": "Reinstalar",
             "button_processing": "Reinstalando",
@@ -39,65 +96,52 @@
             "title": "Reinstalar {{artifact}}"
         },
         "update": {
-            "button_processing": "Actualizando",
             "button_idle": "Actualizar",
+            "button_processing": "Actualizando",
             "desc": "¿Estás seguro de que quieres actualizar {{artifact}} {{version}}?",
             "title": "Actualizar {{artifact}}"
-        },
-        "no_hash": "Este plugin no tiene un hash, lo estás instalando bajo tu propia responsabilidad."
-    },
-    "Developer": {
-        "disabling": "Desactivando DevTools de React",
-        "enabling": "Activando DevTools de React",
-        "5secreload": "Recargando en 5 segundos"
-    },
-    "BranchSelect": {
-        "update_channel": {
-            "prerelease": "Prelanzamiento",
-            "stable": "Estable",
-            "label": "Canal de actualización",
-            "testing": "Pruebas"
-        }
-    },
-    "PluginCard": {
-        "plugin_full_access": "Este plugin tiene acceso completo a su Steam Deck.",
-        "plugin_install": "Instalar",
-        "plugin_version_label": "Versión de Plugin",
-        "plugin_no_desc": "No se proporcionó una descripción."
-    },
-    "FilePickerIndex": {
-        "folder": {
-            "select": "Usar esta carpeta"
         }
     },
     "PluginListIndex": {
-        "uninstall": "Desinstalar",
+        "freeze": "",
+        "hide": "",
+        "no_plugin": "¡No hay plugins instalados!",
+        "plugin_actions": "Acciones de plugin",
         "reinstall": "Reinstalar",
         "reload": "Recargar",
-        "plugin_actions": "Acciones de plugin",
-        "no_plugin": "¡No hay plugins instalados!",
+        "show": "",
+        "unfreeze": "",
+        "uninstall": "Desinstalar",
         "update_all_one": "Actualizar 1 plugin",
         "update_all_many": "Actualizar {{count}} plugins",
         "update_all_other": "Actualizar {{count}} plugins",
         "update_to": "Actualizar a {{name}}"
     },
+    "PluginListLabel": {
+        "hidden": ""
+    },
     "PluginLoader": {
+        "decky_title": "Decky",
+        "decky_update_available": "¡Actualización {{tag_name}} disponible!",
         "error": "Error",
+        "plugin_error_uninstall": "Al cargar {{name}} se ha producido una excepción como se muestra arriba. Esto suele significar que el plugin requiere una actualización para la nueva versión de SteamUI. Comprueba si hay una actualización disponible o valora eliminarlo en los ajustes de Decky, en la sección Plugins.",
+        "plugin_load_error": {
+            "message": "Se ha producido un error al cargar el plugin {{name}}",
+            "toast": "Se ha producido un error al cargar {{name}}"
+        },
         "plugin_uninstall": {
             "button": "Desinstalar",
             "desc": "¿Estás seguro de que quieres desinstalar {{name}}?",
             "title": "Desinstalar {{name}}"
         },
-        "decky_title": "Decky",
         "plugin_update_one": "¡Actualización disponible para 1 plugin!",
         "plugin_update_many": "¡Actualizaciones disponibles para {{count}} plugins!",
-        "plugin_update_other": "¡Actualizaciones disponibles para {{count}} plugins!",
-        "decky_update_available": "¡Actualización {{tag_name}} disponible!",
-        "plugin_load_error": {
-            "message": "Se ha producido un error al cargar el plugin {{name}}",
-            "toast": "Se ha producido un error al cargar {{name}}"
-        },
-        "plugin_error_uninstall": "Al cargar {{name}} se ha producido una excepción como se muestra arriba. Esto suele significar que el plugin requiere una actualización para la nueva versión de SteamUI. Comprueba si hay una actualización disponible o valora eliminarlo en los ajustes de Decky, en la sección Plugins."
+        "plugin_update_other": "¡Actualizaciones disponibles para {{count}} plugins!"
+    },
+    "PluginView": {
+        "hidden_one": "",
+        "hidden_many": "",
+        "hidden_other": ""
     },
     "RemoteDebugging": {
         "remote_cef": {
@@ -105,30 +149,70 @@
             "label": "Permitir depuración remota del CEF"
         }
     },
+    "SettingsDeveloperIndex": {
+        "cef_console": {
+            "button": "Abrir consola",
+            "desc": "Abre la consola del CEF. Solamente es útil para propósitos de depuración. Las cosas que hagas aquí pueden ser potencialmente peligrosas y solo se debería usar si eres un desarrollador de plugins, o uno te ha dirigido aquí.",
+            "label": "Consola CEF"
+        },
+        "header": "Otros",
+        "react_devtools": {
+            "desc": "Permite la conexión a un ordenador ejecutando las DevTools de React. Cambiar este ajuste recargará Steam. Configura la dirección IP antes de activarlo.",
+            "ip_label": "IP",
+            "label": "Activar DevTools de React"
+        },
+        "third_party_plugins": {
+            "button_install": "Instalar",
+            "button_zip": "Navegar",
+            "header": "Plugins de terceros",
+            "label_desc": "URL",
+            "label_url": "Instalar plugin desde URL",
+            "label_zip": "Instalar plugin desde archivo ZIP"
+        },
+        "valve_internal": {
+            "desc1": "Activa el menú interno de desarrollo de Valve.",
+            "desc2": "No toques nada en este menú a menos que sepas lo que haces.",
+            "label": "Activar menú interno de Valve"
+        }
+    },
     "SettingsGeneralIndex": {
-        "updates": {
-            "header": "Actualizaciones"
-        },
         "about": {
-            "header": "Acerca de",
-            "decky_version": "Versión de Decky"
-        },
-        "developer_mode": {
-            "label": "Modo desarrollador"
+            "decky_version": "Versión de Decky",
+            "header": "Acerca de"
         },
         "beta": {
             "header": "Participación en la beta"
         },
+        "developer_mode": {
+            "label": "Modo desarrollador"
+        },
+        "notifications": {
+            "decky_updates_label": "",
+            "header": "",
+            "plugin_updates_label": ""
+        },
         "other": {
             "header": "Otros"
+        },
+        "updates": {
+            "header": "Actualizaciones"
         }
     },
     "SettingsIndex": {
         "developer_title": "Desarrollador",
         "general_title": "General",
-        "plugins_title": "Plugins"
+        "plugins_title": "Plugins",
+        "testing_title": ""
     },
     "Store": {
+        "store_contrib": {
+            "desc": "Si desea contribuir a la tienda de plugins de Decky, mira el repositorio SteamDeckHomebrew/decky-plugin-template en GitHub. Hay información acerca del desarrollo y distribución en el archivo README.",
+            "label": "Contribuyendo"
+        },
+        "store_filter": {
+            "label": "Filtrar",
+            "label_def": "Todos"
+        },
         "store_search": {
             "label": "Buscar"
         },
@@ -136,71 +220,30 @@
             "label": "Ordenar",
             "label_def": "Actualizado por última vez (Nuevos)"
         },
-        "store_contrib": {
-            "desc": "Si desea contribuir a la tienda de plugins de Decky, mira el repositorio SteamDeckHomebrew/decky-plugin-template en GitHub. Hay información acerca del desarrollo y distribución en el archivo README.",
-            "label": "Contribuyendo"
-        },
-        "store_tabs": {
-            "about": "Información",
-            "title": "Navegar",
-            "alph_asce": "Alfabéticamente (Z-A)",
-            "alph_desc": "Alfabéticamente (A-Z)"
-        },
-        "store_testing_cta": "¡Por favor considera probar plugins nuevos para ayudar al equipo de Decky Loader!",
         "store_source": {
             "desc": "El código fuente de los plugins está disponible en el repositiorio SteamDeckHomebrew/decky-plugin-database en GitHub.",
             "label": "Código fuente"
         },
-        "store_filter": {
-            "label_def": "Todos",
-            "label": "Filtrar"
-        }
-    },
-    "Updater": {
-        "updates": {
-            "reloading": "Recargando",
-            "updating": "Actualizando",
-            "checking": "Buscando",
-            "check_button": "Buscar actualizaciones",
-            "install_button": "Instalar actualización",
-            "label": "Actualizaciones",
-            "lat_version": "Actualizado: ejecutando {{ver}}",
-            "cur_version": "Versión actual: {{ver}}"
+        "store_tabs": {
+            "about": "Información",
+            "alph_asce": "Alfabéticamente (Z-A)",
+            "alph_desc": "Alfabéticamente (A-Z)",
+            "date_asce": "",
+            "date_desc": "",
+            "downloads_asce": "",
+            "downloads_desc": "",
+            "title": "Navegar"
         },
-        "decky_updates": "Actualizaciones de Decky",
-        "no_patch_notes_desc": "No hay notas de parche para esta versión",
-        "patch_notes_desc": "Notas de parche"
-    },
-    "MultiplePluginsInstallModal": {
-        "title": {
-            "reinstall_one": "Reinstalar 1 plugin",
-            "reinstall_many": "Reinstalar {{count}} plugins",
-            "reinstall_other": "Reinstalar {{count}} plugins",
-            "update_one": "Actualizar 1 plugin",
-            "update_many": "Actualizar {{count}} plugins",
-            "update_other": "Actualizar {{count}} plugins",
-            "mixed_one": "Modificar 1 plugin",
-            "mixed_many": "Modificar {{count}} plugins",
-            "mixed_other": "Modificar {{count}} plugins",
-            "install_one": "Instalar 1 plugin",
-            "install_many": "Instalar {{count}} plugins",
-            "install_other": "Instalar {{count}} plugins"
-        },
-        "ok_button": {
-            "idle": "Confirmar",
-            "loading": "Trabajando"
-        },
-        "confirm": "¿Estás seguro de que quieres hacer las siguientes modificaciones?",
-        "description": {
-            "install": "Instalar {{name}} {{version}}",
-            "update": "Actualizar {{name}} a {{version}}",
-            "reinstall": "Reinstalar {{name}} {{version}}"
+        "store_testing_cta": "¡Por favor considera probar plugins nuevos para ayudar al equipo de Decky Loader!",
+        "store_testing_warning": {
+            "desc": "",
+            "label": ""
         }
     },
     "StoreSelect": {
         "custom_store": {
-            "url_label": "URL",
-            "label": "Tienda personalizada"
+            "label": "Tienda personalizada",
+            "url_label": "URL"
         },
         "store_channel": {
             "custom": "Personalizada",
@@ -209,9 +252,30 @@
             "testing": "Pruebas"
         }
     },
-    "PluginView": {
-        "hidden_one": "",
-        "hidden_many": "",
-        "hidden_other": ""
+    "Testing": {
+        "download": "",
+        "error": "",
+        "header": "",
+        "loading": "",
+        "start_download_toast": ""
+    },
+    "TitleView": {
+        "decky_store_desc": "",
+        "settings_desc": ""
+    },
+    "Updater": {
+        "decky_updates": "Actualizaciones de Decky",
+        "no_patch_notes_desc": "No hay notas de parche para esta versión",
+        "patch_notes_desc": "Notas de parche",
+        "updates": {
+            "check_button": "Buscar actualizaciones",
+            "checking": "Buscando",
+            "cur_version": "Versión actual: {{ver}}",
+            "install_button": "Instalar actualización",
+            "label": "Actualizaciones",
+            "lat_version": "Actualizado: ejecutando {{ver}}",
+            "reloading": "Recargando",
+            "updating": "Actualizando"
+        }
     }
 }

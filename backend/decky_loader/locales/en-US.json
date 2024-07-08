@@ -198,6 +198,15 @@
         "testing_title": "Testing"
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "Downloading plugin",
+            "increment_count": "Incrementing download count",
+            "installing_plugin": "Installing plugin",
+            "open_zip": "Opening zip file",
+            "parse_zip": "Parsing zip file",
+            "start": "Initializing",
+            "uninstalling_previous": "Uninstalling previous copy"
+        },
         "store_contrib": {
             "desc": "If you would like to contribute to the Decky Plugin Store, check the SteamDeckHomebrew/decky-plugin-template repository on GitHub. Information on development and distribution is available in the README.",
             "label": "Contributing"
@@ -231,15 +240,6 @@
         "store_testing_warning": {
             "desc": "You can use this store channel to test bleeding-edge plugin versions. Be sure to leave feedback on GitHub so the plugin can be updated for all users.",
             "label": "Welcome to the Testing Store Channel"
-        },
-        "download_progress_info": {
-            "start": "Initializing",
-            "open_zip": "Opening zip file",
-            "download_zip": "Downloading plugin",
-            "increment_count": "Incrementing download count",
-            "parse_zip": "Parsing zip file",
-            "uninstalling_previous": "Uninstalling previous copy",
-            "installing_plugin": "Installing plugin"
         }
     },
     "StoreSelect": {
@@ -253,6 +253,13 @@
             "label": "Store Channel",
             "testing": "Testing"
         }
+    },
+    "Testing": {
+        "download": "Download",
+        "error": "Error Installing PR",
+        "header": "The following versions of Decky Loader are built from open third-party Pull Requests. The Decky Loader team has not verified their functionality or security, and they may be outdated.",
+        "loading": "Loading open Pull Requests...",
+        "start_download_toast": "Downloading PR #{{id}}"
     },
     "TitleView": {
         "decky_store_desc": "Open Decky Store",
@@ -272,12 +279,5 @@
             "reloading": "Reloading",
             "updating": "Updating"
         }
-    },
-    "Testing": {
-        "download": "Download",
-        "header": "The following versions of Decky Loader are built from open third-party Pull Requests. The Decky Loader team has not verified their functionality or security, and they may be outdated.",
-        "loading": "Loading open Pull Requests...",
-        "error": "Error Installing PR",
-        "start_download_toast": "Downloading PR #{{id}}"
     }
 }

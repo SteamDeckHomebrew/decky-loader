@@ -197,7 +197,6 @@
             "title": "Gözat"
         },
         "download_progress_info": {
-            "increment_count": "",
             "start": ""
         }
     },
@@ -211,8 +210,7 @@
         }
     },
     "Testing": {
-        "download": "İndir",
-        "start_download_toast": ""
+        "download": "İndir"
     },
     "TitleView": {
         "decky_store_desc": "Decky Mağazasını Aç",

@@ -238,9 +238,6 @@
         "store_testing_warning": {
             "desc": "Tento kanál obchodu můžete použít k testování nejnovějších verzí pluginů. Nezapomeňte zanechat zpětnou vazbu na GitHubu, aby bylo možné plugin aktualizovat pro všechny uživatele.",
             "label": "Vítejte na testovacím kanálu obchodu"
-        },
-        "download_progress_info": {
-            "increment_count": ""
         }
     },
     "StoreSelect": {
@@ -256,8 +253,7 @@
         }
     },
     "Testing": {
-        "download": "Stáhnout",
-        "start_download_toast": ""
+        "download": "Stáhnout"
     },
     "TitleView": {
         "decky_store_desc": "Otevřít obchod Decky",

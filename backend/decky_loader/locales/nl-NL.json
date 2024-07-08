@@ -231,9 +231,6 @@
         "store_testing_warning": {
             "desc": "Je kunt dit winkelkanaal gebruiken om nog in ontwikkeling zijnde plug-inversies te testen. Zorg ervoor dat je feedback geeft op GitHub, zodat de plug-in voor alle gebruikers kan worden bijgewerkt.",
             "label": "Welkom bij het Testing-winkelkanaal"
-        },
-        "download_progress_info": {
-            "increment_count": ""
         }
     },
     "StoreSelect": {
@@ -249,8 +246,7 @@
         }
     },
     "Testing": {
-        "download": "Downloaden",
-        "start_download_toast": ""
+        "download": "Downloaden"
     },
     "TitleView": {
         "decky_store_desc": "Decky Store openen",

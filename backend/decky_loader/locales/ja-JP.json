@@ -211,16 +211,12 @@
             "about": "概要",
             "alph_asce": "アルファベット(Z to A)",
             "alph_desc": "アルファベット(A to Z)",
-            "downloads_desc": "",
             "title": "閲覧"
         },
         "store_testing_cta": "Decky Loaderチームを支援するために、新しいプラグインのテストを検討してください!",
         "store_testing_warning": {
             "desc": "このストアチャンネルを使用して、最先端のプラグイン バージョンをテストできます。 すべてのユーザーがプラグインを更新できるように、必ずGitHubにフィードバックを残してください。",
             "label": "テストストア チャンネルへようこそ"
-        },
-        "download_progress_info": {
-            "open_zip": ""
         }
     },
     "StoreSelect": {
@@ -234,9 +230,6 @@
             "label": "ストアチャンネル",
             "testing": "テスト"
         }
-    },
-    "Testing": {
-        "loading": ""
     },
     "TitleView": {
         "decky_store_desc": "Deckyストアを開く",

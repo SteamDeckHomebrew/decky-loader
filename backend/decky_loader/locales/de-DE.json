@@ -231,9 +231,6 @@
         "store_testing_warning": {
             "desc": "Du kannst diesen Store Kanal nutzen, um brandneue Testversionen von Plugins auszuprobieren. Denk daran Feedback auf GitHub zu hinterlassen, sodass das Plugin für alle Nutzer verbessert werden kann.",
             "label": "Willkommen zum Test Store Kanal"
-        },
-        "download_progress_info": {
-            "open_zip": ""
         }
     },
     "StoreSelect": {
@@ -249,8 +246,7 @@
         }
     },
     "Testing": {
-        "download": "Download",
-        "start_download_toast": ""
+        "download": "Download"
     },
     "TitleView": {
         "decky_store_desc": "Decky Store Öffnen",

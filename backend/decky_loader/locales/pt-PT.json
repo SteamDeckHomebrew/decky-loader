@@ -225,16 +225,12 @@
             "about": "Sobre",
             "alph_asce": "Alfabeticamente (Z-A)",
             "alph_desc": "Alfabeticamente (A-Z)",
-            "downloads_desc": "",
             "title": "Navegar"
         },
         "store_testing_cta": "Testa novos plugins e ajuda a equipa do Decky Loader!",
         "store_testing_warning": {
             "desc": "Pode usar esta versão da loja para testar versões experimentais de plugins. Certifique-se de deixar feedback no GitHub para que o plugin possa ser atualizado para todos os utilizadores.",
             "label": "Bem-vindo ao Canal de Testes da Loja"
-        },
-        "download_progress_info": {
-            "increment_count": ""
         }
     },
     "StoreSelect": {
@@ -248,9 +244,6 @@
             "label": "Canal de loja",
             "testing": "Em teste"
         }
-    },
-    "Testing": {
-        "loading": ""
     },
     "TitleView": {
         "decky_store_desc": "Abrir a Loja Decky",

@@ -238,9 +238,6 @@
         "store_testing_warning": {
             "desc": "Vous pouvez utiliser cette chaîne de magasin pour tester des versions de plugins. Assurez-vous de laisser des commentaires sur GitHub afin que le plugin puisse être mis à jour pour tous les utilisateurs.",
             "label": "Bienvenue sur la chaîne du magasin de tests"
-        },
-        "download_progress_info": {
-            "download_zip": ""
         }
     },
     "StoreSelect": {
@@ -256,8 +253,7 @@
         }
     },
     "Testing": {
-        "download": "Télécharger",
-        "start_download_toast": ""
+        "download": "Télécharger"
     },
     "TitleView": {
         "decky_store_desc": "Ouvrir le magasin Decky",

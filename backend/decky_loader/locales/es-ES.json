@@ -12,17 +12,11 @@
         "disabling": "Desactivando DevTools de React",
         "enabling": "Activando DevTools de React"
     },
-    "FilePickerError": {
-        "errors": {
-            "unknown": ""
-        }
-    },
     "FilePickerIndex": {
         "files": {
             "show_hidden": ""
         },
         "filter": {
-            "modified_desc": "",
             "size_desc": ""
         },
         "folder": {
@@ -195,12 +189,10 @@
             "about": "Información",
             "alph_asce": "Alfabéticamente (Z-A)",
             "alph_desc": "Alfabéticamente (A-Z)",
-            "downloads_desc": "",
             "title": "Navegar"
         },
         "store_testing_cta": "¡Por favor considera probar plugins nuevos para ayudar al equipo de Decky Loader!",
         "download_progress_info": {
-            "download_zip": "",
             "start": ""
         }
     },
@@ -215,9 +207,6 @@
             "label": "Canál de la tienda",
             "testing": "Pruebas"
         }
-    },
-    "Testing": {
-        "loading": ""
     },
     "Updater": {
         "decky_updates": "Actualizaciones de Decky",

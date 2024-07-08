@@ -224,9 +224,6 @@
         "store_testing_warning": {
             "desc": "이 스토어 채널을 사용하여 가장 최신 버전의 플러그인을 테스트할 수 있습니다. GitHub에 피드백을 남겨서 모든 사용자가 업데이트 할 수 있게 해주세요.",
             "label": "테스트 스토어 채널에 오신 것을 환영합니다"
-        },
-        "download_progress_info": {
-            "increment_count": ""
         }
     },
     "StoreSelect": {
@@ -242,8 +239,7 @@
         }
     },
     "Testing": {
-        "download": "다운로드",
-        "start_download_toast": ""
+        "download": "다운로드"
     },
     "TitleView": {
         "decky_store_desc": "Decky 스토어 열기",

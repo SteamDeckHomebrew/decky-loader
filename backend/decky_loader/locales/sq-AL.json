@@ -5,17 +5,11 @@
             "stable": "Fiksuar"
         }
     },
-    "FilePickerError": {
-        "errors": {
-            "perm_denied": ""
-        }
-    },
     "FilePickerIndex": {
         "files": {
             "file_type": ""
         },
         "filter": {
-            "modified_asce": "",
             "size_asce": ""
         },
         "folder": {
@@ -32,9 +26,6 @@
             "reinstall_other": "",
             "update_one": "",
             "update_other": ""
-        },
-        "ok_button": {
-            "idle": ""
         }
     },
     "PluginCard": {
@@ -63,7 +54,6 @@
     },
     "PluginListIndex": {
         "no_plugin": "Nuk ka shtesa të instaluar!",
-        "show": "",
         "uninstall": "Çinstalo",
         "update_all_one": "",
         "update_all_other": ""
@@ -85,9 +75,6 @@
         "hidden_other": ""
     },
     "SettingsDeveloperIndex": {
-        "cef_console": {
-            "desc": ""
-        },
         "react_devtools": {
             "ip_label": "IP",
             "label": "Aktivizo React DevTools"
@@ -104,9 +91,6 @@
     "SettingsGeneralIndex": {
         "about": {
             "decky_version": "Versioni Decky"
-        },
-        "notifications": {
-            "decky_updates_label": ""
         },
         "other": {
             "header": "Të Tjera"
@@ -137,33 +121,23 @@
             "label": "Kodin Burimor"
         },
         "store_tabs": {
-            "date_asce": "",
             "title": "Kërko"
         },
         "download_progress_info": {
-            "installing_plugin": "",
             "uninstalling_previous": ""
         }
     },
     "StoreSelect": {
-        "custom_store": {
-            "url_label": ""
-        },
         "store_channel": {
             "label": "Kanali Dyqanit"
         }
-    },
-    "Testing": {
-        "header": ""
     },
     "TitleView": {
         "settings_desc": ""
     },
     "Updater": {
         "updates": {
-            "check_button": "",
-            "cur_version": "Versioni e tanishëme: {{ver}}",
-            "reloading": ""
+            "cur_version": "Versioni e tanishëme: {{ver}}"
         }
     },
     "Developer": {

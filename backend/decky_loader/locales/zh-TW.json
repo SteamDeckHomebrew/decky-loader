@@ -224,9 +224,6 @@
         "store_testing_warning": {
             "desc": "您可以使用此商店頻道來體驗測試外掛版本。請務必在 GitHub 上留下回饋，以便為所有用戶更新該外掛程式。",
             "label": "歡迎來到測試頻道"
-        },
-        "download_progress_info": {
-            "increment_count": ""
         }
     },
     "StoreSelect": {
@@ -242,8 +239,7 @@
         }
     },
     "Testing": {
-        "download": "下載",
-        "start_download_toast": ""
+        "download": "下載"
     },
     "TitleView": {
         "decky_store_desc": "開啟 Decky 商店",

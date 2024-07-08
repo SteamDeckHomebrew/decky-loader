@@ -128,7 +128,6 @@
             "button": "إزالة التنصيب",
             "title": "إزالة التنصيب {{name}}"
         },
-        "decky_update_available": "",
         "plugin_update_zero": "",
         "plugin_update_one": "",
         "plugin_update_two": "",
@@ -145,65 +144,45 @@
         "hidden_other": ""
     },
     "SettingsDeveloperIndex": {
-        "cef_console": {
-            "desc": ""
-        },
         "header": "أخرى",
         "react_devtools": {
             "ip_label": "عنوان الشبكة"
         },
         "third_party_plugins": {
             "button_install": "تنصيب",
-            "button_zip": "تصفح",
-            "label_zip": ""
+            "button_zip": "تصفح"
         }
     },
     "SettingsGeneralIndex": {
         "about": {
             "decky_version": ""
         },
-        "notifications": {
-            "decky_updates_label": ""
-        },
         "updates": {
             "header": ""
         }
-    },
-    "SettingsIndex": {
-        "testing_title": ""
     },
     "Store": {
         "store_sort": {
             "label": ""
         },
         "store_tabs": {
-            "about": "",
             "date_desc": ""
         },
-        "store_testing_cta": "",
         "download_progress_info": {
-            "open_zip": "",
-            "uninstalling_previous": ""
+            "open_zip": ""
         }
     },
     "StoreSelect": {
         "custom_store": {
-            "label": ""
-        },
-        "store_channel": {
             "label": ""
         }
     },
     "Testing": {
         "header": ""
     },
-    "TitleView": {
-        "settings_desc": ""
-    },
     "Updater": {
         "updates": {
-            "check_button": "",
-            "lat_version": ""
+            "check_button": ""
         }
     }
 }

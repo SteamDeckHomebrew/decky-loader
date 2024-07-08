@@ -71,14 +71,8 @@
             "update_other": ""
         }
     },
-    "PluginCard": {
-        "plugin_version_label": ""
-    },
     "PluginInstallModal": {
         "update": {
-            "desc": ""
-        },
-        "install": {
             "desc": ""
         },
         "reinstall": {
@@ -86,15 +80,11 @@
         }
     },
     "PluginListIndex": {
-        "no_plugin": "",
         "show": "",
         "update_all_one": "",
         "update_all_other": ""
     },
     "PluginLoader": {
-        "plugin_uninstall": {
-            "desc": ""
-        },
         "decky_update_available": "",
         "plugin_update_one": "",
         "plugin_update_other": ""
@@ -104,64 +94,40 @@
         "hidden_other": ""
     },
     "SettingsDeveloperIndex": {
-        "cef_console": {
-            "desc": ""
-        },
         "react_devtools": {
             "ip_label": ""
-        },
-        "third_party_plugins": {
-            "header": ""
         },
         "valve_internal": {
             "desc1": ""
         }
     },
     "SettingsGeneralIndex": {
-        "about": {
-            "header": ""
-        },
         "notifications": {
             "header": ""
         }
-    },
-    "SettingsIndex": {
-        "developer_title": ""
     },
     "Store": {
         "store_contrib": {
             "desc": ""
         },
-        "store_sort": {
-            "label_def": ""
-        },
         "store_tabs": {
-            "alph_asce": "",
-            "downloads_asce": ""
+            "alph_asce": ""
         },
         "store_testing_warning": {
             "desc": ""
         },
         "download_progress_info": {
-            "start": "",
             "parse_zip": ""
         }
     },
     "StoreSelect": {
-        "custom_store": {
-            "url_label": ""
-        },
         "store_channel": {
             "testing": ""
         }
     },
-    "Testing": {
-        "loading": ""
-    },
     "Updater": {
         "decky_updates": "",
         "updates": {
-            "checking": "",
             "reloading": ""
         }
     }

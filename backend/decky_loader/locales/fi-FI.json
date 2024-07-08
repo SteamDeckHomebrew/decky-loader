@@ -218,16 +218,12 @@
             "about": "Tietoja",
             "alph_asce": "Aakkosjärjestyksessä (Z–A)",
             "alph_desc": "Aakkosjärjestyksessä (A–Z)",
-            "downloads_desc": "",
             "title": "Selaa"
         },
         "store_testing_cta": "Harkitse uusien lisäosien testaamista auttaaksesi Decky Loader -tiimiä!",
         "store_testing_warning": {
             "desc": "Voit käyttää tätä myymäläkanavaa testataksesi uusimpia laajennusversioita. Muista jättää palautetta GitHubissa, jotta laajennus voidaan päivittää kaikille käyttäjille.",
             "label": "Tervetuloa testausmyymälä-kanavalle"
-        },
-        "download_progress_info": {
-            "open_zip": ""
         }
     },
     "StoreSelect": {
@@ -241,9 +237,6 @@
             "label": "Myymäläkanava",
             "testing": "Testaus"
         }
-    },
-    "Testing": {
-        "loading": ""
     },
     "TitleView": {
         "decky_store_desc": "Avaa Decky-myymälä",

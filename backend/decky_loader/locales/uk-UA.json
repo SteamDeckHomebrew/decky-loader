@@ -115,7 +115,6 @@
         "update_all_one": "Оновити 1 плагін",
         "update_all_few": "Оновити {{count}} плагінів",
         "update_all_many": "Оновити {{count}} плагінів",
-        "update_all_other": "",
         "update_to": "Оновити {{name}}"
     },
     "PluginListLabel": {
@@ -142,8 +141,7 @@
     "PluginView": {
         "hidden_one": "{{count}} плагін приховано з цього списку",
         "hidden_few": "{{count}} плагінів приховано з цього списку",
-        "hidden_many": "{{count}} плагінів приховано з цього списку",
-        "hidden_other": ""
+        "hidden_many": "{{count}} плагінів приховано з цього списку"
     },
     "RemoteDebugging": {
         "remote_cef": {
@@ -240,6 +238,15 @@
         "store_testing_warning": {
             "desc": "",
             "label": ""
+        },
+        "download_progress_info": {
+            "uninstalling_previous": "",
+            "installing_plugin": "",
+            "increment_count": "",
+            "parse_zip": "",
+            "start": "",
+            "open_zip": "",
+            "download_zip": ""
         }
     },
     "StoreSelect": {

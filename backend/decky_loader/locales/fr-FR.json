@@ -238,6 +238,15 @@
         "store_testing_warning": {
             "desc": "Vous pouvez utiliser cette chaîne de magasin pour tester des versions de plugins. Assurez-vous de laisser des commentaires sur GitHub afin que le plugin puisse être mis à jour pour tous les utilisateurs.",
             "label": "Bienvenue sur la chaîne du magasin de tests"
+        },
+        "download_progress_info": {
+            "increment_count": "",
+            "parse_zip": "",
+            "uninstalling_previous": "",
+            "download_zip": "",
+            "open_zip": "",
+            "start": "",
+            "installing_plugin": ""
         }
     },
     "StoreSelect": {

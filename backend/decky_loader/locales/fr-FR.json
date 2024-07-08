@@ -61,17 +61,17 @@
             "loading": "En cours"
         },
         "title": {
-            "install_one": "Installer 1 plugin",
             "install_many": "Installer {{count}} plugins",
+            "install_one": "Installer 1 plugin",
             "install_other": "Installer {{count}} plugins",
-            "mixed_one": "Modifier {{count}} plugin",
             "mixed_many": "Modifier {{count}} plugins",
+            "mixed_one": "Modifier {{count}} plugin",
             "mixed_other": "Modifier {{count}} plugins",
-            "reinstall_one": "Réinstaller 1 plugin",
             "reinstall_many": "Réinstaller {{count}} plugins",
+            "reinstall_one": "Réinstaller 1 plugin",
             "reinstall_other": "Réinstaller {{count}} plugins",
-            "update_one": "Mettre à jour 1 plugin",
             "update_many": "Mettre à jour {{count}} plugins",
+            "update_one": "Mettre à jour 1 plugin",
             "update_other": "Mettre à jour {{count}} plugins"
         }
     },
@@ -112,8 +112,8 @@
         "show": "Accès Rapide : Afficher",
         "unfreeze": "Autoriser les mises à jour",
         "uninstall": "Désinstaller",
-        "update_all_one": "Mettre à jour 1 plugin",
         "update_all_many": "Mettre à jour {{count}} plugins",
+        "update_all_one": "Mettre à jour 1 plugin",
         "update_all_other": "Mettre à jour {{count}} plugins",
         "update_to": "Mettre à jour vers {{name}}"
     },
@@ -134,13 +134,13 @@
             "desc": "Êtes-vous sûr.e de vouloir désinstaller {{name}} ?",
             "title": "Désinstaller {{name}}"
         },
-        "plugin_update_one": "Mise à jour disponible pour 1 plugin !",
         "plugin_update_many": "Mises à jour disponible pour {{count}} plugins !",
+        "plugin_update_one": "Mise à jour disponible pour 1 plugin !",
         "plugin_update_other": "Mises à jour disponible pour {{count}} plugins !"
     },
     "PluginView": {
-        "hidden_one": "1 plugin est masqué dans cette liste",
         "hidden_many": "{{count}} plugins sont masqués de cette liste",
+        "hidden_one": "1 plugin est masqué dans cette liste",
         "hidden_other": "{{count}} plugins sont masqués de cette liste"
     },
     "RemoteDebugging": {

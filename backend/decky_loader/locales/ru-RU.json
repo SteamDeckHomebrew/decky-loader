@@ -61,18 +61,18 @@
             "loading": "В процессе"
         },
         "title": {
-            "install_one": "Установить {{count}} плагин",
             "install_few": "Установить {{count}} плагинов",
             "install_many": "Установить {{count}} плагинов",
-            "mixed_one": "Изменить {{count}} плагин",
+            "install_one": "Установить {{count}} плагин",
             "mixed_few": "Изменить {{count}} плагинов",
             "mixed_many": "Изменить {{count}} плагинов",
-            "reinstall_one": "Переустановить {{count}} плагин",
+            "mixed_one": "Изменить {{count}} плагин",
             "reinstall_few": "Переустановить {{count}} плагинов",
             "reinstall_many": "Переустановить {{count}} плагинов",
-            "update_one": "Переустановить {{count}} плагин",
+            "reinstall_one": "Переустановить {{count}} плагин",
             "update_few": "Переустановить {{count}} плагинов",
-            "update_many": "Переустановить {{count}} плагинов"
+            "update_many": "Переустановить {{count}} плагинов",
+            "update_one": "Переустановить {{count}} плагин"
         }
     },
     "PluginCard": {
@@ -112,9 +112,9 @@
         "show": "Быстрый доступ: Показать",
         "unfreeze": "Разрешить обновления",
         "uninstall": "Удалить",
-        "update_all_one": "Обновить {{count}} плагин",
         "update_all_few": "Обновить {{count}} плагинов",
         "update_all_many": "Обновить {{count}} плагинов",
+        "update_all_one": "Обновить {{count}} плагин",
         "update_all_other": "",
         "update_to": "Обновить на {{name}}"
     },
@@ -135,14 +135,14 @@
             "desc": "Вы уверены, что хотите удалить {{name}}?",
             "title": "Удалить {{name}}"
         },
-        "plugin_update_one": "Обновления доступны для {{count}} плагина!",
         "plugin_update_few": "Обновления доступны для {{count}} плагинов!",
-        "plugin_update_many": "Обновления доступны для {{count}} плагинов!"
+        "plugin_update_many": "Обновления доступны для {{count}} плагинов!",
+        "plugin_update_one": "Обновления доступны для {{count}} плагина!"
     },
     "PluginView": {
-        "hidden_one": "{{count}} плагин скрыт из списка",
         "hidden_few": "{{count}} плагинов скрыт из списка",
         "hidden_many": "{{count}} плагинов скрыт из списка",
+        "hidden_one": "{{count}} плагин скрыт из списка",
         "hidden_other": ""
     },
     "RemoteDebugging": {

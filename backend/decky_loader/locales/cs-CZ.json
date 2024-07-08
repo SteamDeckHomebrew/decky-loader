@@ -61,17 +61,17 @@
             "loading": "Probíhá"
         },
         "title": {
-            "install_one": "Instalovat 1 plugin",
             "install_few": "Instalovat {{count}} pluginů",
+            "install_one": "Instalovat 1 plugin",
             "install_other": "Instalovat {{count}} pluginů",
-            "mixed_one": "Upravit {{count}} plugin",
             "mixed_few": "Upravit {{count}} pluginů",
+            "mixed_one": "Upravit {{count}} plugin",
             "mixed_other": "Upravit {{count}} pluginů",
-            "reinstall_one": "Přeinstalovat 1 plugin",
             "reinstall_few": "Přeinstalovat {{count}} pluginů",
+            "reinstall_one": "Přeinstalovat 1 plugin",
             "reinstall_other": "Přeinstalovat {{count}} pluginů",
-            "update_one": "Aktualizovat 1 plugin",
             "update_few": "Aktualizovat {{count}} pluginů",
+            "update_one": "Aktualizovat 1 plugin",
             "update_other": "Aktualizovat {{count}} pluginů"
         }
     },
@@ -112,9 +112,9 @@
         "show": "Rychlý přístup: Zobrazit",
         "unfreeze": "Povolit aktualizace",
         "uninstall": "Odinstalovat",
-        "update_all_one": "Aktualizovat 1 plugin",
         "update_all_few": "Aktualizovat {{count}} pluginů",
         "update_all_many": "",
+        "update_all_one": "Aktualizovat 1 plugin",
         "update_all_other": "Aktualizovat {{count}} pluginů",
         "update_to": "Aktualizovat na {{name}}"
     },
@@ -135,14 +135,14 @@
             "desc": "Opravdu chcete odinstalovat {{name}}?",
             "title": "Odinstalovat {{name}}"
         },
-        "plugin_update_one": "Je dostupná aktualizace pro 1 plugin!",
         "plugin_update_few": "Jsou dostupné aktualizace pro {{count}} pluginů!",
+        "plugin_update_one": "Je dostupná aktualizace pro 1 plugin!",
         "plugin_update_other": "Jsou dostupné aktualizace pro {{count}} pluginů!"
     },
     "PluginView": {
-        "hidden_one": "1 plugin je v tomto seznamu skrytý",
         "hidden_few": "{{count}} pluginů je v tomto seznamu skryto",
         "hidden_many": "",
+        "hidden_one": "1 plugin je v tomto seznamu skrytý",
         "hidden_other": "{{count}} pluginů je v tomto seznamu skryto"
     },
     "RemoteDebugging": {

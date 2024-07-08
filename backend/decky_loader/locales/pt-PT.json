@@ -61,17 +61,17 @@
             "loading": "Em curso"
         },
         "title": {
-            "install_one": "Instalar 1 plugin",
             "install_many": "Instalar {{count}} plugins",
+            "install_one": "Instalar 1 plugin",
             "install_other": "Instalar {{count}} plugins",
-            "mixed_one": "Alterar 1 plugin",
             "mixed_many": "Alterar {{count}} plugins",
+            "mixed_one": "Alterar 1 plugin",
             "mixed_other": "Alterar {{count}} plugins",
-            "reinstall_one": "Reinstalar 1 plugin",
             "reinstall_many": "Reinstalar {{count}} plugins",
+            "reinstall_one": "Reinstalar 1 plugin",
             "reinstall_other": "Reinstalar {{count}} plugins",
-            "update_one": "Actualizar 1 plugin",
             "update_many": "Actualizar {{count}} plugins",
+            "update_one": "Actualizar 1 plugin",
             "update_other": "Actualizar {{count}} plugins"
         }
     },
@@ -112,8 +112,8 @@
         "show": "Acesso rápido: Mostrar",
         "unfreeze": "",
         "uninstall": "Desinstalar",
-        "update_all_one": "Actualizar 1 plugin",
         "update_all_many": "Actualizar {{count}} plugins",
+        "update_all_one": "Actualizar 1 plugin",
         "update_all_other": "Actualizar {{count}} plugins",
         "update_to": "Actualizar para {{name}}"
     },
@@ -134,13 +134,13 @@
             "desc": "De certeza que queres desinstalar {{name}}?",
             "title": "Desinstalar {{name}}"
         },
-        "plugin_update_one": "1 plugin tem actualizações disponíveis!",
         "plugin_update_many": "{{count}} plugins têm actualizações disponíveis!",
+        "plugin_update_one": "1 plugin tem actualizações disponíveis!",
         "plugin_update_other": "{{count}} plugins têm actualizações disponíveis!"
     },
     "PluginView": {
-        "hidden_one": "1 plugin está oculto desta lista",
         "hidden_many": "{{count}} plugins estão ocultos desta lista",
+        "hidden_one": "1 plugin está oculto desta lista",
         "hidden_other": "{{count}} plugins estão ocultos desta lista"
     },
     "RemoteDebugging": {

@@ -61,18 +61,18 @@
             "loading": "W toku"
         },
         "title": {
-            "install_one": "Zainstaluj 1 plugin",
             "install_few": "Zainstaluj {{count}} pluginy",
             "install_many": "Zainstaluj {{count}} pluginów",
-            "mixed_one": "Zmodyfikuj {{count}} plugin",
+            "install_one": "Zainstaluj 1 plugin",
             "mixed_few": "Zmodyfikuj {{count}} pluginy",
             "mixed_many": "Zmodyfikuj {{count}} pluginów",
-            "reinstall_one": "Reinstaluj 1 plugin",
+            "mixed_one": "Zmodyfikuj {{count}} plugin",
             "reinstall_few": "Reinstaluj {{count}} pluginy",
             "reinstall_many": "Reinstaluj {{count}} pluginów",
-            "update_one": "Zaktualizuj 1 plugin",
+            "reinstall_one": "Reinstaluj 1 plugin",
             "update_few": "Zaktualizuj {{count}} pluginy",
-            "update_many": "Zaktualizuj {{count}} pluginów"
+            "update_many": "Zaktualizuj {{count}} pluginów",
+            "update_one": "Zaktualizuj 1 plugin"
         }
     },
     "PluginCard": {
@@ -112,9 +112,9 @@
         "show": "Szybki dostęp: Pokaż",
         "unfreeze": "Odblokuj aktualizacje",
         "uninstall": "Odinstaluj",
-        "update_all_one": "Zaktualizuj 1 plugin",
         "update_all_few": "Zaktualizuj {{count}} pluginy",
         "update_all_many": "Zaktualizuj {{count}} pluginów",
+        "update_all_one": "Zaktualizuj 1 plugin",
         "update_all_other": "",
         "update_to": "Zaktualizuj do {{name}}"
     },
@@ -135,14 +135,14 @@
             "desc": "Czy na pewno chcesz odinstalować {{name}}?",
             "title": "Odinstaluj {{name}}"
         },
-        "plugin_update_one": "Aktualizacje dostępne dla 1 pluginu!",
         "plugin_update_few": "Aktualizacje dostępne dla {{count}} pluginów!",
-        "plugin_update_many": "Aktualizacje dostępne dla {{count}} pluginów!"
+        "plugin_update_many": "Aktualizacje dostępne dla {{count}} pluginów!",
+        "plugin_update_one": "Aktualizacje dostępne dla 1 pluginu!"
     },
     "PluginView": {
-        "hidden_one": "1 plugin jest ukryty na tej liście",
         "hidden_few": "{{count}} pluginy jest ukryty na tej liście",
         "hidden_many": "{{count}} pluginów jest ukryty na tej liście",
+        "hidden_one": "1 plugin jest ukryty na tej liście",
         "hidden_other": ""
     },
     "RemoteDebugging": {

@@ -61,17 +61,17 @@
             "loading": "Trabajando"
         },
         "title": {
-            "install_one": "Instalar 1 plugin",
             "install_many": "Instalar {{count}} plugins",
+            "install_one": "Instalar 1 plugin",
             "install_other": "Instalar {{count}} plugins",
-            "mixed_one": "Modificar 1 plugin",
             "mixed_many": "Modificar {{count}} plugins",
+            "mixed_one": "Modificar 1 plugin",
             "mixed_other": "Modificar {{count}} plugins",
-            "reinstall_one": "Reinstalar 1 plugin",
             "reinstall_many": "Reinstalar {{count}} plugins",
+            "reinstall_one": "Reinstalar 1 plugin",
             "reinstall_other": "Reinstalar {{count}} plugins",
-            "update_one": "Actualizar 1 plugin",
             "update_many": "Actualizar {{count}} plugins",
+            "update_one": "Actualizar 1 plugin",
             "update_other": "Actualizar {{count}} plugins"
         }
     },
@@ -112,8 +112,8 @@
         "show": "",
         "unfreeze": "",
         "uninstall": "Desinstalar",
-        "update_all_one": "Actualizar 1 plugin",
         "update_all_many": "Actualizar {{count}} plugins",
+        "update_all_one": "Actualizar 1 plugin",
         "update_all_other": "Actualizar {{count}} plugins",
         "update_to": "Actualizar a {{name}}"
     },
@@ -134,13 +134,13 @@
             "desc": "¿Estás seguro de que quieres desinstalar {{name}}?",
             "title": "Desinstalar {{name}}"
         },
-        "plugin_update_one": "¡Actualización disponible para 1 plugin!",
         "plugin_update_many": "¡Actualizaciones disponibles para {{count}} plugins!",
+        "plugin_update_one": "¡Actualización disponible para 1 plugin!",
         "plugin_update_other": "¡Actualizaciones disponibles para {{count}} plugins!"
     },
     "PluginView": {
-        "hidden_one": "",
         "hidden_many": "",
+        "hidden_one": "",
         "hidden_other": ""
     },
     "RemoteDebugging": {

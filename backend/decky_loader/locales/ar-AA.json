@@ -61,30 +61,30 @@
             "loading": ""
         },
         "title": {
-            "install_zero": "",
-            "install_one": "",
-            "install_two": "",
             "install_few": "",
             "install_many": "",
+            "install_one": "",
             "install_other": "",
-            "mixed_zero": "",
-            "mixed_one": "",
-            "mixed_two": "",
+            "install_two": "",
+            "install_zero": "",
             "mixed_few": "",
             "mixed_many": "",
+            "mixed_one": "",
             "mixed_other": "",
-            "reinstall_zero": "",
-            "reinstall_one": "",
-            "reinstall_two": "",
+            "mixed_two": "",
+            "mixed_zero": "",
             "reinstall_few": "",
             "reinstall_many": "",
+            "reinstall_one": "",
             "reinstall_other": "",
-            "update_zero": "",
-            "update_one": "",
-            "update_two": "",
+            "reinstall_two": "",
+            "reinstall_zero": "",
             "update_few": "",
             "update_many": "",
-            "update_other": ""
+            "update_one": "",
+            "update_other": "",
+            "update_two": "",
+            "update_zero": ""
         }
     },
     "PluginCard": {
@@ -124,12 +124,12 @@
         "show": "إظهار في قائمة الوصول السريع",
         "unfreeze": "السماح بالتحديثات",
         "uninstall": "إزالة التنصيب",
-        "update_all_zero": "",
-        "update_all_one": "",
-        "update_all_two": "",
         "update_all_few": "",
         "update_all_many": "",
+        "update_all_one": "",
         "update_all_other": "",
+        "update_all_two": "",
+        "update_all_zero": "",
         "update_to": "التحديث إلى {{name}}"
     },
     "PluginListLabel": {
@@ -149,20 +149,20 @@
             "desc": "",
             "title": "إزالة التنصيب {{name}}"
         },
-        "plugin_update_zero": "",
-        "plugin_update_one": "",
-        "plugin_update_two": "",
         "plugin_update_few": "",
         "plugin_update_many": "",
-        "plugin_update_other": ""
+        "plugin_update_one": "",
+        "plugin_update_other": "",
+        "plugin_update_two": "",
+        "plugin_update_zero": ""
     },
     "PluginView": {
-        "hidden_zero": "",
-        "hidden_one": "",
-        "hidden_two": "",
         "hidden_few": "",
         "hidden_many": "",
-        "hidden_other": ""
+        "hidden_one": "",
+        "hidden_other": "",
+        "hidden_two": "",
+        "hidden_zero": ""
     },
     "RemoteDebugging": {
         "remote_cef": {

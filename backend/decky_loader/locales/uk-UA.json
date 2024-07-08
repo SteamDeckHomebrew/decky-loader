@@ -61,18 +61,18 @@
             "loading": "Опрацювання"
         },
         "title": {
-            "install_one": "Встановити 1 плагін",
             "install_few": "Встановити {{count}} плагінів",
             "install_many": "Встановити {{count}} плагінів",
-            "mixed_one": "Модифікувати 1 плагін",
+            "install_one": "Встановити 1 плагін",
             "mixed_few": "Модифікувати {{count}} плагінів",
             "mixed_many": "",
-            "reinstall_one": "Перевстановити 1 плагін",
+            "mixed_one": "Модифікувати 1 плагін",
             "reinstall_few": "Перевстановити {{count}} плагінів",
             "reinstall_many": "Перевстановити {{count}} плагінів",
-            "update_one": "Оновити 1 плагін",
+            "reinstall_one": "Перевстановити 1 плагін",
             "update_few": "Оновити {{count}} плагінів",
-            "update_many": "Оновити {{count}} плагінів"
+            "update_many": "Оновити {{count}} плагінів",
+            "update_one": "Оновити 1 плагін"
         }
     },
     "PluginCard": {
@@ -112,9 +112,9 @@
         "show": "Швидкий доступ: Показати",
         "unfreeze": "",
         "uninstall": "Видалити",
-        "update_all_one": "Оновити 1 плагін",
         "update_all_few": "Оновити {{count}} плагінів",
         "update_all_many": "Оновити {{count}} плагінів",
+        "update_all_one": "Оновити 1 плагін",
         "update_all_other": "",
         "update_to": "Оновити {{name}}"
     },
@@ -135,14 +135,14 @@
             "desc": "Ви впевнені, що хочете видалити {{name}}?",
             "title": "Видалити {{name}}"
         },
-        "plugin_update_one": "Доступне оновлення для 1 плагіна!",
         "plugin_update_few": "Доступне оновлення для {{count}} плагінів!",
-        "plugin_update_many": "Доступне оновлення для {{count}} плагінів!"
+        "plugin_update_many": "Доступне оновлення для {{count}} плагінів!",
+        "plugin_update_one": "Доступне оновлення для 1 плагіна!"
     },
     "PluginView": {
-        "hidden_one": "{{count}} плагін приховано з цього списку",
         "hidden_few": "{{count}} плагінів приховано з цього списку",
         "hidden_many": "{{count}} плагінів приховано з цього списку",
+        "hidden_one": "{{count}} плагін приховано з цього списку",
         "hidden_other": ""
     },
     "RemoteDebugging": {

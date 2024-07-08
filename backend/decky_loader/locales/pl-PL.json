@@ -238,6 +238,15 @@
         "store_testing_warning": {
             "desc": "Możesz użyć tego kanału sklepu do testowania najnowszych wersji pluginów. Pamiętaj, aby zostawić opinię na GitHub, aby plugin mogła zostać zaktualizowana dla wszystkich użytkowników.",
             "label": "Witamy w Testowym Kanale Sklepu"
+        },
+        "download_progress_info": {
+            "start": "",
+            "open_zip": "",
+            "download_zip": "",
+            "increment_count": "",
+            "parse_zip": "",
+            "uninstalling_previous": "",
+            "installing_plugin": ""
         }
     },
     "StoreSelect": {

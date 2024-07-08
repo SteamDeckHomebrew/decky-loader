@@ -83,11 +83,6 @@
         "hidden_one": "",
         "hidden_other": ""
     },
-    "Store": {
-        "store_contrib": {
-            "desc": ""
-        }
-    },
     "StoreSelect": {
         "store_channel": {
             "testing": ""

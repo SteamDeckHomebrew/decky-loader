@@ -153,11 +153,6 @@
             "button_zip": "تصفح"
         }
     },
-    "Store": {
-        "store_tabs": {
-            "date_desc": ""
-        }
-    },
     "Updater": {
         "updates": {
             "check_button": ""

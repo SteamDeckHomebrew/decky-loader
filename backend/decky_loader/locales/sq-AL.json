@@ -6,9 +6,6 @@
         }
     },
     "FilePickerIndex": {
-        "filter": {
-            "modified_desc": ""
-        },
         "folder": {
             "select": "Përdore këtë folder"
         }

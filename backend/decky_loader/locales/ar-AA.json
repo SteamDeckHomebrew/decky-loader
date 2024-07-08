@@ -153,18 +153,8 @@
             "button_zip": "تصفح"
         }
     },
-    "SettingsGeneralIndex": {
-        "updates": {
-            "header": ""
-        }
-    },
     "Store": {
         "store_search": {
-            "label": ""
-        }
-    },
-    "StoreSelect": {
-        "custom_store": {
             "label": ""
         }
     },

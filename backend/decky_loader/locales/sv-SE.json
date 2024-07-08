@@ -72,22 +72,15 @@
         }
     },
     "PluginInstallModal": {
-        "install": {
-            "title": ""
-        },
         "update": {
             "desc": ""
         }
     },
     "PluginListIndex": {
-        "show": "",
         "update_all_one": "",
         "update_all_other": ""
     },
     "PluginLoader": {
-        "plugin_load_error": {
-            "toast": ""
-        },
         "plugin_update_one": "",
         "plugin_update_other": ""
     },
@@ -96,29 +89,17 @@
         "hidden_other": ""
     },
     "SettingsDeveloperIndex": {
-        "react_devtools": {
-            "ip_label": ""
-        },
         "valve_internal": {
             "desc1": ""
-        }
-    },
-    "SettingsGeneralIndex": {
-        "notifications": {
-            "header": ""
         }
     },
     "Store": {
         "download_progress_info": {
             "download_zip": ""
         },
-        "store_contrib": {
-            "label": ""
-        },
         "store_tabs": {
             "about": ""
-        },
-        "store_testing_cta": ""
+        }
     },
     "StoreSelect": {
         "store_channel": {
@@ -126,7 +107,6 @@
         }
     },
     "Updater": {
-        "decky_updates": "",
         "updates": {
             "lat_version": ""
         }

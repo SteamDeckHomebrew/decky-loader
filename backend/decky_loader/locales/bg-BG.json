@@ -195,9 +195,6 @@
         "plugins_title": "Добавки"
     },
     "Store": {
-        "download_progress_info": {
-            "uninstalling_previous": ""
-        },
         "store_contrib": {
             "desc": "Ако искате да допринесете към магазина за добавки на Decky, разгледайте хранилището SteamDeckHomebrew/decky-plugin-template в GitHub. Може да намерите информация относно разработката и разпространението във файла README.",
             "label": "Допринасяне"

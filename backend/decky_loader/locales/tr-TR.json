@@ -169,9 +169,6 @@
         "plugins_title": "Eklentiler"
     },
     "Store": {
-        "download_progress_info": {
-            "uninstalling_previous": ""
-        },
         "store_contrib": {
             "label": "Katkıda Bulunma"
         },

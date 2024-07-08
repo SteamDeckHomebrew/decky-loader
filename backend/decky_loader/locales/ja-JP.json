@@ -188,9 +188,6 @@
         "plugins_title": "プラグイン"
     },
     "Store": {
-        "download_progress_info": {
-            "uninstalling_previous": ""
-        },
         "store_contrib": {
             "desc": "Decky Plugin Storeに貢献したい場合は、GitHubのSteamDeckHomebrew/decky-plugin-templateリポジトリを確認してください。 開発と配布に関する情報は README で入手できます。",
             "label": "貢献"

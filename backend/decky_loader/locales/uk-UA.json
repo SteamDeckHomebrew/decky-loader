@@ -13,9 +13,6 @@
         "enabling": "Увімкнення React DevTools"
     },
     "FilePickerIndex": {
-        "files": {
-            "show_hidden": ""
-        },
         "filter": {
             "size_desc": ""
         },
@@ -171,9 +168,6 @@
         "plugins_title": "Плагіни"
     },
     "Store": {
-        "download_progress_info": {
-            "uninstalling_previous": ""
-        },
         "store_contrib": {
             "desc": "Якщо ви бажаєте додати щось у Decky Plugin Store, завітайте у репозиторій SteamDeckHomebrew/decky-plugin-template на GitHub. Інформація про розробку та поширення доступна у README.",
             "label": "Зробити внесок"

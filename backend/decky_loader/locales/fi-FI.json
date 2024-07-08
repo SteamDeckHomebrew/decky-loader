@@ -195,9 +195,6 @@
         "plugins_title": "Laajennukset"
     },
     "Store": {
-        "download_progress_info": {
-            "uninstalling_previous": ""
-        },
         "store_contrib": {
             "desc": "Mikäli haluat julkaista Decky Plugin Storeen, tarkista GitHubin SteamDeckHomebrew/decky-plugin-template -esimerkkitietovarasto. Tietoa kehityksestä ja jakelusta löytyy README:stä.",
             "label": "Osallistuminen"

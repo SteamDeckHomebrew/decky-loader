@@ -82,10 +82,5 @@
     "PluginView": {
         "hidden_one": "",
         "hidden_other": ""
-    },
-    "StoreSelect": {
-        "store_channel": {
-            "testing": ""
-        }
     }
 }

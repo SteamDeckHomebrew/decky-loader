@@ -85,20 +85,20 @@
         "install": {
             "button_idle": "Installer",
             "button_processing": "Installation en cours",
-            "desc": "Êtes-vous sûr de vouloir installer {{artifact}} {{version}} ?",
+            "desc": "Êtes-vous sûr de vouloir installer {{artifact}} {{version}}\u202f?",
             "title": "Installer {{artifact}}"
         },
         "no_hash": "Ce plugin n'a pas de somme de contrôle, vous l'installez à vos risques et périls.",
         "reinstall": {
             "button_idle": "Réinstaller",
             "button_processing": "Réinstallation en cours",
-            "desc": "Êtes-vous sûr de vouloir réinstaller {{artifact}} {{version}} ?",
+            "desc": "Êtes-vous sûr de vouloir réinstaller {{artifact}} {{version}}\u202f?",
             "title": "Réinstaller {{artifact}}"
         },
         "update": {
             "button_idle": "Mettre à jour",
             "button_processing": "Mise à jour",
-            "desc": "Êtes-vous sûr de vouloir mettre à jour {{artifact}} {{version}} ?",
+            "desc": "Êtes-vous sûr de vouloir mettre à jour {{artifact}} {{version}}\u202f?",
             "title": "Mettre à jour {{artifact}}"
         }
     },
@@ -253,7 +253,11 @@
         }
     },
     "Testing": {
-        "download": "Télécharger"
+        "download": "Télécharger",
+        "error": "",
+        "header": "",
+        "loading": "",
+        "start_download_toast": ""
     },
     "TitleView": {
         "decky_store_desc": "Ouvrir le magasin Decky",

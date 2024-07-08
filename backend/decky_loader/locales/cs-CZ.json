@@ -114,6 +114,7 @@
         "uninstall": "Odinstalovat",
         "update_all_one": "Aktualizovat 1 plugin",
         "update_all_few": "Aktualizovat {{count}} pluginů",
+        "update_all_many": "",
         "update_all_other": "Aktualizovat {{count}} pluginů",
         "update_to": "Aktualizovat na {{name}}"
     },
@@ -141,6 +142,7 @@
     "PluginView": {
         "hidden_one": "1 plugin je v tomto seznamu skrytý",
         "hidden_few": "{{count}} pluginů je v tomto seznamu skryto",
+        "hidden_many": "",
         "hidden_other": "{{count}} pluginů je v tomto seznamu skryto"
     },
     "RemoteDebugging": {
@@ -253,7 +255,11 @@
         }
     },
     "Testing": {
-        "download": "Stáhnout"
+        "download": "Stáhnout",
+        "error": "",
+        "header": "",
+        "loading": "",
+        "start_download_toast": ""
     },
     "TitleView": {
         "decky_store_desc": "Otevřít obchod Decky",

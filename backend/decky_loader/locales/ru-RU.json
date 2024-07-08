@@ -115,6 +115,7 @@
         "update_all_one": "Обновить {{count}} плагин",
         "update_all_few": "Обновить {{count}} плагинов",
         "update_all_many": "Обновить {{count}} плагинов",
+        "update_all_other": "",
         "update_to": "Обновить на {{name}}"
     },
     "PluginListLabel": {
@@ -141,7 +142,8 @@
     "PluginView": {
         "hidden_one": "{{count}} плагин скрыт из списка",
         "hidden_few": "{{count}} плагинов скрыт из списка",
-        "hidden_many": "{{count}} плагинов скрыт из списка"
+        "hidden_many": "{{count}} плагинов скрыт из списка",
+        "hidden_other": ""
     },
     "RemoteDebugging": {
         "remote_cef": {
@@ -253,7 +255,11 @@
         }
     },
     "Testing": {
-        "download": "Загрузить"
+        "download": "Загрузить",
+        "error": "",
+        "header": "",
+        "loading": "",
+        "start_download_toast": ""
     },
     "TitleView": {
         "decky_store_desc": "Открыть магазин Decky",

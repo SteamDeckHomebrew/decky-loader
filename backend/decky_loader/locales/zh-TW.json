@@ -192,9 +192,7 @@
     },
     "Store": {
         "download_progress_info": {
-            "increment_count": "",
-            "open_zip": "",
-            "start": ""
+            "open_zip": ""
         },
         "store_contrib": {
             "desc": "如果您想為 Decky 外掛程式商店做貢獻，請查看 GitHub 上的 SteamDeckHomebrew/decky-plugin-template 儲存庫。README 中提供了有關開發和發佈的資訊。",
@@ -245,7 +243,6 @@
     },
     "Testing": {
         "download": "下載",
-        "header": "",
         "start_download_toast": ""
     },
     "TitleView": {

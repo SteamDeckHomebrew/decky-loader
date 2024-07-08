@@ -72,43 +72,29 @@
         }
     },
     "PluginCard": {
-        "plugin_install": "",
         "plugin_version_label": ""
     },
     "PluginInstallModal": {
         "install": {
-            "button_processing": "",
             "title": ""
         },
         "reinstall": {
-            "button_idle": "",
             "desc": ""
         },
         "update": {
-            "button_idle": "",
             "desc": ""
         }
     },
     "PluginListIndex": {
-        "freeze": "",
         "no_plugin": "",
-        "reinstall": "",
         "show": "",
-        "uninstall": "",
         "update_all_one": "",
         "update_all_other": ""
     },
-    "PluginListLabel": {
-        "hidden": ""
-    },
     "PluginLoader": {
         "decky_update_available": "",
-        "plugin_error_uninstall": "",
         "plugin_load_error": {
             "toast": ""
-        },
-        "plugin_uninstall": {
-            "desc": ""
         },
         "plugin_update_one": "",
         "plugin_update_other": ""
@@ -117,101 +103,64 @@
         "hidden_one": "",
         "hidden_other": ""
     },
-    "RemoteDebugging": {
-        "remote_cef": {
-            "label": ""
-        }
-    },
     "SettingsDeveloperIndex": {
         "cef_console": {
             "desc": ""
         },
-        "header": "",
         "react_devtools": {
             "ip_label": ""
         },
         "third_party_plugins": {
-            "button_install": "",
-            "header": "",
-            "label_url": ""
+            "header": ""
         },
         "valve_internal": {
-            "desc1": "",
-            "label": ""
+            "desc1": ""
         }
     },
     "SettingsGeneralIndex": {
         "about": {
             "header": ""
         },
-        "developer_mode": {
-            "label": ""
-        },
         "notifications": {
-            "header": ""
-        },
-        "other": {
             "header": ""
         }
     },
     "SettingsIndex": {
-        "developer_title": "",
-        "plugins_title": ""
+        "developer_title": ""
     },
     "Store": {
         "download_progress_info": {
             "download_zip": "",
-            "installing_plugin": "",
-            "parse_zip": "",
-            "uninstalling_previous": ""
+            "parse_zip": ""
         },
         "store_contrib": {
             "label": ""
         },
-        "store_filter": {
-            "label_def": ""
-        },
         "store_sort": {
             "label": ""
         },
-        "store_source": {
-            "desc": ""
-        },
         "store_tabs": {
             "about": "",
-            "alph_desc": "",
-            "date_desc": "",
-            "downloads_desc": ""
+            "date_desc": ""
         },
-        "store_testing_cta": "",
-        "store_testing_warning": {
-            "label": ""
-        }
+        "store_testing_cta": ""
     },
     "StoreSelect": {
         "custom_store": {
             "url_label": ""
         },
         "store_channel": {
-            "default": "",
             "testing": ""
         }
     },
     "Testing": {
-        "error": "",
         "loading": ""
-    },
-    "TitleView": {
-        "decky_store_desc": ""
     },
     "Updater": {
         "decky_updates": "",
-        "patch_notes_desc": "",
         "updates": {
             "checking": "",
-            "install_button": "",
-            "lat_version": "",
-            "updating": ""
+            "lat_version": ""
         }
     }
 }

@@ -196,9 +196,7 @@
     },
     "Store": {
         "download_progress_info": {
-            "download_zip": "",
             "installing_plugin": "",
-            "parse_zip": "",
             "uninstalling_previous": ""
         },
         "store_contrib": {
@@ -224,14 +222,10 @@
             "about": "Относно",
             "alph_asce": "По азбучен ред (Я -> А)",
             "alph_desc": "По азбучен ред (А -> Я)",
-            "date_desc": "",
             "downloads_desc": "",
             "title": "Разглеждане"
         },
-        "store_testing_cta": "Помислете дали искате да тествате новите добавки, за да помогнете на екипа на Decky Loader!",
-        "store_testing_warning": {
-            "label": ""
-        }
+        "store_testing_cta": "Помислете дали искате да тествате новите добавки, за да помогнете на екипа на Decky Loader!"
     },
     "StoreSelect": {
         "custom_store": {
@@ -246,11 +240,7 @@
         }
     },
     "Testing": {
-        "error": "",
         "loading": ""
-    },
-    "TitleView": {
-        "decky_store_desc": ""
     },
     "Updater": {
         "decky_updates": "Обновления на Decky",

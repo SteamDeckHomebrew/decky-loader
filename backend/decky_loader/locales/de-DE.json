@@ -199,9 +199,7 @@
     },
     "Store": {
         "download_progress_info": {
-            "increment_count": "",
-            "open_zip": "",
-            "start": ""
+            "open_zip": ""
         },
         "store_contrib": {
             "desc": "Wenn du Erweiterungen im Decky Store veröffentlichen willst, besuche die SteamDeckHomebrew/decky-plugin-template Repository auf GitHub. Informationen rund um Entwicklung und Veröffentlichung findest du in der README.",
@@ -252,7 +250,6 @@
     },
     "Testing": {
         "download": "Download",
-        "header": "",
         "start_download_toast": ""
     },
     "TitleView": {

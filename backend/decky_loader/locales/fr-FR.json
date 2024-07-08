@@ -206,9 +206,7 @@
     },
     "Store": {
         "download_progress_info": {
-            "increment_count": "",
-            "open_zip": "",
-            "start": ""
+            "open_zip": ""
         },
         "store_contrib": {
             "desc": "Si vous souhaitez contribuer au Decky Plugin Store, consultez le dépôt SteamDeckHomebrew/decky-plugin-template sur GitHub. Des informations sur le développement et la distribution sont disponibles dans le fichier README.",
@@ -259,7 +257,6 @@
     },
     "Testing": {
         "download": "Télécharger",
-        "header": "",
         "start_download_toast": ""
     },
     "TitleView": {

@@ -14,19 +14,15 @@
     },
     "FilePickerError": {
         "errors": {
-            "file_not_found": "",
             "unknown": ""
         }
     },
     "FilePickerIndex": {
         "files": {
-            "all_files": "",
             "show_hidden": ""
         },
         "filter": {
-            "created_desc": "",
             "modified_desc": "",
-            "name_desc": "",
             "size_desc": ""
         },
         "folder": {
@@ -87,12 +83,10 @@
         }
     },
     "PluginListIndex": {
-        "hide": "",
         "no_plugin": "¡No hay plugins instalados!",
         "plugin_actions": "Acciones de plugin",
         "reinstall": "Reinstalar",
         "reload": "Recargar",
-        "unfreeze": "",
         "uninstall": "Desinstalar",
         "update_all_many": "Actualizar {{count}} plugins",
         "update_all_one": "Actualizar 1 plugin",
@@ -165,9 +159,6 @@
         "developer_mode": {
             "label": "Modo desarrollador"
         },
-        "notifications": {
-            "header": ""
-        },
         "other": {
             "header": "Otros"
         },
@@ -182,9 +173,7 @@
     },
     "Store": {
         "download_progress_info": {
-            "download_zip": "",
             "installing_plugin": "",
-            "parse_zip": "",
             "uninstalling_previous": ""
         },
         "store_contrib": {
@@ -210,14 +199,10 @@
             "about": "Información",
             "alph_asce": "Alfabéticamente (Z-A)",
             "alph_desc": "Alfabéticamente (A-Z)",
-            "date_desc": "",
             "downloads_desc": "",
             "title": "Navegar"
         },
-        "store_testing_cta": "¡Por favor considera probar plugins nuevos para ayudar al equipo de Decky Loader!",
-        "store_testing_warning": {
-            "label": ""
-        }
+        "store_testing_cta": "¡Por favor considera probar plugins nuevos para ayudar al equipo de Decky Loader!"
     },
     "StoreSelect": {
         "custom_store": {
@@ -232,11 +217,7 @@
         }
     },
     "Testing": {
-        "error": "",
         "loading": ""
-    },
-    "TitleView": {
-        "decky_store_desc": ""
     },
     "Updater": {
         "decky_updates": "Actualizaciones de Decky",

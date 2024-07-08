@@ -238,6 +238,15 @@
         "store_testing_warning": {
             "desc": "Вы можете использовать этот канал магазина для тестирования новейших версий плагинов. Не забудьте оставить отзыв на GitHub, чтобы плагин можно было обновить для всех пользователей.",
             "label": "Добро пожаловать в тестовый канал магазина"
+        },
+        "download_progress_info": {
+            "uninstalling_previous": "",
+            "installing_plugin": "",
+            "start": "",
+            "open_zip": "",
+            "download_zip": "",
+            "increment_count": "",
+            "parse_zip": ""
         }
     },
     "StoreSelect": {

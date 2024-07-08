@@ -78,20 +78,20 @@
         "plugin_version_label": ""
     },
     "PluginInstallModal": {
-        "no_hash": "",
-        "update": {
-            "button_processing": "",
-            "button_idle": "",
-            "desc": "",
-            "title": ""
-        },
         "install": {
             "button_idle": "",
             "button_processing": "",
             "desc": "",
             "title": ""
         },
+        "no_hash": "",
         "reinstall": {
+            "button_idle": "",
+            "button_processing": "",
+            "desc": "",
+            "title": ""
+        },
+        "update": {
             "button_idle": "",
             "button_processing": "",
             "desc": "",
@@ -116,21 +116,21 @@
         "hidden": ""
     },
     "PluginLoader": {
+        "decky_title": "",
+        "decky_update_available": "",
+        "error": "",
+        "plugin_error_uninstall": "",
+        "plugin_load_error": {
+            "message": "",
+            "toast": ""
+        },
         "plugin_uninstall": {
             "button": "",
             "desc": "",
             "title": ""
         },
         "plugin_update_one": "",
-        "plugin_update_other": "",
-        "error": "",
-        "decky_update_available": "",
-        "plugin_error_uninstall": "",
-        "plugin_load_error": {
-            "message": "",
-            "toast": ""
-        },
-        "decky_title": ""
+        "plugin_update_other": ""
     },
     "PluginView": {
         "hidden_one": "",
@@ -198,9 +198,22 @@
         "testing_title": ""
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "",
+            "increment_count": "",
+            "installing_plugin": "",
+            "open_zip": "",
+            "parse_zip": "",
+            "start": "",
+            "uninstalling_previous": ""
+        },
         "store_contrib": {
             "desc": "",
             "label": ""
+        },
+        "store_filter": {
+            "label": "",
+            "label_def": ""
         },
         "store_search": {
             "label": ""
@@ -227,19 +240,6 @@
         "store_testing_warning": {
             "desc": "",
             "label": ""
-        },
-        "store_filter": {
-            "label_def": "",
-            "label": ""
-        },
-        "download_progress_info": {
-            "start": "",
-            "open_zip": "",
-            "download_zip": "",
-            "increment_count": "",
-            "parse_zip": "",
-            "uninstalling_previous": "",
-            "installing_plugin": ""
         }
     },
     "StoreSelect": {
@@ -272,12 +272,12 @@
         "updates": {
             "check_button": "",
             "checking": "",
+            "cur_version": "",
             "install_button": "",
             "label": "",
             "lat_version": "",
             "reloading": "",
-            "updating": "",
-            "cur_version": ""
+            "updating": ""
         }
     }
 }

@@ -191,6 +191,15 @@
         "testing_title": "測試"
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "",
+            "increment_count": "",
+            "installing_plugin": "",
+            "open_zip": "",
+            "parse_zip": "",
+            "start": "",
+            "uninstalling_previous": ""
+        },
         "store_contrib": {
             "desc": "如果您想為 Decky 外掛程式商店做貢獻，請查看 GitHub 上的 SteamDeckHomebrew/decky-plugin-template 儲存庫。README 中提供了有關開發和發佈的資訊。",
             "label": "貢獻"
@@ -224,15 +233,6 @@
         "store_testing_warning": {
             "desc": "您可以使用此商店頻道來體驗測試外掛版本。請務必在 GitHub 上留下回饋，以便為所有用戶更新該外掛程式。",
             "label": "歡迎來到測試頻道"
-        },
-        "download_progress_info": {
-            "parse_zip": "",
-            "uninstalling_previous": "",
-            "installing_plugin": "",
-            "start": "",
-            "open_zip": "",
-            "download_zip": "",
-            "increment_count": ""
         }
     },
     "StoreSelect": {

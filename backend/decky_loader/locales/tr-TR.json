@@ -7,6 +7,11 @@
             "testing": "Test"
         }
     },
+    "Developer": {
+        "5secreload": "",
+        "disabling": "",
+        "enabling": ""
+    },
     "DropdownMultiselect": {
         "button": {
             "back": "Geri"
@@ -114,6 +119,7 @@
         "decky_title": "Decky",
         "decky_update_available": "{{tag_name}} güncellemesi mevcut!",
         "error": "Hata",
+        "plugin_error_uninstall": "",
         "plugin_load_error": {
             "message": "{{name}} eklentisi yüklenirken bir hata oluştu",
             "toast": "{{name}} yüklenirken hata oluştu"
@@ -124,8 +130,7 @@
             "title": "Kaldır {{name}}"
         },
         "plugin_update_one": "1 eklenti için güncelleme mevcut!",
-        "plugin_update_other": "{{count}} eklenti için güncelleme mevcut!",
-        "plugin_error_uninstall": ""
+        "plugin_update_other": "{{count}} eklenti için güncelleme mevcut!"
     },
     "PluginView": {
         "hidden_one": "1 eklenti bu listeden gizlenmiştir",
@@ -193,6 +198,15 @@
         "testing_title": ""
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "",
+            "increment_count": "",
+            "installing_plugin": "",
+            "open_zip": "",
+            "parse_zip": "",
+            "start": "",
+            "uninstalling_previous": ""
+        },
         "store_contrib": {
             "desc": "",
             "label": "Katkıda Bulunma"
@@ -226,15 +240,6 @@
         "store_testing_warning": {
             "desc": "",
             "label": ""
-        },
-        "download_progress_info": {
-            "installing_plugin": "",
-            "parse_zip": "",
-            "uninstalling_previous": "",
-            "start": "",
-            "open_zip": "",
-            "download_zip": "",
-            "increment_count": ""
         }
     },
     "StoreSelect": {
@@ -274,10 +279,5 @@
             "reloading": "",
             "updating": "Güncelleniyor"
         }
-    },
-    "Developer": {
-        "5secreload": "",
-        "disabling": "",
-        "enabling": ""
     }
 }

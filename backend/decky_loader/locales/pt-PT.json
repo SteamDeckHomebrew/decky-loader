@@ -205,6 +205,15 @@
         "testing_title": ""
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "",
+            "increment_count": "",
+            "installing_plugin": "",
+            "open_zip": "",
+            "parse_zip": "",
+            "start": "",
+            "uninstalling_previous": ""
+        },
         "store_contrib": {
             "desc": "Se queres contribuir com um novo plugin, vai ao repositório SteamDeckHomebrew/decky-plugin-template no GitHub. No README, podes encontrar mais informação sobre desenvolvimento e distribuição.",
             "label": "Contribuir"
@@ -238,15 +247,6 @@
         "store_testing_warning": {
             "desc": "Pode usar esta versão da loja para testar versões experimentais de plugins. Certifique-se de deixar feedback no GitHub para que o plugin possa ser atualizado para todos os utilizadores.",
             "label": "Bem-vindo ao Canal de Testes da Loja"
-        },
-        "download_progress_info": {
-            "start": "",
-            "open_zip": "",
-            "download_zip": "",
-            "increment_count": "",
-            "parse_zip": "",
-            "uninstalling_previous": "",
-            "installing_plugin": ""
         }
     },
     "StoreSelect": {

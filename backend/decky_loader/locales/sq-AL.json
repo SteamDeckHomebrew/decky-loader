@@ -7,6 +7,11 @@
             "testing": ""
         }
     },
+    "Developer": {
+        "5secreload": "",
+        "disabling": "",
+        "enabling": ""
+    },
     "DropdownMultiselect": {
         "button": {
             "back": ""
@@ -46,6 +51,15 @@
     },
     "MultiplePluginsInstallModal": {
         "confirm": "",
+        "description": {
+            "install": "",
+            "reinstall": "",
+            "update": ""
+        },
+        "ok_button": {
+            "idle": "",
+            "loading": ""
+        },
         "title": {
             "install_one": "",
             "install_other": "",
@@ -55,15 +69,6 @@
             "reinstall_other": "",
             "update_one": "",
             "update_other": ""
-        },
-        "description": {
-            "install": "",
-            "reinstall": "",
-            "update": ""
-        },
-        "ok_button": {
-            "idle": "",
-            "loading": ""
         }
     },
     "PluginCard": {
@@ -87,10 +92,10 @@
             "title": "Riinstalo {{artifact}}"
         },
         "update": {
+            "button_idle": "",
             "button_processing": "Përditësohet",
             "desc": "Je i sigurt a don ta përditësojsh {{artifact}} {{version}}?",
-            "title": "Përditëso {{artifact}}",
-            "button_idle": ""
+            "title": "Përditëso {{artifact}}"
         }
     },
     "PluginListIndex": {
@@ -112,20 +117,20 @@
     },
     "PluginLoader": {
         "decky_title": "Decky",
+        "decky_update_available": "",
         "error": "Gabim",
         "plugin_error_uninstall": "Ju lutem shko nga {{name}} në Decky menu nëse don ta çinstalojsh këtë shtese.",
+        "plugin_load_error": {
+            "message": "",
+            "toast": ""
+        },
         "plugin_uninstall": {
             "button": "Çinstalo",
             "desc": "Je i sigurt që don ta çinstalojsh {{name}}?",
             "title": "Çinstalo {{name}}"
         },
         "plugin_update_one": "",
-        "plugin_update_other": "",
-        "decky_update_available": "",
-        "plugin_load_error": {
-            "message": "",
-            "toast": ""
-        }
+        "plugin_update_other": ""
     },
     "PluginView": {
         "hidden_one": "",
@@ -193,6 +198,15 @@
         "testing_title": ""
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "",
+            "increment_count": "",
+            "installing_plugin": "",
+            "open_zip": "",
+            "parse_zip": "",
+            "start": "",
+            "uninstalling_previous": ""
+        },
         "store_contrib": {
             "desc": "",
             "label": "Kontributi"
@@ -226,15 +240,6 @@
         "store_testing_warning": {
             "desc": "",
             "label": ""
-        },
-        "download_progress_info": {
-            "open_zip": "",
-            "installing_plugin": "",
-            "parse_zip": "",
-            "download_zip": "",
-            "increment_count": "",
-            "start": "",
-            "uninstalling_previous": ""
         }
     },
     "StoreSelect": {
@@ -274,10 +279,5 @@
             "reloading": "",
             "updating": ""
         }
-    },
-    "Developer": {
-        "enabling": "",
-        "5secreload": "",
-        "disabling": ""
     }
 }

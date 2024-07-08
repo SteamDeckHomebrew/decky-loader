@@ -198,6 +198,15 @@
         "testing_title": ""
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "",
+            "increment_count": "",
+            "installing_plugin": "",
+            "open_zip": "",
+            "parse_zip": "",
+            "start": "",
+            "uninstalling_previous": ""
+        },
         "store_contrib": {
             "desc": "Ако искате да допринесете към магазина за добавки на Decky, разгледайте хранилището SteamDeckHomebrew/decky-plugin-template в GitHub. Може да намерите информация относно разработката и разпространението във файла README.",
             "label": "Допринасяне"
@@ -231,15 +240,6 @@
         "store_testing_warning": {
             "desc": "",
             "label": ""
-        },
-        "download_progress_info": {
-            "start": "",
-            "open_zip": "",
-            "download_zip": "",
-            "increment_count": "",
-            "parse_zip": "",
-            "uninstalling_previous": "",
-            "installing_plugin": ""
         }
     },
     "StoreSelect": {

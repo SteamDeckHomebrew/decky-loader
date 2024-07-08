@@ -198,6 +198,15 @@
         "testing_title": ""
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "",
+            "increment_count": "",
+            "installing_plugin": "",
+            "open_zip": "",
+            "parse_zip": "",
+            "start": "",
+            "uninstalling_previous": ""
+        },
         "store_contrib": {
             "desc": "Mikäli haluat julkaista Decky Plugin Storeen, tarkista GitHubin SteamDeckHomebrew/decky-plugin-template -esimerkkitietovarasto. Tietoa kehityksestä ja jakelusta löytyy README:stä.",
             "label": "Osallistuminen"
@@ -231,15 +240,6 @@
         "store_testing_warning": {
             "desc": "Voit käyttää tätä myymäläkanavaa testataksesi uusimpia laajennusversioita. Muista jättää palautetta GitHubissa, jotta laajennus voidaan päivittää kaikille käyttäjille.",
             "label": "Tervetuloa testausmyymälä-kanavalle"
-        },
-        "download_progress_info": {
-            "increment_count": "",
-            "parse_zip": "",
-            "download_zip": "",
-            "open_zip": "",
-            "start": "",
-            "uninstalling_previous": "",
-            "installing_plugin": ""
         }
     },
     "StoreSelect": {

@@ -115,6 +115,7 @@
         "update_all_one": "Оновити 1 плагін",
         "update_all_few": "Оновити {{count}} плагінів",
         "update_all_many": "Оновити {{count}} плагінів",
+        "update_all_other": "",
         "update_to": "Оновити {{name}}"
     },
     "PluginListLabel": {
@@ -141,7 +142,8 @@
     "PluginView": {
         "hidden_one": "{{count}} плагін приховано з цього списку",
         "hidden_few": "{{count}} плагінів приховано з цього списку",
-        "hidden_many": "{{count}} плагінів приховано з цього списку"
+        "hidden_many": "{{count}} плагінів приховано з цього списку",
+        "hidden_other": ""
     },
     "RemoteDebugging": {
         "remote_cef": {
@@ -205,6 +207,15 @@
         "testing_title": ""
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "",
+            "increment_count": "",
+            "installing_plugin": "",
+            "open_zip": "",
+            "parse_zip": "",
+            "start": "",
+            "uninstalling_previous": ""
+        },
         "store_contrib": {
             "desc": "Якщо ви бажаєте додати щось у Decky Plugin Store, завітайте у репозиторій SteamDeckHomebrew/decky-plugin-template на GitHub. Інформація про розробку та поширення доступна у README.",
             "label": "Зробити внесок"
@@ -238,15 +249,6 @@
         "store_testing_warning": {
             "desc": "",
             "label": ""
-        },
-        "download_progress_info": {
-            "uninstalling_previous": "",
-            "installing_plugin": "",
-            "increment_count": "",
-            "parse_zip": "",
-            "download_zip": "",
-            "start": "",
-            "open_zip": ""
         }
     },
     "StoreSelect": {

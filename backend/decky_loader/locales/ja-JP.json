@@ -191,6 +191,15 @@
         "testing_title": ""
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "",
+            "increment_count": "",
+            "installing_plugin": "",
+            "open_zip": "",
+            "parse_zip": "",
+            "start": "",
+            "uninstalling_previous": ""
+        },
         "store_contrib": {
             "desc": "Decky Plugin Storeに貢献したい場合は、GitHubのSteamDeckHomebrew/decky-plugin-templateリポジトリを確認してください。 開発と配布に関する情報は README で入手できます。",
             "label": "貢献"
@@ -224,15 +233,6 @@
         "store_testing_warning": {
             "desc": "このストアチャンネルを使用して、最先端のプラグイン バージョンをテストできます。 すべてのユーザーがプラグインを更新できるように、必ずGitHubにフィードバックを残してください。",
             "label": "テストストア チャンネルへようこそ"
-        },
-        "download_progress_info": {
-            "download_zip": "",
-            "increment_count": "",
-            "installing_plugin": "",
-            "open_zip": "",
-            "parse_zip": "",
-            "start": "",
-            "uninstalling_previous": ""
         }
     },
     "StoreSelect": {

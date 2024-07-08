@@ -114,6 +114,7 @@
         "uninstall": "Odinstalovat",
         "update_all_one": "Aktualizovat 1 plugin",
         "update_all_few": "Aktualizovat {{count}} pluginů",
+        "update_all_many": "",
         "update_all_other": "Aktualizovat {{count}} pluginů",
         "update_to": "Aktualizovat na {{name}}"
     },
@@ -141,6 +142,7 @@
     "PluginView": {
         "hidden_one": "1 plugin je v tomto seznamu skrytý",
         "hidden_few": "{{count}} pluginů je v tomto seznamu skryto",
+        "hidden_many": "",
         "hidden_other": "{{count}} pluginů je v tomto seznamu skryto"
     },
     "RemoteDebugging": {
@@ -205,6 +207,15 @@
         "testing_title": "Testování"
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "",
+            "increment_count": "",
+            "installing_plugin": "",
+            "open_zip": "",
+            "parse_zip": "",
+            "start": "",
+            "uninstalling_previous": ""
+        },
         "store_contrib": {
             "desc": "Pokud byste chtěli přispět do obchodu Decky Plugin Store, podívejte se na repozitář SteamDeckHomebrew/decky-plugin-template na GitHubu. Informace o vývoji a distribuci jsou k dispozici v README.",
             "label": "Přispívání"
@@ -238,15 +249,6 @@
         "store_testing_warning": {
             "desc": "Tento kanál obchodu můžete použít k testování nejnovějších verzí pluginů. Nezapomeňte zanechat zpětnou vazbu na GitHubu, aby bylo možné plugin aktualizovat pro všechny uživatele.",
             "label": "Vítejte na testovacím kanálu obchodu"
-        },
-        "download_progress_info": {
-            "download_zip": "",
-            "increment_count": "",
-            "start": "",
-            "open_zip": "",
-            "installing_plugin": "",
-            "parse_zip": "",
-            "uninstalling_previous": ""
         }
     },
     "StoreSelect": {

@@ -115,6 +115,7 @@
         "update_all_one": "Zaktualizuj 1 plugin",
         "update_all_few": "Zaktualizuj {{count}} pluginy",
         "update_all_many": "Zaktualizuj {{count}} pluginów",
+        "update_all_other": "",
         "update_to": "Zaktualizuj do {{name}}"
     },
     "PluginListLabel": {
@@ -141,7 +142,8 @@
     "PluginView": {
         "hidden_one": "1 plugin jest ukryty na tej liście",
         "hidden_few": "{{count}} pluginy jest ukryty na tej liście",
-        "hidden_many": "{{count}} pluginów jest ukryty na tej liście"
+        "hidden_many": "{{count}} pluginów jest ukryty na tej liście",
+        "hidden_other": ""
     },
     "RemoteDebugging": {
         "remote_cef": {
@@ -205,6 +207,15 @@
         "testing_title": "Testowanie"
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "",
+            "increment_count": "",
+            "installing_plugin": "",
+            "open_zip": "",
+            "parse_zip": "",
+            "start": "",
+            "uninstalling_previous": ""
+        },
         "store_contrib": {
             "desc": "Jeśli chcesz przyczynić się do rozwoju Decky Plugin Store, sprawdź repozytorium SteamDeckHomebrew/decky-plugin-template na GitHub. Informacje na temat rozwoju i dystrybucji są dostępne w pliku README.",
             "label": "Współtworzenie"
@@ -238,15 +249,6 @@
         "store_testing_warning": {
             "desc": "Możesz użyć tego kanału sklepu do testowania najnowszych wersji pluginów. Pamiętaj, aby zostawić opinię na GitHub, aby plugin mogła zostać zaktualizowana dla wszystkich użytkowników.",
             "label": "Witamy w Testowym Kanale Sklepu"
-        },
-        "download_progress_info": {
-            "start": "",
-            "open_zip": "",
-            "download_zip": "",
-            "increment_count": "",
-            "parse_zip": "",
-            "uninstalling_previous": "",
-            "installing_plugin": ""
         }
     },
     "StoreSelect": {

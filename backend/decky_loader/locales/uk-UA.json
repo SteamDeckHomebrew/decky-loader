@@ -13,9 +13,6 @@
         "enabling": "Увімкнення React DevTools"
     },
     "FilePickerIndex": {
-        "filter": {
-            "size_desc": ""
-        },
         "folder": {
             "select": "Використовувати цю папку"
         }

@@ -71,11 +71,6 @@
             "update_other": ""
         }
     },
-    "PluginInstallModal": {
-        "reinstall": {
-            "desc": ""
-        }
-    },
     "PluginListIndex": {
         "update_all_one": "",
         "update_all_other": ""
@@ -88,27 +83,14 @@
         "hidden_one": "",
         "hidden_other": ""
     },
-    "SettingsDeveloperIndex": {
-        "valve_internal": {
-            "desc1": ""
-        }
-    },
     "Store": {
         "store_contrib": {
-            "desc": ""
-        },
-        "store_testing_warning": {
             "desc": ""
         }
     },
     "StoreSelect": {
         "store_channel": {
             "testing": ""
-        }
-    },
-    "Updater": {
-        "updates": {
-            "reloading": ""
         }
     }
 }

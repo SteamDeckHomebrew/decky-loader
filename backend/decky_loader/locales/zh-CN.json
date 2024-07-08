@@ -191,15 +191,6 @@
         "testing_title": "测试"
     },
     "Store": {
-        "download_progress_info": {
-            "download_zip": "",
-            "increment_count": "",
-            "installing_plugin": "",
-            "open_zip": "",
-            "parse_zip": "",
-            "start": "",
-            "uninstalling_previous": ""
-        },
         "store_contrib": {
             "desc": "如果你想要提交你的插件到 Decky 插件商店，请访问 GitHub 上的 SteamDeckHomebrew/decky-plugin-template 存储库。有关开发和分发插件的信息，请查看 README 文件。",
             "label": "贡献"
@@ -248,11 +239,7 @@
         }
     },
     "Testing": {
-        "download": "下载",
-        "error": "",
-        "header": "",
-        "loading": "",
-        "start_download_toast": ""
+        "download": "下载"
     },
     "TitleView": {
         "decky_store_desc": "打开 Decky 商店",

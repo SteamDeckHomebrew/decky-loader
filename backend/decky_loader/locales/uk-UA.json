@@ -12,41 +12,9 @@
         "disabling": "Вимкнення React DevTools",
         "enabling": "Увімкнення React DevTools"
     },
-    "DropdownMultiselect": {
-        "button": {
-            "back": ""
-        }
-    },
-    "FilePickerError": {
-        "errors": {
-            "file_not_found": "",
-            "perm_denied": "",
-            "unknown": ""
-        }
-    },
     "FilePickerIndex": {
-        "file": {
-            "select": ""
-        },
-        "files": {
-            "all_files": "",
-            "file_type": "",
-            "show_hidden": ""
-        },
-        "filter": {
-            "created_asce": "",
-            "created_desc": "",
-            "modified_asce": "",
-            "modified_desc": "",
-            "name_asce": "",
-            "name_desc": "",
-            "size_asce": "",
-            "size_desc": ""
-        },
         "folder": {
-            "label": "",
-            "select": "Використовувати цю папку",
-            "show_more": ""
+            "select": "Використовувати цю папку"
         }
     },
     "MultiplePluginsInstallModal": {
@@ -103,19 +71,16 @@
         }
     },
     "PluginListIndex": {
-        "freeze": "",
         "hide": "Швидкий доступ: Приховати",
         "no_plugin": "Плагінів не встановлено!",
         "plugin_actions": "Дії плагінів",
         "reinstall": "Перевстановити",
         "reload": "Перезавантажити",
         "show": "Швидкий доступ: Показати",
-        "unfreeze": "",
         "uninstall": "Видалити",
         "update_all_few": "Оновити {{count}} плагінів",
         "update_all_many": "Оновити {{count}} плагінів",
         "update_all_one": "Оновити 1 плагін",
-        "update_all_other": "",
         "update_to": "Оновити {{name}}"
     },
     "PluginListLabel": {
@@ -142,8 +107,7 @@
     "PluginView": {
         "hidden_few": "{{count}} плагінів приховано з цього списку",
         "hidden_many": "{{count}} плагінів приховано з цього списку",
-        "hidden_one": "{{count}} плагін приховано з цього списку",
-        "hidden_other": ""
+        "hidden_one": "{{count}} плагін приховано з цього списку"
     },
     "RemoteDebugging": {
         "remote_cef": {
@@ -188,11 +152,6 @@
         "developer_mode": {
             "label": "Розробницький режим"
         },
-        "notifications": {
-            "decky_updates_label": "",
-            "header": "",
-            "plugin_updates_label": ""
-        },
         "other": {
             "header": "Інше"
         },
@@ -203,19 +162,9 @@
     "SettingsIndex": {
         "developer_title": "Розробник",
         "general_title": "Загальне",
-        "plugins_title": "Плагіни",
-        "testing_title": ""
+        "plugins_title": "Плагіни"
     },
     "Store": {
-        "download_progress_info": {
-            "download_zip": "",
-            "increment_count": "",
-            "installing_plugin": "",
-            "open_zip": "",
-            "parse_zip": "",
-            "start": "",
-            "uninstalling_previous": ""
-        },
         "store_contrib": {
             "desc": "Якщо ви бажаєте додати щось у Decky Plugin Store, завітайте у репозиторій SteamDeckHomebrew/decky-plugin-template на GitHub. Інформація про розробку та поширення доступна у README.",
             "label": "Зробити внесок"
@@ -239,17 +188,9 @@
             "about": "Інформація",
             "alph_asce": "За алфавітом (Z до A)",
             "alph_desc": "За алфавітом (A до Z)",
-            "date_asce": "",
-            "date_desc": "",
-            "downloads_asce": "",
-            "downloads_desc": "",
             "title": "Огляд"
         },
-        "store_testing_cta": "Розгляньте можливість тестування нових плагінів, щоб допомогти команді Decky Loader!",
-        "store_testing_warning": {
-            "desc": "",
-            "label": ""
-        }
+        "store_testing_cta": "Розгляньте можливість тестування нових плагінів, щоб допомогти команді Decky Loader!"
     },
     "StoreSelect": {
         "custom_store": {
@@ -262,17 +203,6 @@
             "label": "Канал магазину",
             "testing": "Тестування"
         }
-    },
-    "Testing": {
-        "download": "",
-        "error": "",
-        "header": "",
-        "loading": "",
-        "start_download_toast": ""
-    },
-    "TitleView": {
-        "decky_store_desc": "",
-        "settings_desc": ""
     },
     "Updater": {
         "decky_updates": "Оновлення Decky",

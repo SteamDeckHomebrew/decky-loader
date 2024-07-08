@@ -55,6 +55,15 @@
             "reinstall_other": "",
             "update_one": "",
             "update_other": ""
+        },
+        "description": {
+            "install": "",
+            "reinstall": "",
+            "update": ""
+        },
+        "ok_button": {
+            "idle": "",
+            "loading": ""
         }
     },
     "PluginCard": {
@@ -80,7 +89,8 @@
         "update": {
             "button_processing": "Përditësohet",
             "desc": "Je i sigurt a don ta përditësojsh {{artifact}} {{version}}?",
-            "title": "Përditëso {{artifact}}"
+            "title": "Përditëso {{artifact}}",
+            "button_idle": ""
         }
     },
     "PluginListIndex": {
@@ -110,7 +120,12 @@
             "title": "Çinstalo {{name}}"
         },
         "plugin_update_one": "",
-        "plugin_update_other": ""
+        "plugin_update_other": "",
+        "decky_update_available": "",
+        "plugin_load_error": {
+            "message": "",
+            "toast": ""
+        }
     },
     "PluginView": {
         "hidden_one": "",
@@ -211,6 +226,15 @@
         "store_testing_warning": {
             "desc": "",
             "label": ""
+        },
+        "download_progress_info": {
+            "open_zip": "",
+            "installing_plugin": "",
+            "parse_zip": "",
+            "download_zip": "",
+            "increment_count": "",
+            "start": "",
+            "uninstalling_previous": ""
         }
     },
     "StoreSelect": {
@@ -250,5 +274,10 @@
             "reloading": "",
             "updating": ""
         }
+    },
+    "Developer": {
+        "enabling": "",
+        "5secreload": "",
+        "disabling": ""
     }
 }

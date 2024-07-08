@@ -85,20 +85,20 @@
         "install": {
             "button_idle": "Installer",
             "button_processing": "Installation en cours",
-            "desc": "Êtes-vous sûr de vouloir installer {{artifact}} {{version}}\u202f?",
+            "desc": "Êtes-vous sûr de vouloir installer {{artifact}} {{version}} ?",
             "title": "Installer {{artifact}}"
         },
         "no_hash": "Ce plugin n'a pas de somme de contrôle, vous l'installez à vos risques et périls.",
         "reinstall": {
             "button_idle": "Réinstaller",
             "button_processing": "Réinstallation en cours",
-            "desc": "Êtes-vous sûr de vouloir réinstaller {{artifact}} {{version}}\u202f?",
+            "desc": "Êtes-vous sûr de vouloir réinstaller {{artifact}} {{version}} ?",
             "title": "Réinstaller {{artifact}}"
         },
         "update": {
             "button_idle": "Mettre à jour",
             "button_processing": "Mise à jour",
-            "desc": "Êtes-vous sûr de vouloir mettre à jour {{artifact}} {{version}}\u202f?",
+            "desc": "Êtes-vous sûr de vouloir mettre à jour {{artifact}} {{version}} ?",
             "title": "Mettre à jour {{artifact}}"
         }
     },
@@ -238,6 +238,15 @@
         "store_testing_warning": {
             "desc": "Vous pouvez utiliser cette chaîne de magasin pour tester des versions de plugins. Assurez-vous de laisser des commentaires sur GitHub afin que le plugin puisse être mis à jour pour tous les utilisateurs.",
             "label": "Bienvenue sur la chaîne du magasin de tests"
+        },
+        "download_progress_info": {
+            "increment_count": "",
+            "parse_zip": "",
+            "uninstalling_previous": "",
+            "download_zip": "",
+            "open_zip": "",
+            "start": "",
+            "installing_plugin": ""
         }
     },
     "StoreSelect": {

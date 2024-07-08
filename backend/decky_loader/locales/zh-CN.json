@@ -224,6 +224,15 @@
         "store_testing_warning": {
             "desc": "你可以使用该商店频道以体验最新版本的插件。 请在插件 Github 页面留言以使插件可以正式面向所有用户。",
             "label": "欢迎来到商店测试频道"
+        },
+        "download_progress_info": {
+            "parse_zip": "",
+            "start": "",
+            "uninstalling_previous": "",
+            "open_zip": "",
+            "download_zip": "",
+            "increment_count": "",
+            "installing_plugin": ""
         }
     },
     "StoreSelect": {

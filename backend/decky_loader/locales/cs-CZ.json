@@ -238,6 +238,15 @@
         "store_testing_warning": {
             "desc": "Tento kanál obchodu můžete použít k testování nejnovějších verzí pluginů. Nezapomeňte zanechat zpětnou vazbu na GitHubu, aby bylo možné plugin aktualizovat pro všechny uživatele.",
             "label": "Vítejte na testovacím kanálu obchodu"
+        },
+        "download_progress_info": {
+            "start": "",
+            "open_zip": "",
+            "download_zip": "",
+            "increment_count": "",
+            "installing_plugin": "",
+            "parse_zip": "",
+            "uninstalling_previous": ""
         }
     },
     "StoreSelect": {

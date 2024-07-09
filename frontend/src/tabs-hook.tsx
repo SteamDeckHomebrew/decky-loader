@@ -1,5 +1,5 @@
 // TabsHook for versions after the Desktop merge
-import { ErrorBoundary, Patch, QuickAccessTab, afterPatch, findInReactTree, getReactRoot, sleep } from '@decky/ui';
+import { ErrorBoundary, Patch, QuickAccessTab, afterPatch, createReactTreePatcher, findInReactTree, findModuleByExport, getReactRoot, setReactPatcherLoggingEnabled, sleep } from '@decky/ui';
 
 import { QuickAccessVisibleStateProvider } from './components/QuickAccessVisibleState';
 import Logger from './logger';
@@ -22,6 +22,7 @@ class TabsHook extends Logger {
   tabs: Tab[] = [];
   private qAMRoot?: any;
   private qamPatch?: Patch;
+  private cachedTabs: any;
 
   constructor() {
     super('TabsHook');
@@ -32,87 +33,37 @@ class TabsHook extends Logger {
   }
 
   init() {
-    const tree = getReactRoot(document.getElementById('root') as any);
-    let qAMRoot: any;
-    const findQAMRoot = (currentNode: any, iters: number): any => {
-      if (iters >= 80) {
-        // currently 67
-        return null;
-      }
-      if (
-        (typeof currentNode?.memoizedProps?.visible == 'boolean' ||
-          typeof currentNode?.memoizedProps?.active == 'boolean') &&
-        currentNode?.type?.toString()?.includes('QuickAccessMenuBrowserView')
-      ) {
-        this.log(`QAM root was found in ${iters} recursion cycles`);
-        return currentNode;
-      }
-      if (currentNode.child) {
-        let node = findQAMRoot(currentNode.child, iters + 1);
-        if (node !== null) return node;
-      }
-      if (currentNode.sibling) {
-        let node = findQAMRoot(currentNode.sibling, iters + 1);
-        if (node !== null) return node;
-      }
-      return null;
-    };
-    (async () => {
-      qAMRoot = findQAMRoot(tree, 0);
-      while (!qAMRoot) {
-        this.error(
-          'Failed to find QAM root node, reattempting in 5 seconds. A developer may need to increase the recursion limit.',
-        );
-        await sleep(5000);
-        qAMRoot = findQAMRoot(tree, 0);
-      }
-      this.qAMRoot = qAMRoot;
-      let patchedInnerQAM: any;
-      this.qamPatch = afterPatch(qAMRoot.return, 'type', (_: any, ret: any) => {
-        try {
-          if (!qAMRoot?.child) {
-            qAMRoot = findQAMRoot(tree, 0);
-            this.qAMRoot = qAMRoot;
-          }
-          if (qAMRoot?.child && !qAMRoot?.child?.type?.decky) {
-            afterPatch(qAMRoot.child, 'type', (_: any, ret: any) => {
-              try {
-                const qamTabsRenderer = findInReactTree(ret, (x) => x?.props?.onFocusNavDeactivated);
-                if (patchedInnerQAM) {
-                  qamTabsRenderer.type = patchedInnerQAM;
-                } else {
-                  afterPatch(qamTabsRenderer, 'type', (innerArgs: any, ret: any) => {
-                    const tabs = findInReactTree(ret, (x) => x?.props?.tabs);
-                    this.render(tabs.props.tabs, innerArgs[0].visible);
-                    return ret;
-                  });
-                  patchedInnerQAM = qamTabsRenderer.type;
-                }
-              } catch (e) {
-                this.error('Error patching QAM inner', e);
-              }
-              return ret;
-            });
-            qAMRoot.child.type.decky = true;
-            qAMRoot.child.alternate.type = qAMRoot.child.type;
-          }
-        } catch (e) {
-          this.error('Error patching QAM', e);
-        }
+    // TODO patch the "embedded" renderer in this module too (seems to be for VR? unsure)
+    const qamModule = findModuleByExport(e => e?.type?.toString()?.includes("QuickAccessMenuBrowserView"));
+    const qamRenderer = Object.values(qamModule).find((e: any) => e?.type?.toString()?.includes("QuickAccessMenuBrowserView"))
 
-        return ret;
-      });
+    const patchHandler = createReactTreePatcher([
+      tree => findInReactTree(tree, node => node?.props?.onFocusNavDeactivated)
+    ], (args, ret) => {
+      this.log("qam render", args, ret);
+      const tabs = findInReactTree(ret, (x) => x?.props?.tabs);
+      this.render(tabs.props.tabs, args[0].visible);
+      return ret;
+    }, "TabsHook");
 
-      if (qAMRoot.return.alternate) {
-        qAMRoot.return.alternate.type = qAMRoot.return.type;
+    this.qamPatch = afterPatch(qamRenderer, "type", patchHandler);
+
+    // Patch already rendered qam
+    const root = getReactRoot(document.getElementById('root') as any);
+    const qamNode = root && findInReactTree(root, (n: any) => n.elementType == qamRenderer); // need elementType, because type is actually mobx wrapper
+    if (qamNode) {
+      this.debug("qamNode", qamNode);
+      // Only affects this fiber node so we don't need to unpatch here
+      qamNode.type = qamNode.elementType.type;
+      if (qamNode?.alternate) {
+        qamNode.alternate.type = qamNode.type;
       }
-      this.log('Finished initial injection');
-    })();
+    }
   }
 
   deinit() {
     this.qamPatch?.unpatch();
-    this.qAMRoot.return.alternate.type = this.qAMRoot.return.type;
+    // this.qAMRoot.return.alternate.type = this.qAMRoot.return.type;
   }
 
   add(tab: Tab) {

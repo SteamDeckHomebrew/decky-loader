@@ -36,6 +36,7 @@ import Toaster from './toaster';
 import { getVersionInfo } from './updater';
 import { getSetting, setSetting } from './utils/settings';
 import TranslationHelper, { TranslationClass } from './utils/TranslationHelper';
+import AppHook from './app-hook';
 
 const StorePage = lazy(() => import('./components/store/Store'));
 const SettingsPage = lazy(() => import('./components/settings'));
@@ -81,8 +82,6 @@ class PluginLoader extends Logger {
 
   constructor() {
     super(PluginLoader.name);
-
-    this.errorBoundaryHook.init();
 
     DeckyBackend.addEventListener('loader/notify_updates', this.notifyUpdates.bind(this));
     DeckyBackend.addEventListener('loader/import_plugin', this.importPlugin.bind(this));

@@ -103,12 +103,14 @@
         }
     },
     "PluginListIndex": {
+        "freeze": "",
         "hide": "Acesso rápido: Ocultar",
         "no_plugin": "Nenhum plugin instalado!",
         "plugin_actions": "Operações de plugin",
         "reinstall": "Reinstalar",
         "reload": "Recarregar",
         "show": "Acesso rápido: Mostrar",
+        "unfreeze": "",
         "uninstall": "Desinstalar",
         "update_all_many": "Actualizar {{count}} plugins",
         "update_all_one": "Actualizar 1 plugin",
@@ -199,9 +201,19 @@
     "SettingsIndex": {
         "developer_title": "Programador",
         "general_title": "Geral",
-        "plugins_title": "Plugins"
+        "plugins_title": "Plugins",
+        "testing_title": ""
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "",
+            "increment_count": "",
+            "installing_plugin": "",
+            "open_zip": "",
+            "parse_zip": "",
+            "start": "",
+            "uninstalling_previous": ""
+        },
         "store_contrib": {
             "desc": "Se queres contribuir com um novo plugin, vai ao repositório SteamDeckHomebrew/decky-plugin-template no GitHub. No README, podes encontrar mais informação sobre desenvolvimento e distribuição.",
             "label": "Contribuir"
@@ -225,6 +237,10 @@
             "about": "Sobre",
             "alph_asce": "Alfabeticamente (Z-A)",
             "alph_desc": "Alfabeticamente (A-Z)",
+            "date_asce": "",
+            "date_desc": "",
+            "downloads_asce": "",
+            "downloads_desc": "",
             "title": "Navegar"
         },
         "store_testing_cta": "Testa novos plugins e ajuda a equipa do Decky Loader!",
@@ -244,6 +260,13 @@
             "label": "Canal de loja",
             "testing": "Em teste"
         }
+    },
+    "Testing": {
+        "download": "",
+        "error": "",
+        "header": "",
+        "loading": "",
+        "start_download_toast": ""
     },
     "TitleView": {
         "decky_store_desc": "Abrir a Loja Decky",

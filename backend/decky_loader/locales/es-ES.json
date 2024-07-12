@@ -13,9 +13,6 @@
         "enabling": "Activando DevTools de React"
     },
     "FilePickerIndex": {
-        "filter": {
-            "size_desc": ""
-        },
         "folder": {
             "select": "Usar esta carpeta"
         }

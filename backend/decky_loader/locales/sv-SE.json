@@ -71,11 +71,6 @@
             "update_other": ""
         }
     },
-    "PluginInstallModal": {
-        "update": {
-            "desc": ""
-        }
-    },
     "PluginListIndex": {
         "update_all_one": "",
         "update_all_other": ""
@@ -88,27 +83,14 @@
         "hidden_one": "",
         "hidden_other": ""
     },
-    "SettingsDeveloperIndex": {
-        "valve_internal": {
-            "desc1": ""
-        }
-    },
     "Store": {
         "download_progress_info": {
             "download_zip": ""
-        },
-        "store_tabs": {
-            "about": ""
         }
     },
     "StoreSelect": {
         "store_channel": {
             "testing": ""
-        }
-    },
-    "Updater": {
-        "updates": {
-            "lat_version": ""
         }
     }
 }

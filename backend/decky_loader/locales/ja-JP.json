@@ -95,12 +95,14 @@
         }
     },
     "PluginListIndex": {
+        "freeze": "",
         "hide": "クイックアクセス: 非表示",
         "no_plugin": "プラグインがインストールされていません!",
         "plugin_actions": "プラグインアクション",
         "reinstall": "再インストール",
         "reload": "再読み込み",
         "show": "クイックアクセス: 表示",
+        "unfreeze": "",
         "uninstall": "アンインストール",
         "update_all_other": "{{count}} 個のプラグインをアップデート",
         "update_to": "{{name}} を更新"
@@ -185,9 +187,19 @@
     "SettingsIndex": {
         "developer_title": "開発者",
         "general_title": "一般",
-        "plugins_title": "プラグイン"
+        "plugins_title": "プラグイン",
+        "testing_title": ""
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "",
+            "increment_count": "",
+            "installing_plugin": "",
+            "open_zip": "",
+            "parse_zip": "",
+            "start": "",
+            "uninstalling_previous": ""
+        },
         "store_contrib": {
             "desc": "Decky Plugin Storeに貢献したい場合は、GitHubのSteamDeckHomebrew/decky-plugin-templateリポジトリを確認してください。 開発と配布に関する情報は README で入手できます。",
             "label": "貢献"
@@ -211,6 +223,10 @@
             "about": "概要",
             "alph_asce": "アルファベット(Z to A)",
             "alph_desc": "アルファベット(A to Z)",
+            "date_asce": "",
+            "date_desc": "",
+            "downloads_asce": "",
+            "downloads_desc": "",
             "title": "閲覧"
         },
         "store_testing_cta": "Decky Loaderチームを支援するために、新しいプラグインのテストを検討してください!",
@@ -230,6 +246,13 @@
             "label": "ストアチャンネル",
             "testing": "テスト"
         }
+    },
+    "Testing": {
+        "download": "",
+        "error": "",
+        "header": "",
+        "loading": "",
+        "start_download_toast": ""
     },
     "TitleView": {
         "decky_store_desc": "Deckyストアを開く",

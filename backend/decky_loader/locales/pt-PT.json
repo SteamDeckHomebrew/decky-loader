@@ -202,9 +202,6 @@
         "plugins_title": "Plugins"
     },
     "Store": {
-        "download_progress_info": {
-            "uninstalling_previous": ""
-        },
         "store_contrib": {
             "desc": "Se queres contribuir com um novo plugin, vai ao repositório SteamDeckHomebrew/decky-plugin-template no GitHub. No README, podes encontrar mais informação sobre desenvolvimento e distribuição.",
             "label": "Contribuir"

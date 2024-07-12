@@ -195,9 +195,6 @@
         "plugins_title": "Επεκτάσεις"
     },
     "Store": {
-        "download_progress_info": {
-            "uninstalling_previous": ""
-        },
         "store_contrib": {
             "desc": "Αν θέλετε να συνεισφέρετε στο κατάστημα επεκτάσεων του Decky, τσεκάρετε το SteamDeckHomebrew/decky-plugin-template repository στο GitHub. Πληροφορίες σχετικά με τη δημιουργία και τη διανομή επεκτάσεων είναι διαθέσιμες στο README.",
             "label": "Συνεισφέροντας"

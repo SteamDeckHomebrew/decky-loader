@@ -5,11 +5,6 @@
             "stable": "Fiksuar"
         }
     },
-    "FilePickerError": {
-        "errors": {
-            "unknown": ""
-        }
-    },
     "FilePickerIndex": {
         "filter": {
             "modified_desc": ""
@@ -106,9 +101,6 @@
         "general_title": "Gjeneral"
     },
     "Store": {
-        "download_progress_info": {
-            "start": ""
-        },
         "store_contrib": {
             "label": "Kontributi"
         },
@@ -133,9 +125,6 @@
         "store_channel": {
             "label": "Kanali Dyqanit"
         }
-    },
-    "TitleView": {
-        "settings_desc": ""
     },
     "Updater": {
         "updates": {

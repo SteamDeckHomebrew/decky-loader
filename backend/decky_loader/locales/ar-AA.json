@@ -154,31 +154,19 @@
         }
     },
     "SettingsGeneralIndex": {
-        "about": {
-            "decky_version": ""
-        },
         "updates": {
             "header": ""
         }
     },
     "Store": {
-        "download_progress_info": {
-            "open_zip": ""
-        },
         "store_search": {
             "label": ""
-        },
-        "store_tabs": {
-            "date_asce": ""
         }
     },
     "StoreSelect": {
         "custom_store": {
             "label": ""
         }
-    },
-    "Testing": {
-        "header": ""
     },
     "Updater": {
         "updates": {

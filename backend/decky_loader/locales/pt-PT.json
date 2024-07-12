@@ -203,9 +203,7 @@
     },
     "Store": {
         "download_progress_info": {
-            "download_zip": "",
             "installing_plugin": "",
-            "parse_zip": "",
             "uninstalling_previous": ""
         },
         "store_contrib": {
@@ -231,7 +229,6 @@
             "about": "Sobre",
             "alph_asce": "Alfabeticamente (Z-A)",
             "alph_desc": "Alfabeticamente (A-Z)",
-            "date_desc": "",
             "downloads_desc": "",
             "title": "Navegar"
         },
@@ -254,7 +251,6 @@
         }
     },
     "Testing": {
-        "error": "",
         "loading": ""
     },
     "TitleView": {

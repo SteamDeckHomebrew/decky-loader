@@ -206,9 +206,7 @@
     },
     "Store": {
         "download_progress_info": {
-            "increment_count": "",
-            "open_zip": "",
-            "start": ""
+            "open_zip": ""
         },
         "store_contrib": {
             "desc": "Если вы хотите внести свой вклад в магазин плагинов Decky, проверьте репозиторий SteamDeckHomebrew/decky-plugin-template на GitHub. Информация о разработке и распространении доступна в README.",
@@ -259,7 +257,6 @@
     },
     "Testing": {
         "download": "Загрузить",
-        "header": "",
         "start_download_toast": ""
     },
     "TitleView": {

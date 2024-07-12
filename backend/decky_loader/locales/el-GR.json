@@ -196,9 +196,7 @@
     },
     "Store": {
         "download_progress_info": {
-            "download_zip": "",
             "installing_plugin": "",
-            "parse_zip": "",
             "uninstalling_previous": ""
         },
         "store_contrib": {
@@ -224,7 +222,6 @@
             "about": "Σχετικά",
             "alph_asce": "Αλφαβητικά (Ζ σε Α)",
             "alph_desc": "Αλφαβητικά (Α σε Ζ)",
-            "date_desc": "",
             "downloads_desc": "",
             "title": "Περιήγηση"
         },
@@ -247,7 +244,6 @@
         }
     },
     "Testing": {
-        "error": "",
         "loading": ""
     },
     "TitleView": {

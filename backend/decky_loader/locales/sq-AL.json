@@ -6,24 +6,19 @@
         }
     },
     "Developer": {
-        "5secreload": "",
         "enabling": ""
     },
     "FilePickerError": {
         "errors": {
-            "file_not_found": "",
             "unknown": ""
         }
     },
     "FilePickerIndex": {
         "files": {
-            "all_files": "",
             "show_hidden": ""
         },
         "filter": {
-            "created_desc": "",
             "modified_desc": "",
-            "name_desc": "",
             "size_desc": ""
         },
         "folder": {
@@ -31,12 +26,8 @@
         }
     },
     "MultiplePluginsInstallModal": {
-        "confirm": "",
         "description": {
             "reinstall": ""
-        },
-        "ok_button": {
-            "idle": ""
         },
         "title": {
             "install_one": "",
@@ -74,24 +65,16 @@
         }
     },
     "PluginListIndex": {
-        "hide": "",
         "no_plugin": "Nuk ka shtesa të instaluar!",
-        "reinstall": "",
         "show": "",
         "uninstall": "Çinstalo",
         "update_all_one": "",
         "update_all_other": ""
     },
-    "PluginListLabel": {
-        "hidden": ""
-    },
     "PluginLoader": {
         "decky_title": "Decky",
         "error": "Gabim",
         "plugin_error_uninstall": "Ju lutem shko nga {{name}} në Decky menu nëse don ta çinstalojsh këtë shtese.",
-        "plugin_load_error": {
-            "toast": ""
-        },
         "plugin_uninstall": {
             "button": "Çinstalo",
             "desc": "Je i sigurt që don ta çinstalojsh {{name}}?",
@@ -104,16 +87,10 @@
         "hidden_one": "",
         "hidden_other": ""
     },
-    "RemoteDebugging": {
-        "remote_cef": {
-            "label": ""
-        }
-    },
     "SettingsDeveloperIndex": {
         "cef_console": {
             "desc": ""
         },
-        "header": "",
         "react_devtools": {
             "ip_label": "IP",
             "label": "Aktivizo React DevTools"
@@ -125,21 +102,14 @@
             "label_desc": "URL",
             "label_url": "Instalo Shtes Nga URL",
             "label_zip": "Instalo Shtes Nga ZIP"
-        },
-        "valve_internal": {
-            "desc2": ""
         }
     },
     "SettingsGeneralIndex": {
         "about": {
             "decky_version": "Versioni Decky"
         },
-        "beta": {
-            "header": ""
-        },
         "notifications": {
-            "decky_updates_label": "",
-            "plugin_updates_label": ""
+            "decky_updates_label": ""
         },
         "other": {
             "header": "Të Tjera"
@@ -150,17 +120,14 @@
     },
     "SettingsIndex": {
         "developer_title": "Zhvillues",
-        "general_title": "Gjeneral",
-        "testing_title": ""
+        "general_title": "Gjeneral"
     },
     "Store": {
         "download_progress_info": {
             "increment_count": "",
-            "open_zip": "",
             "start": ""
         },
         "store_contrib": {
-            "desc": "",
             "label": "Kontributi"
         },
         "store_filter": {
@@ -174,17 +141,11 @@
             "label": "Rendit"
         },
         "store_source": {
-            "desc": "",
             "label": "Kodin Burimor"
         },
         "store_tabs": {
-            "alph_asce": "",
             "date_asce": "",
-            "downloads_asce": "",
             "title": "Kërko"
-        },
-        "store_testing_warning": {
-            "desc": ""
         }
     },
     "StoreSelect": {
@@ -192,24 +153,19 @@
             "label": ""
         },
         "store_channel": {
-            "custom": "",
             "label": "Kanali Dyqanit"
         }
     },
     "Testing": {
-        "download": "",
-        "header": "",
-        "start_download_toast": ""
+        "header": ""
     },
     "TitleView": {
         "settings_desc": ""
     },
     "Updater": {
-        "no_patch_notes_desc": "",
         "updates": {
             "check_button": "",
             "cur_version": "Versioni e tanishëme: {{ver}}",
-            "label": "",
             "reloading": ""
         }
     }

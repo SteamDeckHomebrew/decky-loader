@@ -2,15 +2,64 @@
     "BranchSelect": {
         "update_channel": {
             "label": "Kanali Përditësimet",
-            "stable": "Fiksuar"
+            "prerelease": "",
+            "stable": "Fiksuar",
+            "testing": ""
+        }
+    },
+    "Developer": {
+        "5secreload": "",
+        "disabling": "",
+        "enabling": ""
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": ""
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "",
+            "perm_denied": "",
+            "unknown": ""
         }
     },
     "FilePickerIndex": {
+        "file": {
+            "select": ""
+        },
+        "files": {
+            "all_files": "",
+            "file_type": "",
+            "show_hidden": ""
+        },
+        "filter": {
+            "created_asce": "",
+            "created_desc": "",
+            "modified_asce": "",
+            "modified_desc": "",
+            "name_asce": "",
+            "name_desc": "",
+            "size_asce": "",
+            "size_desc": ""
+        },
         "folder": {
-            "select": "Përdore këtë folder"
+            "label": "",
+            "select": "Përdore këtë folder",
+            "show_more": ""
         }
     },
     "MultiplePluginsInstallModal": {
+        "confirm": "",
+        "description": {
+            "install": "",
+            "reinstall": "",
+            "update": ""
+        },
+        "ok_button": {
+            "idle": "",
+            "loading": ""
+        },
         "title": {
             "install_one": "",
             "install_other": "",
@@ -23,7 +72,9 @@
         }
     },
     "PluginCard": {
+        "plugin_full_access": "",
         "plugin_install": "Instalo",
+        "plugin_no_desc": "",
         "plugin_version_label": "Versioni Shteses"
     },
     "PluginInstallModal": {
@@ -41,21 +92,38 @@
             "title": "Riinstalo {{artifact}}"
         },
         "update": {
+            "button_idle": "",
             "button_processing": "Përditësohet",
             "desc": "Je i sigurt a don ta përditësojsh {{artifact}} {{version}}?",
             "title": "Përditëso {{artifact}}"
         }
     },
     "PluginListIndex": {
+        "freeze": "",
+        "hide": "",
         "no_plugin": "Nuk ka shtesa të instaluar!",
+        "plugin_actions": "",
+        "reinstall": "",
+        "reload": "",
+        "show": "",
+        "unfreeze": "",
         "uninstall": "Çinstalo",
         "update_all_one": "",
-        "update_all_other": ""
+        "update_all_other": "",
+        "update_to": ""
+    },
+    "PluginListLabel": {
+        "hidden": ""
     },
     "PluginLoader": {
         "decky_title": "Decky",
+        "decky_update_available": "",
         "error": "Gabim",
         "plugin_error_uninstall": "Ju lutem shko nga {{name}} në Decky menu nëse don ta çinstalojsh këtë shtese.",
+        "plugin_load_error": {
+            "message": "",
+            "toast": ""
+        },
         "plugin_uninstall": {
             "button": "Çinstalo",
             "desc": "Je i sigurt që don ta çinstalojsh {{name}}?",
@@ -68,8 +136,21 @@
         "hidden_one": "",
         "hidden_other": ""
     },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "desc": "",
+            "label": ""
+        }
+    },
     "SettingsDeveloperIndex": {
+        "cef_console": {
+            "button": "",
+            "desc": "",
+            "label": ""
+        },
+        "header": "",
         "react_devtools": {
+            "desc": "",
             "ip_label": "IP",
             "label": "Aktivizo React DevTools"
         },
@@ -80,11 +161,28 @@
             "label_desc": "URL",
             "label_url": "Instalo Shtes Nga URL",
             "label_zip": "Instalo Shtes Nga ZIP"
+        },
+        "valve_internal": {
+            "desc1": "",
+            "desc2": "",
+            "label": ""
         }
     },
     "SettingsGeneralIndex": {
         "about": {
-            "decky_version": "Versioni Decky"
+            "decky_version": "Versioni Decky",
+            "header": ""
+        },
+        "beta": {
+            "header": ""
+        },
+        "developer_mode": {
+            "label": ""
+        },
+        "notifications": {
+            "decky_updates_label": "",
+            "header": "",
+            "plugin_updates_label": ""
         },
         "other": {
             "header": "Të Tjera"
@@ -95,10 +193,22 @@
     },
     "SettingsIndex": {
         "developer_title": "Zhvillues",
-        "general_title": "Gjeneral"
+        "general_title": "Gjeneral",
+        "plugins_title": "",
+        "testing_title": ""
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "",
+            "increment_count": "",
+            "installing_plugin": "",
+            "open_zip": "",
+            "parse_zip": "",
+            "start": "",
+            "uninstalling_previous": ""
+        },
         "store_contrib": {
+            "desc": "",
             "label": "Kontributi"
         },
         "store_filter": {
@@ -109,23 +219,65 @@
             "label": "Kërko"
         },
         "store_sort": {
-            "label": "Rendit"
+            "label": "Rendit",
+            "label_def": ""
         },
         "store_source": {
+            "desc": "",
             "label": "Kodin Burimor"
         },
         "store_tabs": {
+            "about": "",
+            "alph_asce": "",
+            "alph_desc": "",
+            "date_asce": "",
+            "date_desc": "",
+            "downloads_asce": "",
+            "downloads_desc": "",
             "title": "Kërko"
+        },
+        "store_testing_cta": "",
+        "store_testing_warning": {
+            "desc": "",
+            "label": ""
         }
     },
     "StoreSelect": {
+        "custom_store": {
+            "label": "",
+            "url_label": ""
+        },
         "store_channel": {
-            "label": "Kanali Dyqanit"
+            "custom": "",
+            "default": "",
+            "label": "Kanali Dyqanit",
+            "testing": ""
         }
     },
+    "Testing": {
+        "download": "",
+        "error": "",
+        "header": "",
+        "loading": "",
+        "start_download_toast": ""
+    },
+    "TitleView": {
+        "decky_store_desc": "",
+        "settings_desc": ""
+    },
     "Updater": {
+        "decky_updates": "",
+        "no_patch_notes_desc": "",
+        "patch_notes_desc": "",
         "updates": {
-            "cur_version": "Versioni e tanishëme: {{ver}}"
+            "check_button": "",
+            "checking": "",
+            "cur_version": "Versioni e tanishëme: {{ver}}",
+            "install_button": "",
+            "label": "",
+            "lat_version": "",
+            "reloading": "",
+            "updating": ""
         }
     }
 }

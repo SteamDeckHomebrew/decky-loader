@@ -170,7 +170,6 @@
     },
     "Store": {
         "download_progress_info": {
-            "installing_plugin": "",
             "uninstalling_previous": ""
         },
         "store_contrib": {
@@ -203,7 +202,6 @@
     },
     "StoreSelect": {
         "custom_store": {
-            "label": "",
             "url_label": "URL"
         },
         "store_channel": {
@@ -212,8 +210,7 @@
         }
     },
     "Testing": {
-        "download": "İndir",
-        "start_download_toast": ""
+        "download": "İndir"
     },
     "TitleView": {
         "decky_store_desc": "Decky Mağazasını Aç",

@@ -196,7 +196,6 @@
     },
     "Store": {
         "download_progress_info": {
-            "installing_plugin": "",
             "uninstalling_previous": ""
         },
         "store_contrib": {
@@ -222,7 +221,6 @@
             "about": "Tietoja",
             "alph_asce": "Aakkosjärjestyksessä (Z–A)",
             "alph_desc": "Aakkosjärjestyksessä (A–Z)",
-            "downloads_desc": "",
             "title": "Selaa"
         },
         "store_testing_cta": "Harkitse uusien lisäosien testaamista auttaaksesi Decky Loader -tiimiä!",
@@ -242,9 +240,6 @@
             "label": "Myymäläkanava",
             "testing": "Testaus"
         }
-    },
-    "Testing": {
-        "loading": ""
     },
     "TitleView": {
         "decky_store_desc": "Avaa Decky-myymälä",

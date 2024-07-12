@@ -12,17 +12,11 @@
         "disabling": "Вимкнення React DevTools",
         "enabling": "Увімкнення React DevTools"
     },
-    "FilePickerError": {
-        "errors": {
-            "unknown": ""
-        }
-    },
     "FilePickerIndex": {
         "files": {
             "show_hidden": ""
         },
         "filter": {
-            "modified_desc": "",
             "size_desc": ""
         },
         "folder": {
@@ -178,7 +172,6 @@
     },
     "Store": {
         "download_progress_info": {
-            "installing_plugin": "",
             "uninstalling_previous": ""
         },
         "store_contrib": {
@@ -204,7 +197,6 @@
             "about": "Інформація",
             "alph_asce": "За алфавітом (Z до A)",
             "alph_desc": "За алфавітом (A до Z)",
-            "downloads_desc": "",
             "title": "Огляд"
         },
         "store_testing_cta": "Розгляньте можливість тестування нових плагінів, щоб допомогти команді Decky Loader!"
@@ -220,9 +212,6 @@
             "label": "Канал магазину",
             "testing": "Тестування"
         }
-    },
-    "Testing": {
-        "loading": ""
     },
     "Updater": {
         "decky_updates": "Оновлення Decky",

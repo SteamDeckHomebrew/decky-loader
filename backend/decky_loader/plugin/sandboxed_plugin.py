@@ -13,7 +13,7 @@ from .messages import SocketResponseDict, SocketMessageType
 from ..localplatform.localsocket import LocalSocket
 from ..localplatform.localplatform import setgid, setuid, get_username, get_home_path
 from ..enums import UserType
-from .. import helpers, settings
+from .. import helpers, settings, injector # pyright: ignore [reportUnusedImport]
 
 from typing import List, TypeVar, Any
 

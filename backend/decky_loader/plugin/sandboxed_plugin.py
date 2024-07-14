@@ -13,7 +13,7 @@ from .messages import SocketResponseDict, SocketMessageType
 from ..localplatform.localsocket import LocalSocket
 from ..localplatform.localplatform import setgid, setuid, get_username, get_home_path
 from ..enums import UserType
-from .. import helpers
+from .. import helpers, settings
 
 from typing import List, TypeVar, Any
 
@@ -123,7 +123,7 @@ class SandboxedPlugin:
             get_event_loop().create_task(socket.setup_server())
         except:
             self.log.error("Failed to start " + self.name + "!\n" + format_exc())
-            exit(0)
+            sys.exit(0)
         try:
             get_event_loop().run_forever()
         except SystemExit:

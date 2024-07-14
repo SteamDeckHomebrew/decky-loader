@@ -90,7 +90,11 @@ def get_system_pythonpaths() -> list[str]:
         proc = subprocess.run(["python3" if localplatform.ON_LINUX else "python", "-c", "import sys; print('\\n'.join(x for x in sys.path if x))"],
         # TODO make this less insane
                               capture_output=True, user=localplatform.localplatform._get_user_id() if localplatform.ON_LINUX else None, env={} if localplatform.ON_LINUX else None) # pyright: ignore [reportPrivateUsage]
-        return [x.strip() for x in proc.stdout.decode().strip().split("\n")]
+        
+        proc.check_returncode()
+
+        versions = [x.strip() for x in proc.stdout.decode().strip().split("\n")]
+        return [x for x in versions if x and not x.isspace()]
     except Exception as e:
         logger.warn(f"Failed to execute get_system_pythonpaths(): {str(e)}")
         return []

@@ -1,9 +1,9 @@
+import sys
 from os import path, environ
 from signal import SIG_IGN, SIGINT, SIGTERM, getsignal, signal
 from importlib.util import module_from_spec, spec_from_file_location
 from json import dumps, loads
 from logging import getLogger
-from sys import exit, path as syspath, modules as sysmodules
 from traceback import format_exc
 from asyncio import (get_event_loop, new_event_loop,
                      set_event_loop)
@@ -78,12 +78,12 @@ class SandboxedPlugin:
             environ["DECKY_PLUGIN_AUTHOR"] = self.author
 
             # append the plugin's `py_modules` to the recognized python paths
-            syspath.append(path.join(environ["DECKY_PLUGIN_DIR"], "py_modules"))
+            sys.path.append(path.join(environ["DECKY_PLUGIN_DIR"], "py_modules"))
 
             #TODO: FIX IN A LESS CURSED WAY
-            keys = [key for key in sysmodules if key.startswith("decky_loader.")]
+            keys = [key for key in sys.modules if key.startswith("decky_loader.")]
             for key in keys:
-                sysmodules[key.replace("decky_loader.", "")] = sysmodules[key]
+                sys.modules[key.replace("decky_loader.", "")] = sys.modules[key]
             
             from .imports import decky
             async def emit(event: str, *args: Any) -> None:
@@ -95,9 +95,9 @@ class SandboxedPlugin:
             # copy the docstring over so we don't have to duplicate it
             emit.__doc__ = decky.emit.__doc__
             decky.emit = emit
-            sysmodules["decky"] = decky
+            sys.modules["decky"] = decky
             # provided for compatibility
-            sysmodules["decky_plugin"] = decky
+            sys.modules["decky_plugin"] = decky
 
             spec = spec_from_file_location("_", self.file)
             assert spec is not None
@@ -180,7 +180,7 @@ class SandboxedPlugin:
 
             loop = get_event_loop()
             loop.call_soon_threadsafe(loop.stop)
-            exit(0)
+            sys.exit(0)
 
         d: SocketResponseDict = {"type": SocketMessageType.RESPONSE, "res": None, "success": True, "id": data["id"]}
         try:

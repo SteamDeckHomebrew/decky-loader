@@ -7,14 +7,16 @@ from .localplatform.localplatform import (chmod, chown, service_stop, service_st
                             get_privileged_path, restart_webhelper)
 if hasattr(sys, '_MEIPASS'):
     chmod(sys._MEIPASS, 755) # type: ignore
+    
 # Full imports
+import multiprocessing
+multiprocessing.freeze_support()
 from asyncio import AbstractEventLoop, CancelledError, Task, all_tasks, current_task, gather, new_event_loop, set_event_loop, sleep
 from logging import basicConfig, getLogger
 from os import path
 from traceback import format_exc
-import multiprocessing
-
 import aiohttp_cors # pyright: ignore [reportMissingTypeStubs]
+
 # Partial imports
 from aiohttp import client_exceptions
 from aiohttp.web import Application, Response, Request, get, run_app, static # pyright: ignore [reportUnknownVariableType]
@@ -223,9 +225,6 @@ def main():
         # Fix windows/flask not recognising that .js means 'application/javascript'
         import mimetypes
         mimetypes.add_type('application/javascript', '.js')
-
-        # Required for multiprocessing support in frozen files
-        multiprocessing.freeze_support()
     else:
         if get_effective_user_id() != 0:
             logger.warning(f"decky is running as an unprivileged user, this is not officially supported and may cause issues")

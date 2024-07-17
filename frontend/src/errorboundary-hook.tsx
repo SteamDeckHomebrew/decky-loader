@@ -1,4 +1,4 @@
-import { Patch, callOriginal, findModuleExport, replacePatch } from '@decky/ui';
+import { ErrorBoundary, Patch, callOriginal, findModuleExport, replacePatch } from '@decky/ui';
 
 import DeckyErrorBoundary from './components/DeckyErrorBoundary';
 import Logger from './logger';
@@ -70,15 +70,12 @@ class ErrorBoundaryHook extends Logger {
       return shouldReport ? callOriginal : true;
     });
 
-    const ValveErrorBoundary = findModuleExport(
-      (e) => e.InstallErrorReportingStore && e?.prototype?.Reset && e?.prototype?.componentDidCatch,
-    );
-    if (!ValveErrorBoundary) {
+    if (!ErrorBoundary) {
       this.error('could not find ValveErrorBoundary');
       return;
     }
 
-    this.errorBoundaryPatch = replacePatch(ValveErrorBoundary.prototype, 'render', function (this: any) {
+    this.errorBoundaryPatch = replacePatch(ErrorBoundary.prototype, 'render', function (this: any) {
       if (this.state.error) {
         const store = Object.getPrototypeOf(this)?.constructor?.sm_ErrorReportingStore || errorReportingStore;
         return (

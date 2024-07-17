@@ -37,6 +37,11 @@ export default defineConfig({
     visualizer(),
   ],
   preserveEntrySignatures: false,
+  treeshake: {
+    // Assume all external modules have imports with side effects (the default) while allowing decky libraries to treeshake
+    pureExternalImports: true,
+    preset: 'smallest'
+  },
   output: {
     dir: '../backend/decky_loader/static',
     format: 'esm',

@@ -47,7 +47,7 @@
     }
   },
   "dependencies": {
-    "@decky/ui": "^4.2.2",
+    "@decky/ui": "^4.3.1",
     "filesize": "^10.1.2",
     "i18next": "^23.11.5",
     "i18next-http-backend": "^2.5.2",

@@ -36,7 +36,6 @@ import Toaster from './toaster';
 import { getVersionInfo } from './updater';
 import { getSetting, setSetting } from './utils/settings';
 import TranslationHelper, { TranslationClass } from './utils/TranslationHelper';
-import AppHook from './app-hook';
 
 const StorePage = lazy(() => import('./components/store/Store'));
 const SettingsPage = lazy(() => import('./components/settings'));

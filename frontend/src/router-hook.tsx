@@ -1,5 +1,5 @@
-import { ErrorBoundary, Focusable, Patch, afterPatch, beforePatch, findInReactTree, findModuleByExport, findModuleExport, getReactRoot, sleep } from '@decky/ui';
-import { FC, ReactElement, ReactNode, cloneElement, createElement, memo } from 'react';
+import { ErrorBoundary, Patch, afterPatch, findInReactTree, getReactRoot, sleep } from '@decky/ui';
+import { FC, ReactElement, ReactNode, cloneElement, createElement } from 'react';
 import type { Route } from 'react-router';
 
 import {
@@ -32,6 +32,7 @@ class RouterHook extends Logger {
   private DeckyWrapper = this.routerWrapper.bind(this);
   private DeckyGlobalComponentsWrapper = this.globalComponentsWrapper.bind(this);
   private toReplace = new Map<string, ReactNode>();
+  private routerPatch?: Patch;
   public routes?: any[];
 
   constructor() {
@@ -41,22 +42,25 @@ class RouterHook extends Logger {
     window.__ROUTER_HOOK_INSTANCE?.deinit?.();
     window.__ROUTER_HOOK_INSTANCE = this;
 
-    (async()=> {
+    (async () => {
       const root = getReactRoot(document.getElementById('root') as any);
       // TODO be more specific, this is horrible and very very slow
-      const findRouterNode = () =>findInReactTree(root, node => typeof node?.pendingProps?.loggedIn == "undefined" && node?.type?.toString().includes("Settings.Root()"));
+      const findRouterNode = () =>
+        findInReactTree(
+          root,
+          (node) =>
+            typeof node?.pendingProps?.loggedIn == 'undefined' && node?.type?.toString().includes('Settings.Root()'),
+        );
       let routerNode = findRouterNode();
       while (!routerNode) {
-        this.warn(
-          'Failed to find Router node, reattempting in 5 seconds.',
-        );
+        this.warn('Failed to find Router node, reattempting in 5 seconds.');
         await sleep(5000);
         routerNode = findRouterNode();
       }
       if (routerNode) {
-        this.debug("routerNode", routerNode);
+        this.debug('routerNode', routerNode);
         // Patch the component globally
-        afterPatch(routerNode.elementType, "type", this.handleRouterRender.bind(this));
+        this.routerPatch = afterPatch(routerNode.elementType, 'type', this.handleRouterRender.bind(this));
         // Swap out the current instance
         routerNode.type = routerNode.elementType.type;
         if (routerNode?.alternate) {
@@ -91,14 +95,14 @@ class RouterHook extends Logger {
     return returnVal;
   }
 
-  private globalComponentsWrapper () {
+  private globalComponentsWrapper() {
     const { components } = useDeckyGlobalComponentsState();
     if (this.renderedComponents.length != components.size) {
       this.debug('Rerendering global components');
       this.renderedComponents = Array.from(components.values()).map((GComponent) => <GComponent />);
     }
     return <>{this.renderedComponents}</>;
-  };
+  }
 
   private routerWrapper({ children }: { children: ReactElement }) {
     // Used to store the new replicated routes we create to allow routes to be unpatched.
@@ -106,7 +110,7 @@ class RouterHook extends Logger {
     const { routes, routePatches } = useDeckyRouterState();
     // TODO make more redundant
     if (!children?.props?.children?.[0]?.props?.children) {
-      console.log("routerWrapper wrong component?", children)
+      console.log('routerWrapper wrong component?', children);
       return children;
     }
     const mainRouteList = children.props.children[0].props.children;
@@ -116,7 +120,7 @@ class RouterHook extends Logger {
 
     this.debug('Rerendered routes list');
     return children;
-  };
+  }
 
   private processList(
     routeList: any[],
@@ -167,7 +171,7 @@ class RouterHook extends Logger {
         });
       }
     });
-  };
+  }
 
   addRoute(path: string, component: RouterEntry['component'], props: RouterEntry['props'] = {}) {
     this.routerState.addRoute(path, component, props);
@@ -194,8 +198,7 @@ class RouterHook extends Logger {
   }
 
   deinit() {
-    // this.wrapperPatch.unpatch();
-    // this.routerPatch?.unpatch();
+    this.routerPatch?.unpatch();
   }
 }
 

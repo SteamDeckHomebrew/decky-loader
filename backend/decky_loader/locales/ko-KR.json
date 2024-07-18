@@ -191,6 +191,15 @@
         "testing_title": "테스트"
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "플러그인 다운로드 중",
+            "increment_count": "다운로드 횟수 증가",
+            "installing_plugin": "플러그인 설치 중",
+            "open_zip": "압축 파일 여는 중",
+            "parse_zip": "압축 파일 파싱 중",
+            "start": "초기화 중",
+            "uninstalling_previous": "이전 복사본 설치 제거 중"
+        },
         "store_contrib": {
             "desc": "Decky 플러그인 스토어에 기여하고 싶다면 SteamDeckHomebrew/decky-plugin-template Github 저장소를 확인하세요. 개발 및 배포에 대한 정보는 README에서 확인할 수 있습니다.",
             "label": "기여하기"
@@ -239,7 +248,11 @@
         }
     },
     "Testing": {
-        "download": "다운로드"
+        "download": "다운로드",
+        "error": "PR 설치 오류",
+        "header": "다음 버전의 Decky Loader는 서드 파티 PR를 사용하여 빌드 되엇습니다. Decky Loader 팀은 해당 버전의 작동 여부와 안전성을 확인하지 않았으며 최신 버전이 아닐 수 도 있습니다.",
+        "loading": "열린 PR 로딩 중...",
+        "start_download_toast": "PR #{{id}} 다운로드 중"
     },
     "TitleView": {
         "decky_store_desc": "Decky 스토어 열기",

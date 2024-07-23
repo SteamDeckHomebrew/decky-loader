@@ -110,6 +110,7 @@
         "reinstall": "Reinstalar",
         "reload": "Recarregar",
         "show": "Acesso Rápido: Mostrar",
+        "unfreeze": "Permitir atualizações",
         "uninstall": "Desinstalar",
         "update_all_many": "Atualizar {{count}} plugins",
         "update_all_one": "Atualizar 1 plugin",
@@ -200,9 +201,19 @@
     "SettingsIndex": {
         "developer_title": "Desenvolvedor",
         "general_title": "Geral",
-        "plugins_title": "Plugins"
+        "plugins_title": "Plugins",
+        "testing_title": "Testando"
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "Baixando Plugin",
+            "increment_count": "Aumentando contagem de downloads",
+            "installing_plugin": "Instalando Plugin",
+            "open_zip": "Abrindo arquivo Zip",
+            "parse_zip": "Analizando Arquivo ZIP",
+            "start": "Iniciando",
+            "uninstalling_previous": "Desinstalando Cópias Anteriores"
+        },
         "store_contrib": {
             "desc": "Se você deseja contribuir para a Loja de Plugins para o Decky, confira o repositório SteamDeckHomebrew/decky-plugin-template no GitHub. Informações sobre o desenvolvimento e distribuição estão disponíveis no README.",
             "label": "Contribuindo"
@@ -226,6 +237,10 @@
             "about": "Sobre",
             "alph_asce": "Alfabética (Z - A)",
             "alph_desc": "Alfabética (A - Z)",
+            "date_asce": "Antigos Primeiro",
+            "date_desc": "Novos Primeiro",
+            "downloads_asce": "Menos Baixados Primeiro",
+            "downloads_desc": "Mais Baixados Primeiro",
             "title": "Navegar"
         },
         "store_testing_cta": "Por favor, considere testar os novos plugins para ajudar o time do Decky Loader!",
@@ -245,6 +260,13 @@
             "label": "Canal da Loja",
             "testing": "Em Teste"
         }
+    },
+    "Testing": {
+        "download": "Download",
+        "error": "Erro ao instalar PR",
+        "header": "As seguintes versões do Decky Loader são construídas a partir de Pull Requests de terceiros. A equipe do Decky Loader não verificou sua funcionalidade ou segurança, e elas podem estar desatualizadas.",
+        "loading": "Carregando Pull Requests abertos...",
+        "start_download_toast": "Baixando PR #{{id}}"
     },
     "TitleView": {
         "decky_store_desc": "Abrir Loja Decky",

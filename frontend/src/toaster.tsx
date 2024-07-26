@@ -32,16 +32,17 @@ class Toaster extends Logger {
     this.init();
   }
 
+  // TODO maybe move to constructor lol
   async init() {
-    const ToastRenderer = findModuleExport((e) => e?.toString()?.includes(`controller:"notification",method:`));
-    this.debug('toastrenderer', ToastRenderer);
+    const ValveToastRenderer = findModuleExport((e) => e?.toString()?.includes(`controller:"notification",method:`));
     // TODO find a way to undo this if possible?
-    const patchedRenderer = injectFCTrampoline(ToastRenderer);
+    const patchedRenderer = injectFCTrampoline(ValveToastRenderer);
     this.toastPatch = replacePatch(patchedRenderer, 'component', (args: any[]) => {
       this.debug('render toast', args);
       if (args?.[0]?.group?.decky || args?.[0]?.group?.notifications?.[0]?.decky) {
-        this.debug('rendering decky toast');
-        return args[0].group.notifications.map((notification: any) => <Toast toast={notification.data} />);
+        return args[0].group.notifications.map((notification: any) => (
+          <Toast toast={notification.data} location={args?.[0]?.location} />
+        ));
       }
       return callOriginal;
     });
@@ -65,6 +66,7 @@ class Toaster extends Logger {
     if (toast.sound === undefined) toast.sound = 6;
     if (toast.playSound === undefined) toast.playSound = true;
     if (toast.showToast === undefined) toast.showToast = true;
+    if (toast.timestamp === undefined) toast.timestamp = new Date();
     if (
       (window.settingsStore.settings.bDisableAllToasts && !toast.critical) ||
       (window.settingsStore.settings.bDisableToastsInGame &&
@@ -79,6 +81,7 @@ class Toaster extends Logger {
           notifications: [toast],
         };
         tray.unshift(group);
+        // TODO do we need to handle expiration?
       }
       const info = {
         showToast: toast.showToast,

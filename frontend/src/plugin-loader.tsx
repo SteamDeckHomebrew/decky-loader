@@ -12,6 +12,7 @@ import {
 import { FC, lazy } from 'react';
 import { FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
+import DeckyIcon from './components/DeckyIcon';
 import { DeckyState, DeckyStateContextProvider, UserInfo, useDeckyState } from './components/DeckyState';
 import { File, FileSelectionType } from './components/modals/filepicker';
 import { deinitFilepickerPatches, initFilepickerPatches } from './components/modals/filepicker/patches';
@@ -218,6 +219,7 @@ class PluginLoader extends Logger {
               i18nArgs={{ tag_name: versionInfo?.remote?.tag_name }}
             />
           ),
+          icon: <DeckyIcon />,
           onClick: () => Router.Navigate('/decky/settings'),
         });
       }
@@ -246,6 +248,7 @@ class PluginLoader extends Logger {
             i18nArgs={{ count: updates.size }}
           />
         ),
+        icon: <DeckyIcon />,
         onClick: () => Router.Navigate('/decky/settings/plugins'),
       });
     }

@@ -58,7 +58,6 @@ class RouterHook extends Logger {
         routerNode = findRouterNode();
       }
       if (routerNode) {
-        this.debug('routerNode', routerNode);
         // Patch the component globally
         this.routerPatch = afterPatch(routerNode.elementType, 'type', this.handleRouterRender.bind(this));
         // Swap out the current instance
@@ -110,7 +109,7 @@ class RouterHook extends Logger {
     const { routes, routePatches } = useDeckyRouterState();
     // TODO make more redundant
     if (!children?.props?.children?.[0]?.props?.children) {
-      console.log('routerWrapper wrong component?', children);
+      this.debug('routerWrapper wrong component?', children);
       return children;
     }
     const mainRouteList = children.props.children[0].props.children;

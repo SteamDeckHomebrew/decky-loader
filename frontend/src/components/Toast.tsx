@@ -78,7 +78,9 @@ const GamepadUIQAMToast: FC<ToastProps> = memo(({ toast }) => {
               </div>
             )}
           </div>
-          <div className={templateClasses.StandardNotificationDescription}>{toast.title}</div>
+          <div className={templateClasses.StandardNotificationDescription}>
+            {toast.fullTemplateTitle || toast.title}
+          </div>
           <div className={templateClasses.StandardNotificationSubText}>{toast.body}</div>
         </div>
         {/* TODO support NewIndicator */}

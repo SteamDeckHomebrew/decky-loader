@@ -3,7 +3,7 @@ import {
   Export,
   Patch,
   afterPatch,
-  findClass,
+  findClassByName,
   findInReactTree,
   findModuleExport,
   getReactRoot,
@@ -49,10 +49,10 @@ class Toaster extends Logger {
     // ));
     let instance: any;
     const tree = getReactRoot(document.getElementById('root') as any);
-    const toasterClass1 = findClass('GamepadToastPlaceholder');
-    const toasterClass2 = findClass('ToastPlaceholder');
-    const toasterClass3 = findClass('ToastPopup');
-    const toasterClass4 = findClass('GamepadToastPopup');
+    const toasterClass1 = findClassByName('GamepadToastPlaceholder');
+    const toasterClass2 = findClassByName('ToastPlaceholder');
+    const toasterClass3 = findClassByName('ToastPopup');
+    const toasterClass4 = findClassByName('GamepadToastPopup');
     const findToasterRoot = (currentNode: any, iters: number): any => {
       if (iters >= 80) {
         // currently 66

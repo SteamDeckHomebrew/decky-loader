@@ -20,6 +20,7 @@ import PluginInstallModal from './components/modals/PluginInstallModal';
 import PluginUninstallModal from './components/modals/PluginUninstallModal';
 import NotificationBadge from './components/NotificationBadge';
 import PluginView from './components/PluginView';
+import { useQuickAccessVisible } from './components/QuickAccessVisibleState';
 import WithSuspense from './components/WithSuspense';
 import ErrorBoundaryHook from './errorboundary-hook';
 import { FrozenPluginService } from './frozen-plugins-service';
@@ -567,11 +568,11 @@ class PluginLoader extends Logger {
   }
 
   initPluginBackendAPI() {
-    // Things will break *very* badly if plugin code touches this outside of @decky/backend, so lets make that clear.
+    // Things will break *very* badly if plugin code touches this outside of @decky/api, so lets make that clear.
     window.__DECKY_SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED_deckyLoaderAPIInit = {
       connect: (version: number, pluginName: string) => {
-        if (version < 1 || version > 1) {
-          throw new Error(`Plugin ${pluginName} requested unsupported backend api version ${version}.`);
+        if (version < 1 || version > 2) {
+          console.warn(`Plugin ${pluginName} requested unsupported api version ${version}.`);
         }
 
         const eventListeners: listenerMap = new Map();
@@ -611,7 +612,13 @@ class PluginLoader extends Logger {
           removeCssFromTab: DeckyBackend.callable<[tab: string, cssId: string]>('utilities/remove_css_from_tab'),
           routerHook: this.routerHook,
           toaster: this.toaster,
-        };
+          _version: 1,
+        } as any;
+
+        if (version >= 2) {
+          backendAPI._version = 2;
+          backendAPI.useQuickAccessVisible = useQuickAccessVisible;
+        }
 
         this.debug(`${pluginName} connected to loader API.`);
         return backendAPI;

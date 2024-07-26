@@ -49,7 +49,6 @@ class TabsHook extends Logger {
     const patchHandler = createReactTreePatcher(
       [(tree) => findInReactTree(tree, (node) => node?.props?.onFocusNavDeactivated)],
       (args, ret) => {
-        this.log('qam render', args, ret);
         const tabs = findInReactTree(ret, (x) => x?.props?.tabs);
         this.render(tabs.props.tabs, args[0].visible);
         return ret;
@@ -63,7 +62,6 @@ class TabsHook extends Logger {
     const root = getReactRoot(document.getElementById('root') as any);
     const qamNode = root && findInReactTree(root, (n: any) => n.elementType == qamRenderer); // need elementType, because type is actually mobx wrapper
     if (qamNode) {
-      this.debug('qamNode', qamNode);
       // Only affects this fiber node so we don't need to unpatch here
       qamNode.type = qamNode.elementType.type;
       if (qamNode?.alternate) {

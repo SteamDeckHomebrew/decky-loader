@@ -67,31 +67,23 @@ class Toaster extends Logger {
     if (toast.playSound === undefined) toast.playSound = true;
     if (toast.showToast === undefined) toast.showToast = true;
     if (toast.timestamp === undefined) toast.timestamp = new Date();
-    if (
-      (window.settingsStore.settings.bDisableAllToasts && !toast.critical) ||
-      (window.settingsStore.settings.bDisableToastsInGame &&
-        !toast.critical &&
-        window.NotificationStore.BIsUserInGame())
-    )
-      return;
-    if (toast.showToast) {
-      function fnTray(toast: any, tray: any) {
-        let group = {
-          eType: toast.eType,
-          notifications: [toast],
-        };
-        tray.unshift(group);
-        // TODO do we need to handle expiration?
-      }
-      const info = {
-        showToast: toast.showToast,
-        sound: toast.sound,
-        eFeature: 0,
-        toastDurationMS: toastData.nToastDurationMS,
-        fnTray,
+    function fnTray(toast: any, tray: any) {
+      let group = {
+        eType: toast.eType,
+        notifications: [toast],
       };
-      window.NotificationStore.ProcessNotification(info, toastData, ToastType.New);
+      tray.unshift(group);
+      // TODO do we need to handle expiration? how do we do that?
     }
+    const info = {
+      showToast: toast.showToast,
+      sound: toast.sound,
+      eFeature: 0,
+      toastDurationMS: toastData.nToastDurationMS,
+      bCritical: toast.critical,
+      fnTray,
+    };
+    window.NotificationStore.ProcessNotification(info, toastData, ToastType.New);
   }
 
   deinit() {

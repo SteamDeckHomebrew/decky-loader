@@ -6,12 +6,13 @@ interface Window {
 
 (async () => {
   // Wait for react to definitely be loaded
+  console.debug('[Decky:Boot] Waiting for React chunk...');
   while (!window.webpackChunksteamui || window.webpackChunksteamui <= 3) {
     await new Promise((r) => setTimeout(r, 10)); // Can't use DFL sleep here.
   }
 
   if (!window.SP_REACT) {
-    console.debug('[Decky:Boot] Setting up React globals...');
+    console.debug('[Decky:Boot] Setting up Webpack & React globals...');
     // deliberate partial import
     const DFLWebpack = await import('@decky/ui/dist/webpack');
     window.SP_REACT = DFLWebpack.findModule((m) => m.Component && m.PureComponent && m.useLayoutEffect);

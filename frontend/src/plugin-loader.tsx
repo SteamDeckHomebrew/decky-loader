@@ -1,16 +1,17 @@
+import { ToastNotification } from '@decky/api';
 import {
   ModalRoot,
+  Navigation,
   PanelSection,
   PanelSectionRow,
   QuickAccessTab,
-  Router,
   findSP,
   quickAccessMenuClasses,
   showModal,
   sleep,
 } from '@decky/ui';
 import { FC, lazy } from 'react';
-import { FaExclamationCircle, FaPlug } from 'react-icons/fa';
+import { FaDownload, FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
 import DeckyIcon from './components/DeckyIcon';
 import { DeckyState, DeckyStateContextProvider, UserInfo, useDeckyState } from './components/DeckyState';
@@ -79,6 +80,9 @@ class PluginLoader extends Logger {
   private reloadLock: boolean = false;
   // stores a list of plugin names which requested to be reloaded
   private pluginReloadQueue: { name: string; version?: string }[] = [];
+
+  private loaderUpdateToast?: ToastNotification;
+  private pluginUpdateToast?: ToastNotification;
 
   constructor() {
     super(PluginLoader.name);
@@ -174,10 +178,6 @@ class PluginLoader extends Logger {
   >('loader/get_plugins');
 
   private async loadPlugins() {
-    // wait for SP window to exist before loading plugins
-    while (!findSP()) {
-      await sleep(100);
-    }
     const plugins = await this.getPluginsFromBackend();
     const pluginLoadPromises = [];
     const loadStart = performance.now();
@@ -210,7 +210,8 @@ class PluginLoader extends Logger {
     if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
       this.deckyState.setHasLoaderUpdate(true);
       if (this.notificationService.shouldNotify('deckyUpdates')) {
-        this.toaster.toast({
+        this.loaderUpdateToast && this.loaderUpdateToast.dismiss();
+        this.loaderUpdateToast = this.toaster.toast({
           title: <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="decky_title" />,
           body: (
             <TranslationHelper
@@ -219,8 +220,9 @@ class PluginLoader extends Logger {
               i18nArgs={{ tag_name: versionInfo?.remote?.tag_name }}
             />
           ),
-          icon: <DeckyIcon />,
-          onClick: () => Router.Navigate('/decky/settings'),
+          logo: <DeckyIcon />,
+          icon: <FaDownload />,
+          onClick: () => Navigation.Navigate('/decky/settings'),
         });
       }
     }
@@ -239,7 +241,8 @@ class PluginLoader extends Logger {
   public async notifyPluginUpdates() {
     const updates = await this.checkPluginUpdates();
     if (updates?.size > 0 && this.notificationService.shouldNotify('pluginUpdates')) {
-      this.toaster.toast({
+      this.pluginUpdateToast && this.pluginUpdateToast.dismiss();
+      this.pluginUpdateToast = this.toaster.toast({
         title: <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="decky_title" />,
         body: (
           <TranslationHelper
@@ -248,8 +251,9 @@ class PluginLoader extends Logger {
             i18nArgs={{ count: updates.size }}
           />
         ),
-        icon: <DeckyIcon />,
-        onClick: () => Router.Navigate('/decky/settings/plugins'),
+        logo: <DeckyIcon />,
+        icon: <FaDownload />,
+        onClick: () => Navigation.Navigate('/decky/settings/plugins'),
       });
     }
   }

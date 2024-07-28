@@ -91,13 +91,14 @@ export default function TestingVersionList() {
                     <DialogButton
                       style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
                       onClick={async () => {
-                        DeckyPluginLoader.toaster.toast({
+                        const downloadToast = DeckyPluginLoader.toaster.toast({
                           title: t('Testing.start_download_toast', { id: version.id }),
                           body: null,
                           icon: <FaFlask />,
                         });
                         try {
                           await downloadTestingVersion(version.id, version.head_sha);
+                          downloadToast.dismiss();
                         } catch (e) {
                           if (e instanceof Error) {
                             DeckyPluginLoader.toaster.toast({

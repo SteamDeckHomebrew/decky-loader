@@ -1,4 +1,4 @@
-import type { ToastData } from '@decky/api';
+import type { ToastData, ToastNotification } from '@decky/api';
 import { Patch, callOriginal, findModuleExport, injectFCTrampoline, replacePatch } from '@decky/ui';
 
 import Toast from './components/Toast';
@@ -20,8 +20,6 @@ declare global {
 }
 
 class Toaster extends Logger {
-  private finishStartup?: () => void;
-  private ready: Promise<void> = new Promise((res) => (this.finishStartup = res));
   private toastPatch?: Patch;
 
   constructor() {
@@ -29,11 +27,7 @@ class Toaster extends Logger {
 
     window.__TOASTER_INSTANCE?.deinit?.();
     window.__TOASTER_INSTANCE = this;
-    this.init();
-  }
 
-  // TODO maybe move to constructor lol
-  async init() {
     const ValveToastRenderer = findModuleExport((e) => e?.toString()?.includes(`controller:"notification",method:`));
     // TODO find a way to undo this if possible?
     const patchedRenderer = injectFCTrampoline(ValveToastRenderer);
@@ -41,34 +35,43 @@ class Toaster extends Logger {
       this.debug('render toast', args);
       if (args?.[0]?.group?.decky || args?.[0]?.group?.notifications?.[0]?.decky) {
         return args[0].group.notifications.map((notification: any) => (
-          <Toast toast={notification.data} location={args?.[0]?.location} />
+          <Toast toast={notification.data} newIndicator={notification.bNewIndicator} location={args?.[0]?.location} />
         ));
       }
       return callOriginal;
     });
 
     this.log('Initialized');
-    this.finishStartup?.();
   }
 
-  async toast(toast: ToastData) {
-    // toast.duration = toast.duration || 5e3;
-    // this.toasterState.addToast(toast);
-    await this.ready;
-    let toastData = {
-      nNotificationID: window.NotificationStore.m_nNextTestNotificationID++,
-      rtCreated: Date.now(),
-      eType: toast.eType || 11,
-      nToastDurationMS: toast.duration || (toast.duration = 5e3),
-      data: toast,
-      decky: true,
-    };
+  toast(toast: ToastData): ToastNotification {
     if (toast.sound === undefined) toast.sound = 6;
     if (toast.playSound === undefined) toast.playSound = true;
     if (toast.showToast === undefined) toast.showToast = true;
     if (toast.timestamp === undefined) toast.timestamp = new Date();
+    if (toast.showNewIndicator === undefined) toast.showNewIndicator = true;
+    /* eType 13 
+      13: {
+        proto: m.mu,
+        fnTray: null,
+        showToast: !0,
+        sound: f.PN.ToastMisc,
+        eFeature: l.uX
+      }
+    */
+    let toastData = {
+      nNotificationID: window.NotificationStore.m_nNextTestNotificationID++,
+      bNewIndicator: toast.showNewIndicator,
+      rtCreated: Date.now(),
+      eType: toast.eType || 13,
+      eSource: 1, // Client
+      nToastDurationMS: toast.duration || (toast.duration = 5e3),
+      data: toast,
+      decky: true,
+    };
+    let group: any;
     function fnTray(toast: any, tray: any) {
-      let group = {
+      group = {
         eType: toast.eType,
         notifications: [toast],
       };
@@ -83,7 +86,31 @@ class Toaster extends Logger {
       bCritical: toast.critical,
       fnTray,
     };
+    const self = this;
+    let expirationTimeout: number;
+    const toastResult: ToastNotification = {
+      data: toast,
+      dismiss() {
+        // it checks against the id of notifications[0]
+        try {
+          expirationTimeout && clearTimeout(expirationTimeout);
+          group && window.NotificationStore.RemoveGroupFromTray(group);
+        } catch (e) {
+          self.error('Error while dismissing toast:', e);
+        }
+      },
+    };
+    if (toast.expiration) {
+      expirationTimeout = setTimeout(() => {
+        try {
+          group && window.NotificationStore.RemoveGroupFromTray(group);
+        } catch (e) {
+          this.error('Error while dismissing expired toast:', e);
+        }
+      }, toast.expiration);
+    }
     window.NotificationStore.ProcessNotification(info, toastData, ToastType.New);
+    return toastResult;
   }
 
   deinit() {

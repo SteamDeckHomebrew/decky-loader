@@ -166,6 +166,7 @@ class PluginLoader extends Logger {
     this.initPluginBackendAPI();
 
     Promise.all([this.getUserInfo(), this.updateVersion()])
+      .then(() => sleep(500))
       .then(() => this.loadPlugins())
       .then(() => this.checkPluginUpdates())
       .then(() => this.log('Initialized'));

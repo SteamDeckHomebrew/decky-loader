@@ -211,6 +211,7 @@ class PluginLoader extends Logger {
       this.deckyState.setHasLoaderUpdate(true);
       if (this.notificationService.shouldNotify('deckyUpdates')) {
         this.loaderUpdateToast && this.loaderUpdateToast.dismiss();
+        await this.routerHook.waitForUnlock();
         this.loaderUpdateToast = this.toaster.toast({
           title: <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="decky_title" />,
           body: (

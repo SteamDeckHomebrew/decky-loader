@@ -173,10 +173,9 @@ class RouterHook extends Logger {
     }
   }
 
-  private async waitForUnlock() {
+  public async waitForUnlock() {
     try {
       while (window?.securitystore?.IsLockScreenActive?.()) {
-        this.debug('Waiting 500ms for lockscreen to close');
         await sleep(500);
       }
     } catch (e) {

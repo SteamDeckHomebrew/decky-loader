@@ -32,7 +32,6 @@ class Toaster extends Logger {
     // TODO find a way to undo this if possible?
     const patchedRenderer = injectFCTrampoline(ValveToastRenderer);
     this.toastPatch = replacePatch(patchedRenderer, 'component', (args: any[]) => {
-      this.debug('render toast', args);
       if (args?.[0]?.group?.decky || args?.[0]?.group?.notifications?.[0]?.decky) {
         return args[0].group.notifications.map((notification: any) => (
           <Toast toast={notification.data} newIndicator={notification.bNewIndicator} location={args?.[0]?.location} />

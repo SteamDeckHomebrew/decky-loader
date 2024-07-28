@@ -72,7 +72,6 @@ class TabsHook extends Logger {
 
   deinit() {
     this.qamPatch?.unpatch();
-    // this.qAMRoot.return.alternate.type = this.qAMRoot.return.type;
   }
 
   add(tab: Tab) {

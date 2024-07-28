@@ -1,4 +1,13 @@
-import { ErrorBoundary, Patch, afterPatch, findInReactTree, getReactRoot, sleep } from '@decky/ui';
+import {
+  ErrorBoundary,
+  Patch,
+  afterPatch,
+  findInReactTree,
+  findInTree,
+  findModuleByExport,
+  getReactRoot,
+  sleep,
+} from '@decky/ui';
 import { FC, ReactElement, ReactNode, cloneElement, createElement } from 'react';
 import type { Route } from 'react-router';
 
@@ -22,6 +31,11 @@ declare global {
   }
 }
 
+enum UIMode {
+  BigPicture = 4,
+  Desktop = 7,
+}
+
 const isPatched = Symbol('is patched');
 
 class RouterHook extends Logger {
@@ -29,10 +43,14 @@ class RouterHook extends Logger {
   private globalComponentsState: DeckyGlobalComponentsState = new DeckyGlobalComponentsState();
   private renderedComponents: ReactElement[] = [];
   private Route: any;
-  private DeckyWrapper = this.routerWrapper.bind(this);
+  private DeckyGamepadRouterWrapper = this.gamepadRouterWrapper.bind(this);
+  private DeckyDesktopRouterWrapper = this.desktopRouterWrapper.bind(this);
   private DeckyGlobalComponentsWrapper = this.globalComponentsWrapper.bind(this);
   private toReplace = new Map<string, ReactNode>();
-  private routerPatch?: Patch;
+  private desktopRouterPatch?: Patch;
+  private gamepadRouterPatch?: Patch;
+  private modeChangeRegistration?: any;
+  private patchedModes = new Set<number>();
   public routes?: any[];
 
   constructor() {
@@ -42,48 +60,161 @@ class RouterHook extends Logger {
     window.__ROUTER_HOOK_INSTANCE?.deinit?.();
     window.__ROUTER_HOOK_INSTANCE = this;
 
-    (async () => {
-      const root = getReactRoot(document.getElementById('root') as any);
-      // TODO be more specific, this is horrible and very very slow
-      const findRouterNode = () =>
-        findInReactTree(
-          root,
-          (node) =>
-            typeof node?.pendingProps?.loggedIn == 'undefined' && node?.type?.toString().includes('Settings.Root()'),
-        );
-      let routerNode = findRouterNode();
-      while (!routerNode) {
-        this.warn('Failed to find Router node, reattempting in 5 seconds.');
-        await sleep(5000);
-        routerNode = findRouterNode();
+    const reactRouterStackModule = findModuleByExport((e) => e == 'router-backstack', 20);
+    if (reactRouterStackModule) {
+      this.Route = Object.values(reactRouterStackModule).find(
+        (e) => typeof e == 'function' && /routePath:.\.match\?\.path./.test(e.toString()),
+      );
+      if (!this.Route) {
+        this.error('Failed to find Route component');
       }
-      if (routerNode) {
-        // Patch the component globally
-        this.routerPatch = afterPatch(routerNode.elementType, 'type', this.handleRouterRender.bind(this));
-        // Swap out the current instance
-        routerNode.type = routerNode.elementType.type;
-        if (routerNode?.alternate) {
-          routerNode.alternate.type = routerNode.type;
-        }
-        // Force a full rerender via our custom error boundary
-        routerNode?.return?.stateNode?._deckyForceRerender?.();
+    } else {
+      this.error('Failed to find router stack module');
+    }
+
+    this.modeChangeRegistration = SteamClient.UI.RegisterForUIModeChanged((mode: UIMode) => {
+      this.debug(`UI mode changed to ${mode}`);
+      if (this.patchedModes.has(mode)) return;
+      this.patchedModes.add(mode);
+      this.debug(`Patching router for UI mode ${mode}`);
+      switch (mode) {
+        case UIMode.BigPicture:
+          this.debug('Patching gamepad router');
+          this.patchGamepadRouter();
+          break;
+        // Not fully implemented yet
+        // case UIMode.Desktop:
+        //   this.debug("Patching desktop router");
+        //   this.patchDesktopRouter();
+        //   break;
+        default:
+          this.warn(`Router patch not implemented for UI mode ${mode}`);
+          break;
       }
-    })();
+    });
   }
 
-  public handleRouterRender(_: any, ret: any) {
-    const DeckyWrapper = this.DeckyWrapper;
+  private async patchGamepadRouter() {
+    const root = getReactRoot(document.getElementById('root') as any);
+    const findRouterNode = () =>
+      findInReactTree(
+        root,
+        (node) =>
+          typeof node?.pendingProps?.loggedIn == 'undefined' && node?.type?.toString().includes('Settings.Root()'),
+      );
+    await this.waitForUnlock();
+    let routerNode = findRouterNode();
+    while (!routerNode) {
+      this.warn('Failed to find Router node, reattempting in 5 seconds.');
+      await sleep(5000);
+      await this.waitForUnlock();
+      routerNode = findRouterNode();
+    }
+    if (routerNode) {
+      // Patch the component globally
+      this.gamepadRouterPatch = afterPatch(routerNode.elementType, 'type', this.handleGamepadRouterRender.bind(this));
+      // Swap out the current instance
+      routerNode.type = routerNode.elementType.type;
+      if (routerNode?.alternate) {
+        routerNode.alternate.type = routerNode.type;
+      }
+      // Force a full rerender via our custom error boundary
+      const errorBoundaryNode = findInTree(routerNode, (e) => e?.stateNode?._deckyForceRerender, {
+        walkable: ['return'],
+      });
+      errorBoundaryNode?.stateNode?._deckyForceRerender?.();
+    }
+  }
+
+  // Currently unused
+  // @ts-expect-error 6133
+  private async patchDesktopRouter() {
+    const root = getReactRoot(document.getElementById('root') as any);
+    const findRouterNode = () =>
+      findInReactTree(root, (node) => node?.elementType?.type?.toString()?.includes('bShowDesktopUIContent:'));
+    let routerNode = findRouterNode();
+    while (!routerNode) {
+      this.warn('Failed to find Router node, reattempting in 5 seconds.');
+      await sleep(5000);
+      routerNode = findRouterNode();
+    }
+    if (routerNode) {
+      // this.debug("desktop router node", routerNode);
+      // Patch the component globally
+      this.desktopRouterPatch = afterPatch(routerNode.elementType, 'type', this.handleDesktopRouterRender.bind(this));
+      // Swap out the current instance
+      routerNode.type = routerNode.elementType.type;
+      if (routerNode?.alternate) {
+        routerNode.alternate.type = routerNode.type;
+      }
+      // Force a full rerender via our custom error boundary
+      const errorBoundaryNode = findInTree(routerNode, (e) => e?.stateNode?._deckyForceRerender, {
+        walkable: ['return'],
+      });
+      errorBoundaryNode?.stateNode?._deckyForceRerender?.();
+      // this.debug("desktop router node", routerNode);
+      // // Patch the component globally
+      // this.desktopRouterPatch = afterPatch(routerNode.type.prototype, 'render', this.handleDesktopRouterRender.bind(this));
+      // const stateNodeClone = { render: routerNode.stateNode.render } as any;
+      // // Patch the current instance. render is readonly so we have to do this.
+      // Object.assign(stateNodeClone, routerNode.stateNode);
+      // Object.setPrototypeOf(stateNodeClone, Object.getPrototypeOf(routerNode.stateNode));
+      // this.desktopRouterFirstInstancePatch = afterPatch(stateNodeClone, 'render', this.handleDesktopRouterRender.bind(this));
+      // routerNode.stateNode = stateNodeClone;
+      // // Swap out the current instance
+      // if (routerNode?.alternate) {
+      //   routerNode.alternate.type = routerNode.type;
+      //   routerNode.alternate.stateNode = routerNode.stateNode;
+      // }
+      // routerNode.stateNode.forceUpdate();
+      // Force a full rerender via our custom error boundary
+      // const errorBoundaryNode = findInTree(routerNode, e => e?.stateNode?._deckyForceRerender, { walkable: ["return"] });
+      // errorBoundaryNode?.stateNode?._deckyForceRerender?.();
+    }
+  }
+
+  private async waitForUnlock() {
+    try {
+      while (window?.securitystore?.IsLockScreenActive?.()) {
+        this.debug('Waiting 500ms for lockscreen to close');
+        await sleep(500);
+      }
+    } catch (e) {
+      this.warn('Error while checking if unlocked:', e);
+    }
+  }
+
+  public handleDesktopRouterRender(_: any, ret: any) {
+    const DeckyDesktopRouterWrapper = this.DeckyDesktopRouterWrapper;
     const DeckyGlobalComponentsWrapper = this.DeckyGlobalComponentsWrapper;
-    if (!this.Route)
-      // TODO make more redundant
-      this.Route = ret.props.children[0].props.children.find((x: any) => x.props.path == '/createaccount').type;
+    this.debug('desktop router render', ret);
     if (ret._decky) {
       return ret;
     }
     const returnVal = (
       <>
         <DeckyRouterStateContextProvider deckyRouterState={this.routerState}>
-          <DeckyWrapper>{ret}</DeckyWrapper>
+          <DeckyDesktopRouterWrapper>{ret}</DeckyDesktopRouterWrapper>
+        </DeckyRouterStateContextProvider>
+        <DeckyGlobalComponentsStateContextProvider deckyGlobalComponentsState={this.globalComponentsState}>
+          <DeckyGlobalComponentsWrapper />
+        </DeckyGlobalComponentsStateContextProvider>
+      </>
+    );
+    (returnVal as any)._decky = true;
+    return returnVal;
+  }
+
+  public handleGamepadRouterRender(_: any, ret: any) {
+    const DeckyGamepadRouterWrapper = this.DeckyGamepadRouterWrapper;
+    const DeckyGlobalComponentsWrapper = this.DeckyGlobalComponentsWrapper;
+    if (ret._decky) {
+      return ret;
+    }
+    const returnVal = (
+      <>
+        <DeckyRouterStateContextProvider deckyRouterState={this.routerState}>
+          <DeckyGamepadRouterWrapper>{ret}</DeckyGamepadRouterWrapper>
         </DeckyRouterStateContextProvider>
         <DeckyGlobalComponentsStateContextProvider deckyGlobalComponentsState={this.globalComponentsState}>
           <DeckyGlobalComponentsWrapper />
@@ -103,7 +234,7 @@ class RouterHook extends Logger {
     return <>{this.renderedComponents}</>;
   }
 
-  private routerWrapper({ children }: { children: ReactElement }) {
+  private gamepadRouterWrapper({ children }: { children: ReactElement }) {
     // Used to store the new replicated routes we create to allow routes to be unpatched.
 
     const { routes, routePatches } = useDeckyRouterState();
@@ -117,7 +248,30 @@ class RouterHook extends Logger {
     this.processList(mainRouteList, routes, routePatches, true);
     this.processList(ingameRouteList, null, routePatches, false);
 
-    this.debug('Rerendered routes list');
+    this.debug('Rerendered gamepadui routes list');
+    return children;
+  }
+
+  private desktopRouterWrapper({ children }: { children: ReactElement }) {
+    // Used to store the new replicated routes we create to allow routes to be unpatched.
+    this.debug('desktop router wrapper render', children);
+    const { routes, routePatches } = useDeckyRouterState();
+    const routeList = findInReactTree(
+      children,
+      (node) => node?.length > 2 && node?.find((elem: any) => elem?.props?.path == '/library/home'),
+    );
+    if (!routeList) {
+      this.debug('routerWrapper wrong component?', children);
+      return children;
+    }
+    const library = children.props.children[1].props.children.props;
+    if (!Array.isArray(library.children)) {
+      library.children = [library.children];
+    }
+    this.debug('library', library);
+    this.processList(library.children, routes, routePatches, true);
+
+    this.debug('Rerendered desktop routes list');
     return children;
   }
 
@@ -197,7 +351,9 @@ class RouterHook extends Logger {
   }
 
   deinit() {
-    this.routerPatch?.unpatch();
+    this.modeChangeRegistration?.unregister();
+    this.gamepadRouterPatch?.unpatch();
+    this.desktopRouterPatch?.unpatch();
   }
 }
 

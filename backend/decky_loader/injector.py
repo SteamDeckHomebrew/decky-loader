@@ -415,7 +415,7 @@ CLOSEABLE_URLS = ["about:blank", "data:text/html,%3Cbody%3E%3C%2Fbody%3E"] # Clo
 DO_NOT_CLOSE_URLS = ["Valve Steam Gamepad/default", "Valve%20Steam%20Gamepad"] # Steam Big Picture Mode tab
 
 def tab_is_gamepadui(t: Tab) -> bool:
-    return "https://steamloopback.host/routes/" in t.url and t.title in SHARED_CTX_NAMES
+    return ("https://steamloopback.host/routes/" in t.url or "https://steamloopback.host/index.html" in t.url) and t.title in SHARED_CTX_NAMES
 
 async def get_gamepadui_tab() -> Tab:
     tabs = await get_tabs()

@@ -5,9 +5,9 @@ interface Window {
 }
 
 (async () => {
-  // Wait for react to definitely be loaded
-  console.debug('[Decky:Boot] Waiting for React chunk...');
-  while (!window.webpackChunksteamui || window.webpackChunksteamui <= 3) {
+  // Wait for main webpack chunks to definitely be loaded
+  console.debug('[Decky:Boot] Waiting for main Webpack chunks...');
+  while (!window.webpackChunksteamui || window.webpackChunksteamui.length < 8) {
     await new Promise((r) => setTimeout(r, 10)); // Can't use DFL sleep here.
   }
 

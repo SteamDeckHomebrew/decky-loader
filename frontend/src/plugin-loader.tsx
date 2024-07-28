@@ -5,7 +5,6 @@ import {
   PanelSection,
   PanelSectionRow,
   QuickAccessTab,
-  findSP,
   quickAccessMenuClasses,
   showModal,
   sleep,

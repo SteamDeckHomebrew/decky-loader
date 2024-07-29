@@ -5,6 +5,7 @@ import {
   PanelSection,
   PanelSectionRow,
   QuickAccessTab,
+  findSP,
   quickAccessMenuClasses,
   showModal,
   sleep,
@@ -29,7 +30,7 @@ import { HiddenPluginsService } from './hidden-plugins-service';
 import Logger from './logger';
 import { NotificationService } from './notification-service';
 import { InstallType, Plugin, PluginLoadType } from './plugin';
-import RouterHook from './router-hook';
+import RouterHook, { UIMode } from './router-hook';
 import { deinitSteamFixes, initSteamFixes } from './steamfixes';
 import { checkForPluginUpdates } from './store';
 import TabsHook from './tabs-hook';
@@ -166,7 +167,6 @@ class PluginLoader extends Logger {
     this.initPluginBackendAPI();
 
     Promise.all([this.getUserInfo(), this.updateVersion()])
-      .then(() => sleep(800))
       .then(() => this.loadPlugins())
       .then(() => this.checkPluginUpdates())
       .then(() => this.log('Initialized'));
@@ -178,6 +178,17 @@ class PluginLoader extends Logger {
   >('loader/get_plugins');
 
   private async loadPlugins() {
+    let registration: any;
+    const uiMode = await new Promise(r => registration = SteamClient.UI.RegisterForUIModeChanged((mode: UIMode) => {
+      r(mode);
+      registration.unregister()
+    }));
+    if (uiMode == UIMode.BigPicture) {
+      // wait for SP window to exist before loading plugins
+      while (!findSP()) {
+        await sleep(100);
+      }
+    }
     const plugins = await this.getPluginsFromBackend();
     const pluginLoadPromises = [];
     const loadStart = performance.now();
@@ -565,7 +576,6 @@ class PluginLoader extends Logger {
       method = request.method;
       delete req.method;
     }
-    // this is terrible but a. we're going to redo this entire method anyway and b. it was already terrible
     try {
       const ret = await DeckyBackend.call<
         [method: string, url: string, extra_opts?: any],

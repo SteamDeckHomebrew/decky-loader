@@ -179,10 +179,13 @@ class PluginLoader extends Logger {
 
   private async loadPlugins() {
     let registration: any;
-    const uiMode = await new Promise(r => registration = SteamClient.UI.RegisterForUIModeChanged((mode: UIMode) => {
-      r(mode);
-      registration.unregister()
-    }));
+    const uiMode = await new Promise(
+      (r) =>
+        (registration = SteamClient.UI.RegisterForUIModeChanged((mode: UIMode) => {
+          r(mode);
+          registration.unregister();
+        })),
+    );
     if (uiMode == UIMode.BigPicture) {
       // wait for SP window to exist before loading plugins
       while (!findSP()) {

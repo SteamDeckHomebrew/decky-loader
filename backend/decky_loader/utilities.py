@@ -197,7 +197,7 @@ class Utilities:
                 self.logger.debug(f"Finished stream for {url}")
         return res
 
-    async def http_request_legacy(self, method: str, url: str, extra_opts: Any = {}):
+    async def http_request_legacy(self, method: str, url: str, timeout: int | None = None, extra_opts: Any = {}):
         async with ClientSession() as web:
             res = await web.request(method, url, ssl=helpers.get_ssl_context(), **extra_opts)
             text = await res.text()

@@ -75,7 +75,6 @@ class Toaster extends Logger {
         notifications: [toast],
       };
       tray.unshift(group);
-      // TODO do we need to handle expiration? how do we do that?
     }
     const info = {
       showToast: toast.showToast,

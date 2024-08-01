@@ -14,7 +14,9 @@
     },
     "FilePickerError": {
         "errors": {
-            "file_not_found": "Belirtilen yol geçerli değil. Lütfen yolu kontrol edin ve doğru şekilde yeniden girin."
+            "file_not_found": "Belirtilen yol geçerli değil. Lütfen yolu kontrol edin ve doğru şekilde yeniden girin.",
+            "perm_denied": "Belirtilen dizine erişim izniniz yok. Lütfen kullanıcınızın (Steam Deck'te deck) belirtilen klasöre/dosyaya erişmek için ilgili izne sahip olup olmadığını kontrol edin.",
+            "unknown": "Bilinmeyen bir hata oluştu. Raw hata: {{raw_error}}"
         }
     },
     "FilePickerIndex": {
@@ -46,7 +48,8 @@
         "confirm": "Aşağıdaki değişiklikleri yapmak istediğinizden emin misiniz?",
         "description": {
             "install": "Yükle {{name}} {{version}}",
-            "reinstall": "Yeniden yükle {{name}} {{version}}"
+            "reinstall": "Yeniden yükle {{name}} {{version}}",
+            "update": "{{name}}'i {{version}}'ye güncelle"
         },
         "ok_button": {
             "idle": "Onayla",
@@ -55,17 +58,18 @@
         "title": {
             "install_one": "1 eklenti yükle",
             "install_other": "{{count}} eklenti yükle",
-            "mixed_one": "",
-            "mixed_other": "",
+            "mixed_one": "{{count}} eklentiyi değiştir",
+            "mixed_other": "{{count}} eklentiyi değiştir",
             "reinstall_one": "1 eklentiyi yeniden yükle",
             "reinstall_other": "{{count}} eklentiyi yeniden yükle",
-            "update_one": "",
-            "update_other": ""
+            "update_one": "{{count}} eklentiyi güncelle",
+            "update_other": "{{count}} eklentiyi güncelle"
         }
     },
     "PluginCard": {
         "plugin_full_access": "Bu eklenti Steam Deck'inize tam erişime sahiptir.",
         "plugin_install": "Yükle",
+        "plugin_no_desc": "Açıklama bulunmuyor.",
         "plugin_version_label": "Eklenti Versiyonu"
     },
     "PluginInstallModal": {
@@ -94,6 +98,7 @@
         "no_plugin": "Yüklü eklenti yok!",
         "plugin_actions": "Eklenti İşlemleri",
         "reinstall": "Yeniden Yükle",
+        "reload": "Yenile",
         "show": "Hızlı erişim: Göster",
         "unfreeze": "Güncellemelere izin ver",
         "uninstall": "Kaldır",

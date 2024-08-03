@@ -62,9 +62,13 @@ class RouterHook extends Logger {
 
     const reactRouterStackModule = findModuleByExport((e) => e == 'router-backstack', 20);
     if (reactRouterStackModule) {
-      this.Route = Object.values(reactRouterStackModule).find(
-        (e) => typeof e == 'function' && /routePath:.\.match\?\.path./.test(e.toString()),
-      );
+      this.Route =
+        Object.values(reactRouterStackModule).find(
+          (e) => typeof e == 'function' && /routePath:.\.match\?\.path./.test(e.toString()),
+        ) ||
+        Object.values(reactRouterStackModule).find(
+          (e) => typeof e == 'function' && /routePath:null===\(.=.\.match\)/.test(e.toString()),
+        );
       if (!this.Route) {
         this.error('Failed to find Route component');
       }

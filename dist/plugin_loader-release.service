@@ -4,7 +4,7 @@ Description=SteamDeck Plugin Loader
 Type=simple
 User=root
 Restart=always
-TimeoutStopSec=45
+KillSignal=SIGKILL
 ExecStart=${HOMEBREW_FOLDER}/services/PluginLoader
 WorkingDirectory=${HOMEBREW_FOLDER}/services
 Environment=UNPRIVILEGED_PATH=${HOMEBREW_FOLDER}

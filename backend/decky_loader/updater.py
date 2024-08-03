@@ -96,7 +96,7 @@ class Updater:
             "current": self.localVer,
             "remote": self.remoteVer,
             "all": self.allRemoteVers,
-            "updatable": self.localVer != "unknown"
+            "updatable": self.localVer != "unknown" and self.localVer != "dev"
         }
 
     async def check_for_updates(self):

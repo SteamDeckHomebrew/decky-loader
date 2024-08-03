@@ -67,6 +67,9 @@ def get_loader_version() -> str:
     try:
         # Normalize Python-style version to conform to Decky style
         v = Version(importlib.metadata.version("decky_loader"))
+        if v.major == 0 and v.minor == 0 and v.micro == 0:
+            # We are probably running from source
+            return "dev"
 
         version_str = f'v{v.major}.{v.minor}.{v.micro}'
 

@@ -207,7 +207,7 @@ class PluginManager:
                 await tab.close_websocket()
                 self.js_ctx_tab = None
                 await restart_webhelper()
-                await sleep(5)
+                await sleep(1) # To give CEF enough time to close down the websocket
                 return # We'll catch the next tab in the main loop
             await tab.evaluate_js("try{if (window.deckyHasLoaded){setTimeout(() => SteamClient.Browser.RestartJSContext(), 100)}else{window.deckyHasLoaded = true;(async()=>{try{await import('http://localhost:1337/frontend/index.js?v=%s')}catch(e){console.error(e)};})();}}catch(e){console.error(e)}" % (get_loader_version(), ), False, False, False)
         except:

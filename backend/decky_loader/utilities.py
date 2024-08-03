@@ -141,10 +141,10 @@ class Utilities:
 
     # Loosely based on https://gist.github.com/mosquito/4dbfacd51e751827cda7ec9761273e95#file-proxy-py
     async def http_request(self, req: Request) -> StreamResponse:
-        if req.headers.get('X-Decky-Auth', '') != helpers.get_csrf_token() and req.query.get('auth', '') != helpers.get_csrf_token():
+        if req.query['auth'] != helpers.get_csrf_token():
             return Response(text='Forbidden', status=403)
 
-        url = req.headers["X-Decky-Fetch-URL"] if "X-Decky-Fetch-URL" in req.headers else unquote(req.query.get('fetch_url', ''))
+        url = unquote(req.query['fetch_url'])
         self.logger.info(f"Preparing {req.method} request to {url}")
 
         headers = dict(req.headers)
@@ -180,7 +180,11 @@ class Utilities:
 
         body = await req.read() # TODO can this also be streamed?
 
-        async with ClientSession() as web:
+        # We disable auto-decompress so that the body is completely forwarded to the
+        # JS engine for it to do the decompression. Otherwise we need need to clear
+        # the Content-Encoding header in the response headers, however that would
+        # defeat the point of this proxy.
+        async with ClientSession(auto_decompress=False) as web:
             async with web.request(req.method, url, headers=headers, data=body, ssl=helpers.get_ssl_context()) as web_res:
                 res = StreamResponse(headers=web_res.headers, status=web_res.status)
                 if web_res.headers.get('Transfer-Encoding', '').lower() == 'chunked':
@@ -190,8 +194,6 @@ class Utilities:
                 self.logger.debug(f"Starting stream for {url}")
                 async for data in web_res.content.iter_any():
                     await res.write(data)
-                    if data:
-                        await res.drain()
                 self.logger.debug(f"Finished stream for {url}")
         return res
 

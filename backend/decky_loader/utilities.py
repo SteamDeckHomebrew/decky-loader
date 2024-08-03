@@ -199,7 +199,7 @@ class Utilities:
 
     async def http_request_legacy(self, method: str, url: str, extra_opts: Any = {}, timeout: int | None = None):
         async with ClientSession() as web:
-            res = await web.request(method, url, ssl=helpers.get_ssl_context(), timeout=timeout **extra_opts)
+            res = await web.request(method, url, ssl=helpers.get_ssl_context(), timeout=timeout, **extra_opts)
             text = await res.text()
         return {
             "status": res.status,

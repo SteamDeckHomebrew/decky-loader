@@ -180,7 +180,11 @@ class Utilities:
 
         body = await req.read() # TODO can this also be streamed?
 
-        async with ClientSession() as web:
+        # We disable auto-decompress so that the body is completely forwarded to the
+        # JS engine for it to do the decompression. Otherwise we need need to clear
+        # the Content-Encoding header in the response headers, however that would
+        # defeat the point of this proxy.
+        async with ClientSession(auto_decompress=False) as web:
             async with web.request(req.method, url, headers=headers, data=body, ssl=helpers.get_ssl_context()) as web_res:
                 res = StreamResponse(headers=web_res.headers, status=web_res.status)
                 if web_res.headers.get('Transfer-Encoding', '').lower() == 'chunked':
@@ -190,8 +194,6 @@ class Utilities:
                 self.logger.debug(f"Starting stream for {url}")
                 async for data in web_res.content.iter_any():
                     await res.write(data)
-                    if data:
-                        await res.drain()
                 self.logger.debug(f"Finished stream for {url}")
         return res
 

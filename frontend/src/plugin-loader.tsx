@@ -536,17 +536,13 @@ class PluginLoader extends Logger {
       }
       return prefixedInitHeaders;
     };
-    const headers: { [name: string]: string } = {
-      ...getPrefixedHeaders(),
-      'X-Decky-Auth': deckyAuthToken,
-      'X-Decky-Fetch-URL': input,
-    };
+    const headers: { [name: string]: string } = getPrefixedHeaders();
 
     if (init?.excludedHeaders) {
       headers['X-Decky-Fetch-Excluded-Headers'] = init.excludedHeaders.join(', ');
     }
 
-    return fetch('http://127.0.0.1:1337/fetch', {
+    return fetch(this.getExternalResourceURL(input), {
       ...restOfInit,
       credentials: 'include',
       headers,

@@ -141,10 +141,10 @@ class Utilities:
 
     # Loosely based on https://gist.github.com/mosquito/4dbfacd51e751827cda7ec9761273e95#file-proxy-py
     async def http_request(self, req: Request) -> StreamResponse:
-        if req.headers.get('X-Decky-Auth', '') != helpers.get_csrf_token() and req.query.get('auth', '') != helpers.get_csrf_token():
+        if req.query['auth'] != helpers.get_csrf_token():
             return Response(text='Forbidden', status=403)
 
-        url = req.headers["X-Decky-Fetch-URL"] if "X-Decky-Fetch-URL" in req.headers else unquote(req.query.get('fetch_url', ''))
+        url = unquote(req.query['fetch_url'])
         self.logger.info(f"Preparing {req.method} request to {url}")
 
         headers = dict(req.headers)

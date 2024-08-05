@@ -20,9 +20,8 @@ from .browser import PluginInstallRequest, PluginInstallType
 if TYPE_CHECKING:
     from .main import PluginManager
 from .injector import inject_to_tab, get_gamepadui_tab, close_old_tabs, get_tab
-from .localplatform.localplatform import ON_WINDOWS
 from . import helpers
-from .localplatform.localplatform import service_stop, service_start, get_home_path, get_username
+from .localplatform.localplatform import ON_WINDOWS, service_stop, service_start, get_home_path, get_username, get_use_cef_close_workaround, close_cef_socket
 
 class FilePickerObj(TypedDict):
     file: Path
@@ -78,6 +77,7 @@ class Utilities:
             context.ws.add_route("utilities/get_tab_id", self.get_tab_id)
             context.ws.add_route("utilities/get_user_info", self.get_user_info)
             context.ws.add_route("utilities/http_request", self.http_request_legacy)
+            context.ws.add_route("utilities/close_cef_socket", self.close_cef_socket)
             context.ws.add_route("utilities/_call_legacy_utility", self._call_legacy_utility)
 
             context.web_app.add_routes([
@@ -286,6 +286,10 @@ class Utilities:
     async def stop_ssh(self):
         await service_stop(helpers.SSHD_UNIT)
         return True
+
+    async def close_cef_socket(self):
+        if get_use_cef_close_workaround():
+            await close_cef_socket()
 
     async def filepicker_ls(self, 
                             path: str | None = None, 

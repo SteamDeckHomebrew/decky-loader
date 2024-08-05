@@ -1,3 +1,5 @@
+from re import compile
+from asyncio import Lock
 import os, pwd, grp, sys, logging
 from subprocess import call, run, DEVNULL, PIPE, STDOUT
 from ..enums import UserType
@@ -227,3 +229,39 @@ def get_unprivileged_user() -> str:
         user = 'deck'
 
     return user
+
+# Works around the CEF debugger TCP socket not closing properly when Steam restarts
+# Group 1 is PID, group 2 is FD. this also filters for "steamwebhelper" in the process name.
+cef_socket_lsof_regex = compile(r"^p(\d+)(?:\s|.)+csteamwebhelper(?:\s|.)+f(\d+)(?:\s|.)+TST=LISTEN")
+close_cef_socket_lock = Lock()
+
+async def close_cef_socket():
+    async with close_cef_socket_lock:
+        if _get_effective_user_id() != 0:
+            logger.warn("Can't close CEF socket as Decky isn't running as root.")
+            return
+        # Look for anything listening TCP on port 8080
+        lsof = run(["lsof", "-F", "-iTCP:8080", "-sTCP:LISTEN"], capture_output=True, text=True)
+        if lsof.returncode != 0 or len(lsof.stdout) < 1:
+            logger.error(f"lsof call failed in close_cef_socket! return code: {str(lsof.returncode)}")
+            return
+
+        lsof_data = cef_socket_lsof_regex.match(lsof.stdout)
+        
+        if not lsof_data:
+            logger.error("lsof regex match failed in close_cef_socket!")
+            return
+
+        pid = lsof_data.group(1)
+        fd = lsof_data.group(2)
+
+        logger.info(f"Closing CEF socket with PID {pid} and FD {fd}")
+
+        # Use gdb to inject a close() call for the socket fd into steamwebhelper
+        gdb_ret = run(["gdb", "--nx", "-p", pid, "--batch", "--eval-command", f"call (int)close({fd})"])
+
+        if gdb_ret.returncode != 0:
+            logger.error(f"Failed to close CEF socket with gdb! return code: {str(gdb_ret.returncode)}", exc_info=True)
+            return
+
+        logger.info("CEF socket closed")

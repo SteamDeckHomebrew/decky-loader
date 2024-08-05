@@ -37,6 +37,9 @@ def get_live_reload() -> bool:
 def get_keep_systemd_service() -> bool:
     return os.getenv("KEEP_SYSTEMD_SERVICE", "0") == "1"
 
+def get_use_cef_close_workaround() -> bool:
+    return ON_LINUX and os.getenv("USE_CEF_CLOSE_WORKAROUND", "1") == "1"
+
 def get_log_level() -> int:
     return {"CRITICAL": 50, "ERROR": 40, "WARNING": 30, "INFO": 20, "DEBUG": 10}[
         os.getenv("LOG_LEVEL", "INFO")

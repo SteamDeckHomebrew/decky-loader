@@ -95,12 +95,14 @@
         }
     },
     "PluginListIndex": {
+        "freeze": "アップデートを凍結",
         "hide": "クイックアクセス: 非表示",
         "no_plugin": "プラグインがインストールされていません!",
         "plugin_actions": "プラグインアクション",
         "reinstall": "再インストール",
         "reload": "再読み込み",
         "show": "クイックアクセス: 表示",
+        "unfreeze": "アップデートを許可",
         "uninstall": "アンインストール",
         "update_all_other": "{{count}} 個のプラグインをアップデート",
         "update_to": "{{name}} を更新"
@@ -185,9 +187,19 @@
     "SettingsIndex": {
         "developer_title": "開発者",
         "general_title": "一般",
-        "plugins_title": "プラグイン"
+        "plugins_title": "プラグイン",
+        "testing_title": "テスト"
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "プラグインのダウンロード中",
+            "increment_count": "ダウンロード数の増加",
+            "installing_plugin": "プラグインのインストール中",
+            "open_zip": "zipファイルを展開中",
+            "parse_zip": "zipファイルの解析中",
+            "start": "初期化中",
+            "uninstalling_previous": "以前のコピーのアンインストール"
+        },
         "store_contrib": {
             "desc": "Decky Plugin Storeに貢献したい場合は、GitHubのSteamDeckHomebrew/decky-plugin-templateリポジトリを確認してください。 開発と配布に関する情報は README で入手できます。",
             "label": "貢献"
@@ -211,6 +223,10 @@
             "about": "概要",
             "alph_asce": "アルファベット(Z to A)",
             "alph_desc": "アルファベット(A to Z)",
+            "date_asce": "古い順",
+            "date_desc": "新しい順",
+            "downloads_asce": "ダウンロード数が少ない順",
+            "downloads_desc": "ダウンロード数が多い順",
             "title": "閲覧"
         },
         "store_testing_cta": "Decky Loaderチームを支援するために、新しいプラグインのテストを検討してください!",
@@ -230,6 +246,13 @@
             "label": "ストアチャンネル",
             "testing": "テスト"
         }
+    },
+    "Testing": {
+        "download": "ダウンロード",
+        "error": "PRのインストールエラー",
+        "header": "Decky Loaderの以下のバージョンは、公開されているサードパーティのPull Requestからビルドされたものです。 Decky Loaderチームはその機能や安全性を検証しておらず、内容も古い可能性があります。",
+        "loading": "Pull Requestの読み込み中...",
+        "start_download_toast": "PR #{{id}}のダウンロード中"
     },
     "TitleView": {
         "decky_store_desc": "Deckyストアを開く",

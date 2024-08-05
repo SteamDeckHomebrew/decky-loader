@@ -258,7 +258,7 @@ async def close_cef_socket():
         logger.info(f"Closing CEF socket with PID {pid} and FD {fd}")
 
         # Use gdb to inject a close() call for the socket fd into steamwebhelper
-        gdb_ret = run(["gdb", "--nx", "-p", pid, "--batch", "--eval-command", f"call (int)close({fd})"])
+        gdb_ret = run(["gdb", "--nx", "-p", pid, "--batch", "--eval-command", f"call (int)close({fd})"], env={"LD_LIBRARY_PATH": ""})
 
         if gdb_ret.returncode != 0:
             logger.error(f"Failed to close CEF socket with gdb! return code: {str(gdb_ret.returncode)}", exc_info=True)

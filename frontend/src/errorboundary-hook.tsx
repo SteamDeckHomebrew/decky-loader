@@ -22,9 +22,7 @@ class ErrorBoundaryHook extends Logger {
     this.log('Initialized');
     window.__ERRORBOUNDARY_HOOK_INSTANCE?.deinit?.();
     window.__ERRORBOUNDARY_HOOK_INSTANCE = this;
-  }
 
-  init() {
     // valve writes only the sanest of code
     const exp = /^\(\)=>\(.\|\|.\(new .\),.\)$/;
     const initErrorReportingStore = findModuleExport(
@@ -71,11 +69,16 @@ class ErrorBoundaryHook extends Logger {
     });
 
     if (!ErrorBoundary) {
-      this.error('could not find ValveErrorBoundary');
+      this.error('@decky/ui could not find ErrorBoundary, skipping patch');
       return;
     }
 
     this.errorBoundaryPatch = replacePatch(ErrorBoundary.prototype, 'render', function (this: any) {
+      if (this.state._deckyForceRerender) {
+        const stateClone = { ...this.state, _deckyForceRerender: null };
+        this.setState(stateClone);
+        return null;
+      }
       if (this.state.error) {
         const store = Object.getPrototypeOf(this)?.constructor?.sm_ErrorReportingStore || errorReportingStore;
         return (
@@ -89,6 +92,10 @@ class ErrorBoundaryHook extends Logger {
       }
       return callOriginal;
     });
+    // Small hack that gives us a lot more flexibility to force rerenders.
+    ErrorBoundary.prototype._deckyForceRerender = function (this: any) {
+      this.setState({ ...this.state, _deckyForceRerender: true });
+    };
   }
 
   public temporarilyDisableReporting() {

@@ -10,7 +10,7 @@ import {
 } from '@decky/ui';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaDownload, FaInfo } from 'react-icons/fa';
+import { FaDownload, FaFlask, FaInfo } from 'react-icons/fa';
 
 import { setSetting } from '../../../../utils/settings';
 import { UpdateBranch } from '../general/BranchSelect';
@@ -91,17 +91,20 @@ export default function TestingVersionList() {
                     <DialogButton
                       style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
                       onClick={async () => {
-                        DeckyPluginLoader.toaster.toast({
+                        const downloadToast = DeckyPluginLoader.toaster.toast({
                           title: t('Testing.start_download_toast', { id: version.id }),
                           body: null,
+                          icon: <FaFlask />,
                         });
                         try {
                           await downloadTestingVersion(version.id, version.head_sha);
+                          downloadToast.dismiss();
                         } catch (e) {
                           if (e instanceof Error) {
                             DeckyPluginLoader.toaster.toast({
                               title: t('Testing.error'),
                               body: `${e.name}: ${e.message}`,
+                              icon: <FaFlask />,
                             });
                           }
                         }

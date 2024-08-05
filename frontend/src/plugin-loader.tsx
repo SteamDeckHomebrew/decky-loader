@@ -1,17 +1,19 @@
+import { ToastNotification } from '@decky/api';
 import {
   ModalRoot,
+  Navigation,
   PanelSection,
   PanelSectionRow,
   QuickAccessTab,
-  Router,
   findSP,
   quickAccessMenuClasses,
   showModal,
   sleep,
 } from '@decky/ui';
 import { FC, lazy } from 'react';
-import { FaExclamationCircle, FaPlug } from 'react-icons/fa';
+import { FaDownload, FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
+import DeckyIcon from './components/DeckyIcon';
 import { DeckyState, DeckyStateContextProvider, UserInfo, useDeckyState } from './components/DeckyState';
 import { File, FileSelectionType } from './components/modals/filepicker';
 import { deinitFilepickerPatches, initFilepickerPatches } from './components/modals/filepicker/patches';
@@ -28,7 +30,7 @@ import { HiddenPluginsService } from './hidden-plugins-service';
 import Logger from './logger';
 import { NotificationService } from './notification-service';
 import { InstallType, Plugin, PluginLoadType } from './plugin';
-import RouterHook from './router-hook';
+import RouterHook, { UIMode } from './router-hook';
 import { deinitSteamFixes, initSteamFixes } from './steamfixes';
 import { checkForPluginUpdates } from './store';
 import TabsHook from './tabs-hook';
@@ -79,10 +81,11 @@ class PluginLoader extends Logger {
   // stores a list of plugin names which requested to be reloaded
   private pluginReloadQueue: { name: string; version?: string }[] = [];
 
+  private loaderUpdateToast?: ToastNotification;
+  private pluginUpdateToast?: ToastNotification;
+
   constructor() {
     super(PluginLoader.name);
-
-    this.errorBoundaryHook.init();
 
     DeckyBackend.addEventListener('loader/notify_updates', this.notifyUpdates.bind(this));
     DeckyBackend.addEventListener('loader/import_plugin', this.importPlugin.bind(this));
@@ -175,9 +178,19 @@ class PluginLoader extends Logger {
   >('loader/get_plugins');
 
   private async loadPlugins() {
-    // wait for SP window to exist before loading plugins
-    while (!findSP()) {
-      await sleep(100);
+    let registration: any;
+    const uiMode = await new Promise(
+      (r) =>
+        (registration = SteamClient.UI.RegisterForUIModeChanged((mode: UIMode) => {
+          r(mode);
+          registration.unregister();
+        })),
+    );
+    if (uiMode == UIMode.BigPicture) {
+      // wait for SP window to exist before loading plugins
+      while (!findSP()) {
+        await sleep(100);
+      }
     }
     const plugins = await this.getPluginsFromBackend();
     const pluginLoadPromises = [];
@@ -211,7 +224,9 @@ class PluginLoader extends Logger {
     if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
       this.deckyState.setHasLoaderUpdate(true);
       if (this.notificationService.shouldNotify('deckyUpdates')) {
-        this.toaster.toast({
+        this.loaderUpdateToast && this.loaderUpdateToast.dismiss();
+        await this.routerHook.waitForUnlock();
+        this.loaderUpdateToast = this.toaster.toast({
           title: <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="decky_title" />,
           body: (
             <TranslationHelper
@@ -220,7 +235,9 @@ class PluginLoader extends Logger {
               i18nArgs={{ tag_name: versionInfo?.remote?.tag_name }}
             />
           ),
-          onClick: () => Router.Navigate('/decky/settings'),
+          logo: <DeckyIcon />,
+          icon: <FaDownload />,
+          onClick: () => Navigation.Navigate('/decky/settings'),
         });
       }
     }
@@ -239,7 +256,8 @@ class PluginLoader extends Logger {
   public async notifyPluginUpdates() {
     const updates = await this.checkPluginUpdates();
     if (updates?.size > 0 && this.notificationService.shouldNotify('pluginUpdates')) {
-      this.toaster.toast({
+      this.pluginUpdateToast && this.pluginUpdateToast.dismiss();
+      this.pluginUpdateToast = this.toaster.toast({
         title: <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="decky_title" />,
         body: (
           <TranslationHelper
@@ -248,7 +266,9 @@ class PluginLoader extends Logger {
             i18nArgs={{ count: updates.size }}
           />
         ),
-        onClick: () => Router.Navigate('/decky/settings/plugins'),
+        logo: <DeckyIcon />,
+        icon: <FaDownload />,
+        onClick: () => Navigation.Navigate('/decky/settings/plugins'),
       });
     }
   }
@@ -559,7 +579,6 @@ class PluginLoader extends Logger {
       method = request.method;
       delete req.method;
     }
-    // this is terrible but a. we're going to redo this entire method anyway and b. it was already terrible
     try {
       const ret = await DeckyBackend.call<
         [method: string, url: string, extra_opts?: any],

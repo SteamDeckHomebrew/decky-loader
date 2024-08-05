@@ -1,5 +1,5 @@
 // import restartFix from './restart';
-import cefSocketFix from "./socket";
+import cefSocketFix from './socket';
 
 let fixes: Function[] = [];
 

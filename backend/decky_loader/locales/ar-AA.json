@@ -1,0 +1,156 @@
+{
+    "BranchSelect": {
+        "update_channel": {
+            "label": "قناة التحديثات",
+            "prerelease": "الإصدار التجريبي",
+            "stable": "إصدار مستقر",
+            "testing": "إصدار تحت الإختبار"
+        }
+    },
+    "Developer": {
+        "5secreload": "إعادة التحميل في 5 ثواني"
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "الخلف"
+        }
+    },
+    "FilePickerIndex": {
+        "file": {
+            "select": "إختر هذا الملف"
+        },
+        "files": {
+            "all_files": "جميع الملفات",
+            "file_type": "نوع الملف",
+            "show_hidden": "أظهر الملفات المخفية"
+        },
+        "filter": {
+            "created_asce": "المنشئة (الأقدم)",
+            "created_desc": "المنشئة (الأحدث)",
+            "modified_asce": "المعدلة (الأقدم)",
+            "modified_desc": "المعدلة (الأحدث)",
+            "name_asce": "أ-ي",
+            "name_desc": "أ-ي",
+            "size_asce": "الحجم ( الأصغر)",
+            "size_desc": "الحجم ( الأكبر)"
+        },
+        "folder": {
+            "label": "المجلد",
+            "select": "إستخدم هذا المجلد",
+            "show_more": "أظهر المزيد من الملفات"
+        }
+    },
+    "MultiplePluginsInstallModal": {
+        "confirm": "هل أنت متأكد من التعديلات التالية؟",
+        "description": {
+            "install": "تنصيب {{name}} {{version}}",
+            "reinstall": "إعادة تنصيب {{name}} {{version}}",
+            "update": "تحديث {{name}} إلى {{version}}"
+        },
+        "ok_button": {
+            "idle": "تأكيد"
+        },
+        "title": {
+            "install_few": "",
+            "install_many": "",
+            "install_one": "",
+            "install_other": "",
+            "install_two": "",
+            "install_zero": "",
+            "mixed_few": "",
+            "mixed_many": "",
+            "mixed_one": "",
+            "mixed_other": "",
+            "mixed_two": "",
+            "mixed_zero": "",
+            "reinstall_few": "",
+            "reinstall_many": "",
+            "reinstall_one": "",
+            "reinstall_other": "",
+            "reinstall_two": "",
+            "reinstall_zero": "",
+            "update_few": "",
+            "update_many": "",
+            "update_one": "",
+            "update_other": "",
+            "update_two": "",
+            "update_zero": ""
+        }
+    },
+    "PluginCard": {
+        "plugin_full_access": "هذه الإضافة لديها الصلاحية للوصول لمحتويات Steam Deck.",
+        "plugin_install": "تنصيب",
+        "plugin_no_desc": "لا يوجد وصف متاح.",
+        "plugin_version_label": "رقم إصدار الإضافة"
+    },
+    "PluginInstallModal": {
+        "install": {
+            "button_idle": "تنصيب",
+            "button_processing": "يتم التنصيب",
+            "desc": "هل أنت متأكد من رغبتك في تنصيب {{artifact}} {{version}}؟",
+            "title": "تنصيب {{artifact}}"
+        },
+        "reinstall": {
+            "button_idle": "إعادة تنصيب",
+            "button_processing": "تتم إعادة التنصيب",
+            "desc": "هل أنت متأكد من رغبتك في إعادة تنصيب {{artifact}} {{version}}؟",
+            "title": "إعادة تنصيب {{artifact}}"
+        },
+        "update": {
+            "button_idle": "تحديث",
+            "button_processing": "يتم التحديث",
+            "desc": "هل أنت متأكد من رغبتك في تحديث {{artifact}} {{version}}؟",
+            "title": "تحديث {{artifact}}"
+        }
+    },
+    "PluginListIndex": {
+        "hide": "إخفاء من قائمة الوصول السريع",
+        "reinstall": "إعادة التنصيب",
+        "reload": "إعادة التحميل",
+        "show": "إظهار في قائمة الوصول السريع",
+        "unfreeze": "السماح بالتحديثات",
+        "uninstall": "إزالة التنصيب",
+        "update_all_few": "",
+        "update_all_many": "",
+        "update_all_one": "",
+        "update_all_other": "",
+        "update_all_two": "",
+        "update_all_zero": "",
+        "update_to": "التحديث إلى {{name}}"
+    },
+    "PluginListLabel": {
+        "hidden": "مخفي من قائمة الوصول السريع"
+    },
+    "PluginLoader": {
+        "decky_title": "Decky",
+        "error": "خطا",
+        "plugin_uninstall": {
+            "button": "إزالة التنصيب",
+            "title": "إزالة التنصيب {{name}}"
+        },
+        "plugin_update_few": "",
+        "plugin_update_many": "",
+        "plugin_update_one": "",
+        "plugin_update_other": "",
+        "plugin_update_two": "",
+        "plugin_update_zero": ""
+    },
+    "PluginView": {
+        "hidden_few": "",
+        "hidden_many": "",
+        "hidden_one": "",
+        "hidden_other": "",
+        "hidden_two": "",
+        "hidden_zero": ""
+    },
+    "SettingsDeveloperIndex": {
+        "header": "أخرى",
+        "react_devtools": {
+            "ip_label": "عنوان الشبكة"
+        },
+        "third_party_plugins": {
+            "button_install": "تنصيب",
+            "button_zip": "تصفح"
+        }
+    }
+}

@@ -1,4 +1,4 @@
-import { Dropdown, Field, TextField } from 'decky-frontend-lib';
+import { Dropdown, Field, TextField } from '@decky/ui';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaShapes } from 'react-icons/fa';

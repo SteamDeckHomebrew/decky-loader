@@ -1,0 +1,277 @@
+{
+    "BranchSelect": {
+        "update_channel": {
+            "label": "Канал обновлений",
+            "prerelease": "Предрелиз",
+            "stable": "Стабильный",
+            "testing": "Тестовый"
+        }
+    },
+    "Developer": {
+        "5secreload": "Перезагрузка через 5 секунд",
+        "disabling": "Выключение React DevTools",
+        "enabling": "Включение React DevTools"
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "Назад"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "Указан недействительный путь. Пожалуйста, проверьте его и повторите ввод.",
+            "perm_denied": "У вас нет доступа к указанному каталогу.. Пожалуйста, проверьте имеет ли пользователь (deck на Steam Deck) соответствующие права доступа к указанной папке/файлу.",
+            "unknown": "Произошла неизвестная ошибка. Текст ошибки: {{raw_error}}"
+        }
+    },
+    "FilePickerIndex": {
+        "file": {
+            "select": "Выберите этот файл"
+        },
+        "files": {
+            "all_files": "Все файлы",
+            "file_type": "Тип файла",
+            "show_hidden": "Показать скрытые файлы"
+        },
+        "filter": {
+            "created_asce": "Создан (самый старый)",
+            "created_desc": "Создан (самый новый)",
+            "modified_asce": "Модифицирован (самый новый)",
+            "modified_desc": "Модифицирован (самый старый)",
+            "name_asce": "Z-A",
+            "name_desc": "A-Z",
+            "size_asce": "Размер (самый малый)",
+            "size_desc": "Размер (самый большой)"
+        },
+        "folder": {
+            "label": "Папка",
+            "select": "Использовать этот каталог",
+            "show_more": "Показать больше файлов"
+        }
+    },
+    "MultiplePluginsInstallModal": {
+        "confirm": "Вы уверены, что хотите внести следующие изменения?",
+        "description": {
+            "install": "Установить {{name}} {{version}}",
+            "reinstall": "Переустановить {{name}} {{version}}",
+            "update": "Обновить с {{name}} на {{version}}"
+        },
+        "ok_button": {
+            "idle": "Подтвердить",
+            "loading": "В процессе"
+        },
+        "title": {
+            "install_few": "Установить {{count}} плагинов",
+            "install_many": "Установить {{count}} плагинов",
+            "install_one": "Установить {{count}} плагин",
+            "mixed_few": "Изменить {{count}} плагинов",
+            "mixed_many": "Изменить {{count}} плагинов",
+            "mixed_one": "Изменить {{count}} плагин",
+            "reinstall_few": "Переустановить {{count}} плагинов",
+            "reinstall_many": "Переустановить {{count}} плагинов",
+            "reinstall_one": "Переустановить {{count}} плагин",
+            "update_few": "Переустановить {{count}} плагинов",
+            "update_many": "Переустановить {{count}} плагинов",
+            "update_one": "Переустановить {{count}} плагин"
+        }
+    },
+    "PluginCard": {
+        "plugin_full_access": "Этот плагин имеет полный доступ к вашему Steam Deck.",
+        "plugin_install": "Установить",
+        "plugin_no_desc": "Нет описания.",
+        "plugin_version_label": "Версия плагина"
+    },
+    "PluginInstallModal": {
+        "install": {
+            "button_idle": "Установить",
+            "button_processing": "Установка",
+            "desc": "Вы уверены, что хотите установить {{artifact}} {{version}}?",
+            "title": "Установить {{artifact}}"
+        },
+        "no_hash": "У данного плагина отсутствует хэш, устанавливайте на свой страх и риск.",
+        "reinstall": {
+            "button_idle": "Переустановить",
+            "button_processing": "Переустановка",
+            "desc": "Вы уверены, что хотите переустановить {{artifact}} {{version}}?",
+            "title": "Переустановить {{artifact}}"
+        },
+        "update": {
+            "button_idle": "Обновить",
+            "button_processing": "Обновление",
+            "desc": "Вы уверены, что хотите обновить {{artifact}} {{version}}?",
+            "title": "Обновить {{artifact}}"
+        }
+    },
+    "PluginListIndex": {
+        "freeze": "Остановить обновления",
+        "hide": "Быстрый доступ: Скрыть",
+        "no_plugin": "Не установлено ни одного плагина!",
+        "plugin_actions": "Действия с плагинами",
+        "reinstall": "Переустановить",
+        "reload": "Перезагрузить",
+        "show": "Быстрый доступ: Показать",
+        "unfreeze": "Разрешить обновления",
+        "uninstall": "Удалить",
+        "update_all_few": "Обновить {{count}} плагинов",
+        "update_all_many": "Обновить {{count}} плагинов",
+        "update_all_one": "Обновить {{count}} плагин",
+        "update_to": "Обновить на {{name}}"
+    },
+    "PluginListLabel": {
+        "hidden": "Скрыто из меню быстрого доступа"
+    },
+    "PluginLoader": {
+        "decky_title": "Decky",
+        "decky_update_available": "Доступно обновление на {{tag_name}}!",
+        "error": "Ошибка",
+        "plugin_error_uninstall": "Загрузка {{name}} вызвала исключение, указанное выше. Обычно это означает, что плагин требует обновления для новой версии SteamUI. Проверьте наличие обновления или попробуйте его удалить в настройках Decky, в разделе Плагины.",
+        "plugin_load_error": {
+            "message": "Ошибка загрузки плагина {{name}}",
+            "toast": "Ошибка загрузки {{name}}"
+        },
+        "plugin_uninstall": {
+            "button": "Удалить",
+            "desc": "Вы уверены, что хотите удалить {{name}}?",
+            "title": "Удалить {{name}}"
+        },
+        "plugin_update_few": "Обновления доступны для {{count}} плагинов!",
+        "plugin_update_many": "Обновления доступны для {{count}} плагинов!",
+        "plugin_update_one": "Обновления доступны для {{count}} плагина!"
+    },
+    "PluginView": {
+        "hidden_few": "{{count}} плагинов скрыт из списка",
+        "hidden_many": "{{count}} плагинов скрыт из списка",
+        "hidden_one": "{{count}} плагин скрыт из списка"
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "desc": "Разрешить неаутентифицированный доступ к отладчику CEF всем в вашей сети",
+            "label": "Разрешить удаленную отладку CEF"
+        }
+    },
+    "SettingsDeveloperIndex": {
+        "cef_console": {
+            "button": "Открыть консоль",
+            "desc": "Открывает консоль CEF. Полезно только для целей отладки. Настройки здесь потенциально опасны и должны использоваться только в том случае, если вы являетесь разработчиком плагинов или направленны сюда одним из них.",
+            "label": "CEF Консоль"
+        },
+        "header": "Другое",
+        "react_devtools": {
+            "desc": "Позволяет подключиться к компьютеру, на котором работает React DevTools. Изменение этого параметра приведет к перезагрузке Steam. Установите IP-адрес перед включением.",
+            "ip_label": "IP",
+            "label": "Включить React DevTools"
+        },
+        "third_party_plugins": {
+            "button_install": "Установить",
+            "button_zip": "Обзор",
+            "header": "Сторонние плагины",
+            "label_desc": "Ссылка",
+            "label_url": "Установить плагин из URL",
+            "label_zip": "Установить плагин из ZIP файла"
+        },
+        "valve_internal": {
+            "desc1": "Включает внутреннее меню разработчика Valve.",
+            "desc2": "Ничего не трогайте в этом меню, если не знаете, что оно делает.",
+            "label": "Включить Valve Internal"
+        }
+    },
+    "SettingsGeneralIndex": {
+        "about": {
+            "decky_version": "Версия Decky",
+            "header": "Информация"
+        },
+        "beta": {
+            "header": "Бета программа"
+        },
+        "developer_mode": {
+            "label": "Режим разработчика"
+        },
+        "notifications": {
+            "decky_updates_label": "Обновление Decky доступно",
+            "header": "Уведомления",
+            "plugin_updates_label": "Доступны обновления плагинов"
+        },
+        "other": {
+            "header": "Другое"
+        },
+        "updates": {
+            "header": "Обновления"
+        }
+    },
+    "SettingsIndex": {
+        "developer_title": "Разработчик",
+        "general_title": "Общее",
+        "plugins_title": "Плагины",
+        "testing_title": "Тестирование"
+    },
+    "Store": {
+        "store_contrib": {
+            "desc": "Если вы хотите внести свой вклад в магазин плагинов Decky, проверьте репозиторий SteamDeckHomebrew/decky-plugin-template на GitHub. Информация о разработке и распространении доступна в README.",
+            "label": "Помощь проекту"
+        },
+        "store_filter": {
+            "label": "Фильтр",
+            "label_def": "Все"
+        },
+        "store_search": {
+            "label": "Поиск"
+        },
+        "store_sort": {
+            "label": "Сортировка",
+            "label_def": "Последнее обновление(самые новые)"
+        },
+        "store_source": {
+            "desc": "Весь исходный код плагина доступен в репозитории SteamDeckHomebrew/decky-plugin-database на GitHub.",
+            "label": "Исходный код"
+        },
+        "store_tabs": {
+            "about": "Информация",
+            "alph_asce": "По алфавиту (Z - A)",
+            "alph_desc": "По алфавиту (A - Z)",
+            "date_asce": "Сначала старые",
+            "date_desc": "Сначала новые",
+            "downloads_asce": "Наименее загружаемые сначала",
+            "downloads_desc": "Наиболее загружаемые сначала",
+            "title": "Обзор"
+        },
+        "store_testing_cta": "Пожалуйста, рассмотрите возможность тестирования новых плагинов, чтобы помочь команде Decky Loader!",
+        "store_testing_warning": {
+            "desc": "Вы можете использовать этот канал магазина для тестирования новейших версий плагинов. Не забудьте оставить отзыв на GitHub, чтобы плагин можно было обновить для всех пользователей.",
+            "label": "Добро пожаловать в тестовый канал магазина"
+        }
+    },
+    "StoreSelect": {
+        "custom_store": {
+            "label": "Сторонний магазин",
+            "url_label": "URL"
+        },
+        "store_channel": {
+            "custom": "Сторонний",
+            "default": "По-умолчанию",
+            "label": "Канал магазина",
+            "testing": "Тестовый"
+        }
+    },
+    "Testing": {
+        "download": "Загрузить"
+    },
+    "TitleView": {
+        "decky_store_desc": "Открыть магазин Decky",
+        "settings_desc": "Открыть настройки Decky"
+    },
+    "Updater": {
+        "decky_updates": "Обновления Decky",
+        "no_patch_notes_desc": "нет примечаний к патчу для этой версии",
+        "patch_notes_desc": "Примечания к патчу",
+        "updates": {
+            "check_button": "Проверить обновления",
+            "checking": "Проверка",
+            "cur_version": "Текущая версия: {{ver}}",
+            "install_button": "Установить обновление",
+            "label": "Обновления",
+            "lat_version": "Обновлено: версия {{ver}}",
+            "reloading": "Перезагрузка",
+            "updating": "Обновление"
+        }
+    }
+}

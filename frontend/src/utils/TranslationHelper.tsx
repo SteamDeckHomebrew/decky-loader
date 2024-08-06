@@ -11,47 +11,42 @@ export enum TranslationClass {
 }
 
 interface TranslationHelperProps {
-  trans_class: TranslationClass;
-  trans_text: string;
-  i18n_args?: {};
-  install_type?: number;
+  transClass: TranslationClass;
+  transText: string;
+  i18nArgs?: {};
+  installType?: number;
 }
 
 const logger = new Logger('TranslationHelper');
 
-const TranslationHelper: FC<TranslationHelperProps> = ({
-  trans_class,
-  trans_text,
-  i18n_args = null,
-  install_type = 0,
-}) => {
+const TranslationHelper: FC<TranslationHelperProps> = ({ transClass, transText, i18nArgs = null, installType = 0 }) => {
   return (
     <Translation>
       {(t, {}) => {
-        switch (trans_class) {
+        switch (transClass) {
           case TranslationClass.PLUGIN_LOADER:
-            return i18n_args
-              ? t(TranslationClass.PLUGIN_LOADER + '.' + trans_text, i18n_args)
-              : t(TranslationClass.PLUGIN_LOADER + '.' + trans_text);
+            return i18nArgs
+              ? t(TranslationClass.PLUGIN_LOADER + '.' + transText, i18nArgs)
+              : t(TranslationClass.PLUGIN_LOADER + '.' + transText);
           case TranslationClass.PLUGIN_INSTALL_MODAL:
-            switch (install_type) {
+            switch (installType) {
               case InstallType.INSTALL:
-                return i18n_args
-                  ? t(TranslationClass.PLUGIN_INSTALL_MODAL + '.install.' + trans_text, i18n_args)
-                  : t(TranslationClass.PLUGIN_INSTALL_MODAL + '.install.' + trans_text);
+                return i18nArgs
+                  ? t(TranslationClass.PLUGIN_INSTALL_MODAL + '.install.' + transText, i18nArgs)
+                  : t(TranslationClass.PLUGIN_INSTALL_MODAL + '.install.' + transText);
               case InstallType.REINSTALL:
-                return i18n_args
-                  ? t(TranslationClass.PLUGIN_INSTALL_MODAL + '.reinstall.' + trans_text, i18n_args)
-                  : t(TranslationClass.PLUGIN_INSTALL_MODAL + '.reinstall.' + trans_text);
+                return i18nArgs
+                  ? t(TranslationClass.PLUGIN_INSTALL_MODAL + '.reinstall.' + transText, i18nArgs)
+                  : t(TranslationClass.PLUGIN_INSTALL_MODAL + '.reinstall.' + transText);
               case InstallType.UPDATE:
-                return i18n_args
-                  ? t(TranslationClass.PLUGIN_INSTALL_MODAL + '.update.' + trans_text, i18n_args)
-                  : t(TranslationClass.PLUGIN_INSTALL_MODAL + '.update.' + trans_text);
+                return i18nArgs
+                  ? t(TranslationClass.PLUGIN_INSTALL_MODAL + '.update.' + transText, i18nArgs)
+                  : t(TranslationClass.PLUGIN_INSTALL_MODAL + '.update.' + transText);
             }
           case TranslationClass.DEVELOPER:
-            return i18n_args
-              ? t(TranslationClass.DEVELOPER + '.' + trans_text, i18n_args)
-              : t(TranslationClass.DEVELOPER + '.' + trans_text);
+            return i18nArgs
+              ? t(TranslationClass.DEVELOPER + '.' + transText, i18nArgs)
+              : t(TranslationClass.DEVELOPER + '.' + transText);
           default:
             logger.error('We should never fall in the default case!');
             return '';

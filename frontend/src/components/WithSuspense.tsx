@@ -1,4 +1,4 @@
-import { Focusable, SteamSpinner } from 'decky-frontend-lib';
+import { Focusable, SteamSpinner } from '@decky/ui';
 import { FunctionComponent, ReactElement, ReactNode, Suspense } from 'react';
 
 interface WithSuspenseProps {
@@ -26,7 +26,7 @@ const WithSuspense: FunctionComponent<WithSuspenseProps> = (props) => {
             }),
           }}
         >
-          <SteamSpinner />
+          <SteamSpinner background="transparent" />
         </Focusable>
       }
     >

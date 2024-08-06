@@ -1,19 +1,20 @@
+import { ToastNotification } from '@decky/api';
 import {
   ModalRoot,
+  Navigation,
   PanelSection,
   PanelSectionRow,
-  Patch,
   QuickAccessTab,
-  Router,
+  findSP,
   quickAccessMenuClasses,
   showModal,
   sleep,
-} from 'decky-frontend-lib';
+} from '@decky/ui';
 import { FC, lazy } from 'react';
-import { FaExclamationCircle, FaPlug } from 'react-icons/fa';
+import { FaDownload, FaExclamationCircle, FaPlug } from 'react-icons/fa';
 
+import DeckyIcon from './components/DeckyIcon';
 import { DeckyState, DeckyStateContextProvider, UserInfo, useDeckyState } from './components/DeckyState';
-import LegacyPlugin from './components/LegacyPlugin';
 import { File, FileSelectionType } from './components/modals/filepicker';
 import { deinitFilepickerPatches, initFilepickerPatches } from './components/modals/filepicker/patches';
 import MultiplePluginsInstallModal from './components/modals/MultiplePluginsInstallModal';
@@ -21,19 +22,20 @@ import PluginInstallModal from './components/modals/PluginInstallModal';
 import PluginUninstallModal from './components/modals/PluginUninstallModal';
 import NotificationBadge from './components/NotificationBadge';
 import PluginView from './components/PluginView';
+import { useQuickAccessVisible } from './components/QuickAccessVisibleState';
 import WithSuspense from './components/WithSuspense';
+import ErrorBoundaryHook from './errorboundary-hook';
 import { FrozenPluginService } from './frozen-plugins-service';
 import { HiddenPluginsService } from './hidden-plugins-service';
 import Logger from './logger';
 import { NotificationService } from './notification-service';
-import { InstallType, Plugin } from './plugin';
-import RouterHook from './router-hook';
+import { InstallType, Plugin, PluginLoadType } from './plugin';
+import RouterHook, { UIMode } from './router-hook';
 import { deinitSteamFixes, initSteamFixes } from './steamfixes';
-import { checkForUpdates } from './store';
+import { checkForPluginUpdates } from './store';
 import TabsHook from './tabs-hook';
-import OldTabsHook from './tabs-hook.old';
 import Toaster from './toaster';
-import { VerInfo, callUpdaterMethod } from './updater';
+import { getVersionInfo } from './updater';
 import { getSetting, setSetting } from './utils/settings';
 import TranslationHelper, { TranslationClass } from './utils/TranslationHelper';
 
@@ -42,13 +44,34 @@ const SettingsPage = lazy(() => import('./components/settings'));
 
 const FilePicker = lazy(() => import('./components/modals/filepicker'));
 
+declare global {
+  interface Window {
+    __DECKY_SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED_deckyLoaderAPIInit?: {
+      connect: (version: number, key: string) => any; // Returns the backend API used above, no real point adding types to this.
+    };
+  }
+}
+
+/** Map of event names to event listeners */
+type listenerMap = Map<string, Set<(...args: any) => any>>;
+
+interface DeckyRequestInit extends RequestInit {
+  excludedHeaders: string[];
+}
+
+const callPluginMethod = DeckyBackend.callable<[pluginName: string, method: string, ...args: any], any>(
+  'loader/call_plugin_method',
+);
+
 class PluginLoader extends Logger {
   private plugins: Plugin[] = [];
-  private tabsHook: TabsHook | OldTabsHook = document.title == 'SP' ? new OldTabsHook() : new TabsHook();
-  // private windowHook: WindowHook = new WindowHook();
-  private routerHook: RouterHook = new RouterHook();
+  public errorBoundaryHook: ErrorBoundaryHook = new ErrorBoundaryHook();
+  private tabsHook: TabsHook = new TabsHook();
+  public routerHook: RouterHook = new RouterHook();
   public toaster: Toaster = new Toaster();
   private deckyState: DeckyState = new DeckyState();
+  // stores a map of plugin names to all their event listeners
+  private pluginEventListeners: Map<string, listenerMap> = new Map();
 
   public frozenPluginsService = new FrozenPluginService(this.deckyState);
   public hiddenPluginsService = new HiddenPluginsService(this.deckyState);
@@ -58,12 +81,26 @@ class PluginLoader extends Logger {
   // stores a list of plugin names which requested to be reloaded
   private pluginReloadQueue: { name: string; version?: string }[] = [];
 
-  private focusWorkaroundPatch?: Patch;
+  private loaderUpdateToast?: ToastNotification;
+  private pluginUpdateToast?: ToastNotification;
 
   constructor() {
     super(PluginLoader.name);
+
+    DeckyBackend.addEventListener('loader/notify_updates', this.notifyUpdates.bind(this));
+    DeckyBackend.addEventListener('loader/import_plugin', this.importPlugin.bind(this));
+    DeckyBackend.addEventListener('loader/unload_plugin', this.unloadPlugin.bind(this));
+    DeckyBackend.addEventListener('loader/add_plugin_install_prompt', this.addPluginInstallPrompt.bind(this));
+    DeckyBackend.addEventListener(
+      'loader/add_multiple_plugins_install_prompt',
+      this.addMultiplePluginsInstallPrompt.bind(this),
+    );
+    DeckyBackend.addEventListener('updater/update_download_percentage', () => {
+      this.deckyState.setIsLoaderUpdating(true);
+    });
+    DeckyBackend.addEventListener(`loader/plugin_event`, this.pluginEventListener);
+
     this.tabsHook.init();
-    this.log('Initialized');
 
     const TabBadge = () => {
       const { updates, hasLoaderUpdate } = useDeckyState();
@@ -82,6 +119,28 @@ class PluginLoader extends Logger {
         <DeckyStateContextProvider deckyState={this.deckyState}>
           <FaPlug />
           <TabBadge />
+          <style>
+            {`
+              /* fixes random overscrolling in QAM */
+              .${quickAccessMenuClasses?.TabContentColumn} {
+                flex-grow: 1 !important;
+                margin-top: 0 !important;
+                margin-bottom: 0 !important;
+                justify-content: center !important;
+              }
+              .${quickAccessMenuClasses?.Tab} {
+                flex-grow: 1 !important;
+                height: unset !important;
+                --decky-qam-tab-max-height: 64px; /* make things a little easier for themers */
+                max-height: var(--decky-qam-tab-max-height) !important;
+              }
+              /* they broke the footer a while ago and forgot to update the styles LOL */
+              .${quickAccessMenuClasses?.Tabs}.${quickAccessMenuClasses.TabsWithFooter} {
+                margin-bottom: 0 !important;
+                padding-bottom: 0 !important;
+              }
+            `}
+          </style>
         </DeckyStateContextProvider>
       ),
     });
@@ -105,19 +164,56 @@ class PluginLoader extends Logger {
 
     initFilepickerPatches();
 
-    this.getUserInfo();
+    this.initPluginBackendAPI();
 
-    this.updateVersion();
+    Promise.all([this.getUserInfo(), this.updateVersion()])
+      .then(() => this.loadPlugins())
+      .then(() => this.checkPluginUpdates())
+      .then(() => this.log('Initialized'));
+  }
+
+  private getPluginsFromBackend = DeckyBackend.callable<
+    [],
+    { name: string; version: string; load_type: PluginLoadType }[]
+  >('loader/get_plugins');
+
+  private async loadPlugins() {
+    let registration: any;
+    const uiMode = await new Promise(
+      (r) =>
+        (registration = SteamClient.UI.RegisterForUIModeChanged((mode: UIMode) => {
+          r(mode);
+          registration.unregister();
+        })),
+    );
+    if (uiMode == UIMode.BigPicture) {
+      // wait for SP window to exist before loading plugins
+      while (!findSP()) {
+        await sleep(100);
+      }
+    }
+    const plugins = await this.getPluginsFromBackend();
+    const pluginLoadPromises = [];
+    const loadStart = performance.now();
+    for (const plugin of plugins) {
+      if (!this.hasPlugin(plugin.name))
+        pluginLoadPromises.push(this.importPlugin(plugin.name, plugin.version, plugin.load_type, false));
+    }
+    await Promise.all(pluginLoadPromises);
+    const loadEnd = performance.now();
+    this.log(`Loaded ${plugins.length} plugins in ${loadEnd - loadStart}ms`);
+
+    this.checkPluginUpdates();
   }
 
   public async getUserInfo() {
-    const userInfo = (await this.callServerMethod('get_user_info')).result as UserInfo;
+    const userInfo = await DeckyBackend.call<[], UserInfo>('utilities/get_user_info');
     setSetting('user_info.user_name', userInfo.username);
     setSetting('user_info.user_home', userInfo.path);
   }
 
   public async updateVersion() {
-    const versionInfo = (await callUpdaterMethod('get_version')).result as VerInfo;
+    const versionInfo = await getVersionInfo();
     this.deckyState.setVersionInfo(versionInfo);
 
     return versionInfo;
@@ -128,16 +224,20 @@ class PluginLoader extends Logger {
     if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
       this.deckyState.setHasLoaderUpdate(true);
       if (this.notificationService.shouldNotify('deckyUpdates')) {
-        this.toaster.toast({
-          title: <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="decky_title" />,
+        this.loaderUpdateToast && this.loaderUpdateToast.dismiss();
+        await this.routerHook.waitForUnlock();
+        this.loaderUpdateToast = this.toaster.toast({
+          title: <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="decky_title" />,
           body: (
             <TranslationHelper
-              trans_class={TranslationClass.PLUGIN_LOADER}
-              trans_text="decky_update_available"
-              i18n_args={{ tag_name: versionInfo?.remote?.tag_name }}
+              transClass={TranslationClass.PLUGIN_LOADER}
+              transText="decky_update_available"
+              i18nArgs={{ tag_name: versionInfo?.remote?.tag_name }}
             />
           ),
-          onClick: () => Router.Navigate('/decky/settings'),
+          logo: <DeckyIcon />,
+          icon: <FaDownload />,
+          onClick: () => Navigation.Navigate('/decky/settings'),
         });
       }
     }
@@ -148,7 +248,7 @@ class PluginLoader extends Logger {
   public async checkPluginUpdates() {
     const frozenPlugins = this.deckyState.publicState().frozenPlugins;
 
-    const updates = await checkForUpdates(this.plugins.filter((p) => !frozenPlugins.includes(p.name)));
+    const updates = await checkForPluginUpdates(this.plugins.filter((p) => !frozenPlugins.includes(p.name)));
     this.deckyState.setUpdates(updates);
     return updates;
   }
@@ -156,16 +256,19 @@ class PluginLoader extends Logger {
   public async notifyPluginUpdates() {
     const updates = await this.checkPluginUpdates();
     if (updates?.size > 0 && this.notificationService.shouldNotify('pluginUpdates')) {
-      this.toaster.toast({
-        title: <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="decky_title" />,
+      this.pluginUpdateToast && this.pluginUpdateToast.dismiss();
+      this.pluginUpdateToast = this.toaster.toast({
+        title: <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="decky_title" />,
         body: (
           <TranslationHelper
-            trans_class={TranslationClass.PLUGIN_LOADER}
-            trans_text="plugin_update"
-            i18n_args={{ count: updates.size }}
+            transClass={TranslationClass.PLUGIN_LOADER}
+            transText="plugin_update"
+            i18nArgs={{ count: updates.size }}
           />
         ),
-        onClick: () => Router.Navigate('/decky/settings/plugins'),
+        logo: <DeckyIcon />,
+        icon: <FaDownload />,
+        onClick: () => Navigation.Navigate('/decky/settings/plugins'),
       });
     }
   }
@@ -183,8 +286,8 @@ class PluginLoader extends Logger {
         version={version}
         hash={hash}
         installType={install_type}
-        onOK={() => this.callServerMethod('confirm_plugin_install', { request_id })}
-        onCancel={() => this.callServerMethod('cancel_plugin_install', { request_id })}
+        onOK={() => DeckyBackend.call<[string]>('utilities/confirm_plugin_install', request_id)}
+        onCancel={() => DeckyBackend.call<[string]>('utilities/cancel_plugin_install', request_id)}
       />,
     );
   }
@@ -196,8 +299,8 @@ class PluginLoader extends Logger {
     showModal(
       <MultiplePluginsInstallModal
         requests={requests}
-        onOK={() => this.callServerMethod('confirm_plugin_install', { request_id })}
-        onCancel={() => this.callServerMethod('cancel_plugin_install', { request_id })}
+        onOK={() => DeckyBackend.call<[string]>('utilities/confirm_plugin_install', request_id)}
+        onCancel={() => DeckyBackend.call<[string]>('utilities/cancel_plugin_install', request_id)}
       />,
     );
   }
@@ -222,9 +325,9 @@ class PluginLoader extends Logger {
       if (val) import('./developer').then((developer) => developer.startup());
     });
 
-    //* Grab and set plugin order
+    // Grab and set plugin order
     getSetting<string[]>('pluginOrder', []).then((pluginOrder) => {
-      console.log(pluginOrder);
+      this.debug('pluginOrder: ', pluginOrder);
       this.deckyState.setPluginOrder(pluginOrder);
     });
 
@@ -238,151 +341,166 @@ class PluginLoader extends Logger {
     this.routerHook.removeRoute('/decky/settings');
     deinitSteamFixes();
     deinitFilepickerPatches();
-    this.focusWorkaroundPatch?.unpatch();
+    this.routerHook.deinit();
+    this.tabsHook.deinit();
+    this.toaster.deinit();
+    this.errorBoundaryHook.deinit();
   }
 
   public unloadPlugin(name: string) {
-    console.log('Plugin List: ', this.plugins);
-    const plugin = this.plugins.find((plugin) => plugin.name === name || plugin.name === name.replace('$LEGACY_', ''));
+    const plugin = this.plugins.find((plugin) => plugin.name === name);
     plugin?.onDismount?.();
     this.plugins = this.plugins.filter((p) => p !== plugin);
     this.deckyState.setPlugins(this.plugins);
   }
 
-  public async importPlugin(name: string, version?: string | undefined) {
-    if (this.reloadLock) {
+  public async importPlugin(
+    name: string,
+    version?: string | undefined,
+    loadType: PluginLoadType = PluginLoadType.ESMODULE_V1,
+    useQueue: boolean = true,
+  ) {
+    if (useQueue && this.reloadLock) {
       this.log('Reload currently in progress, adding to queue', name);
       this.pluginReloadQueue.push({ name, version: version });
       return;
     }
 
     try {
-      this.reloadLock = true;
+      if (useQueue) this.reloadLock = true;
       this.log(`Trying to load ${name}`);
 
       this.unloadPlugin(name);
-
-      if (name.startsWith('$LEGACY_')) {
-        await this.importLegacyPlugin(name.replace('$LEGACY_', ''));
-      } else {
-        await this.importReactPlugin(name, version);
-      }
+      const startTime = performance.now();
+      await this.importReactPlugin(name, version, loadType);
+      const endTime = performance.now();
 
       this.deckyState.setPlugins(this.plugins);
-      this.log(`Loaded ${name}`);
+      this.log(`Loaded ${name} in ${endTime - startTime}ms`);
     } catch (e) {
       throw e;
     } finally {
-      this.reloadLock = false;
-      const nextPlugin = this.pluginReloadQueue.shift();
-      if (nextPlugin) {
-        this.importPlugin(nextPlugin.name, nextPlugin.version);
+      if (useQueue) {
+        this.reloadLock = false;
+        const nextPlugin = this.pluginReloadQueue.shift();
+        if (nextPlugin) {
+          this.importPlugin(nextPlugin.name, nextPlugin.version);
+        }
       }
     }
   }
 
-  private async importReactPlugin(name: string, version?: string) {
-    let res = await fetch(`http://127.0.0.1:1337/plugins/${name}/frontend_bundle`, {
-      credentials: 'include',
-      headers: {
-        Authentication: window.deckyAuthToken,
-      },
-    });
+  private async importReactPlugin(
+    name: string,
+    version?: string,
+    loadType: PluginLoadType = PluginLoadType.ESMODULE_V1,
+  ) {
+    try {
+      switch (loadType) {
+        case PluginLoadType.ESMODULE_V1:
+          const plugin_exports = await import(`http://127.0.0.1:1337/plugins/${name}/dist/index.js`);
+          let plugin = plugin_exports.default();
 
-    if (res.ok) {
-      try {
-        let plugin_export = await eval(await res.text());
-        let plugin = plugin_export(this.createPluginAPI(name));
-        this.plugins.push({
-          ...plugin,
-          name: name,
-          version: version,
-        });
-      } catch (e) {
-        this.error('Error loading plugin ' + name, e);
-        const TheError: FC<{}> = () => (
-          <PanelSection>
-            <PanelSectionRow>
-              <div
-                className={quickAccessMenuClasses.FriendsTitle}
-                style={{ display: 'flex', justifyContent: 'center' }}
-              >
-                <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="error" />
-              </div>
-            </PanelSectionRow>
-            <PanelSectionRow>
-              <pre style={{ overflowX: 'scroll' }}>
-                <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
-              </pre>
-            </PanelSectionRow>
-            <PanelSectionRow>
-              <div className={quickAccessMenuClasses.Text}>
-                <TranslationHelper
-                  trans_class={TranslationClass.PLUGIN_LOADER}
-                  trans_text="plugin_error_uninstall"
-                  i18n_args={{ name: name }}
-                />
-              </div>
-            </PanelSectionRow>
-          </PanelSection>
-        );
-        this.plugins.push({
-          name: name,
-          version: version,
-          content: <TheError />,
-          icon: <FaExclamationCircle />,
-        });
-        this.toaster.toast({
-          title: (
-            <TranslationHelper
-              trans_class={TranslationClass.PLUGIN_LOADER}
-              trans_text="plugin_load_error.toast"
-              i18n_args={{ name: name }}
-            />
-          ),
-          body: '' + e,
-          icon: <FaExclamationCircle />,
-        });
+          this.plugins.push({
+            ...plugin,
+            name: name,
+            version: version,
+          });
+          break;
+
+        case PluginLoadType.LEGACY_EVAL_IIFE:
+          let res = await fetch(`http://127.0.0.1:1337/plugins/${name}/frontend_bundle`, {
+            credentials: 'include',
+            headers: {
+              'X-Decky-Auth': deckyAuthToken,
+            },
+          });
+          if (res.ok) {
+            let plugin_export: (serverAPI: any) => Plugin = await eval(
+              (await res.text()) + `\n//# sourceURL=decky://decky/legacy_plugin/${encodeURIComponent(name)}/index.js`,
+            );
+            let plugin = plugin_export(this.createLegacyPluginAPI(name));
+            this.plugins.push({
+              ...plugin,
+              name: name,
+              version: version,
+            });
+          } else throw new Error(`${name} frontend_bundle not OK`);
+          break;
+
+        default:
+          throw new Error(`${name} has no defined loadType.`);
       }
-    } else throw new Error(`${name} frontend_bundle not OK`);
-  }
-
-  private async importLegacyPlugin(name: string) {
-    const url = `http://127.0.0.1:1337/plugins/load_main/${name}`;
-    this.plugins.push({
-      name: name,
-      icon: <FaPlug />,
-      content: <LegacyPlugin url={url} />,
-    });
+    } catch (e) {
+      this.error('Error loading plugin ' + name, e);
+      const TheError: FC<{}> = () => (
+        <PanelSection>
+          <PanelSectionRow>
+            <div className={quickAccessMenuClasses.FriendsTitle} style={{ display: 'flex', justifyContent: 'center' }}>
+              <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="error" />
+            </div>
+          </PanelSectionRow>
+          <PanelSectionRow>
+            <pre style={{ overflowX: 'scroll' }}>
+              <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
+            </pre>
+          </PanelSectionRow>
+          <PanelSectionRow>
+            <div className={quickAccessMenuClasses.Text}>
+              <TranslationHelper
+                transClass={TranslationClass.PLUGIN_LOADER}
+                transText="plugin_error_uninstall"
+                i18nArgs={{ name: name }}
+              />
+            </div>
+          </PanelSectionRow>
+        </PanelSection>
+      );
+      this.plugins.push({
+        name: name,
+        version: version,
+        content: <TheError />,
+        icon: <FaExclamationCircle />,
+      });
+      this.toaster.toast({
+        title: (
+          <TranslationHelper
+            transClass={TranslationClass.PLUGIN_LOADER}
+            transText="plugin_load_error.toast"
+            i18nArgs={{ name: name }}
+          />
+        ),
+        body: '' + e,
+        icon: <FaExclamationCircle />,
+      });
+    }
   }
 
   async callServerMethod(methodName: string, args = {}) {
-    const response = await fetch(`http://127.0.0.1:1337/methods/${methodName}`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        Authentication: window.deckyAuthToken,
-      },
-      body: JSON.stringify(args),
-    });
-
-    return response.json();
+    this.warn(
+      `Calling ${methodName} via callServerMethod, which is deprecated and will be removed in a future release. Please switch to the backend API.`,
+    );
+    return await DeckyBackend.call<[methodName: string, kwargs: any], any>(
+      'utilities/_call_legacy_utility',
+      methodName,
+      args,
+    );
   }
 
-  openFilePicker(
+  openFilePickerLegacy(
     startPath: string,
     selectFiles?: boolean,
     regex?: RegExp,
   ): Promise<{ path: string; realpath: string }> {
+    this.warn('openFilePicker is deprecated and will be removed. Please migrate to openFilePickerV2');
     if (selectFiles) {
-      return this.openFilePickerV2(FileSelectionType.FILE, startPath, true, true, regex);
+      return this.openFilePicker(FileSelectionType.FILE, startPath, true, true, regex);
     } else {
-      return this.openFilePickerV2(FileSelectionType.FOLDER, startPath, false, true, regex);
+      return this.openFilePicker(FileSelectionType.FOLDER, startPath, false, true, regex);
     }
   }
 
-  openFilePickerV2(
+  openFilePicker(
     select: FileSelectionType,
     startPath: string,
     includeFiles?: boolean,
@@ -423,54 +541,164 @@ class PluginLoader extends Logger {
     });
   }
 
-  createPluginAPI(pluginName: string) {
-    return {
-      routerHook: this.routerHook,
-      toaster: this.toaster,
-      callServerMethod: this.callServerMethod,
-      openFilePicker: this.openFilePicker,
-      openFilePickerV2: this.openFilePickerV2,
-      async callPluginMethod(methodName: string, args = {}) {
-        const response = await fetch(`http://127.0.0.1:1337/plugins/${pluginName}/methods/${methodName}`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-            Authentication: window.deckyAuthToken,
-          },
-          body: JSON.stringify({
-            args,
-          }),
-        });
+  // Useful for audio/video streams
+  getExternalResourceURL(url: string) {
+    return `http://127.0.0.1:1337/fetch?auth=${deckyAuthToken}&fetch_url=${encodeURIComponent(url)}`;
+  }
 
-        return response.json();
-      },
-      fetchNoCors(url: string, request: any = {}) {
-        let args = { method: 'POST', headers: {} };
-        const req = { ...args, ...request, url, data: request.body };
-        req?.body && delete req.body;
-        return this.callServerMethod('http_request', req);
-      },
-      executeInTab(tab: string, runAsync: boolean, code: string) {
-        return this.callServerMethod('execute_in_tab', {
-          tab,
-          run_async: runAsync,
-          code,
-        });
-      },
-      injectCssIntoTab(tab: string, style: string) {
-        return this.callServerMethod('inject_css_into_tab', {
-          tab,
-          style,
-        });
-      },
-      removeCssFromTab(tab: string, cssId: any) {
-        return this.callServerMethod('remove_css_from_tab', {
-          tab,
-          css_id: cssId,
-        });
+  // Same syntax as fetch but only supports the url-based syntax and an object for headers since it's the most common usage pattern
+  fetchNoCors(input: string, init?: DeckyRequestInit | undefined): Promise<Response> {
+    const { headers: initHeaders = {}, ...restOfInit } = init || {};
+    const getPrefixedHeaders = () => {
+      let prefixedInitHeaders: { [name: string]: any } = {};
+      for (const [key, value] of Object.entries(initHeaders)) {
+        prefixedInitHeaders[`X-Decky-Header-${key}`] = value;
+      }
+      return prefixedInitHeaders;
+    };
+    const headers: { [name: string]: string } = getPrefixedHeaders();
+
+    if (init?.excludedHeaders) {
+      headers['X-Decky-Fetch-Excluded-Headers'] = init.excludedHeaders.join(', ');
+    }
+
+    return fetch(this.getExternalResourceURL(input), {
+      ...restOfInit,
+      credentials: 'include',
+      headers,
+    });
+  }
+
+  async legacyFetchNoCors(url: string, request: any = {}) {
+    let method: string;
+    const req = { headers: {}, ...request, data: request.body };
+    req?.body && delete req.body;
+    if (!request.method) {
+      method = 'POST';
+    } else {
+      method = request.method;
+      delete req.method;
+    }
+    try {
+      const ret = await DeckyBackend.call<
+        [method: string, url: string, extra_opts?: any],
+        { status: number; headers: { [key: string]: string }; body: string }
+      >('utilities/http_request', method, url, req);
+      return { success: true, result: ret };
+    } catch (e) {
+      return { success: false, result: e?.toString() };
+    }
+  }
+
+  initPluginBackendAPI() {
+    // Things will break *very* badly if plugin code touches this outside of @decky/api, so lets make that clear.
+    window.__DECKY_SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED_deckyLoaderAPIInit = {
+      connect: (version: number, pluginName: string) => {
+        if (version < 1 || version > 2) {
+          console.warn(`Plugin ${pluginName} requested unsupported api version ${version}.`);
+        }
+
+        const eventListeners: listenerMap = new Map();
+        this.pluginEventListeners.set(pluginName, eventListeners);
+
+        const backendAPI = {
+          call: (methodName: string, ...args: any) => {
+            return callPluginMethod(pluginName, methodName, ...args);
+          },
+          callable: (methodName: string) => {
+            return (...args: any) => callPluginMethod(pluginName, methodName, ...args);
+          },
+          addEventListener: (event: string, listener: (...args: any) => any) => {
+            if (!eventListeners.has(event)) {
+              eventListeners.set(event, new Set([listener]));
+            } else {
+              eventListeners.get(event)?.add(listener);
+            }
+            return listener;
+          },
+          removeEventListener: (event: string, listener: (...args: any) => any) => {
+            if (eventListeners.has(event)) {
+              const set = eventListeners.get(event);
+              set?.delete(listener);
+            }
+          },
+          openFilePicker: this.openFilePicker.bind(this),
+          executeInTab: DeckyBackend.callable<
+            [tab: String, runAsync: Boolean, code: string],
+            { success: boolean; result: any }
+          >('utilities/execute_in_tab'),
+          fetchNoCors: this.fetchNoCors.bind(this),
+          getExternalResourceURL: this.getExternalResourceURL.bind(this),
+          injectCssIntoTab: DeckyBackend.callable<[tab: string, style: string], string>(
+            'utilities/inject_css_into_tab',
+          ),
+          removeCssFromTab: DeckyBackend.callable<[tab: string, cssId: string]>('utilities/remove_css_from_tab'),
+          routerHook: this.routerHook,
+          toaster: this.toaster,
+          _version: 1,
+        } as any;
+
+        if (version >= 2) {
+          backendAPI._version = 2;
+          backendAPI.useQuickAccessVisible = useQuickAccessVisible;
+        }
+
+        this.debug(`${pluginName} connected to loader API.`);
+        return backendAPI;
       },
     };
+  }
+
+  pluginEventListener = (data: { plugin: string; event: string; args: any }) => {
+    const { plugin, event, args } = data;
+    this.debug(`Recieved plugin event ${event} for ${plugin} with args`, args);
+    if (!this.pluginEventListeners.has(plugin)) {
+      this.warn(`plugin ${plugin} does not have event listeners`);
+      return;
+    }
+    const eventListeners = this.pluginEventListeners.get(plugin)!;
+    if (eventListeners.has(event)) {
+      for (const listener of eventListeners.get(event)!) {
+        (async () => {
+          try {
+            await listener(...args);
+          } catch (e) {
+            this.error(`error in event ${event}`, e, listener);
+          }
+        })();
+      }
+    } else {
+      this.warn(`event ${event} has no listeners`);
+    }
+  };
+
+  createLegacyPluginAPI(pluginName: string) {
+    const pluginAPI = {
+      routerHook: this.routerHook,
+      toaster: this.toaster,
+      // Legacy
+      callServerMethod: this.callServerMethod.bind(this),
+      openFilePicker: this.openFilePickerLegacy.bind(this),
+      openFilePickerV2: this.openFilePicker.bind(this),
+      // Legacy
+      async callPluginMethod(methodName: string, args = {}) {
+        return DeckyBackend.call<[pluginName: string, methodName: string, kwargs: any], any>(
+          'loader/call_legacy_plugin_method',
+          pluginName,
+          methodName,
+          args,
+        );
+      },
+      fetchNoCors: this.legacyFetchNoCors.bind(this),
+      executeInTab: DeckyBackend.callable<
+        [tab: String, runAsync: Boolean, code: string],
+        { success: boolean; result: any }
+      >('utilities/execute_in_tab'),
+      injectCssIntoTab: DeckyBackend.callable<[tab: string, style: string], string>('utilities/inject_css_into_tab'),
+      removeCssFromTab: DeckyBackend.callable<[tab: string, cssId: string]>('utilities/remove_css_from_tab'),
+    };
+
+    return pluginAPI;
   }
 }
 

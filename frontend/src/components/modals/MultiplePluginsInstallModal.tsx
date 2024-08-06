@@ -1,6 +1,7 @@
-import { ConfirmModal, Navigation, QuickAccessTab } from 'decky-frontend-lib';
-import { FC, useMemo, useState } from 'react';
+import { ConfirmModal, Navigation, ProgressBarWithInfo, QuickAccessTab } from '@decky/ui';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FaCheck, FaDownload } from 'react-icons/fa';
 
 import { InstallType } from '../../plugin';
 
@@ -27,7 +28,41 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
   closeModal,
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [percentage, setPercentage] = useState<number>(0);
+  const [pluginsCompleted, setPluginsCompleted] = useState<string[]>([]);
+  const [pluginInProgress, setInProgress] = useState<string | null>();
+  const [downloadInfo, setDownloadInfo] = useState<string | null>(null);
   const { t } = useTranslation();
+
+  function updateDownloadState(percent: number, trans_text: string | undefined, trans_info: Record<string, string>) {
+    setPercentage(percent);
+    if (trans_text === undefined) {
+      setDownloadInfo(null);
+    } else {
+      setDownloadInfo(t(trans_text, trans_info));
+    }
+  }
+
+  function startDownload(name: string) {
+    setInProgress(name);
+    setPercentage(0);
+  }
+
+  function finishDownload(name: string) {
+    setPluginsCompleted((list) => [...list, name]);
+  }
+
+  useEffect(() => {
+    DeckyBackend.addEventListener('loader/plugin_download_info', updateDownloadState);
+    DeckyBackend.addEventListener('loader/plugin_download_start', startDownload);
+    DeckyBackend.addEventListener('loader/plugin_download_finish', finishDownload);
+
+    return () => {
+      DeckyBackend.removeEventListener('loader/plugin_download_info', updateDownloadState);
+      DeckyBackend.removeEventListener('loader/plugin_download_start', startDownload);
+      DeckyBackend.removeEventListener('loader/plugin_download_finish', finishDownload);
+    };
+  }, []);
 
   // used as part of the title translation
   // if we know all operations are of a specific type, we can show so in the title to make decision easier
@@ -46,7 +81,7 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
         setLoading(true);
         await onOK();
         setTimeout(() => Navigation.OpenQuickAccessMenu(QuickAccessTab.Decky), 250);
-        setTimeout(() => window.DeckyPluginLoader.checkPluginUpdates(), 1000);
+        setTimeout(() => DeckyPluginLoader.checkPluginUpdates(), 1000);
       }}
       onCancel={async () => {
         await onCancel();
@@ -66,7 +101,10 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
 
             return (
               <li key={i} style={{ display: 'flex', flexDirection: 'column' }}>
-                <div>{description}</div>
+                <span>
+                  {description}{' '}
+                  {(pluginsCompleted.includes(name) && <FaCheck />) || (name === pluginInProgress && <FaDownload />)}
+                </span>
                 {hash === 'False' && (
                   <div style={{ color: 'red', paddingLeft: '10px' }}>{t('PluginInstallModal.no_hash')}</div>
                 )}
@@ -74,6 +112,17 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
             );
           })}
         </ul>
+        {/* TODO: center the progress bar and make it 80% width */}
+        {loading && (
+          <ProgressBarWithInfo
+            // when the key changes, react considers this a new component so resets the progress without the smoothing animation
+            key={pluginInProgress}
+            bottomSeparator="none"
+            focusable={false}
+            nProgress={percentage}
+            sOperationText={downloadInfo}
+          />
+        )}
       </div>
     </ConfirmModal>
   );

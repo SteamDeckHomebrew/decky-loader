@@ -18,6 +18,16 @@ export const debug = (name: string, ...args: any[]) => {
   );
 };
 
+export const warn = (name: string, ...args: any[]) => {
+  console.warn(
+    `%c Decky %c ${name} %c`,
+    'background: #16a085; color: black;',
+    'background: #ffbb00; color: black;',
+    'color: blue;',
+    ...args,
+  );
+};
+
 export const error = (name: string, ...args: any[]) => {
   console.error(
     `%c Decky %c ${name} %c`,
@@ -39,6 +49,10 @@ class Logger {
 
   debug(...args: any[]) {
     debug(this.name, ...args);
+  }
+
+  warn(...args: any[]) {
+    warn(this.name, ...args);
   }
 
   error(...args: any[]) {

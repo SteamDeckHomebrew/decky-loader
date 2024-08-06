@@ -7,7 +7,7 @@ import {
   Tabs,
   TextField,
   findModule,
-} from 'decky-frontend-lib';
+} from '@decky/ui';
 import { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -89,7 +89,7 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
   useEffect(() => {
     (async () => {
       const res = await getPluginList(selectedSort[0], selectedSort[1]);
-      logger.log('got data!', res);
+      logger.debug('got data!', res);
       setPluginList(res);
       setPluginCount(res.length);
     })();
@@ -98,7 +98,7 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
   useEffect(() => {
     (async () => {
       const storeRes = await getStore();
-      logger.log(`store is ${storeRes}, isTesting is ${storeRes === Store.Testing}`);
+      logger.debug(`store is ${storeRes}, isTesting is ${storeRes === Store.Testing}`);
       setIsTesting(storeRes === Store.Testing);
     })();
   }, []);
@@ -222,7 +222,7 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
       <div>
         {!pluginList ? (
           <div style={{ height: '100%' }}>
-            <SteamSpinner />
+            <SteamSpinner background="transparent" />
           </div>
         ) : (
           pluginList

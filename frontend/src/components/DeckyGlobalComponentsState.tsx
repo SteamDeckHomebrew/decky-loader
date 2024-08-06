@@ -1,4 +1,4 @@
-import { FC, createContext, useContext, useEffect, useState } from 'react';
+import { FC, ReactNode, createContext, useContext, useEffect, useState } from 'react';
 
 interface PublicDeckyGlobalComponentsState {
   components: Map<string, FC>;
@@ -40,6 +40,7 @@ export const useDeckyGlobalComponentsState = () => useContext(DeckyGlobalCompone
 
 interface Props {
   deckyGlobalComponentsState: DeckyGlobalComponentsState;
+  children: ReactNode;
 }
 
 export const DeckyGlobalComponentsStateContextProvider: FC<Props> = ({

@@ -1,11 +1,4 @@
-import {
-  ButtonItem,
-  Dropdown,
-  Focusable,
-  PanelSectionRow,
-  SingleDropdownOption,
-  SuspensefulImage,
-} from 'decky-frontend-lib';
+import { ButtonItem, Dropdown, Focusable, PanelSectionRow, SingleDropdownOption, SuspensefulImage } from '@decky/ui';
 import { CSSProperties, FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

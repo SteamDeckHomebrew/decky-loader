@@ -8,7 +8,7 @@ import {
   ReorderableEntry,
   ReorderableList,
   showContextMenu,
-} from 'decky-frontend-lib';
+} from '@decky/ui';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaDownload, FaEllipsisH, FaRecycle } from 'react-icons/fa';
@@ -44,6 +44,8 @@ type PluginTableData = PluginData & {
   isDeveloper: boolean;
 };
 
+const reloadPluginBackend = DeckyBackend.callable<[pluginName: string], void>('loader/reload_plugin');
+
 function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }) {
   const { t } = useTranslation();
 
@@ -58,27 +60,21 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
     showContextMenu(
       <Menu label={t('PluginListIndex.plugin_actions')}>
         <MenuItem
-          onSelected={() => {
+          onSelected={async () => {
             try {
-              fetch(`http://127.0.0.1:1337/plugins/${name}/reload`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                  Authentication: window.deckyAuthToken,
-                },
-              });
+              await reloadPluginBackend(name);
             } catch (err) {
               console.error('Error Reloading Plugin Backend', err);
             }
 
-            window.DeckyPluginLoader.importPlugin(name, version);
+            DeckyPluginLoader.importPlugin(name, version);
           }}
         >
           {t('PluginListIndex.reload')}
         </MenuItem>
         <MenuItem
           onSelected={() =>
-            window.DeckyPluginLoader.uninstallPlugin(
+            DeckyPluginLoader.uninstallPlugin(
               name,
               t('PluginLoader.plugin_uninstall.title', { name }),
               t('PluginLoader.plugin_uninstall.button'),
@@ -161,12 +157,12 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
   const { t } = useTranslation();
 
   useEffect(() => {
-    window.DeckyPluginLoader.checkPluginUpdates();
+    DeckyPluginLoader.checkPluginUpdates();
   }, []);
 
   const [pluginEntries, setPluginEntries] = useState<ReorderableEntry<PluginTableData>[]>([]);
-  const frozenPluginsService = window.DeckyPluginLoader.frozenPluginsService;
-  const hiddenPluginsService = window.DeckyPluginLoader.hiddenPluginsService;
+  const hiddenPluginsService = DeckyPluginLoader.hiddenPluginsService;
+  const frozenPluginsService = DeckyPluginLoader.frozenPluginsService;
 
   useEffect(() => {
     setPluginEntries(

@@ -1,5 +1,5 @@
-import { ConfirmModal, Navigation, QuickAccessTab } from 'decky-frontend-lib';
-import { FC, useState } from 'react';
+import { ConfirmModal, Navigation, ProgressBarWithInfo, QuickAccessTab } from '@decky/ui';
+import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import TranslationHelper, { TranslationClass } from '../../utils/TranslationHelper';
@@ -24,7 +24,25 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
   closeModal,
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [percentage, setPercentage] = useState<number>(0);
+  const [downloadInfo, setDownloadInfo] = useState<string | null>(null);
   const { t } = useTranslation();
+
+  function updateDownloadState(percent: number, trans_text: string | undefined, trans_info: Record<string, string>) {
+    setPercentage(percent);
+    if (trans_text === undefined) {
+      setDownloadInfo(null);
+    } else {
+      setDownloadInfo(t(trans_text, trans_info));
+    }
+  }
+
+  useEffect(() => {
+    DeckyBackend.addEventListener('loader/plugin_download_info', updateDownloadState);
+    return () => {
+      DeckyBackend.removeEventListener('loader/plugin_download_info', updateDownloadState);
+    };
+  }, []);
 
   return (
     <ConfirmModal
@@ -34,36 +52,46 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
         setLoading(true);
         await onOK();
         setTimeout(() => Navigation.OpenQuickAccessMenu(QuickAccessTab.Decky), 250);
-        setTimeout(() => window.DeckyPluginLoader.checkPluginUpdates(), 1000);
+        setTimeout(() => DeckyPluginLoader.checkPluginUpdates(), 1000);
       }}
       onCancel={async () => {
         await onCancel();
       }}
       strTitle={
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
           <TranslationHelper
-            trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
-            trans_text="title"
-            i18n_args={{ artifact: artifact }}
-            install_type={installType}
+            transClass={TranslationClass.PLUGIN_INSTALL_MODAL}
+            transText="title"
+            i18nArgs={{ artifact: artifact }}
+            installType={installType}
           />
+          {loading && (
+            <div style={{ marginLeft: 'auto' }}>
+              <ProgressBarWithInfo
+                layout="inline"
+                bottomSeparator="none"
+                nProgress={percentage}
+                sOperationText={downloadInfo}
+              />
+            </div>
+          )}
         </div>
       }
       strOKButtonText={
         loading ? (
           <div>
             <TranslationHelper
-              trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
-              trans_text="button_processing"
-              install_type={installType}
+              transClass={TranslationClass.PLUGIN_INSTALL_MODAL}
+              transText="button_processing"
+              installType={installType}
             />
           </div>
         ) : (
           <div>
             <TranslationHelper
-              trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
-              trans_text="button_idle"
-              install_type={installType}
+              transClass={TranslationClass.PLUGIN_INSTALL_MODAL}
+              transText="button_idle"
+              installType={installType}
             />
           </div>
         )
@@ -71,13 +99,13 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
     >
       <div>
         <TranslationHelper
-          trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
-          trans_text="desc"
-          i18n_args={{
+          transClass={TranslationClass.PLUGIN_INSTALL_MODAL}
+          transText="desc"
+          i18nArgs={{
             artifact: artifact,
             version: version,
           }}
-          install_type={installType}
+          installType={installType}
         />
       </div>
       {hash == 'False' && <span style={{ color: 'red' }}>{t('PluginInstallModal.no_hash')}</span>}

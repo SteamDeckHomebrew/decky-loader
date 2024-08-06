@@ -1,9 +1,9 @@
-import { Dropdown, Field } from 'decky-frontend-lib';
+import { Dropdown, Field } from '@decky/ui';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Logger from '../../../../logger';
-import { callUpdaterMethod } from '../../../../updater';
+import { checkForUpdates } from '../../../../updater';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 
 const logger = new Logger('BranchSelect');
@@ -42,7 +42,7 @@ const BranchSelect: FunctionComponent<{}> = () => {
         selectedOption={selectedBranch}
         onChange={async (newVal) => {
           await setSelectedBranch(newVal.data);
-          callUpdaterMethod('check_for_updates');
+          checkForUpdates();
           logger.log('switching branches!');
         }}
       />

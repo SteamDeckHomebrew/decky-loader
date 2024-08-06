@@ -40,11 +40,11 @@ export async function setShowValveInternal(show: boolean) {
 export async function setShouldConnectToReactDevTools(enable: boolean) {
   DeckyPluginLoader.toaster.toast({
     title: enable ? (
-      <TranslationHelper transClass={TranslationClass.DEVELOPER} transText={'enabling'} />
+      <TranslationHelper trans_class={TranslationClass.DEVELOPER} trans_text={'enabling'} />
     ) : (
-      <TranslationHelper transClass={TranslationClass.DEVELOPER} transText={'disabling'} />
+      <TranslationHelper trans_class={TranslationClass.DEVELOPER} trans_text={'disabling'} />
     ),
-    body: <TranslationHelper transClass={TranslationClass.DEVELOPER} transText={'5secreload'} />,
+    body: <TranslationHelper trans_class={TranslationClass.DEVELOPER} trans_text={'5secreload'} />,
     icon: <FaReact />,
   });
   await sleep(5000);

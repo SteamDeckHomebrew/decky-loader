@@ -227,12 +227,12 @@ class PluginLoader extends Logger {
         this.loaderUpdateToast && this.loaderUpdateToast.dismiss();
         await this.routerHook.waitForUnlock();
         this.loaderUpdateToast = this.toaster.toast({
-          title: <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="decky_title" />,
+          title: <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="decky_title" />,
           body: (
             <TranslationHelper
-              transClass={TranslationClass.PLUGIN_LOADER}
-              transText="decky_update_available"
-              i18nArgs={{ tag_name: versionInfo?.remote?.tag_name }}
+              trans_class={TranslationClass.PLUGIN_LOADER}
+              trans_text="decky_update_available"
+              i18n_args={{ tag_name: versionInfo?.remote?.tag_name }}
             />
           ),
           logo: <DeckyIcon />,
@@ -258,12 +258,12 @@ class PluginLoader extends Logger {
     if (updates?.size > 0 && this.notificationService.shouldNotify('pluginUpdates')) {
       this.pluginUpdateToast && this.pluginUpdateToast.dismiss();
       this.pluginUpdateToast = this.toaster.toast({
-        title: <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="decky_title" />,
+        title: <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="decky_title" />,
         body: (
           <TranslationHelper
-            transClass={TranslationClass.PLUGIN_LOADER}
-            transText="plugin_update"
-            i18nArgs={{ count: updates.size }}
+            trans_class={TranslationClass.PLUGIN_LOADER}
+            trans_text="plugin_update"
+            i18n_args={{ count: updates.size }}
           />
         ),
         logo: <DeckyIcon />,
@@ -437,7 +437,7 @@ class PluginLoader extends Logger {
         <PanelSection>
           <PanelSectionRow>
             <div className={quickAccessMenuClasses.FriendsTitle} style={{ display: 'flex', justifyContent: 'center' }}>
-              <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="error" />
+              <TranslationHelper trans_class={TranslationClass.PLUGIN_LOADER} trans_text="error" />
             </div>
           </PanelSectionRow>
           <PanelSectionRow>
@@ -448,9 +448,9 @@ class PluginLoader extends Logger {
           <PanelSectionRow>
             <div className={quickAccessMenuClasses.Text}>
               <TranslationHelper
-                transClass={TranslationClass.PLUGIN_LOADER}
-                transText="plugin_error_uninstall"
-                i18nArgs={{ name: name }}
+                trans_class={TranslationClass.PLUGIN_LOADER}
+                trans_text="plugin_error_uninstall"
+                i18n_args={{ name: name }}
               />
             </div>
           </PanelSectionRow>
@@ -465,9 +465,9 @@ class PluginLoader extends Logger {
       this.toaster.toast({
         title: (
           <TranslationHelper
-            transClass={TranslationClass.PLUGIN_LOADER}
-            transText="plugin_load_error.toast"
-            i18nArgs={{ name: name }}
+            trans_class={TranslationClass.PLUGIN_LOADER}
+            trans_text="plugin_load_error.toast"
+            i18n_args={{ name: name }}
           />
         ),
         body: '' + e,

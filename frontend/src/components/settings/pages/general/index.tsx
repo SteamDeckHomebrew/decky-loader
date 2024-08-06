@@ -1,4 +1,4 @@
-import { DialogBody, DialogControlsSection, DialogControlsSectionHeader, Field, Toggle } from 'decky-frontend-lib';
+import { DialogBody, DialogControlsSection, DialogControlsSectionHeader, Field, Toggle } from '@decky/ui';
 import { useTranslation } from 'react-i18next';
 
 import { useDeckyState } from '../../../DeckyState';

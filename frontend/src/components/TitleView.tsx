@@ -1,5 +1,5 @@
-import { DialogButton, Focusable, Router, staticClasses } from 'decky-frontend-lib';
-import { CSSProperties, VFC } from 'react';
+import { DialogButton, Focusable, Navigation, staticClasses } from '@decky/ui';
+import { CSSProperties, FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BsGearFill } from 'react-icons/bs';
 import { FaArrowLeft, FaStore } from 'react-icons/fa';
@@ -14,18 +14,18 @@ const titleStyles: CSSProperties = {
   top: '0px',
 };
 
-const TitleView: VFC = () => {
+const TitleView: FC = () => {
   const { activePlugin, closeActivePlugin } = useDeckyState();
   const { t } = useTranslation();
 
   const onSettingsClick = () => {
-    Router.CloseSideMenus();
-    Router.Navigate('/decky/settings');
+    Navigation.Navigate('/decky/settings');
+    Navigation.CloseSideMenus();
   };
 
   const onStoreClick = () => {
-    Router.CloseSideMenus();
-    Router.Navigate('/decky/store');
+    Navigation.Navigate('/decky/store');
+    Navigation.CloseSideMenus();
   };
 
   if (activePlugin === null) {

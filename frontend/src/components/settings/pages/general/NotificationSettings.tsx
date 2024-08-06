@@ -1,4 +1,4 @@
-import { Field, Toggle } from 'decky-frontend-lib';
+import { Field, Toggle } from '@decky/ui';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -6,7 +6,7 @@ import { useDeckyState } from '../../../DeckyState';
 
 const NotificationSettings: FC = () => {
   const { notificationSettings } = useDeckyState();
-  const notificationService = window.DeckyPluginLoader.notificationService;
+  const notificationService = DeckyPluginLoader.notificationService;
 
   const { t } = useTranslation();
 

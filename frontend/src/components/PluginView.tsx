@@ -1,5 +1,5 @@
-import { ButtonItem, Focusable, PanelSection, PanelSectionRow } from 'decky-frontend-lib';
-import { VFC, useEffect, useState } from 'react';
+import { ButtonItem, ErrorBoundary, Focusable, PanelSection, PanelSectionRow } from '@decky/ui';
+import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaEyeSlash } from 'react-icons/fa';
 
@@ -9,7 +9,7 @@ import NotificationBadge from './NotificationBadge';
 import { useQuickAccessVisible } from './QuickAccessVisibleState';
 import TitleView from './TitleView';
 
-const PluginView: VFC = () => {
+const PluginView: FC = () => {
   const { hiddenPlugins } = useDeckyState();
   const { plugins, updates, activePlugin, pluginOrder, setActivePlugin, closeActivePlugin } = useDeckyState();
   const visible = useQuickAccessVisible();
@@ -29,7 +29,7 @@ const PluginView: VFC = () => {
       <Focusable onCancelButton={closeActivePlugin}>
         <TitleView />
         <div style={{ height: '100%', paddingTop: '16px' }}>
-          {(visible || activePlugin.alwaysRender) && activePlugin.content}
+          <ErrorBoundary>{(visible || activePlugin.alwaysRender) && activePlugin.content}</ErrorBoundary>
         </div>
       </Focusable>
     );

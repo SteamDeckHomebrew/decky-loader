@@ -1,4 +1,4 @@
-import { Focusable, Navigation } from 'decky-frontend-lib';
+import { Focusable, Navigation } from '@decky/ui';
 import { FunctionComponent, useRef } from 'react';
 import ReactMarkdown, { Options as ReactMarkdownOptions } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -13,8 +13,8 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
-          div: (nodeProps) => <Focusable {...nodeProps.node.properties}>{nodeProps.children}</Focusable>,
-          a: (nodeProps) => {
+          div: (nodeProps: any) => <Focusable {...nodeProps.node.properties}>{nodeProps.children}</Focusable>,
+          a: (nodeProps: any) => {
             const aRef = useRef<HTMLAnchorElement>(null);
             return (
               // TODO fix focus ring

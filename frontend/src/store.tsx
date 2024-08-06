@@ -1,4 +1,4 @@
-import { InstallType, Plugin } from './plugin';
+import { InstallType, Plugin, installPlugin, installPlugins } from './plugin';
 import { getSetting, setSetting } from './utils/settings';
 
 export enum Store {
@@ -53,7 +53,6 @@ export async function getPluginList(
 ): Promise<StorePlugin[]> {
   let version = await window.DeckyPluginLoader.updateVersion();
   let store = await getSetting<Store | null>('store', null);
-
   let customURL = await getSetting<string>('store-url', 'https://plugins.deckbrew.xyz/plugins');
 
   let query: URLSearchParams | string = new URLSearchParams();
@@ -81,6 +80,27 @@ export async function getPluginList(
       console.error('Somehow you ended up without a standard URL, using the default URL.');
       storeURL = 'https://plugins.deckbrew.xyz/plugins';
       break;
+      return fetch(storeURL, {
+        method: 'GET',
+        headers: {
+          'X-Decky-Version': version.current,
+        },
+      }).then((r) => r.json());
+  }
+  switch (+store) {
+    case Store.Default:
+      storeURL = 'https://plugins.deckbrew.xyz/plugins';
+      break;
+    case Store.Testing:
+      storeURL = 'https://testing.deckbrew.xyz/plugins';
+      break;
+    case Store.Custom:
+      storeURL = customURL;
+      break;
+    default:
+      console.error('Somehow you ended up without a standard URL, using the default URL.');
+      storeURL = 'https://plugins.deckbrew.xyz/plugins';
+      break;
   }
   return fetch(storeURL + query, {
     method: 'GET',
@@ -92,36 +112,27 @@ export async function getPluginList(
 
 export async function installFromURL(url: string) {
   const splitURL = url.split('/');
-  await window.DeckyPluginLoader.callServerMethod('install_plugin', {
-    name: splitURL[splitURL.length - 1].replace('.zip', ''),
-    artifact: url,
-  });
+  await installPlugin(url, splitURL[splitURL.length - 1].replace('.zip', ''));
 }
 
 export async function requestPluginInstall(plugin: string, selectedVer: StorePluginVersion, installType: InstallType) {
   const artifactUrl = selectedVer.artifact ?? pluginUrl(selectedVer.hash);
-  await window.DeckyPluginLoader.callServerMethod('install_plugin', {
-    name: plugin,
-    artifact: artifactUrl,
-    version: selectedVer.name,
-    hash: selectedVer.hash,
-    install_type: installType,
-  });
+  await installPlugin(artifactUrl, plugin, selectedVer.name, selectedVer.hash, installType);
 }
 
 export async function requestMultiplePluginInstalls(requests: PluginInstallRequest[]) {
-  await window.DeckyPluginLoader.callServerMethod('install_plugins', {
-    requests: requests.map(({ plugin, installType, selectedVer }) => ({
+  await installPlugins(
+    requests.map(({ plugin, installType, selectedVer }) => ({
       name: plugin,
       artifact: selectedVer.artifact ?? pluginUrl(selectedVer.hash),
       version: selectedVer.name,
       hash: selectedVer.hash,
       install_type: installType,
     })),
-  });
+  );
 }
 
-export async function checkForUpdates(plugins: Plugin[]): Promise<PluginUpdateMapping> {
+export async function checkForPluginUpdates(plugins: Plugin[]): Promise<PluginUpdateMapping> {
   const serverData = await getPluginList();
   const updateMap = new Map<string, StorePluginVersion>();
   for (let plugin of plugins) {

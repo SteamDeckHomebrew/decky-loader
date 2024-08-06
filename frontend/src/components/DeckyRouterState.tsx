@@ -1,4 +1,4 @@
-import { ComponentType, FC, createContext, useContext, useEffect, useState } from 'react';
+import { ComponentType, FC, ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import type { RouteProps } from 'react-router';
 
 export interface RouterEntry {
@@ -71,6 +71,7 @@ export const useDeckyRouterState = () => useContext(DeckyRouterStateContext);
 
 interface Props {
   deckyRouterState: DeckyRouterState;
+  children: ReactNode;
 }
 
 export const DeckyRouterStateContextProvider: FC<Props> = ({ children, deckyRouterState }) => {

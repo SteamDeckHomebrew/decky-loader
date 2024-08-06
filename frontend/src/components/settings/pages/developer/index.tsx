@@ -8,7 +8,7 @@ import {
   TextField,
   Toggle,
   showModal,
-} from 'decky-frontend-lib';
+} from '@decky/ui';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaFileArchive, FaLink, FaReact, FaSteamSymbol, FaTerminal } from 'react-icons/fa';
@@ -30,21 +30,16 @@ const installFromZip = async () => {
     logger.error('The default path has not been found!');
     return;
   }
-  window.DeckyPluginLoader.openFilePickerV2(
-    FileSelectionType.FILE,
-    path,
-    true,
-    true,
-    undefined,
-    ['zip'],
-    false,
-    false,
-  ).then((val) => {
-    const url = `file://${val.path}`;
-    console.log(`Installing plugin locally from ${url}`);
-    installFromURL(url);
-  });
+  DeckyPluginLoader.openFilePicker(FileSelectionType.FILE, path, true, true, undefined, ['zip'], false, false).then(
+    (val) => {
+      const url = `file://${val.path}`;
+      console.log(`Installing plugin locally from ${url}`);
+      installFromURL(url);
+    },
+  );
 };
+
+const getTabID = DeckyBackend.callable<[name: string], string>('utilities/get_tab_id');
 
 export default function DeveloperSettings() {
   const [enableValveInternal, setEnableValveInternal] = useSetting<boolean>('developer.valve_internal', false);
@@ -110,13 +105,13 @@ export default function DeveloperSettings() {
         >
           <DialogButton
             onClick={async () => {
-              let res = await window.DeckyPluginLoader.callServerMethod('get_tab_id', { name: 'SharedJSContext' });
-              if (res.success) {
+              try {
+                let tabId = await getTabID('SharedJSContext');
                 Navigation.NavigateToExternalWeb(
-                  'localhost:8080/devtools/inspector.html?ws=localhost:8080/devtools/page/' + res.result,
+                  'localhost:8080/devtools/inspector.html?ws=localhost:8080/devtools/page/' + tabId,
                 );
-              } else {
-                console.error('Unable to find ID for SharedJSContext tab ', res.result);
+              } catch (e) {
+                console.error('Unable to find ID for SharedJSContext tab ', e);
                 Navigation.NavigateToExternalWeb('localhost:8080');
               }
             }}

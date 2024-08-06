@@ -1,4 +1,4 @@
-import { Field, Toggle } from 'decky-frontend-lib';
+import { Field, Toggle } from '@decky/ui';
 import { useTranslation } from 'react-i18next';
 import { FaChrome } from 'react-icons/fa';
 
@@ -18,8 +18,8 @@ export default function RemoteDebuggingSettings() {
         value={allowRemoteDebugging || false}
         onChange={(toggleValue) => {
           setAllowRemoteDebugging(toggleValue);
-          if (toggleValue) window.DeckyPluginLoader.callServerMethod('allow_remote_debugging');
-          else window.DeckyPluginLoader.callServerMethod('disallow_remote_debugging');
+          if (toggleValue) DeckyBackend.call('utilities/allow_remote_debugging');
+          else DeckyBackend.call('utilities/disallow_remote_debugging');
         }}
       />
     </Field>

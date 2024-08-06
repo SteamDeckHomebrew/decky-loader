@@ -4,11 +4,6 @@ export enum Branches {
   // Testing,
 }
 
-export interface DeckyUpdater {
-  updateProgress: (val: number) => void;
-  finish: () => void;
-}
-
 export interface RemoteVerInfo {
   assets: {
     browser_download_url: string;
@@ -28,20 +23,8 @@ export interface VerInfo {
   updatable: boolean;
 }
 
-export async function callUpdaterMethod(methodName: string, args = {}) {
-  const response = await fetch(`http://127.0.0.1:1337/updater/${methodName}`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      Authentication: window.deckyAuthToken,
-    },
-    body: JSON.stringify(args),
-  });
-
-  return response.json();
-}
-
-export async function finishUpdate() {
-  callUpdaterMethod('do_restart');
-}
+export const doUpdate = DeckyBackend.callable('updater/do_update');
+export const doRestart = DeckyBackend.callable('updater/do_restart');
+export const doShutdown = DeckyBackend.callable('updater/do_shutdown');
+export const getVersionInfo = DeckyBackend.callable<[], VerInfo>('updater/get_version_info');
+export const checkForUpdates = DeckyBackend.callable<[], VerInfo>('updater/check_for_updates');

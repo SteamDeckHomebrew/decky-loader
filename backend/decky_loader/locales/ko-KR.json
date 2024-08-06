@@ -1,0 +1,276 @@
+{
+    "BranchSelect": {
+        "update_channel": {
+            "label": "업데이트 배포 채널",
+            "prerelease": "사전 출시",
+            "stable": "안정",
+            "testing": "테스트"
+        }
+    },
+    "Developer": {
+        "5secreload": "5초 내로 다시 로드 됩니다",
+        "disabling": "React DevTools 비활성화",
+        "enabling": "React DevTools 활성화"
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "뒤로"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "지정된 경로가 잘못되었습니다. 확인 후에 다시 입력해 주세요.",
+            "perm_denied": "선택한 경로에 접근 할 수 없습니다. 선택한 폴더/파일 접근 권한이 유저(Steam Deck의 deck 유저)에 맞게 올바르게 설정 되었는지 확인하세요.",
+            "unknown": "알 수 없는 오류가 발생했습니다. Raw 오류: {{raw_error}}"
+        }
+    },
+    "FilePickerIndex": {
+        "file": {
+            "select": "이 파일 선택"
+        },
+        "files": {
+            "all_files": "모든 파일",
+            "file_type": "파일 형식",
+            "show_hidden": "숨김 파일 표시"
+        },
+        "filter": {
+            "created_asce": "만든 날짜 (오름차순)",
+            "created_desc": "만든 날짜 (내림차 순)",
+            "modified_asce": "수정한 날짜 (오름차순)",
+            "modified_desc": "수정한 날짜 (내림차순)",
+            "name_asce": "Z-A",
+            "name_desc": "A-Z",
+            "size_asce": "크기 (오름차순)",
+            "size_desc": "크기 (내림차순)"
+        },
+        "folder": {
+            "label": "폴더",
+            "select": "이 폴더 사용",
+            "show_more": "더 많은 파일 표시"
+        }
+    },
+    "MultiplePluginsInstallModal": {
+        "confirm": "해당 수정을 적용하겠습니까?",
+        "description": {
+            "install": "{{name}} {{version}} 플러그인 설치",
+            "reinstall": "{{name}} {{version}} 재설치",
+            "update": "{{name}}의 {{version}} 업데이트 설치"
+        },
+        "ok_button": {
+            "idle": "확인",
+            "loading": "작업 중"
+        },
+        "title": {
+            "install_other": "플러그인 {{count}}개 설치",
+            "mixed_other": "플러그인 {{count}}개 수정",
+            "reinstall_other": "플러그인 {{count}}개 재설치",
+            "update_other": "플러그인 {{count}}개 업데이트"
+        }
+    },
+    "PluginCard": {
+        "plugin_full_access": "이 플러그인은 Steam Deck의 모든 접근 권한을 가집니다.",
+        "plugin_install": "설치",
+        "plugin_no_desc": "플러그인 설명이 제공되지 않았습니다.",
+        "plugin_version_label": "플러그인 버전"
+    },
+    "PluginInstallModal": {
+        "install": {
+            "button_idle": "설치",
+            "button_processing": "설치 중",
+            "desc": "{{artifact}} {{version}}을(를) 설치하겠습니까?",
+            "title": "{{artifact}} 설치"
+        },
+        "no_hash": "이 플러그인은 해시 확인을 하지 않습니다, 설치에 따른 위험은 사용자가 감수해야 합니다.",
+        "reinstall": {
+            "button_idle": "재설치",
+            "button_processing": "재설치 중",
+            "desc": "{{artifact}} {{version}}을(를) 재설치하겠습니까?",
+            "title": "{{artifact}} 재설치"
+        },
+        "update": {
+            "button_idle": "업데이트",
+            "button_processing": "업데이트 중",
+            "desc": "{{artifact}} {{version}} 업데이트를 설치하겠습니까?",
+            "title": "{{artifact}} 업데이트"
+        }
+    },
+    "PluginListIndex": {
+        "freeze": "업데이트 일시 중지",
+        "hide": "빠른 액세스 메뉴: 숨김",
+        "no_plugin": "설치된 플러그인이 없습니다!",
+        "plugin_actions": "플러그인 동작",
+        "reinstall": "재설치",
+        "reload": "다시 로드",
+        "show": "빠른 액세스 메뉴: 표시",
+        "unfreeze": "업데이트 허용",
+        "uninstall": "설치 제거",
+        "update_all_other": "플러그인 {{count}}개 업데이트",
+        "update_to": "{{name}}(으)로 업데이트"
+    },
+    "PluginListLabel": {
+        "hidden": "빠른 액세스 메뉴에서 숨김"
+    },
+    "PluginLoader": {
+        "decky_title": "Decky",
+        "decky_update_available": "{{tag_name}} 업데이트를 설치할 수 있습니다!",
+        "error": "오류",
+        "plugin_error_uninstall": "{{name}} 플러그인을 불러올 때 위와 같은 예외가 발생했습니다. 이는 보통 SteamUI 최신 버전에 맞는 플러그인 업데이트가 필요할 때 발생합니다. Decky 설정의 플러그인 섹션에서 업데이트가 있는지 확인하거나 설치 제거를 시도 해 보세요.",
+        "plugin_load_error": {
+            "message": "{{name}} 플러그인 불러오기 오류",
+            "toast": "{{name}} 불러오기 오류"
+        },
+        "plugin_uninstall": {
+            "button": "설치 제거",
+            "desc": "{{name}}을(를) 설치 제거하겠습니까?",
+            "title": "{{name}} 설치 제거"
+        },
+        "plugin_update_other": "플러그인 {{count}}개를 업데이트 할 수 있습니다!"
+    },
+    "PluginView": {
+        "hidden_other": "플러그인 {{count}}개 숨김"
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "desc": "네트워크의 모든 사용자에게 CEF 디버거에 대한 인증되지 않은 액세스 허용",
+            "label": "리모트 CEF 디버그 허용"
+        }
+    },
+    "SettingsDeveloperIndex": {
+        "cef_console": {
+            "button": "콘솔 열기",
+            "desc": "CEF 콘솔을 엽니다. 디버그 전용입니다. 이 항목들은 위험 가능성이 있으므로 플러그인 개발자이거나 개발자의 가이드를 따를 경우에만 사용해야 합니다.",
+            "label": "CEF 콘솔"
+        },
+        "header": "기타",
+        "react_devtools": {
+            "desc": "React DevTools를 실행하고 있는 컴퓨터에 연결을 활성화합니다. 이 설정을 변경하면 Steam이 다시 로드됩니다. 활성화하기 전에 IP 주소를 설정하세요.",
+            "ip_label": "IP",
+            "label": "React DevTools 활성화"
+        },
+        "third_party_plugins": {
+            "button_install": "설치",
+            "button_zip": "검색",
+            "header": "서드파티 플러그인",
+            "label_desc": "URL",
+            "label_url": "URL에서 플러그인 설치",
+            "label_zip": "ZIP 파일에서 플러그인 설치"
+        },
+        "valve_internal": {
+            "desc1": "Valve 내부 개발자 메뉴를 활성화합니다.",
+            "desc2": "이 메뉴의 기능을 모른다면 어떤 것도 건드리지 마세요.",
+            "label": "Valve 내부 개발자 메뉴 활성화"
+        }
+    },
+    "SettingsGeneralIndex": {
+        "about": {
+            "decky_version": "Decky 버전",
+            "header": "정보"
+        },
+        "beta": {
+            "header": "베타 참가"
+        },
+        "developer_mode": {
+            "label": "개발자 모드"
+        },
+        "notifications": {
+            "decky_updates_label": "Decky 업데이트 가능",
+            "header": "알림",
+            "plugin_updates_label": "플러그인 업데이트 가능"
+        },
+        "other": {
+            "header": "기타"
+        },
+        "updates": {
+            "header": "업데이트"
+        }
+    },
+    "SettingsIndex": {
+        "developer_title": "개발자",
+        "general_title": "일반",
+        "plugins_title": "플러그인",
+        "testing_title": "테스트"
+    },
+    "Store": {
+        "download_progress_info": {
+            "download_zip": "플러그인 다운로드 중",
+            "increment_count": "다운로드 횟수 증가",
+            "installing_plugin": "플러그인 설치 중",
+            "open_zip": "압축 파일 여는 중",
+            "parse_zip": "압축 파일 파싱 중",
+            "start": "초기화 중",
+            "uninstalling_previous": "이전 복사본 설치 제거 중"
+        },
+        "store_contrib": {
+            "desc": "Decky 플러그인 스토어에 기여하고 싶다면 SteamDeckHomebrew/decky-plugin-template Github 저장소를 확인하세요. 개발 및 배포에 대한 정보는 README에서 확인할 수 있습니다.",
+            "label": "기여하기"
+        },
+        "store_filter": {
+            "label": "필터",
+            "label_def": "모두"
+        },
+        "store_search": {
+            "label": "검색"
+        },
+        "store_sort": {
+            "label": "정렬",
+            "label_def": "최근 업데이트 순"
+        },
+        "store_source": {
+            "desc": "모든 플러그인 소스 코드는 SteamDeckHomebrew/decky-plugin-database Github 저장소에서 확인할 수 있습니다.",
+            "label": "소스 코드"
+        },
+        "store_tabs": {
+            "about": "정보",
+            "alph_asce": "알파벳순 (Z-A)",
+            "alph_desc": "알파벳순 (A-Z)",
+            "date_asce": "오래된 순",
+            "date_desc": "최신 순",
+            "downloads_asce": "다운로드 수 낮은 순",
+            "downloads_desc": "다운로드 많은 순",
+            "title": "검색"
+        },
+        "store_testing_cta": "새로운 플러그인을 테스트하여 Decky Loader 팀을 도와주세요!",
+        "store_testing_warning": {
+            "desc": "이 스토어 채널을 사용하여 가장 최신 버전의 플러그인을 테스트할 수 있습니다. GitHub에 피드백을 남겨서 모든 사용자가 업데이트 할 수 있게 해주세요.",
+            "label": "테스트 스토어 채널에 오신 것을 환영합니다"
+        }
+    },
+    "StoreSelect": {
+        "custom_store": {
+            "label": "사용자 지정 스토어",
+            "url_label": "URL"
+        },
+        "store_channel": {
+            "custom": "사용자 지정",
+            "default": "기본",
+            "label": "스토어 배포 채널",
+            "testing": "테스트"
+        }
+    },
+    "Testing": {
+        "download": "다운로드",
+        "error": "PR 설치 오류",
+        "header": "다음 버전의 Decky Loader는 서드 파티 PR를 사용하여 빌드 되엇습니다. Decky Loader 팀은 해당 버전의 작동 여부와 안전성을 확인하지 않았으며 최신 버전이 아닐 수 도 있습니다.",
+        "loading": "열린 PR 로딩 중...",
+        "start_download_toast": "PR #{{id}} 다운로드 중"
+    },
+    "TitleView": {
+        "decky_store_desc": "Decky 스토어 열기",
+        "settings_desc": "Decky 설정 열기"
+    },
+    "Updater": {
+        "decky_updates": "Decky 업데이트",
+        "no_patch_notes_desc": "이 버전에는 패치 노트가 없습니다",
+        "patch_notes_desc": "패치 노트",
+        "updates": {
+            "check_button": "업데이트 확인",
+            "checking": "확인 중",
+            "cur_version": "현재 버전: {{ver}}",
+            "install_button": "업데이트 설치",
+            "label": "업데이트",
+            "lat_version": "최신 상태: {{ver}} 실행 중",
+            "reloading": "다시 로드 중",
+            "updating": "업데이트 중"
+        }
+    }
+}

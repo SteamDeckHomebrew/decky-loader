@@ -8,14 +8,12 @@ import {
   Spinner,
   findSP,
   showModal,
-} from 'decky-frontend-lib';
-import { useCallback } from 'react';
-import { Suspense, lazy } from 'react';
-import { useEffect, useState } from 'react';
+} from '@decky/ui';
+import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaExclamation } from 'react-icons/fa';
 
-import { VerInfo, callUpdaterMethod, finishUpdate } from '../../../../updater';
+import { VerInfo, checkForUpdates, doUpdate } from '../../../../updater';
 import { useDeckyState } from '../../../DeckyState';
 import InlinePatchNotes from '../../../patchnotes/InlinePatchNotes';
 import WithSuspense from '../../../WithSuspense';
@@ -68,7 +66,7 @@ function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | n
 }
 
 export default function UpdaterSettings() {
-  const { isLoaderUpdating, setIsLoaderUpdating, versionInfo, setVersionInfo } = useDeckyState();
+  const { isLoaderUpdating, versionInfo, setVersionInfo } = useDeckyState();
 
   const [checkingForUpdates, setCheckingForUpdates] = useState<boolean>(false);
   const [updateProgress, setUpdateProgress] = useState<number>(-1);
@@ -77,16 +75,18 @@ export default function UpdaterSettings() {
   const { t } = useTranslation();
 
   useEffect(() => {
-    window.DeckyUpdater = {
-      updateProgress: (i) => {
-        setUpdateProgress(i);
-        setIsLoaderUpdating(true);
-      },
-      finish: async () => {
-        setUpdateProgress(0);
-        setReloading(true);
-        await finishUpdate();
-      },
+    const a = DeckyBackend.addEventListener('updater/update_download_percentage', (percentage) => {
+      setUpdateProgress(percentage);
+    });
+
+    const b = DeckyBackend.addEventListener('updater/finish_download', () => {
+      setUpdateProgress(0);
+      setReloading(true);
+    });
+
+    return () => {
+      DeckyBackend.removeEventListener('updater/update_download_percentage', a);
+      DeckyBackend.removeEventListener('updater/finish_download', b);
     };
   }, []);
 
@@ -122,13 +122,13 @@ export default function UpdaterSettings() {
               !versionInfo?.remote || versionInfo?.remote?.tag_name == versionInfo?.current
                 ? async () => {
                     setCheckingForUpdates(true);
-                    const res = (await callUpdaterMethod('check_for_updates')) as { result: VerInfo };
-                    setVersionInfo(res.result);
+                    const verInfo = await checkForUpdates();
+                    setVersionInfo(verInfo);
                     setCheckingForUpdates(false);
                   }
                 : async () => {
                     setUpdateProgress(0);
-                    callUpdaterMethod('do_update');
+                    doUpdate();
                   }
             }
           >

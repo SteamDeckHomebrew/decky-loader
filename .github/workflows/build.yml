@@ -3,30 +3,9 @@ name: Builder
 on:
   push:
   pull_request:
+  workflow_call:
   # schedule:
   #   - cron: '0 13 * * *' # run at 1 PM UTC
-  workflow_dispatch:
-    inputs:
-      release:
-        type: choice
-        description: Release the asset
-        default: 'none'
-        options:
-          - none
-          - prerelease
-          - release
-      bump:
-        type: choice
-        description: Semver to bump
-        default: 'none'
-        options:
-          - none
-          - patch
-          - minor
-          - major
-
-permissions:
-  contents: write
 
 jobs:
   build:
@@ -34,47 +13,31 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - name: Print input
-      run : |
-        echo "release: ${{ github.event.inputs.release }}\n"
-        echo "bump: ${{ github.event.inputs.bump }}\n"
-
     - name: Checkout 🧰
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
-    - name: Set up NodeJS 18 💎
-      uses: actions/setup-node@v3
+    - name: Set up NodeJS 20 💎
+      uses: actions/setup-node@v4
       with:
-        node-version: 18
+        node-version: 20
       
-    - name: Set up Python 3.10.6 🐍
-      uses: actions/setup-python@v4
+    - name: Set up Python 3.11.7 🐍
+      uses: actions/setup-python@v5
       with:
-        python-version: "3.10.6"
+        python-version: "3.11.7"
     
-    - name: Upgrade SQLite 3 binary version to 3.42.0 🧑‍💻
-      run: >
-        cd /tmp &&
-        wget "https://www.sqlite.org/2023/sqlite-autoconf-3420000.tar.gz" &&
-        tar -xvzf sqlite-autoconf-3420000.tar.gz &&
-        cd /tmp/sqlite-autoconf-3420000 &&
-        ./configure --prefix=/usr --disable-static CFLAGS="-g" CPPFLAGS="$CPPFLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 \
-          -DSQLITE_ENABLE_UNLOCK_NOTIFY -DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_FTS3_TOKENIZER=1 \
-          -DSQLITE_ENABLE_FTS3_PARENTHESIS -DSQLITE_SECURE_DELETE -DSQLITE_ENABLE_STMTVTAB -DSQLITE_MAX_VARIABLE_NUMBER=250000 \
-          -DSQLITE_MAX_EXPR_DEPTH=10000 -DSQLITE_ENABLE_MATH_FUNCTIONS" &&
-        make -j$(nproc) &&
-        sudo make install &&
-        sudo cp /usr/lib/libsqlite3.so /usr/lib/x86_64-linux-gnu/ &&
-        sudo cp /usr/lib/libsqlite3.so.0 /usr/lib/x86_64-linux-gnu/ &&
-        sudo cp /usr/lib/libsqlite3.so.0.8.6 /usr/lib/x86_64-linux-gnu/ &&
-        rm -r /tmp/sqlite-autoconf-3420000
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        virtualenvs-create: false
 
     - name: Install Python dependencies ⬇️
       working-directory: ./backend
       run: |
-        python -m pip install --upgrade pip
-        pip install pyinstaller==5.13.0
-        pip install -r requirements.txt
+        poetry self add "poetry-dynamic-versioning[plugin]"
+        poetry install --no-interaction
 
     - name: Install JS dependencies ⬇️
       working-directory: ./frontend
@@ -87,183 +50,20 @@ jobs:
       run: pnpm run build
 
     - name: Build Python Backend 🛠️
-      run: pyinstaller --noconfirm --onefile --name "PluginLoader" --add-data ./backend/static:/static --add-data ./backend/locales:/locales --add-data ./backend/src/legacy:/src/legacy --add-data ./plugin:/plugin --hidden-import=logging.handlers --hidden-import=sqlite3 ./backend/main.py
-        
+      working-directory: ./backend
+      run: |
+        poetry dynamic-versioning 
+        pyinstaller pyinstaller.spec
+
     - name: Upload package artifact ⬆️
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: PluginLoader
-        path: ./dist/PluginLoader
+        path: ./backend/dist/PluginLoader
 
     - name: Download package artifact locally
       if: ${{ env.ACT }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        path: ./dist/PluginLoader
-
-  release:
-    name: Release stable version of the package
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release == 'release' }}
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout 🧰
-      uses: actions/checkout@v3
-
-    - name: Install semver-tool asdf
-      uses: asdf-vm/actions/install@v1
-      with:
-        tool_versions: |
-          semver 3.3.0
-
-    - name: Fetch package artifact ⬇️
-      uses: actions/download-artifact@v3
-      if: ${{ !env.ACT }}
-      with:
-        name: PluginLoader
-        path: dist
-
-    - name: Get latest release
-      uses: rez0n/actions-github-release@main
-      id: latest_release
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        repository: "SteamDeckHomebrew/decky-loader"
-        type: "nodraft"
-
-    - name: Prepare tag ⚙️
-      id: ready_tag
-      run: |
-        export VERSION=${{ steps.latest_release.outputs.release }}
-        echo "VERS: $VERSION"
-        OUT="notsemver"
-        if [[ "$VERSION" =~ "-pre" ]]; then
-          printf "is prerelease, bumping to release\n"
-          OUT=$(semver bump release "$VERSION")
-          printf "OUT: ${OUT}\n"\
-          printf "bumping by selected type.\n"
-          if [[ "${{github.event.inputs.bump}}" != "none" ]]; then
-            OUT=$(semver bump ${{github.event.inputs.bump}} "$OUT")
-            printf "OUT: ${OUT}\n"
-          else
-            printf "no type selected, not bumping for release.\n"
-          fi
-        elif [[ ! "$VERSION" =~ "-pre" ]]; then
-          printf "previous tag is a release, bumping by selected type.\n"
-          if [[ "${{github.event.inputs.bump}}" != "none" ]]; then
-            OUT=$(semver bump ${{github.event.inputs.bump}} "$VERSION")
-            printf "OUT: ${OUT}\n"
-          else
-            printf "previous tag is a release, but no bump selected. Defaulting to a patch bump.\n"
-            OUT=$(semver bump patch "$VERSION")
-            printf "OUT: ${OUT}\n"
-          fi
-        fi
-        echo "vOUT: v$OUT"
-        echo tag_name=v$OUT >> $GITHUB_OUTPUT
-
-    - name: Push tag 📤
-      uses: rickstaa/action-create-tag@v1.3.2
-      if: ${{ steps.ready_tag.outputs.tag_name && github.event_name == 'workflow_dispatch' && !env.ACT }}
-      with:
-        tag: ${{ steps.ready_tag.outputs.tag_name }}
-        message: Pre-release ${{ steps.ready_tag.outputs.tag_name }}
-
-    - name: Release 📦
-      uses: softprops/action-gh-release@v1
-      if: ${{ github.event_name == 'workflow_dispatch' && !env.ACT  }}
-      with:
-        name: Release ${{ steps.ready_tag.outputs.tag_name }}
-        tag_name: ${{ steps.ready_tag.outputs.tag_name }}
-        files: ./dist/PluginLoader
-        prerelease: false
-        generate_release_notes: true
-  
-  prerelease:
-    name: Release the pre-release version of the package
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release == 'prerelease' }}
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout 🧰
-      uses: actions/checkout@v3
-
-    - name: Install semver-tool asdf
-      uses: asdf-vm/actions/install@v1
-      with:
-        tool_versions: |
-          semver 3.3.0
-
-    - name: Fetch package artifact ⬇️
-      uses: actions/download-artifact@v3
-      if: ${{ !env.ACT }}
-      with:
-        name: PluginLoader
-        path: dist
-
-    - name: Get latest release
-      uses: rez0n/actions-github-release@main
-      id: latest_release
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        repository: "SteamDeckHomebrew/decky-loader"
-        type: "nodraft"
-
-    - name: Prepare tag ⚙️
-      id: ready_tag
-      run: |
-        export VERSION=${{ steps.latest_release.outputs.release }}
-        echo "VERS: $VERSION"
-        OUT=""
-        if [[ ! "$VERSION" =~ "-pre" ]]; then
-          printf "pre-release from release, bumping by selected type and prerel\n"
-          if [[ ! ${{ github.event.inputs.bump }} == "none" ]]; then
-            OUT=$(semver bump ${{github.event.inputs.bump}} "$VERSION")
-            printf "OUT: ${OUT}\n"
-          else
-            printf "type not selected, defaulting to patch\n"
-            OUT=$(semver bump patch "$VERSION")
-            printf "OUT: ${OUT}\n"
-          fi
-          OUT="$OUT-pre"
-          OUT=$(semver bump prerel "$OUT")
-          printf "OUT: ${OUT}\n"
-        elif [[ "$VERSION" =~ "-pre" ]]; then
-          printf "pre-release to pre-release, bumping by selected type and or prerel version\n"
-          if [[ ! ${{ github.event.inputs.bump }} == "none" ]]; then
-            OUT=$(semver bump ${{github.event.inputs.bump}} "$VERSION")
-            printf "OUT: ${OUT}\n"
-            OUT="$OUT-pre"
-            printf "OUT: ${OUT}\n"
-            printf "bumping prerel\n"
-            OUT=$(semver bump prerel "$OUT")
-            printf "OUT: ${OUT}\n"
-          else
-            printf "type not selected, defaulting to new pre-release only\n"
-            printf "bumping prerel\n"
-            OUT=$(semver bump prerel "$VERSION")
-            printf "OUT: ${OUT}\n"
-          fi
-        fi
-        printf "vOUT: v${OUT}\n"
-        echo tag_name=v$OUT >> $GITHUB_OUTPUT
-
-    - name: Push tag 📤
-      uses: rickstaa/action-create-tag@v1.3.2
-      if: ${{ steps.ready_tag.outputs.tag_name && github.event_name == 'workflow_dispatch' && !env.ACT }}
-      with:
-        tag: ${{ steps.ready_tag.outputs.tag_name }}
-        message: Pre-release ${{ steps.ready_tag.outputs.tag_name }}
-
-    - name: Release 📦
-      uses: softprops/action-gh-release@v1
-      if: ${{ github.event_name == 'workflow_dispatch' && !env.ACT  }}
-      with:
-        name: Prerelease ${{ steps.ready_tag.outputs.tag_name }}
-        tag_name: ${{ steps.ready_tag.outputs.tag_name }}
-        files: ./dist/PluginLoader
-        prerelease: true
-        generate_release_notes: true
+        path: ./backend/dist/PluginLoader

@@ -14,7 +14,7 @@ const hiddenWarnings = ['THIS_IS_UNDEFINED', 'EVAL'];
 export default defineConfig({
   input: 'src/index.ts',
   plugins: [
-    del({ targets: '../backend/static/*', force: true }),
+    del({ targets: '../backend/decky_loader/static/*', force: true }),
     commonjs(),
     nodeResolve({
       browser: true,
@@ -37,8 +37,13 @@ export default defineConfig({
     visualizer(),
   ],
   preserveEntrySignatures: false,
+  treeshake: {
+    // Assume all external modules have imports with side effects (the default) while allowing decky libraries to treeshake
+    pureExternalImports: true,
+    preset: 'smallest'
+  },
   output: {
-    dir: '../backend/static',
+    dir: '../backend/decky_loader/static',
     format: 'esm',
     chunkFileNames: (chunkInfo) => {
       return 'chunk-[hash].js';

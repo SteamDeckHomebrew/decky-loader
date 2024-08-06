@@ -1,4 +1,5 @@
 import { compare } from 'compare-versions';
+
 import { InstallType, Plugin, installPlugin, installPlugins } from './plugin';
 import { getSetting, setSetting } from './utils/settings';
 

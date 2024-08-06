@@ -60,10 +60,10 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
       strTitle={
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
           <TranslationHelper
-            transClass={TranslationClass.PLUGIN_INSTALL_MODAL}
-            transText="title"
-            i18nArgs={{ artifact: artifact }}
-            installType={installType}
+            trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
+            trans_text="title"
+            i18n_args={{ artifact: artifact }}
+            install_type={installType}
           />
           {loading && (
             <div style={{ marginLeft: 'auto' }}>
@@ -81,17 +81,17 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
         loading ? (
           <div>
             <TranslationHelper
-              transClass={TranslationClass.PLUGIN_INSTALL_MODAL}
-              transText="button_processing"
-              installType={installType}
+              trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
+              trans_text="button_processing"
+              install_type={installType}
             />
           </div>
         ) : (
           <div>
             <TranslationHelper
-              transClass={TranslationClass.PLUGIN_INSTALL_MODAL}
-              transText="button_idle"
-              installType={installType}
+              trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
+              trans_text="button_idle"
+              install_type={installType}
             />
           </div>
         )
@@ -99,13 +99,13 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
     >
       <div>
         <TranslationHelper
-          transClass={TranslationClass.PLUGIN_INSTALL_MODAL}
-          transText="desc"
-          i18nArgs={{
+          trans_class={TranslationClass.PLUGIN_INSTALL_MODAL}
+          trans_text="desc"
+          i18n_args={{
             artifact: artifact,
             version: version,
           }}
-          installType={installType}
+          install_type={installType}
         />
       </div>
       {hash == 'False' && <span style={{ color: 'red' }}>{t('PluginInstallModal.no_hash')}</span>}

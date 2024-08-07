@@ -94,7 +94,7 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
                 style={{ marginRight: '5px', padding: '5px' }}
                 onClick={() => {
                   addLogLine('Restarting Steam...');
-                  SteamClient.User.StartRestart();
+                  SteamClient.User.StartRestart(false);
                 }}
               >
                 Restart Steam
@@ -121,7 +121,7 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
                   doShutdown();
                   await sleep(5000);
                   addLogLine('Restarting Steam...');
-                  SteamClient.User.StartRestart();
+                  SteamClient.User.StartRestart(false);
                 }}
               >
                 Disable Decky until next boot
@@ -166,7 +166,7 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
                     await sleep(2000);
                     addLogLine('Restarting Steam...');
                     await sleep(500);
-                    SteamClient.User.StartRestart();
+                    SteamClient.User.StartRestart(false);
                   }}
                 >
                   Uninstall {errorSource} and restart Decky

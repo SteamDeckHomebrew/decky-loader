@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from .main import PluginManager
 from .injector import inject_to_tab, get_gamepadui_tab, close_old_tabs, get_tab
 from . import helpers
-from .localplatform.localplatform import ON_WINDOWS, service_stop, service_start, get_home_path, get_username, get_use_cef_close_workaround, close_cef_socket
+from .localplatform.localplatform import ON_WINDOWS, service_stop, service_start, get_home_path, get_username, get_use_cef_close_workaround, close_cef_socket, restart_webhelper
 
 class FilePickerObj(TypedDict):
     file: Path
@@ -77,6 +77,7 @@ class Utilities:
             context.ws.add_route("utilities/get_tab_id", self.get_tab_id)
             context.ws.add_route("utilities/get_user_info", self.get_user_info)
             context.ws.add_route("utilities/http_request", self.http_request_legacy)
+            context.ws.add_route("utilities/restart_webhelper", self.restart_webhelper)
             context.ws.add_route("utilities/close_cef_socket", self.close_cef_socket)
             context.ws.add_route("utilities/_call_legacy_utility", self._call_legacy_utility)
 
@@ -290,6 +291,9 @@ class Utilities:
     async def close_cef_socket(self):
         if get_use_cef_close_workaround():
             await close_cef_socket()
+
+    async def restart_webhelper(self):
+        await restart_webhelper()
 
     async def filepicker_ls(self, 
                             path: str | None = None, 

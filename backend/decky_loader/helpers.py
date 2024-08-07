@@ -52,6 +52,9 @@ async def csrf_middleware(request: Request, handler: Handler):
         return await handler(request)
     return Response(text='Forbidden', status=403)
 
+def create_inject_script(script: str) -> str:
+    return "try{if (window.deckyHasLoaded){setTimeout(() => SteamClient.Browser.RestartJSContext(), 100)}else{window.deckyHasLoaded = true;(async()=>{try{await import('http://localhost:1337/frontend/%s?v=%s')}catch(e){console.error(e)};})();}}catch(e){console.error(e)}" % (script, get_loader_version(), )
+
 # Get the default homebrew path unless a home_path is specified. home_path argument is deprecated
 def get_homebrew_path() -> str:
     return localplatform.get_unprivileged_path()

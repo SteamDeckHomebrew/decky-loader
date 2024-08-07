@@ -172,10 +172,31 @@ class PluginLoader extends Logger {
       .then(() => this.log('Initialized'));
   }
 
+  private checkForSP(): boolean {
+    try {
+      return !!findSP();
+    } catch (e) {
+      this.warn('Error checking for SP tab', e);
+      return false;
+    }
+  }
+
+  private async runCrashChecker() {
+    const spExists = this.checkForSP();
+    await sleep(5000);
+    if (spExists && !this.checkForSP()) {
+      // SP died after plugin loaded. Give up and let the loader's crash loop detection handle it.
+      this.error('SP died during startup. Restarting webhelper.');
+      await this.restartWebhelper();
+    }
+  }
+
   private getPluginsFromBackend = DeckyBackend.callable<
     [],
     { name: string; version: string; load_type: PluginLoadType }[]
   >('loader/get_plugins');
+
+  private restartWebhelper = DeckyBackend.callable<[], void>('utilities/restart_webhelper');
 
   private async loadPlugins() {
     let registration: any;
@@ -192,6 +213,7 @@ class PluginLoader extends Logger {
         await sleep(100);
       }
     }
+    this.runCrashChecker();
     const plugins = await this.getPluginsFromBackend();
     const pluginLoadPromises = [];
     const loadStart = performance.now();
@@ -395,6 +417,7 @@ class PluginLoader extends Logger {
     version?: string,
     loadType: PluginLoadType = PluginLoadType.ESMODULE_V1,
   ) {
+    let spExists = this.checkForSP();
     try {
       switch (loadType) {
         case PluginLoadType.ESMODULE_V1:
@@ -442,7 +465,7 @@ class PluginLoader extends Logger {
           </PanelSectionRow>
           <PanelSectionRow>
             <pre style={{ overflowX: 'scroll' }}>
-              <code>{e instanceof Error ? e.stack : JSON.stringify(e)}</code>
+              <code>{e instanceof Error ? '' + e.stack : JSON.stringify(e)}</code>
             </pre>
           </PanelSectionRow>
           <PanelSectionRow>
@@ -473,6 +496,12 @@ class PluginLoader extends Logger {
         body: '' + e,
         icon: <FaExclamationCircle />,
       });
+    }
+
+    if (spExists && !this.checkForSP()) {
+      // SP died after plugin loaded. Give up and let the loader's crash loop detection handle it.
+      this.error('SP died after loading plugin. Restarting webhelper.');
+      await this.restartWebhelper();
     }
   }
 

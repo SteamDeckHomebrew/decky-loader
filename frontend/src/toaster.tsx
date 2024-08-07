@@ -1,5 +1,13 @@
 import type { ToastData, ToastNotification } from '@decky/api';
-import { Patch, callOriginal, findModuleExport, injectFCTrampoline, replacePatch } from '@decky/ui';
+import {
+  ErrorBoundary,
+  Patch,
+  callOriginal,
+  findModuleExport,
+  injectFCTrampoline,
+  replacePatch,
+  sleep,
+} from '@decky/ui';
 
 import Toast from './components/Toast';
 import Logger from './logger';
@@ -21,6 +29,8 @@ declare global {
 
 class Toaster extends Logger {
   private toastPatch?: Patch;
+  private markReady!: () => void;
+  private ready = new Promise<void>((r) => (this.markReady = r));
 
   constructor() {
     super('Toaster');
@@ -34,13 +44,16 @@ class Toaster extends Logger {
     this.toastPatch = replacePatch(patchedRenderer, 'component', (args: any[]) => {
       if (args?.[0]?.group?.decky || args?.[0]?.group?.notifications?.[0]?.decky) {
         return args[0].group.notifications.map((notification: any) => (
-          <Toast toast={notification.data} newIndicator={notification.bNewIndicator} location={args?.[0]?.location} />
+          <ErrorBoundary>
+            <Toast toast={notification.data} newIndicator={notification.bNewIndicator} location={args?.[0]?.location} />
+          </ErrorBoundary>
         ));
       }
       return callOriginal;
     });
 
     this.log('Initialized');
+    sleep(4000).then(this.markReady);
   }
 
   toast(toast: ToastData): ToastNotification {
@@ -107,7 +120,7 @@ class Toaster extends Logger {
         }
       }, toast.expiration);
     }
-    window.NotificationStore.ProcessNotification(info, toastData, ToastType.New);
+    this.ready.then(() => window.NotificationStore.ProcessNotification(info, toastData, ToastType.New));
     return toastResult;
   }
 

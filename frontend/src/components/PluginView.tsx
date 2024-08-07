@@ -5,10 +5,10 @@ import { FaEyeSlash } from 'react-icons/fa';
 
 import { Plugin } from '../plugin';
 import { useDeckyState } from './DeckyState';
+import { MotdDisplay } from './MotdDisplay';
 import NotificationBadge from './NotificationBadge';
 import { useQuickAccessVisible } from './QuickAccessVisibleState';
 import TitleView from './TitleView';
-import { MotdDisplay } from './MotdDisplay';
 
 const PluginView: FC = () => {
   const { hiddenPlugins } = useDeckyState();

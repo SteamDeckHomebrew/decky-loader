@@ -42,11 +42,59 @@ export interface PluginInstallRequest {
   installType: InstallType;
 }
 
+export interface Motd {
+  id: string;
+  name: string;
+  description: string;
+  date: string;
+  severity: "High" | "Medium" | "Low";
+}
+
 // name: version
 export type PluginUpdateMapping = Map<string, StorePluginVersion>;
 
 export async function getStore(): Promise<Store> {
   return await getSetting<Store>('store', Store.Default);
+}
+
+export async function getMotd(): Promise<Motd> {
+  let version = await window.DeckyPluginLoader.updateVersion();
+  let store = await getSetting<Store | null>('store', null);
+  let customURL = await getSetting<string>('motd-url', 'https://plugins.deckbrew.xyz/v1/motd');
+
+  if (store === null) {
+    console.log('Could not get store, using Default.');
+    await setSetting('store', Store.Default);
+    store = Store.Default;
+  }
+
+  let resolvedURL;
+  switch (store) {
+    case Store.Default:
+      resolvedURL = 'https://plugins.deckbrew.xyz/v1/motd';
+      break;
+    case Store.Testing:
+      resolvedURL = 'https://testing.deckbrew.xyz/v1/motd';
+      break;
+    case Store.Custom:
+      resolvedURL = customURL;
+      break;
+    default:
+      console.error('Somehow you ended up without a standard URL, using the default URL.');
+      resolvedURL = 'https://plugins.deckbrew.xyz/v1/motd';
+      break;
+  }
+  return fetch(resolvedURL, {
+    method: 'GET',
+    headers: {
+      'X-Decky-Version': version.current,
+    },
+  }).then((r) => {
+    if (r.status === 200) {
+      return r.json();
+    }
+    return null;
+  });
 }
 
 export async function getPluginList(

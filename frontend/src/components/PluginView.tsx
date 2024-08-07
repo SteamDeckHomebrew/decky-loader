@@ -7,6 +7,7 @@ import { useDeckyState } from './DeckyState';
 import NotificationBadge from './NotificationBadge';
 import { useQuickAccessVisible } from './QuickAccessVisibleState';
 import TitleView from './TitleView';
+import { MotdDisplay } from './MotdDisplay';
 
 const PluginView: FC = () => {
   const { plugins, hiddenPlugins, updates, activePlugin, pluginOrder, setActivePlugin, closeActivePlugin } =
@@ -36,6 +37,7 @@ const PluginView: FC = () => {
   return (
     <>
       <TitleView />
+      <MotdDisplay />
       <div
         style={{
           paddingTop: '16px',

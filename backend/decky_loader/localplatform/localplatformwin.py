@@ -56,3 +56,6 @@ def get_unprivileged_user() -> str:
 
 async def restart_webhelper() -> bool:
     return True # Stubbed
+
+async def close_cef_socket():
+    return # Stubbed

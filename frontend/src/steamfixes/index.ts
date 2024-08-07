@@ -1,5 +1,6 @@
-// import reloadFix from './reload';
-import restartFix from './restart';
+// import restartFix from './restart';
+import cefSocketFix from './socket';
+
 let fixes: Function[] = [];
 
 export function deinitSteamFixes() {
@@ -7,6 +8,6 @@ export function deinitSteamFixes() {
 }
 
 export async function initSteamFixes() {
-  // fixes.push(await reloadFix());
-  fixes.push(await restartFix());
+  fixes.push(cefSocketFix());
+  // fixes.push(await restartFix());
 }

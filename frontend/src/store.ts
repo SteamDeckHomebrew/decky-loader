@@ -47,7 +47,7 @@ export interface Motd {
   name: string;
   description: string;
   date: string;
-  severity: "High" | "Medium" | "Low";
+  severity: 'High' | 'Medium' | 'Low';
 }
 
 // name: version

@@ -35,7 +35,7 @@ export function MotdDisplay() {
 
   async function fetchMotd() {
     const motd = await getMotd();
-    setMotd(motd);
+    motd && setMotd(motd);
   }
 
   useEffect(() => {

@@ -79,7 +79,7 @@ class PluginLoader extends Logger {
 
   private reloadLock: boolean = false;
   // stores a list of plugin names which requested to be reloaded
-  private pluginReloadQueue: { name: string; version?: string }[] = [];
+  private pluginReloadQueue: { name: string; version?: string; loadType: PluginLoadType }[] = [];
 
   private loaderUpdateToast?: ToastNotification;
   private pluginUpdateToast?: ToastNotification;
@@ -369,11 +369,11 @@ class PluginLoader extends Logger {
     this.errorBoundaryHook.deinit();
   }
 
-  public unloadPlugin(name: string) {
+  public unloadPlugin(name: string, skipStateUpdate: boolean = false) {
     const plugin = this.plugins.find((plugin) => plugin.name === name);
     plugin?.onDismount?.();
     this.plugins = this.plugins.filter((p) => p !== plugin);
-    this.deckyState.setPlugins(this.plugins);
+    if (!skipStateUpdate) this.deckyState.setPlugins(this.plugins);
   }
 
   public async importPlugin(
@@ -384,7 +384,7 @@ class PluginLoader extends Logger {
   ) {
     if (useQueue && this.reloadLock) {
       this.log('Reload currently in progress, adding to queue', name);
-      this.pluginReloadQueue.push({ name, version: version });
+      this.pluginReloadQueue.push({ name, version: version, loadType });
       return;
     }
 
@@ -392,7 +392,7 @@ class PluginLoader extends Logger {
       if (useQueue) this.reloadLock = true;
       this.log(`Trying to load ${name}`);
 
-      this.unloadPlugin(name);
+      this.unloadPlugin(name, true);
       const startTime = performance.now();
       await this.importReactPlugin(name, version, loadType);
       const endTime = performance.now();
@@ -406,7 +406,7 @@ class PluginLoader extends Logger {
         this.reloadLock = false;
         const nextPlugin = this.pluginReloadQueue.shift();
         if (nextPlugin) {
-          this.importPlugin(nextPlugin.name, nextPlugin.version);
+          this.importPlugin(nextPlugin.name, nextPlugin.version, loadType);
         }
       }
     }
@@ -428,6 +428,7 @@ class PluginLoader extends Logger {
             ...plugin,
             name: name,
             version: version,
+            loadType,
           });
           break;
 
@@ -447,6 +448,7 @@ class PluginLoader extends Logger {
               ...plugin,
               name: name,
               version: version,
+              loadType,
             });
           } else throw new Error(`${name} frontend_bundle not OK`);
           break;
@@ -484,6 +486,7 @@ class PluginLoader extends Logger {
         version: version,
         content: <TheError />,
         icon: <FaExclamationCircle />,
+        loadType,
       });
       this.toaster.toast({
         title: (

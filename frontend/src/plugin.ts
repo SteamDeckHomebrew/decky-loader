@@ -6,6 +6,7 @@ export enum PluginLoadType {
 export interface Plugin {
   name: string;
   version?: string;
+  loadType?: PluginLoadType;
   icon: JSX.Element;
   content?: JSX.Element;
   onDismount?(): void;

@@ -66,8 +66,6 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
             } catch (err) {
               console.error('Error Reloading Plugin Backend', err);
             }
-
-            DeckyPluginLoader.importPlugin(name, version);
           }}
         >
           {t('PluginListIndex.reload')}

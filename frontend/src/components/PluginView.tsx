@@ -37,12 +37,12 @@ const PluginView: FC = () => {
   return (
     <>
       <TitleView />
-      <MotdDisplay />
       <div
         style={{
           paddingTop: '16px',
         }}
       >
+        <MotdDisplay />
         <PanelSection>
           {pluginList.map(({ name, icon }) => (
             <PanelSectionRow key={name}>

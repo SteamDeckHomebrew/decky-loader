@@ -7,6 +7,7 @@ import {
   Navigation,
   TextField,
   Toggle,
+  showModal
 } from '@decky/ui';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +19,8 @@ import { installFromURL } from '../../../../store';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 import { getSetting } from '../../../../utils/settings';
 import { FileSelectionType } from '../../../modals/filepicker';
+import WarnThirdParty from '../../../modals/WarnThirdParty';
+import { WarnThirdPartyType } from '../../../../utils/globalTypes';
 import RemoteDebuggingSettings from '../general/RemoteDebugging';
 
 const logger = new Logger('DeveloperIndex');
@@ -43,6 +46,8 @@ export default function DeveloperSettings() {
   const [enableValveInternal, setEnableValveInternal] = useSetting<boolean>('developer.valve_internal', false);
   const [reactDevtoolsEnabled, setReactDevtoolsEnabled] = useSetting<boolean>('developer.rdt.enabled', false);
   const [reactDevtoolsIP, setReactDevtoolsIP] = useSetting<string>('developer.rdt.ip', '');
+  const [acceptedWarning, setAcceptedWarning] = useSetting<boolean>('developer.warn.third_party', false);
+  const waitTime = acceptedWarning ? 0 : 5;
   const [pluginURL, setPluginURL] = useState('');
   const textRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
@@ -72,7 +77,22 @@ export default function DeveloperSettings() {
           }
           icon={<FaLink style={{ display: 'block' }} />}
         >
-          <DialogButton disabled={pluginURL.length == 0} onClick={() => installFromURL(pluginURL)}>
+          <DialogButton
+            disabled={pluginURL.length == 0}
+            onClick={() =>
+              showModal(
+                <WarnThirdParty
+                  type={WarnThirdPartyType.ZIP}
+                  onOK={() => {
+                    setAcceptedWarning(true);
+                    installFromURL(pluginURL);
+                  }}
+                  onCancel={() => {}}
+                  seconds={waitTime}
+                />,
+              )
+            }
+          >
             {t('SettingsDeveloperIndex.third_party_plugins.button_install')}
           </DialogButton>
         </Field>

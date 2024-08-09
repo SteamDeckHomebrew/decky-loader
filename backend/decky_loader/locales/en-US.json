@@ -254,6 +254,15 @@
             "testing": "Testing"
         }
     },
+    "WarnThirdParty":{
+        "title_zip": "Third-Party Plugin Installation",
+        "title_repo": "Third-Party Store Selection",
+        "button_processing_one": "Please wait {{timer}} second",
+        "button_processing_many": "Please wait {{timer}} seconds",
+        "button_idle": "Continue",
+        "desc_zip": "The Decky Loader team has not reviewed this plugin. It may contain malware, such as software to steal your Steam account or harm your device. By installing this plugin, you agree you have assumed all risks to your device.",
+        "desc_repo": "The Decky Loader team does not maintain this plugin store. It and its plugins may contain malware, such as software to steal your Steam account or harm your device. By adding this store, you agree you have assumed all risks to your device."
+    },
     "Testing": {
         "download": "Download",
         "error": "Error Installing PR",

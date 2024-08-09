@@ -55,6 +55,7 @@
     "react-i18next": "^14.1.2",
     "react-icons": "^5.2.1",
     "react-markdown": "^9.0.1",
-    "remark-gfm": "^4.0.0"
+    "remark-gfm": "^4.0.0",
+    "compare-versions": "^6.1.1"
   }
 }

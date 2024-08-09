@@ -1,3 +1,5 @@
+import { compare } from 'compare-versions';
+
 import { InstallType, Plugin, installPlugin, installPlugins } from './plugin';
 import { getSetting, setSetting } from './utils/settings';
 
@@ -137,7 +139,15 @@ export async function checkForPluginUpdates(plugins: Plugin[]): Promise<PluginUp
   const updateMap = new Map<string, StorePluginVersion>();
   for (let plugin of plugins) {
     const remotePlugin = serverData?.find((x) => x.name == plugin.name);
-    if (remotePlugin && remotePlugin.versions?.length > 0 && plugin.version != remotePlugin?.versions?.[0]?.name) {
+    //FIXME: Ugly hack since plugin.version might be null during evaluation,
+    //so this will set the older version possible
+    const curVer = plugin.version ? plugin.version : '0.0';
+    if (
+      remotePlugin &&
+      remotePlugin.versions?.length > 0 &&
+      plugin.version != remotePlugin?.versions?.[0]?.name &&
+      compare(remotePlugin?.versions?.[0]?.name, curVer, '>')
+    ) {
       updateMap.set(plugin.name, remotePlugin.versions[0]);
     }
   }

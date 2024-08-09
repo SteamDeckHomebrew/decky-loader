@@ -4,7 +4,7 @@
             "label": "Canal de actualización",
             "prerelease": "Prelanzamiento",
             "stable": "Estable",
-            "testing": "Pruebas"
+            "testing": "En pruebas"
         }
     },
     "Developer": {
@@ -20,7 +20,8 @@
     "FilePickerError": {
         "errors": {
             "file_not_found": "La ruta especificada no es válida. Por favor revísala e introdúcela correctamente.",
-            "perm_denied": "No tienes acceso a la ruta especificada. Por favor revisa si tu usuario (deck en Steam Deck) tiene el permiso correspondiente para acceder a la ruta/archivo especificado."
+            "perm_denied": "No tienes acceso a la ruta especificada. Por favor revisa si tu usuario (deck en Steam Deck) tiene el permiso correspondiente para acceder a la ruta/archivo especificado.",
+            "unknown": "Ha ocurrido un error desconocido. El error sin procesar es:{{raw_error}}"
         }
     },
     "FilePickerIndex": {
@@ -75,9 +76,9 @@
         }
     },
     "PluginCard": {
-        "plugin_full_access": "Este plugin tiene acceso completo a su Steam Deck.",
+        "plugin_full_access": "Este plugin tiene acceso completo a tu Steam Deck.",
         "plugin_install": "Instalar",
-        "plugin_no_desc": "No se proporcionó una descripción.",
+        "plugin_no_desc": "No se ha proporcionado una descripción.",
         "plugin_version_label": "Versión de Plugin"
     },
     "PluginInstallModal": {
@@ -105,7 +106,7 @@
         "freeze": "Congelar actualizaciones",
         "hide": "Acceso rápido: Esconder",
         "no_plugin": "¡No hay plugins instalados!",
-        "plugin_actions": "Acciones de plugin",
+        "plugin_actions": "Acciones de Plugin",
         "reinstall": "Reinstalar",
         "reload": "Recargar",
         "show": "Acceso rápido: Mostrar",
@@ -121,7 +122,7 @@
     },
     "PluginLoader": {
         "decky_title": "Decky",
-        "decky_update_available": "¡Actualización {{tag_name}} disponible!",
+        "decky_update_available": "¡Actualización para {{tag_name}} disponible!",
         "error": "Error",
         "plugin_error_uninstall": "Al cargar {{name}} se ha producido una excepción como se muestra arriba. Esto suele significar que el plugin requiere una actualización para la nueva versión de SteamUI. Comprueba si hay una actualización disponible o valora eliminarlo en los ajustes de Decky, en la sección Plugins.",
         "plugin_load_error": {
@@ -138,19 +139,19 @@
         "plugin_update_other": "¡Actualizaciones disponibles para {{count}} plugins!"
     },
     "PluginView": {
-        "hidden_many": "",
-        "hidden_one": "",
-        "hidden_other": ""
+        "hidden_many": "{{count}} plugins están escondidos de esta lista",
+        "hidden_one": "1 plugin está escondido de esta lista",
+        "hidden_other": "{{count}} plugins están escondidos de esta lista"
     },
     "RemoteDebugging": {
         "remote_cef": {
-            "desc": "Permitir acceso no autenticado al CEF debugger a cualquier persona en su red",
+            "desc": "Permitir acceso no autenticado al depurador del CEF a cualquier persona en tu red",
             "label": "Permitir depuración remota del CEF"
         }
     },
     "SettingsDeveloperIndex": {
         "cef_console": {
-            "button": "Abrir consola",
+            "button": "Abrir Consola",
             "desc": "Abre la consola del CEF. Solamente es útil para propósitos de depuración. Las cosas que hagas aquí pueden ser potencialmente peligrosas y solo se debería usar si eres un desarrollador de plugins, o uno te ha dirigido aquí.",
             "label": "Consola CEF"
         },
@@ -206,13 +207,15 @@
     "Store": {
         "download_progress_info": {
             "download_zip": "Descargando plugin",
+            "increment_count": "Incrementando el contador de descargas",
             "installing_plugin": "Instalando plugin",
             "open_zip": "Abriendo archivo zip",
+            "parse_zip": "Analizando archivo zip",
             "start": "Iniciando",
             "uninstalling_previous": "Desinstalando copia previa"
         },
         "store_contrib": {
-            "desc": "Si desea contribuir a la tienda de plugins de Decky, mira el repositorio SteamDeckHomebrew/decky-plugin-template en GitHub. Hay información acerca del desarrollo y distribución en el archivo README.",
+            "desc": "Si desea contribuir a la tienda de plugins de Decky, consulta el repositorio SteamDeckHomebrew/decky-plugin-template en GitHub. Hay información disponible acerca del desarrollo y distribución en el archivo README.",
             "label": "Contribuyendo"
         },
         "store_filter": {
@@ -224,7 +227,7 @@
         },
         "store_sort": {
             "label": "Ordenar",
-            "label_def": "Actualizado por última vez (Nuevos)"
+            "label_def": "Actualizado por última vez (Más reciente)"
         },
         "store_source": {
             "desc": "El código fuente de los plugins está disponible en el repositiorio SteamDeckHomebrew/decky-plugin-database en GitHub.",
@@ -242,6 +245,7 @@
         },
         "store_testing_cta": "¡Por favor considera probar plugins nuevos para ayudar al equipo de Decky Loader!",
         "store_testing_warning": {
+            "desc": "Puedes usar este canal de la tienda para probar versiones inestables de plugins. Recuerda compartir tu experiencia en GitHub con el fin de poder actualizar el plugin para todos los usuarios.",
             "label": "Bienvenido al canal En Pruebas de la Tienda"
         }
     },
@@ -253,12 +257,20 @@
         "store_channel": {
             "custom": "Personalizada",
             "default": "Por defecto",
-            "label": "Canál de la tienda",
-            "testing": "Pruebas"
+            "label": "Canal de la Tienda",
+            "testing": "En pruebas"
         }
     },
     "Testing": {
-        "download": "Descargar"
+        "download": "Descargar",
+        "error": "Error instalando PR",
+        "header": "Las siguientes versiones de Decky Loader han sido compiladas de solicitudes Pull de terceros. El equipo de Decky Loader no ha verificado su funcionalidad o seguridad, y es posible que estén desactulizadas.",
+        "loading": "Cargando abrir Solicitudes de Pull...",
+        "start_download_toast": "Descargando PR #{{id}}"
+    },
+    "TitleView": {
+        "decky_store_desc": "Abrir la tienda de Decky",
+        "settings_desc": "Abrir los ajustes de Decky"
     },
     "Updater": {
         "decky_updates": "Actualizaciones de Decky",

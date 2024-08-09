@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import { Translation } from 'react-i18next';
 
-import { WarnThirdPartyType } from './globalTypes';
 import Logger from '../logger';
 import { InstallType } from '../plugin';
+import { WarnThirdPartyType } from './globalTypes';
 
 export enum TranslationClass {
   PLUGIN_LOADER = 'PluginLoader',
@@ -22,7 +22,13 @@ interface TranslationHelperProps {
 
 const logger = new Logger('TranslationHelper');
 
-const TranslationHelper: FC<TranslationHelperProps> = ({ transClass, transText, i18nArgs = null, installType = 0, warnType = WarnThirdPartyType.REPO }) => {
+const TranslationHelper: FC<TranslationHelperProps> = ({
+  transClass,
+  transText,
+  i18nArgs = null,
+  installType = 0,
+  warnType = WarnThirdPartyType.REPO,
+}) => {
   return (
     <Translation>
       {(t, {}) => {
@@ -50,25 +56,25 @@ const TranslationHelper: FC<TranslationHelperProps> = ({ transClass, transText, 
             return i18nArgs
               ? t(TranslationClass.DEVELOPER + '.' + transText, i18nArgs)
               : t(TranslationClass.DEVELOPER + '.' + transText);
-              //Handle different messages in different class cases
-              case TranslationClass.WARN_THIRD_PARTY:
-              //Needed only for title and description
-              if (!transText.startsWith('button')) {
+          //Handle different messages in different class cases
+          case TranslationClass.WARN_THIRD_PARTY:
+            //Needed only for title and description
+            if (!transText.startsWith('button')) {
               switch (warnType) {
-              case WarnThirdPartyType.REPO:
-                return i18nArgs
-                ? t(TranslationClass.WARN_THIRD_PARTY + '.' + transText + '_repo', i18nArgs)
-                : t(TranslationClass.WARN_THIRD_PARTY + '.' + transText + '_repo');
-              case WarnThirdPartyType.ZIP:
-                return i18nArgs
-                ? t(TranslationClass.WARN_THIRD_PARTY + '.' + transText + '_zip', i18nArgs)
-                : t(TranslationClass.WARN_THIRD_PARTY + '.' + transText + '_zip');
+                case WarnThirdPartyType.REPO:
+                  return i18nArgs
+                    ? t(TranslationClass.WARN_THIRD_PARTY + '.' + transText + '_repo', i18nArgs)
+                    : t(TranslationClass.WARN_THIRD_PARTY + '.' + transText + '_repo');
+                case WarnThirdPartyType.ZIP:
+                  return i18nArgs
+                    ? t(TranslationClass.WARN_THIRD_PARTY + '.' + transText + '_zip', i18nArgs)
+                    : t(TranslationClass.WARN_THIRD_PARTY + '.' + transText + '_zip');
               }
-              } else {
+            } else {
               return i18nArgs
-              ? t(TranslationClass.WARN_THIRD_PARTY + '.' + transText, i18nArgs)
-              : t(TranslationClass.WARN_THIRD_PARTY + '.' + transText);
-              }
+                ? t(TranslationClass.WARN_THIRD_PARTY + '.' + transText, i18nArgs)
+                : t(TranslationClass.WARN_THIRD_PARTY + '.' + transText);
+            }
           default:
             logger.error('We should never fall in the default case!');
             return '';

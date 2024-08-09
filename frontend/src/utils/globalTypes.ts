@@ -1,4 +1,4 @@
 export enum WarnThirdPartyType {
-    REPO = 0,
-    ZIP = 1,
-  }
+  REPO = 0,
+  ZIP = 1,
+}

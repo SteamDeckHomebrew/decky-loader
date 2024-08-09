@@ -2,8 +2,8 @@ import { ConfirmModal } from '@decky/ui';
 import { FC, useEffect, useState } from 'react';
 import { FaExclamationTriangle } from 'react-icons/fa';
 
-import TranslationHelper, { TranslationClass } from '../../utils/TranslationHelper';
 import { WarnThirdPartyType } from '../../utils/globalTypes';
+import TranslationHelper, { TranslationClass } from '../../utils/TranslationHelper';
 
 interface WarnThirdPartyProps {
   seconds?: number;

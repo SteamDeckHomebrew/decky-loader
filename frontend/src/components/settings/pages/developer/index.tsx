@@ -7,7 +7,7 @@ import {
   Navigation,
   TextField,
   Toggle,
-  showModal
+  showModal,
 } from '@decky/ui';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -16,11 +16,11 @@ import { FaFileArchive, FaLink, FaReact, FaSteamSymbol, FaTerminal } from 'react
 import { setShouldConnectToReactDevTools, setShowValveInternal } from '../../../../developer';
 import Logger from '../../../../logger';
 import { installFromURL } from '../../../../store';
+import { WarnThirdPartyType } from '../../../../utils/globalTypes';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 import { getSetting } from '../../../../utils/settings';
 import { FileSelectionType } from '../../../modals/filepicker';
 import WarnThirdParty from '../../../modals/WarnThirdParty';
-import { WarnThirdPartyType } from '../../../../utils/globalTypes';
 import RemoteDebuggingSettings from '../general/RemoteDebugging';
 
 const logger = new Logger('DeveloperIndex');

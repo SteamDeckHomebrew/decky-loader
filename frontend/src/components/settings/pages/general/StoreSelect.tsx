@@ -5,9 +5,9 @@ import { FaShapes } from 'react-icons/fa';
 
 import Logger from '../../../../logger';
 import { Store } from '../../../../store';
+import { WarnThirdPartyType } from '../../../../utils/globalTypes';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 import WarnThirdParty from '../../../modals/WarnThirdParty';
-import { WarnThirdPartyType } from '../../../../utils/globalTypes';
 
 const logger = new Logger('StoreSelect');
 

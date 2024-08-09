@@ -12,9 +12,40 @@
         "disabling": "Desactivando DevTools de React",
         "enabling": "Activando DevTools de React"
     },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "Volver"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "La ruta especificada no es válida. Por favor revísala e introdúcela correctamente.",
+            "perm_denied": "No tienes acceso a la ruta especificada. Por favor revisa si tu usuario (deck en Steam Deck) tiene el permiso correspondiente para acceder a la ruta/archivo especificado."
+        }
+    },
     "FilePickerIndex": {
+        "file": {
+            "select": "Selecciona este archivo"
+        },
+        "files": {
+            "all_files": "Todos los archivos",
+            "file_type": "Tipo de archivo",
+            "show_hidden": "Mostrar archivos ocultos"
+        },
+        "filter": {
+            "created_asce": "Creado (Más antiguo)",
+            "created_desc": "Creado (Más reciente)",
+            "modified_asce": "Modificado (Más antiguo)",
+            "modified_desc": "Modificado (Más reciente)",
+            "name_asce": "Z-A",
+            "name_desc": "A-Z",
+            "size_asce": "Tamaño (Más pequeño)",
+            "size_desc": "Tamaño (Más grande)"
+        },
         "folder": {
-            "select": "Usar esta carpeta"
+            "label": "Carpeta",
+            "select": "Usar esta carpeta",
+            "show_more": "Mostrar más archivos"
         }
     },
     "MultiplePluginsInstallModal": {
@@ -71,15 +102,22 @@
         }
     },
     "PluginListIndex": {
+        "freeze": "Congelar actualizaciones",
+        "hide": "Acceso rápido: Esconder",
         "no_plugin": "¡No hay plugins instalados!",
         "plugin_actions": "Acciones de plugin",
         "reinstall": "Reinstalar",
         "reload": "Recargar",
+        "show": "Acceso rápido: Mostrar",
+        "unfreeze": "Permitir actualizaciones",
         "uninstall": "Desinstalar",
         "update_all_many": "Actualizar {{count}} plugins",
         "update_all_one": "Actualizar 1 plugin",
         "update_all_other": "Actualizar {{count}} plugins",
         "update_to": "Actualizar a {{name}}"
+    },
+    "PluginListLabel": {
+        "hidden": "Escondido del menú de acceso rápido"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -147,6 +185,11 @@
         "developer_mode": {
             "label": "Modo desarrollador"
         },
+        "notifications": {
+            "decky_updates_label": "Actualización de Decky disponible",
+            "header": "Notificaciones",
+            "plugin_updates_label": "Actualizaciones de plugin disponibles"
+        },
         "other": {
             "header": "Otros"
         },
@@ -157,9 +200,17 @@
     "SettingsIndex": {
         "developer_title": "Desarrollador",
         "general_title": "General",
-        "plugins_title": "Plugins"
+        "plugins_title": "Plugins",
+        "testing_title": "En pruebas"
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "Descargando plugin",
+            "installing_plugin": "Instalando plugin",
+            "open_zip": "Abriendo archivo zip",
+            "start": "Iniciando",
+            "uninstalling_previous": "Desinstalando copia previa"
+        },
         "store_contrib": {
             "desc": "Si desea contribuir a la tienda de plugins de Decky, mira el repositorio SteamDeckHomebrew/decky-plugin-template en GitHub. Hay información acerca del desarrollo y distribución en el archivo README.",
             "label": "Contribuyendo"
@@ -183,9 +234,16 @@
             "about": "Información",
             "alph_asce": "Alfabéticamente (Z-A)",
             "alph_desc": "Alfabéticamente (A-Z)",
+            "date_asce": "Más antiguo primero",
+            "date_desc": "Más reciente primero",
+            "downloads_asce": "Menos descargados primero",
+            "downloads_desc": "Más descargados primero",
             "title": "Navegar"
         },
-        "store_testing_cta": "¡Por favor considera probar plugins nuevos para ayudar al equipo de Decky Loader!"
+        "store_testing_cta": "¡Por favor considera probar plugins nuevos para ayudar al equipo de Decky Loader!",
+        "store_testing_warning": {
+            "label": "Bienvenido al canal En Pruebas de la Tienda"
+        }
     },
     "StoreSelect": {
         "custom_store": {
@@ -198,6 +256,9 @@
             "label": "Canál de la tienda",
             "testing": "Pruebas"
         }
+    },
+    "Testing": {
+        "download": "Descargar"
     },
     "Updater": {
         "decky_updates": "Actualizaciones de Decky",

@@ -104,9 +104,14 @@ class Loader:
     async def enable_reload_wait(self):
         if self.live_reload:
             await sleep(10)
-            if self.watcher:
+            if self.watcher and self.live_reload:
                 self.logger.info("Hot reload enabled")
                 self.watcher.disabled = False
+
+    async def disable_reload(self):
+        if self.watcher:
+            self.watcher.disabled = True
+            self.live_reload = False
 
     async def handle_frontend_assets(self, request: web.Request):
         file = Path(__file__).parent.joinpath("static").joinpath(request.match_info["path"])

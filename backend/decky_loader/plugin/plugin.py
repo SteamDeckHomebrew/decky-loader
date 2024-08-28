@@ -1,8 +1,9 @@
-from asyncio import CancelledError, Task, create_task, sleep
+from asyncio import CancelledError, Task, create_task, sleep, get_event_loop
 from json import dumps, load, loads
 from logging import getLogger
 from os import path
 from multiprocessing import Process
+from time import time
 
 from .sandboxed_plugin import SandboxedPlugin
 from .messages import MethodCallRequest, SocketMessageType
@@ -114,29 +115,51 @@ class PluginWrapper:
         self._listener_task = create_task(self._response_listener())
         return self
 
+    async def _close_socket(self, uninstall : bool):
+        self.log.info(f"Closing socket for {self.name}")
+        await self._socket.write_single_line(dumps({ "stop": True, "uninstall": uninstall }, ensure_ascii=False))
+        await self._socket.close_socket_connection()
+        self.log.info(f"Closed socket for {self.name}")
+
     async def stop(self, uninstall: bool = False):
         self.log.info(f"Stopping plugin {self.name}")
         if self.passive:
             return
+        
         if hasattr(self, "_socket"):
-            await self._socket.write_single_line(dumps({ "stop": True, "uninstall": uninstall }, ensure_ascii=False))
-            await self._socket.close_socket_connection()
+            socket_call = create_task(self._close_socket(uninstall))
+        else:
+            socket_call = None
+
         if self.proc:
-            self.proc.join()
+            join_call = get_event_loop().run_in_executor(None, self.proc.join, 6)
+        else:
+            join_call = None
+
         await self.kill_if_still_running()
+
+        if join_call:
+            await join_call
+            self.log.info(f"Process for {self.name} has been stopped")
+
+        if socket_call:
+            socket_call.cancel()
+
         if hasattr(self, "_listener_task"):
             self._listener_task.cancel()
 
     async def kill_if_still_running(self):
-        time = 0
+        start_time = time()
+        sigtermed = False
         while self.proc and self.proc.is_alive():
             await sleep(0.1)
-            time += 1
-            if time == 100:
-                self.log.warn(f"Plugin {self.name} still alive 10 seconds after stop request! Sending SIGTERM!")
+            elapsed_time = time() - start_time
+            if elapsed_time >= 2 and not sigtermed:
+                sigtermed = True
+                self.log.warn(f"Plugin {self.name} still alive 2 seconds after stop request! Sending SIGTERM!")
                 self.terminate()
-            elif time == 200:
-                self.log.warn(f"Plugin {self.name} still alive 20 seconds after stop request! Sending SIGKILL!")
+            elif elapsed_time >= 5:
+                self.log.warn(f"Plugin {self.name} still alive 5 seconds after stop request! Sending SIGKILL!")
                 self.terminate(True)
 
     def terminate(self, kill: bool = False):

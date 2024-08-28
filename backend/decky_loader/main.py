@@ -118,7 +118,11 @@ class PluginManager:
     async def shutdown(self, _: Application):
         try:
             logger.info(f"Shutting down...")
+            logger.info("Disabling reload...")
+            await self.plugin_loader.disable_reload()
+            logger.info("Killing plugins...")
             await self.plugin_loader.shutdown_plugins()
+            logger.info("Disconnecting from WS...")
             await self.ws.disconnect()
             self.reinject = False
             if self.js_ctx_tab:

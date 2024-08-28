@@ -11,6 +11,7 @@ if hasattr(sys, '_MEIPASS'):
 # Full imports
 import multiprocessing
 multiprocessing.freeze_support()
+import signal
 from asyncio import AbstractEventLoop, CancelledError, Task, all_tasks, current_task, gather, new_event_loop, set_event_loop, sleep
 from logging import basicConfig, getLogger
 from os import path
@@ -257,6 +258,11 @@ def main():
 
     # Append the system and user python paths
     sys.path.extend(get_system_pythonpaths())
+
+    #Catch a sigint (CTRL-C) coming from systemd and shut down gracefully
+    #TODO: Handle the Windows case in the future
+    if ON_LINUX:
+        signal.signal(signal.SIGINT, PluginManager.shutdown)
 
     logger.info(f"Starting Decky version {get_loader_version()}")
 

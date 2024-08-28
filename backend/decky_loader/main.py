@@ -245,6 +245,10 @@ class PluginManager:
     def run(self):
         run_app(self.web_app, host=get_server_host(), port=get_server_port(), loop=self.loop, access_log=None, handle_signals=True, shutdown_timeout=40)
 
+def handle_systemd():
+    PluginManager.shutdown()
+    pass
+
 def main():
     setproctitle(f"Decky Loader {get_loader_version()} ({getproctitle()})")
     setthreadtitle("Decky Loader")
@@ -262,7 +266,7 @@ def main():
     #Catch a sigint (CTRL-C) coming from systemd and shut down gracefully
     #TODO: Handle the Windows case in the future
     if ON_LINUX:
-        signal.signal(signal.SIGINT, PluginManager.shutdown)
+        signal.signal(signal.SIGINT, handle_systemd)
 
     logger.info(f"Starting Decky version {get_loader_version()}")
 

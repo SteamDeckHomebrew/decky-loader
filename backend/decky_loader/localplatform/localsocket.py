@@ -91,7 +91,7 @@ class UnixSocket:
                 line.extend(err.partial)
                 break
             except asyncio.CancelledError:
-                break
+                raise
             else:
                 break
 

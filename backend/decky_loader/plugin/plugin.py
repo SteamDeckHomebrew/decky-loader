@@ -1,9 +1,10 @@
-from asyncio import CancelledError, Task, create_task, sleep, get_event_loop
+from asyncio import CancelledError, Task, create_task, sleep, get_event_loop, wait
 from json import dumps, load, loads
 from logging import getLogger
 from os import path
 from multiprocessing import Process
 from time import time
+from traceback import format_exc
 
 from .sandboxed_plugin import SandboxedPlugin
 from .messages import MethodCallRequest, SocketMessageType
@@ -115,38 +116,32 @@ class PluginWrapper:
         self._listener_task = create_task(self._response_listener())
         return self
 
-    async def _close_socket(self, uninstall : bool):
-        self.log.info(f"Closing socket for {self.name}")
-        await self._socket.write_single_line(dumps({ "stop": True, "uninstall": uninstall }, ensure_ascii=False))
-        await self._socket.close_socket_connection()
-        self.log.info(f"Closed socket for {self.name}")
-
     async def stop(self, uninstall: bool = False):
-        self.log.info(f"Stopping plugin {self.name}")
-        if self.passive:
-            return
-        
-        if hasattr(self, "_socket"):
-            socket_call = create_task(self._close_socket(uninstall))
-        else:
-            socket_call = None
+        try:
+            start_time = time()
+            if self.passive:
+                return
 
-        if self.proc:
-            join_call = get_event_loop().run_in_executor(None, self.proc.join, 6)
-        else:
-            join_call = None
+            done, pending = await wait([
+                create_task(self._socket.write_single_line(dumps({ "stop": True, "uninstall": uninstall }, ensure_ascii=False)))
+            ], timeout=1)
 
-        await self.kill_if_still_running()
+            if hasattr(self, "_listener_task"):
+                self._listener_task.cancel()
 
-        if join_call:
-            await join_call
-            self.log.info(f"Process for {self.name} has been stopped")
+            if self.proc:
+                join_call = get_event_loop().run_in_executor(None, self.proc.join, 6)
+            else:
+                join_call = None
+            
+            await self.kill_if_still_running()
 
-        if socket_call:
-            socket_call.cancel()
+            for pending_task in pending:
+                pending_task.cancel()
 
-        if hasattr(self, "_listener_task"):
-            self._listener_task.cancel()
+            self.log.info(f"Process for {self.name} has been stopped in {time() - start_time:.2}s")
+        except Exception as e:
+            self.log.error(f"Error during shutdown for plugin {self.name}: {str(e)}\n{format_exc()}")
 
     async def kill_if_still_running(self):
         start_time = time()

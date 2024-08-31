@@ -42,12 +42,12 @@ export interface PluginInstallRequest {
   installType: InstallType;
 }
 
-export interface Motd {
+export interface Announcement {
   id: string;
-  name: string;
-  description: string;
-  date: string;
-  severity: 'High' | 'Medium' | 'Low';
+  title: string;
+  text: string;
+  created: string;
+  updated: string;
 }
 
 // name: version
@@ -57,10 +57,13 @@ export async function getStore(): Promise<Store> {
   return await getSetting<Store>('store', Store.Default);
 }
 
-export async function getMotd(): Promise<Motd> {
+export async function getLatestAnnouncement(): Promise<Announcement | null> {
   let version = await window.DeckyPluginLoader.updateVersion();
   let store = await getSetting<Store | null>('store', null);
-  let customURL = await getSetting<string>('motd-url', 'https://plugins.deckbrew.xyz/v1/motd');
+  let customURL = await getSetting<string>(
+    'announcements-url',
+    'https://plugins.deckbrew.xyz/v1/announcements/-/current',
+  );
 
   if (store === null) {
     console.log('Could not get store, using Default.');
@@ -71,30 +74,28 @@ export async function getMotd(): Promise<Motd> {
   let resolvedURL;
   switch (store) {
     case Store.Default:
-      resolvedURL = 'https://plugins.deckbrew.xyz/v1/motd';
+      resolvedURL = 'https://plugins.deckbrew.xyz/v1/announcements/-/current';
       break;
     case Store.Testing:
-      resolvedURL = 'https://testing.deckbrew.xyz/v1/motd';
+      resolvedURL = 'https://testing.deckbrew.xyz/v1/announcements/-/current';
       break;
     case Store.Custom:
       resolvedURL = customURL;
       break;
     default:
       console.error('Somehow you ended up without a standard URL, using the default URL.');
-      resolvedURL = 'https://plugins.deckbrew.xyz/v1/motd';
+      resolvedURL = 'https://plugins.deckbrew.xyz/v1/announcements/-/current';
       break;
   }
-  return fetch(resolvedURL, {
+  const res = await fetch(resolvedURL, {
     method: 'GET',
     headers: {
       'X-Decky-Version': version.current,
     },
-  }).then((r) => {
-    if (r.status === 200) {
-      return r.json();
-    }
-    return null;
   });
+  if (res.status !== 200) return null;
+  const json = await res.json();
+  return json?.[0] ?? null;
 }
 
 export async function getPluginList(

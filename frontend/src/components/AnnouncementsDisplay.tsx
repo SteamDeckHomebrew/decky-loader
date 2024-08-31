@@ -2,7 +2,7 @@ import { DialogButton, Focusable, PanelSection } from '@decky/ui';
 import { useEffect, useMemo, useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
 
-import { Motd, getMotd } from '../store';
+import { Announcement, getLatestAnnouncement } from '../store';
 import { useSetting } from '../utils/hooks/useSetting';
 
 const SEVERITIES = {
@@ -20,50 +20,51 @@ const SEVERITIES = {
   },
 };
 
-const welcomeMotd: Motd = {
-  id: 'welcomeMotd',
-  name: 'Welcome to Decky!',
-  date: Date.now().toString(),
-  description: 'We hope you enjoy using Decky! If you have any questions or feedback, please let us know.',
-  severity: 'Low',
+const welcomeAnnouncement: Announcement = {
+  id: 'welcomeAnnouncement',
+  title: 'Welcome to Decky!',
+  text: 'We hope you enjoy using Decky! If you have any questions or feedback, please let us know.',
+  created: Date.now().toString(),
+  updated: Date.now().toString(),
 };
 
-export function MotdDisplay() {
-  const [motd, setMotd] = useState<Motd | null>(null);
+export function AnnouncementsDisplay() {
+  const [announcement, setAnnouncement] = useState<Announcement | null>(null);
   // showWelcome will display a welcome motd, the welcome motd has an id of "welcome" and once that is saved to hiddenMotdId, it will not show again
-  const [hiddenMotdId, setHiddenMotdId] = useSetting('hiddenMotdId', 'showWelcome');
+  const [hiddenAnnouncementId, setHiddenAnnouncementId] = useSetting('hiddenAnnouncementId', 'showWelcome');
 
-  async function fetchMotd() {
-    const motd = await getMotd();
-    motd && setMotd(motd);
+  async function fetchAnnouncement() {
+    const announcement = await getLatestAnnouncement();
+    announcement && setAnnouncement(announcement);
   }
 
   useEffect(() => {
-    void fetchMotd();
+    void fetchAnnouncement();
   }, []);
 
   useEffect(() => {
-    if (hiddenMotdId === 'showWelcome') {
-      setMotd(welcomeMotd);
+    if (hiddenAnnouncementId === 'showWelcome') {
+      setAnnouncement(welcomeAnnouncement);
     }
-  }, [hiddenMotdId]);
+  }, [hiddenAnnouncementId]);
 
-  function hideMotd() {
-    if (motd) {
-      setHiddenMotdId(motd.id);
-      void fetchMotd();
+  function hideAnnouncement() {
+    if (announcement) {
+      setHiddenAnnouncementId(announcement.id);
+      void fetchAnnouncement();
     }
   }
 
   const hidden = useMemo(() => {
-    return hiddenMotdId === motd?.id;
-  }, [hiddenMotdId, motd]);
+    return hiddenAnnouncementId === announcement?.id;
+  }, [hiddenAnnouncementId, announcement]);
 
-  if (!motd || !motd?.name || hidden) {
+  if (!announcement || !announcement.title || hidden) {
     return null;
   }
 
-  const severity = SEVERITIES[motd?.severity || 'Low'];
+  // Severity is not implemented in the API currently
+  const severity = SEVERITIES['Low'];
 
   return (
     <PanelSection>
@@ -82,7 +83,7 @@ export function MotdDisplay() {
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ fontWeight: 'bold' }}>{motd?.name}</span>
+          <span style={{ fontWeight: 'bold' }}>{announcement.title}</span>
           <DialogButton
             style={{
               width: '1rem',
@@ -96,7 +97,7 @@ export function MotdDisplay() {
               top: '.75rem',
               right: '.75rem',
             }}
-            onClick={hideMotd}
+            onClick={hideAnnouncement}
           >
             <FaTimes
               style={{
@@ -105,7 +106,7 @@ export function MotdDisplay() {
             />
           </DialogButton>
         </div>
-        <span style={{ fontSize: '0.75rem', whiteSpace: 'pre-line' }}>{motd?.description}</span>
+        <span style={{ fontSize: '0.75rem', whiteSpace: 'pre-line' }}>{announcement.text}</span>
       </Focusable>
     </PanelSection>
   );

@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { FaEyeSlash } from 'react-icons/fa';
 
 import { Plugin } from '../plugin';
+import { AnnouncementsDisplay } from './AnnouncementsDisplay';
 import { useDeckyState } from './DeckyState';
-import { MotdDisplay } from './MotdDisplay';
 import NotificationBadge from './NotificationBadge';
 import { useQuickAccessVisible } from './QuickAccessVisibleState';
 import TitleView from './TitleView';
@@ -43,7 +43,7 @@ const PluginView: FC = () => {
           paddingTop: '16px',
         }}
       >
-        <MotdDisplay />
+        <AnnouncementsDisplay />
         <PanelSection>
           {pluginList
             .filter((p) => p.content)

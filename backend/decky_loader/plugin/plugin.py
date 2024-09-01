@@ -1,4 +1,4 @@
-from asyncio import CancelledError, Task, create_task, sleep, get_event_loop, wait
+from asyncio import CancelledError, Task, create_task, sleep, wait
 from json import dumps, load, loads
 from logging import getLogger
 from os import path

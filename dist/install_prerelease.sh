@@ -34,10 +34,13 @@ curl -L https://raw.githubusercontent.com/SteamDeckHomebrew/decky-loader/main/di
 cat > "${HOMEBREW_FOLDER}/services/plugin_loader-backup.service" <<- EOM
 [Unit]
 Description=SteamDeck Plugin Loader
+After=network.target
 [Service]
 Type=simple
 User=root
 Restart=always
+KillMode=process
+TimeoutStopSec=45
 ExecStart=${HOMEBREW_FOLDER}/services/PluginLoader
 WorkingDirectory=${HOMEBREW_FOLDER}/services
 Environment=UNPRIVILEGED_PATH=${HOMEBREW_FOLDER}

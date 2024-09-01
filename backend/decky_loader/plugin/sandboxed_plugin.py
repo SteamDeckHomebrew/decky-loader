@@ -1,6 +1,5 @@
 import sys
 from os import path, environ
-from signal import SIG_IGN, SIGINT, SIGTERM, getsignal, signal
 from importlib.util import module_from_spec, spec_from_file_location
 from json import dumps, loads
 from logging import getLogger
@@ -18,8 +17,6 @@ from .. import helpers, settings, injector # pyright: ignore [reportUnusedImport
 from typing import List, TypeVar, Any
 
 DataType = TypeVar("DataType")
-
-original_term_handler = getsignal(SIGTERM)
 
 class SandboxedPlugin:
     def __init__(self,
@@ -48,11 +45,6 @@ class SandboxedPlugin:
         self._socket = socket
 
         try:
-            # Ignore signals meant for parent Process
-            # TODO SURELY there's a better way to do this.
-            signal(SIGINT, SIG_IGN)
-            signal(SIGTERM, SIG_IGN)
-
             setproctitle(f"{self.name} ({self.file})")
             setthreadtitle(self.name)
 
@@ -167,8 +159,6 @@ class SandboxedPlugin:
         data = loads(message)
 
         if "stop" in data:
-            # Incase the loader needs to terminate our process soon
-            signal(SIGTERM, original_term_handler)
             self.log.info(f"Calling Loader unload function for {self.name}.")
             await self._unload()
 

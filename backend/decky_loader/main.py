@@ -106,7 +106,7 @@ class PluginManager:
         new_time = time()
         if (new_time - self.last_webhelper_exit < 60):
             self.webhelper_crash_count += 1
-            logger.warn(f"webhelper crashed within a minute from last crash! crash count: {self.webhelper_crash_count}")
+            logger.warning(f"webhelper crashed within a minute from last crash! crash count: {self.webhelper_crash_count}")
         else:
             self.webhelper_crash_count = 0
         self.last_webhelper_exit = new_time
@@ -147,7 +147,7 @@ class PluginManager:
                         pass
                     logger.debug(f"Task {task} finished")
                 except:
-                    logger.warn(f"Failed to cancel task {task}:\n" + format_exc())
+                    logger.warning(f"Failed to cancel task {task}:\n" + format_exc())
                     pass
             if current:
                 tasks.remove(current)

@@ -203,7 +203,7 @@ def get_unprivileged_path() -> str:
             path = None
 
     if path == None:
-        logger.warn("Unprivileged path is not properly configured. Defaulting to /home/deck/homebrew")
+        logger.warning("Unprivileged path is not properly configured. Defaulting to /home/deck/homebrew")
         path = "/home/deck/homebrew" # We give up
     
     os.makedirs(path, exist_ok=True)
@@ -225,7 +225,7 @@ def get_unprivileged_user() -> str:
                 break
     
     if user == None:
-        logger.warn("Unprivileged user is not properly configured. Defaulting to 'deck'")
+        logger.warning("Unprivileged user is not properly configured. Defaulting to 'deck'")
         user = 'deck'
 
     return user
@@ -238,7 +238,7 @@ close_cef_socket_lock = Lock()
 async def close_cef_socket():
     async with close_cef_socket_lock:
         if _get_effective_user_id() != 0:
-            logger.warn("Can't close CEF socket as Decky isn't running as root.")
+            logger.warning("Can't close CEF socket as Decky isn't running as root.")
             return
         # Look for anything listening TCP on port 8080
         lsof = run(["lsof", "-F", "-iTCP:8080", "-sTCP:LISTEN"], capture_output=True, text=True)

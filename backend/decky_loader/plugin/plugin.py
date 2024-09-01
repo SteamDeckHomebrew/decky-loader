@@ -85,7 +85,7 @@ class PluginWrapper:
     async def execute_legacy_method(self, method_name: str, kwargs: Dict[Any, Any]):
         if not self.legacy_method_warning:
             self.legacy_method_warning = True
-            self.log.warn(f"Plugin {self.name} is using legacy method calls. This will be removed in a future release.")
+            self.log.warning(f"Plugin {self.name} is using legacy method calls. This will be removed in a future release.")
         if self.passive:
             raise RuntimeError("This plugin is passive (aka does not implement main.py)")
         
@@ -144,10 +144,10 @@ class PluginWrapper:
             elapsed_time = time() - start_time
             if elapsed_time >= 5 and not sigtermed:
                 sigtermed = True
-                self.log.warn(f"Plugin {self.name} still alive 5 seconds after stop request! Sending SIGTERM!")
+                self.log.warning(f"Plugin {self.name} still alive 5 seconds after stop request! Sending SIGTERM!")
                 self.terminate()
             elif elapsed_time >= 10:
-                self.log.warn(f"Plugin {self.name} still alive 10 seconds after stop request! Sending SIGKILL!")
+                self.log.warning(f"Plugin {self.name} still alive 10 seconds after stop request! Sending SIGKILL!")
                 self.terminate(True)
             await sleep(0.1)
 

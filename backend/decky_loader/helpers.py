@@ -84,7 +84,7 @@ def get_loader_version() -> str:
 
         return version_str
     except Exception as e:
-        logger.warn(f"Failed to execute get_loader_version(): {str(e)}")
+        logger.warning(f"Failed to execute get_loader_version(): {str(e)}")
         return "unknown"
 
 user_agent = f"Decky/{get_loader_version()} (https://decky.xyz)"
@@ -102,7 +102,7 @@ def get_system_pythonpaths() -> list[str]:
         versions = [x.strip() for x in proc.stdout.decode().strip().split("\n")]
         return [x for x in versions if x and not x.isspace()]
     except Exception as e:
-        logger.warn(f"Failed to execute get_system_pythonpaths(): {str(e)}")
+        logger.warning(f"Failed to execute get_system_pythonpaths(): {str(e)}")
         return []
 
 # Download Remote Binaries to local Plugin

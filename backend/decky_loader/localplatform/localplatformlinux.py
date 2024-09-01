@@ -1,15 +1,20 @@
 from re import compile
 from asyncio import Lock, create_subprocess_exec
-from asyncio.subprocess import PIPE, DEVNULL, STDOUT
+from asyncio.subprocess import PIPE, DEVNULL, STDOUT, Process
+from subprocess import call as call_sync
 import os, pwd, grp, sys, logging
+from typing import IO, Any, Mapping
 from ..enums import UserType
 
 logger = logging.getLogger("localplatform")
 
-async def run(args : list[str], stdin=None, stdout=None, stderr=None) -> int:
-    proc = await create_subprocess_exec(args[0], *(args[1:]), stdout=stdout, stderr=stderr)
-    await proc.communicate()
-    return proc.returncode
+# subprocess._ENV
+ENV = Mapping[str, str]
+ProcessIO = int | IO[Any] | None
+async def run(args: list[str], stdin: ProcessIO = DEVNULL, stdout: ProcessIO = PIPE, stderr: ProcessIO = PIPE, env: ENV | None = None) -> tuple[Process, bytes, bytes]:
+    proc = await create_subprocess_exec(args[0], *(args[1:]), stdin=stdin, stdout=stdout, stderr=stderr, env=env)
+    proc_stdout, proc_stderr = await proc.communicate()
+    return (proc, proc_stdout, proc_stderr)
 
 # Get the user id hosting the plugin loader
 def _get_user_id() -> int:
@@ -59,7 +64,7 @@ def chown(path : str,  user : UserType = UserType.HOST_USER, recursive : bool = 
     else:
         raise Exception("Unknown User Type")
 
-    result = run(["chown", "-R", user_str, path] if recursive else ["chown", user_str, path])
+    result = call_sync(["chown", "-R", user_str, path] if recursive else ["chown", user_str, path])
     return result == 0
 
 def chmod(path : str, permissions : int, recursive : bool = True) -> bool:
@@ -136,17 +141,17 @@ def setuid(user : UserType = UserType.HOST_USER):
     os.setuid(user_id)
 
 async def service_active(service_name : str) -> bool:
-    res = run(["systemctl", "is-active", service_name], stdout=DEVNULL, stderr=DEVNULL)
+    res, _, _ = await run(["systemctl", "is-active", service_name], stdout=DEVNULL, stderr=DEVNULL)
     return res.returncode == 0
 
 async def service_restart(service_name : str, block : bool = True) -> bool:
-    run(["systemctl", "daemon-reload"])
+    await run(["systemctl", "daemon-reload"])
     cmd = ["systemctl", "restart", service_name]
 
     if not block:
         cmd.append("--no-block")
 
-    res = run(cmd, stdout=PIPE, stderr=STDOUT)
+    res, _, _ = await run(cmd, stdout=PIPE, stderr=STDOUT)
     return res.returncode == 0
 
 async def service_stop(service_name : str) -> bool:
@@ -155,7 +160,7 @@ async def service_stop(service_name : str) -> bool:
         return True
 
     cmd = ["systemctl", "stop", service_name]
-    res = run(cmd, stdout=PIPE, stderr=STDOUT)
+    res, _, _ = await run(cmd, stdout=PIPE, stderr=STDOUT)
     return res.returncode == 0
 
 async def service_start(service_name : str) -> bool:
@@ -164,13 +169,13 @@ async def service_start(service_name : str) -> bool:
         return True
 
     cmd = ["systemctl", "start", service_name]
-    res = run(cmd, stdout=PIPE, stderr=STDOUT)
+    res, _, _ = await run(cmd, stdout=PIPE, stderr=STDOUT)
     return res.returncode == 0
 
 async def restart_webhelper() -> bool:
     logger.info("Restarting steamwebhelper")
     # TODO move to pkill
-    res = run(["killall", "-s", "SIGTERM", "steamwebhelper"], stdout=DEVNULL, stderr=DEVNULL)
+    res, _, _ = await run(["killall", "-s", "SIGTERM", "steamwebhelper"], stdout=DEVNULL, stderr=DEVNULL)
     return res.returncode == 0
 
 def get_privileged_path() -> str:
@@ -250,12 +255,12 @@ async def close_cef_socket():
             logger.warning("Can't close CEF socket as Decky isn't running as root.")
             return
         # Look for anything listening TCP on port 8080
-        lsof = run(["lsof", "-F", "-iTCP:8080", "-sTCP:LISTEN"], capture_output=True, text=True)
-        if lsof.returncode != 0 or len(lsof.stdout) < 1:
+        lsof, stdout, _ = await run(["lsof", "-F", "-iTCP:8080", "-sTCP:LISTEN"], stdout=PIPE)
+        if lsof.returncode != 0 or len(stdout) < 1:
             logger.error(f"lsof call failed in close_cef_socket! return code: {str(lsof.returncode)}")
             return
 
-        lsof_data = cef_socket_lsof_regex.match(lsof.stdout)
+        lsof_data = cef_socket_lsof_regex.match(stdout.decode())
         
         if not lsof_data:
             logger.error("lsof regex match failed in close_cef_socket!")
@@ -267,7 +272,7 @@ async def close_cef_socket():
         logger.info(f"Closing CEF socket with PID {pid} and FD {fd}")
 
         # Use gdb to inject a close() call for the socket fd into steamwebhelper
-        gdb_ret = run(["gdb", "--nx", "-p", pid, "--batch", "--eval-command", f"call (int)close({fd})"], env={"LD_LIBRARY_PATH": ""})
+        gdb_ret, _, _ = await run(["gdb", "--nx", "-p", pid, "--batch", "--eval-command", f"call (int)close({fd})"], env={"LD_LIBRARY_PATH": ""})
 
         if gdb_ret.returncode != 0:
             logger.error(f"Failed to close CEF socket with gdb! return code: {str(gdb_ret.returncode)}", exc_info=True)

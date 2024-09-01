@@ -31,7 +31,7 @@ const welcomeAnnouncement: Announcement = {
 export function AnnouncementsDisplay() {
   const [announcement, setAnnouncement] = useState<Announcement | null>(null);
   // showWelcome will display a welcome motd, the welcome motd has an id of "welcome" and once that is saved to hiddenMotdId, it will not show again
-  const [hiddenAnnouncementId, setHiddenAnnouncementId] = useSetting('hiddenAnnouncementId', 'showWelcome');
+  const [hiddenAnnouncementIds, setHiddenAnnouncementIds] = useSetting<string[]>('hiddenAnnouncementIds', []);
 
   async function fetchAnnouncement() {
     const announcement = await getLatestAnnouncement();
@@ -41,23 +41,22 @@ export function AnnouncementsDisplay() {
   useEffect(() => {
     void fetchAnnouncement();
   }, []);
-
   useEffect(() => {
-    if (hiddenAnnouncementId === 'showWelcome') {
+    if (hiddenAnnouncementIds.length > 0) {
       setAnnouncement(welcomeAnnouncement);
     }
-  }, [hiddenAnnouncementId]);
+  }, [hiddenAnnouncementIds]);
 
   function hideAnnouncement() {
     if (announcement) {
-      setHiddenAnnouncementId(announcement.id);
+      setHiddenAnnouncementIds([...hiddenAnnouncementIds, announcement.id]);
       void fetchAnnouncement();
     }
   }
 
   const hidden = useMemo(() => {
-    return hiddenAnnouncementId === announcement?.id;
-  }, [hiddenAnnouncementId, announcement]);
+    return !announcement?.id || hiddenAnnouncementIds.includes(announcement.id);
+  }, [hiddenAnnouncementIds, announcement]);
 
   if (!announcement || !announcement.title || hidden) {
     return null;

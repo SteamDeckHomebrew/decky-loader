@@ -1,10 +1,15 @@
 from re import compile
-from asyncio import Lock
+from asyncio import Lock, create_subprocess_exec
+from asyncio.subprocess import PIPE, DEVNULL, STDOUT
 import os, pwd, grp, sys, logging
-from subprocess import call, run, DEVNULL, PIPE, STDOUT
 from ..enums import UserType
 
 logger = logging.getLogger("localplatform")
+
+async def run(args : list[str], stdin=None, stdout=None, stderr=None) -> int:
+    proc = create_subprocess_exec(args[0], *(args[1:]), stdout=stdout, stderr=stderr)
+    await proc.communicate()
+    return proc.returncode
 
 # Get the user id hosting the plugin loader
 def _get_user_id() -> int:
@@ -54,7 +59,7 @@ def chown(path : str,  user : UserType = UserType.HOST_USER, recursive : bool = 
     else:
         raise Exception("Unknown User Type")
 
-    result = call(["chown", "-R", user_str, path] if recursive else ["chown", user_str, path])
+    result = run(["chown", "-R", user_str, path] if recursive else ["chown", user_str, path])
     return result == 0
 
 def chmod(path : str, permissions : int, recursive : bool = True) -> bool:
@@ -134,9 +139,13 @@ async def service_active(service_name : str) -> bool:
     res = run(["systemctl", "is-active", service_name], stdout=DEVNULL, stderr=DEVNULL)
     return res.returncode == 0
 
-async def service_restart(service_name : str) -> bool:
-    call(["systemctl", "daemon-reload"])
+async def service_restart(service_name : str, block : bool = True) -> bool:
+    run(["systemctl", "daemon-reload"])
     cmd = ["systemctl", "restart", service_name]
+
+    if not block:
+        cmd.append("--no-block")
+
     res = run(cmd, stdout=PIPE, stderr=STDOUT)
     return res.returncode == 0
 

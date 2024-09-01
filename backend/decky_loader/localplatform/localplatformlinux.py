@@ -7,7 +7,7 @@ from ..enums import UserType
 logger = logging.getLogger("localplatform")
 
 async def run(args : list[str], stdin=None, stdout=None, stderr=None) -> int:
-    proc = create_subprocess_exec(args[0], *(args[1:]), stdout=stdout, stderr=stderr)
+    proc = await create_subprocess_exec(args[0], *(args[1:]), stdout=stdout, stderr=stderr)
     await proc.communicate()
     return proc.returncode
 

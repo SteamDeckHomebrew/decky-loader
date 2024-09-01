@@ -44,8 +44,7 @@ class PluginWrapper:
 
         self.sandboxed_plugin = SandboxedPlugin(self.name, self.passive, self.flags, self.file, self.plugin_directory, self.plugin_path, self.version, self.author, self.api_version)
         self.proc: Process | None = None
-        # TODO: Maybe make LocalSocket not require on_new_message to make this cleaner
-        self._socket = LocalSocket(self.sandboxed_plugin.on_new_message)
+        self._socket = LocalSocket()
         self._listener_task: Task[Any]
         self._method_call_requests: Dict[str, MethodCallRequest] = {}
 
@@ -147,7 +146,6 @@ class PluginWrapper:
         start_time = time()
         sigtermed = False
         while self.proc and self.proc.is_alive():
-            await sleep(0.1)
             elapsed_time = time() - start_time
             if elapsed_time >= 2 and not sigtermed:
                 sigtermed = True
@@ -156,6 +154,7 @@ class PluginWrapper:
             elif elapsed_time >= 5:
                 self.log.warn(f"Plugin {self.name} still alive 5 seconds after stop request! Sending SIGKILL!")
                 self.terminate(True)
+            await sleep(0.1)
 
     def terminate(self, kill: bool = False):
         if self.proc and self.proc.is_alive():

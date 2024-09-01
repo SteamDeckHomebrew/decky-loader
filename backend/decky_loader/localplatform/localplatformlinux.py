@@ -256,7 +256,7 @@ async def close_cef_socket():
             return
         # Look for anything listening TCP on port 8080
         lsof, stdout, _ = await run(["lsof", "-F", "-iTCP:8080", "-sTCP:LISTEN"], stdout=PIPE)
-        if lsof.returncode != 0 or len(stdout) < 1:
+        if not stdout or lsof.returncode != 0 or len(stdout) < 1:
             logger.error(f"lsof call failed in close_cef_socket! return code: {str(lsof.returncode)}")
             return
 

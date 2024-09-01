@@ -101,6 +101,8 @@ class PluginManager:
         self.web_app.add_routes([static("/static", path.join(path.dirname(__file__), 'static'))])
 
     async def handle_crash(self):
+        if not self.reinject:
+            return
         new_time = time()
         if (new_time - self.last_webhelper_exit < 60):
             self.webhelper_crash_count += 1
@@ -123,8 +125,8 @@ class PluginManager:
             logger.info("Killing plugins...")
             await self.plugin_loader.shutdown_plugins()
             logger.info("Disconnecting from WS...")
-            await self.ws.disconnect()
             self.reinject = False
+            await self.ws.disconnect()
             if self.js_ctx_tab:
                 await self.js_ctx_tab.close_websocket()
                 self.js_ctx_tab = None

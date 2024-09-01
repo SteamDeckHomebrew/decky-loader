@@ -138,16 +138,17 @@ class PluginManager:
             tasks = all_tasks()
             current = current_task()
             async def cancel_task(task: Task[Any]):
-                logger.debug(f"Cancelling task {task}")
+                name = task.get_coro().__qualname__
+                logger.debug(f"Cancelling task {name}")
                 try:
                     task.cancel()
                     try:
                         await task
                     except CancelledError:
                         pass
-                    logger.debug(f"Task {task} finished")
+                    logger.debug(f"Task {name} finished")
                 except:
-                    logger.warning(f"Failed to cancel task {task}:\n" + format_exc())
+                    logger.warning(f"Failed to cancel task {name}:\n" + format_exc())
                     pass
             if current:
                 tasks.remove(current)

@@ -120,7 +120,7 @@ class SandboxedPlugin:
                     get_event_loop().create_task(self.Plugin._main())
                 else:
                     get_event_loop().create_task(self.Plugin._main(self.Plugin))
-            get_event_loop().create_task(socket.setup_server())
+            get_event_loop().create_task(socket.setup_server(self.on_new_message))
         except:
             self.log.error("Failed to start " + self.name + "!\n" + format_exc())
             sys.exit(0)

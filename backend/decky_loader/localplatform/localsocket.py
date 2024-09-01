@@ -20,6 +20,7 @@ class UnixSocket:
         self.writer = None
         self.server_writer = None
         self.open_lock = asyncio.Lock()
+        self.active = True
 
     async def setup_server(self):
         try:
@@ -58,6 +59,8 @@ class UnixSocket:
         if self.socket:
             self.socket.close()
             await self.socket.wait_closed()
+        
+        self.active = False
 
     async def read_single_line(self) -> str|None:
         reader, _ = await self.get_socket_connection()
@@ -81,7 +84,7 @@ class UnixSocket:
 
     async def _read_single_line(self, reader: asyncio.StreamReader) -> str:
         line = bytearray()
-        while True:
+        while self.active:
             try:
                 line.extend(await reader.readuntil())
             except asyncio.LimitOverrunError:

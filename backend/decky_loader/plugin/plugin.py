@@ -67,7 +67,7 @@ class PluginWrapper:
         return self.name
     
     async def _response_listener(self):
-        while True:
+        while self._socket.active:
             try:
                 line = await self._socket.read_single_line()
                 if line != None:

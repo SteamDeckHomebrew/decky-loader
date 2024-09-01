@@ -121,24 +121,19 @@ class PluginWrapper:
             if self.passive:
                 return
 
-            done, pending = await wait([
+            _, pending = await wait([
                 create_task(self._socket.write_single_line(dumps({ "stop": True, "uninstall": uninstall }, ensure_ascii=False)))
             ], timeout=1)
 
             if hasattr(self, "_listener_task"):
                 self._listener_task.cancel()
-
-            if self.proc:
-                join_call = get_event_loop().run_in_executor(None, self.proc.join, 6)
-            else:
-                join_call = None
             
             await self.kill_if_still_running()
 
             for pending_task in pending:
                 pending_task.cancel()
 
-            self.log.info(f"Process for {self.name} has been stopped in {time() - start_time:.2}s")
+            self.log.info(f"Plugin {self.name} has been stopped in {time() - start_time:.1f}s")
         except Exception as e:
             self.log.error(f"Error during shutdown for plugin {self.name}: {str(e)}\n{format_exc()}")
 
@@ -147,12 +142,12 @@ class PluginWrapper:
         sigtermed = False
         while self.proc and self.proc.is_alive():
             elapsed_time = time() - start_time
-            if elapsed_time >= 2 and not sigtermed:
+            if elapsed_time >= 5 and not sigtermed:
                 sigtermed = True
-                self.log.warn(f"Plugin {self.name} still alive 2 seconds after stop request! Sending SIGTERM!")
+                self.log.warn(f"Plugin {self.name} still alive 5 seconds after stop request! Sending SIGTERM!")
                 self.terminate()
-            elif elapsed_time >= 5:
-                self.log.warn(f"Plugin {self.name} still alive 5 seconds after stop request! Sending SIGKILL!")
+            elif elapsed_time >= 10:
+                self.log.warn(f"Plugin {self.name} still alive 10 seconds after stop request! Sending SIGKILL!")
                 self.terminate(True)
             await sleep(0.1)
 

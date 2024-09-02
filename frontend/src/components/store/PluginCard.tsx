@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { InstallType } from '../../plugin';
 import { StorePlugin, StorePluginVersion, requestPluginInstall } from '../../store';
+import ExternalLink from '../ExternalLink';
 
 interface PluginCardProps {
   plugin: StorePlugin;
@@ -108,7 +109,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               }}
             >
               <i>{t('PluginCard.plugin_full_access')}</i>{' '}
-              <a
+              <ExternalLink
                 className="deckyStoreCardDescriptionRootLink"
                 href="https://deckbrew.xyz/root"
                 target="_blank"
@@ -118,7 +119,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
                 }}
               >
                 deckbrew.xyz/root
-              </a>
+              </ExternalLink>
             </div>
           )}
         </div>

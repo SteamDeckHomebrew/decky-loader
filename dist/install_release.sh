@@ -39,8 +39,6 @@ After=network.target
 Type=simple
 User=root
 Restart=always
-KillMode=process
-TimeoutStopSec=45
 ExecStart=${HOMEBREW_FOLDER}/services/PluginLoader
 WorkingDirectory=${HOMEBREW_FOLDER}/services
 Environment=UNPRIVILEGED_PATH=${HOMEBREW_FOLDER}

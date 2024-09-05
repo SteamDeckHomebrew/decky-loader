@@ -59,16 +59,33 @@ body:
 
   - type: input
     attributes:
+      label: Decky Loader Version
+      description: Specify the exact version of Decky.
+      placeholder: v3.0.0-pre12
+    validations:
+      required: true
+  
+  - type: textarea
+    attributes:
+      label: Plugin Info
+      description: Include all plugins installed including their version. Helpful script here: https://raw.githubusercontent.com/SteamDeckHomebrew/decky-loader/main/scripts/plugin-info.sh
+      placeholder: |
+          If you don't want to collect this info manually you can download plugin-info.sh from our main repo and place it into your home directory, chmod +x plugin-info.sh and then run it with ./plugin-info.sh
+     validations:
+       required: true
+ 
+  - type: input
+    attributes:
       label: Have you modified the read-only filesystem at any point?
-      description: Describe how here, if you haven't done anything you can leave this blank
-      placeholder: Yes, I've installed neofetch via pacman.
+      description: "Describe how here, if you haven't done anything you can leave this blank"
+      placeholder: "Yes, I've installed neofetch via pacman."
     validations:
       required: false
 
   - type: textarea
     attributes:
       label: Backend Logs
-      description: Please reboot your deck (if possible) when attempting to recreate the issue, then run ``cd ~ && journalctl -b0  -u plugin_loader.service > deckylog.txt``. This will save the log file to ``~`` aka ``/home/deck``. Please upload the file here
+      description: Please reboot your deck (if possible) when attempting to recreate the issue, then run ``cd ~ && journalctl -b0  -u plugin_loader.service > deckylog.txt``. This will save the log file to ``~`` aka ``/home/deck``. Please upload the file here.
       placeholder: deckylog.txt
     validations:
       required: true

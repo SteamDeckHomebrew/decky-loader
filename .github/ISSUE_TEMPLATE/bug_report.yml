@@ -68,9 +68,8 @@ body:
   - type: textarea
     attributes:
       label: Plugin Info
-      description: Include all plugins installed including their version. Helpful script here: https://raw.githubusercontent.com/SteamDeckHomebrew/decky-loader/main/scripts/plugin-info.sh
-      placeholder: |
-          If you don't want to collect this info manually you can download plugin-info.sh from our main repo and place it into your home directory, chmod +x plugin-info.sh and then run it with ./plugin-info.sh
+      description: "Include all plugins installed including their version. Helpful script here: https://github.com/SteamDeckHomebrew/decky-loader/blob/main/scripts/plugin-info.sh"
+      placeholder: "If you don't want to collect this info manually you can download plugin-info.sh from our main repo and place it into your home directory, chmod +x plugin-info.sh and then run it with ./plugin-info.sh"
      validations:
        required: true
  

@@ -421,7 +421,7 @@ class PluginLoader extends Logger {
     try {
       switch (loadType) {
         case PluginLoadType.ESMODULE_V1:
-          const plugin_exports = await import(`http://127.0.0.1:1337/plugins/${name}/dist/index.js`);
+          const plugin_exports = await import(`http://127.0.0.1:1337/plugins/${name}/dist/index.js?t=${Date.now()}`);
           let plugin = plugin_exports.default();
 
           this.plugins.push({

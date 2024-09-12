@@ -27,6 +27,7 @@ interface Window {
 
   if (!window.SP_REACT) {
     console.debug('[Decky:Boot] Setting up Webpack & React globals...');
+    await new Promise((r) => setTimeout(r, 500)); // Can't use DFL sleep here.
     // deliberate partial import
     const DFLWebpack = await import('@decky/ui/dist/webpack');
     window.SP_REACT = DFLWebpack.findModule((m) => m.Component && m.PureComponent && m.useLayoutEffect);

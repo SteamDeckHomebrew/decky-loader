@@ -120,18 +120,25 @@ class PluginWrapper:
             start_time = time()
             if self.passive:
                 return
+            self.log.info(f"Shutting down {self.name}")
 
-            _, pending = await wait([
-                create_task(self._socket.write_single_line(dumps({ "stop": True, "uninstall": uninstall }, ensure_ascii=False)))
-            ], timeout=1)
+            pending: set[Task[None]] | None = None;
+
+            if uninstall:
+                _, pending = await wait([
+                    create_task(self._socket.write_single_line(dumps({ "uninstall": uninstall }, ensure_ascii=False)))
+                ], timeout=1)
+
+            self.terminate() # the plugin process will handle SIGTERM and shut down cleanly without a socket message
 
             if hasattr(self, "_listener_task"):
                 self._listener_task.cancel()
             
             await self.kill_if_still_running()
 
-            for pending_task in pending:
-                pending_task.cancel()
+            if pending:
+                for pending_task in pending:
+                    pending_task.cancel()
 
             self.log.info(f"Plugin {self.name} has been stopped in {time() - start_time:.1f}s")
         except Exception as e:
@@ -139,17 +146,13 @@ class PluginWrapper:
 
     async def kill_if_still_running(self):
         start_time = time()
-        sigtermed = False
         while self.proc and self.proc.is_alive():
             elapsed_time = time() - start_time
-            if elapsed_time >= 5 and not sigtermed:
-                sigtermed = True
-                self.log.warning(f"Plugin {self.name} still alive 5 seconds after stop request! Sending SIGTERM!")
-                self.terminate()
-            elif elapsed_time >= 10:
-                self.log.warning(f"Plugin {self.name} still alive 10 seconds after stop request! Sending SIGKILL!")
+            if elapsed_time >= 5:
+                self.log.warning(f"Plugin {self.name} still alive 5 seconds after stop request! Sending SIGKILL!")
                 self.terminate(True)
             await sleep(0.1)
+
 
     def terminate(self, kill: bool = False):
         if self.proc and self.proc.is_alive():

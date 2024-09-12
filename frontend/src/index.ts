@@ -16,8 +16,10 @@ interface Window {
   console.time('[Decky:Boot] Waiting for React root mount...');
   let root;
   while (
+    // Does React root node exist?
     !(root = document.getElementById('root')) ||
-    !(root as any)[Object.keys(root).find((k) => k.startsWith('__reactContainer$')) as string]
+    // Does it have a child element?
+    !(root as any)[Object.keys(root).find((k) => k.startsWith('__reactContainer$')) as string].child
   ) {
     await new Promise((r) => setTimeout(r, 10)); // Can't use DFL sleep here.
   }

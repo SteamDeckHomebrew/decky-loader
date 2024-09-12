@@ -40,6 +40,7 @@ class SandboxedPlugin:
         self.author = author
         self.api_version = api_version
         self.shutdown_running = False
+        self.uninstalling = False
 
         self.log = getLogger("sandboxed_plugin")
 
@@ -161,13 +162,13 @@ class SandboxedPlugin:
             self.log.error("Failed to uninstall " + self.name + "!\n" + format_exc())
             pass
 
-    async def shutdown(self, uninstall: bool = False):
+    async def shutdown(self):
         if not self.shutdown_running:
             self.shutdown_running = True
             self.log.info(f"Calling Loader unload function for {self.name}.")
             await self._unload()
 
-            if uninstall:
+            if self.uninstalling:
                 self.log.info("Calling Loader uninstall function.")
                 await self._uninstall()
 
@@ -180,8 +181,8 @@ class SandboxedPlugin:
     async def on_new_message(self, message : str) -> str|None:
         data = loads(message)
 
-        if "stop" in data:
-            await self.shutdown(data.get('uninstall'))
+        if "uninstall" in data:
+            self.uninstalling = data.get("uninstall")
 
         d: SocketResponseDict = {"type": SocketMessageType.RESPONSE, "res": None, "success": True, "id": data["id"]}
         try:

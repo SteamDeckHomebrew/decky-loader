@@ -11,7 +11,7 @@ from setproctitle import setproctitle, setthreadtitle
 
 from .messages import SocketResponseDict, SocketMessageType
 from ..localplatform.localsocket import LocalSocket
-from ..localplatform.localplatform import setgid, setuid, get_username, get_home_path
+from ..localplatform.localplatform import setgid, setuid, get_username, get_home_path, ON_LINUX
 from ..enums import UserType
 from .. import helpers, settings, injector # pyright: ignore [reportUnusedImport]
 
@@ -54,10 +54,13 @@ class SandboxedPlugin:
             loop = new_event_loop()
             set_event_loop(loop)
             # When running Decky manually in a terminal, ctrl-c will trigger this, so we have to handle it properly
-            loop.add_signal_handler(SIGINT, lambda: ensure_future(self.shutdown()))
-            loop.add_signal_handler(SIGTERM, lambda: ensure_future(self.shutdown()))
+            if ON_LINUX:
+                loop.add_signal_handler(SIGINT, lambda: ensure_future(self.shutdown()))
+                loop.add_signal_handler(SIGTERM, lambda: ensure_future(self.shutdown()))
+            
             if self.passive:
                 return
+                
             setgid(UserType.ROOT if "root" in self.flags else UserType.HOST_USER)
             setuid(UserType.ROOT if "root" in self.flags else UserType.HOST_USER)
             # export a bunch of environment variables to help plugin developers

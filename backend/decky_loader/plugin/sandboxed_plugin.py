@@ -1,25 +1,23 @@
 import sys
 from os import path, environ
-from signal import SIG_IGN, SIGINT, SIGTERM, getsignal, signal
 from importlib.util import module_from_spec, spec_from_file_location
 from json import dumps, loads
 from logging import getLogger
 from traceback import format_exc
-from asyncio import (get_event_loop, new_event_loop,
+from asyncio import (ensure_future, get_event_loop, new_event_loop,
                      set_event_loop)
+from signal import SIGINT, SIGTERM
 from setproctitle import setproctitle, setthreadtitle
 
 from .messages import SocketResponseDict, SocketMessageType
 from ..localplatform.localsocket import LocalSocket
-from ..localplatform.localplatform import setgid, setuid, get_username, get_home_path
+from ..localplatform.localplatform import setgid, setuid, get_username, get_home_path, ON_LINUX
 from ..enums import UserType
 from .. import helpers, settings, injector # pyright: ignore [reportUnusedImport]
 
 from typing import List, TypeVar, Any
 
 DataType = TypeVar("DataType")
-
-original_term_handler = getsignal(SIGTERM)
 
 class SandboxedPlugin:
     def __init__(self,
@@ -41,6 +39,8 @@ class SandboxedPlugin:
         self.version = version
         self.author = author
         self.api_version = api_version
+        self.shutdown_running = False
+        self.uninstalling = False
 
         self.log = getLogger("sandboxed_plugin")
 
@@ -48,17 +48,19 @@ class SandboxedPlugin:
         self._socket = socket
 
         try:
-            # Ignore signals meant for parent Process
-            # TODO SURELY there's a better way to do this.
-            signal(SIGINT, SIG_IGN)
-            signal(SIGTERM, SIG_IGN)
-
             setproctitle(f"{self.name} ({self.file})")
             setthreadtitle(self.name)
 
-            set_event_loop(new_event_loop())
+            loop = new_event_loop()
+            set_event_loop(loop)
+            # When running Decky manually in a terminal, ctrl-c will trigger this, so we have to handle it properly
+            if ON_LINUX:
+                loop.add_signal_handler(SIGINT, lambda: ensure_future(self.shutdown()))
+                loop.add_signal_handler(SIGTERM, lambda: ensure_future(self.shutdown()))
+            
             if self.passive:
                 return
+                
             setgid(UserType.ROOT if "root" in self.flags else UserType.HOST_USER)
             setuid(UserType.ROOT if "root" in self.flags else UserType.HOST_USER)
             # export a bunch of environment variables to help plugin developers
@@ -120,7 +122,7 @@ class SandboxedPlugin:
                     get_event_loop().create_task(self.Plugin._main())
                 else:
                     get_event_loop().create_task(self.Plugin._main(self.Plugin))
-            get_event_loop().create_task(socket.setup_server())
+            get_event_loop().create_task(socket.setup_server(self.on_new_message))
         except:
             self.log.error("Failed to start " + self.name + "!\n" + format_exc())
             sys.exit(0)
@@ -163,24 +165,27 @@ class SandboxedPlugin:
             self.log.error("Failed to uninstall " + self.name + "!\n" + format_exc())
             pass
 
-    async def on_new_message(self, message : str) -> str|None:
-        data = loads(message)
-
-        if "stop" in data:
-            # Incase the loader needs to terminate our process soon
-            signal(SIGTERM, original_term_handler)
+    async def shutdown(self):
+        if not self.shutdown_running:
+            self.shutdown_running = True
             self.log.info(f"Calling Loader unload function for {self.name}.")
             await self._unload()
 
-            if data.get('uninstall'):
+            if self.uninstalling:
                 self.log.info("Calling Loader uninstall function.")
                 await self._uninstall()
 
-            self.log.debug("Stopping event loop")
+        self.log.debug("Stopping event loop")
 
-            loop = get_event_loop()
-            loop.call_soon_threadsafe(loop.stop)
-            sys.exit(0)
+        loop = get_event_loop()
+        loop.call_soon_threadsafe(loop.stop)
+        sys.exit(0)
+
+    async def on_new_message(self, message : str) -> str|None:
+        data = loads(message)
+
+        if "uninstall" in data:
+            self.uninstalling = data.get("uninstall")
 
         d: SocketResponseDict = {"type": SocketMessageType.RESPONSE, "res": None, "success": True, "id": data["id"]}
         try:

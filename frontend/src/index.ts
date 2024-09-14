@@ -7,7 +7,7 @@ interface Window {
 (async () => {
   // Wait for main webpack chunks to definitely be loaded
   console.time('[Decky:Boot] Waiting for main Webpack chunks...');
-  while (!window.webpackChunksteamui || window.webpackChunksteamui.length < 8) {
+  while (!window.webpackChunksteamui || window.webpackChunksteamui.length < 5) {
     await new Promise((r) => setTimeout(r, 10)); // Can't use DFL sleep here.
   }
   console.timeEnd('[Decky:Boot] Waiting for main Webpack chunks...');
@@ -16,8 +16,10 @@ interface Window {
   console.time('[Decky:Boot] Waiting for React root mount...');
   let root;
   while (
+    // Does React root node exist?
     !(root = document.getElementById('root')) ||
-    !(root as any)[Object.keys(root).find((k) => k.startsWith('__reactContainer$')) as string]
+    // Does it have a child element?
+    !(root as any)[Object.keys(root).find((k) => k.startsWith('__reactContainer$')) as string].child
   ) {
     await new Promise((r) => setTimeout(r, 10)); // Can't use DFL sleep here.
   }
@@ -25,6 +27,7 @@ interface Window {
 
   if (!window.SP_REACT) {
     console.debug('[Decky:Boot] Setting up Webpack & React globals...');
+    await new Promise((r) => setTimeout(r, 500)); // Can't use DFL sleep here.
     // deliberate partial import
     const DFLWebpack = await import('@decky/ui/dist/webpack');
     window.SP_REACT = DFLWebpack.findModule((m) => m.Component && m.PureComponent && m.useLayoutEffect);

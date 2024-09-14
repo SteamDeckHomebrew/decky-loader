@@ -205,6 +205,15 @@
         "testing_title": "Testování"
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "Stahování pluginu",
+            "increment_count": "Zvyšující se počet stahování",
+            "installing_plugin": "Instalování pluginu",
+            "open_zip": "Otevírání ZIP souboru",
+            "parse_zip": "Analýza ZIP souboru",
+            "start": "Inicializace",
+            "uninstalling_previous": "Odinstalování předchozí kopie"
+        },
         "store_contrib": {
             "desc": "Pokud byste chtěli přispět do obchodu Decky Plugin Store, podívejte se na repozitář SteamDeckHomebrew/decky-plugin-template na GitHubu. Informace o vývoji a distribuci jsou k dispozici v README.",
             "label": "Přispívání"
@@ -253,7 +262,11 @@
         }
     },
     "Testing": {
-        "download": "Stáhnout"
+        "download": "Stáhnout",
+        "error": "Chyba při instalaci PR",
+        "header": "Následující verze Decky Loaderu jsou vytvořeny z otevřených Pull Requestů třetích stran. Tým Decky Loaderu neověřil jejich funkčnost ani zabezpečení a mohou být zastaralé.",
+        "loading": "Načítání Pull Requestů...",
+        "start_download_toast": "Stahování PR #{{id}}"
     },
     "TitleView": {
         "decky_store_desc": "Otevřít obchod Decky",

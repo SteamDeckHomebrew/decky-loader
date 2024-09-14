@@ -7,22 +7,24 @@ from .localplatform import ON_WINDOWS
 BUFFER_LIMIT = 2 ** 20  # 1 MiB
 
 class UnixSocket:
-    def __init__(self, on_new_message: Callable[[str], Coroutine[Any, Any, Any]]):
+    def __init__(self):
         '''
         on_new_message takes 1 string argument.
         It's return value gets used, if not None, to write data to the socket.
         Method should be async
         '''
         self.socket_addr = f"/tmp/plugin_socket_{time.time()}"
-        self.on_new_message = on_new_message
+        self.on_new_message = None
         self.socket = None
         self.reader = None
         self.writer = None
         self.server_writer = None
         self.open_lock = asyncio.Lock()
+        self.active = True
 
-    async def setup_server(self):
+    async def setup_server(self, on_new_message: Callable[[str], Coroutine[Any, Any, Any]]):
         try:
+            self.on_new_message = on_new_message
             self.socket = await asyncio.start_unix_server(self._listen_for_method_call, path=self.socket_addr, limit=BUFFER_LIMIT)
         except asyncio.CancelledError:
             await self.close_socket_connection()
@@ -58,6 +60,8 @@ class UnixSocket:
         if self.socket:
             self.socket.close()
             await self.socket.wait_closed()
+        
+        self.active = False
 
     async def read_single_line(self) -> str|None:
         reader, _ = await self.get_socket_connection()
@@ -81,7 +85,7 @@ class UnixSocket:
 
     async def _read_single_line(self, reader: asyncio.StreamReader) -> str:
         line = bytearray()
-        while True:
+        while self.active:
             try:
                 line.extend(await reader.readuntil())
             except asyncio.LimitOverrunError:
@@ -91,7 +95,7 @@ class UnixSocket:
                 line.extend(err.partial)
                 break
             except asyncio.CancelledError:
-                break
+                raise
             else:
                 break
 
@@ -111,7 +115,7 @@ class UnixSocket:
 
     async def _listen_for_method_call(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
         self.server_writer = writer
-        while True:
+        while self.active and self.on_new_message:
 
             def _(task: asyncio.Task[str|None]):
                 res = task.result()
@@ -122,18 +126,19 @@ class UnixSocket:
             asyncio.create_task(self.on_new_message(line)).add_done_callback(_)
             
 class PortSocket (UnixSocket):
-    def __init__(self, on_new_message: Callable[[str], Coroutine[Any, Any, Any]]):
+    def __init__(self):
         '''
         on_new_message takes 1 string argument.
         It's return value gets used, if not None, to write data to the socket.
         Method should be async
         '''
-        super().__init__(on_new_message)
+        super().__init__()
         self.host = "127.0.0.1"
         self.port = random.sample(range(40000, 60000), 1)[0]
     
-    async def setup_server(self):
+    async def setup_server(self, on_new_message: Callable[[str], Coroutine[Any, Any, Any]]):
         try:
+            self.on_new_message = on_new_message
             self.socket = await asyncio.start_server(self._listen_for_method_call, host=self.host, port=self.port, limit=BUFFER_LIMIT)
         except asyncio.CancelledError:
             await self.close_socket_connection()

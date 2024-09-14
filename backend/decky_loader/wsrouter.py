@@ -50,7 +50,7 @@ class WSRouter:
         if self.ws != None:
             await self.ws.send_json(data)
         else:
-            self.logger.warn("Dropping message as there is no connected socket: %s", data)
+            self.logger.warning("Dropping message as there is no connected socket: %s", data)
 
     def add_route(self, name: str, route: Route):
         self.routes[name] = route
@@ -69,9 +69,9 @@ class WSRouter:
         
         if instance_id != self.instance_id:
             try:
-                self.logger.warn("Ignoring %s reply from stale instance %d with args %s and response %s", route, instance_id, args, res)
+                self.logger.warning("Ignoring %s reply from stale instance %d with args %s and response %s", route, instance_id, args, res)
             except:
-                self.logger.warn("Ignoring %s reply from stale instance %d (failed to log event data)", route, instance_id)
+                self.logger.warning("Ignoring %s reply from stale instance %d (failed to log event data)", route, instance_id)
             finally:
                 return 
 

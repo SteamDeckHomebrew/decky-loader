@@ -38,11 +38,16 @@ export function AnnouncementsDisplay() {
     setAnnouncements((oldAnnouncements) => {
       const newArr = [...oldAnnouncements, ...newAnnouncements];
       const setOfIds = new Set(newArr.map((a) => a.id));
-      return Array.from(setOfIds)
-        .map((id) => newArr.find((a) => a.id === id)!)
-        .sort((a, b) => {
+      return (
+        (
+          Array.from(setOfIds)
+            .map((id) => newArr.find((a) => a.id === id))
+            // Typescript doesn't type filter(Boolean) correctly, so I have to assert this
+            .filter(Boolean) as Announcement[]
+        ).sort((a, b) => {
           return new Date(b.created).getTime() - new Date(a.created).getTime();
-        });
+        })
+      );
     });
   }
 

@@ -22,7 +22,10 @@ export function getLikelyErrorSourceFromValveError(error: ValveError): ErrorSour
 }
 
 export function getLikelyErrorSourceFromValveReactError(error: ValveReactErrorInfo): ErrorSource {
-  return getLikelyErrorSource(error?.error?.stack + '\n' + error.info.componentStack);
+  // get the first 10 lines of the componentStack to avoid matching against the decky router wrapper for any route errors deeper in the tree
+  return getLikelyErrorSource(
+    error?.error?.stack + '\n' + error.info.componentStack?.split('\n').slice(0, 8).join('\n'),
+  );
 }
 
 export function getLikelyErrorSource(error?: string): ErrorSource {

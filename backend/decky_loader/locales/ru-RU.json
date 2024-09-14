@@ -205,6 +205,15 @@
         "testing_title": "Тестирование"
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "Скачивание плагина",
+            "increment_count": "Увеличение количества загрузок",
+            "installing_plugin": "Установка плагина",
+            "open_zip": "Открытие zip файла",
+            "parse_zip": "Распаковка zip файла",
+            "start": "Инициализация",
+            "uninstalling_previous": "Удаление предыдущей копии"
+        },
         "store_contrib": {
             "desc": "Если вы хотите внести свой вклад в магазин плагинов Decky, проверьте репозиторий SteamDeckHomebrew/decky-plugin-template на GitHub. Информация о разработке и распространении доступна в README.",
             "label": "Помощь проекту"
@@ -253,7 +262,11 @@
         }
     },
     "Testing": {
-        "download": "Загрузить"
+        "download": "Загрузить",
+        "error": "Ошибка при установке PR",
+        "header": "Данные версии Decky Loader созданы на основе сторонних pull requst. Команда Decky Loader не проверяла их функциональность и безопасность, и они могут быть устаревшими.",
+        "loading": "Загрузка открытых pull requst'ов...",
+        "start_download_toast": "Загрузка PR#{{id}}"
     },
     "TitleView": {
         "decky_store_desc": "Открыть магазин Decky",

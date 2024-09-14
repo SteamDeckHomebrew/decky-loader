@@ -46,7 +46,7 @@ class Tab:
             async for message in self.websocket:
                 data = message.json()
                 yield data
-            logger.warn(f"The Tab {self.title} socket has been disconnected while listening for messages.")
+            logger.warning(f"The Tab {self.title} socket has been disconnected while listening for messages.")
             await self.close_websocket()
             
     async def _send_devtools_cmd(self, dc: Dict[str, Any], receive: bool = True):
@@ -381,10 +381,10 @@ async def get_tabs() -> List[Tab]:
                 na = True
             await sleep(5)
         except ClientOSError:
-            logger.warn(f"The request to {BASE_ADDRESS}/json was reset")
+            logger.warning(f"The request to {BASE_ADDRESS}/json was reset")
             await sleep(1)
         except TimeoutError:
-            logger.warn(f"The request to {BASE_ADDRESS}/json timed out")
+            logger.warning(f"The request to {BASE_ADDRESS}/json timed out")
             await sleep(1)
         else:
             break

@@ -29,7 +29,7 @@ const welcomeAnnouncement: Announcement = {
 };
 
 export function AnnouncementsDisplay() {
-  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([welcomeAnnouncement]);
   // showWelcome will display a welcome motd, the welcome motd has an id of "welcome" and once that is saved to hiddenMotdId, it will not show again
   const [hiddenAnnouncementIds, setHiddenAnnouncementIds] = useSetting<string[]>('hiddenAnnouncementIds', []);
 
@@ -54,11 +54,6 @@ export function AnnouncementsDisplay() {
   useEffect(() => {
     void fetchAnnouncement();
   }, []);
-  useEffect(() => {
-    if (hiddenAnnouncementIds.length > 0) {
-      addAnnouncements([welcomeAnnouncement]);
-    }
-  }, [hiddenAnnouncementIds]);
 
   const currentlyDisplayingAnnouncement: Announcement | null = useMemo(() => {
     return announcements.find((announcement) => !hiddenAnnouncementIds.includes(announcement.id)) || null;

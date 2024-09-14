@@ -24,6 +24,7 @@ logger = getLogger("Updater")
 
 class RemoteVerAsset(TypedDict):
     name: str
+    size: int
     browser_download_url: str
 class RemoteVer(TypedDict):
     tag_name: str
@@ -198,11 +199,13 @@ class Updater:
 
         version = self.remoteVer["tag_name"]
         download_url = None
+        size_in_bytes = None
         download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
 
         for x in self.remoteVer["assets"]:
             if x["name"] == download_filename:
                 download_url = x["browser_download_url"]
+                size_in_bytes = x["size"]
                 break
         
         if download_url == None:
@@ -238,10 +241,10 @@ class Updater:
                     os.mkdir(path.join(getcwd(), ".systemd"))
                 shutil.move(service_file_path, path.join(getcwd(), ".systemd")+"/plugin_loader.service")
             
-        await self.download_decky_binary(download_url, version)
+        await self.download_decky_binary(download_url, version, size_in_bytes=size_in_bytes)
 
     async def do_restart(self):
-        await service_restart("plugin_loader")
+        await service_restart("plugin_loader", block=False)
 
     async def do_shutdown(self):
         await service_stop("plugin_loader")

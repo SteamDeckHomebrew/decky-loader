@@ -101,10 +101,12 @@ class PluginManager:
         self.web_app.add_routes([static("/static", path.join(path.dirname(__file__), 'static'))])
 
     async def handle_crash(self):
+        if not self.reinject:
+            return
         new_time = time()
         if (new_time - self.last_webhelper_exit < 60):
             self.webhelper_crash_count += 1
-            logger.warn(f"webhelper crashed within a minute from last crash! crash count: {self.webhelper_crash_count}")
+            logger.warning(f"webhelper crashed within a minute from last crash! crash count: {self.webhelper_crash_count}")
         else:
             self.webhelper_crash_count = 0
         self.last_webhelper_exit = new_time
@@ -118,9 +120,13 @@ class PluginManager:
     async def shutdown(self, _: Application):
         try:
             logger.info(f"Shutting down...")
+            logger.info("Disabling reload...")
+            await self.plugin_loader.disable_reload()
+            logger.info("Killing plugins...")
             await self.plugin_loader.shutdown_plugins()
-            await self.ws.disconnect()
+            logger.info("Disconnecting from WS...")
             self.reinject = False
+            await self.ws.disconnect()
             if self.js_ctx_tab:
                 await self.js_ctx_tab.close_websocket()
                 self.js_ctx_tab = None
@@ -132,16 +138,17 @@ class PluginManager:
             tasks = all_tasks()
             current = current_task()
             async def cancel_task(task: Task[Any]):
-                logger.debug(f"Cancelling task {task}")
+                name = task.get_coro().__qualname__
+                logger.debug(f"Cancelling task {name}")
                 try:
                     task.cancel()
                     try:
                         await task
                     except CancelledError:
                         pass
-                    logger.debug(f"Task {task} finished")
+                    logger.debug(f"Task {name} finished")
                 except:
-                    logger.warn(f"Failed to cancel task {task}:\n" + format_exc())
+                    logger.warning(f"Failed to cancel task {name}:\n" + format_exc())
                     pass
             if current:
                 tasks.remove(current)

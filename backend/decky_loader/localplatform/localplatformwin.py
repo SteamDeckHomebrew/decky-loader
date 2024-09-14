@@ -28,7 +28,7 @@ async def service_stop(service_name : str) -> bool:
 async def service_start(service_name : str) -> bool:
     return True # Stubbed
 
-async def service_restart(service_name : str) -> bool:
+async def service_restart(service_name : str, block : bool = True) -> bool:
     if service_name == "plugin_loader":
         sys.exit(42)
 

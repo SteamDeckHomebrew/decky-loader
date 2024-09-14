@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import logo from '../../../assets/plugin_store.png';
 import Logger from '../../logger';
 import { SortDirections, SortOptions, Store, StorePlugin, getPluginList, getStore } from '../../store';
+import ExternalLink from '../ExternalLink';
 import PluginCard from './PluginCard';
 
 const logger = new Logger('Store');
@@ -207,7 +208,7 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
           <h2 style={{ margin: 0 }}>{t('Store.store_testing_warning.label')}</h2>
           <span>
             {`${t('Store.store_testing_warning.desc')} `}
-            <a
+            <ExternalLink
               href="https://decky.xyz/testing"
               target="_blank"
               style={{
@@ -215,7 +216,7 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
               }}
             >
               decky.xyz/testing
-            </a>
+            </ExternalLink>
           </span>
         </div>
       )}
@@ -269,7 +270,7 @@ const AboutTab: FC<{}> = () => {
       <span className="deckyStoreAboutHeader">Testing</span>
       <span>
         {t('Store.store_testing_cta')}{' '}
-        <a
+        <ExternalLink
           href="https://decky.xyz/testing"
           target="_blank"
           style={{
@@ -277,7 +278,7 @@ const AboutTab: FC<{}> = () => {
           }}
         >
           decky.xyz/testing
-        </a>
+        </ExternalLink>
       </span>
       <span className="deckyStoreAboutHeader">{t('Store.store_contrib.label')}</span>
       <span>{t('Store.store_contrib.desc')}</span>

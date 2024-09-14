@@ -1,8 +1,10 @@
-from asyncio import CancelledError, Task, create_task, sleep
+from asyncio import CancelledError, Task, create_task, sleep, wait
 from json import dumps, load, loads
 from logging import getLogger
 from os import path
 from multiprocessing import Process
+from time import time
+from traceback import format_exc
 
 from .sandboxed_plugin import SandboxedPlugin
 from .messages import MethodCallRequest, SocketMessageType
@@ -42,8 +44,7 @@ class PluginWrapper:
 
         self.sandboxed_plugin = SandboxedPlugin(self.name, self.passive, self.flags, self.file, self.plugin_directory, self.plugin_path, self.version, self.author, self.api_version)
         self.proc: Process | None = None
-        # TODO: Maybe make LocalSocket not require on_new_message to make this cleaner
-        self._socket = LocalSocket(self.sandboxed_plugin.on_new_message)
+        self._socket = LocalSocket()
         self._listener_task: Task[Any]
         self._method_call_requests: Dict[str, MethodCallRequest] = {}
 
@@ -65,7 +66,7 @@ class PluginWrapper:
         return self.name
     
     async def _response_listener(self):
-        while True:
+        while self._socket.active:
             try:
                 line = await self._socket.read_single_line()
                 if line != None:
@@ -84,7 +85,7 @@ class PluginWrapper:
     async def execute_legacy_method(self, method_name: str, kwargs: Dict[Any, Any]):
         if not self.legacy_method_warning:
             self.legacy_method_warning = True
-            self.log.warn(f"Plugin {self.name} is using legacy method calls. This will be removed in a future release.")
+            self.log.warning(f"Plugin {self.name} is using legacy method calls. This will be removed in a future release.")
         if self.passive:
             raise RuntimeError("This plugin is passive (aka does not implement main.py)")
         
@@ -115,29 +116,43 @@ class PluginWrapper:
         return self
 
     async def stop(self, uninstall: bool = False):
-        self.log.info(f"Stopping plugin {self.name}")
-        if self.passive:
-            return
-        if hasattr(self, "_socket"):
-            await self._socket.write_single_line(dumps({ "stop": True, "uninstall": uninstall }, ensure_ascii=False))
-            await self._socket.close_socket_connection()
-        if self.proc:
-            self.proc.join()
-        await self.kill_if_still_running()
-        if hasattr(self, "_listener_task"):
-            self._listener_task.cancel()
+        try:
+            start_time = time()
+            if self.passive:
+                return
+            self.log.info(f"Shutting down {self.name}")
+
+            pending: set[Task[None]] | None = None;
+
+            if uninstall:
+                _, pending = await wait([
+                    create_task(self._socket.write_single_line(dumps({ "uninstall": uninstall }, ensure_ascii=False)))
+                ], timeout=1)
+
+            self.terminate() # the plugin process will handle SIGTERM and shut down cleanly without a socket message
+
+            if hasattr(self, "_listener_task"):
+                self._listener_task.cancel()
+            
+            await self.kill_if_still_running()
+
+            if pending:
+                for pending_task in pending:
+                    pending_task.cancel()
+
+            self.log.info(f"Plugin {self.name} has been stopped in {time() - start_time:.1f}s")
+        except Exception as e:
+            self.log.error(f"Error during shutdown for plugin {self.name}: {str(e)}\n{format_exc()}")
 
     async def kill_if_still_running(self):
-        time = 0
+        start_time = time()
         while self.proc and self.proc.is_alive():
-            await sleep(0.1)
-            time += 1
-            if time == 100:
-                self.log.warn(f"Plugin {self.name} still alive 10 seconds after stop request! Sending SIGTERM!")
-                self.terminate()
-            elif time == 200:
-                self.log.warn(f"Plugin {self.name} still alive 20 seconds after stop request! Sending SIGKILL!")
+            elapsed_time = time() - start_time
+            if elapsed_time >= 5:
+                self.log.warning(f"Plugin {self.name} still alive 5 seconds after stop request! Sending SIGKILL!")
                 self.terminate(True)
+            await sleep(0.1)
+
 
     def terminate(self, kill: bool = False):
         if self.proc and self.proc.is_alive():

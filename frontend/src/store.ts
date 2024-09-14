@@ -57,7 +57,7 @@ export async function getStore(): Promise<Store> {
   return await getSetting<Store>('store', Store.Default);
 }
 
-export async function getLatestAnnouncement(): Promise<Announcement | null> {
+export async function getAnnouncements(): Promise<Announcement[]> {
   let version = await window.DeckyPluginLoader.updateVersion();
   let store = await getSetting<Store | null>('store', null);
   let customURL = await getSetting<string>(
@@ -93,9 +93,9 @@ export async function getLatestAnnouncement(): Promise<Announcement | null> {
       'X-Decky-Version': version.current,
     },
   });
-  if (res.status !== 200) return null;
+  if (res.status !== 200) return [];
   const json = await res.json();
-  return json?.[0] ?? null;
+  return json ?? [];
 }
 
 export async function getPluginList(

@@ -2,7 +2,7 @@ import { DialogButton, Focusable, PanelSection } from '@decky/ui';
 import { useEffect, useMemo, useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
 
-import { Announcement, getLatestAnnouncement } from '../store';
+import { Announcement, getAnnouncements } from '../store';
 import { useSetting } from '../utils/hooks/useSetting';
 
 const SEVERITIES = {
@@ -29,13 +29,13 @@ const welcomeAnnouncement: Announcement = {
 };
 
 export function AnnouncementsDisplay() {
-  const [announcement, setAnnouncement] = useState<Announcement | null>(null);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   // showWelcome will display a welcome motd, the welcome motd has an id of "welcome" and once that is saved to hiddenMotdId, it will not show again
   const [hiddenAnnouncementIds, setHiddenAnnouncementIds] = useSetting<string[]>('hiddenAnnouncementIds', []);
 
   async function fetchAnnouncement() {
-    const announcement = await getLatestAnnouncement();
-    announcement && setAnnouncement(announcement);
+    const announcements = await getAnnouncements();
+    announcements && setAnnouncements((oldAnnouncements) => [...announcements, ...oldAnnouncements]);
   }
 
   useEffect(() => {
@@ -43,22 +43,20 @@ export function AnnouncementsDisplay() {
   }, []);
   useEffect(() => {
     if (hiddenAnnouncementIds.length > 0) {
-      setAnnouncement(welcomeAnnouncement);
+      setAnnouncements((oldAnnouncement) => [welcomeAnnouncement, ...oldAnnouncement]);
     }
   }, [hiddenAnnouncementIds]);
 
-  function hideAnnouncement() {
-    if (announcement) {
-      setHiddenAnnouncementIds([...hiddenAnnouncementIds, announcement.id]);
-      void fetchAnnouncement();
-    }
+  const currentlyDisplayingAnnouncement: Announcement | null = useMemo(() => {
+    return announcements.find((announcement) => !hiddenAnnouncementIds.includes(announcement.id)) || null;
+  }, [announcements, hiddenAnnouncementIds]);
+
+  function hideAnnouncement(id: string) {
+    setHiddenAnnouncementIds([...hiddenAnnouncementIds, id]);
+    void fetchAnnouncement();
   }
 
-  const hidden = useMemo(() => {
-    return !announcement?.id || hiddenAnnouncementIds.includes(announcement.id);
-  }, [hiddenAnnouncementIds, announcement]);
-
-  if (!announcement || !announcement.title || hidden) {
+  if (!currentlyDisplayingAnnouncement) {
     return null;
   }
 
@@ -82,7 +80,7 @@ export function AnnouncementsDisplay() {
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ fontWeight: 'bold' }}>{announcement.title}</span>
+          <span style={{ fontWeight: 'bold' }}>{currentlyDisplayingAnnouncement.title}</span>
           <DialogButton
             style={{
               width: '1rem',
@@ -96,7 +94,7 @@ export function AnnouncementsDisplay() {
               top: '.75rem',
               right: '.75rem',
             }}
-            onClick={hideAnnouncement}
+            onClick={() => hideAnnouncement(currentlyDisplayingAnnouncement.id)}
           >
             <FaTimes
               style={{
@@ -105,7 +103,7 @@ export function AnnouncementsDisplay() {
             />
           </DialogButton>
         </div>
-        <span style={{ fontSize: '0.75rem', whiteSpace: 'pre-line' }}>{announcement.text}</span>
+        <span style={{ fontSize: '0.75rem', whiteSpace: 'pre-line' }}>{currentlyDisplayingAnnouncement.text}</span>
       </Focusable>
     </PanelSection>
   );

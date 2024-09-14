@@ -33,9 +33,22 @@ export function AnnouncementsDisplay() {
   // showWelcome will display a welcome motd, the welcome motd has an id of "welcome" and once that is saved to hiddenMotdId, it will not show again
   const [hiddenAnnouncementIds, setHiddenAnnouncementIds] = useSetting<string[]>('hiddenAnnouncementIds', []);
 
+  function addAnnouncements(newAnnouncements: Announcement[]) {
+    // Removes any duplicates and sorts by created date
+    setAnnouncements((oldAnnouncements) => {
+      const newArr = [...oldAnnouncements, ...newAnnouncements];
+      const setOfIds = new Set(newArr.map((a) => a.id));
+      return Array.from(setOfIds)
+        .map((id) => newArr.find((a) => a.id === id)!)
+        .sort((a, b) => {
+          return new Date(b.created).getTime() - new Date(a.created).getTime();
+        });
+    });
+  }
+
   async function fetchAnnouncement() {
     const announcements = await getAnnouncements();
-    announcements && setAnnouncements((oldAnnouncements) => [...announcements, ...oldAnnouncements]);
+    announcements && addAnnouncements(announcements);
   }
 
   useEffect(() => {
@@ -43,7 +56,7 @@ export function AnnouncementsDisplay() {
   }, []);
   useEffect(() => {
     if (hiddenAnnouncementIds.length > 0) {
-      setAnnouncements((oldAnnouncement) => [welcomeAnnouncement, ...oldAnnouncement]);
+      addAnnouncements([welcomeAnnouncement]);
     }
   }, [hiddenAnnouncementIds]);
 

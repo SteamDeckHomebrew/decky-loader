@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@decky/ui':
-        specifier: ^4.7.1
-        version: 4.7.1
+        specifier: ^4.7.2
+        version: 4.7.2
       filesize:
         specifier: ^10.1.2
         version: 10.1.2
@@ -215,8 +215,8 @@ packages:
   '@decky/api@1.1.1':
     resolution: {integrity: sha512-R5fkBRHBt5QIQY7Q0AlbVIhlIZ/nTzwBOoi8Rt4Go2fjFnoMKPInCJl6cPjXzimGwl2pyqKJgY6VnH6ar0XrHQ==}
 
-  '@decky/ui@4.7.1':
-    resolution: {integrity: sha512-yJwBgW+J2cMDfMkmcDFtzsubhUjekFZAtCnP55QEJ/1UKGR7sLNOvDLFYi1h5PI0K4L1XYcAMKHwbYFFTzcDTA==}
+  '@decky/ui@4.7.2':
+    resolution: {integrity: sha512-jYXVhbyyupXAcCuFqr7G2qjYVjp8hlMGF8zl8ALv67y0YhikAtfhA2rGUjCuaV3kdo9YrpBh8djRUJXdFPg/Eg==}
 
   '@esbuild/aix-ppc64@0.20.2':
     resolution: {integrity: sha512-D+EBOJHXdNZcLJRBkhENNG8Wji2kgc9AZ9KiPr1JuZjsNtyHzrsfLRrY0tk2H2aoFu6RANO1y1iPPUCDYWkb5g==}
@@ -2289,7 +2289,7 @@ snapshots:
 
   '@decky/api@1.1.1': {}
 
-  '@decky/ui@4.7.1': {}
+  '@decky/ui@4.7.2': {}
 
   '@esbuild/aix-ppc64@0.20.2':
     optional: true

@@ -2,7 +2,6 @@
 interface Window {
   // Shut up TS
   SP_REACTDOM: any;
-  App: any; // TODO type BFinishedInitStageOne in @decky/ui
 }
 
 (async () => {
@@ -10,6 +9,7 @@ interface Window {
 
   console.time('[Decky:Boot] Waiting for SteamApp init stage 1 to finish...');
 
+  // @ts-expect-error TODO type BFinishedInitStageOne in @decky/ui
   while (!window.App?.BFinishedInitStageOne()) {
     await new Promise((r) => setTimeout(r, 0)); // Can't use DFL sleep here.
   }

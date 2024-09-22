@@ -213,7 +213,19 @@ class PluginBrowser:
                     return
 
                 else:
-                    name = sub(r"/.+$", "", plugin_json_list[0])
+                    plugin_json_file = plugin_json_list[0]
+                    name = sub(r"/.+$", "", plugin_json_file)
+                    try:
+                        with plugin_zip.open(plugin_json_file) as f:
+                            plugin_json_data = json.loads(f.read().decode('utf-8'))
+                            plugin_name_from_plugin_json = plugin_json_data.get('name')
+                            if plugin_name_from_plugin_json and plugin_name_from_plugin_json.strip():
+                                logger.info(f"Extracted plugin name from {plugin_json_file}: {plugin_name_from_plugin_json}")
+                                name = plugin_name_from_plugin_json
+                            else:
+                                logger.warning(f"Nonexistent or invalid 'name' key value in {plugin_json_file}. Falling back to extracting from path.")
+                    except Exception as e:
+                        logger.error(f"Failed to read or parse {plugin_json_file}: {str(e)}. Falling back to extracting from path.")
 
         try:
             pluginFolderPath = self.find_plugin_folder(name)

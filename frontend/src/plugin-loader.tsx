@@ -170,7 +170,7 @@ class PluginLoader extends Logger {
       .then(() => this.loadPlugins())
       .then(() => this.log('Initialized'))
       .then(() => sleep(30000)) // Internet might not immediately be up
-      .then(() => this.checkPluginUpdates())
+      .then(() => this.checkPluginUpdates());
   }
 
   private checkForSP(): boolean {

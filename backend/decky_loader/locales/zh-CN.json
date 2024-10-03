@@ -191,6 +191,15 @@
         "testing_title": "测试"
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "正在下载插件",
+            "increment_count": "正在计入下载次数",
+            "installing_plugin": "正在安装插件",
+            "open_zip": "正在打开 ZIP 文件",
+            "parse_zip": "正在解析 ZIP 文件",
+            "start": "正在初始化",
+            "uninstalling_previous": "正在卸载之前的版本"
+        },
         "store_contrib": {
             "desc": "如果你想要提交你的插件到 Decky 插件商店，请访问 GitHub 上的 SteamDeckHomebrew/decky-plugin-template 存储库。有关开发和分发插件的信息，请查看 README 文件。",
             "label": "贡献"
@@ -239,7 +248,11 @@
         }
     },
     "Testing": {
-        "download": "下载"
+        "download": "下载",
+        "error": "安装 PR 时出错",
+        "header": "以下版本的 Decky Loader 是根据开放的第三方 Pull Request 构建的。Decky Loader 团队尚未验证这些版本的功能或安全性，且它们可能已经过期。",
+        "loading": "正在加载尚未合并的 Pull Request ...",
+        "start_download_toast": "正在下载 PR #{{id}}"
     },
     "TitleView": {
         "decky_store_desc": "打开 Decky 商店",

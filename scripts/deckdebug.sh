@@ -30,7 +30,7 @@ while :; do
     if [[ $NEWTARGET != "" ]] && [[ $NEWTARGET != $TARGET ]]; then
         echo found new tab at $NEWTARGET
         TARGET=$NEWTARGET
-        TARGETURL="devtools://devtools/bundled/inspector.html?remoteFrontend=true&ws=$ADDR/devtools/page/$TARGET"
+        TARGETURL="http://$ADDR/devtools/inspector.html?ws=$ADDR/devtools/page/$TARGET"
 
         LOCALTARGET=$(echo '{"id": 1, "method": "Target.createTarget", "params": {"background": true, "url": "'$TARGETURL'"}}
 {"id": 2, "method": "Target.closeTarget", "params": {"targetId": "'$LOCALTARGET'"}}' \

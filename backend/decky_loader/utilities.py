@@ -429,17 +429,28 @@ class Utilities:
                 async with ClientSession() as web:
                     res = await web.request("GET", "http://" + ip + ":8097", ssl=helpers.get_ssl_context())
                     script = """
-                    if (!window.deckyHasConnectedRDT) {
-                        window.deckyHasConnectedRDT = true;
-                        // This fixes the overlay when hovering over an element in RDT
-                        Object.defineProperty(window, '__REACT_DEVTOOLS_TARGET_WINDOW__', {
-                            enumerable: true,
-                            configurable: true,
-                            get: function() {
-                                return (GamepadNavTree?.m_context?.m_controller || FocusNavController)?.m_ActiveContext?.ActiveWindow || window;
-                            }
-                        });
-                    """ + await res.text() + "\n}"
+                    try {
+                        if (!window.deckyHasConnectedRDT) {
+                            window.deckyHasConnectedRDT = true;
+                            // This fixes the overlay when hovering over an element in RDT
+                            Object.defineProperty(window, '__REACT_DEVTOOLS_TARGET_WINDOW__', {
+                                enumerable: true,
+                                configurable: true,
+                                get: function() {
+                                    return window?.DFL?.findSP?.() || window;
+                                }
+                            });
+                    """ + await res.text() + """
+                    // they broke the script so we have to do this ourselves
+                    ReactDevToolsBackend.initialize({
+                        appendComponentStack: true,
+                        breakOnConsoleErrors: false,
+                        showInlineWarningsAndErrors: true,
+                        hideConsoleLogsInStrictMode: false
+                    });
+                    ReactDevToolsBackend.connectToDevTools({port: 8097, host: 'localhost', useHttps: false});
+                    } } catch(e) {console.error('RDT LOAD ERROR', e);}console.log('LOADED RDT');
+                    """
                 if res.status != 200:
                     self.logger.error("Failed to connect to React DevTools at " + ip)
                     return False
@@ -447,7 +458,10 @@ class Utilities:
                 self.logger.info("Connected to React DevTools, loading script")
                 tab = await get_gamepadui_tab()
                 # RDT needs to load before React itself to work.
-                await close_old_tabs()
+                try:
+                    await close_old_tabs()
+                except Exception:
+                    pass
                 result = await tab.reload_and_evaluate(script)
                 self.logger.info(result)
 

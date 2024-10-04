@@ -87,10 +87,10 @@ class RouterHook extends Logger {
           this.patchGamepadRouter();
           break;
         // Not fully implemented yet
-        // case UIMode.Desktop:
-        //   this.debug("Patching desktop router");
-        //   this.patchDesktopRouter();
-        //   break;
+        case UIMode.Desktop:
+          this.debug("Patching desktop router");
+          this.patchDesktopRouter();
+          break;
         default:
           this.warn(`Router patch not implemented for UI mode ${mode}`);
           break;
@@ -131,7 +131,6 @@ class RouterHook extends Logger {
   }
 
   // Currently unused
-  // @ts-expect-error 6133
   private async patchDesktopRouter() {
     const root = getReactRoot(document.getElementById('root') as any);
     const findRouterNode = () =>

@@ -10,7 +10,8 @@
     "lint": "prettier -c src",
     "typecheck": "tsc --noEmit",
     "format": "prettier -c src -w",
-    "localize": "i18next"
+    "localize": "i18next",
+    "react-devtools": "electron node_modules/react-devtools/app"
   },
   "devDependencies": {
     "@decky/api": "^1.1.1",
@@ -31,6 +32,7 @@
     "prettier": "^3.3.2",
     "prettier-plugin-import-sort": "^0.0.7",
     "react": "18.3.1",
+    "react-devtools": "^6.0.0",
     "react-dom": "18.3.1",
     "rollup": "^4.18.0",
     "rollup-plugin-delete": "^2.0.0",
@@ -47,7 +49,7 @@
     }
   },
   "dependencies": {
-    "@decky/ui": "^4.7.4",
+    "@decky/ui": "^4.8.0",
     "compare-versions": "^6.1.1",
     "filesize": "^10.1.2",
     "i18next": "^23.11.5",

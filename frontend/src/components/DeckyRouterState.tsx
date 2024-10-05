@@ -1,6 +1,8 @@
 import { ComponentType, FC, ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import type { RouteProps } from 'react-router';
 
+import { UIMode } from '../enums';
+
 export interface RouterEntry {
   props: Omit<RouteProps, 'path' | 'children'>;
   component: ComponentType;
@@ -10,12 +12,16 @@ export type RoutePatch = (route: RouteProps) => RouteProps;
 
 interface PublicDeckyRouterState {
   routes: Map<string, RouterEntry>;
-  routePatches: Map<string, Set<RoutePatch>>;
+  routePatches: Map<UIMode, Map<string, Set<RoutePatch>>>;
 }
 
 export class DeckyRouterState {
   private _routes = new Map<string, RouterEntry>();
-  private _routePatches = new Map<string, Set<RoutePatch>>();
+  // Update when support for new UIModes is added
+  private _routePatches = new Map<UIMode, Map<string, Set<RoutePatch>>>([
+    [UIMode.BigPicture, new Map()],
+    [UIMode.Desktop, new Map()],
+  ]);
 
   public eventBus = new EventTarget();
 
@@ -28,22 +34,26 @@ export class DeckyRouterState {
     this.notifyUpdate();
   }
 
-  addPatch(path: string, patch: RoutePatch) {
-    let patchList = this._routePatches.get(path);
+  addPatch(path: string, patch: RoutePatch, uiMode: UIMode) {
+    const patchesForMode = this._routePatches.get(uiMode);
+    if (!patchesForMode) throw new Error(`UI mode ${uiMode} not supported.`);
+    let patchList = patchesForMode.get(path);
     if (!patchList) {
       patchList = new Set();
-      this._routePatches.set(path, patchList);
+      patchesForMode.set(path, patchList);
     }
     patchList.add(patch);
     this.notifyUpdate();
     return patch;
   }
 
-  removePatch(path: string, patch: RoutePatch) {
-    const patchList = this._routePatches.get(path);
+  removePatch(path: string, patch: RoutePatch, uiMode: UIMode) {
+    const patchesForMode = this._routePatches.get(uiMode);
+    if (!patchesForMode) throw new Error(`UI mode ${uiMode} not supported.`);
+    const patchList = patchesForMode.get(path);
     patchList?.delete(patch);
     if (patchList?.size == 0) {
-      this._routePatches.delete(path);
+      patchesForMode.delete(path);
     }
     this.notifyUpdate();
   }
@@ -60,8 +70,8 @@ export class DeckyRouterState {
 
 interface DeckyRouterStateContext extends PublicDeckyRouterState {
   addRoute(path: string, component: RouterEntry['component'], props: RouterEntry['props']): void;
-  addPatch(path: string, patch: RoutePatch): RoutePatch;
-  removePatch(path: string, patch: RoutePatch): void;
+  addPatch(path: string, patch: RoutePatch, uiMode?: UIMode): RoutePatch;
+  removePatch(path: string, patch: RoutePatch, uiMode?: UIMode): void;
   removeRoute(path: string): void;
 }
 

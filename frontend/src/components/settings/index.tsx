@@ -53,5 +53,20 @@ export default function SettingsPage() {
     },
   ];
 
-  return <SidebarNavigation pages={pages} />;
+  return (
+    <div className="deckySettingsHeightHack">
+      <style>
+        {/* hacky fix to work around height: 720px in desktop ui */}
+        {`
+        .deckySettingsHeightHack {
+          height: 100% !important;
+        }
+        .deckySettingsHeightHack > div {
+          height: 100% !important;
+        }
+      `}
+      </style>
+      <SidebarNavigation pages={pages} />
+    </div>
+  );
 }

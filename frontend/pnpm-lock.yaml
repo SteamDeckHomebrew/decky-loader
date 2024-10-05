@@ -41,7 +41,7 @@ importers:
     devDependencies:
       '@decky/api':
         specifier: ^1.1.1
-        version: 1.1.1
+        version: 1.1.2
       '@rollup/plugin-commonjs':
         specifier: ^26.0.1
         version: 26.0.1(rollup@4.18.0)
@@ -218,8 +218,8 @@ packages:
     resolution: {integrity: sha512-XEFXSlxiG5td2EJRe8vOmRbaXVgfcBlszKujvVmWIK/UpywWljQCfzAv3RQCGujWQ1RD4YYWEAqDXfuJiy8f5Q==}
     engines: {node: '>=6.9.0'}
 
-  '@decky/api@1.1.1':
-    resolution: {integrity: sha512-R5fkBRHBt5QIQY7Q0AlbVIhlIZ/nTzwBOoi8Rt4Go2fjFnoMKPInCJl6cPjXzimGwl2pyqKJgY6VnH6ar0XrHQ==}
+  '@decky/api@1.1.2':
+    resolution: {integrity: sha512-lTMqRpHOrGTCyH2c1jJvkmWhOq2dcnX5/ioHbfCVmyQOBik1OM1BnzF1uROsnNDC5GkRvl3J/ATqYp6vhYpRqw==}
 
   '@decky/ui@4.8.1':
     resolution: {integrity: sha512-lM4jdeyHjIbxHWxDBhbk+GQvdIT50p6RW9DC+oWSWXlaNWU/iG+8aUAcnfxygFkTP43EkCgjFASsYTfB55CMXA==}
@@ -2817,7 +2817,7 @@ snapshots:
       '@babel/helper-validator-identifier': 7.24.7
       to-fast-properties: 2.0.0
 
-  '@decky/api@1.1.1': {}
+  '@decky/api@1.1.2': {}
 
   '@decky/ui@4.8.1': {}
 

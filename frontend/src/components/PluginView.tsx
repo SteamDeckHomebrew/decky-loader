@@ -9,7 +9,11 @@ import NotificationBadge from './NotificationBadge';
 import { useQuickAccessVisible } from './QuickAccessVisibleState';
 import TitleView from './TitleView';
 
-const PluginView: FC = () => {
+interface PluginViewProps {
+  desktop?: boolean;
+}
+
+const PluginView: FC<PluginViewProps> = ({ desktop = false }) => {
   const { hiddenPlugins } = useDeckyState();
   const { plugins, updates, activePlugin, pluginOrder, setActivePlugin, closeActivePlugin } = useDeckyState();
   const visible = useQuickAccessVisible();
@@ -27,7 +31,7 @@ const PluginView: FC = () => {
   if (activePlugin) {
     return (
       <Focusable onCancelButton={closeActivePlugin}>
-        <TitleView />
+        <TitleView desktop={desktop} />
         <div style={{ height: '100%', paddingTop: '16px' }}>
           <ErrorBoundary>{(visible || activePlugin.alwaysRender) && activePlugin.content}</ErrorBoundary>
         </div>
@@ -36,7 +40,7 @@ const PluginView: FC = () => {
   }
   return (
     <>
-      <TitleView />
+      <TitleView desktop={desktop} />
       <div
         style={{
           paddingTop: '16px',

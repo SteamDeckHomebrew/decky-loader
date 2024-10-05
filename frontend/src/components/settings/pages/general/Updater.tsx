@@ -6,8 +6,8 @@ import {
   Focusable,
   ProgressBarWithInfo,
   Spinner,
-  findSP,
   showModal,
+  useWindowRef,
 } from '@decky/ui';
 import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,45 +21,48 @@ import WithSuspense from '../../../WithSuspense';
 const MarkdownRenderer = lazy(() => import('../../../Markdown'));
 
 function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | null; closeModal?: () => {} }) {
-  const SP = findSP();
+  const [outerRef, win] = useWindowRef<HTMLDivElement>();
   const { t } = useTranslation();
+  // TODO proper desktop scrolling
   return (
-    <Focusable onCancelButton={closeModal}>
+    <Focusable ref={outerRef} onCancelButton={closeModal}>
       <FocusRing>
-        <Carousel
-          fnItemRenderer={(id: number) => (
-            <Focusable
-              style={{
-                marginTop: '40px',
-                height: 'calc( 100% - 40px )',
-                overflowY: 'scroll',
-                display: 'flex',
-                justifyContent: 'center',
-                margin: '40px',
-              }}
-            >
-              <div>
-                <h1>{versionInfo?.all?.[id]?.name || 'Invalid Update Name'}</h1>
-                {versionInfo?.all?.[id]?.body ? (
-                  <WithSuspense>
-                    <MarkdownRenderer onDismiss={closeModal}>{versionInfo.all[id].body}</MarkdownRenderer>
-                  </WithSuspense>
-                ) : (
-                  t('Updater.no_patch_notes_desc')
-                )}
-              </div>
-            </Focusable>
-          )}
-          fnGetId={(id) => id}
-          nNumItems={versionInfo?.all?.length}
-          nHeight={SP.innerHeight - 40}
-          nItemHeight={SP.innerHeight - 40}
-          nItemMarginX={0}
-          initialColumn={0}
-          autoFocus={true}
-          fnGetColumnWidth={() => SP.innerWidth}
-          name={t('Updater.decky_updates') as string}
-        />
+        {win && (
+          <Carousel
+            fnItemRenderer={(id: number) => (
+              <Focusable
+                style={{
+                  marginTop: '40px',
+                  height: 'calc( 100% - 40px )',
+                  overflowY: 'scroll',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  margin: '40px',
+                }}
+              >
+                <div>
+                  <h1>{versionInfo?.all?.[id]?.name || 'Invalid Update Name'}</h1>
+                  {versionInfo?.all?.[id]?.body ? (
+                    <WithSuspense>
+                      <MarkdownRenderer onDismiss={closeModal}>{versionInfo.all[id].body}</MarkdownRenderer>
+                    </WithSuspense>
+                  ) : (
+                    t('Updater.no_patch_notes_desc')
+                  )}
+                </div>
+              </Focusable>
+            )}
+            fnGetId={(id) => id}
+            nNumItems={versionInfo?.all?.length}
+            nHeight={(win?.innerHeight || 800) - 40}
+            nItemHeight={(win?.innerHeight || 800) - 40}
+            nItemMarginX={0}
+            initialColumn={0}
+            autoFocus={true}
+            fnGetColumnWidth={() => win?.innerHeight || 1280}
+            name={t('Updater.decky_updates') as string}
+          />
+        )}
       </FocusRing>
     </Focusable>
   );
@@ -71,6 +74,8 @@ export default function UpdaterSettings() {
   const [checkingForUpdates, setCheckingForUpdates] = useState<boolean>(false);
   const [updateProgress, setUpdateProgress] = useState<number>(-1);
   const [reloading, setReloading] = useState<boolean>(false);
+
+  const [windowRef, win] = useWindowRef<HTMLDivElement>();
 
   const { t } = useTranslation();
 
@@ -91,11 +96,12 @@ export default function UpdaterSettings() {
   }, []);
 
   const showPatchNotes = useCallback(() => {
-    showModal(<PatchNotesModal versionInfo={versionInfo} />);
-  }, [versionInfo]);
+    // TODO set width and height on desktop - needs fixing in DFL?
+    showModal(<PatchNotesModal versionInfo={versionInfo} />, win!);
+  }, [versionInfo, win]);
 
   return (
-    <>
+    <div ref={windowRef}>
       <Field
         onOptionsActionDescription={versionInfo?.all ? t('Updater.patch_notes_desc') : undefined}
         onOptionsButton={versionInfo?.all ? showPatchNotes : undefined}
@@ -164,6 +170,6 @@ export default function UpdaterSettings() {
           </Suspense>
         </InlinePatchNotes>
       )}
-    </>
+    </div>
   );
 }

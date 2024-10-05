@@ -24,6 +24,11 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                   props.onDismiss?.();
                   Navigation.NavigateToExternalWeb(aRef.current!.href);
                 }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  props.onDismiss?.();
+                  Navigation.NavigateToExternalWeb(aRef.current!.href);
+                }}
                 style={{ display: 'inline' }}
               >
                 <a ref={aRef} {...nodeProps.node.properties}>

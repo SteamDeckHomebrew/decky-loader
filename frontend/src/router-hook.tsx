@@ -6,7 +6,9 @@ import {
   findInTree,
   findModuleByExport,
   getReactRoot,
+  injectFCTrampoline,
   sleep,
+  wrapReactType,
 } from '@decky/ui';
 import { FC, ReactElement, ReactNode, cloneElement, createElement } from 'react';
 import type { Route } from 'react-router';
@@ -23,6 +25,7 @@ import {
   RouterEntry,
   useDeckyRouterState,
 } from './components/DeckyRouterState';
+import { UIMode } from './enums';
 import Logger from './logger';
 
 declare global {
@@ -31,18 +34,18 @@ declare global {
   }
 }
 
-export enum UIMode {
-  BigPicture = 4,
-  Desktop = 7,
-}
-
 const isPatched = Symbol('is patched');
 
 class RouterHook extends Logger {
   private routerState: DeckyRouterState = new DeckyRouterState();
   private globalComponentsState: DeckyGlobalComponentsState = new DeckyGlobalComponentsState();
-  private renderedComponents: ReactElement[] = [];
+  private renderedComponents = new Map<UIMode, ReactElement[]>([
+    [UIMode.BigPicture, []],
+    [UIMode.Desktop, []],
+  ]);
   private Route: any;
+  private DesktopRoute: any;
+  private wrappedDesktopLibraryMemo?: any;
   private DeckyGamepadRouterWrapper = this.gamepadRouterWrapper.bind(this);
   private DeckyDesktopRouterWrapper = this.desktopRouterWrapper.bind(this);
   private DeckyGlobalComponentsWrapper = this.globalComponentsWrapper.bind(this);
@@ -76,6 +79,21 @@ class RouterHook extends Logger {
       this.error('Failed to find router stack module');
     }
 
+    const routerModule = findModuleByExport((e) => e?.displayName == 'Router');
+    if (routerModule) {
+      this.DesktopRoute = Object.values(routerModule).find(
+        (e) =>
+          typeof e == 'function' &&
+          e?.prototype?.render?.toString()?.includes('props.computedMatch') &&
+          e?.prototype?.render?.toString()?.includes('.Children.count('),
+      );
+      if (!this.DesktopRoute) {
+        this.error('Failed to find DesktopRoute component');
+      }
+    } else {
+      this.error('Failed to find router module, desktop routes will not work');
+    }
+
     this.modeChangeRegistration = SteamClient.UI.RegisterForUIModeChanged((mode: UIMode) => {
       this.debug(`UI mode changed to ${mode}`);
       if (this.patchedModes.has(mode)) return;
@@ -88,7 +106,7 @@ class RouterHook extends Logger {
           break;
         // Not fully implemented yet
         case UIMode.Desktop:
-          this.debug("Patching desktop router");
+          this.debug('Patching desktop router');
           this.patchDesktopRouter();
           break;
         default:
@@ -109,7 +127,7 @@ class RouterHook extends Logger {
     await this.waitForUnlock();
     let routerNode = findRouterNode();
     while (!routerNode) {
-      this.warn('Failed to find Router node, reattempting in 5 seconds.');
+      this.warn('Failed to find GamepadUI Router node, reattempting in 5 seconds.');
       await sleep(5000);
       await this.waitForUnlock();
       routerNode = findRouterNode();
@@ -130,49 +148,34 @@ class RouterHook extends Logger {
     }
   }
 
-  // Currently unused
   private async patchDesktopRouter() {
     const root = getReactRoot(document.getElementById('root') as any);
     const findRouterNode = () =>
-      findInReactTree(root, (node) => node?.elementType?.type?.toString?.()?.includes('bShowDesktopUIContent:'));
+      findInReactTree(root, (node) => {
+        const typeStr = node?.elementType?.toString?.();
+        return (
+          typeStr &&
+          typeStr?.includes('.IsMainDesktopWindow') &&
+          typeStr?.includes('.IN_STEAMUI_SHARED_CONTEXT') &&
+          typeStr?.includes('.ContentFrame') &&
+          typeStr?.includes('.Console()')
+        );
+      });
     let routerNode = findRouterNode();
     while (!routerNode) {
-      this.warn('Failed to find Router node, reattempting in 5 seconds.');
+      this.warn('Failed to find DesktopUI Router node, reattempting in 5 seconds.');
       await sleep(5000);
       routerNode = findRouterNode();
     }
     if (routerNode) {
-      // this.debug("desktop router node", routerNode);
       // Patch the component globally
-      this.desktopRouterPatch = afterPatch(routerNode.elementType, 'type', this.handleDesktopRouterRender.bind(this));
-      // Swap out the current instance
-      routerNode.type = routerNode.elementType.type;
-      if (routerNode?.alternate) {
-        routerNode.alternate.type = routerNode.type;
-      }
+      const patchedRenderer = injectFCTrampoline(routerNode.elementType);
+      this.desktopRouterPatch = afterPatch(patchedRenderer, 'component', this.handleDesktopRouterRender.bind(this));
       // Force a full rerender via our custom error boundary
       const errorBoundaryNode = findInTree(routerNode, (e) => e?.stateNode?._deckyForceRerender, {
         walkable: ['return'],
       });
       errorBoundaryNode?.stateNode?._deckyForceRerender?.();
-      // this.debug("desktop router node", routerNode);
-      // // Patch the component globally
-      // this.desktopRouterPatch = afterPatch(routerNode.type.prototype, 'render', this.handleDesktopRouterRender.bind(this));
-      // const stateNodeClone = { render: routerNode.stateNode.render } as any;
-      // // Patch the current instance. render is readonly so we have to do this.
-      // Object.assign(stateNodeClone, routerNode.stateNode);
-      // Object.setPrototypeOf(stateNodeClone, Object.getPrototypeOf(routerNode.stateNode));
-      // this.desktopRouterFirstInstancePatch = afterPatch(stateNodeClone, 'render', this.handleDesktopRouterRender.bind(this));
-      // routerNode.stateNode = stateNodeClone;
-      // // Swap out the current instance
-      // if (routerNode?.alternate) {
-      //   routerNode.alternate.type = routerNode.type;
-      //   routerNode.alternate.stateNode = routerNode.stateNode;
-      // }
-      // routerNode.stateNode.forceUpdate();
-      // Force a full rerender via our custom error boundary
-      // const errorBoundaryNode = findInTree(routerNode, e => e?.stateNode?._deckyForceRerender, { walkable: ["return"] });
-      // errorBoundaryNode?.stateNode?._deckyForceRerender?.();
     }
   }
 
@@ -196,10 +199,18 @@ class RouterHook extends Logger {
     const returnVal = (
       <>
         <DeckyRouterStateContextProvider deckyRouterState={this.routerState}>
+          <style>
+            {`
+              .deckyDesktopDialogPaddingHack + * .DialogContent_InnerWidth {
+                max-width: unset !important;
+              }
+            `}
+          </style>
+          <div className="deckyDesktopDialogPaddingHack" />
           <DeckyDesktopRouterWrapper>{ret}</DeckyDesktopRouterWrapper>
         </DeckyRouterStateContextProvider>
         <DeckyGlobalComponentsStateContextProvider deckyGlobalComponentsState={this.globalComponentsState}>
-          <DeckyGlobalComponentsWrapper />
+          <DeckyGlobalComponentsWrapper uiMode={UIMode.Desktop} />
         </DeckyGlobalComponentsStateContextProvider>
       </>
     );
@@ -219,7 +230,7 @@ class RouterHook extends Logger {
           <DeckyGamepadRouterWrapper>{ret}</DeckyGamepadRouterWrapper>
         </DeckyRouterStateContextProvider>
         <DeckyGlobalComponentsStateContextProvider deckyGlobalComponentsState={this.globalComponentsState}>
-          <DeckyGlobalComponentsWrapper />
+          <DeckyGlobalComponentsWrapper uiMode={UIMode.BigPicture} />
         </DeckyGlobalComponentsStateContextProvider>
       </>
     );
@@ -227,13 +238,21 @@ class RouterHook extends Logger {
     return returnVal;
   }
 
-  private globalComponentsWrapper() {
+  private globalComponentsWrapper({ uiMode }: { uiMode: UIMode }) {
     const { components } = useDeckyGlobalComponentsState();
-    if (this.renderedComponents.length != components.size) {
-      this.debug('Rerendering global components');
-      this.renderedComponents = Array.from(components.values()).map((GComponent) => <GComponent />);
+    const componentsForMode = components.get(uiMode);
+    if (!componentsForMode) {
+      this.warn(`Couldn't find global components map for uimode ${uiMode}`);
+      return null;
     }
-    return <>{this.renderedComponents}</>;
+    if (!this.renderedComponents.has(uiMode) || this.renderedComponents.get(uiMode)?.length != componentsForMode.size) {
+      this.debug('Rerendering global components for uiMode', uiMode);
+      this.renderedComponents.set(
+        uiMode,
+        Array.from(componentsForMode.values()).map((GComponent) => <GComponent />),
+      );
+    }
+    return <>{this.renderedComponents.get(uiMode)}</>;
   }
 
   private gamepadRouterWrapper({ children }: { children: ReactElement }) {
@@ -247,8 +266,8 @@ class RouterHook extends Logger {
     }
     const mainRouteList = children.props.children[0].props.children;
     const ingameRouteList = children.props.children[1].props.children; // /appoverlay and /apprunning
-    this.processList(mainRouteList, routes, routePatches, true);
-    this.processList(ingameRouteList, null, routePatches, false);
+    this.processList(mainRouteList, routes, routePatches.get(UIMode.BigPicture), true, this.Route);
+    this.processList(ingameRouteList, null, routePatches.get(UIMode.BigPicture), false, this.Route);
 
     this.debug('Rerendered gamepadui routes list');
     return children;
@@ -256,22 +275,38 @@ class RouterHook extends Logger {
 
   private desktopRouterWrapper({ children }: { children: ReactElement }) {
     // Used to store the new replicated routes we create to allow routes to be unpatched.
-    this.debug('desktop router wrapper render', children);
     const { routes, routePatches } = useDeckyRouterState();
-    const routeList = findInReactTree(
+    const mainRouteList = findInReactTree(
       children,
-      (node) => node?.length > 2 && node?.find((elem: any) => elem?.props?.path == '/library/home'),
+      (node) => node?.length > 2 && node?.find((elem: any) => elem?.props?.path == '/console'),
     );
-    if (!routeList) {
+    if (!mainRouteList) {
       this.debug('routerWrapper wrong component?', children);
       return children;
     }
-    const library = children.props.children[1].props.children.props;
-    if (!Array.isArray(library.children)) {
-      library.children = [library.children];
+    this.processList(mainRouteList, routes, routePatches.get(UIMode.Desktop), true, this.DesktopRoute);
+    const libraryRouteWrapper = mainRouteList.find(
+      (r: any) => r?.props && 'cm' in r.props && 'bShowDesktopUIContent' in r.props,
+    );
+    if (!this.wrappedDesktopLibraryMemo) {
+      wrapReactType(libraryRouteWrapper);
+      afterPatch(libraryRouteWrapper.type, 'type', (_, ret) => {
+        const { routePatches } = useDeckyRouterState();
+        const libraryRouteList = findInReactTree(
+          ret,
+          (node) => node?.length > 1 && node?.find((elem: any) => elem?.props?.path == '/library/downloads'),
+        );
+        if (!libraryRouteList) {
+          this.warn('failed to find library route list', ret);
+          return ret;
+        }
+        this.processList(libraryRouteList, null, routePatches.get(UIMode.Desktop), false, this.DesktopRoute);
+        return ret;
+      });
+      this.wrappedDesktopLibraryMemo = libraryRouteWrapper.type;
+    } else {
+      libraryRouteWrapper.type = this.wrappedDesktopLibraryMemo;
     }
-    this.debug('library', library);
-    this.processList(library.children, routes, routePatches, true);
 
     this.debug('Rerendered desktop routes list');
     return children;
@@ -279,11 +314,11 @@ class RouterHook extends Logger {
 
   private processList(
     routeList: any[],
-    routes: Map<string, RouterEntry> | null,
-    routePatches: Map<string, Set<RoutePatch>>,
+    routes: Map<string, RouterEntry> | null | undefined,
+    routePatches: Map<string, Set<RoutePatch>> | null | undefined,
     save: boolean,
+    RouteComponent: any,
   ) {
-    const Route = this.Route;
     this.debug('Route list: ', routeList);
     if (save) this.routes = routeList;
     let routerIndex = routeList.length;
@@ -293,59 +328,60 @@ class RouterHook extends Logger {
         const newRouterArray: (ReactElement | JSX.Element)[] = [];
         routes.forEach(({ component, props }, path) => {
           newRouterArray.push(
-            <Route path={path} {...props}>
+            <RouteComponent path={path} {...props}>
               <ErrorBoundary>{createElement(component)}</ErrorBoundary>
-            </Route>,
+            </RouteComponent>,
           );
         });
         routeList[routerIndex] = newRouterArray;
       }
     }
-    routeList.forEach((route: Route, index: number) => {
-      const replaced = this.toReplace.get(route?.props?.path as string);
-      if (replaced) {
-        routeList[index].props.children = replaced;
-        this.toReplace.delete(route?.props?.path as string);
-      }
-      if (route?.props?.path && routePatches.has(route.props.path as string)) {
-        this.toReplace.set(
-          route?.props?.path as string,
-          // @ts-ignore
-          routeList[index].props.children,
-        );
-        routePatches.get(route.props.path as string)?.forEach((patch) => {
-          const oType = routeList[index].props.children.type;
-          routeList[index].props.children = patch({
-            ...routeList[index].props,
-            children: {
-              ...cloneElement(routeList[index].props.children),
-              type: routeList[index].props.children[isPatched] ? oType : (props) => createElement(oType, props),
-            },
-          }).children;
-          routeList[index].props.children[isPatched] = true;
-        });
-      }
-    });
+    routePatches &&
+      routeList.forEach((route: Route, index: number) => {
+        const replaced = this.toReplace.get(route?.props?.path as string);
+        if (replaced) {
+          routeList[index].props.children = replaced;
+          this.toReplace.delete(route?.props?.path as string);
+        }
+        if (route?.props?.path && routePatches.has(route.props.path as string)) {
+          this.toReplace.set(
+            route?.props?.path as string,
+            // @ts-ignore
+            routeList[index].props.children,
+          );
+          routePatches.get(route.props.path as string)?.forEach((patch) => {
+            const oType = routeList[index].props.children.type;
+            routeList[index].props.children = patch({
+              ...routeList[index].props,
+              children: {
+                ...cloneElement(routeList[index].props.children),
+                type: routeList[index].props.children[isPatched] ? oType : (props) => createElement(oType, props),
+              },
+            }).children;
+            routeList[index].props.children[isPatched] = true;
+          });
+        }
+      });
   }
 
   addRoute(path: string, component: RouterEntry['component'], props: RouterEntry['props'] = {}) {
     this.routerState.addRoute(path, component, props);
   }
 
-  addPatch(path: string, patch: RoutePatch) {
-    return this.routerState.addPatch(path, patch);
+  addPatch(path: string, patch: RoutePatch, uiMode: UIMode = UIMode.BigPicture) {
+    return this.routerState.addPatch(path, patch, uiMode);
   }
 
-  addGlobalComponent(name: string, component: FC) {
-    this.globalComponentsState.addComponent(name, component);
+  addGlobalComponent(name: string, component: FC, uiMode: UIMode = UIMode.BigPicture) {
+    this.globalComponentsState.addComponent(name, component, uiMode);
   }
 
-  removeGlobalComponent(name: string) {
-    this.globalComponentsState.removeComponent(name);
+  removeGlobalComponent(name: string, uiMode: UIMode = UIMode.BigPicture) {
+    this.globalComponentsState.removeComponent(name, uiMode);
   }
 
-  removePatch(path: string, patch: RoutePatch) {
-    this.routerState.removePatch(path, patch);
+  removePatch(path: string, patch: RoutePatch, uiMode: UIMode = UIMode.BigPicture) {
+    this.routerState.removePatch(path, patch, uiMode);
   }
 
   removeRoute(path: string) {

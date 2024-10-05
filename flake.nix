@@ -41,6 +41,7 @@
             poetry
             jq
             electron_30-bin
+            killall
             # fixes local pyright not being able to see the pythonpath properly.
             (pkgs.writeShellScriptBin "pyright" ''
               ${pkgs.pyright}/bin/pyright --pythonpath `which python3` "$@" '')

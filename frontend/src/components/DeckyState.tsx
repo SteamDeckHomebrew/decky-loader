@@ -17,6 +17,7 @@ interface PublicDeckyState {
   versionInfo: VerInfo | null;
   notificationSettings: NotificationSettings;
   userInfo: UserInfo | null;
+  desktopMenuOpen: boolean;
 }
 
 export interface UserInfo {
@@ -36,6 +37,7 @@ export class DeckyState {
   private _versionInfo: VerInfo | null = null;
   private _notificationSettings = DEFAULT_NOTIFICATION_SETTINGS;
   private _userInfo: UserInfo | null = null;
+  private _desktopMenuOpen: boolean = false;
 
   public eventBus = new EventTarget();
 
@@ -52,6 +54,7 @@ export class DeckyState {
       versionInfo: this._versionInfo,
       notificationSettings: this._notificationSettings,
       userInfo: this._userInfo,
+      desktopMenuOpen: this._desktopMenuOpen,
     };
   }
 
@@ -115,6 +118,11 @@ export class DeckyState {
     this.notifyUpdate();
   }
 
+  setDesktopMenuOpen(open: boolean) {
+    this._desktopMenuOpen = open;
+    this.notifyUpdate();
+  }
+
   private notifyUpdate() {
     this.eventBus.dispatchEvent(new Event('update'));
   }
@@ -126,6 +134,7 @@ interface DeckyStateContext extends PublicDeckyState {
   setActivePlugin(name: string): void;
   setPluginOrder(pluginOrder: string[]): void;
   closeActivePlugin(): void;
+  setDesktopMenuOpen(open: boolean): void;
 }
 
 const DeckyStateContext = createContext<DeckyStateContext>(null as any);
@@ -155,6 +164,7 @@ export const DeckyStateContextProvider: FC<Props> = ({ children, deckyState }) =
   const setActivePlugin = deckyState.setActivePlugin.bind(deckyState);
   const closeActivePlugin = deckyState.closeActivePlugin.bind(deckyState);
   const setPluginOrder = deckyState.setPluginOrder.bind(deckyState);
+  const setDesktopMenuOpen = deckyState.setDesktopMenuOpen.bind(deckyState);
 
   return (
     <DeckyStateContext.Provider
@@ -165,6 +175,7 @@ export const DeckyStateContextProvider: FC<Props> = ({ children, deckyState }) =
         setActivePlugin,
         closeActivePlugin,
         setPluginOrder,
+        setDesktopMenuOpen,
       }}
     >
       {children}

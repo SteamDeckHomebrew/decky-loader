@@ -135,7 +135,7 @@ class RouterHook extends Logger {
   private async patchDesktopRouter() {
     const root = getReactRoot(document.getElementById('root') as any);
     const findRouterNode = () =>
-      findInReactTree(root, (node) => node?.elementType?.type?.toString()?.includes('bShowDesktopUIContent:'));
+      findInReactTree(root, (node) => node?.elementType?.type?.toString?.()?.includes('bShowDesktopUIContent:'));
     let routerNode = findRouterNode();
     while (!routerNode) {
       this.warn('Failed to find Router node, reattempting in 5 seconds.');

@@ -157,8 +157,16 @@ class PluginBrowser:
         # Will be set later in code
         res_zip = None
 
-        # Check if plugin is installed
+        # Check if plugin was already installed before this
         isInstalled = False
+
+        try:
+            pluginFolderPath = self.find_plugin_folder(name)
+            if pluginFolderPath:
+                isInstalled = True
+        except:
+            logger.error(f"Failed to determine if {name} is already installed, continuing anyway.")
+
         # Preserve plugin order before removing plugin (uninstall alters the order and removes the plugin from the list)
         current_plugin_order = self.settings.getSetting("pluginOrder")[:]
         if self.loader.watcher:
@@ -214,13 +222,6 @@ class PluginBrowser:
 
                 else:
                     name = sub(r"/.+$", "", plugin_json_list[0])
-
-        try:
-            pluginFolderPath = self.find_plugin_folder(name)
-            if pluginFolderPath:
-                isInstalled = True
-        except:
-            logger.error(f"Failed to determine if {name} is already installed, continuing anyway.")
 
         # Check to make sure we got the file
         if res_zip is None:

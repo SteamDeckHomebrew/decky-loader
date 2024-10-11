@@ -41,9 +41,9 @@ class TabsHook extends Logger {
 
   init() {
     // TODO patch the "embedded" renderer in this module too (seems to be for VR? unsure)
-    const qamModule = findModuleByExport((e) => e?.type?.toString()?.includes('QuickAccessMenuBrowserView'));
+    const qamModule = findModuleByExport((e) => e?.type?.toString?.()?.includes('QuickAccessMenuBrowserView'));
     const qamRenderer = Object.values(qamModule).find((e: any) =>
-      e?.type?.toString()?.includes('QuickAccessMenuBrowserView'),
+      e?.type?.toString?.()?.includes('QuickAccessMenuBrowserView'),
     );
 
     const patchHandler = createReactTreePatcher(

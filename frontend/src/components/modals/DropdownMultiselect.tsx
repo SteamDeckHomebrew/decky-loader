@@ -15,7 +15,7 @@ import { FaChevronDown } from 'react-icons/fa';
 
 // TODO add to dfl
 const dropDownControlButtonClass = findModuleExport((e: Export) =>
-  e?.toString()?.includes('gamepaddropdown_DropDownControlButton'),
+  e?.toString?.()?.includes('gamepaddropdown_DropDownControlButton'),
 );
 
 const DropdownMultiselectItem: FC<

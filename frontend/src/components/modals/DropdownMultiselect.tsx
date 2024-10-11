@@ -2,11 +2,11 @@ import {
   DialogButton,
   DialogCheckbox,
   DialogCheckboxProps,
-  findModule,
   Marquee,
   Menu,
   MenuItem,
   Module,
+  findModule,
   showContextMenu,
 } from '@decky/ui';
 import { FC, useCallback, useEffect, useState } from 'react';
@@ -14,9 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { FaChevronDown } from 'react-icons/fa';
 
 // TODO add to dfl
-const dropDownControlButtonClasses = findModule((m: Module) =>
-  m?.DropDownControlButton && m?.["duration-app-launch"],
-);
+const dropDownControlButtonClasses = findModule((m: Module) => m?.DropDownControlButton && m?.['duration-app-launch']);
 
 const DropdownMultiselectItem: FC<
   {

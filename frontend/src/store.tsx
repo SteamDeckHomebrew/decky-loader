@@ -109,7 +109,19 @@ export async function getPluginList(
     headers: {
       'X-Decky-Version': version.current,
     },
-  }).then((r) => r.json());
+  }).then(async (r) => {
+    let res = structuredClone(await r.json());
+    const lng = navigator.language;
+    for (let val of res) {
+      if (val.hasOwnProperty('name-' + lng)) {
+        val.name = val['name-' + lng];
+      }
+      if (val.hasOwnProperty('description-' + lng)) {
+        val.description = val['description-' + lng];
+      }
+      return val;
+    }
+  });
 }
 
 export async function installFromURL(url: string) {

@@ -51,7 +51,10 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
       onOK={async () => {
         setLoading(true);
         await onOK();
-        setTimeout(() => Navigation.OpenQuickAccessMenu(QuickAccessTab.Decky), 250);
+        setTimeout(() => {
+          Navigation.OpenQuickAccessMenu(QuickAccessTab.Decky);
+          DeckyPluginLoader.setDesktopMenuOpen(true);
+        }, 250);
         setTimeout(() => DeckyPluginLoader.checkPluginUpdates(), 1000);
       }}
       onCancel={async () => {

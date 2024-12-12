@@ -186,6 +186,7 @@ class SandboxedPlugin:
 
         if "uninstall" in data:
             self.uninstalling = data.get("uninstall")
+            return None;
 
         d: SocketResponseDict = {"type": SocketMessageType.RESPONSE, "res": None, "success": True, "id": data["id"]}
         try:

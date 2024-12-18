@@ -14,18 +14,34 @@ const titleStyles: CSSProperties = {
   top: '0px',
 };
 
-const TitleView: FC = () => {
-  const { activePlugin, closeActivePlugin } = useDeckyState();
+interface TitleViewProps {
+  desktop?: boolean;
+}
+
+const TitleView: FC<TitleViewProps> = ({ desktop }) => {
+  const { activePlugin, closeActivePlugin, setDesktopMenuOpen } = useDeckyState();
   const { t } = useTranslation();
 
   const onSettingsClick = () => {
     Navigation.Navigate('/decky/settings');
     Navigation.CloseSideMenus();
+    setDesktopMenuOpen(false);
   };
 
   const onStoreClick = () => {
     Navigation.Navigate('/decky/store');
     Navigation.CloseSideMenus();
+    setDesktopMenuOpen(false);
+  };
+
+  const buttonStyles = {
+    height: '28px',
+    width: '40px',
+    minWidth: 0,
+    padding: desktop ? '' : '10px 12px',
+    display: 'flex',
+    alignItems: desktop ? 'center' : '',
+    justifyContent: desktop ? 'center' : '',
   };
 
   if (activePlugin === null) {
@@ -33,14 +49,14 @@ const TitleView: FC = () => {
       <Focusable style={titleStyles} className={staticClasses.Title}>
         <div style={{ marginRight: 'auto', flex: 0.9 }}>Decky</div>
         <DialogButton
-          style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
+          style={buttonStyles}
           onClick={onStoreClick}
           onOKActionDescription={t('TitleView.decky_store_desc')}
         >
           <FaStore style={{ marginTop: '-4px', display: 'block' }} />
         </DialogButton>
         <DialogButton
-          style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
+          style={buttonStyles}
           onClick={onSettingsClick}
           onOKActionDescription={t('TitleView.settings_desc')}
         >
@@ -52,10 +68,7 @@ const TitleView: FC = () => {
 
   return (
     <Focusable className={staticClasses.Title} style={titleStyles}>
-      <DialogButton
-        style={{ height: '28px', width: '40px', minWidth: 0, padding: '10px 12px' }}
-        onClick={closeActivePlugin}
-      >
+      <DialogButton style={buttonStyles} onClick={closeActivePlugin}>
         <FaArrowLeft style={{ marginTop: '-4px', display: 'block' }} />
       </DialogButton>
       {activePlugin?.titleView || <div style={{ flex: 0.9 }}>{activePlugin.name}</div>}

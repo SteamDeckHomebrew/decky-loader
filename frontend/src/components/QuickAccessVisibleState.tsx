@@ -1,6 +1,6 @@
 import { FC, ReactNode, createContext, useContext, useState } from 'react';
 
-const QuickAccessVisibleState = createContext<boolean>(false);
+export const QuickAccessVisibleState = createContext<boolean>(false);
 
 export const useQuickAccessVisible = () => useContext(QuickAccessVisibleState);
 

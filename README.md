@@ -105,7 +105,7 @@ Please consult [the wiki page regarding development](https://wiki.deckbrew.xyz/e
 ⚠️ If you are recieving build errors due to an out of date library, you should run this command inside of your repository.
 
 ```bash
-pnpm update decky-frontend-lib --latest
+pnpm update @decky/ui --latest
 ```
 
 Source control and deploying plugins are left to each respective contributor for the cloned repos in order to keep dependencies up to date.

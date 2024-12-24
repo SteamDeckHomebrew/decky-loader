@@ -16,6 +16,7 @@ import Logger from '../../logger';
 import { SortDirections, SortOptions, Store, StorePlugin, getPluginList, getStore } from '../../store';
 import ExternalLink from '../ExternalLink';
 import PluginCard from './PluginCard';
+import { useDeckyState } from '../DeckyState';
 
 const logger = new Logger('Store');
 
@@ -103,6 +104,8 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
       setIsTesting(storeRes === Store.Testing);
     })();
   }, []);
+
+  const { plugins: installedPlugins } = useDeckyState();
 
   return (
     <>
@@ -235,7 +238,10 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
                 plugin.tags.some((tag: string) => tag.toLowerCase().includes(searchFieldValue.toLowerCase()))
               );
             })
-            .map((plugin: StorePlugin) => <PluginCard plugin={plugin} />)
+            .map((plugin: StorePlugin) => <PluginCard
+              storePlugin={plugin}
+              installedPlugin={installedPlugins.find(installedPlugin => installedPlugin.name === plugin.name)}
+            />)
         )}
       </div>
     </>

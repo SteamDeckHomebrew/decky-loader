@@ -18,6 +18,8 @@ export enum InstallType {
   INSTALL,
   REINSTALL,
   UPDATE,
+  DOWNGRADE,
+  OVERWRITE,
 }
 
 type installPluginArgs = [

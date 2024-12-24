@@ -42,6 +42,14 @@ const TranslationHelper: FC<TranslationHelperProps> = ({ transClass, transText, 
                 return i18nArgs
                   ? t(TranslationClass.PLUGIN_INSTALL_MODAL + '.update.' + transText, i18nArgs)
                   : t(TranslationClass.PLUGIN_INSTALL_MODAL + '.update.' + transText);
+              case InstallType.DOWNGRADE:
+                return i18nArgs
+                  ? t(TranslationClass.PLUGIN_INSTALL_MODAL + '.downgrade.' + transText, i18nArgs)
+                  : t(TranslationClass.PLUGIN_INSTALL_MODAL + '.downgrade.' + transText);
+              case InstallType.OVERWRITE:
+                return i18nArgs
+                  ? t(TranslationClass.PLUGIN_INSTALL_MODAL + '.overwrite.' + transText, i18nArgs)
+                  : t(TranslationClass.PLUGIN_INSTALL_MODAL + '.overwrite.' + transText);
             }
           case TranslationClass.DEVELOPER:
             return i18nArgs

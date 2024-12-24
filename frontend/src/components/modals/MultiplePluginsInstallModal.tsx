@@ -17,6 +17,8 @@ const InstallTypeTranslationMapping = {
   [InstallType.INSTALL]: 'install',
   [InstallType.REINSTALL]: 'reinstall',
   [InstallType.UPDATE]: 'update',
+  [InstallType.DOWNGRADE]: 'downgrade',
+  [InstallType.OVERWRITE]: 'overwrite',
 } as const satisfies Record<InstallType, string>;
 
 type TitleTranslationMapping = 'mixed' | (typeof InstallTypeTranslationMapping)[InstallType];
@@ -70,6 +72,8 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
     if (requests.every(({ install_type }) => install_type === InstallType.INSTALL)) return 'install';
     if (requests.every(({ install_type }) => install_type === InstallType.REINSTALL)) return 'reinstall';
     if (requests.every(({ install_type }) => install_type === InstallType.UPDATE)) return 'update';
+    if (requests.every(({ install_type }) => install_type === InstallType.DOWNGRADE)) return 'downgrade';
+    if (requests.every(({ install_type }) => install_type === InstallType.OVERWRITE)) return 'overwrite';
     return 'mixed';
   }, [requests]);
 

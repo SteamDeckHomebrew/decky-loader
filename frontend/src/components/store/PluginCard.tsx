@@ -1,11 +1,11 @@
 import { ButtonItem, Dropdown, Focusable, PanelSectionRow, SingleDropdownOption, SuspensefulImage } from '@decky/ui';
 import { CSSProperties, FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FaArrowDown, FaArrowUp, FaCheck, FaDownload, FaRecycle } from 'react-icons/fa';
 
 import { InstallType, Plugin } from '../../plugin';
 import { StorePlugin, requestPluginInstall } from '../../store';
 import ExternalLink from '../ExternalLink';
-import { FaArrowDown, FaArrowUp, FaCheck, FaDownload, FaRecycle } from 'react-icons/fa';
 
 interface PluginCardProps {
   storePlugin: StorePlugin;
@@ -14,17 +14,17 @@ interface PluginCardProps {
 
 const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
   const [selectedOption, setSelectedOption] = useState<number>(0);
-  const installedVersionIndex = storePlugin.versions.findIndex(version => version.name === installedPlugin?.version);
+  const installedVersionIndex = storePlugin.versions.findIndex((version) => version.name === installedPlugin?.version);
   const installType = // This assumes index in options is inverse to update order (i.e. newer updates are first)
     installedPlugin && selectedOption < installedVersionIndex
-    ? InstallType.UPDATE
-    : installedPlugin && selectedOption === installedVersionIndex
-    ? InstallType.REINSTALL
-    : installedPlugin && selectedOption > installedVersionIndex
-    ? InstallType.DOWNGRADE
-    : installedPlugin // can happen if installed version is not in store
-    ? InstallType.OVERWRITE
-    : InstallType.INSTALL
+      ? InstallType.UPDATE
+      : installedPlugin && selectedOption === installedVersionIndex
+        ? InstallType.REINSTALL
+        : installedPlugin && selectedOption > installedVersionIndex
+          ? InstallType.DOWNGRADE
+          : installedPlugin // can happen if installed version is not in store
+            ? InstallType.OVERWRITE
+            : InstallType.INSTALL;
 
   const root = storePlugin.tags.some((tag) => tag === 'root');
 
@@ -162,28 +162,28 @@ const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
                     className="deckyStoreCardInstallText"
                     style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px' }}
                   >
-                    {
-                      installType === InstallType.UPDATE
-                      ? <>
-                          <FaArrowUp /> {t('PluginCard.plugin_update')}
-                        </>
-                      : installType === InstallType.REINSTALL
-                      ? <>
-                          <FaRecycle /> {t('PluginCard.plugin_reinstall')}
-                        </>
-                      : installType === InstallType.DOWNGRADE
-                      ? <>
-                          <FaArrowDown /> {t('PluginCard.plugin_downgrade')}
-                        </>
-                      : installType === InstallType.OVERWRITE
-                      ? <>
-                          <FaDownload /> {t('PluginCard.plugin_overwrite')}
-                        </>
-                      : // installType === InstallType.INSTALL (also fallback)
-                        <>
-                          <FaDownload /> {t('PluginCard.plugin_install')}
-                        </>
-                    }
+                    {installType === InstallType.UPDATE ? (
+                      <>
+                        <FaArrowUp /> {t('PluginCard.plugin_update')}
+                      </>
+                    ) : installType === InstallType.REINSTALL ? (
+                      <>
+                        <FaRecycle /> {t('PluginCard.plugin_reinstall')}
+                      </>
+                    ) : installType === InstallType.DOWNGRADE ? (
+                      <>
+                        <FaArrowDown /> {t('PluginCard.plugin_downgrade')}
+                      </>
+                    ) : installType === InstallType.OVERWRITE ? (
+                      <>
+                        <FaDownload /> {t('PluginCard.plugin_overwrite')}
+                      </>
+                    ) : (
+                      // installType === InstallType.INSTALL (also fallback)
+                      <>
+                        <FaDownload /> {t('PluginCard.plugin_install')}
+                      </>
+                    )}
                   </span>
                 </ButtonItem>
               </div>

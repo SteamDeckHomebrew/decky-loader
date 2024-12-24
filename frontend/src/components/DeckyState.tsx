@@ -138,7 +138,7 @@ export const useDeckyState = () => {
   }
 
   return deckyState;
-}
+};
 
 interface Props {
   deckyState: DeckyState;

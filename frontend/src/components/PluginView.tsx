@@ -9,7 +9,8 @@ import { useQuickAccessVisible } from './QuickAccessVisibleState';
 import TitleView from './TitleView';
 
 const PluginView: FC = () => {
-  const { plugins, hiddenPlugins, updates, activePlugin, pluginOrder, setActivePlugin, closeActivePlugin } = useDeckyState();
+  const { plugins, hiddenPlugins, updates, activePlugin, pluginOrder, setActivePlugin, closeActivePlugin } =
+    useDeckyState();
   const visible = useQuickAccessVisible();
   const { t } = useTranslation();
 
@@ -41,18 +42,17 @@ const PluginView: FC = () => {
         }}
       >
         <PanelSection>
-          {pluginList
-            .map(({ name, icon }) => (
-              <PanelSectionRow key={name}>
-                <ButtonItem layout="below" onClick={() => setActivePlugin(name)}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    {icon}
-                    <div>{name}</div>
-                    <NotificationBadge show={updates?.has(name)} style={{ top: '-5px', right: '-5px' }} />
-                  </div>
-                </ButtonItem>
-              </PanelSectionRow>
-            ))}
+          {pluginList.map(({ name, icon }) => (
+            <PanelSectionRow key={name}>
+              <ButtonItem layout="below" onClick={() => setActivePlugin(name)}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  {icon}
+                  <div>{name}</div>
+                  <NotificationBadge show={updates?.has(name)} style={{ top: '-5px', right: '-5px' }} />
+                </div>
+              </ButtonItem>
+            </PanelSectionRow>
+          ))}
           {hiddenPlugins.length > 0 && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.8rem', marginTop: '10px' }}>
               <FaEyeSlash />

@@ -5,11 +5,13 @@ import {
   GamepadEvent,
   Menu,
   MenuItem,
+  Navigation,
+  QuickAccessTab,
   ReorderableEntry,
   ReorderableList,
   showContextMenu,
 } from '@decky/ui';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaDownload, FaEllipsisH, FaRecycle } from 'react-icons/fa';
 
@@ -41,6 +43,7 @@ type PluginTableData = PluginData & {
   hidden: boolean;
   onHide(): void;
   onShow(): void;
+  onOpen(): void;
   isDeveloper: boolean;
 };
 
@@ -54,11 +57,13 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
     return null;
   }
 
-  const { name, update, version, onHide, onShow, hidden, onFreeze, onUnfreeze, frozen, isDeveloper } = props.entry.data;
+  const { name, update, version, onHide, onShow, hidden, onFreeze, onUnfreeze, frozen, isDeveloper, onOpen } =
+    props.entry.data;
 
   const showCtxMenu = (e: MouseEvent | GamepadEvent) => {
     showContextMenu(
       <Menu label={t('PluginListIndex.plugin_actions')}>
+        <MenuItem onSelected={onOpen}>{t('PluginListIndex.open')}</MenuItem>
         <MenuItem
           onSelected={async () => {
             try {
@@ -147,7 +152,8 @@ type PluginData = {
 };
 
 export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
-  const { plugins, updates, pluginOrder, setPluginOrder, frozenPlugins, hiddenPlugins } = useDeckyState();
+  const { plugins, updates, pluginOrder, setPluginOrder, frozenPlugins, hiddenPlugins, setActivePlugin } =
+    useDeckyState();
   const [_, setPluginOrderSetting] = useSetting<string[]>(
     'pluginOrder',
     plugins.map((plugin) => plugin.name),
@@ -158,13 +164,12 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
     DeckyPluginLoader.checkPluginUpdates();
   }, []);
 
-  const [pluginEntries, setPluginEntries] = useState<ReorderableEntry<PluginTableData>[]>([]);
-  const hiddenPluginsService = DeckyPluginLoader.hiddenPluginsService;
-  const frozenPluginsService = DeckyPluginLoader.frozenPluginsService;
-
-  useEffect(() => {
-    setPluginEntries(
+  const pluginEntries = useMemo(
+    () =>
       plugins.map(({ name, version }) => {
+        const hiddenPluginsService = DeckyPluginLoader.hiddenPluginsService;
+        const frozenPluginsService = DeckyPluginLoader.frozenPluginsService;
+
         const frozen = frozenPlugins.includes(name);
         const hidden = hiddenPlugins.includes(name);
 
@@ -182,11 +187,15 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
             onUnfreeze: () => frozenPluginsService.update(frozenPlugins.filter((pluginName) => name !== pluginName)),
             onHide: () => hiddenPluginsService.update([...hiddenPlugins, name]),
             onShow: () => hiddenPluginsService.update(hiddenPlugins.filter((pluginName) => name !== pluginName)),
+            onOpen: () => {
+              setActivePlugin(name);
+              Navigation.OpenQuickAccessMenu(QuickAccessTab.Decky);
+            },
           },
         };
       }),
-    );
-  }, [plugins, updates, hiddenPlugins]);
+    [plugins, updates, frozenPlugins, hiddenPlugins, setActivePlugin],
+  );
 
   if (plugins.length === 0) {
     return (

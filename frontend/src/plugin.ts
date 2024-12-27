@@ -22,6 +22,16 @@ export enum InstallType {
   OVERWRITE,
 }
 
+// values are the JSON keys used in the translation file
+// IMPORTANT! keep in sync with `t(...)` comments where this is used
+export const InstallTypeTranslationMapping = {
+  [InstallType.INSTALL]: 'install',
+  [InstallType.REINSTALL]: 'reinstall',
+  [InstallType.UPDATE]: 'update',
+  [InstallType.DOWNGRADE]: 'downgrade',
+  [InstallType.OVERWRITE]: 'overwrite',
+} as const satisfies Record<InstallType, string>;
+
 type installPluginArgs = [
   artifact: string,
   name?: string,

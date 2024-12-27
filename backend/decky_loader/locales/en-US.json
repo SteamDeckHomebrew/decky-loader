@@ -52,7 +52,9 @@
     "MultiplePluginsInstallModal": {
         "confirm": "Are you sure you want to make the following modifications?",
         "description": {
+            "downgrade": "Downgrade {{name}} to {{version}}",
             "install": "Install {{name}} {{version}}",
+            "overwrite": "Overwrite {{name}} with {{version}}",
             "reinstall": "Reinstall {{name}} {{version}}",
             "update": "Update {{name}} to {{version}}"
         },

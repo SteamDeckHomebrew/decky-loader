@@ -11,9 +11,10 @@ import {
   ReorderableList,
   showContextMenu,
 } from '@decky/ui';
-import { useEffect, useMemo } from 'react';
+import { CSSProperties, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaDownload, FaEllipsisH, FaRecycle } from 'react-icons/fa';
+import { FaDownload, FaEllipsisH } from 'react-icons/fa';
+import { TbLayoutSidebarRightExpandFilled } from 'react-icons/tb';
 
 import { InstallType } from '../../../../plugin';
 import {
@@ -49,6 +50,17 @@ type PluginTableData = PluginData & {
 
 const reloadPluginBackend = DeckyBackend.callable<[pluginName: string], void>('loader/reload_plugin');
 
+const squareButtonStyle: CSSProperties = {
+  height: '40px',
+  width: '40px',
+  minWidth: '40px',
+  padding: '0',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
+
 function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }) {
   const { t } = useTranslation();
 
@@ -63,7 +75,6 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
   const showCtxMenu = (e: MouseEvent | GamepadEvent) => {
     showContextMenu(
       <Menu label={t('PluginListIndex.plugin_actions')}>
-        <MenuItem onSelected={onOpen}>{t('PluginListIndex.open')}</MenuItem>
         <MenuItem
           onSelected={async () => {
             try {
@@ -75,6 +86,7 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
         >
           {t('PluginListIndex.reload')}
         </MenuItem>
+        <MenuItem onSelected={() => reinstallPlugin(name, version)}>{t('PluginListIndex.reinstall')}</MenuItem>
         <MenuItem
           onSelected={() =>
             DeckyPluginLoader.uninstallPlugin(
@@ -103,46 +115,34 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
   };
 
   return (
-    <>
+    <div style={{ display: 'flex', gap: '10px' }}>
       {update ? (
         <DialogButton
-          style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
+          style={{
+            flex: '1 1',
+            minWidth: 'unset',
+            height: '40px',
+            display: 'flex',
+            gap: '1rem',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
           onClick={() => requestPluginInstall(name, update, InstallType.UPDATE)}
           onOKButton={() => requestPluginInstall(name, update, InstallType.UPDATE)}
         >
-          <div style={{ display: 'flex', minWidth: '180px', justifyContent: 'space-between', alignItems: 'center' }}>
-            {t('PluginListIndex.update_to', { name: update.name })}
-            <FaDownload style={{ paddingLeft: '1rem' }} />
-          </div>
+          {t('PluginListIndex.update_to', { name: update.name })} <FaDownload />
         </DialogButton>
-      ) : (
-        <DialogButton
-          style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
-          onClick={() => reinstallPlugin(name, version)}
-          onOKButton={() => reinstallPlugin(name, version)}
-        >
-          <div style={{ display: 'flex', minWidth: '180px', justifyContent: 'space-between', alignItems: 'center' }}>
-            {t('PluginListIndex.reinstall')}
-            <FaRecycle style={{ paddingLeft: '1rem' }} />
-          </div>
-        </DialogButton>
-      )}
-      <DialogButton
-        style={{
-          height: '40px',
-          width: '40px',
-          padding: '10px 12px',
-          minWidth: '40px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        }}
-        onClick={showCtxMenu}
-        onOKButton={showCtxMenu}
-      >
+      ) : null}
+      <DialogButton style={squareButtonStyle} onClick={onOpen} onOKButton={onOpen}>
+        <TbLayoutSidebarRightExpandFilled
+          // make size more consistent with the rest of icons in app
+          size={'1.5rem'}
+        />
+      </DialogButton>
+      <DialogButton style={squareButtonStyle} onClick={showCtxMenu} onOKButton={showCtxMenu}>
         <FaEllipsisH />
       </DialogButton>
-    </>
+    </div>
   );
 }
 
@@ -232,10 +232,11 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
             width: 'auto',
             display: 'flex',
             alignItems: 'center',
+            gap: '1rem',
           }}
         >
           {t('PluginListIndex.update_all', { count: updates.size })}
-          <FaDownload style={{ paddingLeft: '1rem' }} />
+          <FaDownload />
         </DialogButton>
       )}
       <DialogControlsSection style={{ marginTop: 0 }}>

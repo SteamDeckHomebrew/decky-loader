@@ -2,18 +2,27 @@ import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaEyeSlash, FaLock } from 'react-icons/fa';
 
+import { StorePluginVersion } from '../../../../store';
+import NotificationBadge from '../../../NotificationBadge';
+
 interface PluginListLabelProps {
   frozen: boolean;
   hidden: boolean;
   name: string;
   version?: string;
+  update: StorePluginVersion | undefined;
 }
 
-const PluginListLabel: FC<PluginListLabelProps> = ({ name, frozen, hidden, version }) => {
+const PluginListLabel: FC<PluginListLabelProps> = ({ name, frozen, hidden, version, update }) => {
   const { t } = useTranslation();
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-      <div>
+      <div
+        style={{
+          // needed for NotificationBadge
+          position: 'relative',
+        }}
+      >
         {name}
         {version && (
           <>
@@ -28,6 +37,7 @@ const PluginListLabel: FC<PluginListLabelProps> = ({ name, frozen, hidden, versi
             </span>
           </>
         )}
+        <NotificationBadge show={!!update} style={{ top: '-5px', right: '-10px' }} />
       </div>
       {hidden && (
         <div

@@ -173,8 +173,10 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
         const frozen = frozenPlugins.includes(name);
         const hidden = hiddenPlugins.includes(name);
 
+        const update = updates?.get(name);
+
         return {
-          label: <PluginListLabel name={name} frozen={frozen} hidden={hidden} version={version} />,
+          label: <PluginListLabel name={name} frozen={frozen} hidden={hidden} version={version} update={update} />,
           position: pluginOrder.indexOf(name),
           data: {
             name,
@@ -182,7 +184,7 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
             hidden,
             isDeveloper,
             version,
-            update: updates?.get(name),
+            update,
             onFreeze: () => frozenPluginsService.update([...frozenPlugins, name]),
             onUnfreeze: () => frozenPluginsService.update(frozenPlugins.filter((pluginName) => name !== pluginName)),
             onHide: () => hiddenPluginsService.update([...hiddenPlugins, name]),

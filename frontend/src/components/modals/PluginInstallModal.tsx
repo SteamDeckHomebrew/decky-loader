@@ -2,13 +2,13 @@ import { ConfirmModal, Navigation, ProgressBarWithInfo, QuickAccessTab } from '@
 import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import TranslationHelper, { TranslationClass } from '../../utils/TranslationHelper';
+import { InstallType, InstallTypeTranslationMapping } from '../../plugin';
 
 interface PluginInstallModalProps {
   artifact: string;
   version: string;
   hash: string;
-  installType: number;
+  installType: InstallType;
   onOK(): void;
   onCancel(): void;
   closeModal?(): void;
@@ -44,6 +44,8 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
     };
   }, []);
 
+  const installTypeTranslationKey = InstallTypeTranslationMapping[installType];
+
   return (
     <ConfirmModal
       bOKDisabled={loading}
@@ -59,12 +61,15 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
       }}
       strTitle={
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-          <TranslationHelper
-            transClass={TranslationClass.PLUGIN_INSTALL_MODAL}
-            transText="title"
-            i18nArgs={{ artifact: artifact }}
-            installType={installType}
-          />
+          {
+            // IMPORTANT! These comments are not cosmetic and are needed for `extracttext` task to work
+            // t('PluginInstallModal.install.title')
+            // t('PluginInstallModal.reinstall.title')
+            // t('PluginInstallModal.update.title')
+            // t('PluginInstallModal.downgrade.title')
+            // t('PluginInstallModal.overwrite.title')
+            t(`PluginInstallModal.${installTypeTranslationKey}.title`, { artifact: artifact })
+          }
           {loading && (
             <div style={{ marginLeft: 'auto' }}>
               <ProgressBarWithInfo
@@ -80,33 +85,44 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
       strOKButtonText={
         loading ? (
           <div>
-            <TranslationHelper
-              transClass={TranslationClass.PLUGIN_INSTALL_MODAL}
-              transText="button_processing"
-              installType={installType}
-            />
+            {
+              // IMPORTANT! These comments are not cosmetic and are needed for `extracttext` task to work
+              // t('PluginInstallModal.install.button_processing')
+              // t('PluginInstallModal.reinstall.button_processing')
+              // t('PluginInstallModal.update.button_processing')
+              // t('PluginInstallModal.downgrade.button_processing')
+              // t('PluginInstallModal.overwrite.button_processing')
+              t(`PluginInstallModal.${installTypeTranslationKey}.button_processing`)
+            }
           </div>
         ) : (
           <div>
-            <TranslationHelper
-              transClass={TranslationClass.PLUGIN_INSTALL_MODAL}
-              transText="button_idle"
-              installType={installType}
-            />
+            {
+              // IMPORTANT! These comments are not cosmetic and are needed for `extracttext` task to work
+              // t('PluginInstallModal.install.button_idle')
+              // t('PluginInstallModal.reinstall.button_idle')
+              // t('PluginInstallModal.update.button_idle')
+              // t('PluginInstallModal.downgrade.button_idle')
+              // t('PluginInstallModal.overwrite.button_idle')
+              t(`PluginInstallModal.${installTypeTranslationKey}.button_idle`)
+            }
           </div>
         )
       }
     >
       <div>
-        <TranslationHelper
-          transClass={TranslationClass.PLUGIN_INSTALL_MODAL}
-          transText="desc"
-          i18nArgs={{
+        {
+          // IMPORTANT! These comments are not cosmetic and are needed for `extracttext` task to work
+          // t('PluginInstallModal.install.desc')
+          // t('PluginInstallModal.reinstall.desc')
+          // t('PluginInstallModal.update.desc')
+          // t('PluginInstallModal.downgrade.desc')
+          // t('PluginInstallModal.overwrite.desc')
+          t(`PluginInstallModal.${installTypeTranslationKey}.desc`, {
             artifact: artifact,
             version: version,
-          }}
-          installType={installType}
-        />
+          })
+        }
       </div>
       {hash == 'False' && <span style={{ color: 'red' }}>{t('PluginInstallModal.no_hash')}</span>}
     </ConfirmModal>

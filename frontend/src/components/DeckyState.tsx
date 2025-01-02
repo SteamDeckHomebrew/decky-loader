@@ -128,9 +128,17 @@ interface DeckyStateContext extends PublicDeckyState {
   closeActivePlugin(): void;
 }
 
-const DeckyStateContext = createContext<DeckyStateContext>(null as any);
+const DeckyStateContext = createContext<DeckyStateContext | null>(null);
 
-export const useDeckyState = () => useContext(DeckyStateContext);
+export const useDeckyState = () => {
+  const deckyState = useContext(DeckyStateContext);
+
+  if (deckyState === null) {
+    throw new Error('useDeckyState needs a parent DeckyStateContext');
+  }
+
+  return deckyState;
+};
 
 interface Props {
   deckyState: DeckyState;

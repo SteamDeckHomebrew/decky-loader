@@ -29,6 +29,8 @@ class PluginInstallType(IntEnum):
     INSTALL = 0
     REINSTALL = 1
     UPDATE = 2
+    DOWNGRADE = 3
+    OVERWRITE = 4
 
 class PluginInstallRequest(TypedDict):
     name: str
@@ -323,5 +325,5 @@ class PluginBrowser:
         if name in plugin_order:
             plugin_order.remove(name)
             self.settings.setSetting("pluginOrder", plugin_order)
-            
+
         logger.debug("Removed any settings for plugin %s", name)

@@ -146,9 +146,11 @@ class PluginLoader extends Logger {
     });
 
     this.routerHook.addRoute('/decky/store', () => (
-      <WithSuspense route={true}>
-        <StorePage />
-      </WithSuspense>
+      <DeckyStateContextProvider deckyState={this.deckyState}>
+        <WithSuspense route={true}>
+          <StorePage />
+        </WithSuspense>
+      </DeckyStateContextProvider>
     ));
     this.routerHook.addRoute('/decky/settings', () => {
       return (

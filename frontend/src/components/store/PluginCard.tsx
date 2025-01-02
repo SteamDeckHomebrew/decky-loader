@@ -1,18 +1,32 @@
 import { ButtonItem, Dropdown, Focusable, PanelSectionRow, SingleDropdownOption, SuspensefulImage } from '@decky/ui';
 import { CSSProperties, FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FaArrowDown, FaArrowUp, FaCheck, FaDownload, FaRecycle } from 'react-icons/fa';
 
-import { InstallType } from '../../plugin';
-import { StorePlugin, StorePluginVersion, requestPluginInstall } from '../../store';
+import { InstallType, Plugin } from '../../plugin';
+import { StorePlugin, requestPluginInstall } from '../../store';
 import ExternalLink from '../ExternalLink';
 
 interface PluginCardProps {
-  plugin: StorePlugin;
+  storePlugin: StorePlugin;
+  installedPlugin: Plugin | undefined;
 }
 
-const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
+const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
   const [selectedOption, setSelectedOption] = useState<number>(0);
-  const root = plugin.tags.some((tag) => tag === 'root');
+  const installedVersionIndex = storePlugin.versions.findIndex((version) => version.name === installedPlugin?.version);
+  const installType = // This assumes index in options is inverse to update order (i.e. newer updates are first)
+    installedPlugin && selectedOption < installedVersionIndex
+      ? InstallType.UPDATE
+      : installedPlugin && selectedOption === installedVersionIndex
+        ? InstallType.REINSTALL
+        : installedPlugin && selectedOption > installedVersionIndex
+          ? InstallType.DOWNGRADE
+          : installedPlugin // can happen if installed version is not in store
+            ? InstallType.OVERWRITE
+            : InstallType.INSTALL;
+
+  const root = storePlugin.tags.some((tag) => tag === 'root');
 
   const { t } = useTranslation();
 
@@ -43,7 +57,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
             height: '200px',
             objectFit: 'cover',
           }}
-          src={plugin.image_url}
+          src={storePlugin.image_url}
         />
       </div>
       <div
@@ -69,7 +83,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               width: '90%',
             }}
           >
-            {plugin.name}
+            {storePlugin.name}
           </span>
           <span
             className="deckyStoreCardAuthor"
@@ -78,7 +92,7 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               fontSize: '1em',
             }}
           >
-            {plugin.author}
+            {storePlugin.author}
           </span>
           <span
             className="deckyStoreCardDescription"
@@ -91,8 +105,8 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
               display: '-webkit-box',
             }}
           >
-            {plugin.description ? (
-              plugin.description
+            {storePlugin.description ? (
+              storePlugin.description
             ) : (
               <span>
                 <i style={{ color: '#666' }}>{t('PluginCard.plugin_no_desc')}</i>
@@ -141,18 +155,49 @@ const PluginCard: FC<PluginCardProps> = ({ plugin }) => {
                   bottomSeparator="none"
                   layout="below"
                   onClick={() =>
-                    requestPluginInstall(plugin.name, plugin.versions[selectedOption], InstallType.INSTALL)
+                    requestPluginInstall(storePlugin.name, storePlugin.versions[selectedOption], installType)
                   }
                 >
-                  <span className="deckyStoreCardInstallText">{t('PluginCard.plugin_install')}</span>
+                  <span
+                    className="deckyStoreCardInstallText"
+                    style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px' }}
+                  >
+                    {installType === InstallType.UPDATE ? (
+                      <>
+                        <FaArrowUp /> {t('PluginCard.plugin_update')}
+                      </>
+                    ) : installType === InstallType.REINSTALL ? (
+                      <>
+                        <FaRecycle /> {t('PluginCard.plugin_reinstall')}
+                      </>
+                    ) : installType === InstallType.DOWNGRADE ? (
+                      <>
+                        <FaArrowDown /> {t('PluginCard.plugin_downgrade')}
+                      </>
+                    ) : installType === InstallType.OVERWRITE ? (
+                      <>
+                        <FaDownload /> {t('PluginCard.plugin_overwrite')}
+                      </>
+                    ) : (
+                      // installType === InstallType.INSTALL (also fallback)
+                      <>
+                        <FaDownload /> {t('PluginCard.plugin_install')}
+                      </>
+                    )}
+                  </span>
                 </ButtonItem>
               </div>
               <div className="deckyStoreCardVersionContainer" style={{ minWidth: '130px' }}>
                 <Dropdown
                   rgOptions={
-                    plugin.versions.map((version: StorePluginVersion, index) => ({
+                    storePlugin.versions.map((version, index) => ({
                       data: index,
-                      label: version.name,
+                      label: (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                          {version.name}
+                          {installedPlugin && installedVersionIndex === index ? <FaCheck /> : null}
+                        </div>
+                      ),
                     })) as SingleDropdownOption[]
                   }
                   menuLabel={t('PluginCard.plugin_version_label') as string}

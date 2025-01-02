@@ -52,7 +52,9 @@
     "MultiplePluginsInstallModal": {
         "confirm": "Are you sure you want to make the following modifications?",
         "description": {
+            "downgrade": "Downgrade {{name}} to {{version}}",
             "install": "Install {{name}} {{version}}",
+            "overwrite": "Overwrite {{name}} with {{version}}",
             "reinstall": "Reinstall {{name}} {{version}}",
             "update": "Update {{name}} to {{version}}"
         },
@@ -61,10 +63,14 @@
             "loading": "Working"
         },
         "title": {
+            "downgrade_one": "Downgrade 1 plugin",
+            "downgrade_other": "Downgrade {{count}} plugins",
             "install_one": "Install 1 plugin",
             "install_other": "Install {{count}} plugins",
             "mixed_one": "Modify {{count}} plugin",
             "mixed_other": "Modify {{count}} plugins",
+            "overwrite_one": "Overwrite 1 plugin",
+            "overwrite_other": "Overwrite {{count}} plugins",
             "reinstall_one": "Reinstall 1 plugin",
             "reinstall_other": "Reinstall {{count}} plugins",
             "update_one": "Update 1 plugin",
@@ -72,12 +78,22 @@
         }
     },
     "PluginCard": {
+        "plugin_downgrade": "Downgrade",
         "plugin_full_access": "This plugin has full access to your Steam Deck.",
         "plugin_install": "Install",
         "plugin_no_desc": "No description provided.",
+        "plugin_overwrite": "Overwrite",
+        "plugin_reinstall": "Reinstall",
+        "plugin_update": "Update",
         "plugin_version_label": "Plugin Version"
     },
     "PluginInstallModal": {
+        "downgrade": {
+            "button_idle": "Downgrade",
+            "button_processing": "Downgrading",
+            "desc": "Are you sure you want to downgrade {{artifact}} to version {{version}}?",
+            "title": "Downgrade {{artifact}}"
+        },
         "install": {
             "button_idle": "Install",
             "button_processing": "Installing",
@@ -85,6 +101,13 @@
             "title": "Install {{artifact}}"
         },
         "no_hash": "This plugin does not have a hash, you are installing it at your own risk.",
+        "not_installed": "(not installed)",
+        "overwrite": {
+            "button_idle": "Overwrite",
+            "button_processing": "Overwriting",
+            "desc": "Are you sure you want to overwrite {{artifact}} with version {{version}}?",
+            "title": "Overwrite {{artifact}}"
+        },
         "reinstall": {
             "button_idle": "Reinstall",
             "button_processing": "Reinstalling",
@@ -94,7 +117,7 @@
         "update": {
             "button_idle": "Update",
             "button_processing": "Updating",
-            "desc": "Are you sure you want to update {{artifact}} {{version}}?",
+            "desc": "Are you sure you want to update {{artifact}} to version {{version}}?",
             "title": "Update {{artifact}}"
         }
     },

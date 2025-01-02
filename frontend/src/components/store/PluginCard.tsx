@@ -32,7 +32,6 @@ const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
 
   return (
     <div
-      className="deckyStoreCard"
       style={{
         marginLeft: '20px',
         marginRight: '20px',
@@ -41,7 +40,6 @@ const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
       }}
     >
       <div
-        className="deckyStoreCardImageContainer"
         style={{
           width: '320px',
           height: '200px',
@@ -49,7 +47,6 @@ const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
         }}
       >
         <SuspensefulImage
-          className="deckyStoreCardImage"
           suspenseHeight="200px"
           suspenseWidth="320px"
           style={{
@@ -61,7 +58,6 @@ const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
         />
       </div>
       <div
-        className="deckyStoreCardInfo"
         style={{
           width: 'calc(100% - 320px)', // The calc is here so that the info section doesn't expand into the image
           display: 'flex',
@@ -73,7 +69,6 @@ const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
       >
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           <span
-            className="deckyStoreCardTitle"
             style={{
               fontSize: '1.25em',
               fontWeight: 'bold',
@@ -86,7 +81,6 @@ const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
             {storePlugin.name}
           </span>
           <span
-            className="deckyStoreCardAuthor"
             style={{
               marginRight: 'auto',
               fontSize: '1em',
@@ -95,7 +89,6 @@ const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
             {storePlugin.author}
           </span>
           <span
-            className="deckyStoreCardDescription"
             style={{
               fontSize: '13px',
               color: '#969696',
@@ -115,7 +108,6 @@ const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
           </span>
           {root && (
             <div
-              className="deckyStoreCardDescription deckyStoreCardDescriptionRoot"
               style={{
                 fontSize: '13px',
                 color: '#fee75c',
@@ -124,7 +116,6 @@ const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
             >
               <i>{t('PluginCard.plugin_full_access')}</i>{' '}
               <ExternalLink
-                className="deckyStoreCardDescriptionRootLink"
                 href="https://deckbrew.xyz/root"
                 target="_blank"
                 style={{
@@ -137,7 +128,7 @@ const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
             </div>
           )}
         </div>
-        <div className="deckyStoreCardButtonRow">
+        <div>
           <PanelSectionRow>
             <Focusable style={{ display: 'flex', gap: '5px', padding: 0 }}>
               <div
@@ -159,7 +150,6 @@ const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
                   }
                 >
                   <span
-                    className="deckyStoreCardInstallText"
                     style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px' }}
                   >
                     {installType === InstallType.UPDATE ? (
@@ -187,7 +177,7 @@ const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
                   </span>
                 </ButtonItem>
               </div>
-              <div className="deckyStoreCardVersionContainer" style={{ minWidth: '130px' }}>
+              <div style={{ minWidth: '130px' }}>
                 <Dropdown
                   rgOptions={
                     storePlugin.versions.map((version, index) => ({

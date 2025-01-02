@@ -1,84 +1,49 @@
 {
-    "BranchSelect": {
-        "update_channel": {
-            "testing": ""
-        }
-    },
     "DropdownMultiselect": {
         "button": {
             "back": ""
         }
     },
     "FilePickerIndex": {
-        "file": {
-            "select": ""
-        },
         "filter": {
-            "created_asce": "",
-            "name_asce": ""
+            "created_asce": ""
         },
         "folder": {
             "label": ""
         }
     },
     "MultiplePluginsInstallModal": {
-        "description": {
-            "install": ""
-        },
         "ok_button": {
             "loading": ""
-        },
-        "title": {
-            "update": ""
         }
     },
     "PluginCard": {
         "plugin_version_label": ""
     },
     "PluginInstallModal": {
-        "install": {
-            "title": ""
-        },
         "reinstall": {
-            "desc": ""
-        },
-        "update": {
             "desc": ""
         }
     },
     "PluginListIndex": {
         "no_plugin": "",
-        "show": "",
         "update_to": ""
     },
     "PluginLoader": {
-        "error": "",
         "plugin_uninstall": {
             "button": ""
         }
-    },
-    "PluginView": {
-        "hidden": ""
     },
     "SettingsDeveloperIndex": {
         "cef_console": {
             "desc": ""
         },
-        "react_devtools": {
-            "ip_label": ""
-        },
         "third_party_plugins": {
             "header": ""
-        },
-        "valve_internal": {
-            "desc1": ""
         }
     },
     "SettingsGeneralIndex": {
         "about": {
-            "header": ""
-        },
-        "notifications": {
             "header": ""
         }
     },
@@ -87,37 +52,26 @@
     },
     "Store": {
         "download_progress_info": {
-            "download_zip": "",
             "parse_zip": ""
-        },
-        "store_contrib": {
-            "label": ""
         },
         "store_sort": {
             "label": ""
         },
         "store_tabs": {
-            "about": "",
             "date_desc": ""
-        },
-        "store_testing_cta": ""
+        }
     },
     "StoreSelect": {
         "custom_store": {
             "url_label": ""
-        },
-        "store_channel": {
-            "testing": ""
         }
     },
     "Testing": {
         "loading": ""
     },
     "Updater": {
-        "decky_updates": "",
         "updates": {
-            "checking": "",
-            "lat_version": ""
+            "checking": ""
         }
     }
 }

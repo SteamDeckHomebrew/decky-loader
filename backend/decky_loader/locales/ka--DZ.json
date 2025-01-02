@@ -1,0 +1,276 @@
+{
+    "BranchSelect": {
+        "update_channel": {
+            "label": "",
+            "prerelease": "",
+            "stable": "",
+            "testing": ""
+        }
+    },
+    "Developer": {
+        "5secreload": "",
+        "disabling": "",
+        "enabling": ""
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": ""
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "",
+            "perm_denied": "",
+            "unknown": ""
+        }
+    },
+    "FilePickerIndex": {
+        "file": {
+            "select": ""
+        },
+        "files": {
+            "all_files": "",
+            "file_type": "",
+            "show_hidden": ""
+        },
+        "filter": {
+            "created_asce": "",
+            "created_desc": "",
+            "modified_asce": "",
+            "modified_desc": "",
+            "name_asce": "",
+            "name_desc": "",
+            "size_asce": "",
+            "size_desc": ""
+        },
+        "folder": {
+            "label": "",
+            "select": "",
+            "show_more": ""
+        }
+    },
+    "MultiplePluginsInstallModal": {
+        "confirm": "",
+        "description": {
+            "install": "",
+            "reinstall": "",
+            "update": ""
+        },
+        "ok_button": {
+            "idle": "",
+            "loading": ""
+        },
+        "title": {
+            "install": "",
+            "mixed": "",
+            "reinstall": "",
+            "update": ""
+        }
+    },
+    "PluginCard": {
+        "plugin_full_access": "",
+        "plugin_install": "",
+        "plugin_no_desc": "",
+        "plugin_version_label": ""
+    },
+    "PluginInstallModal": {
+        "install": {
+            "button_idle": "",
+            "button_processing": "",
+            "desc": "",
+            "title": ""
+        },
+        "no_hash": "",
+        "reinstall": {
+            "button_idle": "",
+            "button_processing": "",
+            "desc": "",
+            "title": ""
+        },
+        "update": {
+            "button_idle": "",
+            "button_processing": "",
+            "desc": "",
+            "title": ""
+        }
+    },
+    "PluginListIndex": {
+        "freeze": "",
+        "hide": "",
+        "no_plugin": "",
+        "plugin_actions": "",
+        "reinstall": "",
+        "reload": "",
+        "show": "",
+        "unfreeze": "",
+        "uninstall": "",
+        "update_all": "",
+        "update_to": ""
+    },
+    "PluginListLabel": {
+        "hidden": ""
+    },
+    "PluginLoader": {
+        "decky_title": "",
+        "decky_update_available": "",
+        "error": "",
+        "plugin_error_uninstall": "",
+        "plugin_load_error": {
+            "message": "",
+            "toast": ""
+        },
+        "plugin_uninstall": {
+            "button": "",
+            "desc": "",
+            "title": ""
+        },
+        "plugin_update": ""
+    },
+    "PluginView": {
+        "hidden": ""
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "desc": "",
+            "label": ""
+        }
+    },
+    "SettingsDeveloperIndex": {
+        "cef_console": {
+            "button": "",
+            "desc": "",
+            "label": ""
+        },
+        "header": "",
+        "react_devtools": {
+            "desc": "",
+            "ip_label": "",
+            "label": ""
+        },
+        "third_party_plugins": {
+            "button_install": "",
+            "button_zip": "",
+            "header": "",
+            "label_desc": "",
+            "label_url": "",
+            "label_zip": ""
+        },
+        "valve_internal": {
+            "desc1": "",
+            "desc2": "",
+            "label": ""
+        }
+    },
+    "SettingsGeneralIndex": {
+        "about": {
+            "decky_version": "",
+            "header": ""
+        },
+        "beta": {
+            "header": ""
+        },
+        "developer_mode": {
+            "label": ""
+        },
+        "notifications": {
+            "decky_updates_label": "",
+            "header": "",
+            "plugin_updates_label": ""
+        },
+        "other": {
+            "header": ""
+        },
+        "updates": {
+            "header": ""
+        }
+    },
+    "SettingsIndex": {
+        "developer_title": "",
+        "general_title": "",
+        "plugins_title": "",
+        "testing_title": ""
+    },
+    "Store": {
+        "download_progress_info": {
+            "download_zip": "",
+            "increment_count": "",
+            "installing_plugin": "",
+            "open_zip": "",
+            "parse_zip": "",
+            "start": "",
+            "uninstalling_previous": ""
+        },
+        "store_contrib": {
+            "desc": "",
+            "label": ""
+        },
+        "store_filter": {
+            "label": "",
+            "label_def": ""
+        },
+        "store_search": {
+            "label": ""
+        },
+        "store_sort": {
+            "label": "",
+            "label_def": ""
+        },
+        "store_source": {
+            "desc": "",
+            "label": ""
+        },
+        "store_tabs": {
+            "about": "",
+            "alph_asce": "",
+            "alph_desc": "",
+            "date_asce": "",
+            "date_desc": "",
+            "downloads_asce": "",
+            "downloads_desc": "",
+            "title": ""
+        },
+        "store_testing_cta": "",
+        "store_testing_warning": {
+            "desc": "",
+            "label": ""
+        }
+    },
+    "StoreSelect": {
+        "custom_store": {
+            "label": "",
+            "url_label": ""
+        },
+        "store_channel": {
+            "custom": "",
+            "default": "",
+            "label": "",
+            "testing": ""
+        }
+    },
+    "Testing": {
+        "download": "",
+        "error": "",
+        "header": "",
+        "loading": "",
+        "start_download_toast": ""
+    },
+    "TitleView": {
+        "decky_store_desc": "",
+        "settings_desc": ""
+    },
+    "Updater": {
+        "decky_updates": "",
+        "no_patch_notes_desc": "",
+        "patch_notes_desc": "",
+        "updates": {
+            "check_button": "",
+            "checking": "",
+            "cur_version": "",
+            "install_button": "",
+            "label": "",
+            "lat_version": "",
+            "reloading": "",
+            "updating": ""
+        }
+    }
+}

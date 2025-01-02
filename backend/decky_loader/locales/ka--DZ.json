@@ -1,26 +1,11 @@
 {
-    "FilePickerIndex": {
-        "filter": {
-            "created_asce": ""
-        }
-    },
     "MultiplePluginsInstallModal": {
         "ok_button": {
             "loading": ""
         }
     },
-    "PluginInstallModal": {
-        "reinstall": {
-            "desc": ""
-        }
-    },
     "PluginListIndex": {
         "update_to": ""
-    },
-    "SettingsDeveloperIndex": {
-        "cef_console": {
-            "desc": ""
-        }
     },
     "SettingsGeneralIndex": {
         "about": {
@@ -28,14 +13,8 @@
         }
     },
     "Store": {
-        "download_progress_info": {
-            "parse_zip": ""
-        },
         "store_tabs": {
             "date_desc": ""
         }
-    },
-    "Testing": {
-        "loading": ""
     }
 }

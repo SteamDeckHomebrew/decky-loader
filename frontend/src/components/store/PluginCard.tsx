@@ -141,44 +141,46 @@ const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
         <div className="deckyStoreCardButtonRow">
           <PanelSectionRow>
             <Focusable style={{ display: 'flex', gap: '5px', padding: 0 }}>
-              <DialogButton
-                onClick={() =>
-                  requestPluginInstall(storePlugin.name, storePlugin.versions[selectedOption], installType)
-                }
-              >
-                <span
-                  className="deckyStoreCardInstallText"
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: '5px',
-                  }}
+              <div className="deckyStoreCardInstallContainer" style={{ flexGrow: '1' }}>
+                <DialogButton
+                  onClick={() =>
+                    requestPluginInstall(storePlugin.name, storePlugin.versions[selectedOption], installType)
+                  }
                 >
-                  {installType === InstallType.UPDATE ? (
-                    <>
-                      <FaArrowUp /> {t('PluginCard.plugin_update')}
-                    </>
-                  ) : installType === InstallType.REINSTALL ? (
-                    <>
-                      <FaRecycle /> {t('PluginCard.plugin_reinstall')}
-                    </>
-                  ) : installType === InstallType.DOWNGRADE ? (
-                    <>
-                      <FaArrowDown /> {t('PluginCard.plugin_downgrade')}
-                    </>
-                  ) : installType === InstallType.OVERWRITE ? (
-                    <>
-                      <FaDownload /> {t('PluginCard.plugin_overwrite')}
-                    </>
-                  ) : (
-                    // installType === InstallType.INSTALL (also fallback)
-                    <>
-                      <FaDownload /> {t('PluginCard.plugin_install')}
-                    </>
-                  )}
-                </span>
-              </DialogButton>
+                  <span
+                    className="deckyStoreCardInstallText"
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      gap: '5px',
+                    }}
+                  >
+                    {installType === InstallType.UPDATE ? (
+                      <>
+                        <FaArrowUp /> {t('PluginCard.plugin_update')}
+                      </>
+                    ) : installType === InstallType.REINSTALL ? (
+                      <>
+                        <FaRecycle /> {t('PluginCard.plugin_reinstall')}
+                      </>
+                    ) : installType === InstallType.DOWNGRADE ? (
+                      <>
+                        <FaArrowDown /> {t('PluginCard.plugin_downgrade')}
+                      </>
+                    ) : installType === InstallType.OVERWRITE ? (
+                      <>
+                        <FaDownload /> {t('PluginCard.plugin_overwrite')}
+                      </>
+                    ) : (
+                      // installType === InstallType.INSTALL (also fallback)
+                      <>
+                        <FaDownload /> {t('PluginCard.plugin_install')}
+                      </>
+                    )}
+                  </span>
+                </DialogButton>
+              </div>
               {installedPlugin && installedVersionIndex === selectedOption ? (
                 <DialogButton
                   style={{

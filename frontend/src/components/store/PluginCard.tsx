@@ -149,12 +149,7 @@ const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
                 >
                   <span
                     className="deckyStoreCardInstallText"
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      gap: '5px',
-                    }}
+                    style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px' }}
                   >
                     {installType === InstallType.UPDATE ? (
                       <>

@@ -5,6 +5,7 @@ import {
   GamepadEvent,
   Menu,
   MenuItem,
+  MenuSeparator,
   Navigation,
   QuickAccessTab,
   ReorderableEntry,
@@ -99,6 +100,9 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
         >
           {t('PluginListIndex.uninstall')}
         </MenuItem>
+
+        <MenuSeparator />
+
         {hidden ? (
           <MenuItem onSelected={onShow}>{t('PluginListIndex.show')}</MenuItem>
         ) : (

@@ -75,6 +75,8 @@ class PluginBrowser:
             packageJsonPath = path.join(pluginBasePath, 'package.json')
             pluginBinPath = path.join(pluginBasePath, 'bin')
 
+            logger.debug(f"Checking package.json at {packageJsonPath}")
+
             if access(packageJsonPath, R_OK):
                 with open(packageJsonPath, "r", encoding="utf-8") as f:
                     packageJson = json.load(f)
@@ -83,6 +85,7 @@ class PluginBrowser:
                         chmod(pluginBasePath, 777)
                         if access(pluginBasePath, W_OK):
                             if not path.exists(pluginBinPath):
+                                logger.debug(f"Creating bin directory at {pluginBinPath}")
                                 mkdir(pluginBinPath)
                             if not access(pluginBinPath, W_OK):
                                 chmod(pluginBinPath, 777)
@@ -93,6 +96,7 @@ class PluginBrowser:
                             binName = remoteBinary["name"]
                             binURL = remoteBinary["url"]
                             binHash = remoteBinary["sha256hash"]
+                            logger.debug(f"Attempting to download {binName} from {binURL}")
                             if not await download_remote_binary_to_path(binURL, binHash, path.join(pluginBinPath, binName)):
                                 rv = False
                                 raise Exception(f"Error Downloading Remote Binary {binName}@{binURL} with hash {binHash} to {path.join(pluginBinPath, binName)}")

@@ -70,79 +70,48 @@ class PluginBrowser:
         return True
 
     async def _download_remote_binaries_for_plugin_with_name(self, pluginBasePath: str):
-        """Download and install remote binary dependencies for a plugin"""
-        
+        rv = False
         try:
-            # Validate plugin path
-            if not path.exists(pluginBasePath):
-                raise ValueError(f"Plugin path does not exist: {pluginBasePath}")
-                
             packageJsonPath = path.join(pluginBasePath, 'package.json')
             pluginBinPath = path.join(pluginBasePath, 'bin')
 
             logger.debug(f"Checking package.json at {packageJsonPath}")
 
-            if not access(packageJsonPath, R_OK):
-                raise PermissionError(f"Cannot read package.json at {packageJsonPath}")
-
-            with open(packageJsonPath, "r", encoding="utf-8") as f:
-                try:
+            if access(packageJsonPath, R_OK):
+                with open(packageJsonPath, "r", encoding="utf-8") as f:
                     packageJson = json.load(f)
-                except json.JSONDecodeError as e:
-                    raise ValueError(f"Invalid package.json format: {str(e)}")
+                    if "remote_binary" in packageJson and len(packageJson["remote_binary"]) > 0:
+                        # create bin directory if needed.
+                        chmod(pluginBasePath, 777)
+                        if access(pluginBasePath, W_OK):
+                            if not path.exists(pluginBinPath):
+                                logger.debug(f"Creating bin directory at {pluginBinPath}")
+                                mkdir(pluginBinPath)
+                            if not access(pluginBinPath, W_OK):
+                                chmod(pluginBinPath, 777)
 
-            if "remote_binary" not in packageJson:
-                logger.debug("No remote binaries specified")
-                return True
+                        rv = True
+                        for remoteBinary in packageJson["remote_binary"]:
+                            # Required Fields. If any Remote Binary is missing these fail the install.
+                            binName = remoteBinary["name"]
+                            binURL = remoteBinary["url"]
+                            binHash = remoteBinary["sha256hash"]
+                            logger.debug(f"Attempting to download {binName} from {binURL}")
+                            if not await download_remote_binary_to_path(binURL, binHash, path.join(pluginBinPath, binName)):
+                                rv = False
+                                raise Exception(f"Error Downloading Remote Binary {binName}@{binURL} with hash {binHash} to {path.join(pluginBinPath, binName)}")
 
-            binaries = packageJson["remote_binary"]
-            if not binaries:
-                logger.debug("Empty remote_binary list")
-                return True
-
-            # Create bin directory with proper permissions
-            chmod(pluginBasePath, 0o777)
-            if not access(pluginBasePath, W_OK):
-                raise PermissionError(f"Cannot write to plugin directory: {pluginBasePath}")
-
-            if not path.exists(pluginBinPath):
-                logger.debug(f"Creating bin directory at {pluginBinPath}")
-                mkdir(pluginBinPath)
-            
-            chmod(pluginBinPath, 0o777)
-            if not access(pluginBinPath, W_OK):
-                raise PermissionError(f"Cannot write to bin directory: {pluginBinPath}")
-
-            # Download each binary
-            for binary in binaries:
-                try:
-                    # Validate required fields
-                    required = ['name', 'url', 'sha256hash']
-                    if not all(k in binary for k in required):
-                        raise ValueError(f"Missing required binary fields: {required}")
-
-                    binPath = path.join(pluginBinPath, binary['name'])
-                    logger.debug(f"Downloading {binary['name']} from {binary['url']}")
-                    
-                    if not await download_remote_binary_to_path(
-                        binary['url'], 
-                        binary['sha256hash'],
-                        binPath
-                    ):
-                        raise RuntimeError(f"Failed to download binary {binary['name']}")
-                        
-                except Exception as e:
-                    logger.error(f"Error downloading binary {binary.get('name', 'unknown')}: {str(e)}")
-                    return False
-
-            # Set final permissions
-            chown(self.plugin_path)
-            chmod(pluginBasePath, 0o555)
-            return True
+                        chown(self.plugin_path)
+                        chmod(pluginBasePath, 555)
+                    else:
+                        rv = True
+                        logger.debug(f"No Remote Binaries to Download")
 
         except Exception as e:
-            logger.error(f"Failed to download remote binaries: {str(e)}")
-            return False
+            rv = False
+            logger.debug(str(e))
+
+        return rv
 
     """Return the filename (only) for the specified plugin"""
     def find_plugin_folder(self, name: str) -> str | None:

@@ -9,8 +9,8 @@
     },
     "Developer": {
         "5secreload": "A recarregar em 5 segundos",
-        "disabling": "Desativando React DevTools",
-        "enabling": "Ativando React DevTools"
+        "disabling": "Desativar React DevTools",
+        "enabling": "Ativar React DevTools"
     },
     "DropdownMultiselect": {
         "button": {
@@ -19,8 +19,8 @@
     },
     "FilePickerError": {
         "errors": {
-            "file_not_found": "O caminho especificado não é válido. Por favor, verifique-o e insira-o corretamente.",
-            "perm_denied": "Não tem acesso ao diretório especificado. Por favor, verifique se o seu utilizador (deck na Steam Deck) tem a permissão correspondente para aceder à pasta/ficheiro especificado.",
+            "file_not_found": "O caminho especificado não é válido. Por favor, verifica e insere o caminho correto.",
+            "perm_denied": "Não tens acesso ao diretório especificado. Por favor, verifica se o seu utilizador (deck na Steam Deck) tem a permissão correspondente para aceder à pasta/ficheiro especificada(o).",
             "unknown": "Ocorreu um erro desconhecido. O erro bruto é: {{raw_error}}"
         }
     },
@@ -50,7 +50,7 @@
         }
     },
     "MultiplePluginsInstallModal": {
-        "confirm": "Tem a certeza de que pretende fazer as seguintes alterações?",
+        "confirm": "Tens a certeza de que pretendes fazer as seguintes alterações?",
         "description": {
             "install": "Instalar {{name}} {{version}}",
             "reinstall": "Reinstalar {{name}} {{version}}",
@@ -88,7 +88,7 @@
             "desc": "De certeza que queres instalar {{artifact}} {{version}}?",
             "title": "Instalar {{artifact}}"
         },
-        "no_hash": "Este plugin não tem um hash, estás a instalá-lo por tua conta e risco.",
+        "no_hash": "Este plugin não tem uma hash, estás a instalá-lo por tua conta e risco.",
         "reinstall": {
             "button_idle": "Reinstalar",
             "button_processing": "Reinstalação em curso",
@@ -145,14 +145,14 @@
     },
     "RemoteDebugging": {
         "remote_cef": {
-            "desc": "Permitir acesso não autenticado ao debugger do CEF a qualquer pessoa na tua rede",
-            "label": "Permitir debugging remoto do CEF"
+            "desc": "Permitir acesso não autenticado ao depurador do CEF a qualquer pessoa na tua rede",
+            "label": "Permitir Depuração Remota do CEF"
         }
     },
     "SettingsDeveloperIndex": {
         "cef_console": {
             "button": "Abrir consola",
-            "desc": "Abre a consola do CEF. Só é útil para efeitos de debugging. O conteúdo aqui presente pode ser perigoso e deve ser utilizado apenas se fores desenvolvedor de plugins ou se foste orientado a utilizá-lo por um.",
+            "desc": "Abre a Consola CEF. Apenas útil para fins de depuração. O conteúdo aqui presente pode ser perigoso e só devem ser usadas se fores um desenvolvedor de plugins ou se fores direcionado para aqui por um.",
             "label": "Consola CEF"
         },
         "header": "Outros",

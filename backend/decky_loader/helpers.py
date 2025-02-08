@@ -4,7 +4,6 @@ import uuid
 import os
 import subprocess
 from hashlib import sha256
-from io import BytesIO
 import importlib.metadata
 
 import certifi
@@ -125,7 +124,7 @@ async def download_remote_binary_to_path(url: str, binHash: str, path: str) -> b
                 else:
                     rv = False
     except Exception as e:
-        logger.error("Error during download" + str(e))
+        logger.error("Error during download " + str(e))
         rv = False
 
     return rv

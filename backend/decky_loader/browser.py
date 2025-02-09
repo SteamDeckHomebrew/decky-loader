@@ -96,7 +96,7 @@ class PluginBrowser:
                             binName = remoteBinary["name"]
                             binURL = remoteBinary["url"]
                             binHash = remoteBinary["sha256hash"]
-                            logger.debug(f"Attempting to download {binName} from {binURL}")
+                            logger.info(f"Attempting to download {binName} from {binURL}")
                             if not await download_remote_binary_to_path(binURL, binHash, path.join(pluginBinPath, binName)):
                                 rv = False
                                 raise Exception(f"Error Downloading Remote Binary {binName}@{binURL} with hash {binHash} to {path.join(pluginBinPath, binName)}")
@@ -105,7 +105,7 @@ class PluginBrowser:
                         chmod(pluginBasePath, 555)
                     else:
                         rv = True
-                        logger.debug(f"No Remote Binaries to Download")
+                        logger.info(f"No Remote Binaries to Download")
 
         except Exception as e:
             rv = False
@@ -200,7 +200,7 @@ class PluginBrowser:
                 else:
                     logger.fatal(f"Could not fetch from URL. {await res.text()}")
 
-            await self.loader.ws.emit("loader/plugin_download_info", 80, "Store.download_progress_info.increment_count")
+            await self.loader.ws.emit("loader/plugin_download_info", 70, "Store.download_progress_info.increment_count")
             storeUrl = ""
             match self.settings.getSetting("store", 0):
                 case 0: storeUrl = "https://plugins.deckbrew.xyz/plugins" # default
@@ -213,7 +213,7 @@ class PluginBrowser:
                 if res.status != 200:
                     logger.error(f"Server did not accept install count increment request. code: {res.status}")
 
-        await self.loader.ws.emit("loader/plugin_download_info", 85, "Store.download_progress_info.parse_zip")
+        await self.loader.ws.emit("loader/plugin_download_info", 75, "Store.download_progress_info.parse_zip")
         if res_zip and version == "dev":
             with ZipFile(res_zip) as plugin_zip:
                 plugin_json_list = [file for file in plugin_zip.namelist() if file.endswith("/plugin.json") and file.count("/") == 1]
@@ -248,7 +248,7 @@ class PluginBrowser:
 
         # If plugin is installed, uninstall it
         if isInstalled:
-            await self.loader.ws.emit("loader/plugin_download_info", 90, "Store.download_progress_info.uninstalling_previous")
+            await self.loader.ws.emit("loader/plugin_download_info", 80, "Store.download_progress_info.uninstalling_previous")
             try:
                 logger.debug("Uninstalling existing plugin...")
                 await self.uninstall_plugin(name)
@@ -256,7 +256,7 @@ class PluginBrowser:
                 logger.error(f"Plugin {name} could not be uninstalled.")
 
 
-        await self.loader.ws.emit("loader/plugin_download_info", 95, "Store.download_progress_info.installing_plugin")
+        await self.loader.ws.emit("loader/plugin_download_info", 90, "Store.download_progress_info.installing_plugin")
         # Install the plugin
         logger.debug("Unzipping...")
         ret = self._unzip_to_plugin_dir(res_zip, name, hash)
@@ -264,7 +264,7 @@ class PluginBrowser:
             plugin_folder = self.find_plugin_folder(name)
             assert plugin_folder is not None
             plugin_dir = path.join(self.plugin_path, plugin_folder)
-            #TODO count again from 0% to 100% quickly for this one if it does anything
+            await self.loader.ws.emit("loader/plugin_download_info", 95, "Store.download_progress_info.download_remote")
             ret = await self._download_remote_binaries_for_plugin_with_name(plugin_dir)
             if ret:
                 logger.info(f"Installed {name} (Version: {version})")
@@ -279,7 +279,8 @@ class PluginBrowser:
                     logger.debug("Plugin %s was added to the pluginOrder setting", name)
                 await self.loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_folder)
             else:
-                logger.fatal(f"Failed Downloading Remote Binaries")
+                logger.error("Could not download remote binaries")
+                return
         else:
             logger.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
         if self.loader.watcher:

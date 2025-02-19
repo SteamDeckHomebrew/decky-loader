@@ -49,38 +49,259 @@
             "show_more": "Visa fler filer"
         }
     },
-    "MultiplePluginsInstallModal": {
+ "MultiplePluginsInstallModal": {
         "confirm": "Är du säker på att du vill göra följande ändringar?",
         "description": {
+            "downgrade": "Nedgradera {{name}} till {{version}}",
             "install": "Installera {{name}} {{version}}",
-            "reinstall": "Installera om {{name}} {{version}}",
-            "update": "Uppdatera {{name}} {{version}}"
+            "overwrite": "Skriva över {{name}} med {{version}}",
+            "reinstall": "Ominstallera {{name}} {{version}}",
+            "update": "Uppdatera {{name}} till {{version}}"
         },
         "ok_button": {
             "idle": "Bekräfta",
             "loading": "Arbetar"
         },
         "title": {
-            "install_one": "Install 1 tillägg",
-            "install_other": "Installerar {{count}} tillägg",
-            "mixed_one": "",
-            "mixed_other": "",
-            "reinstall_one": "",
-            "reinstall_other": "",
-            "update_one": "",
-            "update_other": ""
+            "downgrade_one": "Nedgradera 1 insticksmodul",
+            "downgrade_other": "Nedgradera {{count}} insticksmoduler",
+            "install_one": "Installera 1 insticksmodul",
+            "install_other": "Installera {{count}} insticksmoduler",
+            "mixed_one": "Ändra {{count}} insticksmodul",
+            "mixed_other": "Ändra {{count}} insticksmoduler",
+            "overwrite_one": "Skriva över 1 insticksmodul",
+            "overwrite_other": "Skriva över {{count}} insticksmoduler",
+            "reinstall_one": "Ominstallera 1 insticksmodul",
+            "reinstall_other": "Ominstallera {{count}} insticksmoduler",
+            "update_one": "Uppdatera 1 insticksmodul",
+            "update_other": "Uppdatera {{count}} insticksmoduler"
+        }
+    },
+    "PluginCard": {
+        "plugin_downgrade": "Nedgradera",
+        "plugin_full_access": "Denna insticksmodul har fullständig åtkomst till din Steam Deck.",
+        "plugin_install": "Installera",
+        "plugin_no_desc": "Ingen beskrivning angavs.",
+        "plugin_overwrite": "Skriv över",
+        "plugin_reinstall": "Ominstallera",
+        "plugin_update": "Uppdatera",
+        "plugin_version_label": "Version för insticksmodul"
+    },
+    "PluginInstallModal": {
+        "downgrade": {
+            "button_idle": "Nedgradera",
+            "button_processing": "Nedgraderar",
+            "desc": "Är du säker på att du vill nedgradera {{artifact}} till version {{version}}?",
+            "title": "Nedgradera {{artifact}}"
+        },
+        "install": {
+            "button_idle": "Installera",
+            "button_processing": "Installerar",
+            "desc": "Är du säker på att du vill installera {{artifact}} {{version}}?",
+            "title": "Installera {{artifact}}"
+        },
+        "no_hash": "Denna insticksmodul har ingen kontrollsumma och du installerar den på egen risk.",
+        "not_installed": "(inte installerad)",
+        "overwrite": {
+            "button_idle": "Skriv över",
+            "button_processing": "Skriver över",
+            "desc": "Är du säker på att du vill skriva över {{artifact}} med version {{version}}?",
+            "title": "Skriv över {{artifact}}"
+        },
+        "reinstall": {
+            "button_idle": "Ominstallera",
+            "button_processing": "Ominstallerar",
+            "desc": "Är du säker på att du vill ominstallera {{artifact}} {{version}}?",
+            "title": "Ominstallera {{artifact}}"
+        },
+        "update": {
+            "button_idle": "Uppdatera",
+            "button_processing": "Uppdaterar",
+            "desc": "Är du säker på att du vill uppdatera {{artifact}} till version {{version}}?",
+            "title": "Uppdatera {{artifact}}"
         }
     },
     "PluginListIndex": {
-        "update_all_one": "",
-        "update_all_other": ""
+        "freeze": "Frys uppdateringar",
+        "hide": "Snabbåtkomst: Dölj",
+        "no_plugin": "Inga insticksmoduler installerade!",
+        "plugin_actions": "insticksmodulåtgärder",
+        "reinstall": "Ominstallera",
+        "reload": "Läs om",
+        "show": "Snabbåtkomst: Visa",
+        "unfreeze": "Tillåt uppdateringar",
+        "uninstall": "Avinstallera",
+        "update_all_one": "Uppdatera 1 insticksmodul",
+        "update_all_other": "Uppdatera {{count}} insticksmoduler",
+        "update_to": "Uppdate till {{name}}"
+    },
+    "PluginListLabel": {
+        "hidden": "Dold från snabbåtkomstmenyn"
     },
     "PluginLoader": {
-        "plugin_update_one": "",
-        "plugin_update_other": ""
+        "decky_title": "Decky",
+        "decky_update_available": "Uppdatering till {{tag_name}} finns nu!",
+        "error": "Fel",
+        "plugin_error_uninstall": "Inläsning av {{name}} orsakade ett undantag som visas nedan. Dett betyder oftast att insticksmodulen kräver en uppdatering för den nya versionen av SteamUI. Kontrollera om en uppdatering finns eller fundera på att ta bort den i Decky-inställningarna, under insticksmoduler.",
+        "plugin_load_error": {
+            "message": "Fel vid inläsning av insticksmodulen {{name}}",
+            "toast": "Fel vid inläsning {{name}}"
+        },
+        "plugin_uninstall": {
+            "button": "Avinstallera",
+            "desc": "Är du säker på att du vill avinstallera {{name}}?",
+            "title": "Avinstallera {{name}}"
+        },
+        "plugin_update_one": "Uppdateringar tillgängliga för 1 insticksmodul!",
+        "plugin_update_other": "Uppdateringar tillgängliga för {{count}} insticksmoduler!"
     },
     "PluginView": {
-        "hidden_one": "",
-        "hidden_other": ""
+        "hidden_one": "1 insticksmodul är dold från denna lista",
+        "hidden_other": "{{count}} insticksmoduler är dolda från denna lista"
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "desc": "Tillåt oautentiserad åtkomst till CEF-felsökaren till vem som helst i ditt nätverk",
+            "label": "Tillåt fjärr-CEF-felsökning"
+        }
+    },
+    "SettingsDeveloperIndex": {
+        "cef_console": {
+            "button": "Öppna konsoll",
+            "desc": "Öppnar CEF-konsollen. Endast användbart för felsökningssyften. Saker här är potentiellt farliga och bör endast användas om du utvecklar insticksmoduler.",
+            "label": "CEF-konsoll"
+        },
+        "header": "Övrigt",
+        "react_devtools": {
+            "desc": "Aktiverar anslutning till en dator som kör React DevTools. Ändring av denna inställning kommer att läsa om Steam. Ställ in IP-adressen innan du aktiverar.",
+            "ip_label": "IP",
+            "label": "Aktivera React DevTools"
+        },
+        "third_party_plugins": {
+            "button_install": "Installera",
+            "button_zip": "Bläddra",
+            "header": "Insticksmoduler från tredjepart",
+            "label_desc": "URL",
+            "label_url": "Installera insticksmodul från URL",
+            "label_zip": "Installera insticksmodul från ZIP-fil"
+        },
+        "valve_internal": {
+            "desc1": "Aktiverar Valves interna utvecklarmeny.",
+            "desc2": "Rör ingenting i denna meny såvida inte du vet vad du gör.",
+            "label": "Aktivera Valves interna"
+        }
+    },
+    "SettingsGeneralIndex": {
+        "about": {
+            "decky_version": "Decky Version",
+            "header": "Om"
+        },
+        "beta": {
+            "header": "Delta i beta"
+        },
+        "developer_mode": {
+            "label": "Utvecklarläge"
+        },
+        "notifications": {
+            "decky_updates_label": "Uppdatering till Decky finns tillgänglig",
+            "header": "Aviseringar",
+            "plugin_updates_label": "Uppdateringar till insticksmoduler tillgängliga"
+        },
+        "other": {
+            "header": "Övrigt"
+        },
+        "updates": {
+            "header": "Uppdateringar"
+        }
+    },
+    "SettingsIndex": {
+        "developer_title": "Utvecklare",
+        "general_title": "Allmänt",
+        "plugins_title": "Insticksmoduler",
+        "testing_title": "Testning"
+    },
+    "Store": {
+        "download_progress_info": {
+            "download_zip": "Hämtar insticksmodul",
+            "download_remote": "Hämtar externa binärfiler",
+            "increment_count": "Ökar hämtningsantal",
+            "installing_plugin": "Installerar insticksmodul",
+            "open_zip": "Öppnar zip-fil",
+            "parse_zip": "Tolkar zip-fil",
+            "start": "Initierar",
+            "uninstalling_previous": "Avinstallerar tidigare kopia"
+        },
+        "store_contrib": {
+            "desc": "Om du vill bidra till Deckys insticksmoduler, titta in i förrådet SteamDeckHomebrew/decky-plugin-template på GitHub. Information om utveckling och distribution finns tillgänglig i filen README.",
+            "label": "Bidra"
+        },
+        "store_filter": {
+            "label": "Filtrera",
+            "label_def": "Alla"
+        },
+        "store_search": {
+            "label": "Sök"
+        },
+        "store_sort": {
+            "label": "Sortera",
+            "label_def": "Senast uppdaterad (Senaste)"
+        },
+        "store_source": {
+            "desc": "All källkod för insticksmoduler finns tillgänglig i förrådet SteamDeckHomebrew/decky-plugin-database på GitHub.",
+            "label": "Källkod"
+        },
+        "store_tabs": {
+            "about": "Om",
+            "alph_asce": "Alfabetisk (Z till A)",
+            "alph_desc": "Alfabetisk (A till Z)",
+            "date_asce": "Äldsta först",
+            "date_desc": "Nyaste först",
+            "downloads_asce": "Minst hämtade först",
+            "downloads_desc": "Mest hämtade först",
+            "title": "Bläddra"
+        },
+        "store_testing_cta": "Överväg att testa nya insticksmoduler för att hjälpa Decky Loader-teamet!",
+        "store_testing_warning": {
+            "desc": "Du kan använda denna kanal för att testa de absolut senaste versionerna. Tänk på att ge återkoppling på GitHub så att insticksmodulen kan uppdateras för alla användare.",
+            "label": "Välkommen till testkanalen"
+        }
+    },
+    "StoreSelect": {
+        "custom_store": {
+            "label": "Anpassad affär",
+            "url_label": "URL"
+        },
+        "store_channel": {
+            "custom": "Anpassad",
+            "default": "Standard",
+            "label": "Affärskanal",
+            "testing": "Testning"
+        }
+    },
+    "Testing": {
+        "download": "Hämta",
+        "error": "Fel vid installation av PR",
+        "header": "Följande versioner av Decky Loader byggs från öppnade Pull Requests från tredjepart. Decky Loader-teamet har inte verifierat deras funktionalitet eller säkerhet och de kan vara utdaterade.",
+        "loading": "Läser in öppnade Pull Requests...",
+        "start_download_toast": "Hämtar PR #{{id}}"
+    },
+    "TitleView": {
+        "decky_store_desc": "Öppna Decky-affär",
+        "settings_desc": "Öppna Decky-inställningar"
+    },
+    "Updater": {
+        "decky_updates": "Decky-uppdateringar",
+        "no_patch_notes_desc": "inga patch-anteckningar för denna version",
+        "patch_notes_desc": "Patch-anteckningar",
+        "updates": {
+            "check_button": "Leta efter uppdateringar",
+            "checking": "Letar",
+            "cur_version": "Aktuell version: {{ver}}",
+            "install_button": "Installera uppdatering",
+            "label": "Uppdateringar",
+            "lat_version": "Uppdaterad: kör {{ver}}",
+            "reloading": "Läser om",
+            "updating": "Uppdaterar"
+        }
     }
 }

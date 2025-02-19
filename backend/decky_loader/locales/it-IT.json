@@ -98,7 +98,7 @@
         "update": {
             "button_idle": "Aggiorna",
             "button_processing": "Aggiornando",
-            "desc": "Sei sicuro di voler aggiornare {{artifact}} {{version}}?",
+            "desc": "Sei sicuro di voler aggiornare {{artifact}} alla versione {{version}}?",
             "title": "Aggiorna {{artifact}}"
         }
     },

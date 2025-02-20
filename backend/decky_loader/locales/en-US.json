@@ -222,8 +222,8 @@
     },
     "Store": {
         "download_progress_info": {
-            "download_zip": "Downloading plugin",
             "download_remote": "Downloading any external binaries",
+            "download_zip": "Downloading plugin",
             "increment_count": "Incrementing download count",
             "installing_plugin": "Installing plugin",
             "open_zip": "Opening zip file",

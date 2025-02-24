@@ -52,7 +52,9 @@
     "MultiplePluginsInstallModal": {
         "confirm": "Jste si jisti, že chcete udělat následující úpravy?",
         "description": {
+            "downgrade": "Downgradovat {{name}} na verzi {{version}}",
             "install": "Instalovat {{name}} {{version}}",
+            "overwrite": "Přepsat {{name}} verzí {{version}}",
             "reinstall": "Přeinstalovat {{name}} {{version}}",
             "update": "Aktualizovat {{name}} na {{version}}"
         },
@@ -61,12 +63,18 @@
             "loading": "Probíhá"
         },
         "title": {
+            "downgrade_few": "Downgradovat {{count}} pluginy",
+            "downgrade_one": "Downgradovat {{count}} plugin",
+            "downgrade_other": "Downgradovat {{count}} pluginů",
             "install_few": "Instalovat {{count}} pluginů",
             "install_one": "Instalovat 1 plugin",
             "install_other": "Instalovat {{count}} pluginů",
             "mixed_few": "Upravit {{count}} pluginů",
             "mixed_one": "Upravit {{count}} plugin",
             "mixed_other": "Upravit {{count}} pluginů",
+            "overwrite_few": "Přepsat {{count}} pluginy",
+            "overwrite_one": "Přepsat {{count}} plugin",
+            "overwrite_other": "Přepsat {{count}} pluginů",
             "reinstall_few": "Přeinstalovat {{count}} pluginů",
             "reinstall_one": "Přeinstalovat 1 plugin",
             "reinstall_other": "Přeinstalovat {{count}} pluginů",
@@ -76,12 +84,22 @@
         }
     },
     "PluginCard": {
+        "plugin_downgrade": "Downgrade",
         "plugin_full_access": "Tento plugin má plný přístup k vašemu Steam Decku.",
         "plugin_install": "Instalovat",
         "plugin_no_desc": "Nebyl uveden žádný popis.",
+        "plugin_overwrite": "Přepsat",
+        "plugin_reinstall": "Přeinstalovat",
+        "plugin_update": "Aktualizovat",
         "plugin_version_label": "Verze pluginu"
     },
     "PluginInstallModal": {
+        "downgrade": {
+            "button_idle": "Downgrade",
+            "button_processing": "Downgradování",
+            "desc": "Opravdu chcete downgradovat {{artifact}} na verzi {{version}}?",
+            "title": "Downgradovat {{artifact}}"
+        },
         "install": {
             "button_idle": "Instalovat",
             "button_processing": "Instalování",
@@ -89,6 +107,13 @@
             "title": "Instalovat {{artifact}}"
         },
         "no_hash": "Tento plugin nemá hash, instalujete jej na vlastní nebezpečí.",
+        "not_installed": "(nenainstalováno)",
+        "overwrite": {
+            "button_idle": "Přepsat",
+            "button_processing": "Přepisování",
+            "desc": "Opravdu chcete přepsat {{artifact}} na verzi {{version}}?",
+            "title": "Přepsat {{artifact}}"
+        },
         "reinstall": {
             "button_idle": "Přeinstalovat",
             "button_processing": "Přeinstalování",
@@ -98,7 +123,7 @@
         "update": {
             "button_idle": "Aktualizovat",
             "button_processing": "Aktualizování",
-            "desc": "Jste si jisti, že chcete aktualizovat {{artifact}} {{version}}?",
+            "desc": "Opravdu chcete aktualizovat {{artifact}} na verzi {{version}}?",
             "title": "Aktualizovat {{artifact}}"
         }
     },
@@ -206,6 +231,7 @@
     },
     "Store": {
         "download_progress_info": {
+            "download_remote": "Stahování externích knihoven",
             "download_zip": "Stahování pluginu",
             "increment_count": "Zvyšující se počet stahování",
             "installing_plugin": "Instalování pluginu",

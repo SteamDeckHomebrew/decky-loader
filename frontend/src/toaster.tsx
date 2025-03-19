@@ -64,7 +64,7 @@ class Toaster extends Logger {
       nNotificationID: window.NotificationStore.m_nNextTestNotificationID++,
       bNewIndicator: toast.showNewIndicator,
       rtCreated: Date.now(),
-      eType: toast.eType || 13,
+      eType: toast.eType || 31,
       eSource: 1, // Client
       nToastDurationMS: toast.duration || (toast.duration = 5e3),
       data: toast,

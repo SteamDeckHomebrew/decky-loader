@@ -8,6 +8,7 @@ from typing import Any, Tuple, Dict, cast
 
 from aiohttp import web
 from os.path import exists
+from decky_loader.helpers import get_homebrew_path
 from watchdog.events import RegexMatchingEventHandler, FileSystemEvent
 from watchdog.observers import Observer
 
@@ -140,7 +141,17 @@ class Loader:
         plugin = self.plugins[request.match_info["plugin_name"]]
         file = path.join(self.plugin_path, plugin.plugin_directory, "dist/assets", request.match_info["path"])
 
+        if not path.exists(file):
+            file = self.handle_plugin_frontend_assets_from_data(request)
+
         return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
+
+    def handle_plugin_frontend_assets_from_data(self, request: web.Request) -> str:
+        plugin = self.plugins[request.match_info["plugin_name"]]
+        home = get_homebrew_path()
+        file = path.join(home, "data", plugin.plugin_directory, "assets", request.match_info["path"])
+
+        return file
 
     async def handle_frontend_bundle(self, request: web.Request):
         plugin = self.plugins[request.match_info["plugin_name"]]

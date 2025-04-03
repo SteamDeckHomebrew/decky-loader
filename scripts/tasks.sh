@@ -10,6 +10,17 @@
 #
 # Requirements: jq sed
 
+# https://jackson.dev/post/a-portable-nix-shell-shebang/
+if [ -z "$INSIDE_NIX_RANDOMSTRING" ] && command -v nix &> /dev/null; then
+  # If the user has nix, relaunch in nix shell with dependencies added
+  INSIDE_NIX_RANDOMSTRING=1 nix shell \
+      nixpkgs#websocat \
+      nixpkgs#jq \
+      nixpkgs#curl \
+      --command "$0" "$@"
+  exit $?
+fi
+
 required_dependencies=(jq sed)
 
 # Check if the dependencies are installed

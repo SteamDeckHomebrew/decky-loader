@@ -2,6 +2,12 @@
 # Usage: deckdebug.sh DECKIP:8081
 # Dependencies: websocat jq curl chromium
 
+if [ "$#" -ne 1 ]; then
+    echo "Error: Missing or incorrect argument." >&2
+    echo "Usage: deckdebug.sh DECKIP:8081" >&2
+    exit 1
+fi
+
 required_dependencies=(lalala websocat jq curl chromium)
 
 # Check if the dependencies are installed

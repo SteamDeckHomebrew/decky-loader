@@ -2,6 +2,16 @@
 # Usage: deckdebug.sh DECKIP:8081
 # Dependencies: websocat jq curl chromium
 
+required_dependencies=(lalala websocat jq curl chromium)
+
+# Check if the dependencies are installed
+for cmd in "${required_dependencies[@]}"; do
+    if ! command -v "$cmd" &> /dev/null; then
+        echo "Error: '$cmd' is not installed. Please install it and try again." >&2
+        exit 1
+    fi
+done
+
 # https://jackson.dev/post/a-portable-nix-shell-shebang/
 if [ -z "$INSIDE_NIX_RANDOMSTRING" ] && command -v nix &> /dev/null; then
   # If the user has nix, relaunch in nix shell with dependencies added

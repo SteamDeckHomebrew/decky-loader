@@ -8,15 +8,6 @@ if [ "$#" -ne 1 ]; then
     exit 1
 fi
 
-required_dependencies=(websocat jq curl chromium)
-
-# Check if the dependencies are installed
-for cmd in "${required_dependencies[@]}"; do
-    if ! command -v "$cmd" &> /dev/null; then
-        echo "Error: '$cmd' is not installed. Please install it and try again." >&2
-        exit 1
-    fi
-done
 
 # https://jackson.dev/post/a-portable-nix-shell-shebang/
 if [ -z "$INSIDE_NIX_RANDOMSTRING" ] && command -v nix &> /dev/null; then
@@ -28,6 +19,16 @@ if [ -z "$INSIDE_NIX_RANDOMSTRING" ] && command -v nix &> /dev/null; then
       --command "$0" "$@"
   exit $?
 fi
+
+required_dependencies=(websocat jq curl chromium)
+
+# Check if the dependencies are installed
+for cmd in "${required_dependencies[@]}"; do
+    if ! command -v "$cmd" &> /dev/null; then
+        echo "Error: '$cmd' is not installed. Please install it and try again." >&2
+        exit 1
+    fi
+done
 
 chromium --remote-debugging-port=9222 &
 sleep 2

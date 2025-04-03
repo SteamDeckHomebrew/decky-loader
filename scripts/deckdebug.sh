@@ -8,7 +8,7 @@ if [ "$#" -ne 1 ]; then
     exit 1
 fi
 
-required_dependencies=(lalala websocat jq curl chromium)
+required_dependencies=(websocat jq curl chromium)
 
 # Check if the dependencies are installed
 for cmd in "${required_dependencies[@]}"; do

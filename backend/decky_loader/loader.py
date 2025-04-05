@@ -8,6 +8,7 @@ from typing import Any, Tuple, Dict, cast
 
 from aiohttp import web
 from os.path import exists
+from decky_loader.helpers import get_homebrew_path
 from watchdog.events import RegexMatchingEventHandler, FileSystemEvent
 from watchdog.observers import Observer
 
@@ -91,6 +92,7 @@ class Loader:
             web.get("/plugins/{plugin_name}/frontend_bundle", self.handle_frontend_bundle),
             web.get("/plugins/{plugin_name}/dist/{path:.*}", self.handle_plugin_dist),
             web.get("/plugins/{plugin_name}/assets/{path:.*}", self.handle_plugin_frontend_assets),
+            web.get("/plugins/{plugin_name}/data/{path:.*}", self.handle_plugin_frontend_assets_from_data),
         ])
 
         server_instance.ws.add_route("loader/get_plugins", self.get_plugins)
@@ -139,6 +141,13 @@ class Loader:
     async def handle_plugin_frontend_assets(self, request: web.Request):
         plugin = self.plugins[request.match_info["plugin_name"]]
         file = path.join(self.plugin_path, plugin.plugin_directory, "dist/assets", request.match_info["path"])
+
+        return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
+
+    async def handle_plugin_frontend_assets_from_data(self, request: web.Request):
+        plugin = self.plugins[request.match_info["plugin_name"]]
+        home = get_homebrew_path()
+        file = path.join(home, "data", plugin.plugin_directory, request.match_info["path"])
 
         return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
 

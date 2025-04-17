@@ -2,6 +2,13 @@
 # Usage: deckdebug.sh DECKIP:8081
 # Dependencies: websocat jq curl chromium
 
+if [ "$#" -ne 1 ]; then
+    echo "Error: Missing or incorrect argument." >&2
+    echo "Usage: deckdebug.sh DECKIP:8081" >&2
+    exit 1
+fi
+
+
 # https://jackson.dev/post/a-portable-nix-shell-shebang/
 if [ -z "$INSIDE_NIX_RANDOMSTRING" ] && command -v nix &> /dev/null; then
   # If the user has nix, relaunch in nix shell with dependencies added
@@ -12,6 +19,16 @@ if [ -z "$INSIDE_NIX_RANDOMSTRING" ] && command -v nix &> /dev/null; then
       --command "$0" "$@"
   exit $?
 fi
+
+required_dependencies=(websocat jq curl chromium)
+
+# Check if the dependencies are installed
+for cmd in "${required_dependencies[@]}"; do
+    if ! command -v "$cmd" &> /dev/null; then
+        echo "Error: '$cmd' is not installed. Please install it and try again." >&2
+        exit 1
+    fi
+done
 
 chromium --remote-debugging-port=9222 &
 sleep 2

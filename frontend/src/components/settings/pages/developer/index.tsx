@@ -72,7 +72,15 @@ export default function DeveloperSettings() {
           }
           icon={<FaLink style={{ display: 'block' }} />}
         >
-          <DialogButton disabled={pluginURL.length == 0} onClick={() => installFromURL(pluginURL)}>
+          <DialogButton disabled={pluginURL.length == 0}
+            onClick={() => {
+              if (/^https?:\/\//.test(pluginURL)){
+                installFromURL(pluginURL);
+              } else {
+                installFromURL("https://" + pluginURL);
+              }
+            }}
+          >
             {t('SettingsDeveloperIndex.third_party_plugins.button_install')}
           </DialogButton>
         </Field>

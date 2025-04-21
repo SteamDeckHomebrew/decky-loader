@@ -52,7 +52,9 @@
     "MultiplePluginsInstallModal": {
         "confirm": "以下の変更を加えてもよろしいですか?",
         "description": {
+            "downgrade": "ダウングレード {{name}} {{version}}",
             "install": "インストール {{name}} {{version}}",
+            "overwrite": "上書き {{name}} {{version}}",
             "reinstall": "再インストール {{name}} {{version}}",
             "update": "アップデート {{name}} {{version}}"
         },
@@ -61,19 +63,31 @@
             "loading": "作業中"
         },
         "title": {
+            "downgrade_other": "{{count}} 個のプラグインをダウングレード",
             "install_other": "{{count}} 個のプラグインをインストール",
             "mixed_other": "{{count}} 個のプラグインを修正",
+            "overwrite_other": "{{count}} 個のプラグインを上書き",
             "reinstall_other": "{{count}} 個のプラグインを再インストール",
             "update_other": "{{count}} 個のプラグインをアップデート"
         }
     },
     "PluginCard": {
+        "plugin_downgrade": "ダウングレード",
         "plugin_full_access": "このプラグインはSteam Deckの全てのアクセス権を持ちます。",
         "plugin_install": "インストール",
         "plugin_no_desc": "説明はありません。",
+        "plugin_overwrite": "上書き",
+        "plugin_reinstall": "再インストール",
+        "plugin_update": "アップデート",
         "plugin_version_label": "プラグインバージョン"
     },
     "PluginInstallModal": {
+        "downgrade": {
+            "button_idle": "ダウングレード",
+            "button_processing": "ダウングレード中",
+            "desc": "{{artifact}}をVer {{version}} にダウングレードしてもよろしいですか？",
+            "title": "{{artifact}}をダウングレード"
+        },
         "install": {
             "button_idle": "インストール",
             "button_processing": "インストール中",
@@ -81,6 +95,13 @@
             "title": "{{artifact}} をインストール"
         },
         "no_hash": "このプラグインにはハッシュがありません。ご自身の責任でインストールしてください。",
+        "not_installed": "(インストールされていません)",
+        "overwrite": {
+            "button_idle": "上書き",
+            "button_processing": "上書き中",
+            "desc": "{{artifact}}をVer {{version}} に上書きしてもよろしいですか？",
+            "title": "{{artifact}}を上書き"
+        },
         "reinstall": {
             "button_idle": "再インストール",
             "button_processing": "再インストール中",
@@ -90,7 +111,7 @@
         "update": {
             "button_idle": "アップデート",
             "button_processing": "アップデート中",
-            "desc": "{{artifact}} {{version}} をアップデートしてもよろしいですか？",
+            "desc": "{{artifact}}をVer {{version}} にアップデートしてもよろしいですか？",
             "title": "{{artifact}} をアップデート"
         }
     },
@@ -192,6 +213,7 @@
     },
     "Store": {
         "download_progress_info": {
+            "download_remote": "外部バイナリのダウンロード",
             "download_zip": "プラグインのダウンロード中",
             "increment_count": "ダウンロード数の増加",
             "installing_plugin": "プラグインのインストール中",

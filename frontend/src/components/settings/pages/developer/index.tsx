@@ -72,12 +72,13 @@ export default function DeveloperSettings() {
           }
           icon={<FaLink style={{ display: 'block' }} />}
         >
-          <DialogButton disabled={pluginURL.length == 0}
+          <DialogButton
+            disabled={pluginURL.length == 0}
             onClick={() => {
-              if (/^https?:\/\//.test(pluginURL)){
+              if (/^https?:\/\//.test(pluginURL)) {
                 installFromURL(pluginURL);
               } else {
-                installFromURL("https://" + pluginURL);
+                installFromURL('https://' + pluginURL);
               }
             }}
           >

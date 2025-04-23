@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ./script/task.sh: Run a VSCode task from tasks.json including its dependencies.
 #
-# Usage: ./script/task.sh TASK_LABEL
+# Usage: ./scripts/task.sh TASK_LABEL
 #
 # This script looks for .vscode/tasks.json in your workspace folder (or current directory)
 # and executes the command associated with the given task label.

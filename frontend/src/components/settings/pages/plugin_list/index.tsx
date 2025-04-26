@@ -5,13 +5,17 @@ import {
   GamepadEvent,
   Menu,
   MenuItem,
+  MenuSeparator,
+  Navigation,
+  QuickAccessTab,
   ReorderableEntry,
   ReorderableList,
   showContextMenu,
 } from '@decky/ui';
-import { useEffect, useState } from 'react';
+import { CSSProperties, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaDownload, FaEllipsisH, FaRecycle } from 'react-icons/fa';
+import { FaDownload, FaEllipsisH } from 'react-icons/fa';
+import { TbLayoutSidebarRightExpandFilled } from 'react-icons/tb';
 
 import { InstallType } from '../../../../plugin';
 import {
@@ -41,10 +45,22 @@ type PluginTableData = PluginData & {
   hidden: boolean;
   onHide(): void;
   onShow(): void;
+  onOpen(): void;
   isDeveloper: boolean;
 };
 
 const reloadPluginBackend = DeckyBackend.callable<[pluginName: string], void>('loader/reload_plugin');
+
+const squareButtonStyle: CSSProperties = {
+  height: '40px',
+  width: '40px',
+  minWidth: '40px',
+  padding: '0',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
 
 function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }) {
   const { t } = useTranslation();
@@ -54,7 +70,8 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
     return null;
   }
 
-  const { name, update, version, onHide, onShow, hidden, onFreeze, onUnfreeze, frozen, isDeveloper } = props.entry.data;
+  const { name, update, version, onHide, onShow, hidden, onFreeze, onUnfreeze, frozen, isDeveloper, onOpen } =
+    props.entry.data;
 
   const showCtxMenu = (e: MouseEvent | GamepadEvent) => {
     showContextMenu(
@@ -70,6 +87,7 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
         >
           {t('PluginListIndex.reload')}
         </MenuItem>
+        <MenuItem onSelected={() => reinstallPlugin(name, version)}>{t('PluginListIndex.reinstall')}</MenuItem>
         <MenuItem
           onSelected={() =>
             DeckyPluginLoader.uninstallPlugin(
@@ -82,6 +100,9 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
         >
           {t('PluginListIndex.uninstall')}
         </MenuItem>
+
+        <MenuSeparator />
+
         {hidden ? (
           <MenuItem onSelected={onShow}>{t('PluginListIndex.show')}</MenuItem>
         ) : (
@@ -98,46 +119,34 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
   };
 
   return (
-    <>
+    <div style={{ display: 'flex', gap: '10px' }}>
       {update ? (
         <DialogButton
-          style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
+          style={{
+            flex: '1 1',
+            minWidth: 'unset',
+            height: '40px',
+            display: 'flex',
+            gap: '1rem',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
           onClick={() => requestPluginInstall(name, update, InstallType.UPDATE)}
           onOKButton={() => requestPluginInstall(name, update, InstallType.UPDATE)}
         >
-          <div style={{ display: 'flex', minWidth: '180px', justifyContent: 'space-between', alignItems: 'center' }}>
-            {t('PluginListIndex.update_to', { name: update.name })}
-            <FaDownload style={{ paddingLeft: '1rem' }} />
-          </div>
+          {t('PluginListIndex.update_to', { name: update.name })} <FaDownload />
         </DialogButton>
-      ) : (
-        <DialogButton
-          style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
-          onClick={() => reinstallPlugin(name, version)}
-          onOKButton={() => reinstallPlugin(name, version)}
-        >
-          <div style={{ display: 'flex', minWidth: '180px', justifyContent: 'space-between', alignItems: 'center' }}>
-            {t('PluginListIndex.reinstall')}
-            <FaRecycle style={{ paddingLeft: '1rem' }} />
-          </div>
-        </DialogButton>
-      )}
-      <DialogButton
-        style={{
-          height: '40px',
-          width: '40px',
-          padding: '10px 12px',
-          minWidth: '40px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        }}
-        onClick={showCtxMenu}
-        onOKButton={showCtxMenu}
-      >
+      ) : null}
+      <DialogButton style={squareButtonStyle} onClick={onOpen} onOKButton={onOpen}>
+        <TbLayoutSidebarRightExpandFilled
+          // make size more consistent with the rest of icons in app
+          size={'1.5rem'}
+        />
+      </DialogButton>
+      <DialogButton style={squareButtonStyle} onClick={showCtxMenu} onOKButton={showCtxMenu}>
         <FaEllipsisH />
       </DialogButton>
-    </>
+    </div>
   );
 }
 
@@ -147,7 +156,8 @@ type PluginData = {
 };
 
 export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
-  const { plugins, updates, pluginOrder, setPluginOrder, frozenPlugins, hiddenPlugins } = useDeckyState();
+  const { plugins, updates, pluginOrder, setPluginOrder, frozenPlugins, hiddenPlugins, setActivePlugin } =
+    useDeckyState();
   const [_, setPluginOrderSetting] = useSetting<string[]>(
     'pluginOrder',
     plugins.map((plugin) => plugin.name),
@@ -158,18 +168,19 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
     DeckyPluginLoader.checkPluginUpdates();
   }, []);
 
-  const [pluginEntries, setPluginEntries] = useState<ReorderableEntry<PluginTableData>[]>([]);
-  const hiddenPluginsService = DeckyPluginLoader.hiddenPluginsService;
-  const frozenPluginsService = DeckyPluginLoader.frozenPluginsService;
-
-  useEffect(() => {
-    setPluginEntries(
+  const pluginEntries = useMemo(
+    () =>
       plugins.map(({ name, version }) => {
+        const hiddenPluginsService = DeckyPluginLoader.hiddenPluginsService;
+        const frozenPluginsService = DeckyPluginLoader.frozenPluginsService;
+
         const frozen = frozenPlugins.includes(name);
         const hidden = hiddenPlugins.includes(name);
 
+        const update = updates?.get(name);
+
         return {
-          label: <PluginListLabel name={name} frozen={frozen} hidden={hidden} version={version} />,
+          label: <PluginListLabel name={name} frozen={frozen} hidden={hidden} version={version} update={update} />,
           position: pluginOrder.indexOf(name),
           data: {
             name,
@@ -177,16 +188,20 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
             hidden,
             isDeveloper,
             version,
-            update: updates?.get(name),
+            update,
             onFreeze: () => frozenPluginsService.update([...frozenPlugins, name]),
             onUnfreeze: () => frozenPluginsService.update(frozenPlugins.filter((pluginName) => name !== pluginName)),
             onHide: () => hiddenPluginsService.update([...hiddenPlugins, name]),
             onShow: () => hiddenPluginsService.update(hiddenPlugins.filter((pluginName) => name !== pluginName)),
+            onOpen: () => {
+              setActivePlugin(name);
+              Navigation.OpenQuickAccessMenu(QuickAccessTab.Decky);
+            },
           },
         };
       }),
-    );
-  }, [plugins, updates, hiddenPlugins]);
+    [plugins, updates, frozenPlugins, hiddenPlugins, setActivePlugin],
+  );
 
   if (plugins.length === 0) {
     return (
@@ -223,10 +238,11 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
             width: 'auto',
             display: 'flex',
             alignItems: 'center',
+            gap: '1rem',
           }}
         >
           {t('PluginListIndex.update_all', { count: updates.size })}
-          <FaDownload style={{ paddingLeft: '1rem' }} />
+          <FaDownload />
         </DialogButton>
       )}
       <DialogControlsSection style={{ marginTop: 0 }}>

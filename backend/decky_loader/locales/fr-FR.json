@@ -2,7 +2,7 @@
     "BranchSelect": {
         "update_channel": {
             "label": "Canal de mise à jour",
-            "prerelease": "Avant-première",
+            "prerelease": "Préliminaire",
             "stable": "Stable",
             "testing": "Test"
         }
@@ -52,21 +52,29 @@
     "MultiplePluginsInstallModal": {
         "confirm": "Êtes-vous sûr de vouloir apporter les modifications suivantes ?",
         "description": {
+            "downgrade": "Rétrograder {{name}} en {{version}}",
             "install": "Installer {{name}} {{version}}",
+            "overwrite": "Écraser {{name}} avec {{version}}",
             "reinstall": "Réinstaller {{name}} {{version}}",
-            "update": "Mettre à jour {{name}} à {{version}}"
+            "update": "Mettre à jour {{name}} en {{version}}"
         },
         "ok_button": {
             "idle": "Confirmer",
             "loading": "En cours"
         },
         "title": {
+            "downgrade_many": "Rétrograder {{count}} plugins",
+            "downgrade_one": "Rétrograder 1 plugin",
+            "downgrade_other": "Rétrograder {{count}} plugins",
             "install_many": "Installer {{count}} plugins",
             "install_one": "Installer 1 plugin",
             "install_other": "Installer {{count}} plugins",
             "mixed_many": "Modifier {{count}} plugins",
             "mixed_one": "Modifier {{count}} plugin",
             "mixed_other": "Modifier {{count}} plugins",
+            "overwrite_many": "Écraser {{count}} plugins",
+            "overwrite_one": "Écraser 1 plugin",
+            "overwrite_other": "Écraser {{count}} plugins",
             "reinstall_many": "Réinstaller {{count}} plugins",
             "reinstall_one": "Réinstaller 1 plugin",
             "reinstall_other": "Réinstaller {{count}} plugins",
@@ -76,12 +84,22 @@
         }
     },
     "PluginCard": {
+        "plugin_downgrade": "Rétrograder",
         "plugin_full_access": "Ce plugin a un accès complet à votre Steam Deck.",
         "plugin_install": "Installer",
         "plugin_no_desc": "Aucune description fournie.",
+        "plugin_overwrite": "Écraser",
+        "plugin_reinstall": "Réinstaller",
+        "plugin_update": "Mettre à jour",
         "plugin_version_label": "Version du plugin"
     },
     "PluginInstallModal": {
+        "downgrade": {
+            "button_idle": "Rétrograder",
+            "button_processing": "Rétrogradation",
+            "desc": "Êtes-vous sûr de vouloir rétrograder {{artifact}} vers la version {{version}} ?",
+            "title": "Rétrograder {{artifact}}"
+        },
         "install": {
             "button_idle": "Installer",
             "button_processing": "Installation en cours",
@@ -89,6 +107,13 @@
             "title": "Installer {{artifact}}"
         },
         "no_hash": "Ce plugin n'a pas de somme de contrôle, vous l'installez à vos risques et périls.",
+        "not_installed": "(non installé)",
+        "overwrite": {
+            "button_idle": "Écraser",
+            "button_processing": "Écrasement",
+            "desc": "Êtes-vous sûr de vouloir remplacer {{artifact}} par la version {{version}} ?",
+            "title": "Écraser {{artifact}}"
+        },
         "reinstall": {
             "button_idle": "Réinstaller",
             "button_processing": "Réinstallation en cours",
@@ -98,7 +123,7 @@
         "update": {
             "button_idle": "Mettre à jour",
             "button_processing": "Mise à jour",
-            "desc": "Êtes-vous sûr de vouloir mettre à jour {{artifact}} {{version}} ?",
+            "desc": "Êtes-vous sûr de vouloir mettre à jour {{artifact}} vers la version {{version}} ?",
             "title": "Mettre à jour {{artifact}}"
         }
     },
@@ -124,7 +149,7 @@
         "decky_title": "Decky",
         "decky_update_available": "Mise à jour vers {{tag_name}} disponible !",
         "error": "Erreur",
-        "plugin_error_uninstall": "Allez sur {{name}} dans le menu de Decky si vous voulez désinstaller ce plugin.",
+        "plugin_error_uninstall": "Le chargement de {{name}} a provoqué une exception comme indiqué ci-dessus. Cela signifie généralement que le plugin nécessite une mise à jour pour la nouvelle version de SteamUI. Vérifiez si une mise à jour est présente ou évaluez sa suppression dans les paramètres de Decky, dans la section Plugins.",
         "plugin_load_error": {
             "message": "Erreur lors du chargement du plugin {{name}}",
             "toast": "Erreur lors du chargement de {{name}}"
@@ -153,7 +178,7 @@
         "cef_console": {
             "button": "Ouvrir la console",
             "desc": "Ouvre la console CEF. Utile uniquement à des fins de débogage. Les éléments présentés ici sont potentiellement dangereux et ne doivent être utilisés que si vous êtes un développeur de plugins ou si vous êtes dirigé ici par un de ces développeurs.",
-            "label": "CEF Console"
+            "label": "Console CEF"
         },
         "header": "Autre",
         "react_devtools": {
@@ -171,7 +196,7 @@
         },
         "valve_internal": {
             "desc1": "Active le menu développeur interne de Valve.",
-            "desc2": "Ne touchez à rien dans ce menu à moins que vous ne sachiez ce qu'il fait.",
+            "desc2": "Ne touchez à rien dans ce menu à moins que vous ne sachiez ce que ça fait.",
             "label": "Activer Valve Internal"
         }
     },
@@ -205,6 +230,16 @@
         "testing_title": "Essai"
     },
     "Store": {
+        "download_progress_info": {
+            "download_remote": "Téléchargement des binaires externes",
+            "download_zip": "Téléchargement du plugin",
+            "increment_count": "Incrémentation du nombre de téléchargements",
+            "installing_plugin": "Installation du plugin",
+            "open_zip": "Ouverture du fichier zip",
+            "parse_zip": "Analyse du fichier zip",
+            "start": "Initialisation",
+            "uninstalling_previous": "Désinstallation de la copie précédente"
+        },
         "store_contrib": {
             "desc": "Si vous souhaitez contribuer au Decky Plugin Store, consultez le dépôt SteamDeckHomebrew/decky-plugin-template sur GitHub. Des informations sur le développement et la distribution sont disponibles dans le fichier README.",
             "label": "Contributions"
@@ -253,7 +288,11 @@
         }
     },
     "Testing": {
-        "download": "Télécharger"
+        "download": "Télécharger",
+        "error": "Erreur d'installation de la PR",
+        "header": "Les versions suivantes de Decky Loader sont construites à partir de Pull Requests ouvertes par des tiers. L'équipe de Decky Loader n'a pas vérifié leur fonctionnalité ou leur sécurité, et elles peuvent être obsolètes.",
+        "loading": "Chargement des Pull Requests ouvertes...",
+        "start_download_toast": "Téléchargement de la PR #{{id}}"
     },
     "TitleView": {
         "decky_store_desc": "Ouvrir le magasin Decky",

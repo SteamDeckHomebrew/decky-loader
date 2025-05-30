@@ -43,7 +43,7 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
   const [selectedBranch, setSelectedBranch] = useSetting<UpdateBranch>('branch', UpdateBranch.Stable);
   const [isChecking, setIsChecking] = useState<boolean>(false);
   const [updateProgress, setUpdateProgress] = useState<number>(-1);
-  const [versionToUpdateTo, setSetVersionToUpdateTo] = useState<string>("");
+  const [versionToUpdateTo, setSetVersionToUpdateTo] = useState<string>('');
 
   useEffect(() => {
     const a = DeckyBackend.addEventListener('updater/update_download_percentage', (percentage) => {
@@ -174,45 +174,61 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
             )}
             {!wasCausedByPlugin && (
               <div style={{ display: 'block', marginBottom: '5px' }}>
-                {updateProgress > -1 ? ("Update in progress... " + updateProgress + "%") : updateProgress == -2 ? 'Update complete. Restarting...' :
-                  'Changing your Decky Loader branch and/or \n checking for updates might help!\n'}
-                {
-                  updateProgress == -1 && (
-                    <div style={{ height: '30px' }}>
-                      <select style={{ height: '100%' }} onChange={async (e) => {
+                {updateProgress > -1
+                  ? 'Update in progress... ' + updateProgress + '%'
+                  : updateProgress == -2
+                    ? 'Update complete. Restarting...'
+                    : 'Changing your Decky Loader branch and/or \n checking for updates might help!\n'}
+                {updateProgress == -1 && (
+                  <div style={{ height: '30px' }}>
+                    <select
+                      style={{ height: '100%' }}
+                      onChange={async (e) => {
                         const branch = parseInt(e.target.value);
                         setSelectedBranch(branch);
-                        setSetVersionToUpdateTo("");
-                      }}>
-                        <option value="0" selected={selectedBranch == UpdateBranch.Stable}>Stable</option>
-                        <option value="1" selected={selectedBranch == UpdateBranch.Prerelease}>Pre-Release</option>
-                        <option value="2" selected={selectedBranch == UpdateBranch.Testing}>Testing</option>
-                      </select>
-                      <button
-                        style={{ height: '100%' }}
-                        disabled={updateProgress != -1 || isChecking}
-                        onClick={async () => {
-                          if (versionToUpdateTo == "") {
-                            setIsChecking(true);
-                            const versionInfo = await DeckyBackend.callable('updater/check_for_updates')() as unknown as VerInfo;
-                            setIsChecking(false);
-                            if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
-                              setSetVersionToUpdateTo(versionInfo.remote.tag_name);
-                            }
-                            else {
-                              setSetVersionToUpdateTo("");
-                            }
+                        setSetVersionToUpdateTo('');
+                      }}
+                    >
+                      <option value="0" selected={selectedBranch == UpdateBranch.Stable}>
+                        Stable
+                      </option>
+                      <option value="1" selected={selectedBranch == UpdateBranch.Prerelease}>
+                        Pre-Release
+                      </option>
+                      <option value="2" selected={selectedBranch == UpdateBranch.Testing}>
+                        Testing
+                      </option>
+                    </select>
+                    <button
+                      style={{ height: '100%' }}
+                      disabled={updateProgress != -1 || isChecking}
+                      onClick={async () => {
+                        if (versionToUpdateTo == '') {
+                          setIsChecking(true);
+                          const versionInfo = (await DeckyBackend.callable(
+                            'updater/check_for_updates',
+                          )()) as unknown as VerInfo;
+                          setIsChecking(false);
+                          if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
+                            setSetVersionToUpdateTo(versionInfo.remote.tag_name);
+                          } else {
+                            setSetVersionToUpdateTo('');
                           }
-                          else {
-                            DeckyBackend.callable('updater/do_update')();
-                            setUpdateProgress(0);
-                          }
-                        }}
-                      > {isChecking ? "Checking for updates..." : versionToUpdateTo != "" ? 'Update to ' + versionToUpdateTo : 'Check for updates'}
-                      </button>
-                    </div>
-                  )
-                }
+                        } else {
+                          DeckyBackend.callable('updater/do_update')();
+                          setUpdateProgress(0);
+                        }
+                      }}
+                    >
+                      {' '}
+                      {isChecking
+                        ? 'Checking for updates...'
+                        : versionToUpdateTo != ''
+                          ? 'Update to ' + versionToUpdateTo
+                          : 'Check for updates'}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
             {wasCausedByPlugin && (

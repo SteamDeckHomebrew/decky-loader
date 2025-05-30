@@ -23,6 +23,7 @@ csrf_token = str(uuid.uuid4())
 ssl_ctx = ssl.create_default_context(cafile=certifi.where())
 
 assets_regex = re.compile("^/plugins/.*/assets/.*")
+data_regex = re.compile("^/plugins/.*/data/.*")
 dist_regex = re.compile("^/plugins/.*/dist/.*")
 frontend_regex = re.compile("^/frontend/.*")
 logger = getLogger("Main")
@@ -45,6 +46,7 @@ async def csrf_middleware(request: Request, handler: Handler):
         str(request.rel_url.path) == "/fetch" or \
         str(request.rel_url.path) == "/ws" or \
         assets_regex.match(str(request.rel_url)) or \
+        data_regex.match(str(request.rel_url)) or \
         dist_regex.match(str(request.rel_url)) or \
         frontend_regex.match(str(request.rel_url)):
 

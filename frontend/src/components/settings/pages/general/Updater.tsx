@@ -2,10 +2,10 @@ import {
   Carousel,
   DialogButton,
   Field,
-  FocusRing,
   Focusable,
   ProgressBarWithInfo,
   Spinner,
+  findClassByName,
   findSP,
   showModal,
 } from '@decky/ui';
@@ -23,9 +23,32 @@ const MarkdownRenderer = lazy(() => import('../../../Markdown'));
 function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | null; closeModal?: () => {} }) {
   const SP = findSP();
   const { t } = useTranslation();
+
   return (
-    <Focusable onCancelButton={closeModal}>
-      <FocusRing>
+    <>
+      <style>
+        {`
+.steam-focus {
+outline-offset: 2px;
+outline: 2px solid rgba(255, 255, 255, 0.6);
+animation: pulseOutline 1.2s infinite ease-in-out;
+}
+
+@keyframes pulseOutline {
+  0% {
+    outline: 2px solid rgba(255, 255, 255, 0.6);
+  }
+  50% {
+    outline: 2px solid rgba(255, 255, 255, 1);
+  }
+  100% {
+    outline: 2px solid rgba(255, 255, 255, 0.6);
+  }
+}
+`}
+      </style>
+
+      <Focusable onCancelButton={closeModal}>
         <Carousel
           fnItemRenderer={(id: number) => (
             <Focusable
@@ -35,7 +58,9 @@ function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | n
                 overflowY: 'scroll',
                 display: 'flex',
                 justifyContent: 'center',
-                margin: '40px',
+                margin: '30px',
+                padding: '0 15px',
+                backgroundColor: 'rgba(37, 40, 46, 0.5)',
               }}
             >
               <div>
@@ -57,11 +82,11 @@ function PatchNotesModal({ versionInfo, closeModal }: { versionInfo: VerInfo | n
           nItemMarginX={0}
           initialColumn={0}
           autoFocus={true}
-          fnGetColumnWidth={() => SP.innerWidth}
+          fnGetColumnWidth={() => SP.innerWidth - SP.innerWidth * (10 / 100)}
           name={t('Updater.decky_updates') as string}
         />
-      </FocusRing>
-    </Focusable>
+      </Focusable>
+    </>
   );
 }
 

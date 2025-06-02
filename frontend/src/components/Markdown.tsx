@@ -1,4 +1,4 @@
-import { Focusable, Navigation } from '@decky/ui';
+import { Focusable, Navigation, findClass, findClassByName } from '@decky/ui';
 import { FunctionComponent, useRef } from 'react';
 import ReactMarkdown, { Options as ReactMarkdownOptions } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -8,6 +8,9 @@ interface MarkdownProps extends ReactMarkdownOptions {
 }
 
 const Markdown: FunctionComponent<MarkdownProps> = (props) => {
+  const eventDetailsBodyClassName = findClassByName('EventDetailsBody') || undefined;
+  const eventLinkClassName = findClass('43088', 'Link');
+
   return (
     <Focusable>
       <ReactMarkdown
@@ -25,8 +28,10 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                   Navigation.NavigateToExternalWeb(aRef.current!.href);
                 }}
                 style={{ display: 'inline' }}
+                focusClassName="steam-focus"
+                className={eventDetailsBodyClassName}
               >
-                <a ref={aRef} {...nodeProps.node.properties}>
+                <a ref={aRef} {...nodeProps.node.properties} className={eventLinkClassName}>
                   {nodeProps.children}
                 </a>
               </Focusable>

@@ -58,7 +58,7 @@ const TitleView: FC = () => {
       >
         <FaArrowLeft style={{ marginTop: '-4px', display: 'block' }} />
       </DialogButton>
-      {activePlugin?.titleView || <div style={{ flex: 0.9 }}>{activePlugin.name}</div>}
+      {activePlugin.titleView || <div style={{ flex: 0.9 }}>{activePlugin.name}</div>}
     </Focusable>
   );
 };

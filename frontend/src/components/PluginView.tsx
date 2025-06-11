@@ -25,7 +25,12 @@ const PluginView: FC = () => {
 
   if (activePlugin) {
     return (
-      <Focusable onCancelButton={closeActivePlugin}>
+      <Focusable
+        onCancelButton={closeActivePlugin}
+        // Needed to focus inside the panel when opening plugin from settings menu
+        // Doesn't seem to do any harm (since this seems to need focus in normal cases too) so I made this unconditional
+        autoFocus
+      >
         <TitleView />
         <div style={{ height: '100%', paddingTop: '16px' }}>
           <ErrorBoundary>{(visible || activePlugin.alwaysRender) && activePlugin.content}</ErrorBoundary>

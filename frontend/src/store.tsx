@@ -9,6 +9,8 @@ export enum Store {
   Custom,
 }
 
+export type SortKeys = `${keyof typeof SortOptions}-${keyof typeof SortDirections}`;
+
 export enum SortOptions {
   name = 'name',
   date = 'date',
@@ -18,6 +20,12 @@ export enum SortOptions {
 export enum SortDirections {
   ascending = 'asc',
   descending = 'desc',
+}
+
+export enum StoreFilter {
+  All = 'all',
+  Installed = 'installed',
+  NotInstalled = 'not_installed'
 }
 
 export interface StorePluginVersion {

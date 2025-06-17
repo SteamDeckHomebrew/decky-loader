@@ -25,7 +25,7 @@ export enum SortDirections {
 export enum StoreFilter {
   All = 'all',
   Installed = 'installed',
-  NotInstalled = 'not_installed'
+  NotInstalled = 'not_installed',
 }
 
 export interface StorePluginVersion {

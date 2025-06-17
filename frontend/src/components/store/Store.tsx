@@ -19,7 +19,7 @@ import ExternalLink from '../ExternalLink';
 import PluginCard from './PluginCard';
 
 interface DropdownOptions<TData = unknown> extends SingleDropdownOption {
-    data: TData;
+  data: TData;
 }
 
 const logger = new Logger('Store');

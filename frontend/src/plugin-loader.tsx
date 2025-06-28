@@ -9,6 +9,7 @@ import {
   quickAccessMenuClasses,
   showModal,
   sleep,
+  EUIMode
 } from '@decky/ui';
 import { FC, lazy } from 'react';
 import { FaDownload, FaExclamationCircle, FaPlug } from 'react-icons/fa';
@@ -30,7 +31,7 @@ import { HiddenPluginsService } from './hidden-plugins-service';
 import Logger from './logger';
 import { NotificationService } from './notification-service';
 import { InstallType, Plugin, PluginLoadType } from './plugin';
-import RouterHook, { UIMode } from './router-hook';
+import RouterHook from './router-hook';
 import { deinitSteamFixes, initSteamFixes } from './steamfixes';
 import { checkForPluginUpdates } from './store';
 import TabsHook from './tabs-hook';
@@ -205,12 +206,12 @@ class PluginLoader extends Logger {
     let registration: any;
     const uiMode = await new Promise(
       (r) =>
-        (registration = SteamClient.UI.RegisterForUIModeChanged((mode: UIMode) => {
+        (registration = SteamClient.UI.RegisterForUIModeChanged((mode: EUIMode) => {
           r(mode);
           registration.unregister();
         })),
     );
-    if (uiMode == UIMode.BigPicture) {
+    if (uiMode == EUIMode.GamePad) {
       // wait for SP window to exist before loading plugins
       while (!findSP()) {
         await sleep(100);

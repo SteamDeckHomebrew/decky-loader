@@ -1,5 +1,6 @@
 import { ToastNotification } from '@decky/api';
 import {
+  EUIMode,
   ModalRoot,
   Navigation,
   PanelSection,
@@ -9,7 +10,6 @@ import {
   quickAccessMenuClasses,
   showModal,
   sleep,
-  EUIMode
 } from '@decky/ui';
 import { FC, lazy } from 'react';
 import { FaDownload, FaExclamationCircle, FaPlug } from 'react-icons/fa';

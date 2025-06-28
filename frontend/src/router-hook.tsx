@@ -1,4 +1,5 @@
 import {
+  EUIMode,
   ErrorBoundary,
   Patch,
   afterPatch,
@@ -7,7 +8,6 @@ import {
   findModuleByExport,
   getReactRoot,
   sleep,
-  EUIMode
 } from '@decky/ui';
 import { FC, ReactElement, ReactNode, cloneElement, createElement } from 'react';
 import type { Route } from 'react-router';

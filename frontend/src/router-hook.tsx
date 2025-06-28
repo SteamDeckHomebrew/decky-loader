@@ -1,4 +1,5 @@
 import {
+  EUIMode,
   ErrorBoundary,
   Patch,
   afterPatch,
@@ -29,11 +30,6 @@ declare global {
   interface Window {
     __ROUTER_HOOK_INSTANCE: any;
   }
-}
-
-export enum UIMode {
-  BigPicture = 4,
-  Desktop = 7,
 }
 
 const isPatched = Symbol('is patched');
@@ -76,13 +72,13 @@ class RouterHook extends Logger {
       this.error('Failed to find router stack module');
     }
 
-    this.modeChangeRegistration = SteamClient.UI.RegisterForUIModeChanged((mode: UIMode) => {
+    this.modeChangeRegistration = SteamClient.UI.RegisterForUIModeChanged((mode: EUIMode) => {
       this.debug(`UI mode changed to ${mode}`);
       if (this.patchedModes.has(mode)) return;
       this.patchedModes.add(mode);
       this.debug(`Patching router for UI mode ${mode}`);
       switch (mode) {
-        case UIMode.BigPicture:
+        case EUIMode.GamePad:
           this.debug('Patching gamepad router');
           this.patchGamepadRouter();
           break;

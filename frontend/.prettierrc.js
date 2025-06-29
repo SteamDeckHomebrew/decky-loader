@@ -7,4 +7,4 @@ export default {
   tabWidth: 2,
   endOfLine: 'auto',
   plugins: [importSort],
-}
+};

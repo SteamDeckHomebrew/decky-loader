@@ -172,7 +172,7 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
                 </button>
               </div>
             )}
-            {(
+            {
               <div style={{ display: 'block', marginBottom: '5px' }}>
                 {updateProgress > -1
                   ? 'Update in progress... ' + updateProgress + '%'
@@ -230,7 +230,7 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
                   </div>
                 )}
               </div>
-            )}
+            }
             {wasCausedByPlugin && (
               <div style={{ display: 'block', marginBottom: '5px' }}>
                 {'\n'}

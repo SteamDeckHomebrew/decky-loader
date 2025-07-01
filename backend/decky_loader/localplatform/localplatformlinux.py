@@ -11,7 +11,7 @@ logger = logging.getLogger("localplatform")
 # subprocess._ENV
 ENV = Mapping[str, str]
 ProcessIO = int | IO[Any] | None
-async def run(args: list[str], stdin: ProcessIO = DEVNULL, stdout: ProcessIO = PIPE, stderr: ProcessIO = PIPE, env: ENV | None = None) -> tuple[Process, bytes | None, bytes | None]:
+async def run(args: list[str], stdin: ProcessIO = DEVNULL, stdout: ProcessIO = PIPE, stderr: ProcessIO = PIPE, env: ENV | None = {"LD_LIBRARY_PATH": ""}) -> tuple[Process, bytes | None, bytes | None]:
     proc = await create_subprocess_exec(args[0], *(args[1:]), stdin=stdin, stdout=stdout, stderr=stderr, env=env)
     proc_stdout, proc_stderr = await proc.communicate()
     return (proc, proc_stdout, proc_stderr)
@@ -146,6 +146,7 @@ async def service_active(service_name : str) -> bool:
 
 async def service_restart(service_name : str, block : bool = True) -> bool:
     await run(["systemctl", "daemon-reload"])
+    logger.info("Systemd reload done.")
     cmd = ["systemctl", "restart", service_name]
 
     if not block:
@@ -272,7 +273,7 @@ async def close_cef_socket():
         logger.info(f"Closing CEF socket with PID {pid} and FD {fd}")
 
         # Use gdb to inject a close() call for the socket fd into steamwebhelper
-        gdb_ret, _, _ = await run(["gdb", "--nx", "-p", pid, "--batch", "--eval-command", f"call (int)close({fd})"], env={"LD_LIBRARY_PATH": ""})
+        gdb_ret, _, _ = await run(["gdb", "--nx", "-p", pid, "--batch", "--eval-command", f"call (int)close({fd})"])
 
         if gdb_ret.returncode != 0:
             logger.error(f"Failed to close CEF socket with gdb! return code: {str(gdb_ret.returncode)}", exc_info=True)

@@ -14,7 +14,6 @@ import zipfile
 from aiohttp import ClientSession
 
 from . import helpers
-from .injector import get_gamepadui_tab
 from .settings import SettingsManager
 if TYPE_CHECKING:
     from .main import PluginManager
@@ -142,8 +141,6 @@ class Updater:
     async def download_decky_binary(self, download_url: str, version: str, is_zip: bool = False, size_in_bytes: int | None = None):
         download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
         download_temp_filename = download_filename + ".new"
-        tab = await get_gamepadui_tab()
-        await tab.open_websocket()
 
         if size_in_bytes == None:
             size_in_bytes = 26214400 # 25MiB, a reasonable overestimate (19.6MiB as of 2024/02/25)
@@ -186,7 +183,6 @@ class Updater:
 
         logger.info("Updated loader installation.")
         await self.context.ws.emit("updater/finish_download")
-        await tab.close_websocket()
         await self.do_restart()
 
     async def do_update(self):
@@ -244,6 +240,7 @@ class Updater:
         await self.download_decky_binary(download_url, version, size_in_bytes=size_in_bytes)
 
     async def do_restart(self):
+        logger.info("Restarting loader for update.")
         await service_restart("plugin_loader", block=False)
 
     async def do_shutdown(self):

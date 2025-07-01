@@ -52,7 +52,9 @@
     "MultiplePluginsInstallModal": {
         "confirm": "Вы уверены, что хотите внести следующие изменения?",
         "description": {
+            "downgrade": "Откатить {{name}} до {{version}}",
             "install": "Установить {{name}} {{version}}",
+            "overwrite": "Заменить {{name}} на {{version}}",
             "reinstall": "Переустановить {{name}} {{version}}",
             "update": "Обновить с {{name}} на {{version}}"
         },
@@ -61,6 +63,9 @@
             "loading": "В процессе"
         },
         "title": {
+            "downgrade_few": "Откатить {{count}} плагинов",
+            "downgrade_many": "Откатить {{count}} плагинов",
+            "downgrade_one": "Откатить 1 плагин",
             "install_few": "Установить {{count}} плагинов",
             "install_many": "Установить {{count}} плагинов",
             "install_one": "Установить {{count}} плагин",
@@ -76,12 +81,21 @@
         }
     },
     "PluginCard": {
+        "plugin_downgrade": "Откат",
         "plugin_full_access": "Этот плагин имеет полный доступ к вашему Steam Deck.",
         "plugin_install": "Установить",
         "plugin_no_desc": "Нет описания.",
+        "plugin_overwrite": "Замена",
+        "plugin_reinstall": "Переустановка",
+        "plugin_update": "Обновление",
         "plugin_version_label": "Версия плагина"
     },
     "PluginInstallModal": {
+        "downgrade": {
+            "button_idle": "Откат",
+            "desc": "Вы уверенны, что хотите откатить {{artifact}} до версии {{version}}?",
+            "title": "Откатить {{artifact}}"
+        },
         "install": {
             "button_idle": "Установить",
             "button_processing": "Установка",
@@ -98,7 +112,7 @@
         "update": {
             "button_idle": "Обновить",
             "button_processing": "Обновление",
-            "desc": "Вы уверены, что хотите обновить {{artifact}} {{version}}?",
+            "desc": "Вы уверены, что хотите обновить {{artifact}} до версии {{version}}?",
             "title": "Обновить {{artifact}}"
         }
     },

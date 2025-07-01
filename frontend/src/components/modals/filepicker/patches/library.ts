@@ -47,7 +47,7 @@ export default async function libraryPatch() {
     }
 
     const unlisten = History.listen(() => {
-      if (window.SteamClient.Apps.PromptToChangeShortcut !== patch.patchedFunction) {
+      if ((window.SteamClient.Apps as any).PromptToChangeShortcut !== patch.patchedFunction) {
         rePatch();
       }
     });

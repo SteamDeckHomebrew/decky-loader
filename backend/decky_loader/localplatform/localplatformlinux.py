@@ -147,13 +147,13 @@ async def service_active(service_name : str) -> bool:
 async def service_restart(service_name : str, block : bool = True) -> bool:
     await run(["systemctl", "daemon-reload"])
     logger.info("Systemd reload done.")
-    
+
     cmd = ["systemctl", "restart", service_name]
 
     if not block:
         cmd.append("--no-block")
 
-    res, _, _ = await run(cmd, stdout=PIPE, stderr=STDOUT)
+    res, _, _ = await run(cmd)
     return res.returncode == 0
 
 async def service_stop(service_name : str) -> bool:

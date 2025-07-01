@@ -240,6 +240,7 @@ class Updater:
         await self.download_decky_binary(download_url, version, size_in_bytes=size_in_bytes)
 
     async def do_restart(self):
+        logger.info("Restarting loader for update.")
         await service_restart("plugin_loader", block=False)
 
     async def do_shutdown(self):

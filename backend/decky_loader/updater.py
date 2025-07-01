@@ -14,7 +14,6 @@ import zipfile
 from aiohttp import ClientSession
 
 from . import helpers
-from .injector import get_gamepadui_tab
 from .settings import SettingsManager
 if TYPE_CHECKING:
     from .main import PluginManager

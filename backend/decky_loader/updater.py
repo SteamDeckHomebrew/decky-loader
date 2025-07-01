@@ -142,8 +142,6 @@ class Updater:
     async def download_decky_binary(self, download_url: str, version: str, is_zip: bool = False, size_in_bytes: int | None = None):
         download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
         download_temp_filename = download_filename + ".new"
-        tab = await get_gamepadui_tab()
-        await tab.open_websocket()
 
         if size_in_bytes == None:
             size_in_bytes = 26214400 # 25MiB, a reasonable overestimate (19.6MiB as of 2024/02/25)
@@ -186,7 +184,6 @@ class Updater:
 
         logger.info("Updated loader installation.")
         await self.context.ws.emit("updater/finish_download")
-        await tab.close_websocket()
         await self.do_restart()
 
     async def do_update(self):

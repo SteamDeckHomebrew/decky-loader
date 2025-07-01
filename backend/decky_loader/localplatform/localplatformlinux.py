@@ -12,6 +12,10 @@ logger = logging.getLogger("localplatform")
 ENV = Mapping[str, str]
 ProcessIO = int | IO[Any] | None
 async def run(args: list[str], stdin: ProcessIO = DEVNULL, stdout: ProcessIO = PIPE, stderr: ProcessIO = PIPE, env: ENV | None = None) -> tuple[Process, bytes | None, bytes | None]:
+    if env == None:
+        env = {"LD_LIBRARY_PATH": ""}
+    else:
+        env["LD_LIBRARY_PATH"] = ""
     proc = await create_subprocess_exec(args[0], *(args[1:]), stdin=stdin, stdout=stdout, stderr=stderr, env=env)
     proc_stdout, proc_stderr = await proc.communicate()
     return (proc, proc_stdout, proc_stderr)
@@ -147,13 +151,12 @@ async def service_active(service_name : str) -> bool:
 async def service_restart(service_name : str, block : bool = True) -> bool:
     await run(["systemctl", "daemon-reload"])
     logger.info("Systemd reload done.")
-
     cmd = ["systemctl", "restart", service_name]
 
     if not block:
         cmd.append("--no-block")
 
-    res, _, _ = await run(cmd)
+    res, _, _ = await run(cmd, stdout=PIPE, stderr=STDOUT)
     return res.returncode == 0
 
 async def service_stop(service_name : str) -> bool:

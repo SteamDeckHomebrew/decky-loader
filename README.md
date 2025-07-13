@@ -95,7 +95,7 @@ Please consult [the wiki page regarding development](https://wiki.deckbrew.xyz/e
 1. In your clone of the repository, run these commands.
    ```bash
    cd frontend
-   pnpm i
+   pnpm i # NOTE: you may need to approve esbuild's build script with pnpm approve-builds
    pnpm run build
    ```
 1. If you are modifying the UI, these commands will need to be run before deploying the changes to your Steam Deck.

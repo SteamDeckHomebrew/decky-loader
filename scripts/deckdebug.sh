@@ -20,7 +20,10 @@ if [ -z "$INSIDE_NIX_RANDOMSTRING" ] && command -v nix &> /dev/null; then
   exit $?
 fi
 
-required_dependencies=(websocat jq curl chromium)
+[[ -f "$HOME/.config/deckdebug/config.sh" ]] && source "$HOME/.config/deckdebug/config.sh"
+CHROMIUM="${CHROMIUM:-chromium}"
+
+required_dependencies=(websocat jq curl $CHROMIUM)
 
 # Check if the dependencies are installed
 for cmd in "${required_dependencies[@]}"; do
@@ -30,7 +33,7 @@ for cmd in "${required_dependencies[@]}"; do
     fi
 done
 
-chromium --remote-debugging-port=9222 &
+$CHROMIUM --remote-debugging-port=9222 &
 sleep 2
 
 ADDR=$1
@@ -49,10 +52,14 @@ while :; do
         TARGET=$NEWTARGET
         TARGETURL="http://$ADDR/devtools/inspector.html?ws=$ADDR/devtools/page/$TARGET"
 
-        LOCALTARGET=$(echo '{"id": 1, "method": "Target.createTarget", "params": {"background": true, "url": "'$TARGETURL'"}}
+        echo '{"id": 1, "method": "Target.createTarget", "params": {"background": true, "url": "'$TARGETURL'"}}
 {"id": 2, "method": "Target.closeTarget", "params": {"targetId": "'$LOCALTARGET'"}}' \
-            | websocat ws://$LOCAL/devtools/page/$LOCALTARGET \
-            | jq -r '.result.targetId')
+            | websocat -t ws://$LOCAL/devtools/page/$LOCALTARGET
+
+        sleep 2
+
+        LOCALTARGETS=$(curl -s http://$LOCAL/json/list)
+        LOCALTARGET=$(jq -r '.[] | select(.title | startswith("DevTools")) | .id' <<< "$LOCALTARGETS")
 
         echo started devtools at $LOCALTARGET
     fi

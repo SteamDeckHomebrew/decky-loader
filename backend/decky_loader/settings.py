@@ -1,7 +1,7 @@
 from json import dump, load
 from os import mkdir, path, listdir, rename
 from typing import Any, Dict
-from .localplatform.localplatform import chown, folder_owner, get_chown_plugin_path
+from .localplatform.localplatform import chown, file_owner, get_chown_plugin_path
 from .enums import UserType
 
 from .helpers import get_homebrew_path
@@ -28,8 +28,8 @@ class SettingsManager:
 
 
         #If the owner of the settings directory is not the user, then set it as the user:
-        expected_user = UserType.HOST_USER if get_chown_plugin_path() else UserType.ROOT
-        if folder_owner(settings_directory) != expected_user:
+        expected_user = UserType.HOST_USER if get_chown_plugin_path() else UserType.EFFECTIVE_USER
+        if file_owner(settings_directory) != expected_user:
             chown(settings_directory, expected_user, False)
 
         self.settings: Dict[str, Any] = {}

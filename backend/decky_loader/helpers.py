@@ -181,7 +181,8 @@ def get_user_group_id() -> int:
 
 # Get the default home path unless a user is specified
 def get_home_path(username: str | None = None) -> str:
-    return localplatform.get_home_path(UserType.ROOT if username == "root" else UserType.HOST_USER)
+    # TODO hardcoded root is kinda a hack
+    return localplatform.get_home_path(UserType.EFFECTIVE_USER if username == "root" else UserType.HOST_USER)
 
 async def is_systemd_unit_active(unit_name: str) -> bool:
     return await localplatform.service_active(unit_name)

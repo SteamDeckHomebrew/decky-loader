@@ -8,7 +8,8 @@ from traceback import format_exc
 
 from .sandboxed_plugin import SandboxedPlugin
 from .messages import MethodCallRequest, SocketMessageType
-from ..enums import PluginLoadType
+from ..enums import PluginLoadType, UserType
+from ..localplatform.localplatform import file_owner, chown, chmod, get_chown_plugin_path
 from ..localplatform.localsocket import LocalSocket
 from ..helpers import get_homebrew_path, mkdir_as_user
 
@@ -26,9 +27,12 @@ class PluginWrapper:
 
         self.load_type = PluginLoadType.LEGACY_EVAL_IIFE.value
 
-        json = load(open(path.join(plugin_path, plugin_directory, "plugin.json"), "r", encoding="utf-8"))
-        if path.isfile(path.join(plugin_path, plugin_directory, "package.json")):
-            package_json = load(open(path.join(plugin_path, plugin_directory, "package.json"), "r", encoding="utf-8"))
+        plugin_dir_path = path.join(plugin_path, plugin_directory)
+        plugin_json_path = path.join(plugin_dir_path, "plugin.json")
+
+        json = load(open(plugin_json_path, "r", encoding="utf-8"))
+        if path.isfile(path.join(plugin_dir_path, "package.json")):
+            package_json = load(open(path.join(plugin_dir_path, "package.json"), "r", encoding="utf-8"))
             self.version = package_json["version"]
             if ("type" in package_json and package_json["type"] == "module"):
                 self.load_type = PluginLoadType.ESMODULE_V1.value
@@ -41,6 +45,17 @@ class PluginWrapper:
         self.passive = not path.isfile(self.file)
 
         self.log = getLogger("plugin")
+
+        if get_chown_plugin_path():
+            # ensure plugin folder ownership
+            if file_owner(plugin_dir_path) != UserType.EFFECTIVE_USER:
+                chown(plugin_dir_path, UserType.EFFECTIVE_USER if "root" in self.flags else UserType.HOST_USER, True)
+                chown(plugin_dir_path, UserType.EFFECTIVE_USER, False)
+                chmod(plugin_dir_path, 755, True)
+            # fix plugin.json permissions
+            if file_owner(plugin_json_path) != UserType.EFFECTIVE_USER:
+                chown(plugin_json_path, UserType.EFFECTIVE_USER, False)
+                chmod(plugin_json_path, 755, False)
 
         self.sandboxed_plugin = SandboxedPlugin(self.name, self.passive, self.flags, self.file, self.plugin_directory, self.plugin_path, self.version, self.author, self.api_version)
         self.proc: Process | None = None

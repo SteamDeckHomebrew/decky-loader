@@ -59,8 +59,6 @@ def chown(path : str,  user : UserType = UserType.HOST_USER, recursive : bool = 
         user_str = _get_user()+":"+_get_user_group()
     elif user == UserType.EFFECTIVE_USER:
         user_str = _get_effective_user()+":"+_get_effective_user_group()
-    elif user == UserType.ROOT:
-        user_str = "root:root"
     else:
         raise Exception("Unknown User Type")
 
@@ -87,7 +85,7 @@ def chmod(path : str, permissions : int, recursive : bool = True) -> bool:
 
     return True
 
-def folder_owner(path : str) -> UserType|None:
+def file_owner(path : str) -> UserType|None:
     user_owner = _get_user_owner(path)
 
     if (user_owner == _get_user()):
@@ -106,12 +104,13 @@ def get_home_path(user : UserType = UserType.HOST_USER) -> str:
         user_name = _get_user()
     elif user == UserType.EFFECTIVE_USER:
         user_name = _get_effective_user()
-    elif user == UserType.ROOT:
-        pass
     else:
         raise Exception("Unknown User Type")
 
     return pwd.getpwnam(user_name).pw_dir
+
+def get_effective_username() -> str:
+    return _get_effective_user()
 
 def get_username() -> str:
     return _get_user()
@@ -121,8 +120,8 @@ def setgid(user : UserType = UserType.HOST_USER):
 
     if user == UserType.HOST_USER:
         user_id = _get_user_group_id()
-    elif user == UserType.ROOT:
-        pass
+    elif user == UserType.EFFECTIVE_USER:
+        pass # we already are
     else:
         raise Exception("Unknown user type")
     
@@ -133,8 +132,8 @@ def setuid(user : UserType = UserType.HOST_USER):
 
     if user == UserType.HOST_USER:
         user_id = _get_user_id()
-    elif user == UserType.ROOT:
-        pass
+    elif user == UserType.EFFECTIVE_USER:
+        pass # we already are
     else:
         raise Exception("Unknown user type")
     

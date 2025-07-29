@@ -13,7 +13,7 @@ from .messages import SocketResponseDict, SocketMessageType
 from ..localplatform.localsocket import LocalSocket
 from ..localplatform.localplatform import setgid, setuid, get_username, get_home_path, ON_LINUX
 from ..enums import UserType
-from .. import helpers, settings, injector # pyright: ignore [reportUnusedImport]
+from .. import helpers
 
 from typing import List, TypeVar, Any
 
@@ -61,10 +61,10 @@ class SandboxedPlugin:
             if self.passive:
                 return
                 
-            setgid(UserType.ROOT if "root" in self.flags else UserType.HOST_USER)
-            setuid(UserType.ROOT if "root" in self.flags else UserType.HOST_USER)
+            setgid(UserType.EFFECTIVE_USER if "root" in self.flags else UserType.HOST_USER)
+            setuid(UserType.EFFECTIVE_USER if "root" in self.flags else UserType.HOST_USER)
             # export a bunch of environment variables to help plugin developers
-            environ["HOME"] = get_home_path(UserType.ROOT if "root" in self.flags else UserType.HOST_USER)
+            environ["HOME"] = get_home_path(UserType.EFFECTIVE_USER if "root" in self.flags else UserType.HOST_USER)
             environ["USER"] = "root" if "root" in self.flags else get_username()
             environ["DECKY_VERSION"] = helpers.get_loader_version()
             environ["DECKY_USER"] = get_username()

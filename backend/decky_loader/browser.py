@@ -18,9 +18,10 @@ from enum import IntEnum
 from typing import Dict, List, TypedDict
 
 # Local modules
-from .localplatform.localplatform import chown, chmod
+from .localplatform.localplatform import chown, chmod, get_chown_plugin_path
 from .loader import Loader, Plugins
 from .helpers import get_ssl_context, download_remote_binary_to_path
+from .enums import UserType
 from .settings import SettingsManager
 
 logger = getLogger("Browser")
@@ -60,13 +61,6 @@ class PluginBrowser:
             return False
         zip_file = ZipFile(zip)
         zip_file.extractall(self.plugin_path)
-        plugin_folder = self.find_plugin_folder(name)
-        assert plugin_folder is not None
-        plugin_dir = path.join(self.plugin_path, plugin_folder)
-
-        if not chown(plugin_dir) or not chmod(plugin_dir, 555):
-            logger.error(f"chown/chmod exited with a non-zero exit code")
-            return False
         return True
 
     async def _download_remote_binaries_for_plugin_with_name(self, pluginBasePath: str):
@@ -101,8 +95,6 @@ class PluginBrowser:
                                 rv = False
                                 raise Exception(f"Error Downloading Remote Binary {binName}@{binURL} with hash {binHash} to {path.join(pluginBinPath, binName)}")
 
-                        chown(self.plugin_path)
-                        chmod(pluginBasePath, 555)
                     else:
                         rv = True
                         logger.info(f"No Remote Binaries to Download")
@@ -124,6 +116,25 @@ class PluginBrowser:
                     return folder
             except:
                 logger.debug(f"skipping {folder}")
+    
+    def set_plugin_dir_permissions(self, plugin_dir: str) -> bool:
+        plugin_json_path = path.join(plugin_dir, 'plugin.json')
+        logger.debug(f"Checking plugin.json at {plugin_json_path}")
+
+        root_plugin = False
+
+        if access(plugin_json_path, R_OK):
+            with open(plugin_json_path, "r", encoding="utf-8") as f:
+                plugin_json = json.load(f)
+                if "flags" in plugin_json and "root" in plugin_json["flags"]:
+                    root_plugin = True
+
+        logger.debug("root_plugin %d, dir %s", root_plugin, plugin_dir)
+        if get_chown_plugin_path():
+            return chown(plugin_dir, UserType.EFFECTIVE_USER if root_plugin else UserType.HOST_USER, True) and chown(plugin_dir, UserType.EFFECTIVE_USER, False) and chmod(plugin_dir, 755) and chown(plugin_json_path, UserType.EFFECTIVE_USER, False) and chmod(plugin_json_path, 755)
+        else:
+            logger.debug("chown disabled by environment")
+            return True
 
     async def uninstall_plugin(self, name: str):
         if self.loader.watcher:
@@ -266,6 +277,7 @@ class PluginBrowser:
             plugin_dir = path.join(self.plugin_path, plugin_folder)
             await self.loader.ws.emit("loader/plugin_download_info", 95, "Store.download_progress_info.download_remote")
             ret = await self._download_remote_binaries_for_plugin_with_name(plugin_dir)
+            chown_ret = self.set_plugin_dir_permissions(plugin_dir)
             if ret:
                 logger.info(f"Installed {name} (Version: {version})")
                 if name in self.loader.plugins:
@@ -278,6 +290,9 @@ class PluginBrowser:
                     self.settings.setSetting("pluginOrder", current_plugin_order)
                     logger.debug("Plugin %s was added to the pluginOrder setting", name)
                 await self.loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_folder)
+            elif not chown_ret:
+                logger.error("Could not chown plugin")
+                return
             else:
                 logger.error("Could not download remote binaries")
                 return

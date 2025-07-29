@@ -7,7 +7,7 @@ def chown(path : str,  user : UserType = UserType.HOST_USER, recursive : bool = 
 def chmod(path : str, permissions : int, recursive : bool = True) -> bool:
     return True # Stubbed
 
-def folder_owner(path : str) -> UserType|None:
+def file_owner(path : str) -> UserType|None:
     return UserType.HOST_USER # Stubbed
 
 def get_home_path(user : UserType = UserType.HOST_USER) -> str:
@@ -33,6 +33,9 @@ async def service_restart(service_name : str, block : bool = True) -> bool:
         sys.exit(42)
 
     return True # Stubbed
+
+def get_effective_username() -> str:
+    return os.getlogin()
 
 def get_username() -> str:
     return os.getlogin()

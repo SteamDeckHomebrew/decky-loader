@@ -1,9 +1,8 @@
 from enum import IntEnum
 
 class UserType(IntEnum):
-    HOST_USER = 1
-    EFFECTIVE_USER = 2
-    ROOT = 3
+    HOST_USER = 1 # usually deck
+    EFFECTIVE_USER = 2 # usually root
 
 class PluginLoadType(IntEnum):
     LEGACY_EVAL_IIFE = 0 # legacy, uses legacy serverAPI

@@ -7,7 +7,7 @@ from aiohttp.web import Application, WebSocketResponse, Request, Response, get
 
 from enum import IntEnum
 
-from typing import Callable, Coroutine, Dict, Any, cast, TypeVar
+from typing import Callable, Coroutine, Dict, Any, cast
 
 from traceback import format_exc
 
@@ -28,8 +28,6 @@ class WSMessageExtra(WSMessage):
     type: WSMsgType # pyright: ignore [reportIncompatibleVariableOverride]
 
 # see wsrouter.ts for typings
-
-DataType = TypeVar("DataType")
 
 Route = Callable[..., Coroutine[Any, Any, Any]]
 

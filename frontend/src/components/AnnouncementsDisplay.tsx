@@ -30,7 +30,6 @@ const welcomeAnnouncement: Announcement = {
 
 export function AnnouncementsDisplay() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([welcomeAnnouncement]);
-  // showWelcome will display a welcome motd, the welcome motd has an id of "welcome" and once that is saved to hiddenMotdId, it will not show again
   const [hiddenAnnouncementIds, setHiddenAnnouncementIds] = useSetting<string[]>('hiddenAnnouncementIds', []);
 
   function addAnnouncements(newAnnouncements: Announcement[]) {
@@ -60,8 +59,8 @@ export function AnnouncementsDisplay() {
     void fetchAnnouncement();
   }, []);
 
-  const currentlyDisplayingAnnouncement: Announcement | null = useMemo(() => {
-    return announcements.find((announcement) => !hiddenAnnouncementIds.includes(announcement.id)) || null;
+  const currentlyDisplayingAnnouncements: Announcement[] = useMemo(() => {
+    return announcements.filter((announcement) => !hiddenAnnouncementIds.includes(announcement.id));
   }, [announcements, hiddenAnnouncementIds]);
 
   function hideAnnouncement(id: string) {
@@ -69,16 +68,24 @@ export function AnnouncementsDisplay() {
     void fetchAnnouncement();
   }
 
-  if (!currentlyDisplayingAnnouncement) {
+  if (!currentlyDisplayingAnnouncements) {
     return null;
   }
 
-  // Severity is not implemented in the API currently
-  const severity = SEVERITIES['Low'];
-
   return (
     <PanelSection>
-      <Focusable
+     {currentlyDisplayingAnnouncements.map((announcement) => (
+      <Announcement key={announcement.id} announcement={announcement} onHide={() => hideAnnouncement(announcement.id)} />
+     ))}
+    </PanelSection>
+  );
+}
+
+function Announcement({ announcement, onHide }: { announcement: Announcement, onHide: () => void }) {
+    // Severity is not implemented in the API currently
+  const severity = SEVERITIES['Low'];
+  return (
+<Focusable
         style={{
           // Transparency is 20% of the color
           backgroundColor: `${severity.color}33`,
@@ -93,7 +100,7 @@ export function AnnouncementsDisplay() {
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ fontWeight: 'bold' }}>{currentlyDisplayingAnnouncement.title}</span>
+          <span style={{ fontWeight: 'bold' }}>{announcement.title}</span>
           <DialogButton
             style={{
               width: '1rem',
@@ -107,7 +114,7 @@ export function AnnouncementsDisplay() {
               top: '.75rem',
               right: '.75rem',
             }}
-            onClick={() => hideAnnouncement(currentlyDisplayingAnnouncement.id)}
+            onClick={() => onHide()}
           >
             <FaTimes
               style={{
@@ -116,8 +123,7 @@ export function AnnouncementsDisplay() {
             />
           </DialogButton>
         </div>
-        <span style={{ fontSize: '0.75rem', whiteSpace: 'pre-line' }}>{currentlyDisplayingAnnouncement.text}</span>
+        <span style={{ fontSize: '0.75rem', whiteSpace: 'pre-line' }}>{announcement.text}</span>
       </Focusable>
-    </PanelSection>
   );
 }

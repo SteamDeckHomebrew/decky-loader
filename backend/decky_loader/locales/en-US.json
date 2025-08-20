@@ -237,7 +237,12 @@
         },
         "store_filter": {
             "label": "Filter",
-            "label_def": "All"
+            "label_def": "All",
+            "options": {
+                "all": "All",
+                "installed": "Installed",
+                "not_installed": "Not Installed"
+            }
         },
         "store_search": {
             "label": "Search"

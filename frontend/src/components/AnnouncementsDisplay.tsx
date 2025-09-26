@@ -68,62 +68,66 @@ export function AnnouncementsDisplay() {
     void fetchAnnouncement();
   }
 
-  if (!currentlyDisplayingAnnouncements) {
+  if (currentlyDisplayingAnnouncements.length === 0) {
     return null;
   }
 
   return (
     <PanelSection>
-     {currentlyDisplayingAnnouncements.map((announcement) => (
-      <Announcement key={announcement.id} announcement={announcement} onHide={() => hideAnnouncement(announcement.id)} />
-     ))}
+      {currentlyDisplayingAnnouncements.map((announcement) => (
+        <Announcement
+          key={announcement.id}
+          announcement={announcement}
+          onHide={() => hideAnnouncement(announcement.id)}
+        />
+      ))}
     </PanelSection>
   );
 }
 
-function Announcement({ announcement, onHide }: { announcement: Announcement, onHide: () => void }) {
-    // Severity is not implemented in the API currently
+function Announcement({ announcement, onHide }: { announcement: Announcement; onHide: () => void }) {
+  // Severity is not implemented in the API currently
   const severity = SEVERITIES['Low'];
   return (
-<Focusable
-        style={{
-          // Transparency is 20% of the color
-          backgroundColor: `${severity.color}33`,
-          color: severity.text,
-          borderColor: severity.color,
-          borderWidth: '2px',
-          borderStyle: 'solid',
-          padding: '0.7rem',
-          display: 'flex',
-          flexDirection: 'column',
-          position: 'relative',
-        }}
-      >
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ fontWeight: 'bold' }}>{announcement.title}</span>
-          <DialogButton
+    <Focusable
+      style={{
+        // Transparency is 20% of the color
+        backgroundColor: `${severity.color}33`,
+        color: severity.text,
+        borderColor: severity.color,
+        borderWidth: '2px',
+        borderStyle: 'solid',
+        padding: '0.7rem',
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
+      }}
+    >
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <span style={{ fontWeight: 'bold' }}>{announcement.title}</span>
+        <DialogButton
+          style={{
+            width: '1rem',
+            minWidth: '1rem',
+            height: '1rem',
+            padding: '0',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'absolute',
+            top: '.75rem',
+            right: '.75rem',
+          }}
+          onClick={() => onHide()}
+        >
+          <FaTimes
             style={{
-              width: '1rem',
-              minWidth: '1rem',
-              height: '1rem',
-              padding: '0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'absolute',
-              top: '.75rem',
-              right: '.75rem',
+              height: '.75rem',
             }}
-            onClick={() => onHide()}
-          >
-            <FaTimes
-              style={{
-                height: '.75rem',
-              }}
-            />
-          </DialogButton>
-        </div>
-        <span style={{ fontSize: '0.75rem', whiteSpace: 'pre-line' }}>{announcement.text}</span>
-      </Focusable>
+          />
+        </DialogButton>
+      </div>
+      <span style={{ fontSize: '0.75rem', whiteSpace: 'pre-line' }}>{announcement.text}</span>
+    </Focusable>
   );
 }

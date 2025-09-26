@@ -82,13 +82,15 @@ export function AnnouncementsDisplay() {
 
   return (
     <PanelSection>
-      {currentlyDisplayingAnnouncements.map((announcement) => (
-        <Announcement
-          key={announcement.id}
-          announcement={announcement}
-          onHide={() => hideAnnouncement(announcement.id)}
-        />
-      ))}
+      <Focusable style={{display: "flex", flexDirection: "column", gap: "0.5rem"}}>
+        {currentlyDisplayingAnnouncements.map((announcement) => (
+          <Announcement
+            key={announcement.id}
+            announcement={announcement}
+            onHide={() => hideAnnouncement(announcement.id)}
+          />
+        ))}
+      </Focusable>
     </PanelSection>
   );
 }
@@ -107,58 +109,58 @@ function Announcement({ announcement, onHide }: { announcement: Announcement; on
         borderStyle: 'solid',
         padding: '0.7rem',
         display: 'flex',
-        flexDirection: 'column',
-        position: 'relative',
+        alignItems: "center",
+        justifyContent: "space-between"
       }}
     >
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <span style={{ fontWeight: 'bold' }}>{announcement.title}</span>
-        <DialogButton
-          style={{
-            width: '1rem',
-            minWidth: '1rem',
-            height: '1rem',
-            padding: '0',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          onClick={() =>
-            showModal(
-              <AnnouncementModal
-                announcement={announcement}
-                onHide={() => {
-                  console.log('On Hide');
-                }}
-              />,
-            )
-          }
-        >
-          <FaInfo
+        <Focusable style={{display: "flex", alignItems: "center", gap: "0.5rem"}}>
+          <DialogButton
             style={{
-              height: '.75rem',
+              width: '1rem',
+              minWidth: '1rem',
+              height: '1rem',
+              padding: '0',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
-          />
-        </DialogButton>
-        <DialogButton
-          style={{
-            width: '1rem',
-            minWidth: '1rem',
-            height: '1rem',
-            padding: '0',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          onClick={() => onHide()}
-        >
-          <FaTimes
+            onClick={() =>
+              showModal(
+                <AnnouncementModal
+                  announcement={announcement}
+                  onHide={() => {
+                    console.log('On Hide');
+                  }}
+                />,
+              )
+            }
+          >
+            <FaInfo
+              style={{
+                height: '.75rem',
+              }}
+            />
+          </DialogButton>
+          <DialogButton
             style={{
-              height: '.75rem',
+              width: '1rem',
+              minWidth: '1rem',
+              height: '1rem',
+              padding: '0',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
-          />
-        </DialogButton>
-      </div>
+            onClick={() => onHide()}
+          >
+            <FaTimes
+              style={{
+                height: '.75rem',
+              }}
+            />
+          </DialogButton>
+        </Focusable>
     </Focusable>
   );
 }

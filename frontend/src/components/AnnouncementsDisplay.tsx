@@ -131,7 +131,7 @@ function Announcement({ announcement, onHide }: { announcement: Announcement; on
               <AnnouncementModal
                 announcement={announcement}
                 onHide={() => {
-                  console.log('On Hide');
+                  onHide();
                 }}
               />,
             )
@@ -202,6 +202,7 @@ function AnnouncementModal({
       </style>
       <Focusable style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', height: 'calc(100vh - 200px)' }}>
         <span style={{ fontWeight: 'bold', fontSize: '1.25rem' }}>{announcement.title}</span>
+        <span style={{ opacity: 0.5 }}>Use your finger to scroll</span>
         <ScrollPanelGroup
           // @ts-ignore
           focusable={false}
@@ -218,7 +219,6 @@ function AnnouncementModal({
           <WithSuspense>
             <MarkdownRenderer
               onDismiss={() => {
-                console.log('Dismiss');
                 closeModal?.();
               }}
             >
@@ -227,8 +227,15 @@ function AnnouncementModal({
           </WithSuspense>
         </ScrollPanelGroup>
         <Focusable style={{ display: 'flex', gap: '0.5rem' }}>
-          <DialogButton onClick={() => onHide()}>Close Popup</DialogButton>
-          <DialogButton onClick={() => onHide()}>Close and Hide Announcement</DialogButton>
+          <DialogButton onClick={() => closeModal?.()}>Close</DialogButton>
+          <DialogButton
+            onClick={() => {
+              // onHide();
+              closeModal?.();
+            }}
+          >
+            Close and Hide Announcement
+          </DialogButton>
         </Focusable>
       </Focusable>
     </ModalRoot>

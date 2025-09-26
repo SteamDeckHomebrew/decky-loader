@@ -4,6 +4,7 @@ import { FaInfo, FaTimes } from 'react-icons/fa';
 
 import { Announcement, getAnnouncements } from '../store';
 import { useSetting } from '../utils/hooks/useSetting';
+import WithSuspense from './WithSuspense';
 
 const SEVERITIES = {
   High: {
@@ -30,8 +31,8 @@ const welcomeAnnouncement: Announcement = {
 
 const welcomeAnnouncement2: Announcement = {
   id: 'welcomeAnnouncement2',
-  title: 'Welcome to Decky 2!',
-  text: '',
+  title: 'Test With mkdown content and a slightly long title',
+  text: '# Lorem Ipsum\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n\n## Features\n\n- **Bold text** for emphasis\n- *Italic text* for style\n- `Code snippets` for technical content\n\n### Getting Started\n\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\n> This is a blockquote with some important information.\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
   created: Date.now().toString(),
   updated: Date.now().toString(),
 };
@@ -82,7 +83,7 @@ export function AnnouncementsDisplay() {
 
   return (
     <PanelSection>
-      <Focusable style={{display: "flex", flexDirection: "column", gap: "0.5rem"}}>
+      <Focusable style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
         {currentlyDisplayingAnnouncements.map((announcement) => (
           <Announcement
             key={announcement.id}
@@ -109,58 +110,58 @@ function Announcement({ announcement, onHide }: { announcement: Announcement; on
         borderStyle: 'solid',
         padding: '0.7rem',
         display: 'flex',
-        alignItems: "center",
-        justifyContent: "space-between"
+        alignItems: 'center',
+        justifyContent: 'space-between',
       }}
     >
-        <span style={{ fontWeight: 'bold' }}>{announcement.title}</span>
-        <Focusable style={{display: "flex", alignItems: "center", gap: "0.5rem"}}>
-          <DialogButton
+      <span style={{ fontWeight: 'bold' }}>{announcement.title}</span>
+      <Focusable style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <DialogButton
+          style={{
+            width: '1rem',
+            minWidth: '1rem',
+            height: '1rem',
+            padding: '0',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onClick={() =>
+            showModal(
+              <AnnouncementModal
+                announcement={announcement}
+                onHide={() => {
+                  console.log('On Hide');
+                }}
+              />,
+            )
+          }
+        >
+          <FaInfo
             style={{
-              width: '1rem',
-              minWidth: '1rem',
-              height: '1rem',
-              padding: '0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              height: '.75rem',
             }}
-            onClick={() =>
-              showModal(
-                <AnnouncementModal
-                  announcement={announcement}
-                  onHide={() => {
-                    console.log('On Hide');
-                  }}
-                />,
-              )
-            }
-          >
-            <FaInfo
-              style={{
-                height: '.75rem',
-              }}
-            />
-          </DialogButton>
-          <DialogButton
+          />
+        </DialogButton>
+        <DialogButton
+          style={{
+            width: '1rem',
+            minWidth: '1rem',
+            height: '1rem',
+            padding: '0',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onClick={() => onHide()}
+        >
+          <FaTimes
             style={{
-              width: '1rem',
-              minWidth: '1rem',
-              height: '1rem',
-              padding: '0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              height: '.75rem',
             }}
-            onClick={() => onHide()}
-          >
-            <FaTimes
-              style={{
-                height: '.75rem',
-              }}
-            />
-          </DialogButton>
-        </Focusable>
+          />
+        </DialogButton>
+      </Focusable>
     </Focusable>
   );
 }
@@ -178,15 +179,42 @@ function AnnouncementModal({
 }) {
   return (
     <ModalRoot>
-      <span>{announcement.title}</span>
-      <MarkdownRenderer
-        onDismiss={() => {
-          console.log('Dismiss');
-          closeModal?.();
-        }}
-      >
-        {announcement.text}
-      </MarkdownRenderer>
+      <style>
+        {`
+          .steam-focus {
+            outline-offset: 3px;
+            outline: 2px solid rgba(255, 255, 255, 0.6);
+            animation: pulseOutline 1.2s infinite ease-in-out;
+          }
+
+          @keyframes pulseOutline {
+            0% {
+              outline: 2px solid rgba(255, 255, 255, 0.6);
+            }
+            50% {
+              outline: 2px solid rgba(255, 255, 255, 1);
+            }
+            100% {
+              outline: 2px solid rgba(255, 255, 255, 0.6);
+            }
+          }
+        `}
+      </style>
+      <h1>{announcement.title}</h1>
+      <WithSuspense>
+        <MarkdownRenderer
+          onDismiss={() => {
+            console.log('Dismiss');
+            closeModal?.();
+          }}
+        >
+          {announcement.text}
+        </MarkdownRenderer>
+      </WithSuspense>
+      <Focusable style={{ display: 'flex', gap: '0.5rem' }}>
+        <DialogButton onClick={() => onHide()}>Close Popup</DialogButton>
+        <DialogButton onClick={() => onHide()}>Close and Hide Announcement</DialogButton>
+      </Focusable>
     </ModalRoot>
   );
 }

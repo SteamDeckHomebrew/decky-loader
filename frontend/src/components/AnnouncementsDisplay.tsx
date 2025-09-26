@@ -28,8 +28,16 @@ const welcomeAnnouncement: Announcement = {
   updated: Date.now().toString(),
 };
 
+const welcomeAnnouncement2: Announcement = {
+  id: 'welcomeAnnouncement2',
+  title: 'Welcome to Decky 2!',
+  text: "",
+  created: Date.now().toString(),
+  updated: Date.now().toString(),
+};
+
 export function AnnouncementsDisplay() {
-  const [announcements, setAnnouncements] = useState<Announcement[]>([welcomeAnnouncement]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([welcomeAnnouncement, welcomeAnnouncement2]);
   const [hiddenAnnouncementIds, setHiddenAnnouncementIds] = useSetting<string[]>('hiddenAnnouncementIds', []);
 
   function addAnnouncements(newAnnouncements: Announcement[]) {

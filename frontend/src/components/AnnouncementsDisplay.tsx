@@ -200,11 +200,11 @@ function AnnouncementModal({
           }
         `}
       </style>
-      <Focusable style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', height: '80vh' }}>
-        <h1>{announcement.title}</h1>
+      <Focusable style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', height: 'calc(100vh - 200px)' }}>
+        <span style={{ fontWeight: 'bold', fontSize: '1.25rem' }}>{announcement.title}</span>
         <ScrollPanelGroup
           // @ts-ignore
-          focusable={true}
+          focusable={false}
           style={{ flex: 1, height: '100%' }}
           // onCancelButton doesn't work here
           onCancelActionDescription="Back"

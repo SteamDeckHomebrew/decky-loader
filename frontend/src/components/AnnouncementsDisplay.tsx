@@ -200,35 +200,37 @@ function AnnouncementModal({
           }
         `}
       </style>
-      <ScrollPanelGroup
-        // @ts-ignore
-        focusable={true}
-        style={{ height: '80vh' }}
-        // onCancelButton doesn't work here
-        onCancelActionDescription="Back"
-        onButtonDown={(evt: any) => {
-          if (!evt?.detail?.button) return;
-          if (evt.detail.button === 2) {
-            closeModal?.();
-          }
-        }}
-      >
+      <Focusable style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', height: '80vh' }}>
         <h1>{announcement.title}</h1>
-        <WithSuspense>
-          <MarkdownRenderer
-            onDismiss={() => {
-              console.log('Dismiss');
+        <ScrollPanelGroup
+          // @ts-ignore
+          focusable={true}
+          style={{ flex: 1, height: '100%' }}
+          // onCancelButton doesn't work here
+          onCancelActionDescription="Back"
+          onButtonDown={(evt: any) => {
+            if (!evt?.detail?.button) return;
+            if (evt.detail.button === 2) {
               closeModal?.();
-            }}
-          >
-            {announcement.text}
-          </MarkdownRenderer>
-        </WithSuspense>
+            }
+          }}
+        >
+          <WithSuspense>
+            <MarkdownRenderer
+              onDismiss={() => {
+                console.log('Dismiss');
+                closeModal?.();
+              }}
+            >
+              {announcement.text}
+            </MarkdownRenderer>
+          </WithSuspense>
+        </ScrollPanelGroup>
         <Focusable style={{ display: 'flex', gap: '0.5rem' }}>
           <DialogButton onClick={() => onHide()}>Close Popup</DialogButton>
           <DialogButton onClick={() => onHide()}>Close and Hide Announcement</DialogButton>
         </Focusable>
-      </ScrollPanelGroup>
+      </Focusable>
     </ModalRoot>
   );
 }

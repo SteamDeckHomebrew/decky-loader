@@ -1,6 +1,6 @@
-import { DialogButton, Focusable, PanelSection } from '@decky/ui';
-import { useEffect, useMemo, useState } from 'react';
-import { FaTimes } from 'react-icons/fa';
+import { DialogButton, Focusable, ModalRoot, PanelSection, showModal } from '@decky/ui';
+import { lazy, useEffect, useMemo, useState } from 'react';
+import { FaInfo, FaTimes } from 'react-icons/fa';
 
 import { Announcement, getAnnouncements } from '../store';
 import { useSetting } from '../utils/hooks/useSetting';
@@ -31,7 +31,7 @@ const welcomeAnnouncement: Announcement = {
 const welcomeAnnouncement2: Announcement = {
   id: 'welcomeAnnouncement2',
   title: 'Welcome to Decky 2!',
-  text: "",
+  text: '',
   created: Date.now().toString(),
   updated: Date.now().toString(),
 };
@@ -122,9 +122,33 @@ function Announcement({ announcement, onHide }: { announcement: Announcement; on
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            position: 'absolute',
-            top: '.75rem',
-            right: '.75rem',
+          }}
+          onClick={() =>
+            showModal(
+              <AnnouncementModal
+                announcement={announcement}
+                onHide={() => {
+                  console.log('On Hide');
+                }}
+              />,
+            )
+          }
+        >
+          <FaInfo
+            style={{
+              height: '.75rem',
+            }}
+          />
+        </DialogButton>
+        <DialogButton
+          style={{
+            width: '1rem',
+            minWidth: '1rem',
+            height: '1rem',
+            padding: '0',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
           onClick={() => onHide()}
         >
@@ -135,7 +159,32 @@ function Announcement({ announcement, onHide }: { announcement: Announcement; on
           />
         </DialogButton>
       </div>
-      <span style={{ fontSize: '0.75rem', whiteSpace: 'pre-line' }}>{announcement.text}</span>
     </Focusable>
+  );
+}
+
+const MarkdownRenderer = lazy(() => import('./Markdown'));
+
+function AnnouncementModal({
+  announcement,
+  closeModal,
+  onHide,
+}: {
+  announcement: Announcement;
+  closeModal?: () => void;
+  onHide: () => void;
+}) {
+  return (
+    <ModalRoot>
+      <span>{announcement.title}</span>
+      <MarkdownRenderer
+        onDismiss={() => {
+          console.log('Dismiss');
+          closeModal?.();
+        }}
+      >
+        {announcement.text}
+      </MarkdownRenderer>
+    </ModalRoot>
   );
 }

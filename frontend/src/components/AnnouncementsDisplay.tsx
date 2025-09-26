@@ -1,4 +1,4 @@
-import { DialogButton, Focusable, ModalRoot, PanelSection, showModal } from '@decky/ui';
+import { DialogButton, Focusable, ModalRoot, PanelSection, ScrollPanelGroup, showModal } from '@decky/ui';
 import { lazy, useEffect, useMemo, useState } from 'react';
 import { FaInfo, FaTimes } from 'react-icons/fa';
 
@@ -200,7 +200,19 @@ function AnnouncementModal({
           }
         `}
       </style>
-      <Focusable style={{display: "flex", flexDirection: "column", gap: "0.5rem", overflowY: "scroll", height: "80vh"}}>
+      <ScrollPanelGroup
+        // @ts-ignore
+        focusable={true}
+        style={{ height: '80vh' }}
+        // onCancelButton doesn't work here
+        onCancelActionDescription="Back"
+        onButtonDown={(evt: any) => {
+          if (!evt?.detail?.button) return;
+          if (evt.detail.button === 2) {
+            closeModal?.();
+          }
+        }}
+      >
         <h1>{announcement.title}</h1>
         <WithSuspense>
           <MarkdownRenderer
@@ -216,7 +228,7 @@ function AnnouncementModal({
           <DialogButton onClick={() => onHide()}>Close Popup</DialogButton>
           <DialogButton onClick={() => onHide()}>Close and Hide Announcement</DialogButton>
         </Focusable>
-      </Focusable>
+      </ScrollPanelGroup>
     </ModalRoot>
   );
 }

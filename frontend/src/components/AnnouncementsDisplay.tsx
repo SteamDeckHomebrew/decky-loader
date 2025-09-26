@@ -178,7 +178,7 @@ function AnnouncementModal({
   onHide: () => void;
 }) {
   return (
-    <ModalRoot>
+    <ModalRoot onCancel={closeModal} onEscKeypress={closeModal}>
       <style>
         {`
           .steam-focus {
@@ -200,20 +200,22 @@ function AnnouncementModal({
           }
         `}
       </style>
-      <h1>{announcement.title}</h1>
-      <WithSuspense>
-        <MarkdownRenderer
-          onDismiss={() => {
-            console.log('Dismiss');
-            closeModal?.();
-          }}
-        >
-          {announcement.text}
-        </MarkdownRenderer>
-      </WithSuspense>
-      <Focusable style={{ display: 'flex', gap: '0.5rem' }}>
-        <DialogButton onClick={() => onHide()}>Close Popup</DialogButton>
-        <DialogButton onClick={() => onHide()}>Close and Hide Announcement</DialogButton>
+      <Focusable style={{display: "flex", flexDirection: "column", gap: "0.5rem", overflowY: "scroll", height: "80vh"}}>
+        <h1>{announcement.title}</h1>
+        <WithSuspense>
+          <MarkdownRenderer
+            onDismiss={() => {
+              console.log('Dismiss');
+              closeModal?.();
+            }}
+          >
+            {announcement.text}
+          </MarkdownRenderer>
+        </WithSuspense>
+        <Focusable style={{ display: 'flex', gap: '0.5rem' }}>
+          <DialogButton onClick={() => onHide()}>Close Popup</DialogButton>
+          <DialogButton onClick={() => onHide()}>Close and Hide Announcement</DialogButton>
+        </Focusable>
       </Focusable>
     </ModalRoot>
   );

@@ -230,7 +230,7 @@ function AnnouncementModal({
           <DialogButton onClick={() => closeModal?.()}>Close</DialogButton>
           <DialogButton
             onClick={() => {
-              // onHide();
+              onHide();
               closeModal?.();
             }}
           >

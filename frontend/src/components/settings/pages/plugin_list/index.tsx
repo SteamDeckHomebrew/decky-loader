@@ -35,6 +35,7 @@ async function reinstallPlugin(pluginName: string, currentVersion?: string) {
 
 type PluginTableData = PluginData & {
   name: string;
+  disabled: boolean;
   frozen: boolean;
   onFreeze(): void;
   onUnfreeze(): void;
@@ -54,7 +55,7 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
     return null;
   }
 
-  const { name, update, version, onHide, onShow, hidden, onFreeze, onUnfreeze, frozen, isDeveloper } = props.entry.data;
+  const { name, update, version, onHide, onShow, hidden, onFreeze, onUnfreeze, frozen, isDeveloper, disabled } = props.entry.data;
 
   const showCtxMenu = (e: MouseEvent | GamepadEvent) => {
     showContextMenu(
@@ -82,6 +83,22 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
         >
           {t('PluginListIndex.uninstall')}
         </MenuItem>
+        {disabled ? <MenuItem
+          onSelected={() =>
+            DeckyPluginLoader.disablePlugin(
+              name,
+              t('PluginLoader.plugin_disable.title', { name }),
+              t('PluginLoader.plugin_disable.button'),
+              t('PluginLoader.plugin_disable.desc', { name }),
+            )
+          }
+        >
+          {t('PluginListIndex.plugin_disable')}
+        </MenuItem> :
+          // implement enabler
+          <>
+          </>
+        }
         {hidden ? (
           <MenuItem onSelected={onShow}>{t('PluginListIndex.show')}</MenuItem>
         ) : (
@@ -147,10 +164,11 @@ type PluginData = {
 };
 
 export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
-  const { plugins, updates, pluginOrder, setPluginOrder, frozenPlugins, hiddenPlugins } = useDeckyState();
+  const { installedPlugins, disabled, updates, pluginOrder, setPluginOrder, frozenPlugins, hiddenPlugins } = useDeckyState();
+
   const [_, setPluginOrderSetting] = useSetting<string[]>(
     'pluginOrder',
-    plugins.map((plugin) => plugin.name),
+    installedPlugins.map((plugin) => plugin.name),
   );
   const { t } = useTranslation();
 
@@ -164,7 +182,7 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
 
   useEffect(() => {
     setPluginEntries(
-      plugins.map(({ name, version }) => {
+      installedPlugins.map(({ name, version }) => {
         const frozen = frozenPlugins.includes(name);
         const hidden = hiddenPlugins.includes(name);
 
@@ -173,6 +191,7 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
           position: pluginOrder.indexOf(name),
           data: {
             name,
+            disabled: disabled.some(disabledPlugin => disabledPlugin.name === name),
             frozen,
             hidden,
             isDeveloper,
@@ -186,9 +205,9 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
         };
       }),
     );
-  }, [plugins, updates, hiddenPlugins]);
+  }, [installedPlugins, updates, hiddenPlugins]);
 
-  if (plugins.length === 0) {
+  if (installedPlugins.length === 0) {
     return (
       <div>
         <p>{t('PluginListIndex.no_plugin')}</p>

@@ -390,7 +390,6 @@ class Utilities:
             "total": len(all),
         }
         
-
     # Based on https://stackoverflow.com/a/46422554/13174603
     def start_rdt_proxy(self, ip: str, port: int):
         async def pipe(reader: StreamReader, writer: StreamWriter):
@@ -474,3 +473,22 @@ class Utilities:
     
     async def get_tab_id(self, name: str):
         return (await get_tab(name)).id
+
+    async def disable_plugin(self, name: str):
+        disabled_plugins: List[str] = await self.get_setting("disabled_plugins", [])
+        if name not in disabled_plugins:
+            disabled_plugins.append(name)
+            await self.set_setting("disabled_plugins", disabled_plugins)
+
+            await self.context.plugin_loader.plugins[name].stop()
+            await self.context.ws.emit("loader/unload_plugin", name)
+    
+    async def enable_plugin(self, name: str):
+        disabled_plugins: List[str] = await self.get_setting("disabled_plugins", [])
+        if name in disabled_plugins:
+            disabled_plugins.remove(name)
+            await self.set_setting("disabled_plugins", disabled_plugins)
+
+            plugin = self.context.plugin_loader.plugins[name]
+            plugin.start()
+            await self.context.plugin_loader.dispatch_plugin(plugin.name, plugin.version, plugin.load_type)

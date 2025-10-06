@@ -78,6 +78,7 @@ class Loader:
         self.live_reload = live_reload
         self.reload_queue: ReloadQueue = Queue()
         self.loop.create_task(self.handle_reloads())
+        self.context: PluginManager = server_instance
 
         if live_reload:
             self.observer = Observer()
@@ -164,6 +165,9 @@ class Loader:
                 await self.ws.emit(f"loader/plugin_event", {"plugin": plugin.name, "event": event, "args": args})
 
             plugin = PluginWrapper(file, plugin_directory, self.plugin_path, plugin_emitted_event)
+            if hasattr(self.context, "utilities") and plugin.name in await self.context.utilities.get_setting("disabled_plugins",[]):
+                self.plugins[plugin.name] = plugin
+                return
             if plugin.name in self.plugins:
                     if not "debug" in plugin.flags and refresh:
                         self.logger.info(f"Plugin {plugin.name} is already loaded and has requested to not be re-loaded")

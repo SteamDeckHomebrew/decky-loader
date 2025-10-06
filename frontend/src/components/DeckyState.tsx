@@ -47,7 +47,7 @@ export class DeckyState {
     return {
       plugins: this._plugins,
       disabled: this._disabledPlugins,
-      installedPlugins: this._disabledPlugins,
+      installedPlugins: this._installedPlugins,
       pluginOrder: this._pluginOrder,
       frozenPlugins: this._frozenPlugins,
       hiddenPlugins: this._hiddenPlugins,

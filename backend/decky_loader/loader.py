@@ -131,7 +131,7 @@ class Loader:
 
     async def get_plugins(self):
         plugins = list(self.plugins.values())
-        return [{"name": str(i), "version": i.version, "load_type": i.load_type} for i in plugins]
+        return [{"name": str(i), "version": i.version, "load_type": i.load_type, "disabled": i.disabled} for i in plugins]
 
     async def handle_plugin_dist(self, request: web.Request):
         plugin = self.plugins[request.match_info["plugin_name"]]
@@ -166,6 +166,7 @@ class Loader:
 
             plugin = PluginWrapper(file, plugin_directory, self.plugin_path, plugin_emitted_event)
             if hasattr(self.context, "utilities") and plugin.name in await self.context.utilities.get_setting("disabled_plugins",[]):
+                plugin.disabled = True
                 self.plugins[plugin.name] = plugin
                 return
             if plugin.name in self.plugins:

@@ -1,7 +1,7 @@
 import { ConfirmModal, Spinner } from '@decky/ui';
 import { FC, useState } from 'react';
 
-import { disablePlugin, uninstallPlugin } from '../../plugin';
+import { disablePlugin } from '../../plugin';
 
 interface PluginUninstallModalProps {
   name: string;

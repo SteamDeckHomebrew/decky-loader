@@ -30,7 +30,7 @@ import { FrozenPluginService } from './frozen-plugins-service';
 import { HiddenPluginsService } from './hidden-plugins-service';
 import Logger from './logger';
 import { NotificationService } from './notification-service';
-import { InstallType, Plugin, PluginLoadType } from './plugin';
+import { DisabledPlugin, InstallType, Plugin, PluginLoadType } from './plugin';
 import RouterHook from './router-hook';
 import { deinitSteamFixes, initSteamFixes } from './steamfixes';
 import { checkForPluginUpdates } from './store';
@@ -197,7 +197,7 @@ class PluginLoader extends Logger {
 
   private getPluginsFromBackend = DeckyBackend.callable<
     [],
-    { name: string; version: string; load_type: PluginLoadType }[]
+    { name: string; version: string; load_type: PluginLoadType; disabled: boolean }[]
   >('loader/get_plugins');
 
   private restartWebhelper = DeckyBackend.callable<[], void>('utilities/restart_webhelper');
@@ -220,10 +220,16 @@ class PluginLoader extends Logger {
     this.runCrashChecker();
     const plugins = await this.getPluginsFromBackend();
     const pluginLoadPromises = [];
+    const disabledPlugins: DisabledPlugin[] = [];
     const loadStart = performance.now();
     for (const plugin of plugins) {
-      if (!this.hasPlugin(plugin.name))
-        pluginLoadPromises.push(this.importPlugin(plugin.name, plugin.version, plugin.load_type, false));
+      if (plugin.disabled) {
+        disabledPlugins.push({ name: plugin.name, version: plugin.version });
+        this.deckyState.setDisabledPlugins(disabledPlugins);
+      } else {
+        if (!this.hasPlugin(plugin.name))
+          pluginLoadPromises.push(this.importPlugin(plugin.name, plugin.version, plugin.load_type, false));
+      }
     }
     await Promise.all(pluginLoadPromises);
     const loadEnd = performance.now();

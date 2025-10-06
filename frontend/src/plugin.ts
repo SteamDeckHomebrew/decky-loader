@@ -14,6 +14,8 @@ export interface Plugin {
   titleView?: JSX.Element;
 }
 
+export type DisabledPlugin = Pick<Plugin, 'name' | 'version'>;
+
 export enum InstallType {
   INSTALL,
   REINSTALL,

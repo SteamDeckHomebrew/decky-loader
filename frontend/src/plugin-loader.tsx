@@ -341,6 +341,10 @@ class PluginLoader extends Logger {
     showModal(<PluginUninstallModal name={name} title={title} buttonText={buttonText} description={description} />);
   }
 
+  public disablePlugin(name: string, title: string, buttonText: string, description: string) {
+    showModal(<PluginUninstallModal name={name} title={title} buttonText={buttonText} description={description} />);
+  }
+
   public hasPlugin(name: string) {
     return Boolean(this.plugins.find((plugin) => plugin.name == name));
   }

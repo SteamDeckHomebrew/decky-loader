@@ -92,6 +92,7 @@ class PluginLoader extends Logger {
     DeckyBackend.addEventListener('loader/notify_updates', this.notifyUpdates.bind(this));
     DeckyBackend.addEventListener('loader/import_plugin', this.importPlugin.bind(this));
     DeckyBackend.addEventListener('loader/unload_plugin', this.unloadPlugin.bind(this));
+    DeckyBackend.addEventListener('loader/disable_plugin', this.doDisablePlugin.bind(this));
     DeckyBackend.addEventListener('loader/add_plugin_install_prompt', this.addPluginInstallPrompt.bind(this));
     DeckyBackend.addEventListener(
       'loader/add_multiple_plugins_install_prompt',
@@ -207,10 +208,10 @@ class PluginLoader extends Logger {
     let registration: any;
     const uiMode = await new Promise(
       (r) =>
-        (registration = SteamClient.UI.RegisterForUIModeChanged((mode: EUIMode) => {
-          r(mode);
-          registration.unregister();
-        })),
+      (registration = SteamClient.UI.RegisterForUIModeChanged((mode: EUIMode) => {
+        r(mode);
+        registration.unregister();
+      })),
     );
     if (uiMode == EUIMode.GamePad) {
       // wait for SP window to exist before loading plugins
@@ -384,6 +385,17 @@ class PluginLoader extends Logger {
     this.errorBoundaryHook.deinit();
   }
 
+  public doDisablePlugin(name: string) {
+    const plugin = this.plugins.find((plugin) => plugin.name === name);
+    if (plugin == undefined) return;
+
+    plugin?.onDismount?.();
+    this.plugins = this.plugins.filter((p) => p !== plugin);
+    this.deckyState.setDisabledPlugins([...this.deckyState.publicState().disabled,
+    { name: plugin.name, version: plugin.version }]);
+    this.deckyState.setPlugins(this.plugins);
+  }
+
   public unloadPlugin(name: string, skipStateUpdate: boolean = false) {
     const plugin = this.plugins.find((plugin) => plugin.name === name);
     plugin?.onDismount?.();
@@ -403,12 +415,15 @@ class PluginLoader extends Logger {
       return;
     }
 
+    this.deckyState.setDisabledPlugins(this.deckyState.publicState().disabled.filter(d => d.name !== name))
+
     try {
       if (useQueue) this.reloadLock = true;
       this.log(`Trying to load ${name}`);
 
       this.unloadPlugin(name, true);
       const startTime = performance.now();
+
       await this.importReactPlugin(name, version, loadType);
       const endTime = performance.now();
 

@@ -80,6 +80,8 @@ class Utilities:
             context.ws.add_route("utilities/restart_webhelper", self.restart_webhelper)
             context.ws.add_route("utilities/close_cef_socket", self.close_cef_socket)
             context.ws.add_route("utilities/_call_legacy_utility", self._call_legacy_utility)
+            context.ws.add_route("utilities/enable_plugin", self.enable_plugin)
+            context.ws.add_route("utilities/disable_plugin", self.disable_plugin)
 
             context.web_app.add_routes([
                 post("/methods/{method_name}", self._handle_legacy_server_method_call)
@@ -481,7 +483,7 @@ class Utilities:
             await self.set_setting("disabled_plugins", disabled_plugins)
 
             await self.context.plugin_loader.plugins[name].stop()
-            await self.context.ws.emit("loader/unload_plugin", name)
+            await self.context.ws.emit("loader/disable_plugin", name)
     
     async def enable_plugin(self, name: str):
         disabled_plugins: List[str] = await self.get_setting("disabled_plugins", [])

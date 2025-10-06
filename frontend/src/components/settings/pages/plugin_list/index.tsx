@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaDownload, FaEllipsisH, FaRecycle } from 'react-icons/fa';
 
-import { InstallType } from '../../../../plugin';
+import { enablePlugin, InstallType } from '../../../../plugin';
 import {
   StorePluginVersion,
   getPluginList,
@@ -84,9 +84,11 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
           {t('PluginListIndex.uninstall')}
         </MenuItem>
         {disabled ?
-          // implement enabler
-          <>
-          </> :
+          <MenuItem
+            onSelected={() => enablePlugin(name)}
+          >
+            {t('PluginListIndex.plugin_enable')}
+          </MenuItem> :
           <MenuItem
             onSelected={() =>
               DeckyPluginLoader.disablePlugin(
@@ -188,7 +190,8 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
         const hidden = hiddenPlugins.includes(name);
 
         return {
-          label: <PluginListLabel name={name} frozen={frozen} hidden={hidden} version={version} />,
+          label: <PluginListLabel name={name} frozen={frozen} hidden={hidden} version={version}
+            disabled={disabled.find(p => p.name == name) !== undefined} />,
           position: pluginOrder.indexOf(name),
           data: {
             name,

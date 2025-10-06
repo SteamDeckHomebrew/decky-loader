@@ -39,6 +39,7 @@ import Toaster from './toaster';
 import { getVersionInfo } from './updater';
 import { getSetting, setSetting } from './utils/settings';
 import TranslationHelper, { TranslationClass } from './utils/TranslationHelper';
+import PluginDisablelModal from './components/modals/PluginDisablelModal';
 
 const StorePage = lazy(() => import('./components/store/Store'));
 const SettingsPage = lazy(() => import('./components/settings'));
@@ -342,7 +343,7 @@ class PluginLoader extends Logger {
   }
 
   public disablePlugin(name: string, title: string, buttonText: string, description: string) {
-    showModal(<PluginUninstallModal name={name} title={title} buttonText={buttonText} description={description} />);
+    showModal(<PluginDisablelModal name={name} title={title} buttonText={buttonText} description={description} />);
   }
 
   public hasPlugin(name: string) {

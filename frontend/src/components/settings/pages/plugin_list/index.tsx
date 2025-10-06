@@ -83,21 +83,22 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
         >
           {t('PluginListIndex.uninstall')}
         </MenuItem>
-        {disabled ? <MenuItem
-          onSelected={() =>
-            DeckyPluginLoader.disablePlugin(
-              name,
-              t('PluginLoader.plugin_disable.title', { name }),
-              t('PluginLoader.plugin_disable.button'),
-              t('PluginLoader.plugin_disable.desc', { name }),
-            )
-          }
-        >
-          {t('PluginListIndex.plugin_disable')}
-        </MenuItem> :
+        {disabled ?
           // implement enabler
           <>
-          </>
+          </> :
+          <MenuItem
+            onSelected={() =>
+              DeckyPluginLoader.disablePlugin(
+                name,
+                t('PluginLoader.plugin_disable.title', { name }),
+                t('PluginLoader.plugin_disable.button'),
+                t('PluginLoader.plugin_disable.desc', { name }),
+              )
+            }
+          >
+            {t('PluginListIndex.plugin_disable')}
+          </MenuItem>
         }
         {hidden ? (
           <MenuItem onSelected={onShow}>{t('PluginListIndex.show')}</MenuItem>

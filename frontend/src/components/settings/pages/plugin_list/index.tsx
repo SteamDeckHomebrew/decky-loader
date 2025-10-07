@@ -87,7 +87,7 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
           <MenuItem
             onSelected={() => enablePlugin(name)}
           >
-            {t('PluginListIndex.plugin_enable')}
+            {t('PluginListIndex.enable')}
           </MenuItem> :
           <MenuItem
             onSelected={() =>
@@ -99,7 +99,7 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
               )
             }
           >
-            {t('PluginListIndex.plugin_disable')}
+            {t('PluginListIndex.disable')}
           </MenuItem>
         }
         {!disabled &&

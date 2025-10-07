@@ -133,10 +133,13 @@
         "uninstall": "Uninstall",
         "update_all_one": "Update 1 plugin",
         "update_all_other": "Update {{count}} plugins",
-        "update_to": "Update to {{name}}"
+        "update_to": "Update to {{name}}",
+        "disable": "Disable",
+        "enable": "Enable"
     },
     "PluginListLabel": {
-        "hidden": "Hidden from the quick access menu"
+        "hidden": "Hidden from the quick access menu",
+        "disabled": "Plugin disabled"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -151,6 +154,15 @@
             "button": "Uninstall",
             "desc": "Are you sure you want to uninstall {{name}}?",
             "title": "Uninstall {{name}}"
+        },
+        "plugin_disable": {
+            "button": "Disable",
+            "desc": "Are you sure you want to disbale {{name}}?",
+            "title": "Disable {{name}}",
+            "error": "Error disabling {{name}}"
+        },
+        "plugin_enable": {
+            "error": "Error enabling {{name}}"
         },
         "plugin_update_one": "Updates available for 1 plugin!",
         "plugin_update_other": "Updates available for {{count}} plugins!"

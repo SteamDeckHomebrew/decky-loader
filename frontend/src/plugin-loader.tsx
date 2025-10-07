@@ -436,7 +436,7 @@ class PluginLoader extends Logger {
         this.reloadLock = false;
         const nextPlugin = this.pluginReloadQueue.shift();
         if (nextPlugin) {
-          this.importPlugin(nextPlugin.name, nextPlugin.version, loadType);
+          this.importPlugin(nextPlugin.name, nextPlugin.version, nextPlugin.loadType);
         }
       }
     }

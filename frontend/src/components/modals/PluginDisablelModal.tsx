@@ -19,13 +19,6 @@ const PluginDisableModal: FC<PluginUninstallModalProps> = ({ name, title, button
       onOK={async () => {
         setDisabling(true);
         await disablePlugin(name);
-
-        //not sure about this yet
-
-        // uninstalling a plugin resets the hidden setting for it server-side
-        // we invalidate here so if you re-install it, you won't have an out-of-date hidden filter
-        await DeckyPluginLoader.frozenPluginsService.invalidate();
-        await DeckyPluginLoader.hiddenPluginsService.invalidate();
         closeModal?.();
       }}
       bOKDisabled={disabling}

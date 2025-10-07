@@ -21,7 +21,7 @@ const PluginView: FC = () => {
       .sort((a, b) => pluginOrder.indexOf(a.name) - pluginOrder.indexOf(b.name))
       .filter((p) => p.content)
       .filter(({ name }) => !hiddenPlugins.includes(name));
-  }, [plugins, pluginOrder]);
+  }, [plugins, pluginOrder, hiddenPlugins]);
 
   if (activePlugin) {
     return (

@@ -340,7 +340,7 @@ class PluginLoader extends Logger {
   }
 
   public uninstallPlugin(name: string, title: string, buttonText: string, description: string) {
-    showModal(<PluginUninstallModal name={name} title={title} buttonText={buttonText} description={description} />);
+    showModal(<PluginUninstallModal name={name} title={title} buttonText={buttonText} description={description} deckyState={this.deckyState}/>);
   }
 
   public disablePlugin(name: string, title: string, buttonText: string, description: string) {

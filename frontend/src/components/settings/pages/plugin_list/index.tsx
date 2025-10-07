@@ -167,7 +167,7 @@ type PluginData = {
 };
 
 export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
-  const { installedPlugins, disabled, updates, pluginOrder, setPluginOrder, frozenPlugins, hiddenPlugins } = useDeckyState();
+  const { installedPlugins, disabledPlugins, updates, pluginOrder, setPluginOrder, frozenPlugins, hiddenPlugins } = useDeckyState();
 
   const [_, setPluginOrderSetting] = useSetting<string[]>(
     'pluginOrder',
@@ -191,11 +191,11 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
 
         return {
           label: <PluginListLabel name={name} frozen={frozen} hidden={hidden} version={version}
-            disabled={disabled.find(p => p.name == name) !== undefined} />,
+            disabled={disabledPlugins.find(p => p.name == name) !== undefined} />,
           position: pluginOrder.indexOf(name),
           data: {
             name,
-            disabled: disabled.some(disabledPlugin => disabledPlugin.name === name),
+            disabled: disabledPlugins.some(disabledPlugin => disabledPlugin.name === name),
             frozen,
             hidden,
             isDeveloper,

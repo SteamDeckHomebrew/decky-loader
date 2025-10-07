@@ -7,7 +7,7 @@ import { VerInfo } from '../updater';
 
 interface PublicDeckyState {
   plugins: Plugin[];
-  disabled: DisabledPlugin[];
+  disabledPlugins: DisabledPlugin[];
   installedPlugins: (Plugin | DisabledPlugin)[];
   pluginOrder: string[];
   frozenPlugins: string[];
@@ -46,7 +46,7 @@ export class DeckyState {
   publicState(): PublicDeckyState {
     return {
       plugins: this._plugins,
-      disabled: this._disabledPlugins,
+      disabledPlugins: this._disabledPlugins,
       installedPlugins: this._installedPlugins,
       pluginOrder: this._pluginOrder,
       frozenPlugins: this._frozenPlugins,
@@ -138,6 +138,7 @@ interface DeckyStateContext extends PublicDeckyState {
   setIsLoaderUpdating(hasUpdate: boolean): void;
   setActivePlugin(name: string): void;
   setPluginOrder(pluginOrder: string[]): void;
+  setDisabledPlugins(disabled: DisabledPlugin[]): void;
   closeActivePlugin(): void;
 }
 
@@ -176,6 +177,7 @@ export const DeckyStateContextProvider: FC<Props> = ({ children, deckyState }) =
   const setActivePlugin = deckyState.setActivePlugin.bind(deckyState);
   const closeActivePlugin = deckyState.closeActivePlugin.bind(deckyState);
   const setPluginOrder = deckyState.setPluginOrder.bind(deckyState);
+  const setDisabledPlugins = deckyState.setDisabledPlugins.bind(deckyState);
 
   return (
     <DeckyStateContext.Provider
@@ -186,6 +188,7 @@ export const DeckyStateContextProvider: FC<Props> = ({ children, deckyState }) =
         setActivePlugin,
         closeActivePlugin,
         setPluginOrder,
+        setDisabledPlugins
       }}
     >
       {children}

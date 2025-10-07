@@ -2,6 +2,7 @@ import { ConfirmModal, Spinner } from '@decky/ui';
 import { FC, useState } from 'react';
 
 import { uninstallPlugin } from '../../plugin';
+import { useDeckyState } from '../DeckyState';
 
 interface PluginUninstallModalProps {
   name: string;
@@ -13,12 +14,14 @@ interface PluginUninstallModalProps {
 
 const PluginUninstallModal: FC<PluginUninstallModalProps> = ({ name, title, buttonText, description, closeModal }) => {
   const [uninstalling, setUninstalling] = useState<boolean>(false);
+  const { disabledPlugins, setDisabledPlugins } = useDeckyState();
   return (
     <ConfirmModal
       closeModal={closeModal}
       onOK={async () => {
         setUninstalling(true);
         await uninstallPlugin(name);
+        setDisabledPlugins(disabledPlugins.filter(d => d.name !== name));
         // uninstalling a plugin resets the hidden setting for it server-side
         // we invalidate here so if you re-install it, you won't have an out-of-date hidden filter
         await DeckyPluginLoader.frozenPluginsService.invalidate();

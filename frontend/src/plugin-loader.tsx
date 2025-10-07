@@ -391,7 +391,7 @@ class PluginLoader extends Logger {
 
     plugin?.onDismount?.();
     this.plugins = this.plugins.filter((p) => p !== plugin);
-    this.deckyState.setDisabledPlugins([...this.deckyState.publicState().disabled,
+    this.deckyState.setDisabledPlugins([...this.deckyState.publicState().disabledPlugins,
     { name: plugin.name, version: plugin.version }]);
     this.deckyState.setPlugins(this.plugins);
   }
@@ -415,7 +415,6 @@ class PluginLoader extends Logger {
       return;
     }
 
-    this.deckyState.setDisabledPlugins(this.deckyState.publicState().disabled.filter(d => d.name !== name))
 
     try {
       if (useQueue) this.reloadLock = true;
@@ -427,6 +426,7 @@ class PluginLoader extends Logger {
       await this.importReactPlugin(name, version, loadType);
       const endTime = performance.now();
 
+      this.deckyState.setDisabledPlugins(this.deckyState.publicState().disabledPlugins.filter(d => d.name !== name));
       this.deckyState.setPlugins(this.plugins);
       this.log(`Loaded ${name} in ${endTime - startTime}ms`);
     } catch (e) {

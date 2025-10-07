@@ -23,6 +23,8 @@ const PluginView: FC = () => {
       .filter(({ name }) => !hiddenPlugins.includes(name));
   }, [plugins, pluginOrder, hiddenPlugins]);
 
+  const numberOfHidden = hiddenPlugins.filter(name => !!plugins.find(p => p.name === name)).length;
+
   if (activePlugin) {
     return (
       <Focusable onCancelButton={closeActivePlugin}>
@@ -53,10 +55,10 @@ const PluginView: FC = () => {
               </ButtonItem>
             </PanelSectionRow>
           ))}
-          {hiddenPlugins.length > 0 && (
+          {numberOfHidden > 0 && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.8rem', marginTop: '10px' }}>
               <FaEyeSlash />
-              <div>{t('PluginView.hidden', { count: hiddenPlugins.length })}</div>
+              <div>{t('PluginView.hidden', { count: numberOfHidden })}</div>
             </div>
           )}
         </PanelSection>

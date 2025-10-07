@@ -1,25 +1,12 @@
 {
-    "MultiplePluginsInstallModal": {
-        "description": {
-            "update": ""
-        }
-    },
     "PluginInstallModal": {
         "reinstall": {
             "button_processing": ""
-        }
-    },
-    "SettingsDeveloperIndex": {
-        "cef_console": {
-            "button": ""
         }
     },
     "Store": {
         "download_progress_info": {
             "installing_plugin": ""
         }
-    },
-    "Testing": {
-        "error": ""
     }
 }

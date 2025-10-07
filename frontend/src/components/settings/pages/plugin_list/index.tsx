@@ -60,7 +60,7 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
   const showCtxMenu = (e: MouseEvent | GamepadEvent) => {
     showContextMenu(
       <Menu label={t('PluginListIndex.plugin_actions')}>
-        <MenuItem
+        {!disabled && <MenuItem
           onSelected={async () => {
             try {
               await reloadPluginBackend(name);
@@ -70,7 +70,7 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
           }}
         >
           {t('PluginListIndex.reload')}
-        </MenuItem>
+        </MenuItem>}
         <MenuItem
           onSelected={() =>
             DeckyPluginLoader.uninstallPlugin(
@@ -102,11 +102,13 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
             {t('PluginListIndex.plugin_disable')}
           </MenuItem>
         }
-        {hidden ? (
-          <MenuItem onSelected={onShow}>{t('PluginListIndex.show')}</MenuItem>
-        ) : (
-          <MenuItem onSelected={onHide}>{t('PluginListIndex.hide')}</MenuItem>
-        )}
+        {!disabled &&
+          (hidden ? (
+            <MenuItem onSelected={onShow}>{t('PluginListIndex.show')}</MenuItem>
+          ) : (
+            <MenuItem onSelected={onHide}>{t('PluginListIndex.hide')}</MenuItem>
+          )
+          )}
         {frozen ? (
           <MenuItem onSelected={onUnfreeze}>{t('PluginListIndex.unfreeze')}</MenuItem>
         ) : (

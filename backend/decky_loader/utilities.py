@@ -1,5 +1,5 @@
 from __future__ import annotations
-from os import stat_result
+from os import path, stat_result
 import uuid
 from urllib.parse import unquote
 from json.decoder import JSONDecodeError
@@ -8,7 +8,7 @@ import re
 from traceback import format_exc
 from stat import FILE_ATTRIBUTE_HIDDEN # pyright: ignore [reportAttributeAccessIssue, reportUnknownVariableType]
 
-from asyncio import StreamReader, StreamWriter, start_server, gather, open_connection
+from asyncio import StreamReader, StreamWriter, sleep, start_server, gather, open_connection
 from aiohttp import ClientSession, hdrs
 from aiohttp.web import Request, StreamResponse, Response, json_response, post
 from typing import TYPE_CHECKING, Callable, Coroutine, Dict, Any, List, TypedDict
@@ -486,11 +486,21 @@ class Utilities:
             await self.context.ws.emit("loader/disable_plugin", name)
     
     async def enable_plugin(self, name: str):
+        plugin_folder = self.context.plugin_browser.find_plugin_folder(name)
+        assert plugin_folder is not None
+        plugin_dir = path.join(self.context.plugin_browser.plugin_path, plugin_folder)
+        
+        if name in self.context.plugin_loader.plugins:
+            plugin = self.context.plugin_loader.plugins[name]
+            if plugin.proc and plugin.proc.is_alive():
+                await plugin.stop()
+            self.context.plugin_loader.plugins.pop(name, None)
+            await sleep(1)
+            
         disabled_plugins: List[str] = await self.get_setting("disabled_plugins", [])
+        
         if name in disabled_plugins:
             disabled_plugins.remove(name)
             await self.set_setting("disabled_plugins", disabled_plugins)
-
-            plugin = self.context.plugin_loader.plugins[name]
-            plugin.start()
-            await self.context.plugin_loader.dispatch_plugin(plugin.name, plugin.version, plugin.load_type)
+            
+        await self.context.plugin_loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_folder)

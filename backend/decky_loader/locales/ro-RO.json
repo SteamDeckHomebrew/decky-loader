@@ -1,49 +1,25 @@
 {
-    "FilePickerIndex": {
-        "filter": {
-            "created_asce": ""
-        }
-    },
     "MultiplePluginsInstallModal": {
         "description": {
             "update": ""
         }
-    },
-    "PluginCard": {
-        "plugin_version_label": ""
     },
     "PluginInstallModal": {
         "reinstall": {
             "button_processing": ""
         }
     },
-    "PluginListIndex": {
-        "update_all": ""
-    },
     "SettingsDeveloperIndex": {
         "cef_console": {
             "button": ""
         }
     },
-    "SettingsGeneralIndex": {
-        "about": {
-            "decky_version": ""
-        }
-    },
     "Store": {
         "download_progress_info": {
             "installing_plugin": ""
-        },
-        "store_tabs": {
-            "alph_desc": ""
         }
     },
     "Testing": {
         "error": ""
-    },
-    "Updater": {
-        "updates": {
-            "updating": ""
-        }
     }
 }

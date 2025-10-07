@@ -1,9 +1,4 @@
 {
-    "PluginInstallModal": {
-        "reinstall": {
-            "button_processing": ""
-        }
-    },
     "Store": {
         "download_progress_info": {
             "installing_plugin": ""

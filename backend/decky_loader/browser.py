@@ -150,6 +150,11 @@ class PluginBrowser:
             # plugins_snapshot = self.plugins.copy()
             # snapshot_string = pformat(plugins_snapshot)
             # logger.debug("current plugins: %s", snapshot_string)
+            disabled_plugins: List[str] = self.settings.getSetting("disabled_plugins", [])
+            if name in disabled_plugins:
+                disabled_plugins.remove(name)
+                self.settings.setSetting("disabled_plugins", disabled_plugins)
+                
             if name in self.plugins:
                 logger.debug("Plugin %s was found", name)
                 await self.plugins[name].stop(uninstall=True)

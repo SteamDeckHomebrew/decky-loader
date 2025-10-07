@@ -211,7 +211,7 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
         };
       }),
     );
-  }, [installedPlugins, updates, hiddenPlugins]);
+  }, [installedPlugins, updates, hiddenPlugins, disabledPlugins]);
 
   if (installedPlugins.length === 0) {
     return (

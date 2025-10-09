@@ -156,7 +156,7 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
 
   useEffect(() => {
     DeckyPluginLoader.checkPluginUpdates();
-  }, []);
+  }, [updates]);
 
   const [pluginEntries, setPluginEntries] = useState<ReorderableEntry<PluginTableData>[]>([]);
   const hiddenPluginsService = DeckyPluginLoader.hiddenPluginsService;

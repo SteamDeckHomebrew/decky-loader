@@ -126,7 +126,7 @@ export async function checkForPluginUpdates(plugins: Plugin[]): Promise<PluginUp
       remotePlugin &&
       remotePlugin.versions?.length > 0 &&
       plugin.version != remotePlugin?.versions?.[0]?.name &&
-      validate(remotePlugin.versions?.[0]?.name) && 
+      validate(remotePlugin.versions?.[0]?.name) &&
       validate(curVer) &&
       compare(remotePlugin?.versions?.[0]?.name, curVer, '>')
     ) {

@@ -1,4 +1,12 @@
-import { ButtonItem, Dropdown, Focusable, PanelSectionRow, SingleDropdownOption, SuspensefulImage } from '@decky/ui';
+import {
+  ButtonItem,
+  Dropdown,
+  Focusable,
+  NavEntryPositionPreferences,
+  PanelSectionRow,
+  SingleDropdownOption,
+  SuspensefulImage,
+} from '@decky/ui';
 import { CSSProperties, FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaArrowDown, FaArrowUp, FaCheck, FaDownload, FaRecycle } from 'react-icons/fa';
@@ -139,7 +147,10 @@ const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
         </div>
         <div className="deckyStoreCardButtonRow">
           <PanelSectionRow>
-            <Focusable style={{ display: 'flex', gap: '5px', padding: 0 }}>
+            <Focusable
+              style={{ display: 'flex', gap: '5px', padding: 0 }}
+              navEntryPreferPosition={NavEntryPositionPreferences.MAINTAIN_X}
+            >
               <div
                 className="deckyStoreCardInstallContainer"
                 style={

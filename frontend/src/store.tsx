@@ -120,7 +120,7 @@ export async function checkForPluginUpdates(plugins: Plugin[]): Promise<PluginUp
     const remotePlugin = serverData?.find((x) => x.name == plugin.name);
     //FIXME: Ugly hack since plugin.version might be null during evaluation,
     //so this will set the older version possible
-    const curVer = plugin.version ? plugin.version : '0.0';
+    const curVer = plugin.version ? plugin.version : '0.0.0';
 
     if (
       remotePlugin &&

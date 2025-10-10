@@ -9,6 +9,7 @@ interface PluginInstallModalProps {
   version: string;
   hash: string;
   installType: InstallType;
+  disabled?: boolean;
   onOK(): void;
   onCancel(): void;
   closeModal?(): void;
@@ -19,6 +20,7 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
   version,
   hash,
   installType,
+  disabled,
   onOK,
   onCancel,
   closeModal,
@@ -45,6 +47,10 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
   }, []);
 
   const installTypeTranslationKey = InstallTypeTranslationMapping[installType];
+  const description = t(`PluginInstallModal.${installTypeTranslationKey}.desc`, {
+    artifact: artifact,
+    version: version,
+  });
 
   return (
     <ConfirmModal
@@ -118,10 +124,7 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
           // t('PluginInstallModal.update.desc')
           // t('PluginInstallModal.downgrade.desc')
           // t('PluginInstallModal.overwrite.desc')
-          t(`PluginInstallModal.${installTypeTranslationKey}.desc`, {
-            artifact: artifact,
-            version: version,
-          })
+          disabled ? `${description} ${t('PluginInstallModal.disabled')}` : description
         }
       </div>
       {hash == 'False' && <span style={{ color: 'red' }}>{t('PluginInstallModal.no_hash')}</span>}

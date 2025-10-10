@@ -102,6 +102,7 @@
         },
         "no_hash": "This plugin does not have a hash, you are installing it at your own risk.",
         "not_installed": "(not installed)",
+        "disabled": "The plugin will be re-enabled after installation",
         "overwrite": {
             "button_idle": "Overwrite",
             "button_processing": "Overwriting",

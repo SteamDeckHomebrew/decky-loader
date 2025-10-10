@@ -320,6 +320,7 @@ class PluginLoader extends Logger {
         version={version}
         hash={hash}
         installType={install_type}
+        disabled={this.deckyState.publicState().disabledPlugins.some(p => p.name === artifact)}
         onOK={() => DeckyBackend.call<[string]>('utilities/confirm_plugin_install', request_id)}
         onCancel={() => DeckyBackend.call<[string]>('utilities/cancel_plugin_install', request_id)}
       />,
@@ -333,6 +334,7 @@ class PluginLoader extends Logger {
     showModal(
       <MultiplePluginsInstallModal
         requests={requests}
+        disabledPlugins={this.deckyState.publicState().disabledPlugins}
         onOK={() => DeckyBackend.call<[string]>('utilities/confirm_plugin_install', request_id)}
         onCancel={() => DeckyBackend.call<[string]>('utilities/cancel_plugin_install', request_id)}
       />,

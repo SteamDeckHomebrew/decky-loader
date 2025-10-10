@@ -282,7 +282,7 @@ class PluginLoader extends Logger {
   public async checkPluginUpdates() {
     const frozenPlugins = this.deckyState.publicState().frozenPlugins;
 
-    const updates = await checkForPluginUpdates(this.plugins.filter((p) => !frozenPlugins.includes(p.name)));
+    const updates = await checkForPluginUpdates(this.deckyState.publicState().installedPlugins.filter((p) => !frozenPlugins.includes(p.name)));
     this.deckyState.setUpdates(updates);
     return updates;
   }

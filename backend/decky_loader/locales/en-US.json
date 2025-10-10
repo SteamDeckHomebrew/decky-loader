@@ -169,7 +169,9 @@
     },
     "PluginView": {
         "hidden_one": "1 plugin is hidden from this list",
-        "hidden_other": "{{count}} plugins are hidden from this list"
+        "hidden_other": "{{count}} plugins are hidden from this list",
+        "disabled_one": "1 plugin is disabled",
+        "disabled_other": "{{count}} plugins are disabled"
     },
     "RemoteDebugging": {
         "remote_cef": {

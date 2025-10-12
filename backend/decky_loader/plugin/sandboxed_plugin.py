@@ -14,6 +14,7 @@ from ..localplatform.localsocket import LocalSocket
 from ..localplatform.localplatform import setgid, setuid, get_username, get_home_path, ON_LINUX
 from ..enums import UserType
 from .. import helpers
+from .. import settings
 
 from typing import List, TypeVar, Any
 

@@ -1,8 +1,4 @@
 // Sets up DFL, then loads start.ts which starts up the loader
-interface Window {
-  // Shut up TS
-  SP_REACTDOM: any;
-}
 
 (async () => {
   console.debug('[Decky:Boot] Frontend init');

@@ -21,7 +21,19 @@ interface Window {
     // deliberate partial import
     const DFLWebpack = await import('@decky/ui/dist/webpack');
     window.SP_REACT = DFLWebpack.findModule((m) => m.Component && m.PureComponent && m.useLayoutEffect);
-    window.SP_REACTDOM = DFLWebpack.findModule((m) => m.createPortal && m.createRoot);
+    window.SP_REACTDOM =
+      DFLWebpack.findModule((m) => m.createPortal && m.createRoot) ||
+      DFLWebpack.findModule((m) => m.createPortal && m.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE);
+
+    console.debug('[Decky:Boot] Setting up JSX internals...');
+    const jsx = DFLWebpack.findModule((m) => m.jsx && Object.keys(m).length == 1)?.jsx;
+    if (jsx) {
+      window.SP_JSX = {
+        jsx,
+        jsxs: jsx,
+        Fragment: window.SP_REACT.Fragment,
+      };
+    }
   }
   console.debug('[Decky:Boot] Setting up @decky/ui...');
   window.DFL = await import('@decky/ui');

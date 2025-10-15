@@ -9,7 +9,7 @@ import {
   getReactRoot,
   sleep,
 } from '@decky/ui';
-import { FC, ReactElement, ReactNode, cloneElement, createElement } from 'react';
+import { FC, JSX, ReactElement, ReactNode, cloneElement, createElement } from 'react';
 import type { Route } from 'react-router';
 
 import {
@@ -37,7 +37,7 @@ const isPatched = Symbol('is patched');
 class RouterHook extends Logger {
   private routerState: DeckyRouterState = new DeckyRouterState();
   private globalComponentsState: DeckyGlobalComponentsState = new DeckyGlobalComponentsState();
-  private renderedComponents: ReactElement[] = [];
+  private renderedComponents: ReactElement<any>[] = [];
   private Route: any;
   private DeckyGamepadRouterWrapper = this.gamepadRouterWrapper.bind(this);
   private DeckyDesktopRouterWrapper = this.desktopRouterWrapper.bind(this);
@@ -233,7 +233,7 @@ class RouterHook extends Logger {
     return <>{this.renderedComponents}</>;
   }
 
-  private gamepadRouterWrapper({ children }: { children: ReactElement }) {
+  private gamepadRouterWrapper({ children }: { children: ReactElement<any> }) {
     // Used to store the new replicated routes we create to allow routes to be unpatched.
 
     const { routes, routePatches } = useDeckyRouterState();
@@ -251,7 +251,7 @@ class RouterHook extends Logger {
     return children;
   }
 
-  private desktopRouterWrapper({ children }: { children: ReactElement }) {
+  private desktopRouterWrapper({ children }: { children: ReactElement<any> }) {
     // Used to store the new replicated routes we create to allow routes to be unpatched.
     this.debug('desktop router wrapper render', children);
     const { routes, routePatches } = useDeckyRouterState();
@@ -287,7 +287,7 @@ class RouterHook extends Logger {
     if (routes) {
       if (!routeList[routerIndex - 1]?.length || routeList[routerIndex - 1]?.length !== routes.size) {
         if (routeList[routerIndex - 1]?.length && routeList[routerIndex - 1].length !== routes.size) routerIndex--;
-        const newRouterArray: (ReactElement | JSX.Element)[] = [];
+        const newRouterArray: (ReactElement<any> | JSX.Element)[] = [];
         routes.forEach(({ component, props }, path) => {
           newRouterArray.push(
             <Route path={path} {...props}>

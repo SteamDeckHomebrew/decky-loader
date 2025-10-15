@@ -10,7 +10,7 @@ interface WithSuspenseProps {
 const WithSuspense: FunctionComponent<WithSuspenseProps> = (props) => {
   const propsCopy = { ...props };
   delete propsCopy.children;
-  (props.children as ReactElement)?.props && Object.assign((props.children as ReactElement).props, propsCopy); // There is probably a better way to do this but valve does it this way so ¯\_(ツ)_/¯
+  (props.children as ReactElement<any>)?.props && Object.assign((props.children as ReactElement<any>).props, propsCopy); // There is probably a better way to do this but valve does it this way so ¯\_(ツ)_/¯
   return (
     <Suspense
       fallback={

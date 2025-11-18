@@ -173,7 +173,7 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
       </style>
       <div className={classes.root}>
         <div className={classes.marginBottom} style={{ fontSize: '20px' }}>
-          ⚠️ Decky encountered an error while rendering this content.
+          ⚠️ An error occured while rendering this content.
         </div>
         <pre className={joinClassNames(classes.grayText, classes.marginBottom)} style={{ marginTop: '0px' }}>
           <code>
@@ -227,9 +227,10 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
                 <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
                   Disable/ uninstall suspected plugin and restart Decky
                   <div className={classes.flexRowWGap}>
-                    <button>
+                    {/**temp placeholder for plugin disable functionality*/}
+                    {/* <button>
                       Disable {errorSource}
-                    </button>
+                    </button> */}
                     <button
                       onClick={async () => {
                         setActionsEnabled(false);
@@ -251,12 +252,13 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
                   </div>
                 </div>
               )}
-              <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
+              {/**temp placeholder for plugin disable functionality*/}
+              {/* <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
                 Disable all plugins and restart Decky
                 <button>
                   Disable All Plugins
                 </button>
-              </div>
+              </div> */}
               <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
                 Disable Decky until next boot
                 <button

@@ -1,3 +1,4 @@
+import type { JSX } from 'react';
 export enum PluginLoadType {
   LEGACY_EVAL_IIFE = 0, // legacy, uses legacy serverAPI
   ESMODULE_V1 = 1, // esmodule loading with modern @decky/backend apis

@@ -32,13 +32,13 @@ const classes = {
   grayText: 'gray-text',
   flexRowWGap: 'flex-row',
   marginBottom: 'margin-bottom',
-}
+};
 
 const vars = {
   scrollBarwidth: '18px',
   rootMarginLeft: '15px',
-  panelXPadding: '20px'
-}
+  panelXPadding: '20px',
+};
 
 export const startSSH = DeckyBackend.callable('utilities/start_ssh');
 export const starrCEFForwarding = DeckyBackend.callable('utilities/allow_remote_debugging');
@@ -196,13 +196,13 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
           <div className={classes.panel}>
             <div className={classes.flexRowWGap} style={{ alignItems: 'baseline' }}>
               <div className={classes.panelHeader}>Actions</div>
-              <div className={classes.grayText} style={{ fontSize: 'small', fontStyle: 'italic' }}>Use the touch screen.</div>
+              <div className={classes.grayText} style={{ fontSize: 'small', fontStyle: 'italic' }}>
+                Use the touch screen.
+              </div>
             </div>
             <div className={classes.rowList}>
               <div className={joinClassNames(classes.rowItem, classes.flexRowWGap)} style={{ justifyContent: 'right' }}>
-                <button onClick={reset}>
-                  Retry
-                </button>
+                <button onClick={reset}>Retry</button>
                 <button
                   onClick={() => {
                     addLogLine('Restarting Steam...');
@@ -367,8 +367,9 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
               fontStyle: 'italic',
               fontSize: 'small',
               textAlign: 'center',
-              textShadow: '2px 2px 4px rgb(0 0 0 / 60%)'
-            }}>
+              textShadow: '2px 2px 4px rgb(0 0 0 / 60%)',
+            }}
+          >
             Swipe to scroll
           </div>
         )}
@@ -380,7 +381,7 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
               userSelect: 'auto',
               overflowX: 'scroll',
               padding: `0px ${vars.panelXPadding}`,
-              maskImage: `linear-gradient(to right, transparent, black ${vars.panelXPadding}, black calc(100% - ${vars.panelXPadding}), transparent)`
+              maskImage: `linear-gradient(to right, transparent, black ${vars.panelXPadding}, black calc(100% - ${vars.panelXPadding}), transparent)`,
             }}
           >
             <code>

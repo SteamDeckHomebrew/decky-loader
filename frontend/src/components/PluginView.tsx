@@ -3,6 +3,7 @@ import { FC, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaEyeSlash } from 'react-icons/fa';
 
+import { AnnouncementsDisplay } from './AnnouncementsDisplay';
 import { useDeckyState } from './DeckyState';
 import NotificationBadge from './NotificationBadge';
 import { useQuickAccessVisible } from './QuickAccessVisibleState';
@@ -41,6 +42,7 @@ const PluginView: FC = () => {
           paddingTop: '16px',
         }}
       >
+        <AnnouncementsDisplay />
         <PanelSection>
           {pluginList.map(({ name, icon }) => (
             <PanelSectionRow key={name}>

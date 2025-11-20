@@ -1,15 +1,16 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaEyeSlash, FaLock } from 'react-icons/fa';
+import { FaEyeSlash, FaLock, FaMoon } from 'react-icons/fa';
 
 interface PluginListLabelProps {
   frozen: boolean;
   hidden: boolean;
+  disabled: boolean;
   name: string;
   version?: string;
 }
 
-const PluginListLabel: FC<PluginListLabelProps> = ({ name, frozen, hidden, version }) => {
+const PluginListLabel: FC<PluginListLabelProps> = ({ name, frozen, hidden, version, disabled }) => {
   const { t } = useTranslation();
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -41,6 +42,20 @@ const PluginListLabel: FC<PluginListLabelProps> = ({ name, frozen, hidden, versi
         >
           <FaEyeSlash />
           {t('PluginListLabel.hidden')}
+        </div>
+      )}
+      {disabled && (
+        <div
+          style={{
+            fontSize: '0.8rem',
+            color: '#dcdedf',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+          }}
+        >
+          <FaMoon />
+          {t('PluginListLabel.disabled')}
         </div>
       )}
     </div>

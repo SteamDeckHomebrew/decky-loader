@@ -1,10 +1,10 @@
-import { FC, ReactNode, createContext, useContext, useState } from 'react';
+import { FC, PropsWithChildren, createContext, useContext, useState } from 'react';
 
 const QuickAccessVisibleState = createContext<boolean>(false);
 
 export const useQuickAccessVisible = () => useContext(QuickAccessVisibleState);
 
-export const QuickAccessVisibleStateProvider: FC<{ tab: any; children: ReactNode }> = ({ children, tab }) => {
+export const QuickAccessVisibleStateProvider: FC<PropsWithChildren<{ tab: any }>> = ({ children, tab }) => {
   const initial = tab.initialVisibility;
   const [visible, setVisible] = useState<boolean>(initial);
   // HACK but i can't think of a better way to do this

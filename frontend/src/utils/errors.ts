@@ -1,6 +1,6 @@
 import { ErrorInfo } from 'react';
 
-const pluginErrorRegex = /http:\/\/localhost:1337\/plugins\/([^\/]*)\//;
+const pluginErrorRegex = /http:\/\/(?:localhost|127\.0\.0\.1):1337\/plugins\/([^\/]*)\//;
 const pluginSourceMapErrorRegex = /decky:\/\/decky\/plugin\/([^\/]*)\//;
 const legacyPluginErrorRegex = /decky:\/\/decky\/legacy_plugin\/([^\/]*)\/index.js/;
 
@@ -44,7 +44,7 @@ export function getLikelyErrorSource(error?: string): ErrorSource {
     return [decodeURIComponent(legacyPluginMatch[1]), true, false];
   }
 
-  if (error?.includes('http://localhost:1337/')) {
+  if (error?.includes('http://localhost:1337/') || error?.includes('http://127.0.0.1:1337/')) {
     return ['the Decky frontend', false, false];
   }
   return ['Steam', false, true];

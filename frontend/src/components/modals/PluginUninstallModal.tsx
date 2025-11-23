@@ -5,7 +5,7 @@ import { uninstallPlugin } from '../../plugin';
 import { DeckyState } from '../DeckyState';
 
 interface PluginUninstallModalProps {
-  deckyState: DeckyState
+  deckyState: DeckyState;
   name: string;
   title: string;
   buttonText: string;
@@ -13,7 +13,14 @@ interface PluginUninstallModalProps {
   closeModal?(): void;
 }
 
-const PluginUninstallModal: FC<PluginUninstallModalProps> = ({ name, title, buttonText, description, deckyState, closeModal }) => {
+const PluginUninstallModal: FC<PluginUninstallModalProps> = ({
+  name,
+  title,
+  buttonText,
+  description,
+  deckyState,
+  closeModal,
+}) => {
   const [uninstalling, setUninstalling] = useState<boolean>(false);
   return (
     <ConfirmModal
@@ -21,7 +28,7 @@ const PluginUninstallModal: FC<PluginUninstallModalProps> = ({ name, title, butt
       onOK={async () => {
         setUninstalling(true);
         await uninstallPlugin(name);
-        deckyState.setDisabledPlugins(deckyState.publicState().disabledPlugins.filter(d => d.name !== name));
+        deckyState.setDisabledPlugins(deckyState.publicState().disabledPlugins.filter((d) => d.name !== name));
         // uninstalling a plugin resets the hidden setting for it server-side
         // we invalidate here so if you re-install it, you won't have an out-of-date hidden filter
         await DeckyPluginLoader.frozenPluginsService.invalidate();

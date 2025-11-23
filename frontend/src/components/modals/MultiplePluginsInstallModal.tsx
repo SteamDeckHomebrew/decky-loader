@@ -118,7 +118,7 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
               version,
             });
 
-            const disabled = disabledPlugins.some(p => p.name === name);
+            const disabled = disabledPlugins.some((p) => p.name === name);
             return (
               <li key={i} style={{ display: 'flex', flexDirection: 'column' }}>
                 <span>

@@ -9,8 +9,16 @@ import { useQuickAccessVisible } from './QuickAccessVisibleState';
 import TitleView from './TitleView';
 
 const PluginView: FC = () => {
-  const { plugins, disabledPlugins, hiddenPlugins, updates, activePlugin, pluginOrder, setActivePlugin, closeActivePlugin } =
-    useDeckyState();
+  const {
+    plugins,
+    disabledPlugins,
+    hiddenPlugins,
+    updates,
+    activePlugin,
+    pluginOrder,
+    setActivePlugin,
+    closeActivePlugin,
+  } = useDeckyState();
   const visible = useQuickAccessVisible();
   const { t } = useTranslation();
 
@@ -23,7 +31,7 @@ const PluginView: FC = () => {
       .filter(({ name }) => !hiddenPlugins.includes(name));
   }, [plugins, pluginOrder, hiddenPlugins]);
 
-  const numberOfHidden = hiddenPlugins.filter(name => !!plugins.find(p => p.name === name)).length;
+  const numberOfHidden = hiddenPlugins.filter((name) => !!plugins.find((p) => p.name === name)).length;
 
   if (activePlugin) {
     return (
@@ -61,7 +69,7 @@ const PluginView: FC = () => {
               flexDirection: 'column',
               position: 'absolute',
               justifyContent: 'center',
-              padding: '5px 0px'
+              padding: '5px 0px',
             }}
           >
             {numberOfHidden > 0 && (

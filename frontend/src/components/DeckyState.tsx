@@ -188,7 +188,7 @@ export const DeckyStateContextProvider: FC<Props> = ({ children, deckyState }) =
         setActivePlugin,
         closeActivePlugin,
         setPluginOrder,
-        setDisabledPlugins
+        setDisabledPlugins,
       }}
     >
       {children}

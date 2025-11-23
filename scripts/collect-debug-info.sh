@@ -23,21 +23,18 @@ grep "Client version:" "$HOME/.steam/steam/logs/steamui_system.txt" | tail -n 1 
 echo ""
 echo -e "\tCollecting plugin information from \"$directory_to_scan\"..."
 # Loop through each subdirectory (one level deep)
-for dir in "$directory_to_scan"/*/; do
-    # Check if package.json exists in the subdirectory
-    if [ -f "${dir}package.json" ]; then
-        # Extract name and version from the package.json file using jq
-        name=$(jq -r '.name' "${dir}package.json")
-        version=$(jq -r '.version' "${dir}package.json")
+for dir in "$directory_to_scan"/*/package.json; do
+  # Extract name and version from the package.json file using jq
+  name=$(jq -r '.name' "$dir")
+  version=$(jq -r '.version' "$dir")
 
-        {
-          # Output the name and version
-          echo "Directory: ${dir}"
-          echo "Package Name: $name"
-          echo "Version: $version"
-          echo "-----------------------------"
-         } >> "$plugin_info_file"
-    fi
+  {
+    # Output the name and version
+    echo "Directory: ${dir}"
+    echo "Package Name: $name"
+    echo "Version: $version"
+    echo "-----------------------------"
+  } >> "$plugin_info_file"
 done
 echo -e "\tPlugin information saved to \"$plugin_info_file\""
 echo ""

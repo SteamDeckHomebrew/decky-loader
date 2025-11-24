@@ -49,12 +49,14 @@ echo -e "\tRunning command: cp \"$HOME/.steam/steam/logs/cef_log.previous.txt\" 
 cp "$HOME/.steam/steam/logs/cef_log.previous.txt" "$frontend_previnfo_file"
 echo ""
 echo -e "\tScrubbing frontend logs to remove personal information..."
-echo -e "\tRunning command: username=\$(sed -nE 's/.*OnLoginStateChange ([^ ]*).*/\1/p' $HOME/.steam/steam/logs/webhelper_js.txt | uniq)"
-username=$(sed -nE 's/.*OnLoginStateChange ([^ ]*).*/\1/p' $HOME/.steam/steam/logs/webhelper_js.txt | uniq)
-echo -e "\tRunning command: sed -i \"s/\$username/anonymous/Ig\" \"$frontend_info_file\""
-sed -i "s/$username/anonymous/Ig" "$frontend_info_file"
-echo -e "\tRunning command: sed -i \"s/\$username/anonymous/Ig\" \"$frontend_previnfo_file\""
-sed -i "s/$username/anonymous/Ig" "$frontend_previnfo_file"
+echo -e "\tRunning command: mapfile -t usernames < <(sed -nE 's/.*OnLoginStateChange ([^ ]*).*/\1/p' $HOME/.steam/steam/logs/webhelper_js.txt | sort | uniq)"
+mapfile -t usernames < <(sed -nE 's/.*OnLoginStateChange ([^ ]*).*/\1/p' $HOME/.steam/steam/logs/webhelper_js.txt | sort | uniq)
+for username in "${usernames[@]}"; do
+  echo -e "\tRunning command: sed -i \"s/$username/anonymous/Ig\" \"$frontend_info_file\""
+  sed -i "s/$username/anonymous/Ig" "$frontend_info_file"
+  echo -e "\tRunning command: sed -i \"s/$username/anonymous/Ig\" \"$frontend_previnfo_file\""
+  sed -i "s/$username/anonymous/Ig" "$frontend_previnfo_file"
+done
 echo ""
 echo "Zipping up logs to \"$archive_file\". This may take a moment..."
 echo -e "\tRunning command: zip -j \"$archive_file\" \"$system_info_file\" \"$plugin_info_file\" \"$backend_info_file\" \"$frontend_info_file\" \"$frontend_previnfo_file\"

@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@decky/ui':
-        specifier: ^4.11.0
-        version: 4.11.0
+        specifier: ^4.11.1
+        version: 4.11.1
       compare-versions:
         specifier: ^6.1.1
         version: 6.1.1
@@ -40,8 +40,8 @@ importers:
         version: 4.0.0
     devDependencies:
       '@decky/api':
-        specifier: ^1.1.1
-        version: 1.1.1
+        specifier: ^1.1.3
+        version: 1.1.3
       '@rollup/plugin-commonjs':
         specifier: ^26.0.1
         version: 26.0.1(rollup@4.22.4)
@@ -219,11 +219,11 @@ packages:
     resolution: {integrity: sha512-XEFXSlxiG5td2EJRe8vOmRbaXVgfcBlszKujvVmWIK/UpywWljQCfzAv3RQCGujWQ1RD4YYWEAqDXfuJiy8f5Q==}
     engines: {node: '>=6.9.0'}
 
-  '@decky/api@1.1.1':
-    resolution: {integrity: sha512-R5fkBRHBt5QIQY7Q0AlbVIhlIZ/nTzwBOoi8Rt4Go2fjFnoMKPInCJl6cPjXzimGwl2pyqKJgY6VnH6ar0XrHQ==}
+  '@decky/api@1.1.3':
+    resolution: {integrity: sha512-XsPCZxfxk5I1UtylIUN3qaWQI31siQbKfbLIskkI5innEatY1m4NQqBv/6hwPaO9mKMbdqYpnh5PSJDeMEOOBA==}
 
-  '@decky/ui@4.11.0':
-    resolution: {integrity: sha512-l9PstFC+S8FE8M2kIM78L8cYW4vzJ/ZD30II0huarHLcCsKM4Q+rbmEnbWjlJ1/KLmGXVRXBdAbyD4X/FzfxnQ==}
+  '@decky/ui@4.11.1':
+    resolution: {integrity: sha512-+x+rJB0MBQSQGp0UpsRJ4BOv7zlHzcBPT76enopjGf56H41beR8VZua9F4upLtDgPku4Zh8z3uB53nFlvTilXQ==}
 
   '@esbuild/aix-ppc64@0.20.2':
     resolution: {integrity: sha512-D+EBOJHXdNZcLJRBkhENNG8Wji2kgc9AZ9KiPr1JuZjsNtyHzrsfLRrY0tk2H2aoFu6RANO1y1iPPUCDYWkb5g==}
@@ -2309,9 +2309,9 @@ snapshots:
       '@babel/helper-validator-identifier': 7.24.7
       to-fast-properties: 2.0.0
 
-  '@decky/api@1.1.1': {}
+  '@decky/api@1.1.3': {}
 
-  '@decky/ui@4.11.0': {}
+  '@decky/ui@4.11.1': {}
 
   '@esbuild/aix-ppc64@0.20.2':
     optional: true

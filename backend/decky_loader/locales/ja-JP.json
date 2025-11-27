@@ -215,7 +215,7 @@
         "download_progress_info": {
             "download_remote": "外部バイナリのダウンロード",
             "download_zip": "プラグインのダウンロード中",
-            "increment_count": "ダウンロード数の増加",
+            "increment_count": "ダウンロード進行中",
             "installing_plugin": "プラグインのインストール中",
             "open_zip": "zipファイルを展開中",
             "parse_zip": "zipファイルの解析中",

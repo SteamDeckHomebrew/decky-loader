@@ -158,7 +158,7 @@
         },
         "plugin_disable": {
             "button": "Disable",
-            "desc": "Are you sure you want to disbale {{name}}?",
+            "desc": "Are you sure you want to disable {{name}}?",
             "title": "Disable {{name}}",
             "error": "Error disabling {{name}}"
         },

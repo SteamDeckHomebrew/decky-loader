@@ -19,7 +19,7 @@ import { DeckyState, DeckyStateContextProvider, UserInfo, useDeckyState } from '
 import { File, FileSelectionType } from './components/modals/filepicker';
 import { deinitFilepickerPatches, initFilepickerPatches } from './components/modals/filepicker/patches';
 import MultiplePluginsInstallModal from './components/modals/MultiplePluginsInstallModal';
-import PluginDisablelModal from './components/modals/PluginDisablelModal';
+import PluginDisableModal from './components/modals/PluginDisableModal';
 import PluginInstallModal from './components/modals/PluginInstallModal';
 import PluginUninstallModal from './components/modals/PluginUninstallModal';
 import NotificationBadge from './components/NotificationBadge';
@@ -334,7 +334,7 @@ class PluginLoader extends Logger {
   }
 
   public disablePlugin(name: string, title: string, buttonText: string, description: string) {
-    showModal(<PluginDisablelModal name={name} title={title} buttonText={buttonText} description={description} />);
+    showModal(<PluginDisableModal name={name} title={title} buttonText={buttonText} description={description} />);
   }
 
   public hasPlugin(name: string) {

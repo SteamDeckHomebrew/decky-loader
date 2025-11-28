@@ -3,7 +3,7 @@ import { FC, useState } from 'react';
 
 import { disablePlugin } from '../../plugin';
 
-interface PluginUninstallModalProps {
+interface PluginDisableModalProps {
   name: string;
   title: string;
   buttonText: string;
@@ -11,7 +11,7 @@ interface PluginUninstallModalProps {
   closeModal?(): void;
 }
 
-const PluginDisableModal: FC<PluginUninstallModalProps> = ({ name, title, buttonText, description, closeModal }) => {
+const PluginDisableModal: FC<PluginDisableModalProps> = ({ name, title, buttonText, description, closeModal }) => {
   const [disabling, setDisabling] = useState<boolean>(false);
   return (
     <ConfirmModal

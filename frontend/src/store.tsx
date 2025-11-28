@@ -1,6 +1,6 @@
 import { compare } from 'compare-versions';
 
-import { InstallType, Plugin, installPlugin, installPlugins } from './plugin';
+import { DisabledPlugin, InstallType, Plugin, installPlugin, installPlugins } from './plugin';
 import { getSetting, setSetting } from './utils/settings';
 
 export enum Store {
@@ -113,7 +113,7 @@ export async function requestMultiplePluginInstalls(requests: PluginInstallReque
   );
 }
 
-export async function checkForPluginUpdates(plugins: Plugin[]): Promise<PluginUpdateMapping> {
+export async function checkForPluginUpdates(plugins: (Plugin | DisabledPlugin)[]): Promise<PluginUpdateMapping> {
   const serverData = await getPluginList();
   const updateMap = new Map<string, StorePluginVersion>();
   for (let plugin of plugins) {

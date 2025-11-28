@@ -1,7 +1,7 @@
 import { ButtonItem, ErrorBoundary, Focusable, PanelSection, PanelSectionRow } from '@decky/ui';
 import { FC, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaEyeSlash, FaMoon } from 'react-icons/fa';
+import { FaEyeSlash, FaBan } from 'react-icons/fa';
 
 import { useDeckyState } from './DeckyState';
 import NotificationBadge from './NotificationBadge';
@@ -80,7 +80,7 @@ const PluginView: FC = () => {
             )}
             {disabledPlugins.length > 0 && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.8rem' }}>
-                <FaMoon />
+                <FaBan />
                 <div>{t('PluginView.disabled', { count: disabledPlugins.length })}</div>
               </div>
             )}

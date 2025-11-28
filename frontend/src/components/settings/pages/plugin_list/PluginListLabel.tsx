@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaEyeSlash, FaLock, FaMoon } from 'react-icons/fa';
+import { FaEyeSlash, FaLock, FaBan } from 'react-icons/fa';
 
 interface PluginListLabelProps {
   frozen: boolean;
@@ -54,7 +54,7 @@ const PluginListLabel: FC<PluginListLabelProps> = ({ name, frozen, hidden, versi
             gap: '10px',
           }}
         >
-          <FaMoon />
+          <FaBan />
           {t('PluginListLabel.disabled')}
         </div>
       )}

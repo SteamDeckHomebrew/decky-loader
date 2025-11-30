@@ -127,7 +127,7 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
           }
           .${classes.likelyOccurred} {
             font-size: 22px;
-            font-weight: 900;
+            font-weight: bold;
             color: #588fb4;
           }
           .${classes.rowItem} {

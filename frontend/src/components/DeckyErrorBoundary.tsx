@@ -31,6 +31,7 @@ const classes = {
   buttonDescRow: 'button-description-row',
   flexRowWGap: 'flex-row',
   marginBottom: 'margin-bottom',
+  swipePrompt: 'swipe-prompt',
 };
 
 const vars = {
@@ -106,15 +107,15 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
           .${classes.root} select {
             border: none;
             padding: 4px 16px !important;
-            background: #fff;
-            color: #000;
+            background: #333;
+            color: #ddd;
             font-size: 12px;
             border-radius: 3px;
             outline: none;
             height: 28px;
           }
           .${classes.panel} {
-            background: #03081270;
+            background: #080808;
             padding: 8px ${vars.panelXPadding};
             border-radius: 3px;
             /* box-shadow: 9px 9px 20px -5px rgb(0 0 0 / 89%); */
@@ -126,7 +127,7 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
           }
           .${classes.likelyOccurred} {
             font-size: 22px;
-            font-weight: 500;
+            font-weight: 900;
             color: #588fb4;
           }
           .${classes.rowItem} {
@@ -163,11 +164,42 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
             justify-content: space-between;
             align-items: center;
           }
+
+          .${classes.swipePrompt} {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            font-style: italic;
+            font-size: small;
+            margin: 16px 0;
+          }
+          .${classes.swipePrompt} span {
+            padding: 0 8px;
+            background-color: #000;
+            position: relative;
+            z-index: 1;
+          }
+          .${classes.swipePrompt}::before,
+          .${classes.swipePrompt}::after {
+            content: "";
+            flex-grow: 1;
+            border-bottom: 1px solid #474752;
+            top: 50%;
+          }
+          .${classes.swipePrompt}::before {
+            right: 50%;
+            margin-right: 8px;
+          }
+          .${classes.swipePrompt}::after {
+            left: 50%;
+            margin-left: 8px;
+          }
         `}
       </style>
       <div className={classes.root}>
-        <div className={classes.marginBottom} style={{ fontSize: '20px' }}>
-          ⚠️ An error occurred while rendering this content.
+        <div className={classes.marginBottom}>
+          An error occurred while rendering this content.
         </div>
         <pre className={joinClassNames(classes.marginBottom)} style={{ marginTop: '0px' }}>
           <code>
@@ -188,34 +220,37 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
         )}
         {actionsEnabled && (
           <div className={classes.panel}>
-            <div className={classes.flexRowWGap} style={{ alignItems: 'baseline' }}>
+            <div className={classes.flexRowWGap} style={{ alignItems: 'center', marginBottom: '8px' }}>
               <div className={classes.panelHeader}>Actions</div>
               <div style={{ fontSize: 'small', fontStyle: 'italic' }}>
-                Use the touch screen.
+                Use the touch screen. Solutions are listed in the recommended order. If you are still experiencing issues, please post in the #loader-support channel at decky.xyz/discord.
               </div>
             </div>
             <div className={classes.rowList}>
-              <div className={joinClassNames(classes.rowItem, classes.flexRowWGap)} style={{ justifyContent: 'right' }}>
-                <button onClick={reset}>Retry</button>
-                <button
-                  onClick={() => {
-                    addLogLine('Restarting Steam...');
-                    SteamClient.User.StartRestart(false);
-                  }}
-                >
-                  Restart Steam
-                </button>
-                <button
-                  onClick={async () => {
-                    setActionsEnabled(false);
-                    addLogLine('Restarting Decky...');
-                    doRestart();
-                    await sleep(2000);
-                    addLogLine('Reloading UI...');
-                  }}
-                >
-                  Restart Decky
-                </button>
+              <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
+                Retry the action or restart
+                <div className={classes.flexRowWGap}>
+                  <button onClick={reset}>Retry</button>
+                  <button
+                    onClick={() => {
+                      addLogLine('Restarting Steam...');
+                      SteamClient.User.StartRestart(false);
+                    }}
+                  >
+                    Restart Steam
+                  </button>
+                  <button
+                    onClick={async () => {
+                      setActionsEnabled(false);
+                      addLogLine('Restarting Decky...');
+                      doRestart();
+                      await sleep(2000);
+                      addLogLine('Reloading UI...');
+                    }}
+                  >
+                    Restart Decky
+                  </button>
+                </div>
               </div>
               {wasCausedByPlugin && (
                 <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
@@ -253,21 +288,6 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
                   Disable All Plugins
                 </button>
               </div> */}
-              <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
-                Disable Decky until next boot
-                <button
-                  onClick={async () => {
-                    setActionsEnabled(false);
-                    addLogLine('Stopping Decky...');
-                    doShutdown();
-                    await sleep(5000);
-                    addLogLine('Restarting Steam...');
-                    SteamClient.User.StartRestart(false);
-                  }}
-                >
-                  Disable Decky
-                </button>
-              </div>
               {
                 <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
                   {updateProgress > -1
@@ -329,9 +349,24 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
                   }
                 </div>
               }
+              <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
+                Disable Decky until next boot
+                <button
+                  onClick={async () => {
+                    setActionsEnabled(false);
+                    addLogLine('Stopping Decky...');
+                    doShutdown();
+                    await sleep(5000);
+                    addLogLine('Restarting Steam...');
+                    SteamClient.User.StartRestart(false);
+                  }}
+                >
+                  Disable Decky
+                </button>
+              </div>
               {debugAllowed && (
                 <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
-                  Enable remote debugging and SSH until next boot
+                  Enable remote debugging and SSH until next boot (for developers)
                   <button
                     onClick={async () => {
                       setDebugAllowed(false);
@@ -355,15 +390,10 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
           </div>
         )}
         {actionsEnabled && (
-          <div
-            style={{
-              fontStyle: 'italic',
-              fontSize: 'small',
-              textAlign: 'center',
-              textShadow: '2px 2px 4px rgb(0 0 0 / 60%)',
-            }}
-          >
-            Swipe to scroll
+          <div className={classes.swipePrompt}>
+            <span>
+              Swipe to scroll
+            </span>
           </div>
         )}
         <div className={classes.panel}>

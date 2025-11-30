@@ -8,6 +8,7 @@ import { VerInfo } from '../updater';
 interface PublicDeckyState {
   plugins: Plugin[];
   pluginOrder: string[];
+  sortPlugins: boolean;
   frozenPlugins: string[];
   hiddenPlugins: string[];
   activePlugin: Plugin | null;
@@ -27,6 +28,7 @@ export interface UserInfo {
 export class DeckyState {
   private _plugins: Plugin[] = [];
   private _pluginOrder: string[] = [];
+  private _sortPlugins: boolean = false;
   private _frozenPlugins: string[] = [];
   private _hiddenPlugins: string[] = [];
   private _activePlugin: Plugin | null = null;
@@ -43,6 +45,7 @@ export class DeckyState {
     return {
       plugins: this._plugins,
       pluginOrder: this._pluginOrder,
+      sortPlugins: this._sortPlugins,
       frozenPlugins: this._frozenPlugins,
       hiddenPlugins: this._hiddenPlugins,
       activePlugin: this._activePlugin,
@@ -67,6 +70,11 @@ export class DeckyState {
 
   setPluginOrder(pluginOrder: string[]) {
     this._pluginOrder = pluginOrder;
+    this.notifyUpdate();
+  }
+
+  setSortPlugins(sortPlugins: boolean) {
+    this._sortPlugins = sortPlugins;
     this.notifyUpdate();
   }
 
@@ -125,6 +133,7 @@ interface DeckyStateContext extends PublicDeckyState {
   setIsLoaderUpdating(hasUpdate: boolean): void;
   setActivePlugin(name: string): void;
   setPluginOrder(pluginOrder: string[]): void;
+  setSortPlugins(sortPlugins: boolean): void;
   closeActivePlugin(): void;
 }
 
@@ -163,6 +172,7 @@ export const DeckyStateContextProvider: FC<Props> = ({ children, deckyState }) =
   const setActivePlugin = deckyState.setActivePlugin.bind(deckyState);
   const closeActivePlugin = deckyState.closeActivePlugin.bind(deckyState);
   const setPluginOrder = deckyState.setPluginOrder.bind(deckyState);
+  const setSortPlugins = deckyState.setSortPlugins.bind(deckyState);
 
   return (
     <DeckyStateContext.Provider
@@ -173,6 +183,7 @@ export const DeckyStateContextProvider: FC<Props> = ({ children, deckyState }) =
         setActivePlugin,
         closeActivePlugin,
         setPluginOrder,
+        setSortPlugins,
       }}
     >
       {children}

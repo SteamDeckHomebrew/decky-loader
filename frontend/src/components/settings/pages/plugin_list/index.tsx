@@ -9,7 +9,7 @@ import {
   ReorderableList,
   showContextMenu,
 } from '@decky/ui';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaDownload, FaEllipsisH, FaRecycle } from 'react-icons/fa';
 
@@ -147,7 +147,7 @@ type PluginData = {
 };
 
 export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
-  const { plugins, updates, pluginOrder, setPluginOrder, frozenPlugins, hiddenPlugins } = useDeckyState();
+  const { plugins, updates, pluginOrder, setPluginOrder, frozenPlugins, hiddenPlugins, sortPlugins } = useDeckyState();
   const [_, setPluginOrderSetting] = useSetting<string[]>(
     'pluginOrder',
     plugins.map((plugin) => plugin.name),
@@ -162,6 +162,12 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
   const hiddenPluginsService = DeckyPluginLoader.hiddenPluginsService;
   const frozenPluginsService = DeckyPluginLoader.frozenPluginsService;
 
+  const sortedPlugins = useMemo(() => {
+    return sortPlugins
+      ? [...plugins].sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
+      : plugins;
+  }, [plugins, sortPlugins]);
+
   useEffect(() => {
     setPluginEntries(
       plugins.map(({ name, version }) => {
@@ -170,7 +176,7 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
 
         return {
           label: <PluginListLabel name={name} frozen={frozen} hidden={hidden} version={version} />,
-          position: pluginOrder.indexOf(name),
+          position: sortPlugins ? sortedPlugins.findIndex((p) => p.name === name) : pluginOrder.indexOf(name),
           data: {
             name,
             frozen,
@@ -186,7 +192,7 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
         };
       }),
     );
-  }, [plugins, updates, hiddenPlugins]);
+  }, [plugins, updates, hiddenPlugins, sortPlugins]);
 
   if (plugins.length === 0) {
     return (
@@ -197,6 +203,9 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
   }
 
   function onSave(entries: ReorderableEntry<PluginTableData>[]) {
+    if (sortPlugins) {
+      return;
+    }
     const newOrder = entries.map((entry) => entry.data!.name);
     console.log(newOrder);
     setPluginOrder(newOrder);

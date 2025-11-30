@@ -202,6 +202,9 @@
         "developer_mode": {
             "label": "Developer mode"
         },
+        "sort_plugins": {
+            "label": "Sort plugins alphabetically"
+        },
         "notifications": {
             "decky_updates_label": "Decky update available",
             "header": "Notifications",

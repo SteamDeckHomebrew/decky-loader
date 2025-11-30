@@ -9,8 +9,16 @@ import { useQuickAccessVisible } from './QuickAccessVisibleState';
 import TitleView from './TitleView';
 
 const PluginView: FC = () => {
-  const { plugins, hiddenPlugins, updates, activePlugin, pluginOrder, setActivePlugin, closeActivePlugin } =
-    useDeckyState();
+  const {
+    plugins,
+    hiddenPlugins,
+    updates,
+    activePlugin,
+    pluginOrder,
+    sortPlugins,
+    setActivePlugin,
+    closeActivePlugin,
+  } = useDeckyState();
   const visible = useQuickAccessVisible();
   const { t } = useTranslation();
 
@@ -18,10 +26,14 @@ const PluginView: FC = () => {
     console.log('updating PluginView after changes');
 
     return [...plugins]
-      .sort((a, b) => pluginOrder.indexOf(a.name) - pluginOrder.indexOf(b.name))
+      .sort((a, b) =>
+        sortPlugins
+          ? a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+          : pluginOrder.indexOf(a.name) - pluginOrder.indexOf(b.name),
+      )
       .filter((p) => p.content)
       .filter(({ name }) => !hiddenPlugins.includes(name));
-  }, [plugins, pluginOrder]);
+  }, [plugins, pluginOrder, sortPlugins]);
 
   if (activePlugin) {
     return (

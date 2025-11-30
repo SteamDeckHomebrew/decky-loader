@@ -11,7 +11,7 @@ import {
   ReorderableList,
   showContextMenu,
 } from '@decky/ui';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaDownload, FaEllipsisH, FaRecycle } from 'react-icons/fa';
 
@@ -171,9 +171,16 @@ type PluginData = {
 };
 
 export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
-  const { installedPlugins, disabledPlugins, updates, pluginOrder, setPluginOrder, frozenPlugins, hiddenPlugins } =
-    useDeckyState();
-
+  const {
+    installedPlugins,
+    disabledPlugins,
+    updates,
+    pluginOrder,
+    setPluginOrder,
+    frozenPlugins,
+    hiddenPlugins,
+    sortPlugins,
+  } = useDeckyState();
   const [_, setPluginOrderSetting] = useSetting<string[]>(
     'pluginOrder',
     installedPlugins.map((plugin) => plugin.name),
@@ -187,6 +194,12 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
   const [pluginEntries, setPluginEntries] = useState<ReorderableEntry<PluginTableData>[]>([]);
   const hiddenPluginsService = DeckyPluginLoader.hiddenPluginsService;
   const frozenPluginsService = DeckyPluginLoader.frozenPluginsService;
+
+  const sortedPlugins = useMemo(() => {
+    return sortPlugins
+      ? [...installedPlugins].sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
+      : installedPlugins;
+  }, [installedPlugins, sortPlugins]);
 
   useEffect(() => {
     setPluginEntries(
@@ -204,7 +217,7 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
               disabled={disabledPlugins.find((p) => p.name == name) !== undefined}
             />
           ),
-          position: pluginOrder.indexOf(name),
+          position: sortPlugins ? sortedPlugins.findIndex((p) => p.name === name) : pluginOrder.indexOf(name),
           data: {
             name,
             disabled: disabledPlugins.some((disabledPlugin) => disabledPlugin.name === name),
@@ -221,7 +234,7 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
         };
       }),
     );
-  }, [installedPlugins, updates, hiddenPlugins, disabledPlugins]);
+  }, [installedPlugins, updates, hiddenPlugins, disabledPlugins, sortPlugins, sortedPlugins]);
 
   if (installedPlugins.length === 0) {
     return (
@@ -232,6 +245,9 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
   }
 
   function onSave(entries: ReorderableEntry<PluginTableData>[]) {
+    if (sortPlugins) {
+      return;
+    }
     const newOrder = entries.map((entry) => entry.data!.name);
     console.log(newOrder);
     setPluginOrder(newOrder);

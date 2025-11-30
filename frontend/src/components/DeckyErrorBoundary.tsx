@@ -29,7 +29,6 @@ const classes = {
   rowList: 'row-list',
   rowItem: 'row-item',
   buttonDescRow: 'button-description-row',
-  grayText: 'gray-text',
   flexRowWGap: 'flex-row',
   marginBottom: 'margin-bottom',
 };
@@ -87,7 +86,6 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
           *:has(> .${classes.root}) {
             margin-top: var(--basicui-header-height);
             overflow: scroll !important;
-            background: radial-gradient(circle at 79% 96%, rgba(92, 21, 157, 0.23), rgba(92, 21, 157, 0) 69%), radial-gradient(circle at 14% 90%, rgba(0, 146, 219, 0.17), rgba(0, 146, 219, 0) 51%), radial-gradient(circle at 93% 11%, rgb(138 0 62 / 9%), rgba(204, 0, 92, 0) 50%), linear-gradient(to bottom right, rgba(5, 15, 31, 1), rgba(5, 15, 31, 1));
           }
           *:has(> .${classes.root})::-webkit-scrollbar {
             display: initial !important;
@@ -108,11 +106,10 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
           .${classes.root} select {
             border: none;
             padding: 4px 16px !important;
-            background: #0d263f;
-            color: #2294f4;
+            background: #fff;
+            color: #000;
             font-size: 12px;
             border-radius: 3px;
-            box-shadow: 8px 9px 8px -5px rgb(4 7 31), inset 0px 14px 11px -10px rgb(38 56 74);
             outline: none;
             height: 28px;
           }
@@ -159,9 +156,6 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
           .${classes.rowList} {
             gap: 8px;
           }
-          .${classes.grayText} {
-            color: #74778096;
-          }
           .${classes.marginBottom} {
             margin-bottom: 10px;
           }
@@ -173,19 +167,19 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
       </style>
       <div className={classes.root}>
         <div className={classes.marginBottom} style={{ fontSize: '20px' }}>
-          ⚠️ An error occured while rendering this content.
+          ⚠️ An error occurred while rendering this content.
         </div>
-        <pre className={joinClassNames(classes.grayText, classes.marginBottom)} style={{ marginTop: '0px' }}>
+        <pre className={joinClassNames(classes.marginBottom)} style={{ marginTop: '0px' }}>
           <code>
             {identifier && `Error Reference: ${identifier}`}
             {versionInfo?.current && `\nDecky Version: ${versionInfo.current}`}
           </code>
         </pre>
         <div className={joinClassNames(classes.likelyOccurred, classes.marginBottom)}>
-          This error likely occured in {errorSource}.
+          This error likely occurred in {errorSource}.
         </div>
         {actionLog?.length > 0 && (
-          <pre className={classes.grayText}>
+          <pre>
             <code>
               Running actions...
               {actionLog}
@@ -196,7 +190,7 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
           <div className={classes.panel}>
             <div className={classes.flexRowWGap} style={{ alignItems: 'baseline' }}>
               <div className={classes.panelHeader}>Actions</div>
-              <div className={classes.grayText} style={{ fontSize: 'small', fontStyle: 'italic' }}>
+              <div style={{ fontSize: 'small', fontStyle: 'italic' }}>
                 Use the touch screen.
               </div>
             </div>
@@ -225,7 +219,7 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
               </div>
               {wasCausedByPlugin && (
                 <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
-                  Disable/ uninstall suspected plugin and restart Decky
+                  Disable or uninstall the suspected plugin
                   <div className={classes.flexRowWGap}>
                     {/**temp placeholder for plugin disable functionality*/}
                     {/* <button>
@@ -362,7 +356,6 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
         )}
         {actionsEnabled && (
           <div
-            className={classes.grayText}
             style={{
               fontStyle: 'italic',
               fontSize: 'small',

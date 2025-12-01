@@ -3,13 +3,13 @@ import { CSSProperties, FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaArrowDown, FaArrowUp, FaCheck, FaDownload, FaRecycle } from 'react-icons/fa';
 
-import { InstallType, Plugin } from '../../plugin';
+import { DisabledPlugin, InstallType, Plugin } from '../../plugin';
 import { StorePlugin, requestPluginInstall } from '../../store';
 import ExternalLink from '../ExternalLink';
 
 interface PluginCardProps {
   storePlugin: StorePlugin;
-  installedPlugin: Plugin | undefined;
+  installedPlugin: Plugin | DisabledPlugin | undefined;
 }
 
 const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {

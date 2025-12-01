@@ -1,8 +1,8 @@
 {
-    "deckip"    : "0.0.0.0",
+    "deckip"    : "192.168.1.69",
     "deckport"  : "22",
     "deckuser"  : "deck",
-    "deckpass"  : "ssap",
+    "deckpass"  : "deck",
     "deckkey"   : "-i ${env:HOME}/.ssh/id_rsa",
     "deckdir"   : "/home/deck"
 }

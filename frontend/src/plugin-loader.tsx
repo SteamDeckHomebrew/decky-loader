@@ -400,6 +400,7 @@ class PluginLoader extends Logger {
     version?: string | undefined,
     loadType: PluginLoadType = PluginLoadType.ESMODULE_V1,
     useQueue: boolean = true,
+    timeoutMS?: number,
   ) {
     if (useQueue && this.reloadLock) {
       this.log('Reload currently in progress, adding to queue', name);
@@ -414,7 +415,7 @@ class PluginLoader extends Logger {
       this.unloadPlugin(name, true);
       const startTime = performance.now();
 
-      await this.importReactPlugin(name, version, loadType);
+      await this.importReactPlugin(name, version, loadType, timeoutMS);
       const endTime = performance.now();
 
       this.deckyState.setDisabledPlugins(this.deckyState.publicState().disabledPlugins.filter((d) => d.name !== name));
@@ -427,7 +428,7 @@ class PluginLoader extends Logger {
         this.reloadLock = false;
         const nextPlugin = this.pluginReloadQueue.shift();
         if (nextPlugin) {
-          this.importPlugin(nextPlugin.name, nextPlugin.version, nextPlugin.loadType);
+          this.importPlugin(nextPlugin.name, nextPlugin.version, nextPlugin.loadType, true, timeoutMS);
         }
       }
     }
@@ -437,12 +438,28 @@ class PluginLoader extends Logger {
     name: string,
     version?: string,
     loadType: PluginLoadType = PluginLoadType.ESMODULE_V1,
+    timeoutMS?: number,
   ) {
     let spExists = this.checkForSP();
+    const timeoutException = new Error(
+      `${name} failed to load within ${timeoutMS ? `${timeoutMS / 1000} second` : ''} time limit`,
+    );
+    let timeout: number | undefined;
+
     try {
       switch (loadType) {
         case PluginLoadType.ESMODULE_V1:
-          const plugin_exports = await import(`http://127.0.0.1:1337/plugins/${name}/dist/index.js?t=${Date.now()}`);
+          const importJS = () => import(`http://127.0.0.1:1337/plugins/${name}/dist/index.js?t=${Date.now()}`);
+
+          const promise =
+            timeoutMS === undefined
+              ? importJS()
+              : Promise.race([
+                  importJS(),
+                  new Promise((_, reject) => (timeout = setTimeout(() => reject(timeoutException), timeoutMS))),
+                ]);
+
+          const plugin_exports = await promise;
           let plugin = plugin_exports.default();
 
           this.plugins.push({
@@ -454,12 +471,26 @@ class PluginLoader extends Logger {
           break;
 
         case PluginLoadType.LEGACY_EVAL_IIFE:
-          let res = await fetch(`http://127.0.0.1:1337/plugins/${name}/frontend_bundle`, {
-            credentials: 'include',
-            headers: {
-              'X-Decky-Auth': deckyAuthToken,
-            },
-          });
+          const fetchJS = async () => {
+            const controller = new AbortController();
+            const { signal } = controller;
+
+            if (timeoutMS !== undefined) timeout = setTimeout(() => controller.abort(), timeoutMS);
+
+            try {
+              return await fetch(`http://127.0.0.1:1337/plugins/${name}/frontend_bundle`, {
+                credentials: 'include',
+                headers: {
+                  'X-Decky-Auth': deckyAuthToken,
+                },
+                signal,
+              });
+            } catch (e: any) {
+              throw 'name' in e && e.name === 'AbortError' ? timeoutException : e;
+            }
+          };
+
+          let res = await fetchJS();
           if (res.ok) {
             let plugin_export: (serverAPI: any) => Plugin = await eval(
               (await res.text()) + `\n//# sourceURL=decky://decky/legacy_plugin/${encodeURIComponent(name)}/index.js`,
@@ -478,6 +509,8 @@ class PluginLoader extends Logger {
           throw new Error(`${name} has no defined loadType.`);
       }
     } catch (e) {
+      if (e === timeoutException) throw timeoutException;
+
       this.error('Error loading plugin ' + name, e);
       const TheError: FC<{}> = () => (
         <PanelSection>
@@ -520,6 +553,8 @@ class PluginLoader extends Logger {
         body: '' + e,
         icon: <FaExclamationCircle />,
       });
+    } finally {
+      if (timeout !== undefined) clearTimeout(timeout);
     }
 
     if (spExists && !this.checkForSP()) {

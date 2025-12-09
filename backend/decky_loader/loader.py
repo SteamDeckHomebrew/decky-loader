@@ -188,7 +188,7 @@ class Loader:
             print_exc()
 
     async def dispatch_plugin(self, name: str, version: str | None, load_type: int = PluginLoadType.ESMODULE_V1.value):
-        await self.ws.emit("loader/import_plugin", name, version, load_type)        
+        await self.ws.emit("loader/import_plugin", name, version, load_type, True, 15000)        
 
     async def import_plugins(self):
         self.logger.info(f"import plugins from {self.plugin_path}")

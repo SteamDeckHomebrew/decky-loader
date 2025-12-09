@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaEyeSlash, FaLock, FaBan } from 'react-icons/fa';
+import { FaBan, FaEyeSlash, FaLock } from 'react-icons/fa';
 
 interface PluginListLabelProps {
   frozen: boolean;

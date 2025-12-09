@@ -1,7 +1,7 @@
 import { ButtonItem, ErrorBoundary, Focusable, PanelSection, PanelSectionRow } from '@decky/ui';
 import { FC, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaEyeSlash, FaBan } from 'react-icons/fa';
+import { FaBan, FaEyeSlash } from 'react-icons/fa';
 
 import { useDeckyState } from './DeckyState';
 import NotificationBadge from './NotificationBadge';

@@ -2,9 +2,11 @@ import {
   DialogBody,
   DialogButton,
   DialogControlsSection,
+  Focusable,
   GamepadEvent,
   Menu,
   MenuItem,
+  NavEntryPositionPreferences,
   ReorderableEntry,
   ReorderableList,
   showContextMenu,
@@ -119,7 +121,7 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
   };
 
   return (
-    <>
+    <Focusable navEntryPreferPosition={NavEntryPositionPreferences.MAINTAIN_X} style={{ display: 'flex' }}>
       {update ? (
         <DialogButton
           style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
@@ -158,7 +160,7 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
       >
         <FaEllipsisH />
       </DialogButton>
-    </>
+    </Focusable>
   );
 }
 
@@ -179,7 +181,7 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
 
   useEffect(() => {
     DeckyPluginLoader.checkPluginUpdates();
-  }, []);
+  }, [updates]);
 
   const [pluginEntries, setPluginEntries] = useState<ReorderableEntry<PluginTableData>[]>([]);
   const hiddenPluginsService = DeckyPluginLoader.hiddenPluginsService;

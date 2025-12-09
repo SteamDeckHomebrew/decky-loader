@@ -1,12 +1,14 @@
 import { FC, ReactNode, createContext, useContext, useEffect, useState } from 'react';
 
 import { DEFAULT_NOTIFICATION_SETTINGS, NotificationSettings } from '../notification-service';
-import { Plugin } from '../plugin';
+import { DisabledPlugin, Plugin } from '../plugin';
 import { PluginUpdateMapping } from '../store';
 import { VerInfo } from '../updater';
 
 interface PublicDeckyState {
   plugins: Plugin[];
+  disabledPlugins: DisabledPlugin[];
+  installedPlugins: (Plugin | DisabledPlugin)[];
   pluginOrder: string[];
   frozenPlugins: string[];
   hiddenPlugins: string[];
@@ -26,6 +28,8 @@ export interface UserInfo {
 
 export class DeckyState {
   private _plugins: Plugin[] = [];
+  private _disabledPlugins: DisabledPlugin[] = [];
+  private _installedPlugins: (Plugin | DisabledPlugin)[] = [];
   private _pluginOrder: string[] = [];
   private _frozenPlugins: string[] = [];
   private _hiddenPlugins: string[] = [];
@@ -42,6 +46,8 @@ export class DeckyState {
   publicState(): PublicDeckyState {
     return {
       plugins: this._plugins,
+      disabledPlugins: this._disabledPlugins,
+      installedPlugins: this._installedPlugins,
       pluginOrder: this._pluginOrder,
       frozenPlugins: this._frozenPlugins,
       hiddenPlugins: this._hiddenPlugins,
@@ -62,6 +68,13 @@ export class DeckyState {
 
   setPlugins(plugins: Plugin[]) {
     this._plugins = plugins;
+    this._installedPlugins = [...plugins, ...this._disabledPlugins];
+    this.notifyUpdate();
+  }
+
+  setDisabledPlugins(disabledPlugins: DisabledPlugin[]) {
+    this._disabledPlugins = disabledPlugins;
+    this._installedPlugins = [...this._plugins, ...disabledPlugins];
     this.notifyUpdate();
   }
 
@@ -125,6 +138,7 @@ interface DeckyStateContext extends PublicDeckyState {
   setIsLoaderUpdating(hasUpdate: boolean): void;
   setActivePlugin(name: string): void;
   setPluginOrder(pluginOrder: string[]): void;
+  setDisabledPlugins(disabled: DisabledPlugin[]): void;
   closeActivePlugin(): void;
 }
 
@@ -163,6 +177,7 @@ export const DeckyStateContextProvider: FC<Props> = ({ children, deckyState }) =
   const setActivePlugin = deckyState.setActivePlugin.bind(deckyState);
   const closeActivePlugin = deckyState.closeActivePlugin.bind(deckyState);
   const setPluginOrder = deckyState.setPluginOrder.bind(deckyState);
+  const setDisabledPlugins = deckyState.setDisabledPlugins.bind(deckyState);
 
   return (
     <DeckyStateContext.Provider
@@ -173,6 +188,7 @@ export const DeckyStateContextProvider: FC<Props> = ({ children, deckyState }) =
         setActivePlugin,
         closeActivePlugin,
         setPluginOrder,
+        setDisabledPlugins,
       }}
     >
       {children}

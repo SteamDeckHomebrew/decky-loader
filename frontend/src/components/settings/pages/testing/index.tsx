@@ -79,7 +79,7 @@ export default function TestingVersionList() {
         <ul style={{ listStyleType: 'none', padding: '0' }}>
           {testingVersions.map((version) => {
             return (
-              <li>
+              <li key={`${version.id}_${version.name}`}>
                 <Field
                   label={
                     <>

@@ -1,8 +1,8 @@
 import {
   Dropdown,
-  DropdownOption,
   Focusable,
   PanelSectionRow,
+  SingleDropdownOption,
   SteamSpinner,
   Tabs,
   TextField,
@@ -13,10 +13,14 @@ import { useTranslation } from 'react-i18next';
 
 import logo from '../../../assets/plugin_store.png';
 import Logger from '../../logger';
-import { SortDirections, SortOptions, Store, StorePlugin, getPluginList, getStore } from '../../store';
+import { SortKeys, Store, StoreFilter, StorePlugin, getPluginList, getStore } from '../../store';
 import { useDeckyState } from '../DeckyState';
 import ExternalLink from '../ExternalLink';
 import PluginCard from './PluginCard';
+
+interface DropdownOptions<TData = unknown> extends SingleDropdownOption {
+  data: TData;
+}
 
 const logger = new Logger('Store');
 
@@ -63,39 +67,99 @@ const StorePage: FC<{}> = () => {
   );
 };
 
+// Functions for each of the store sort options
+const storeSortFunctions: Record<SortKeys, Parameters<Array<StorePlugin>['sort']>[0]> = {
+  'name-ascending': (a, b) => a.name.localeCompare(b.name),
+  'name-descending': (a, b) => b.name.localeCompare(a.name),
+  'date-ascending': (a, b) => new Date(a.updated).valueOf() - new Date(b.updated).valueOf(),
+  'date-descending': (a, b) => new Date(b.updated).valueOf() - new Date(a.updated).valueOf(),
+  'downloads-ascending': (a, b) => b.downloads - a.downloads,
+  'downloads-descending': (a, b) => a.downloads - b.downloads,
+};
+
 const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }> = ({ setPluginCount }) => {
   const { t } = useTranslation();
 
   const dropdownSortOptions = useMemo(
-    (): DropdownOption[] => [
+    (): DropdownOptions<SortKeys>[] => [
       // ascending and descending order are the wrong way around for the alphabetical sort
       // this is because it was initially done incorrectly for i18n and 'fixing' it would
       // make all the translations incorrect
-      { data: [SortOptions.name, SortDirections.ascending], label: t('Store.store_tabs.alph_desc') },
-      { data: [SortOptions.name, SortDirections.descending], label: t('Store.store_tabs.alph_asce') },
-      { data: [SortOptions.date, SortDirections.ascending], label: t('Store.store_tabs.date_asce') },
-      { data: [SortOptions.date, SortDirections.descending], label: t('Store.store_tabs.date_desc') },
-      { data: [SortOptions.downloads, SortDirections.descending], label: t('Store.store_tabs.downloads_desc') },
-      { data: [SortOptions.downloads, SortDirections.ascending], label: t('Store.store_tabs.downloads_asce') },
+      { data: 'name-ascending', label: t('Store.store_tabs.alph_desc') },
+      { data: 'name-descending', label: t('Store.store_tabs.alph_asce') },
+      { data: 'date-ascending', label: t('Store.store_tabs.date_asce') },
+      { data: 'date-descending', label: t('Store.store_tabs.date_desc') },
+      { data: 'downloads-ascending', label: t('Store.store_tabs.downloads_desc') },
+      { data: 'downloads-descending', label: t('Store.store_tabs.downloads_asce') },
     ],
     [],
   );
 
-  // const filterOptions = useMemo((): DropdownOption[] => [{ data: 1, label: 'All' }], []);
-  const [selectedSort, setSort] = useState<[SortOptions, SortDirections]>(dropdownSortOptions[0].data);
-  // const [selectedFilter, setFilter] = useState<number>(filterOptions[0].data);
+  // Our list of filters populates automatically based on the enum and matches directly to locale strings
+  const filterOptions = useMemo(
+    () =>
+      Object.keys(StoreFilter).map<DropdownOptions<StoreFilter>>(
+        (key) => ({
+          data: StoreFilter[key as keyof typeof StoreFilter],
+          label: t(`Store.store_filter.options.${StoreFilter[key as keyof typeof StoreFilter]}`),
+        }),
+        {},
+      ),
+    [],
+  );
+
+  const [selectedSort, setSort] = useState<DropdownOptions<SortKeys>['data']>(dropdownSortOptions[0].data);
+  const [filter, setFilter] = useState<StoreFilter>(filterOptions[0].data);
   const [searchFieldValue, setSearchValue] = useState<string>('');
   const [pluginList, setPluginList] = useState<StorePlugin[] | null>(null);
   const [isTesting, setIsTesting] = useState<boolean>(false);
 
+  const { plugins: installedPlugins } = useDeckyState();
+
+  const hasInstalledPlugin = (plugin: StorePlugin) =>
+    installedPlugins?.find((installedPlugin) => installedPlugin.name === plugin.name);
+
+  const filterPlugin = (plugin: StorePlugin): boolean => {
+    switch (filter) {
+      case StoreFilter.Installed:
+        return !!hasInstalledPlugin(plugin);
+      case StoreFilter.NotInstalled:
+        return !hasInstalledPlugin(plugin);
+      default:
+        return true;
+    }
+  };
+
+  const renderedList = useMemo(() => {
+    // Use an empty array in case it's null
+    const plugins = pluginList || [];
+    return (
+      <>
+        {plugins
+          .filter(filterPlugin)
+          .filter(
+            (plugin) =>
+              plugin.name.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
+              plugin.description.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
+              plugin.author.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
+              plugin.tags.some((tag) => tag.toLowerCase().includes(searchFieldValue.toLowerCase())),
+          )
+          .sort(storeSortFunctions[selectedSort])
+          .map((plugin) => (
+            <PluginCard storePlugin={plugin} installedPlugin={hasInstalledPlugin(plugin)} />
+          ))}
+      </>
+    );
+  }, [pluginList, filter, searchFieldValue, selectedSort, installedPlugins, storeSortFunctions]);
+
   useEffect(() => {
     (async () => {
-      const res = await getPluginList(selectedSort[0], selectedSort[1]);
+      const res = await getPluginList();
       logger.debug('got data!', res);
       setPluginList(res);
       setPluginCount(res.length);
     })();
-  }, [selectedSort]);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -105,70 +169,20 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
     })();
   }, []);
 
-  const { plugins: installedPlugins } = useDeckyState();
-
   return (
     <>
       <style>{`
-              .deckyStoreCardInstallContainer > .Panel {
-                padding: 0;
-              }
-            `}</style>
-      {/* This should be used once filtering is added
-
+        .deckyStoreCardInstallContainer > .Panel {
+          padding: 0;
+        }
+      `}</style>
       <PanelSectionRow>
-        <Focusable style={{ display: 'flex', maxWidth: '100%' }}>
+        <Focusable style={{ display: 'flex', maxWidth: '100%', gap: '1rem' }}>
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
-              width: '47.5%',
-            }}
-          >
-            <span className="DialogLabel">{t("Store.store_sort.label")}</span>
-            <Dropdown
-              menuLabel={t("Store.store_sort.label") as string}
-              rgOptions={dropdownSortOptions}
-              strDefaultLabel={t("Store.store_sort.label_def") as string}
-              selectedOption={selectedSort}
-              onChange={(e) => setSort(e.data)}
-            />
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              width: '47.5%',
-              marginLeft: 'auto',
-            }}
-          >
-            <span className="DialogLabel">{t("Store.store_filter.label")}</span>
-            <Dropdown
-              menuLabel={t("Store.store_filter.label")}
-              rgOptions={filterOptions}
-              strDefaultLabel={t("Store.store_filter.label_def")}
-              selectedOption={selectedFilter}
-              onChange={(e) => setFilter(e.data)}
-            />
-          </div>
-        </Focusable>
-      </PanelSectionRow>
-      <div style={{ justifyContent: 'center', display: 'flex' }}>
-        <Focusable style={{ display: 'flex', alignItems: 'center', width: '96%' }}>
-          <div style={{ width: '100%' }}>
-            <TextField label={t("Store.store_search.label")} value={searchFieldValue} onChange={(e) => setSearchValue(e.target.value)} />
-          </div>
-        </Focusable>
-      </div>
-      */}
-      <PanelSectionRow>
-        <Focusable style={{ display: 'flex', maxWidth: '100%' }}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              minWidth: '100%',
-              maxWidth: '100%',
+              width: '100%',
             }}
           >
             <span className="DialogLabel">{t('Store.store_sort.label')}</span>
@@ -178,6 +192,22 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
               strDefaultLabel={t('Store.store_sort.label_def') as string}
               selectedOption={selectedSort}
               onChange={(e) => setSort(e.data)}
+            />
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+            }}
+          >
+            <span className="DialogLabel">{t('Store.store_filter.label')}</span>
+            <Dropdown
+              menuLabel={t('Store.store_filter.label')}
+              rgOptions={filterOptions}
+              strDefaultLabel={t('Store.store_filter.label_def')}
+              selectedOption={filter}
+              onChange={(e) => setFilter(e.data)}
             />
           </div>
         </Focusable>
@@ -229,21 +259,7 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
             <SteamSpinner background="transparent" />
           </div>
         ) : (
-          pluginList
-            .filter((plugin: StorePlugin) => {
-              return (
-                plugin.name.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
-                plugin.description.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
-                plugin.author.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
-                plugin.tags.some((tag: string) => tag.toLowerCase().includes(searchFieldValue.toLowerCase()))
-              );
-            })
-            .map((plugin: StorePlugin) => (
-              <PluginCard
-                storePlugin={plugin}
-                installedPlugin={installedPlugins.find((installedPlugin) => installedPlugin.name === plugin.name)}
-              />
-            ))
+          renderedList
         )}
       </div>
     </>

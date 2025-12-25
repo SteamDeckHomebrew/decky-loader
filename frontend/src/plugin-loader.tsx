@@ -335,6 +335,12 @@ class PluginLoader extends Logger {
       this.deckyState.setPluginOrder(pluginOrder);
     });
 
+    // Grab and set sort plugins setting
+    getSetting<boolean>('sortPlugins', false).then((sortPlugins) => {
+      this.debug('sortPlugins: ', sortPlugins);
+      this.deckyState.setSortPlugins(sortPlugins);
+    });
+
     this.frozenPluginsService.init();
     this.hiddenPluginsService.init();
     this.notificationService.init();

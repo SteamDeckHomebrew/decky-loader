@@ -1,12 +1,14 @@
 import { FC, ReactNode, createContext, useContext, useEffect, useState } from 'react';
 
 import { DEFAULT_NOTIFICATION_SETTINGS, NotificationSettings } from '../notification-service';
-import { Plugin } from '../plugin';
+import { DisabledPlugin, Plugin } from '../plugin';
 import { PluginUpdateMapping } from '../store';
 import { VerInfo } from '../updater';
 
 interface PublicDeckyState {
   plugins: Plugin[];
+  disabled: DisabledPlugin[];
+  installedPlugins: (Plugin | DisabledPlugin)[];
   pluginOrder: string[];
   frozenPlugins: string[];
   hiddenPlugins: string[];
@@ -26,6 +28,8 @@ export interface UserInfo {
 
 export class DeckyState {
   private _plugins: Plugin[] = [];
+  private _disabledPlugins: DisabledPlugin[] = [];
+  private _installedPlugins: (Plugin | DisabledPlugin)[] = [];
   private _pluginOrder: string[] = [];
   private _frozenPlugins: string[] = [];
   private _hiddenPlugins: string[] = [];
@@ -42,6 +46,8 @@ export class DeckyState {
   publicState(): PublicDeckyState {
     return {
       plugins: this._plugins,
+      disabled: this._disabledPlugins,
+      installedPlugins: this._installedPlugins,
       pluginOrder: this._pluginOrder,
       frozenPlugins: this._frozenPlugins,
       hiddenPlugins: this._hiddenPlugins,
@@ -62,6 +68,13 @@ export class DeckyState {
 
   setPlugins(plugins: Plugin[]) {
     this._plugins = plugins;
+    this._installedPlugins = [...plugins, ...this._disabledPlugins];
+    this.notifyUpdate();
+  }
+
+  setDisabledPlugins(disabledPlugins: DisabledPlugin[]) {
+    this._disabledPlugins = disabledPlugins;
+    this._installedPlugins = [...this._plugins, ...disabledPlugins];
     this.notifyUpdate();
   }
 

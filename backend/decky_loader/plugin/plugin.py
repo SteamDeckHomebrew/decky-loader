@@ -41,6 +41,7 @@ class PluginWrapper:
         self.author = json["author"]
         self.flags = json["flags"]
         self.api_version = json["api_version"] if "api_version" in json else 0
+        self.disabled = False
         
         self.passive = not path.isfile(self.file)
 

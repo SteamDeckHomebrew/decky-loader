@@ -80,6 +80,13 @@ class PluginWrapper:
     def __str__(self) -> str:
         return self.name
     
+    def get_display_name(self) -> str:
+        """Returns plugin name with version if available, formatted for logging."""
+        if self.version:
+            return f"{self.name} (v{self.version})"
+
+        return self.name
+
     async def _response_listener(self):
         while self._socket.active:
             try:
@@ -91,7 +98,7 @@ class PluginWrapper:
                     elif res["type"] == SocketMessageType.RESPONSE.value:
                         self._method_call_requests.pop(res["id"]).set_result(res)
             except CancelledError:
-                self.log.info(f"Stopping response listener for {self.name}")
+                self.log.info(f"Stopping response listener for {self.get_display_name()}")
                 await self._socket.close_socket_connection()
                 raise
             except:
@@ -100,7 +107,7 @@ class PluginWrapper:
     async def execute_legacy_method(self, method_name: str, kwargs: Dict[Any, Any]):
         if not self.legacy_method_warning:
             self.legacy_method_warning = True
-            self.log.warning(f"Plugin {self.name} is using legacy method calls. This will be removed in a future release.")
+            self.log.warning(f"Plugin {self.get_display_name()} is using legacy method calls. This will be removed in a future release.")
         if self.passive:
             raise RuntimeError("This plugin is passive (aka does not implement main.py)")
         
@@ -135,7 +142,7 @@ class PluginWrapper:
             start_time = time()
             if self.passive:
                 return
-            self.log.info(f"Shutting down {self.name}")
+            self.log.info(f"Shutting down {self.get_display_name()}")
 
             pending: set[Task[None]] | None = None;
 
@@ -155,16 +162,16 @@ class PluginWrapper:
                 for pending_task in pending:
                     pending_task.cancel()
 
-            self.log.info(f"Plugin {self.name} has been stopped in {time() - start_time:.1f}s")
+            self.log.info(f"Plugin {self.get_display_name()} has been stopped in {time() - start_time:.1f}s")
         except Exception as e:
-            self.log.error(f"Error during shutdown for plugin {self.name}: {str(e)}\n{format_exc()}")
+            self.log.error(f"Error during shutdown for plugin {self.get_display_name()}: {str(e)}\n{format_exc()}")
 
     async def kill_if_still_running(self):
         start_time = time()
         while self.proc and self.proc.is_alive():
             elapsed_time = time() - start_time
             if elapsed_time >= 5:
-                self.log.warning(f"Plugin {self.name} still alive 5 seconds after stop request! Sending SIGKILL!")
+                self.log.warning(f"Plugin {self.get_display_name()} still alive 5 seconds after stop request! Sending SIGKILL!")
                 self.terminate(True)
             await sleep(0.1)
 

@@ -166,16 +166,16 @@ class Loader:
             plugin = PluginWrapper(file, plugin_directory, self.plugin_path, plugin_emitted_event)
             if plugin.name in self.plugins:
                     if not "debug" in plugin.flags and refresh:
-                        self.logger.info(f"Plugin {plugin.name} is already loaded and has requested to not be re-loaded")
+                        self.logger.info(f"Plugin {plugin.get_display_name()} is already loaded and has requested to not be re-loaded")
                         return
                     else:
                         await self.plugins[plugin.name].stop()
                         self.plugins.pop(plugin.name, None)
             if plugin.passive:
-                self.logger.info(f"Plugin {plugin.name} is passive")
+                self.logger.info(f"Plugin {plugin.get_display_name()} is passive")
 
             self.plugins[plugin.name] = plugin.start()
-            self.logger.info(f"Loaded {plugin.name}")
+            self.logger.info(f"Loaded {plugin.get_display_name()}")
             if not batch:
                 self.loop.create_task(self.dispatch_plugin(plugin.name, plugin.version, plugin.load_type))
         except Exception as e:
@@ -203,7 +203,7 @@ class Loader:
         plugin = self.plugins[plugin_name]
         try:
           if method_name.startswith("_"):
-              raise RuntimeError(f"Plugin {plugin.name} tried to call private method {method_name}")
+              raise RuntimeError(f"Plugin {plugin.get_display_name()} tried to call private method {method_name}")
           res["result"] = await plugin.execute_legacy_method(method_name, kwargs)
           res["success"] = True
         except Exception as e:
@@ -215,10 +215,10 @@ class Loader:
         plugin = self.plugins[plugin_name]
         try:
           if method_name.startswith("_"):
-              raise RuntimeError(f"Plugin {plugin.name} tried to call private method {method_name}")
+              raise RuntimeError(f"Plugin {plugin.get_display_name()} tried to call private method {method_name}")
           result = await plugin.execute_method(method_name, *args)
         except Exception as e:
-            self.logger.error(f"Method {method_name} of plugin {plugin.name} failed with the following exception:\n{format_exc()}")
+            self.logger.error(f"Method {method_name} of plugin {plugin.get_display_name()} failed with the following exception:\n{format_exc()}")
             raise e # throw again to pass the error to the frontend
         return result
 

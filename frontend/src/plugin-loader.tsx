@@ -37,6 +37,7 @@ import { checkForPluginUpdates } from './store';
 import TabsHook from './tabs-hook';
 import Toaster from './toaster';
 import { getVersionInfo } from './updater';
+import { getPluginDisplayName } from './utils/pluginHelpers';
 import { getSetting, setSetting } from './utils/settings';
 import TranslationHelper, { TranslationClass } from './utils/TranslationHelper';
 
@@ -319,7 +320,7 @@ class PluginLoader extends Logger {
 
   public dismountAll() {
     for (const plugin of this.plugins) {
-      this.log(`Dismounting ${plugin.name}`);
+      this.log(`Dismounting ${getPluginDisplayName(plugin.name, plugin.version)}`);
       plugin.onDismount?.();
     }
   }
@@ -365,14 +366,14 @@ class PluginLoader extends Logger {
     useQueue: boolean = true,
   ) {
     if (useQueue && this.reloadLock) {
-      this.log('Reload currently in progress, adding to queue', name);
+      this.log(`Reload currently in progress, adding ${getPluginDisplayName(name, version)} to queue`);
       this.pluginReloadQueue.push({ name, version: version, loadType });
       return;
     }
 
     try {
       if (useQueue) this.reloadLock = true;
-      this.log(`Trying to load ${name}`);
+      this.log(`Trying to load ${getPluginDisplayName(name, version)}`);
 
       this.unloadPlugin(name, true);
       const startTime = performance.now();
@@ -380,7 +381,7 @@ class PluginLoader extends Logger {
       const endTime = performance.now();
 
       this.deckyState.setPlugins(this.plugins);
-      this.log(`Loaded ${name} in ${endTime - startTime}ms`);
+      this.log(`Loaded ${getPluginDisplayName(name, version)} in ${endTime - startTime}ms`);
     } catch (e) {
       throw e;
     } finally {
@@ -432,14 +433,14 @@ class PluginLoader extends Logger {
               version: version,
               loadType,
             });
-          } else throw new Error(`${name} frontend_bundle not OK`);
+          } else throw new Error(`${getPluginDisplayName(name, version)} frontend_bundle not OK`);
           break;
 
         default:
-          throw new Error(`${name} has no defined loadType.`);
+          throw new Error(`${getPluginDisplayName(name, version)} has no defined loadType.`);
       }
     } catch (e) {
-      this.error('Error loading plugin ' + name, e);
+      this.error(`Error loading plugin ${getPluginDisplayName(name, version)}`, e);
       const TheError: FC<{}> = () => (
         <PanelSection>
           <PanelSectionRow>
@@ -657,7 +658,8 @@ class PluginLoader extends Logger {
           backendAPI.useQuickAccessVisible = useQuickAccessVisible;
         }
 
-        this.debug(`${pluginName} connected to loader API.`);
+        // Note: version info not available at connection time
+        this.debug(`Plugin ${pluginName} connected to loader API.`);
         return backendAPI;
       },
     };

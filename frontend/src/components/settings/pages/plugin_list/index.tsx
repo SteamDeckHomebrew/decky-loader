@@ -23,6 +23,7 @@ import {
   requestPluginInstall,
 } from '../../../../store';
 import { useSetting } from '../../../../utils/hooks/useSetting';
+import { getPluginDisplayName } from '../../../../utils/pluginHelpers';
 import { useDeckyState } from '../../../DeckyState';
 import PluginListLabel from './PluginListLabel';
 
@@ -69,7 +70,7 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
               try {
                 await reloadPluginBackend(name);
               } catch (err) {
-                console.error('Error Reloading Plugin Backend', err);
+                console.error(`Error Reloading Plugin Backend for ${getPluginDisplayName(name, version)}`, err);
               }
             }}
           >

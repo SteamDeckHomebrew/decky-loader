@@ -151,11 +151,12 @@ class PluginBrowser:
             # snapshot_string = pformat(plugins_snapshot)
             # logger.debug("current plugins: %s", snapshot_string)
             if name in self.plugins:
-                logger.debug("Plugin %s was found", name)
+                plugin_display = self.plugins[name].get_display_name()
+                logger.debug(f"Plugin {plugin_display} was found")
                 await self.plugins[name].stop(uninstall=True)
-                logger.debug("Plugin %s was stopped", name)
+                logger.debug(f"Plugin {plugin_display} was stopped")
                 del self.plugins[name]
-                logger.debug("Plugin %s was removed from the dictionary", name)
+                logger.debug(f"Plugin {plugin_display} was removed from the dictionary")
                 self.cleanup_plugin_settings(name)
             logger.debug("removing files %s" % str(name))
             rmtree(plugin_dir)

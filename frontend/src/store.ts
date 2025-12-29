@@ -42,11 +42,60 @@ export interface PluginInstallRequest {
   installType: InstallType;
 }
 
+export interface Announcement {
+  id: string;
+  title: string;
+  text: string;
+  created: string;
+  updated: string;
+}
+
 // name: version
 export type PluginUpdateMapping = Map<string, StorePluginVersion>;
 
 export async function getStore(): Promise<Store> {
   return await getSetting<Store>('store', Store.Default);
+}
+
+export async function getAnnouncements(): Promise<Announcement[]> {
+  let version = await window.DeckyPluginLoader.updateVersion();
+  let store = await getSetting<Store | null>('store', null);
+  let customURL = await getSetting<string>(
+    'announcements-url',
+    'https://plugins.deckbrew.xyz/v1/announcements/-/current',
+  );
+
+  if (store === null) {
+    console.log('Could not get store, using Default.');
+    await setSetting('store', Store.Default);
+    store = Store.Default;
+  }
+
+  let resolvedURL;
+  switch (store) {
+    case Store.Default:
+      resolvedURL = 'https://plugins.deckbrew.xyz/v1/announcements/-/current';
+      break;
+    case Store.Testing:
+      resolvedURL = 'https://testing.deckbrew.xyz/v1/announcements/-/current';
+      break;
+    case Store.Custom:
+      resolvedURL = customURL;
+      break;
+    default:
+      console.error('Somehow you ended up without a standard URL, using the default URL.');
+      resolvedURL = 'https://plugins.deckbrew.xyz/v1/announcements/-/current';
+      break;
+  }
+  const res = await fetch(resolvedURL, {
+    method: 'GET',
+    headers: {
+      'X-Decky-Version': version.current,
+    },
+  });
+  if (res.status !== 200) return [];
+  const json = await res.json();
+  return json ?? [];
 }
 
 export async function getPluginList(

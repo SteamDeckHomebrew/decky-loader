@@ -165,3 +165,6 @@ act/.directory
 act/artifacts/*
 bin/act
 /settings/
+
+# macOS
+.DS_Store

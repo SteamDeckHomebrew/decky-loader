@@ -109,11 +109,6 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
 
   return (
     <>
-      <style>{`
-              .deckyStoreCardInstallContainer > .Panel {
-                padding: 0;
-              }
-            `}</style>
       {/* This should be used once filtering is added
 
       <PanelSectionRow>

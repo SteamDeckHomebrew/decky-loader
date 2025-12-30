@@ -52,7 +52,7 @@
     "MultiplePluginsInstallModal": {
         "confirm": "Sei sicuro di voler effettuare le modifiche seguenti?",
         "description": {
-            "downgrade": "Downgrada {{name}} a versione {{version}}",
+            "downgrade": "Declassa {{name}} a versione {{version}}",
             "install": "Installa {{name}} {{version}}",
             "overwrite": "Sovrascrive {{name}} con {{version}}",
             "reinstall": "Reinstalla {{name}} {{version}}",
@@ -63,9 +63,9 @@
             "loading": "Elaboro"
         },
         "title": {
-            "downgrade_many": "Downgrada {{count}} plugins",
-            "downgrade_one": "Downgrada un plugin",
-            "downgrade_other": "Downgrada {{count}} plugins",
+            "downgrade_many": "Declassa {{count}} plugins",
+            "downgrade_one": "Declassa un plugin",
+            "downgrade_other": "Declassa {{count}} plugins",
             "install_many": "Installa {{count}} plugins",
             "install_one": "Installa un plugin",
             "install_other": "Installa {{count}} plugins",
@@ -84,7 +84,7 @@
         }
     },
     "PluginCard": {
-        "plugin_downgrade": "Downgrada",
+        "plugin_downgrade": "Declassa",
         "plugin_full_access": "Questo plugin ha accesso completo al tuo Steam Deck.",
         "plugin_install": "Installa",
         "plugin_no_desc": "Nessuna descrizione fornita.",
@@ -95,10 +95,10 @@
     },
     "PluginInstallModal": {
         "downgrade": {
-            "button_idle": "Downgrada",
-            "button_processing": "Downgradando",
-            "desc": "Sei sicuro di voler downgradare {{artifact}} alla versione {{version}}?",
-            "title": "Downgrada {{artifact}}"
+            "button_idle": "Declassa",
+            "button_processing": "Declassando",
+            "desc": "Sei sicuro di voler declassare {{artifact}} alla versione {{version}}?",
+            "title": "Declassa {{artifact}}"
         },
         "install": {
             "button_idle": "Installa",

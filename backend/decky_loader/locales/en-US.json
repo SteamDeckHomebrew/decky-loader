@@ -102,6 +102,7 @@
         },
         "no_hash": "This plugin does not have a hash, you are installing it at your own risk.",
         "not_installed": "(not installed)",
+        "disabled": "The plugin will be re-enabled after installation",
         "overwrite": {
             "button_idle": "Overwrite",
             "button_processing": "Overwriting",
@@ -133,10 +134,13 @@
         "uninstall": "Uninstall",
         "update_all_one": "Update 1 plugin",
         "update_all_other": "Update {{count}} plugins",
-        "update_to": "Update to {{name}}"
+        "update_to": "Update to {{name}}",
+        "disable": "Disable",
+        "enable": "Enable"
     },
     "PluginListLabel": {
-        "hidden": "Hidden from the quick access menu"
+        "hidden": "Hidden from the quick access menu",
+        "disabled": "Plugin disabled"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -152,12 +156,23 @@
             "desc": "Are you sure you want to uninstall {{name}}?",
             "title": "Uninstall {{name}}"
         },
+        "plugin_disable": {
+            "button": "Disable",
+            "desc": "Are you sure you want to disable {{name}}?",
+            "title": "Disable {{name}}",
+            "error": "Error disabling {{name}}"
+        },
+        "plugin_enable": {
+            "error": "Error enabling {{name}}"
+        },
         "plugin_update_one": "Updates available for 1 plugin!",
         "plugin_update_other": "Updates available for {{count}} plugins!"
     },
     "PluginView": {
         "hidden_one": "1 plugin is hidden from this list",
-        "hidden_other": "{{count}} plugins are hidden from this list"
+        "hidden_other": "{{count}} plugins are hidden from this list",
+        "disabled_one": "1 plugin is disabled",
+        "disabled_other": "{{count}} plugins are disabled"
     },
     "RemoteDebugging": {
         "remote_cef": {

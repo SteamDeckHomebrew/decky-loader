@@ -105,7 +105,7 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
     })();
   }, []);
 
-  const { plugins: installedPlugins } = useDeckyState();
+  const { installedPlugins } = useDeckyState();
 
   return (
     <>

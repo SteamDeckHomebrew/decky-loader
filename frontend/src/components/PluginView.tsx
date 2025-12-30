@@ -1,7 +1,7 @@
 import { ButtonItem, ErrorBoundary, Focusable, PanelSection, PanelSectionRow } from '@decky/ui';
 import { FC, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaEyeSlash } from 'react-icons/fa';
+import { FaBan, FaEyeSlash } from 'react-icons/fa';
 
 import { useDeckyState } from './DeckyState';
 import NotificationBadge from './NotificationBadge';
@@ -9,8 +9,16 @@ import { useQuickAccessVisible } from './QuickAccessVisibleState';
 import TitleView from './TitleView';
 
 const PluginView: FC = () => {
-  const { plugins, hiddenPlugins, updates, activePlugin, pluginOrder, setActivePlugin, closeActivePlugin } =
-    useDeckyState();
+  const {
+    plugins,
+    disabledPlugins,
+    hiddenPlugins,
+    updates,
+    activePlugin,
+    pluginOrder,
+    setActivePlugin,
+    closeActivePlugin,
+  } = useDeckyState();
   const visible = useQuickAccessVisible();
   const { t } = useTranslation();
 
@@ -21,7 +29,9 @@ const PluginView: FC = () => {
       .sort((a, b) => pluginOrder.indexOf(a.name) - pluginOrder.indexOf(b.name))
       .filter((p) => p.content)
       .filter(({ name }) => !hiddenPlugins.includes(name));
-  }, [plugins, pluginOrder]);
+  }, [plugins, pluginOrder, hiddenPlugins]);
+
+  const numberOfHidden = hiddenPlugins.filter((name) => !!plugins.find((p) => p.name === name)).length;
 
   if (activePlugin) {
     return (
@@ -53,12 +63,28 @@ const PluginView: FC = () => {
               </ButtonItem>
             </PanelSectionRow>
           ))}
-          {hiddenPlugins.length > 0 && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.8rem', marginTop: '10px' }}>
-              <FaEyeSlash />
-              <div>{t('PluginView.hidden', { count: hiddenPlugins.length })}</div>
-            </div>
-          )}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              position: 'absolute',
+              justifyContent: 'center',
+              padding: '5px 0px',
+            }}
+          >
+            {numberOfHidden > 0 && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.8rem' }}>
+                <FaEyeSlash />
+                <div>{t('PluginView.hidden', { count: numberOfHidden })}</div>
+              </div>
+            )}
+            {disabledPlugins.length > 0 && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.8rem' }}>
+                <FaBan />
+                <div>{t('PluginView.disabled', { count: disabledPlugins.length })}</div>
+              </div>
+            )}
+          </div>
         </PanelSection>
       </div>
     </>

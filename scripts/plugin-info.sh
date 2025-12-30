@@ -2,7 +2,7 @@
 # Adapted from a script provided by Jaynator495.
 # Make sure to place in home directory, chmod +x plugin-info.sh and then run with ./plugin-info.sh
 # Define the directory to scan
-directory_to_scan="~/homebrew/plugins"
+directory_to_scan="$HOME/homebrew/plugins"
 
 # Loop through each subdirectory (one level deep)
 for dir in "$directory_to_scan"/*/; do

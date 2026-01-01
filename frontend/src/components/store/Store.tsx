@@ -68,9 +68,6 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
 
   const dropdownSortOptions = useMemo(
     (): DropdownOption[] => [
-      // ascending and descending order are the wrong way around for the alphabetical sort
-      // this is because it was initially done incorrectly for i18n and 'fixing' it would
-      // make all the translations incorrect
       { data: [SortOptions.name, SortDirections.ascending], label: t('Store.store_tabs.alph_desc') },
       { data: [SortOptions.name, SortDirections.descending], label: t('Store.store_tabs.alph_asce') },
       { data: [SortOptions.date, SortDirections.ascending], label: t('Store.store_tabs.date_asce') },

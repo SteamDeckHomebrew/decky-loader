@@ -4,6 +4,7 @@ import {
   DialogControlsSection,
   Field,
   Focusable,
+  NavEntryPositionPreferences,
   Navigation,
   ProgressBar,
   SteamSpinner,
@@ -87,7 +88,10 @@ export default function TestingVersionList() {
                     </>
                   }
                 >
-                  <Focusable style={{ height: '40px', marginLeft: 'auto', display: 'flex' }}>
+                  <Focusable
+                    style={{ height: '40px', marginLeft: 'auto', display: 'flex' }}
+                    navEntryPreferPosition={NavEntryPositionPreferences.MAINTAIN_X}
+                  >
                     <DialogButton
                       style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
                       onClick={async () => {

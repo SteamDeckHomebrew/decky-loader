@@ -78,6 +78,7 @@ class Loader:
         self.live_reload = live_reload
         self.reload_queue: ReloadQueue = Queue()
         self.loop.create_task(self.handle_reloads())
+        self.context: PluginManager = server_instance
 
         if live_reload:
             self.observer = Observer()
@@ -130,7 +131,7 @@ class Loader:
 
     async def get_plugins(self):
         plugins = list(self.plugins.values())
-        return [{"name": str(i), "version": i.version, "load_type": i.load_type} for i in plugins]
+        return [{"name": str(i), "version": i.version, "load_type": i.load_type, "disabled": i.disabled} for i in plugins]
 
     async def handle_plugin_dist(self, request: web.Request):
         plugin = self.plugins[request.match_info["plugin_name"]]
@@ -164,6 +165,10 @@ class Loader:
                 await self.ws.emit(f"loader/plugin_event", {"plugin": plugin.name, "event": event, "args": args})
 
             plugin = PluginWrapper(file, plugin_directory, self.plugin_path, plugin_emitted_event)
+            if hasattr(self.context, "utilities") and plugin.name in await self.context.utilities.get_setting("disabled_plugins",[]):
+                plugin.disabled = True
+                self.plugins[plugin.name] = plugin
+                return
             if plugin.name in self.plugins:
                     if not "debug" in plugin.flags and refresh:
                         self.logger.info(f"Plugin {plugin.name} is already loaded and has requested to not be re-loaded")
@@ -183,7 +188,7 @@ class Loader:
             print_exc()
 
     async def dispatch_plugin(self, name: str, version: str | None, load_type: int = PluginLoadType.ESMODULE_V1.value):
-        await self.ws.emit("loader/import_plugin", name, version, load_type)        
+        await self.ws.emit("loader/import_plugin", name, version, load_type, True, 15000)        
 
     async def import_plugins(self):
         self.logger.info(f"import plugins from {self.plugin_path}")

@@ -1,7 +1,7 @@
 import { joinClassNames, sleep } from '@decky/ui';
 import { FunctionComponent, useEffect, useReducer, useState } from 'react';
 
-import { uninstallPlugin } from '../plugin';
+import { disablePlugin, uninstallPlugin } from '../plugin';
 import { VerInfo, doRestart, doShutdown } from '../updater';
 import { ValveReactErrorInfo, getLikelyErrorSourceFromValveReactError } from '../utils/errors';
 import { useSetting } from '../utils/hooks/useSetting';
@@ -198,9 +198,7 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
         `}
       </style>
       <div className={classes.root}>
-        <div className={classes.marginBottom}>
-          An error occurred while rendering this content.
-        </div>
+        <div className={classes.marginBottom}>An error occurred while rendering this content.</div>
         <pre className={joinClassNames(classes.marginBottom)} style={{ marginTop: '0px' }}>
           <code>
             {identifier && `Error Reference: ${identifier}`}
@@ -223,7 +221,8 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
             <div className={classes.flexRowWGap} style={{ alignItems: 'center', marginBottom: '8px' }}>
               <div className={classes.panelHeader}>Actions</div>
               <div style={{ fontSize: 'small', fontStyle: 'italic' }}>
-                Use the touch screen. Solutions are listed in the recommended order. If you are still experiencing issues, please post in the #loader-support channel at decky.xyz/discord.
+                Use the touch screen. Solutions are listed in the recommended order. If you are still experiencing
+                issues, please post in the #loader-support channel at decky.xyz/discord.
               </div>
             </div>
             <div className={classes.rowList}>
@@ -256,10 +255,22 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
                 <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
                   Disable or uninstall the suspected plugin
                   <div className={classes.flexRowWGap}>
-                    {/**temp placeholder for plugin disable functionality*/}
-                    {/* <button>
+                    <button
+                      onClick={async () => {
+                        setActionsEnabled(false);
+                        addLogLine(`Disabling ${errorSource}...`);
+                        await disablePlugin(errorSource);
+                        await sleep(1000);
+                        addLogLine('Restarting Decky...');
+                        doRestart();
+                        await sleep(2000);
+                        addLogLine('Restarting Steam...');
+                        await sleep(500);
+                        SteamClient.User.StartRestart(false);
+                      }}
+                    >
                       Disable {errorSource}
-                    </button> */}
+                    </button>
                     <button
                       onClick={async () => {
                         setActionsEnabled(false);
@@ -281,13 +292,25 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
                   </div>
                 </div>
               )}
-              {/**temp placeholder for plugin disable functionality*/}
-              {/* <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
-                Disable all plugins and restart Decky
-                <button>
+              <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
+                Disable all plugins
+                <button
+                  onClick={async () => {
+                    setActionsEnabled(false);
+                    addLogLine(`Disabling plugins...`);
+                    await DeckyBackend.call('utilities/set_all_plugins_disabled');
+                    await sleep(1000);
+                    addLogLine('Restarting Decky...');
+                    doRestart();
+                    await sleep(2000);
+                    addLogLine('Restarting Steam...');
+                    await sleep(500);
+                    SteamClient.User.StartRestart(false);
+                  }}
+                >
                   Disable All Plugins
                 </button>
-              </div> */}
+              </div>
               {
                 <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
                   {updateProgress > -1
@@ -391,9 +414,7 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
         )}
         {actionsEnabled && (
           <div className={classes.swipePrompt}>
-            <span>
-              Swipe to scroll
-            </span>
+            <span>Swipe to scroll</span>
           </div>
         )}
         <div className={classes.panel}>

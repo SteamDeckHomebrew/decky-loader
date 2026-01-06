@@ -87,6 +87,7 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
           *:has(> .${classes.root}) {
             margin-top: var(--basicui-header-height);
             overflow: scroll !important;
+            background: #000;
           }
           *:has(> .${classes.root})::-webkit-scrollbar {
             display: initial !important;

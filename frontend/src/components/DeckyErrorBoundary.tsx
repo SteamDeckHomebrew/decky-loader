@@ -1,7 +1,7 @@
-import { sleep } from '@decky/ui';
+import { joinClassNames, sleep } from '@decky/ui';
 import { FunctionComponent, useEffect, useReducer, useState } from 'react';
 
-import { uninstallPlugin } from '../plugin';
+import { disablePlugin, uninstallPlugin } from '../plugin';
 import { VerInfo, doRestart, doShutdown } from '../updater';
 import { ValveReactErrorInfo, getLikelyErrorSourceFromValveReactError } from '../utils/errors';
 import { useSetting } from '../utils/hooks/useSetting';
@@ -19,6 +19,26 @@ declare global {
     SystemNetworkStore?: any;
   }
 }
+
+const classes = {
+  root: 'deckyErrorBoundary',
+  likelyOccurred: 'likely-occured-msg',
+  panel: 'panel-section',
+  panelHeader: 'panel-header',
+  trace: 'trace',
+  rowList: 'row-list',
+  rowItem: 'row-item',
+  buttonDescRow: 'button-description-row',
+  flexRowWGap: 'flex-row',
+  marginBottom: 'margin-bottom',
+  swipePrompt: 'swipe-prompt',
+};
+
+const vars = {
+  scrollBarwidth: '18px',
+  rootMarginLeft: '15px',
+  panelXPadding: '20px',
+};
 
 export const startSSH = DeckyBackend.callable('utilities/start_ssh');
 export const starrCEFForwarding = DeckyBackend.callable('utilities/allow_remote_debugging');
@@ -64,39 +84,131 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
     <>
       <style>
         {`
-          *:has(> .deckyErrorBoundary) {
+          *:has(> .${classes.root}) {
+            margin-top: var(--basicui-header-height);
             overflow: scroll !important;
+            background: #000;
+          }
+          *:has(> .${classes.root})::-webkit-scrollbar {
+            display: initial !important;
+            width: ${vars.scrollBarwidth};
+            height: 0px;
+          }
+          *:has(> .${classes.root})::-webkit-scrollbar-thumb {
+            background: #4349535e;
+          }
+          .${classes.root} {
+            color: #93929e;
+            font-size: 15px;
+            margin: 10px 0px 40px ${vars.rootMarginLeft};
+            width: calc(100vw - ${vars.scrollBarwidth} - ${vars.rootMarginLeft});
+            overflow: visible;
+          }
+          .${classes.root} button,
+          .${classes.root} select {
+            border: none;
+            padding: 4px 16px !important;
+            background: #333;
+            color: #ddd;
+            font-size: 12px;
+            border-radius: 3px;
+            outline: none;
+            height: 28px;
+          }
+          .${classes.panel} {
+            background: #080808;
+            padding: 8px ${vars.panelXPadding};
+            border-radius: 3px;
+            /* box-shadow: 9px 9px 20px -5px rgb(0 0 0 / 89%); */
+          }
+          .${classes.panelHeader} {
+            font-size: 18px;
+            font-weight: bolder;
+            text-transform: uppercase;
+          }
+          .${classes.likelyOccurred} {
+            font-size: 22px;
+            font-weight: bold;
+            color: #588fb4;
+          }
+          .${classes.rowItem} {
+            position: relative;
+          }
+          .${classes.rowItem}:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            bottom: -4.5px;
+            left: 5px;
+            right: 15px;
+            height: 0.5px;
+            background: #3c3c3c47;
+          }
+          .${classes.flexRowWGap},
+          .${classes.buttonDescRow},
+          .${classes.rowList},
+          .${classes.panel} {
+            display: flex;
+          }
+
+          .${classes.rowList},
+          .${classes.panel} {
+            flex-direction: column;
+          }
+          .${classes.flexRowWGap},
+          .${classes.rowList} {
+            gap: 8px;
+          }
+          .${classes.marginBottom} {
+            margin-bottom: 10px;
+          }
+          .${classes.buttonDescRow} {
+            justify-content: space-between;
+            align-items: center;
+          }
+
+          .${classes.swipePrompt} {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            font-style: italic;
+            font-size: small;
+            margin: 16px 0;
+          }
+          .${classes.swipePrompt} span {
+            padding: 0 8px;
+            background-color: #000;
+            position: relative;
+            z-index: 1;
+          }
+          .${classes.swipePrompt}::before,
+          .${classes.swipePrompt}::after {
+            content: "";
+            flex-grow: 1;
+            border-bottom: 1px solid #474752;
+            top: 50%;
+          }
+          .${classes.swipePrompt}::before {
+            right: 50%;
+            margin-right: 8px;
+          }
+          .${classes.swipePrompt}::after {
+            left: 50%;
+            margin-left: 8px;
           }
         `}
       </style>
-      <div
-        style={{
-          overflow: 'auto',
-          marginLeft: '15px',
-          color: 'white',
-          fontSize: '16px',
-          userSelect: 'auto',
-          backgroundColor: 'black',
-          marginTop: '48px', // Incase this is a page
-        }}
-        className="deckyErrorBoundary"
-      >
-        <h1
-          style={{
-            fontSize: '20px',
-            display: 'inline-block',
-            userSelect: 'auto',
-          }}
-        >
-          ⚠️ An error occured while rendering this content.
-        </h1>
-        <pre style={{}}>
+      <div className={classes.root}>
+        <div className={classes.marginBottom}>An error occurred while rendering this content.</div>
+        <pre className={joinClassNames(classes.marginBottom)} style={{ marginTop: '0px' }}>
           <code>
             {identifier && `Error Reference: ${identifier}`}
             {versionInfo?.current && `\nDecky Version: ${versionInfo.current}`}
           </code>
         </pre>
-        <p>This error likely occured in {errorSource}.</p>
+        <div className={joinClassNames(classes.likelyOccurred, classes.marginBottom)}>
+          This error likely occurred in {errorSource}.
+        </div>
         {actionLog?.length > 0 && (
           <pre>
             <code>
@@ -106,142 +218,88 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
           </pre>
         )}
         {actionsEnabled && (
-          <>
-            <h3>Actions: </h3>
-            <p>Use the touch screen.</p>
-            <div style={{ display: 'block', marginBottom: '5px' }}>
-              <button style={{ marginRight: '5px', padding: '5px' }} onClick={reset}>
-                Retry
-              </button>
-              <button
-                style={{ marginRight: '5px', padding: '5px' }}
-                onClick={() => {
-                  addLogLine('Restarting Steam...');
-                  SteamClient.User.StartRestart(false);
-                }}
-              >
-                Restart Steam
-              </button>
-            </div>
-            <div style={{ display: 'block', marginBottom: '5px' }}>
-              <button
-                style={{ marginRight: '5px', padding: '5px' }}
-                onClick={async () => {
-                  setActionsEnabled(false);
-                  addLogLine('Restarting Decky...');
-                  doRestart();
-                  await sleep(2000);
-                  addLogLine('Reloading UI...');
-                }}
-              >
-                Restart Decky
-              </button>
-              <button
-                style={{ marginRight: '5px', padding: '5px' }}
-                onClick={async () => {
-                  setActionsEnabled(false);
-                  addLogLine('Stopping Decky...');
-                  doShutdown();
-                  await sleep(5000);
-                  addLogLine('Restarting Steam...');
-                  SteamClient.User.StartRestart(false);
-                }}
-              >
-                Disable Decky until next boot
-              </button>
-            </div>
-            {debugAllowed && (
-              <div style={{ display: 'block', marginBottom: '5px' }}>
-                <button
-                  style={{ marginRight: '5px', padding: '5px' }}
-                  onClick={async () => {
-                    setDebugAllowed(false);
-                    addLogLine('Enabling CEF debugger forwarding...');
-                    await starrCEFForwarding();
-                    addLogLine('Enabling SSH...');
-                    await startSSH();
-                    addLogLine('Ready for debugging!');
-                    if (window?.SystemNetworkStore?.wirelessNetworkDevice?.ip4?.addresses?.[0]?.ip) {
-                      const ip = ipToString(window.SystemNetworkStore.wirelessNetworkDevice.ip4.addresses[0].ip);
-                      addLogLine(`CEF Debugger: http://${ip}:8081`);
-                      addLogLine(`SSH: deck@${ip}`);
-                    }
-                  }}
-                >
-                  Allow remote debugging and SSH until next boot
-                </button>
+          <div className={classes.panel}>
+            <div className={classes.flexRowWGap} style={{ alignItems: 'center', marginBottom: '8px' }}>
+              <div className={classes.panelHeader}>Actions</div>
+              <div style={{ fontSize: 'small', fontStyle: 'italic' }}>
+                Use the touch screen. Solutions are listed in the recommended order. If you are still experiencing
+                issues, please post in the #loader-support channel at decky.xyz/discord.
               </div>
-            )}
-            {
-              <div style={{ display: 'block', marginBottom: '5px' }}>
-                {updateProgress > -1
-                  ? 'Update in progress... ' + updateProgress + '%'
-                  : updateProgress == -2
-                    ? 'Update complete. Restarting...'
-                    : 'Changing your Decky Loader branch and/or \n checking for updates might help!\n'}
-                {updateProgress == -1 && (
-                  <div style={{ height: '30px' }}>
-                    <select
-                      style={{ height: '100%' }}
-                      onChange={async (e) => {
-                        const branch = parseInt(e.target.value);
-                        setSelectedBranch(branch);
-                        setSetVersionToUpdateTo('');
-                      }}
-                    >
-                      <option value="0" selected={selectedBranch == UpdateBranch.Stable}>
-                        Stable
-                      </option>
-                      <option value="1" selected={selectedBranch == UpdateBranch.Prerelease}>
-                        Pre-Release
-                      </option>
-                      <option value="2" selected={selectedBranch == UpdateBranch.Testing}>
-                        Testing
-                      </option>
-                    </select>
+            </div>
+            <div className={classes.rowList}>
+              <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
+                Retry the action or restart
+                <div className={classes.flexRowWGap}>
+                  <button onClick={reset}>Retry</button>
+                  <button
+                    onClick={() => {
+                      addLogLine('Restarting Steam...');
+                      SteamClient.User.StartRestart(false);
+                    }}
+                  >
+                    Restart Steam
+                  </button>
+                  <button
+                    onClick={async () => {
+                      setActionsEnabled(false);
+                      addLogLine('Restarting Decky...');
+                      doRestart();
+                      await sleep(2000);
+                      addLogLine('Reloading UI...');
+                    }}
+                  >
+                    Restart Decky
+                  </button>
+                </div>
+              </div>
+              {wasCausedByPlugin && (
+                <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
+                  Disable or uninstall the suspected plugin
+                  <div className={classes.flexRowWGap}>
                     <button
-                      style={{ height: '100%' }}
-                      disabled={updateProgress != -1 || isChecking}
                       onClick={async () => {
-                        if (versionToUpdateTo == '') {
-                          setIsChecking(true);
-                          const versionInfo = (await DeckyBackend.callable(
-                            'updater/check_for_updates',
-                          )()) as unknown as VerInfo;
-                          setIsChecking(false);
-                          if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
-                            setSetVersionToUpdateTo(versionInfo.remote.tag_name);
-                          } else {
-                            setSetVersionToUpdateTo('');
-                          }
-                        } else {
-                          DeckyBackend.callable('updater/do_update')();
-                          setUpdateProgress(0);
-                        }
+                        setActionsEnabled(false);
+                        addLogLine(`Disabling ${errorSource}...`);
+                        await disablePlugin(errorSource);
+                        await sleep(1000);
+                        addLogLine('Restarting Decky...');
+                        doRestart();
+                        await sleep(2000);
+                        addLogLine('Restarting Steam...');
+                        await sleep(500);
+                        SteamClient.User.StartRestart(false);
                       }}
                     >
-                      {' '}
-                      {isChecking
-                        ? 'Checking for updates...'
-                        : versionToUpdateTo != ''
-                          ? 'Update to ' + versionToUpdateTo
-                          : 'Check for updates'}
+                      Disable {errorSource}
+                    </button>
+                    <button
+                      onClick={async () => {
+                        setActionsEnabled(false);
+                        addLogLine(`Uninstalling ${errorSource}...`);
+                        await uninstallPlugin(errorSource);
+                        await DeckyPluginLoader.frozenPluginsService.invalidate();
+                        await DeckyPluginLoader.hiddenPluginsService.invalidate();
+                        await sleep(1000);
+                        addLogLine('Restarting Decky...');
+                        doRestart();
+                        await sleep(2000);
+                        addLogLine('Restarting Steam...');
+                        await sleep(500);
+                        SteamClient.User.StartRestart(false);
+                      }}
+                    >
+                      Uninstall {errorSource}
                     </button>
                   </div>
-                )}
-              </div>
-            }
-            {wasCausedByPlugin && (
-              <div style={{ display: 'block', marginBottom: '5px' }}>
-                {'\n'}
+                </div>
+              )}
+              <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
+                Disable all plugins
                 <button
-                  style={{ marginRight: '5px', padding: '5px' }}
                   onClick={async () => {
                     setActionsEnabled(false);
-                    addLogLine(`Uninstalling ${errorSource}...`);
-                    await uninstallPlugin(errorSource);
-                    await DeckyPluginLoader.frozenPluginsService.invalidate();
-                    await DeckyPluginLoader.hiddenPluginsService.invalidate();
+                    addLogLine(`Disabling plugins...`);
+                    await DeckyBackend.call('utilities/set_all_plugins_disabled');
                     await sleep(1000);
                     addLogLine('Restarting Decky...');
                     doRestart();
@@ -251,27 +309,134 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
                     SteamClient.User.StartRestart(false);
                   }}
                 >
-                  Uninstall {errorSource} and restart Decky
+                  Disable All Plugins
                 </button>
               </div>
-            )}
-          </>
+              {
+                <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
+                  {updateProgress > -1
+                    ? 'Update in progress... ' + updateProgress + '%'
+                    : updateProgress == -2
+                      ? 'Update complete. Restarting...'
+                      : 'Check for Decky updates'}
+                  {
+                    <div className={classes.flexRowWGap}>
+                      {updateProgress == -1 && (
+                        <>
+                          <select
+                            onChange={async (e) => {
+                              const branch = parseInt(e.target.value);
+                              setSelectedBranch(branch);
+                              setSetVersionToUpdateTo('');
+                            }}
+                          >
+                            <option value="0" selected={selectedBranch == UpdateBranch.Stable}>
+                              Stable
+                            </option>
+                            <option value="1" selected={selectedBranch == UpdateBranch.Prerelease}>
+                              Pre-Release
+                            </option>
+                            <option value="2" selected={selectedBranch == UpdateBranch.Testing}>
+                              Testing
+                            </option>
+                          </select>
+                          <button
+                            disabled={updateProgress != -1 || isChecking}
+                            onClick={async () => {
+                              if (versionToUpdateTo == '') {
+                                setIsChecking(true);
+                                const versionInfo = (await DeckyBackend.callable(
+                                  'updater/check_for_updates',
+                                )()) as unknown as VerInfo;
+                                setIsChecking(false);
+                                if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
+                                  setSetVersionToUpdateTo(versionInfo.remote.tag_name);
+                                } else {
+                                  setSetVersionToUpdateTo('');
+                                }
+                              } else {
+                                DeckyBackend.callable('updater/do_update')();
+                                setUpdateProgress(0);
+                              }
+                            }}
+                          >
+                            {' '}
+                            {isChecking
+                              ? 'Checking for updates...'
+                              : versionToUpdateTo != ''
+                                ? 'Update to ' + versionToUpdateTo
+                                : 'Check for updates'}
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  }
+                </div>
+              }
+              <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
+                Disable Decky until next boot
+                <button
+                  onClick={async () => {
+                    setActionsEnabled(false);
+                    addLogLine('Stopping Decky...');
+                    doShutdown();
+                    await sleep(5000);
+                    addLogLine('Restarting Steam...');
+                    SteamClient.User.StartRestart(false);
+                  }}
+                >
+                  Disable Decky
+                </button>
+              </div>
+              {debugAllowed && (
+                <div className={joinClassNames(classes.rowItem, classes.buttonDescRow)}>
+                  Enable remote debugging and SSH until next boot (for developers)
+                  <button
+                    onClick={async () => {
+                      setDebugAllowed(false);
+                      addLogLine('Enabling CEF debugger forwarding...');
+                      await starrCEFForwarding();
+                      addLogLine('Enabling SSH...');
+                      await startSSH();
+                      addLogLine('Ready for debugging!');
+                      if (window?.SystemNetworkStore?.wirelessNetworkDevice?.ip4?.addresses?.[0]?.ip) {
+                        const ip = ipToString(window.SystemNetworkStore.wirelessNetworkDevice.ip4.addresses[0].ip);
+                        addLogLine(`CEF Debugger: http://${ip}:8081`);
+                        addLogLine(`SSH: deck@${ip}`);
+                      }
+                    }}
+                  >
+                    Enable
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         )}
-
-        <pre
-          style={{
-            marginTop: '15px',
-            opacity: 0.7,
-            userSelect: 'auto',
-          }}
-        >
-          <code>
-            {error.error.stack}
-            {'\n\n'}
-            Component Stack:
-            {error.info.componentStack}
-          </code>
-        </pre>
+        {actionsEnabled && (
+          <div className={classes.swipePrompt}>
+            <span>Swipe to scroll</span>
+          </div>
+        )}
+        <div className={classes.panel}>
+          <div className={classes.panelHeader}>Trace</div>
+          <pre
+            style={{
+              margin: `8px calc(-1 * ${vars.panelXPadding})`,
+              userSelect: 'auto',
+              overflowX: 'scroll',
+              padding: `0px ${vars.panelXPadding}`,
+              maskImage: `linear-gradient(to right, transparent, black ${vars.panelXPadding}, black calc(100% - ${vars.panelXPadding}), transparent)`,
+            }}
+          >
+            <code>
+              {error.error.stack}
+              {'\n\n'}
+              Component Stack:
+              {error.info.componentStack}
+            </code>
+          </pre>
+        </div>
       </div>
     </>
   );

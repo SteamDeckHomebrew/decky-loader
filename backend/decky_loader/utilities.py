@@ -82,6 +82,7 @@ class Utilities:
             context.ws.add_route("utilities/_call_legacy_utility", self._call_legacy_utility)
             context.ws.add_route("utilities/enable_plugin", self.enable_plugin)
             context.ws.add_route("utilities/disable_plugin", self.disable_plugin)
+            context.ws.add_route("utilities/set_all_plugins_disabled", self.set_all_plugins_disabled)
 
             context.web_app.add_routes([
                 post("/methods/{method_name}", self._handle_legacy_server_method_call)
@@ -504,3 +505,12 @@ class Utilities:
             await self.set_setting("disabled_plugins", disabled_plugins)
             
         await self.context.plugin_loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_folder)
+        
+    async def set_all_plugins_disabled(self):
+        disabled_plugins: List[str] = await self.get_setting("disabled_plugins", [])
+
+        for name, _ in self.context.plugin_loader.plugins.items():
+            if name not in disabled_plugins:
+                disabled_plugins.append(name)
+
+        await self.set_setting("disabled_plugins", disabled_plugins)

@@ -52,7 +52,9 @@
     "MultiplePluginsInstallModal": {
         "confirm": "¿Estás seguro de que quieres hacer las siguientes modificaciones?",
         "description": {
+            "downgrade": "Downgrade {{name}} a la {{version}}",
             "install": "Instalar {{name}} {{version}}",
+            "overwrite": "Sobrescribir {{name}} con {{version}}",
             "reinstall": "Reinstalar {{name}} {{version}}",
             "update": "Actualizar {{name}} a {{version}}"
         },
@@ -61,12 +63,18 @@
             "loading": "Trabajando"
         },
         "title": {
+            "downgrade_many": "Downgrade {{count}} plugins",
+            "downgrade_one": "Downgrade 1 plugin",
+            "downgrade_other": "Downgrade {{count}} plugins",
             "install_many": "Instalar {{count}} plugins",
             "install_one": "Instalar 1 plugin",
             "install_other": "Instalar {{count}} plugins",
             "mixed_many": "Modificar {{count}} plugins",
             "mixed_one": "Modificar 1 plugin",
             "mixed_other": "Modificar {{count}} plugins",
+            "overwrite_many": "Sobrescribir {{count}} plugins",
+            "overwrite_one": "Sobrescribir 1 plugin",
+            "overwrite_other": "Sobrescribr {{count}} plugins",
             "reinstall_many": "Reinstalar {{count}} plugins",
             "reinstall_one": "Reinstalar 1 plugin",
             "reinstall_other": "Reinstalar {{count}} plugins",
@@ -76,12 +84,22 @@
         }
     },
     "PluginCard": {
+        "plugin_downgrade": "Downgrade",
         "plugin_full_access": "Este plugin tiene acceso completo a tu Steam Deck.",
         "plugin_install": "Instalar",
         "plugin_no_desc": "No se ha proporcionado una descripción.",
+        "plugin_overwrite": "Sobrescribir",
+        "plugin_reinstall": "Reinstalar",
+        "plugin_update": "Actualizar",
         "plugin_version_label": "Versión de Plugin"
     },
     "PluginInstallModal": {
+        "downgrade": {
+            "button_idle": "Downgrade",
+            "button_processing": "Downgrading",
+            "desc": "¿Estas seguro de que quieres realizar el downgrade de {{artifact}} a la versión {{version}}?",
+            "title": "Downgrade {{artifact}}"
+        },
         "install": {
             "button_idle": "Instalar",
             "button_processing": "Instalando",
@@ -89,6 +107,13 @@
             "title": "Instalar {{artifact}}"
         },
         "no_hash": "Este plugin no tiene un hash, lo estás instalando bajo tu propia responsabilidad.",
+        "not_installed": "(no instalado)",
+        "overwrite": {
+            "button_idle": "Sobrescribir",
+            "button_processing": "Sobrescribiendo",
+            "desc": "¿Estas seguro de que quieres sobrescribir {{artifact}} con la versión {{version}}?",
+            "title": "Sobrescribir {{artifact}}"
+        },
         "reinstall": {
             "button_idle": "Reinstalar",
             "button_processing": "Reinstalando",
@@ -98,7 +123,7 @@
         "update": {
             "button_idle": "Actualizar",
             "button_processing": "Actualizando",
-            "desc": "¿Estás seguro de que quieres actualizar {{artifact}} {{version}}?",
+            "desc": "¿Estás seguro de que quieres actualizar {{artifact}} a la {{version}}?",
             "title": "Actualizar {{artifact}}"
         }
     },
@@ -206,6 +231,7 @@
     },
     "Store": {
         "download_progress_info": {
+            "download_remote": "Descargando los binarios externos",
             "download_zip": "Descargando plugin",
             "increment_count": "Incrementando el contador de descargas",
             "installing_plugin": "Instalando plugin",

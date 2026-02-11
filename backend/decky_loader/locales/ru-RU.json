@@ -63,15 +63,18 @@
             "loading": "В процессе"
         },
         "title": {
-            "downgrade_few": "Откатить {{count}} плагинов",
+            "downgrade_few": "Откатить {{count}} плагина",
             "downgrade_many": "Откатить {{count}} плагинов",
-            "downgrade_one": "Откатить 1 плагин",
+            "downgrade_one": "Откатить {{count}} плагин",
             "install_few": "Установить {{count}} плагинов",
             "install_many": "Установить {{count}} плагинов",
             "install_one": "Установить {{count}} плагин",
             "mixed_few": "Изменить {{count}} плагинов",
             "mixed_many": "Изменить {{count}} плагинов",
             "mixed_one": "Изменить {{count}} плагин",
+            "overwrite_few": "Перезаписать {{count}} плагина",
+            "overwrite_many": "Перезаписать {{count}} плагинов",
+            "overwrite_one": "Перезаписать {{count}} плагин",
             "reinstall_few": "Переустановить {{count}} плагинов",
             "reinstall_many": "Переустановить {{count}} плагинов",
             "reinstall_one": "Переустановить {{count}} плагин",
@@ -93,6 +96,7 @@
     "PluginInstallModal": {
         "downgrade": {
             "button_idle": "Откат",
+            "button_processing": "Откатывание",
             "desc": "Вы уверенны, что хотите откатить {{artifact}} до версии {{version}}?",
             "title": "Откатить {{artifact}}"
         },
@@ -103,6 +107,13 @@
             "title": "Установить {{artifact}}"
         },
         "no_hash": "У данного плагина отсутствует хэш, устанавливайте на свой страх и риск.",
+        "not_installed": "(не установлено)",
+        "overwrite": {
+            "button_idle": "Перезаписать",
+            "button_processing": "Перезаписывание",
+            "desc": "Вы уверены, что хотите перезаписать {{artifact}} версией {{version}}?",
+            "title": "Перезаписать {{artifact}}"
+        },
         "reinstall": {
             "button_idle": "Переустановить",
             "button_processing": "Переустановка",
@@ -220,6 +231,7 @@
     },
     "Store": {
         "download_progress_info": {
+            "download_remote": "Загрузка внешних бинарных файлов",
             "download_zip": "Скачивание плагина",
             "increment_count": "Увеличение количества загрузок",
             "installing_plugin": "Установка плагина",

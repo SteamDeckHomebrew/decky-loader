@@ -134,26 +134,38 @@ class Loader:
         return [{"name": str(i), "version": i.version, "load_type": i.load_type, "disabled": i.disabled} for i in plugins]
 
     async def handle_plugin_dist(self, request: web.Request):
-        plugin = self.plugins[request.match_info["plugin_name"]]
+        plugin_name = request.match_info["plugin_name"]
+        if plugin_name not in self.plugins:
+            return web.Response(status=404, text=f"Plugin {plugin_name} not found")
+        plugin = self.plugins[plugin_name]
         file = path.join(self.plugin_path, plugin.plugin_directory, "dist", request.match_info["path"])
 
         return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
 
     async def handle_plugin_frontend_assets(self, request: web.Request):
-        plugin = self.plugins[request.match_info["plugin_name"]]
+        plugin_name = request.match_info["plugin_name"]
+        if plugin_name not in self.plugins:
+            return web.Response(status=404, text=f"Plugin {plugin_name} not found")
+        plugin = self.plugins[plugin_name]
         file = path.join(self.plugin_path, plugin.plugin_directory, "dist/assets", request.match_info["path"])
 
         return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
 
     async def handle_plugin_frontend_assets_from_data(self, request: web.Request):
-        plugin = self.plugins[request.match_info["plugin_name"]]
+        plugin_name = request.match_info["plugin_name"]
+        if plugin_name not in self.plugins:
+            return web.Response(status=404, text=f"Plugin {plugin_name} not found")
+        plugin = self.plugins[plugin_name]
         home = get_homebrew_path()
         file = path.join(home, "data", plugin.plugin_directory, request.match_info["path"])
 
         return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
 
     async def handle_frontend_bundle(self, request: web.Request):
-        plugin = self.plugins[request.match_info["plugin_name"]]
+        plugin_name = request.match_info["plugin_name"]
+        if plugin_name not in self.plugins:
+            return web.Response(status=404, text=f"Plugin {plugin_name} not found")
+        plugin = self.plugins[plugin_name]
 
         with open(path.join(self.plugin_path, plugin.plugin_directory, "dist/index.js"), "r", encoding="utf-8") as bundle:
             return web.Response(text=bundle.read(), content_type="application/javascript")

@@ -68,7 +68,7 @@ class WSRouter:
         if instance_id != self.instance_id:
             try:
                 self.logger.warning("Ignoring %s reply from stale instance %d with args %s and response %s", route, instance_id, args, res)
-            except:
+            except Exception:
                 self.logger.warning("Ignoring %s reply from stale instance %d (failed to log event data)", route, instance_id)
             finally:
                 return 
@@ -91,7 +91,7 @@ class WSRouter:
         if self.ws != None:
             try:
                 await self.ws.close()
-            except:
+            except Exception:
                 pass
             self.ws = None
 
@@ -122,7 +122,7 @@ class WSRouter:
             try:
                 await ws.close()
                 self.ws = None
-            except:
+            except Exception:
                 pass
 
         self.logger.debug('Websocket connection closed')

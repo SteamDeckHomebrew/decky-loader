@@ -80,7 +80,7 @@ def chmod(path : str, permissions : int, recursive : bool = True) -> bool:
                     os.chmod(os.path.join(root, d), octal_permissions)
 
         os.chmod(path, octal_permissions)
-    except:
+    except Exception:
         return False
 
     return True

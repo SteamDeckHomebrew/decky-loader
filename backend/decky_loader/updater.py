@@ -45,7 +45,7 @@ class Updater:
 
         try:
             self.currentBranch = self.get_branch(self.context.settings)
-        except:
+        except Exception:
             self.currentBranch = 0
             logger.error("Current branch could not be determined, defaulting to \"Stable\"")
 
@@ -134,7 +134,7 @@ class Updater:
         while True:
             try:
                 await self.check_for_updates()
-            except:
+            except Exception:
                 pass
             await sleep(60 * 60 * 6) # 6 hours
 

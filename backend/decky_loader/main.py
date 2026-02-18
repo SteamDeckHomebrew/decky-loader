@@ -130,7 +130,7 @@ class PluginManager:
             if self.js_ctx_tab:
                 await self.js_ctx_tab.close_websocket()
                 self.js_ctx_tab = None
-        except:
+        except Exception:
             logger.info("Error during shutdown:\n" + format_exc())
             pass
         finally:
@@ -147,7 +147,7 @@ class PluginManager:
                     except CancelledError:
                         pass
                     logger.debug(f"Task {name} finished")
-                except:
+                except Exception:
                     logger.warning(f"Failed to cancel task {name}:\n" + format_exc())
                     pass
             if current:
@@ -244,7 +244,7 @@ class PluginManager:
                 self.reinject = False
                 await sleep(1)
                 await self.updater.do_shutdown()
-        except:
+        except Exception:
             logger.info("Failed to inject JavaScript into tab\n" + format_exc())
             pass
 

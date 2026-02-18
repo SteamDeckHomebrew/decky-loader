@@ -37,7 +37,7 @@ class UnixSocket:
                 try:
                     self.reader, self.writer = await asyncio.open_unix_connection(self.socket_addr, limit=BUFFER_LIMIT)
                     return True
-                except:
+                except Exception:
                     await asyncio.sleep(2)
                     retries += 1
             return False
@@ -151,7 +151,7 @@ class PortSocket (UnixSocket):
                 try:
                     self.reader, self.writer = await asyncio.open_connection(host=self.host, port=self.port, limit=BUFFER_LIMIT)
                     return True
-                except:
+                except Exception:
                     await asyncio.sleep(2)
                     retries += 1
             return False

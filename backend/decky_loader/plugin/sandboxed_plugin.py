@@ -124,14 +124,14 @@ class SandboxedPlugin:
                 else:
                     get_event_loop().create_task(self.Plugin._main(self.Plugin))
             get_event_loop().create_task(socket.setup_server(self.on_new_message))
-        except:
+        except Exception:
             self.log.error("Failed to start " + self.name + "!\n" + format_exc())
             sys.exit(0)
         try:
             get_event_loop().run_forever()
         except SystemExit:
             pass
-        except:
+        except Exception:
             self.log.error("Loop exited for " + self.name + "!\n" + format_exc())
         finally:
             get_event_loop().close()
@@ -147,7 +147,7 @@ class SandboxedPlugin:
                 self.log.info("Unloaded " + self.name + "\n")
             else:
                 self.log.info("Could not find \"_unload\" in " + self.name + "'s main.py" + "\n")
-        except:
+        except Exception:
             self.log.error("Failed to unload " + self.name + "!\n" + format_exc())
             pass
 
@@ -162,7 +162,7 @@ class SandboxedPlugin:
                 self.log.info("Uninstalled " + self.name + "\n")
             else:
                 self.log.info("Could not find \"_uninstall\" in " + self.name + "'s main.py" + "\n")
-        except:
+        except Exception:
             self.log.error("Failed to uninstall " + self.name + "!\n" + format_exc())
             pass
 

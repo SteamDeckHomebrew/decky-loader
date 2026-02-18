@@ -95,7 +95,7 @@ class PluginWrapper:
                 self.log.info(f"Stopping response listener for {self.name}")
                 await self._socket.close_socket_connection()
                 raise
-            except:
+            except Exception:
                 pass
 
     async def execute_legacy_method(self, method_name: str, kwargs: Dict[Any, Any]):

@@ -114,7 +114,7 @@ class PluginBrowser:
 
                 if plugin['name'] == name:
                     return folder
-            except:
+            except Exception:
                 logger.debug(f"skipping {folder}")
     
     def set_plugin_dir_permissions(self, plugin_dir: str) -> bool:
@@ -182,7 +182,7 @@ class PluginBrowser:
             pluginFolderPath = self.find_plugin_folder(name)
             if pluginFolderPath:
                 isInstalled = True
-        except:
+        except Exception:
             logger.error(f"Failed to determine if {name} is already installed, continuing anyway.")
 
         # Preserve plugin order before removing plugin (uninstall alters the order and removes the plugin from the list)
@@ -264,7 +264,7 @@ class PluginBrowser:
             try:
                 logger.debug("Uninstalling existing plugin...")
                 await self.uninstall_plugin(name)
-            except:
+            except Exception:
                 logger.error(f"Plugin {name} could not be uninstalled.")
 
 

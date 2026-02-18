@@ -240,6 +240,7 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
             })
             .map((plugin: StorePlugin) => (
               <PluginCard
+                key={plugin.id}
                 storePlugin={plugin}
                 installedPlugin={installedPlugins.find((installedPlugin) => installedPlugin.name === plugin.name)}
               />

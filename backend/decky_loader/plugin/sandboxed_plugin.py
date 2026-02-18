@@ -126,7 +126,7 @@ class SandboxedPlugin:
             get_event_loop().create_task(socket.setup_server(self.on_new_message))
         except:
             self.log.error("Failed to start " + self.name + "!\n" + format_exc())
-            sys.exit(0)
+            sys.exit(1)
         try:
             get_event_loop().run_forever()
         except SystemExit:

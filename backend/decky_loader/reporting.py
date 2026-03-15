@@ -1,17 +1,17 @@
 from __future__ import annotations
 
-from aiohttp import ClientSession, web
-from logging import getLogger
-from typing import Dict, List
 import re
 import shutil
 import subprocess
+from logging import getLogger
 from pathlib import Path
+from typing import Dict, List, TYPE_CHECKING
+
+from aiohttp import ClientSession, web
 
 from . import helpers
-from .localplatform.localplatform import ON_LINUX
 from .helpers import get_home_path
-from typing import TYPE_CHECKING
+from .localplatform.localplatform import ON_LINUX
 if TYPE_CHECKING:
     from .main import PluginManager
 
@@ -226,7 +226,6 @@ class Reporting:
                         logger.error(f"copyandpaste.at upload failed: {res.status} {text}")
                         return web.json_response({"error": "Paste upload failed"}, status=502)
                     url = (await res.text()).strip()
-                # Try to shorten with is.gd; fall back to original on failure.
                 try:
                     async with session.get(
                         "https://is.gd/create.php",

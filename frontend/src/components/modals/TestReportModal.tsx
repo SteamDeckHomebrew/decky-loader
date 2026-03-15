@@ -47,9 +47,7 @@ const apiFetchJson = async <T,>(path: string, init?: RequestInit): Promise<T> =>
     } catch {
       try {
         message = await res.text();
-      } catch {
-        // ignore
-      }
+      } catch {}
     }
     throw new Error(message);
   }
@@ -221,7 +219,6 @@ const TestReportModal: FC<TestReportModalProps> = ({ mode = 'full', closeModal }
       setCopyMessageType('success');
       return;
     } catch (e) {
-      // Backend clipboard failed, try a legacy DOM copy.
       try {
         const textarea = document.createElement('textarea');
         textarea.value = value;
@@ -237,9 +234,7 @@ const TestReportModal: FC<TestReportModalProps> = ({ mode = 'full', closeModal }
           setCopyMessageType('success');
           return;
         }
-      } catch {
-        // fallthrough
-      }
+      } catch {}
       const message = e instanceof Error && e.message ? e.message : t(failKey);
       setCopyMessage(message);
       setCopyMessageType('error');

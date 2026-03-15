@@ -7,16 +7,18 @@ import {
   Navigation,
   TextField,
   Toggle,
+  showModal,
 } from '@decky/ui';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaFileArchive, FaLink, FaReact, FaSteamSymbol, FaTerminal } from 'react-icons/fa';
+import { FaFileAlt, FaFileArchive, FaLink, FaReact, FaSteamSymbol, FaTerminal } from 'react-icons/fa';
 
 import { setShouldConnectToReactDevTools, setShowValveInternal } from '../../../../developer';
 import Logger from '../../../../logger';
 import { installFromURL } from '../../../../store';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 import { getSetting } from '../../../../utils/settings';
+import TestReportModal from '../../../modals/TestReportModal';
 import { FileSelectionType } from '../../../modals/filepicker';
 import RemoteDebuggingSettings from '../general/RemoteDebugging';
 
@@ -154,6 +156,25 @@ export default function DeveloperSettings() {
               setShouldConnectToReactDevTools(toggleValue);
             }}
           />
+        </Field>
+        <DialogControlsSectionHeader>{t('SettingsDeveloperIndex.test_report.header')}</DialogControlsSectionHeader>
+        <Field
+          label={t('SettingsDeveloperIndex.test_report.option_label')}
+          description={t('SettingsDeveloperIndex.test_report.description')}
+          icon={<FaFileAlt style={{ display: 'block' }} />}
+        >
+          <DialogButton onClick={() => showModal(<TestReportModal mode="full" />)}>
+            {t('SettingsDeveloperIndex.test_report.create')}
+          </DialogButton>
+        </Field>
+        <Field
+          label={t('SettingsDeveloperIndex.test_report_simple.option_label')}
+          description={t('SettingsDeveloperIndex.test_report_simple.description')}
+          icon={<FaFileAlt style={{ display: 'block' }} />}
+        >
+          <DialogButton onClick={() => showModal(<TestReportModal mode="simple" />)}>
+            {t('SettingsDeveloperIndex.test_report_simple.create')}
+          </DialogButton>
         </Field>
       </DialogControlsSection>
     </DialogBody>

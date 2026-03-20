@@ -163,17 +163,8 @@ export default function DeveloperSettings() {
           description={t('SettingsDeveloperIndex.test_report.description')}
           icon={<FaFileAlt style={{ display: 'block' }} />}
         >
-          <DialogButton onClick={() => showModal(<TestReportModal mode="full" />)}>
+          <DialogButton onClick={() => showModal(<TestReportModal />)}>
             {t('SettingsDeveloperIndex.test_report.create')}
-          </DialogButton>
-        </Field>
-        <Field
-          label={t('SettingsDeveloperIndex.test_report_simple.option_label')}
-          description={t('SettingsDeveloperIndex.test_report_simple.description')}
-          icon={<FaFileAlt style={{ display: 'block' }} />}
-        >
-          <DialogButton onClick={() => showModal(<TestReportModal mode="simple" />)}>
-            {t('SettingsDeveloperIndex.test_report_simple.create')}
           </DialogButton>
         </Field>
       </DialogControlsSection>

@@ -184,8 +184,8 @@ const TestReportModal: FC<TestReportModalProps> = ({ closeModal }) => {
       const hasCustomContent =
         majorIssues ||
         minorIssues ||
-        majorIssuesNotes.trim().length > 0 ||
-        minorIssuesNotes.trim().length > 0 ||
+        (majorIssues && majorIssuesNotes.trim().length > 0) ||
+        (minorIssues && minorIssuesNotes.trim().length > 0) ||
         summary.trim().length > 0;
       const report = hasCustomContent
         ? buildReportFull(
@@ -273,10 +273,26 @@ const TestReportModal: FC<TestReportModalProps> = ({ closeModal }) => {
               )}
               <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <Field label={t('SettingsDeveloperIndex.test_report.major_issues')}>
-                  <Toggle value={majorIssues} onChange={(value) => setMajorIssues(value)} />
+                  <Toggle
+                    value={majorIssues}
+                    onChange={(value) => {
+                      setMajorIssues(value);
+                      if (!value) {
+                        setMajorIssuesNotes('');
+                      }
+                    }}
+                  />
                 </Field>
                 <Field label={t('SettingsDeveloperIndex.test_report.minor_issues')}>
-                  <Toggle value={minorIssues} onChange={(value) => setMinorIssues(value)} />
+                  <Toggle
+                    value={minorIssues}
+                    onChange={(value) => {
+                      setMinorIssues(value);
+                      if (!value) {
+                        setMinorIssuesNotes('');
+                      }
+                    }}
+                  />
                 </Field>
               </div>
             </div>

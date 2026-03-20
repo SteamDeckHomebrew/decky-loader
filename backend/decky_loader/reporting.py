@@ -7,7 +7,7 @@ from logging import getLogger
 from pathlib import Path
 from typing import Dict, List, TYPE_CHECKING
 
-from aiohttp import ClientSession, web
+from aiohttp import ClientSession, ClientTimeout, web
 
 from . import helpers
 from .helpers import get_home_path
@@ -16,6 +16,7 @@ if TYPE_CHECKING:
     from .main import PluginManager
 
 logger = getLogger("Reporting")
+paste_timeout = ClientTimeout(total=10)
 clipboard_commands = (
     ["wl-copy"],
     ["xclip", "-selection", "clipboard"],
@@ -215,7 +216,7 @@ class Reporting:
             return web.json_response({"error": "Missing or invalid fields"}, status=400)
 
         try:
-            async with ClientSession() as session:
+            async with ClientSession(timeout=paste_timeout) as session:
                 async with session.post(
                     "https://copyandpaste.at/api/log",
                     data=body.encode("utf-8"),

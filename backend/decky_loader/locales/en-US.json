@@ -202,8 +202,8 @@
             "copy_report_success": "Report copied.",
             "description": "Create and share a plugin test report",
             "close": "Close",
-            "cloud_notice": "Clicking 'Upload Report' will upload your report to copyandpaste.at. No private data will be uploaded. Only the report content shown here and your summary notes.",
-            "header": "Test Report",
+            "cloud_notice": "Clicking 'Upload Report' will upload your report to copyandpaste.at. Use it for easily reporting issues. No private data will be uploaded. Only the report content shown here and your summary notes.",
+            "header": "Reports",
             "major_issues": "Major blocking issues",
             "minor_issues": "Minor non-blocking issues",
             "paste_url": "Report Link",
@@ -215,16 +215,13 @@
             "qr_label": "Share",
             "qr_desc": "Scan QR code to open the report on an external device browser.",
             "copy_title": "Copy Link / Report",
+            "toast_body": "Report generated and uploaded successfully.",
+            "toast_title": "Report Ready",
             "upload_report": "Upload Report",
             "sending": "Sending...",
             "system_error": "Failed to fetch system or plugins.",
             "system_info": "System Info",
             "title": "Generate Plugin Test Reports"
-        },
-        "test_report_simple": {
-            "create": "Create",
-            "description": "Share system info and installed plugins",
-            "option_label": "Generate System Info"
         },
         "third_party_plugins": {
             "button_install": "Install",

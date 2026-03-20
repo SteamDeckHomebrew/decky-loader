@@ -12,6 +12,7 @@ import {
 } from '@decky/ui';
 import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FaFileAlt } from 'react-icons/fa';
 
 type SystemInfo = {
   steamos: string;
@@ -27,7 +28,6 @@ type PluginsInfo = {
 };
 
 interface TestReportModalProps {
-  mode?: 'full' | 'simple';
   closeModal?(): void;
 }
 
@@ -130,7 +130,7 @@ const buildReportSimple = (system: SystemInfo, plugins: PluginsInfo) => {
   ].join('\n');
 };
 
-const TestReportModal: FC<TestReportModalProps> = ({ mode = 'full', closeModal }) => {
+const TestReportModal: FC<TestReportModalProps> = ({ closeModal }) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
@@ -181,23 +181,33 @@ const TestReportModal: FC<TestReportModalProps> = ({ mode = 'full', closeModal }
     setCopyMessageType(null);
     setPasteUrl(null);
     try {
-      const report =
-        mode === 'simple'
-          ? buildReportSimple(systemInfo, pluginsInfo)
-          : buildReportFull(
-              systemInfo,
-              pluginsInfo,
-              majorIssues,
-              minorIssues,
-              majorIssuesNotes,
-              minorIssuesNotes,
-              summary,
-            );
+      const hasCustomContent =
+        majorIssues ||
+        minorIssues ||
+        majorIssuesNotes.trim().length > 0 ||
+        minorIssuesNotes.trim().length > 0 ||
+        summary.trim().length > 0;
+      const report = hasCustomContent
+        ? buildReportFull(
+            systemInfo,
+            pluginsInfo,
+            majorIssues,
+            minorIssues,
+            majorIssuesNotes,
+            minorIssuesNotes,
+            summary,
+          )
+        : buildReportSimple(systemInfo, pluginsInfo);
       setLastReport(report);
       const response = await apiFetchJson<{ url: string }>('/report/paste', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ body: report }),
+      });
+      DeckyPluginLoader.toaster.toast({
+        title: t('SettingsDeveloperIndex.test_report.toast_title'),
+        body: t('SettingsDeveloperIndex.test_report.toast_body'),
+        icon: <FaFileAlt />,
       });
       setPasteUrl(response.url);
     } catch (e) {
@@ -245,11 +255,7 @@ const TestReportModal: FC<TestReportModalProps> = ({ mode = 'full', closeModal }
     <ModalRoot onCancel={() => closeModal?.()}>
       <DialogBody>
         <DialogControlsSection>
-          <DialogControlsSectionHeader>
-            {mode === 'simple'
-              ? t('SettingsDeveloperIndex.test_report_simple.option_label')
-              : t('SettingsDeveloperIndex.test_report.title')}
-          </DialogControlsSectionHeader>
+          <DialogControlsSectionHeader>{t('SettingsDeveloperIndex.test_report.title')}</DialogControlsSectionHeader>
           {loading && <Spinner width="24px" height="24px" />}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: '20px', rowGap: '24px' }}>
             <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -265,23 +271,21 @@ const TestReportModal: FC<TestReportModalProps> = ({ mode = 'full', closeModal }
                   }
                 />
               )}
-              {mode === 'full' && (
-                <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <Field label={t('SettingsDeveloperIndex.test_report.major_issues')}>
-                    <Toggle value={majorIssues} onChange={(value) => setMajorIssues(value)} />
-                  </Field>
-                  <Field label={t('SettingsDeveloperIndex.test_report.minor_issues')}>
-                    <Toggle value={minorIssues} onChange={(value) => setMinorIssues(value)} />
-                  </Field>
-                </div>
-              )}
+              <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <Field label={t('SettingsDeveloperIndex.test_report.major_issues')}>
+                  <Toggle value={majorIssues} onChange={(value) => setMajorIssues(value)} />
+                </Field>
+                <Field label={t('SettingsDeveloperIndex.test_report.minor_issues')}>
+                  <Toggle value={minorIssues} onChange={(value) => setMinorIssues(value)} />
+                </Field>
+              </div>
             </div>
             <div style={{ minWidth: 0 }}>
               {pluginsInfo && (
                 <Field
                   label={t('SettingsDeveloperIndex.test_report.plugins')}
                   description={
-                    <div style={{ maxHeight: mode === 'simple' ? '170px' : '180px', overflow: 'auto' }}>
+                    <div style={{ maxHeight: '180px', overflow: 'auto' }}>
                       {pluginsInfo.plugins.length === 0 && (
                         <div>{t('SettingsDeveloperIndex.test_report.no_plugins')}</div>
                       )}
@@ -296,7 +300,7 @@ const TestReportModal: FC<TestReportModalProps> = ({ mode = 'full', closeModal }
               )}
             </div>
           </div>
-          {mode === 'full' && majorIssues && (
+          {majorIssues && (
             <Field
               label={t('SettingsDeveloperIndex.test_report.major_issues')}
               description={
@@ -307,7 +311,7 @@ const TestReportModal: FC<TestReportModalProps> = ({ mode = 'full', closeModal }
               }
             />
           )}
-          {mode === 'full' && minorIssues && (
+          {minorIssues && (
             <Field
               label={t('SettingsDeveloperIndex.test_report.minor_issues')}
               description={
@@ -318,19 +322,17 @@ const TestReportModal: FC<TestReportModalProps> = ({ mode = 'full', closeModal }
               }
             />
           )}
-          {mode === 'full' && (
-            <Field
-              label={t('SettingsDeveloperIndex.test_report.summary')}
-              description={
-                <div>
-                  <div style={{ marginBottom: '6px', opacity: 0.7 }}>
-                    {t('SettingsDeveloperIndex.test_report.summary_placeholder')}
-                  </div>
-                  <TextField value={summary} onChange={(e) => setSummary(e?.target.value || '')} />
+          <Field
+            label={t('SettingsDeveloperIndex.test_report.summary')}
+            description={
+              <div>
+                <div style={{ marginBottom: '6px', opacity: 0.7 }}>
+                  {t('SettingsDeveloperIndex.test_report.summary_placeholder')}
                 </div>
-              }
-            />
-          )}
+                <TextField value={summary} onChange={(e) => setSummary(e?.target.value || '')} />
+              </div>
+            }
+          />
           {pasteUrl && (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: '20px', marginTop: '20px' }}>
               <div style={{ minWidth: 0, display: 'flex' }}>

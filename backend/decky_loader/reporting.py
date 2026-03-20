@@ -16,6 +16,11 @@ if TYPE_CHECKING:
     from .main import PluginManager
 
 logger = getLogger("Reporting")
+clipboard_commands = (
+    ["wl-copy"],
+    ["xclip", "-selection", "clipboard"],
+    ["xsel", "--clipboard", "--input"],
+)
 
 
 def _parse_os_release(contents: str) -> Dict[str, str]:
@@ -37,7 +42,6 @@ def _get_steamos_version() -> str:
             info = _parse_os_release(f.read())
         if "PRETTY_NAME" in info and info["PRETTY_NAME"].strip():
             pretty = info["PRETTY_NAME"].strip()
-            # If PRETTY_NAME is just "SteamOS", try to add version/build info.
             if pretty.lower() == "steamos":
                 version = info.get("VERSION_ID") or info.get("VERSION") or ""
                 build = info.get("BUILD_ID") or info.get("STEAMOS_BUILD_ID") or ""
@@ -62,7 +66,7 @@ class Reporting:
         routes = [
             web.get("/report/system", self.get_system),
             web.get("/report/plugins", self.get_plugins),
-            web.post("/report/paste", self.send_email),
+            web.post("/report/paste", self.upload_report),
             web.post("/report/clipboard", self.copy_to_clipboard),
         ]
         context.web_app.add_routes(routes)
@@ -200,7 +204,7 @@ class Reporting:
             }
         )
 
-    async def send_email(self, request: web.Request) -> web.Response:
+    async def upload_report(self, request: web.Request) -> web.Response:
         try:
             data = await request.json()
         except Exception:
@@ -254,7 +258,7 @@ class Reporting:
         if not isinstance(text, str):
             return web.json_response({"error": "Missing or invalid fields"}, status=400)
 
-        for cmd in (["wl-copy"], ["xclip", "-selection", "clipboard"], ["xsel", "--clipboard", "--input"]):
+        for cmd in clipboard_commands:
             if shutil.which(cmd[0]):
                 try:
                     subprocess.run(cmd, input=text.encode("utf-8"), check=True)

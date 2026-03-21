@@ -211,7 +211,7 @@
             "option_label": "Generate Plugin Test Report",
             "plugins": "Installed Plugins",
             "summary": "Summary",
-            "summary_placeholder": "Brief summary of your tests...",
+            "summary_placeholder": "Leave a brief summary of how you tested the plugin...",
             "qr_label": "Share",
             "qr_desc": "Scan QR code to open the report on an external device browser.",
             "copy_title": "Copy Link / Report",

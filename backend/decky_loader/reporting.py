@@ -231,18 +231,6 @@ class Reporting:
                         logger.error(f"copyandpaste.at upload failed: {res.status} {text}")
                         return web.json_response({"error": "Paste upload failed"}, status=502)
                     url = (await res.text()).strip()
-                try:
-                    async with session.get(
-                        "https://is.gd/create.php",
-                        params={"format": "simple", "url": url},
-                        ssl=helpers.get_ssl_context(),
-                    ) as short_res:
-                        if short_res.status == 200:
-                            short_url = (await short_res.text()).strip()
-                            if short_url:
-                                url = short_url
-                except Exception:
-                    pass
         except Exception as e:
             logger.error(f"Failed to upload report: {e}")
             return web.json_response({"error": "Paste upload failed"}, status=502)

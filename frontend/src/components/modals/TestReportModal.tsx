@@ -97,8 +97,8 @@ const buildReportFull = (
     `- Decky ${system.decky} (${system.decky_branch})`,
     '',
     '## Issues',
-    `**Has the following major blocking issue(s):** ${majorIssues ? (majorIssuesNotes || 'Yes') : 'No'}`,
-    `**Has the following minor non-blocking issue(s):** ${minorIssues ? (minorIssuesNotes || 'Yes') : 'No'}`,
+    `**Has the following major blocking issue(s):** ${majorIssues ? majorIssuesNotes || 'Yes' : 'No'}`,
+    `**Has the following minor non-blocking issue(s):** ${minorIssues ? minorIssuesNotes || 'Yes' : 'No'}`,
     '',
     '## Summary',
     '<!--',
@@ -320,10 +320,7 @@ const TestReportModal: FC<TestReportModalProps> = ({ closeModal }) => {
             <Field
               label={t('SettingsDeveloperIndex.test_report.major_issues')}
               description={
-                <TextField
-                  value={majorIssuesNotes}
-                  onChange={(e) => setMajorIssuesNotes(e?.target.value || '')}
-                />
+                <TextField value={majorIssuesNotes} onChange={(e) => setMajorIssuesNotes(e?.target.value || '')} />
               }
             />
           )}
@@ -331,10 +328,7 @@ const TestReportModal: FC<TestReportModalProps> = ({ closeModal }) => {
             <Field
               label={t('SettingsDeveloperIndex.test_report.minor_issues')}
               description={
-                <TextField
-                  value={minorIssuesNotes}
-                  onChange={(e) => setMinorIssuesNotes(e?.target.value || '')}
-                />
+                <TextField value={minorIssuesNotes} onChange={(e) => setMinorIssuesNotes(e?.target.value || '')} />
               }
             />
           )}

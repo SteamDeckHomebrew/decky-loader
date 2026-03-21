@@ -18,8 +18,8 @@ import Logger from '../../../../logger';
 import { installFromURL } from '../../../../store';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 import { getSetting } from '../../../../utils/settings';
-import TestReportModal from '../../../modals/TestReportModal';
 import { FileSelectionType } from '../../../modals/filepicker';
+import TestReportModal from '../../../modals/TestReportModal';
 import RemoteDebuggingSettings from '../general/RemoteDebugging';
 
 const logger = new Logger('DeveloperIndex');

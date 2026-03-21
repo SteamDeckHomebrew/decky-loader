@@ -1,5 +1,5 @@
 from __future__ import annotations
-from os import stat_result
+from os import path, stat_result
 import uuid
 from urllib.parse import unquote
 from json.decoder import JSONDecodeError
@@ -8,7 +8,7 @@ import re
 from traceback import format_exc
 from stat import FILE_ATTRIBUTE_HIDDEN # pyright: ignore [reportAttributeAccessIssue, reportUnknownVariableType]
 
-from asyncio import StreamReader, StreamWriter, start_server, gather, open_connection
+from asyncio import StreamReader, StreamWriter, sleep, start_server, gather, open_connection
 from aiohttp import ClientSession, hdrs
 from aiohttp.web import Request, StreamResponse, Response, json_response, post
 from typing import TYPE_CHECKING, Callable, Coroutine, Dict, Any, List, TypedDict
@@ -80,6 +80,8 @@ class Utilities:
             context.ws.add_route("utilities/restart_webhelper", self.restart_webhelper)
             context.ws.add_route("utilities/close_cef_socket", self.close_cef_socket)
             context.ws.add_route("utilities/_call_legacy_utility", self._call_legacy_utility)
+            context.ws.add_route("utilities/enable_plugin", self.enable_plugin)
+            context.ws.add_route("utilities/disable_plugin", self.disable_plugin)
 
             context.web_app.add_routes([
                 post("/methods/{method_name}", self._handle_legacy_server_method_call)
@@ -214,7 +216,7 @@ class Utilities:
 
     async def http_request_legacy(self, method: str, url: str, extra_opts: Any = {}, timeout: int | None = None):
         async with ClientSession() as web:
-            res = await web.request(method, url, ssl=helpers.get_ssl_context(), timeout=timeout, **extra_opts)
+            res = await web.request(method, url, ssl=helpers.get_ssl_context(), timeout=timeout, **extra_opts) # type: ignore
             text = await res.text()
         return {
             "status": res.status,
@@ -390,7 +392,6 @@ class Utilities:
             "total": len(all),
         }
         
-
     # Based on https://stackoverflow.com/a/46422554/13174603
     def start_rdt_proxy(self, ip: str, port: int):
         async def pipe(reader: StreamReader, writer: StreamWriter):
@@ -474,3 +475,32 @@ class Utilities:
     
     async def get_tab_id(self, name: str):
         return (await get_tab(name)).id
+
+    async def disable_plugin(self, name: str):
+        disabled_plugins: List[str] = await self.get_setting("disabled_plugins", [])
+        if name not in disabled_plugins:
+            disabled_plugins.append(name)
+            await self.set_setting("disabled_plugins", disabled_plugins)
+
+            await self.context.plugin_loader.plugins[name].stop()
+            await self.context.ws.emit("loader/disable_plugin", name)
+    
+    async def enable_plugin(self, name: str):
+        plugin_folder = self.context.plugin_browser.find_plugin_folder(name)
+        assert plugin_folder is not None
+        plugin_dir = path.join(self.context.plugin_browser.plugin_path, plugin_folder)
+        
+        if name in self.context.plugin_loader.plugins:
+            plugin = self.context.plugin_loader.plugins[name]
+            if plugin.proc and plugin.proc.is_alive():
+                await plugin.stop()
+            self.context.plugin_loader.plugins.pop(name, None)
+            await sleep(1)
+            
+        disabled_plugins: List[str] = await self.get_setting("disabled_plugins", [])
+        
+        if name in disabled_plugins:
+            disabled_plugins.remove(name)
+            await self.set_setting("disabled_plugins", disabled_plugins)
+            
+        await self.context.plugin_loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_folder)

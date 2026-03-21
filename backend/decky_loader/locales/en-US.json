@@ -208,7 +208,7 @@
             "minor_issues": "Minor non-blocking issues",
             "paste_url": "Report Link",
             "no_plugins": "No plugins found.",
-            "option_label": "Generate Plugin Test Reports",
+            "option_label": "Generate Plugin Test Report",
             "plugins": "Installed Plugins",
             "summary": "Summary",
             "summary_placeholder": "Brief summary of your tests...",
@@ -221,7 +221,7 @@
             "sending": "Sending...",
             "system_error": "Failed to fetch system or plugins.",
             "system_info": "System Info",
-            "title": "Generate Plugin Test Reports"
+            "title": "Generate Plugin Test Report"
         },
         "third_party_plugins": {
             "button_install": "Install",

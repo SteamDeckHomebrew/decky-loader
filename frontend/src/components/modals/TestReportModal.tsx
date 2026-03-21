@@ -130,6 +130,18 @@ const buildReportSimple = (system: SystemInfo, plugins: PluginsInfo) => {
   ].join('\n');
 };
 
+const getPasteOrigin = (url: string | null) => {
+  if (!url) {
+    return '';
+  }
+
+  try {
+    return new URL(url).origin;
+  } catch {
+    return '';
+  }
+};
+
 const TestReportModal: FC<TestReportModalProps> = ({ closeModal }) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
@@ -376,8 +388,9 @@ const TestReportModal: FC<TestReportModalProps> = ({ closeModal }) => {
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '10px' }}>
                         <TextField
                           label={t('SettingsDeveloperIndex.test_report.paste_url')}
+                          description={pasteUrl || getPasteOrigin(pasteUrl)}
                           value={pasteUrl}
-                          disabled={true}
+                          onChange={() => {}}
                         />
                         <DialogButton
                           style={{ width: '100%' }}

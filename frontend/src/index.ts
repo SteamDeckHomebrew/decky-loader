@@ -25,8 +25,7 @@
     const jsxModule = DFLWebpack.findModule((m) => (m.jsx && m.jsxs) || (m.jsx && Object.keys(m).length == 1));
     if (jsxModule.jsxs) {
       window.SP_JSX = jsxModule;
-    }
-    else {
+    } else {
       window.SP_JSX = {
         jsx: jsxModule.jsx,
         jsxs: jsxModule.jsx,

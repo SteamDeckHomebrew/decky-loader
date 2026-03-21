@@ -47,7 +47,7 @@
     }
   },
   "dependencies": {
-    "@decky/ui": "^4.11.1",
+    "@decky/ui": "^4.11.2",
     "compare-versions": "^6.1.1",
     "filesize": "^10.1.2",
     "i18next": "^25.6.0",

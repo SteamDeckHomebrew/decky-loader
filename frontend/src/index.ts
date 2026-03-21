@@ -22,11 +22,13 @@
       DFLWebpack.findModule((m) => m.createPortal && m.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE);
 
     console.debug('[Decky:Boot] Setting up JSX internals...');
-    const jsx = DFLWebpack.findModule((m) => m.jsx && Object.keys(m).length == 1)?.jsx;
-    if (jsx) {
+    const jsxModule = DFLWebpack.findModule((m) => (m.jsx && m.jsxs) || (m.jsx && Object.keys(m).length == 1));
+    if (jsxModule.jsxs) {
+      window.SP_JSX = jsxModule;
+    } else {
       window.SP_JSX = {
-        jsx,
-        jsxs: jsx,
+        jsx: jsxModule.jsx,
+        jsxs: jsxModule.jsx,
         Fragment: window.SP_REACT.Fragment,
       };
     }

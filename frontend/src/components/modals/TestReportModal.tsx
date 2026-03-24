@@ -361,11 +361,11 @@ const TestReportModal: FC<TestReportModalProps> = ({ closeModal }) => {
                 <Field
                   label={t('SettingsDeveloperIndex.test_report.qr_label')}
                   description={
-                    <div>
-                      <div style={{ marginBottom: '8px', opacity: 0.7 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                      <div style={{ marginBottom: '20px', opacity: 0.7 }}>
                         {t('SettingsDeveloperIndex.test_report.qr_desc')}
                       </div>
-                      <div style={{ display: 'flex', justifyContent: 'center' }}>
+                      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'auto' }}>
                         <img
                           alt={t('SettingsDeveloperIndex.test_report.qr_label')}
                           src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(

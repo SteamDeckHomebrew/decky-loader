@@ -217,9 +217,9 @@ class Reporting:
 
         try:
             async with ClientSession(timeout=paste_timeout) as session:
-                async with session.post(
-                    "https://copyandpaste.at/api/log",
-                    data=body.encode("utf-8"),
+                async with session.put(
+                    "https://lp.deckbrew.xyz/",
+                    data=body,
                     headers={
                         "User-Agent": helpers.user_agent,
                         "Content-Type": "text/plain; charset=utf-8",
@@ -228,9 +228,14 @@ class Reporting:
                 ) as res:
                     if res.status < 200 or res.status >= 300:
                         text = await res.text()
-                        logger.error(f"copyandpaste.at upload failed: {res.status} {text}")
+                        logger.error(f"lp.deckbrew.xyz upload failed: {res.status} {text}")
                         return web.json_response({"error": "Paste upload failed"}, status=502)
-                    url = (await res.text()).strip()
+                    payload = await res.json()
+                    paste_id = payload.get("id")
+                    if not isinstance(paste_id, str) or not paste_id:
+                        logger.error(f"lp.deckbrew.xyz returned invalid payload: {payload}")
+                        return web.json_response({"error": "Paste upload failed"}, status=502)
+                    url = f"https://lp.deckbrew.xyz/{paste_id}"
         except Exception as e:
             logger.error(f"Failed to upload report: {e}")
             return web.json_response({"error": "Paste upload failed"}, status=502)

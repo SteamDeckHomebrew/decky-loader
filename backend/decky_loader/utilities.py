@@ -187,14 +187,14 @@ class Utilities:
         # JS engine for it to do the decompression. Otherwise we need need to clear
         # the Content-Encoding header in the response headers, however that would
         # defeat the point of this proxy.
-        async with ClientSession(auto_decompress=False) as web:
+        async with ClientSession(auto_decompress=False, trust_env=True) as web:
             async with web.request(req.method, url, headers=headers, data=body, ssl=helpers.get_ssl_context()) as web_res:
                 # Whenever the aiohttp_cors is used, it expects a near complete control over whatever headers are needed
                 # for `aiohttp_cors.ResourceOptions`. As a server, if you delegate CORS handling to aiohttp_cors,
-                # the headers below must NOT be set. Otherwise they would be overwritten by aiohttp_cors and there would be 
+                # the headers below must NOT be set. Otherwise they would be overwritten by aiohttp_cors and there would be
                 # logic bugs, so it was probably a smart choice to assert if the headers are present.
                 #
-                # However, this request handler method does not act like our own local server, it always acts like a proxy 
+                # However, this request handler method does not act like our own local server, it always acts like a proxy
                 # where we do not have control over the response headers. For responses that do not allow CORS, we add the support
                 # via aiohttp_cors. For responses that allow CORS, we have to remove the conflicting headers to allow
                 # aiohttp_cors handle it for us as if there was no CORS support.
@@ -215,7 +215,7 @@ class Utilities:
         return res
 
     async def http_request_legacy(self, method: str, url: str, extra_opts: Any = {}, timeout: int | None = None):
-        async with ClientSession() as web:
+        async with ClientSession(trust_env=True) as web:
             res = await web.request(method, url, ssl=helpers.get_ssl_context(), timeout=timeout, **extra_opts) # type: ignore
             text = await res.text()
         return {
@@ -275,7 +275,7 @@ class Utilities:
                     style.parentNode.removeChild(style);
             }})()
             """, False)
-        
+
         assert result
         if "exceptionDetails" in result["result"]:
             raise result["result"]["exceptionDetails"]
@@ -311,8 +311,8 @@ class Utilities:
     async def restart_webhelper(self):
         await restart_webhelper()
 
-    async def filepicker_ls(self, 
-                            path: str | None = None, 
+    async def filepicker_ls(self,
+                            path: str | None = None,
                             include_files: bool = True,
                             include_folders: bool = True,
                             include_ext: list[str] | None = None,
@@ -321,7 +321,7 @@ class Utilities:
                             filter_for: str | None = None,
                             page: int = 1,
                             max: int = 1000):
-        
+
         if path == None:
             path = get_home_path()
 
@@ -353,7 +353,7 @@ class Utilities:
                     files = list(filter(lambda file: re.search(filter_for, file["file"].name) != None, files))
             except re.error:
                 files = list(filter(lambda file: file["file"].name.find(filter_for) != -1, files))
-        
+
         # Ordering logic
         ord_arg = order_by.split("_")
         ord = ord_arg[0]
@@ -375,7 +375,7 @@ class Utilities:
             case _:
                 files.sort(key=lambda x: x['file'].name.casefold(), reverse = rev)
                 folders.sort(key=lambda x: x['file'].name.casefold(), reverse = rev)
-        
+
         #Constructing the final file list, folders first
         all =   [{
                     "isdir": x['is_dir'],
@@ -391,7 +391,7 @@ class Utilities:
             "files": all[(page-1)*max:(page)*max],
             "total": len(all),
         }
-        
+
     # Based on https://stackoverflow.com/a/46422554/13174603
     def start_rdt_proxy(self, ip: str, port: int):
         async def pipe(reader: StreamReader, writer: StreamWriter):
@@ -472,7 +472,7 @@ class Utilities:
             "username": get_username(),
             "path": get_home_path()
         }
-    
+
     async def get_tab_id(self, name: str):
         return (await get_tab(name)).id
 
@@ -484,23 +484,23 @@ class Utilities:
 
             await self.context.plugin_loader.plugins[name].stop()
             await self.context.ws.emit("loader/disable_plugin", name)
-    
+
     async def enable_plugin(self, name: str):
         plugin_folder = self.context.plugin_browser.find_plugin_folder(name)
         assert plugin_folder is not None
         plugin_dir = path.join(self.context.plugin_browser.plugin_path, plugin_folder)
-        
+
         if name in self.context.plugin_loader.plugins:
             plugin = self.context.plugin_loader.plugins[name]
             if plugin.proc and plugin.proc.is_alive():
                 await plugin.stop()
             self.context.plugin_loader.plugins.pop(name, None)
             await sleep(1)
-            
+
         disabled_plugins: List[str] = await self.get_setting("disabled_plugins", [])
-        
+
         if name in disabled_plugins:
             disabled_plugins.remove(name)
             await self.set_setting("disabled_plugins", disabled_plugins)
-            
+
         await self.context.plugin_loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_folder)

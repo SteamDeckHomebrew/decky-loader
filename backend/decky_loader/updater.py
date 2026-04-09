@@ -3,16 +3,13 @@ from asyncio import sleep
 from logging import getLogger
 import os
 from os import getcwd, path, remove
-from typing import TYPE_CHECKING, List, TypedDict
+from typing import TYPE_CHECKING, TypedDict
 if TYPE_CHECKING:
     from .main import PluginManager
 from .localplatform.localplatform import chmod, service_restart, service_stop, ON_LINUX, ON_WINDOWS, get_keep_systemd_service, get_selinux
 import shutil
-from typing import List, TYPE_CHECKING, TypedDict
 import zipfile
-
-from aiohttp import ClientSession
-
+from .helpers import get_session
 from . import helpers
 from .settings import SettingsManager
 if TYPE_CHECKING:
@@ -28,7 +25,7 @@ class RemoteVerAsset(TypedDict):
 class RemoteVer(TypedDict):
     tag_name: str
     prerelease: bool
-    assets: List[RemoteVerAsset]
+    assets: list[RemoteVerAsset]
 class TestingVersion(TypedDict):
     id: int
     name: str
@@ -40,7 +37,7 @@ class Updater:
         self.context = context
         self.settings = self.context.settings
         self.remoteVer: RemoteVer | None = None
-        self.allRemoteVers: List[RemoteVer] = []
+        self.allRemoteVers: list[RemoteVer] = []
         self.localVer = helpers.get_loader_version()
 
         try:
@@ -102,9 +99,9 @@ class Updater:
     async def check_for_updates(self):
         logger.debug("checking for updates")
         selectedBranch = self.get_branch(self.context.settings)
-        async with ClientSession() as web:
+        async with get_session as web:
             async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases", headers={'X-GitHub-Api-Version': '2022-11-28'}, ssl=helpers.get_ssl_context()) as res:
-                remoteVersions: List[RemoteVer] = await res.json()
+                remoteVersions: list[RemoteVer] = await res.json()
                 if selectedBranch == 0:
                     logger.debug("release type: release")
                     remoteVersions = list(filter(lambda ver: ver["tag_name"].startswith("v") and not ver["prerelease"] and not ver["tag_name"].find("-pre") > 0 and ver["tag_name"], remoteVersions))
@@ -145,7 +142,7 @@ class Updater:
         if size_in_bytes == None:
             size_in_bytes = 26214400 # 25MiB, a reasonable overestimate (19.6MiB as of 2024/02/25)
 
-        async with ClientSession() as web:
+        async with get_session() as web:
             logger.debug("Downloading binary")
             async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
                 total = int(res.headers.get('content-length', size_in_bytes))
@@ -174,7 +171,7 @@ class Updater:
                 shutil.move(path.join(getcwd(), download_filename + ".unzipped"), path.join(getcwd(), download_filename))
             else:
                 shutil.move(path.join(getcwd(), download_temp_filename), path.join(getcwd(), download_filename))
-            
+
             chmod(path.join(getcwd(), download_filename), 777, False)
             if get_selinux():
                 from asyncio.subprocess import create_subprocess_exec
@@ -203,14 +200,14 @@ class Updater:
                 download_url = x["browser_download_url"]
                 size_in_bytes = x["size"]
                 break
-        
+
         if download_url == None:
             raise Exception("Download url not found")
 
         service_url = self.get_service_url()
         logger.debug("Retrieved service URL")
 
-        async with ClientSession() as web:
+        async with get_session() as web:
             if ON_LINUX and not get_keep_systemd_service():
                 logger.debug("Downloading systemd service")
                 # download the relevant systemd service depending upon branch
@@ -229,14 +226,14 @@ class Updater:
                 service_data = service_data.replace("${HOMEBREW_FOLDER}", helpers.get_homebrew_path())
                 with open(path.join(getcwd(), "plugin_loader.service"), "w", encoding="utf-8") as service_file:
                         service_file.write(service_data)
-                    
+
                 logger.debug("Saved service file")
                 logger.debug("Copying service file over current file.")
                 shutil.copy(service_file_path, "/etc/systemd/system/plugin_loader.service")
                 if not os.path.exists(path.join(getcwd(), ".systemd")):
                     os.mkdir(path.join(getcwd(), ".systemd"))
                 shutil.move(service_file_path, path.join(getcwd(), ".systemd")+"/plugin_loader.service")
-            
+
         await self.download_decky_binary(download_url, version, size_in_bytes=size_in_bytes)
 
     async def do_restart(self):
@@ -246,10 +243,10 @@ class Updater:
     async def do_shutdown(self):
         await service_stop("plugin_loader")
 
-    async def get_testing_versions(self) -> List[TestingVersion]:
-        result: List[TestingVersion] = []
-        async with ClientSession() as web:
-            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/pulls", 
+    async def get_testing_versions(self) -> list[TestingVersion]:
+        result: list[TestingVersion] = []
+        async with get_session() as web:
+            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/pulls",
                     headers={'X-GitHub-Api-Version': '2022-11-28'}, params={'state':'open'}, ssl=helpers.get_ssl_context()) as res:
                 open_prs = await res.json()
                 for pr in open_prs:
@@ -264,8 +261,8 @@ class Updater:
     async def download_testing_version(self, pr_id: int, sha_id: str):
         down_id = ''
         #Get all the associated workflow run for the given sha_id code hash
-        async with ClientSession() as web:
-            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/actions/runs", 
+        async with get_session() as web:
+            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/actions/runs",
                     headers={'X-GitHub-Api-Version': '2022-11-28'}, params={'head_sha': sha_id}, ssl=helpers.get_ssl_context()) as res:
                 works = await res.json()
         #Iterate over the workflow_run to get the two builds if they exists
@@ -277,7 +274,7 @@ class Updater:
                 down_id=work['id']
                 break
         if down_id != '':
-            async with ClientSession() as web:
+            async with get_session() as web:
                 async with web.request("GET", f"https://api.github.com/repos/SteamDeckHomebrew/decky-loader/actions/runs/{down_id}/artifacts",
                         headers={'X-GitHub-Api-Version': '2022-11-28'}, ssl=helpers.get_ssl_context()) as res:
                     jresp = await res.json()

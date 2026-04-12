@@ -72,7 +72,7 @@ class PluginManager:
         })
         self.ws = WSRouter(self.loop, self.web_app)
         self.settings = SettingsManager("loader", path.join(get_privileged_path(), "settings"))
-        self.use_live_reload = get_live_reload() or self.settings.getSetting('developer.enabled', False)
+        self.use_live_reload = get_live_reload() or self.settings.getSetting("developer.enabled", False)
         self.plugin_loader = Loader(self, self.ws, plugin_path, self.loop, self.use_live_reload)
         self.plugin_browser = PluginBrowser(plugin_path, self.plugin_loader.plugins, self.plugin_loader, self.settings) 
         self.utilities = Utilities(self)

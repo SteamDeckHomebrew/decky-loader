@@ -81,6 +81,7 @@ class Toaster extends Logger {
     const info = {
       showToast: toast.showToast,
       sound: toast.sound,
+      playSound: toast.playSound,
       eFeature: 0,
       toastDurationMS: toastData.nToastDurationMS,
       bCritical: toast.critical,

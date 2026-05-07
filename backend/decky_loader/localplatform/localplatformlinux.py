@@ -116,28 +116,26 @@ def get_username() -> str:
     return _get_user()
 
 def setgid(user : UserType = UserType.HOST_USER):
-    user_id = 0
-
-    if user == UserType.HOST_USER:
-        user_id = _get_user_group_id()
+    host_user_group_id, effective_user_group_id = _get_user_group_id(), _get_effective_user_group_id()
+    if host_user_group_id == effective_user_group_id:
+        pass
+    elif user == UserType.HOST_USER:
+        os.setgid(host_user_group_id)
     elif user == UserType.EFFECTIVE_USER:
-        pass # we already are
+        os.setgid(effective_user_group_id)
     else:
         raise Exception("Unknown user type")
-    
-    os.setgid(user_id)
 
 def setuid(user : UserType = UserType.HOST_USER):
-    user_id = 0
-
-    if user == UserType.HOST_USER:
-        user_id = _get_user_id()
+    host_user_id, effective_user_id = _get_user_id(), _get_effective_user_id()
+    if host_user_id == effective_user_id:
+        pass
+    elif user == UserType.HOST_USER:
+        os.setuid(host_user_id)
     elif user == UserType.EFFECTIVE_USER:
-        pass # we already are
+        os.setuid(effective_user_id)
     else:
         raise Exception("Unknown user type")
-    
-    os.setuid(user_id)
 
 async def service_active(service_name : str) -> bool:
     res, _, _ = await run(["systemctl", "is-active", service_name], stdout=DEVNULL, stderr=DEVNULL)

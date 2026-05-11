@@ -56,7 +56,8 @@ const PluginView: FC = () => {
             <PanelSectionRow key={name}>
               <ButtonItem layout="below" onClick={() => setActivePlugin(name)}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  {icon}
+                  {/* @ts-expect-error - ErrorBoundary is given fallback in the patch in errorboundary-hook.tsx, but it's not typed */}
+                  <ErrorBoundary fallback={<span>❌</span>}>{icon}</ErrorBoundary>
                   <div>{name}</div>
                   <NotificationBadge show={updates?.has(name)} style={{ top: '-5px', right: '-5px' }} />
                 </div>

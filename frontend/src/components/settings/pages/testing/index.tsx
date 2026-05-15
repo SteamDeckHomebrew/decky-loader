@@ -66,9 +66,9 @@ export default function TestingVersionList() {
 
   if (testingVersions.length === 0) {
     return (
-      <div>
+      <DialogBody>
         <p>No open PRs found</p>
-      </div>
+      </DialogBody>
     );
   }
 

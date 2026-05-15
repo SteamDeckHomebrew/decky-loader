@@ -36,7 +36,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install semver-tool asdf
-      uses: asdf-vm/actions/install@v3
+      uses: asdf-vm/actions/install@v4
       with:
         tool_versions: |
           semver 3.4.0

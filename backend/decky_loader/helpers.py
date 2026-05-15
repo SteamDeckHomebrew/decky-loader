@@ -1,5 +1,6 @@
 import re
 import ssl
+from typing import Any
 import uuid
 import os
 import subprocess
@@ -97,7 +98,7 @@ def get_system_pythonpaths() -> list[str]:
         proc = subprocess.run(["python3" if localplatform.ON_LINUX else "python", "-c", "import sys; print('\\n'.join(x for x in sys.path if x))"],
         # TODO make this less insane
                               capture_output=True, user=localplatform.localplatform._get_user_id() if localplatform.ON_LINUX else None, env={} if localplatform.ON_LINUX else None) # pyright: ignore [reportPrivateUsage]
-        
+
         proc.check_returncode()
 
         versions = [x.strip() for x in proc.stdout.decode().strip().split("\n")]
@@ -111,7 +112,7 @@ async def download_remote_binary_to_path(url: str, binHash: str, path: str) -> b
     rv = False
     try:
         if os.access(os.path.dirname(path), os.W_OK):
-            async with ClientSession() as client:
+            async with get_session() as client:
                 res = await client.get(url, ssl=get_ssl_context())
                 if res.status == 200:
                     logger.debug("Download attempt of URL: " + url)
@@ -192,3 +193,6 @@ async def stop_systemd_unit(unit_name: str) -> bool:
 
 async def start_systemd_unit(unit_name: str) -> bool:
     return await localplatform.service_start(unit_name)
+
+def get_session(**kwargs: Any) -> ClientSession:
+    return ClientSession(trust_env=True, **kwargs)

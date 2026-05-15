@@ -20,7 +20,7 @@ from typing import Dict, List, TypedDict
 # Local modules
 from .localplatform.localplatform import chown, chmod, get_chown_plugin_path
 from .loader import Loader, Plugins
-from .helpers import get_ssl_context, download_remote_binary_to_path
+from .helpers import get_session, get_ssl_context, download_remote_binary_to_path
 from .enums import UserType
 from .settings import SettingsManager
 
@@ -116,7 +116,7 @@ class PluginBrowser:
                     return folder
             except:
                 logger.debug(f"skipping {folder}")
-    
+
     def set_plugin_dir_permissions(self, plugin_dir: str) -> bool:
         plugin_json_path = path.join(plugin_dir, 'plugin.json')
         logger.debug(f"Checking plugin.json at {plugin_json_path}")
@@ -150,7 +150,7 @@ class PluginBrowser:
             # plugins_snapshot = self.plugins.copy()
             # snapshot_string = pformat(plugins_snapshot)
             # logger.debug("current plugins: %s", snapshot_string)
-                
+
             if name in self.plugins:
                 logger.debug("Plugin %s was found", name)
                 await self.plugins[name].stop(uninstall=True)
@@ -199,7 +199,7 @@ class PluginBrowser:
             logger.info(f"Installing {name} from URL (Version: {version})")
             await self.loader.ws.emit("loader/plugin_download_info", 10, "Store.download_progress_info.download_zip")
 
-            async with ClientSession() as client:
+            async with get_session() as client:
                 logger.debug(f"Fetching {artifact}")
                 res = await client.get(artifact, ssl=get_ssl_context())
                 #TODO track progress of this download in chunks like with decky updates
@@ -220,7 +220,7 @@ class PluginBrowser:
                 case 2: storeUrl = self.settings.getSetting("store-url", "https://plugins.deckbrew.xyz/plugins")  # custom
                 case _: storeUrl = "https://plugins.deckbrew.xyz/plugins"
             logger.info(f"Incrementing installs for {name} from URL {storeUrl} (version {version})")
-            async with ClientSession() as client:
+            async with get_session() as client:
                 res = await client.post(storeUrl+f"/{name}/versions/{version}/increment?isUpdate={isInstalled}", ssl=get_ssl_context())
                 if res.status != 200:
                     logger.error(f"Server did not accept install count increment request. code: {res.status}")
@@ -346,7 +346,7 @@ class PluginBrowser:
         if name in plugin_order:
             plugin_order.remove(name)
             self.settings.setSetting("pluginOrder", plugin_order)
-            
+
         disabled_plugins: List[str] = self.settings.getSetting("disabled_plugins", [])
         if name in disabled_plugins:
             disabled_plugins.remove(name)

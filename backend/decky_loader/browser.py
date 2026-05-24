@@ -341,6 +341,11 @@ class PluginBrowser:
             hidden_plugins.remove(name)
             self.settings.setSetting("hiddenPlugins", hidden_plugins)
 
+        pinned_plugins = self.settings.getSetting("pinnedPlugins", [])
+        if name in pinned_plugins:
+            pinned_plugins.remove(name)
+            self.settings.setSetting("pinnedPlugins", pinned_plugins)
+
         plugin_order = self.settings.getSetting("pluginOrder", [])
 
         if name in plugin_order:

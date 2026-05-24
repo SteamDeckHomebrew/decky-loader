@@ -33,6 +33,7 @@ const PluginUninstallModal: FC<PluginUninstallModalProps> = ({
         // we invalidate here so if you re-install it, you won't have an out-of-date hidden filter
         await DeckyPluginLoader.frozenPluginsService.invalidate();
         await DeckyPluginLoader.hiddenPluginsService.invalidate();
+        await DeckyPluginLoader.pinnedPluginsService.invalidate();
         closeModal?.();
       }}
       bOKDisabled={uninstalling}

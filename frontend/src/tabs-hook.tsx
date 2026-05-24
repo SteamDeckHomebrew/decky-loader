@@ -20,7 +20,7 @@ declare global {
 }
 
 interface Tab {
-  id: QuickAccessTab | number;
+  id: QuickAccessTab | number | string;
   title: any;
   content: any;
   icon: any;
@@ -92,38 +92,48 @@ class TabsHook extends Logger {
     this.tabs.push(tab);
   }
 
-  removeById(id: number) {
+  removeById(id: QuickAccessTab | number | string) {
     this.debug('Removing tab', id);
     this.tabs = this.tabs.filter((tab) => tab.id !== id);
   }
 
   render(existingTabs: any[], visible: boolean) {
-    let deckyTabAmount = existingTabs.reduce((prev: any, cur: any) => (cur.decky ? prev + 1 : prev), 0);
-    if (deckyTabAmount == this.tabs.length) {
-      for (let tab of existingTabs) {
-        if (tab?.decky) {
-          if (tab?.qAMVisibilitySetter) {
-            tab?.qAMVisibilitySetter(visible);
-          } else {
-            tab.initialVisibility = visible;
-          }
-        }
+    const existing = new Map<unknown, any>();
+    for (let i = existingTabs.length - 1; i >= 0; i--) {
+      if (existingTabs[i]?.decky) {
+        existing.set(existingTabs[i].key, existingTabs[i]);
+        existingTabs.splice(i, 1);
       }
-      return;
     }
-    for (const { title, icon, content, id } of this.tabs) {
-      const tab: any = {
-        key: id,
-        title,
-        tab: icon,
-        decky: true,
-        initialVisibility: visible,
-      };
-      tab.panel = (
-        <ErrorBoundary>
-          <QuickAccessVisibleStateProvider tab={tab}>{content}</QuickAccessVisibleStateProvider>
-        </ErrorBoundary>
-      );
+
+    const ordered = [...this.tabs].sort((a, b) => {
+      if (a.id === QuickAccessTab.Decky) return 1;
+      if (b.id === QuickAccessTab.Decky) return -1;
+      return 0;
+    });
+
+    for (const { title, icon, content, id } of ordered) {
+      let tab = existing.get(id);
+      if (tab) {
+        if (tab.qAMVisibilitySetter) {
+          tab.qAMVisibilitySetter(visible);
+        } else {
+          tab.initialVisibility = visible;
+        }
+      } else {
+        tab = {
+          key: id,
+          title,
+          tab: icon,
+          decky: true,
+          initialVisibility: visible,
+        };
+        tab.panel = (
+          <ErrorBoundary>
+            <QuickAccessVisibleStateProvider tab={tab}>{content}</QuickAccessVisibleStateProvider>
+          </ErrorBoundary>
+        );
+      }
       existingTabs.push(tab);
     }
   }

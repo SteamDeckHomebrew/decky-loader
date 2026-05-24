@@ -12,6 +12,7 @@ interface PublicDeckyState {
   pluginOrder: string[];
   frozenPlugins: string[];
   hiddenPlugins: string[];
+  pinnedPlugins: string[];
   activePlugin: Plugin | null;
   updates: PluginUpdateMapping | null;
   hasLoaderUpdate?: boolean;
@@ -33,6 +34,7 @@ export class DeckyState {
   private _pluginOrder: string[] = [];
   private _frozenPlugins: string[] = [];
   private _hiddenPlugins: string[] = [];
+  private _pinnedPlugins: string[] = [];
   private _activePlugin: Plugin | null = null;
   private _updates: PluginUpdateMapping | null = null;
   private _hasLoaderUpdate: boolean = false;
@@ -51,6 +53,7 @@ export class DeckyState {
       pluginOrder: this._pluginOrder,
       frozenPlugins: this._frozenPlugins,
       hiddenPlugins: this._hiddenPlugins,
+      pinnedPlugins: this._pinnedPlugins,
       activePlugin: this._activePlugin,
       updates: this._updates,
       hasLoaderUpdate: this._hasLoaderUpdate,
@@ -90,6 +93,11 @@ export class DeckyState {
 
   setHiddenPlugins(hiddenPlugins: string[]) {
     this._hiddenPlugins = hiddenPlugins;
+    this.notifyUpdate();
+  }
+
+  setPinnedPlugins(pinnedPlugins: string[]) {
+    this._pinnedPlugins = pinnedPlugins;
     this.notifyUpdate();
   }
 

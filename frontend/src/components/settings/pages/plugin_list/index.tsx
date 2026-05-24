@@ -44,6 +44,9 @@ type PluginTableData = PluginData & {
   hidden: boolean;
   onHide(): void;
   onShow(): void;
+  pinned: boolean;
+  onPin(): void;
+  onUnpin(): void;
   isDeveloper: boolean;
 };
 
@@ -57,8 +60,22 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
     return null;
   }
 
-  const { name, update, version, onHide, onShow, hidden, onFreeze, onUnfreeze, frozen, isDeveloper, disabled } =
-    props.entry.data;
+  const {
+    name,
+    update,
+    version,
+    onHide,
+    onShow,
+    hidden,
+    onFreeze,
+    onUnfreeze,
+    frozen,
+    onPin,
+    onUnpin,
+    pinned,
+    isDeveloper,
+    disabled,
+  } = props.entry.data;
 
   const showCtxMenu = (e: MouseEvent | GamepadEvent) => {
     showContextMenu(
@@ -109,6 +126,13 @@ function PluginInteractables(props: { entry: ReorderableEntry<PluginTableData> }
             <MenuItem onSelected={onShow}>{t('PluginListIndex.show')}</MenuItem>
           ) : (
             <MenuItem onSelected={onHide}>{t('PluginListIndex.hide')}</MenuItem>
+          ))}
+        {!disabled &&
+          !hidden &&
+          (pinned ? (
+            <MenuItem onSelected={onUnpin}>{t('PluginListIndex.unpin')}</MenuItem>
+          ) : (
+            <MenuItem onSelected={onPin}>{t('PluginListIndex.pin')}</MenuItem>
           ))}
         {frozen ? (
           <MenuItem onSelected={onUnfreeze}>{t('PluginListIndex.unfreeze')}</MenuItem>
@@ -170,8 +194,16 @@ type PluginData = {
 };
 
 export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
-  const { installedPlugins, disabledPlugins, updates, pluginOrder, setPluginOrder, frozenPlugins, hiddenPlugins } =
-    useDeckyState();
+  const {
+    installedPlugins,
+    disabledPlugins,
+    updates,
+    pluginOrder,
+    setPluginOrder,
+    frozenPlugins,
+    hiddenPlugins,
+    pinnedPlugins,
+  } = useDeckyState();
 
   const [_, setPluginOrderSetting] = useSetting<string[]>(
     'pluginOrder',
@@ -186,12 +218,14 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
   const [pluginEntries, setPluginEntries] = useState<ReorderableEntry<PluginTableData>[]>([]);
   const hiddenPluginsService = DeckyPluginLoader.hiddenPluginsService;
   const frozenPluginsService = DeckyPluginLoader.frozenPluginsService;
+  const pinnedPluginsService = DeckyPluginLoader.pinnedPluginsService;
 
   useEffect(() => {
     setPluginEntries(
       installedPlugins.map(({ name, version }) => {
         const frozen = frozenPlugins.includes(name);
         const hidden = hiddenPlugins.includes(name);
+        const pinned = pinnedPlugins.includes(name);
 
         return {
           label: (
@@ -199,6 +233,7 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
               name={name}
               frozen={frozen}
               hidden={hidden}
+              pinned={pinned}
               version={version}
               disabled={disabledPlugins.find((p) => p.name == name) !== undefined}
             />
@@ -209,6 +244,7 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
             disabled: disabledPlugins.some((disabledPlugin) => disabledPlugin.name === name),
             frozen,
             hidden,
+            pinned,
             isDeveloper,
             version,
             update: updates?.get(name),
@@ -216,11 +252,13 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
             onUnfreeze: () => frozenPluginsService.update(frozenPlugins.filter((pluginName) => name !== pluginName)),
             onHide: () => hiddenPluginsService.update([...hiddenPlugins, name]),
             onShow: () => hiddenPluginsService.update(hiddenPlugins.filter((pluginName) => name !== pluginName)),
+            onPin: () => pinnedPluginsService.update([...pinnedPlugins, name]),
+            onUnpin: () => pinnedPluginsService.update(pinnedPlugins.filter((pluginName) => name !== pluginName)),
           },
         };
       }),
     );
-  }, [installedPlugins, updates, hiddenPlugins, disabledPlugins]);
+  }, [installedPlugins, updates, hiddenPlugins, pinnedPlugins, disabledPlugins]);
 
   if (installedPlugins.length === 0) {
     return (

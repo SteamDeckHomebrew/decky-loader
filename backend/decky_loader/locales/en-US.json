@@ -126,12 +126,14 @@
         "freeze": "Freeze updates",
         "hide": "Quick access: Hide",
         "no_plugin": "No plugins installed!",
+        "pin": "Pin directly to Quick Access Menu",
         "plugin_actions": "Plugin Actions",
         "reinstall": "Reinstall",
         "reload": "Reload",
         "show": "Quick access: Show",
         "unfreeze": "Allow updates",
         "uninstall": "Uninstall",
+        "unpin": "Unpin from Quick Access Menu",
         "update_all_one": "Update 1 plugin",
         "update_all_other": "Update {{count}} plugins",
         "update_to": "Update to {{name}}",
@@ -140,6 +142,7 @@
     },
     "PluginListLabel": {
         "hidden": "Hidden from the quick access menu",
+        "pinned": "Pinned directly to Quick Access Menu",
         "disabled": "Plugin disabled"
     },
     "PluginLoader": {

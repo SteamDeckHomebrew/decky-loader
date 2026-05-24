@@ -23,6 +23,7 @@ import PluginDisableModal from './components/modals/PluginDisableModal';
 import PluginInstallModal from './components/modals/PluginInstallModal';
 import PluginUninstallModal from './components/modals/PluginUninstallModal';
 import NotificationBadge from './components/NotificationBadge';
+import PinnedPluginView from './components/PinnedPluginView';
 import PluginView from './components/PluginView';
 import { useQuickAccessVisible } from './components/QuickAccessVisibleState';
 import WithSuspense from './components/WithSuspense';
@@ -31,6 +32,7 @@ import { FrozenPluginService } from './frozen-plugins-service';
 import { HiddenPluginsService } from './hidden-plugins-service';
 import Logger from './logger';
 import { NotificationService } from './notification-service';
+import { PinnedPluginsService } from './pinned-plugins-service';
 import { DisabledPlugin, InstallType, Plugin, PluginLoadType } from './plugin';
 import RouterHook from './router-hook';
 import { deinitSteamFixes, initSteamFixes } from './steamfixes';
@@ -38,6 +40,7 @@ import { checkForPluginUpdates } from './store';
 import TabsHook from './tabs-hook';
 import Toaster from './toaster';
 import { getVersionInfo } from './updater';
+import { pinnedPluginTabId } from './utils/pinned-tab-id';
 import { getSetting, setSetting } from './utils/settings';
 import TranslationHelper, { TranslationClass } from './utils/TranslationHelper';
 
@@ -77,7 +80,10 @@ class PluginLoader extends Logger {
 
   public frozenPluginsService = new FrozenPluginService(this.deckyState);
   public hiddenPluginsService = new HiddenPluginsService(this.deckyState);
+  public pinnedPluginsService = new PinnedPluginsService(this.deckyState);
   public notificationService = new NotificationService(this.deckyState);
+
+  private pinnedTabIds = new Map<string, number>();
 
   private reloadLock: boolean = false;
   // stores a list of plugin names which requested to be reloaded
@@ -125,6 +131,8 @@ class PluginLoader extends Logger {
         </DeckyStateContextProvider>
       ),
     });
+
+    this.deckyState.eventBus.addEventListener('update', this.syncPinnedTabs);
 
     this.routerHook.addRoute('/decky/store', () => (
       <DeckyStateContextProvider deckyState={this.deckyState}>
@@ -361,10 +369,12 @@ class PluginLoader extends Logger {
 
     this.frozenPluginsService.init();
     this.hiddenPluginsService.init();
+    this.pinnedPluginsService.init();
     this.notificationService.init();
   }
 
   public deinit() {
+    this.deckyState.eventBus.removeEventListener('update', this.syncPinnedTabs);
     this.routerHook.removeRoute('/decky/store');
     this.routerHook.removeRoute('/decky/settings');
     deinitSteamFixes();
@@ -374,6 +384,44 @@ class PluginLoader extends Logger {
     this.toaster.deinit();
     this.errorBoundaryHook.deinit();
   }
+
+  private syncPinnedTabs = () => {
+    const { pinnedPlugins, pluginOrder } = this.deckyState.publicState();
+    const orderedPinned = [...pinnedPlugins].sort((a, b) => pluginOrder.indexOf(a) - pluginOrder.indexOf(b));
+    const desired = new Set(orderedPinned);
+
+    const currentOrder = [...this.pinnedTabIds.keys()].filter((name) => desired.has(name));
+    const desiredOrder = orderedPinned.filter((name) => this.pinnedTabIds.has(name));
+    const orderChanged = currentOrder.join('\0') !== desiredOrder.join('\0');
+
+    for (const name of [...this.pinnedTabIds.keys()]) {
+      if (!desired.has(name) || orderChanged) {
+        const id = this.pinnedTabIds.get(name)!;
+        this.tabsHook.removeById(id);
+        this.pinnedTabIds.delete(name);
+      }
+    }
+
+    for (const name of orderedPinned) {
+      if (this.pinnedTabIds.has(name)) continue;
+      const id = pinnedPluginTabId(name, new Set(this.pinnedTabIds.values()));
+      this.pinnedTabIds.set(name, id);
+      this.tabsHook.add({
+        id,
+        title: null,
+        content: (
+          <DeckyStateContextProvider deckyState={this.deckyState}>
+            <PinnedPluginView name={name} />
+          </DeckyStateContextProvider>
+        ),
+        icon: (
+          <DeckyStateContextProvider deckyState={this.deckyState}>
+            <PinnedPluginView name={name} iconOnly />
+          </DeckyStateContextProvider>
+        ),
+      });
+    }
+  };
 
   public doDisablePlugin(name: string) {
     const plugin = this.plugins.find((plugin) => plugin.name === name);

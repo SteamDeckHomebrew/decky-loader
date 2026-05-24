@@ -13,6 +13,7 @@ const PluginView: FC = () => {
     plugins,
     disabledPlugins,
     hiddenPlugins,
+    pinnedPlugins,
     updates,
     activePlugin,
     pluginOrder,
@@ -28,8 +29,8 @@ const PluginView: FC = () => {
     return [...plugins]
       .sort((a, b) => pluginOrder.indexOf(a.name) - pluginOrder.indexOf(b.name))
       .filter((p) => p.content)
-      .filter(({ name }) => !hiddenPlugins.includes(name));
-  }, [plugins, pluginOrder, hiddenPlugins]);
+      .filter(({ name }) => !hiddenPlugins.includes(name) && !pinnedPlugins.includes(name));
+  }, [plugins, pluginOrder, hiddenPlugins, pinnedPlugins]);
 
   const numberOfHidden = hiddenPlugins.filter((name) => !!plugins.find((p) => p.name === name)).length;
 

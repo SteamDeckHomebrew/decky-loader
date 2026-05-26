@@ -1,13 +1,13 @@
 import {
-  DialogBody,
-  DialogButton,
-  DialogControlsSection,
-  Field,
-  Focusable,
-  NavEntryPositionPreferences,
-  Navigation,
-  ProgressBar,
-  SteamSpinner,
+    DialogBody,
+    DialogButton,
+    DialogControlsSection,
+    Field,
+    Focusable,
+    NavEntryPositionPreferences,
+    Navigation,
+    ProgressBar,
+    SteamSpinner,
 } from '@decky/ui';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -84,7 +84,7 @@ export default function TestingVersionList() {
                 <Field
                   label={
                     <>
-                      {version.name} <span style={{ opacity: '50%' }}>{'#' + version.id}</span>
+                      {version.name} <span style={{ opacity: '50%', whiteSpace: 'nowrap', marginLeft: 'auto', alignSelf: 'center' }}>{'#' + version.id}</span>
                     </>
                   }
                 >

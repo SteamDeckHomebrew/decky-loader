@@ -129,7 +129,7 @@ export default function UpdaterSettings() {
         }
         childrenContainerWidth={'fixed'}
       >
-        {updateProgress == -1 && !isLoaderUpdating ? (
+        {false && (updateProgress == -1 && !isLoaderUpdating) ? (
           <DialogButton
             disabled={!versionInfo?.updatable || checkingForUpdates}
             onClick={

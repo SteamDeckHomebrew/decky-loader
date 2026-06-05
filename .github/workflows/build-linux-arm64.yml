@@ -1,0 +1,13 @@
+name: Builder (Linux arm64)
+
+on:
+  push:
+  pull_request:
+  workflow_call:
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-linux.yml
+    with:
+      arch: arm64
+      output_name: PluginLoader-arm64

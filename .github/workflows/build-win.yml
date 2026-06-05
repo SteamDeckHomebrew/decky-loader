@@ -1,4 +1,4 @@
-name: Builder Win
+name: Builder (Windows)
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   build-win:
-    name: Build PluginLoader for Win
+    name: Build PluginLoader (Windows x86_64)
     runs-on: windows-2022
 
     steps:

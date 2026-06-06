@@ -166,8 +166,7 @@ export default function UpdaterSettings() {
           <div id="decky-hide-left">
             <style>
               {`
-              ${/* @ts-ignore */ ''}
-              #decky-hide-left .${gamepadDialogClasses.FieldLeftColumn as unknown as string} {
+              #decky-hide-left .${gamepadDialogClasses.FieldLeftColumn} {
                 display: none;
               }
               `}

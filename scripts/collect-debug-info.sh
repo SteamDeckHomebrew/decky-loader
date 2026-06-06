@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # chmod +x collect-debug-info.sh && collect-debug-info.sh
 # Define the directory to scan
 directory_to_scan="$HOME/homebrew/plugins"

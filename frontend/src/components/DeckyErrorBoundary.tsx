@@ -101,7 +101,6 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
             color: #93929e;
             font-size: 15px;
             margin: 10px 0px 40px ${vars.rootMarginLeft};
-            width: calc(100vw - ${vars.scrollBarwidth} - ${vars.rootMarginLeft});
             overflow: visible;
           }
           .${classes.root} button,

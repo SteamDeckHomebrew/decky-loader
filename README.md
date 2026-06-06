@@ -15,6 +15,9 @@
   <a href="https://deckbrew.xyz/discord"><img src="https://img.shields.io/discord/960281551428522045?color=%235865F2&label=discord" /></a>
   <br>
   <br>
+  🌐 <a href="./README.md">English</a> · <a href="./README_zh-Hans.md">简体中文</a>
+  <br>
+  <br>
 <!--  <img src="https://media.discordapp.net/attachments/966017112244125756/1012466063893610506/main.jpg" alt="Decky screenshot" width="80%">-->
 </p>
 

@@ -1,0 +1,3 @@
+minimumReleaseAgeExclude:
+- "@decky/api"
+- "@decky/ui"

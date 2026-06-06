@@ -1,0 +1,316 @@
+{
+    "BranchSelect": {
+        "update_channel": {
+            "label": "Candalul de Actualizare",
+            "prerelease": "Pre-lansare",
+            "stable": "Stabil",
+            "testing": "Testare"
+        }
+    },
+    "Developer": {
+        "5secreload": "Reîncărcare în 5 secunde",
+        "disabling": "Dezactivare React DevTools",
+        "enabling": "Activare React DevTools"
+    },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "Înapoi"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "Calea specificată nu este validă. Vă rugăm să o verificați și să o reintroduceți corect.",
+            "perm_denied": "Nu aveți acces la fișierul specificat. Te rugăm să verifici dacă utilizatorul tău (deck pe Steam Deck) are permisiunea corespunzătoare de a accesa folderul/fișierul specific.",
+            "unknown": "A apărut o eroare necunoscută. Eroarea brută este: {{raw_error}}"
+        }
+    },
+    "FilePickerIndex": {
+        "file": {
+            "select": "Selectați acest fișier"
+        },
+        "files": {
+            "all_files": "Toate Fișierele",
+            "file_type": "Tip de Fișier",
+            "show_hidden": "Afișați Fișierele Ascunse"
+        },
+        "filter": {
+            "created_asce": "Create (Cele mai vechi)",
+            "created_desc": "Create (Cele mai noi)",
+            "modified_asce": "Modificate (Cele mai vechi)",
+            "modified_desc": "Modificate (Cele mai noi)",
+            "name_asce": "Z-A",
+            "name_desc": "A-Z",
+            "size_asce": "Dimensiune (Cea mai mică)",
+            "size_desc": "Dimensiune (Cea mai mare)"
+        },
+        "folder": {
+            "label": "Fișier",
+            "select": "Folosiți acest fișier",
+            "show_more": "Afișați mai multe fișiere"
+        }
+    },
+    "MultiplePluginsInstallModal": {
+        "confirm": "Sigur doriți să faceți următoarele modificări?",
+        "description": {
+            "downgrade": "Retrogradare {{name}} la {{version}}",
+            "install": "Instalați {{name}} {{version}}",
+            "overwrite": "Suprascrie {{name}} cu {{version}}",
+            "reinstall": "Reinstalați {{name}} {{version}}",
+            "update": "Actualizați {{name}} la {{version}}"
+        },
+        "ok_button": {
+            "idle": "Confirmați",
+            "loading": "Încărcare"
+        },
+        "title": {
+            "downgrade_few": "Retrogradează {{count}} pluginuri",
+            "downgrade_one": "Retrogradează un plugin",
+            "downgrade_other": "Retrogradează {{count}} pluginuri",
+            "install_few": "Instalați {{count}} pluginuri",
+            "install_one": "Instalați un plugin",
+            "install_other": "Instalați {{count}} pluginuri",
+            "mixed_few": "Modificați {{count}} pluginuri",
+            "mixed_one": "Modificați un plugin",
+            "mixed_other": "Modificați {{count}} pluginuri",
+            "overwrite_few": "Suprascrie {{count}} pluginuri",
+            "overwrite_one": "Suprascrie un plugin",
+            "overwrite_other": "Suprascrie {{count}} pluginuri",
+            "reinstall_few": "Reinstalați {{count}} pluginuri",
+            "reinstall_one": "Reinstalați un plugin",
+            "reinstall_other": "Reinstalați {{count}} pluginuri",
+            "update_few": "Actualizați {{count}} pluginuri",
+            "update_one": "Actualizați un plugin",
+            "update_other": "Actualizați {{count}} pluginuri"
+        }
+    },
+    "PluginCard": {
+        "plugin_downgrade": "Retrogradare",
+        "plugin_full_access": "Acest plugin are acces complet la Steam Deck-ul tău.",
+        "plugin_install": "Instalați",
+        "plugin_no_desc": "Nici-o descriere pusă.",
+        "plugin_overwrite": "Suprascriere",
+        "plugin_reinstall": "Reinstalați",
+        "plugin_update": "Actualizare",
+        "plugin_version_label": "Versiunea Plugin"
+    },
+    "PluginInstallModal": {
+        "downgrade": {
+            "button_idle": "Retrogradare",
+            "button_processing": "Retrogradare",
+            "desc": "Sunteți sigur că vreți să retrogradați {{artifact}} la versiunea {{version}}?",
+            "title": "Retrogradare {{artifact}}"
+        },
+        "install": {
+            "button_idle": "Instalați",
+            "button_processing": "Instalare",
+            "desc": "Sigur vreți să instalați {{artifact}} {{version}}?",
+            "title": "Instalați {{artifact}}"
+        },
+        "no_hash": "Acest plugin nu are hash, îl instalați pe propriul risc.",
+        "not_installed": "(neinstalat)",
+        "overwrite": {
+            "button_idle": "Suprascriere",
+            "button_processing": "Suprascriere",
+            "desc": "Sigur vreți să suprascrii {{artifact}} cu versiunea {{version}}?",
+            "title": "Suprascrie {{artifact}}"
+        },
+        "reinstall": {
+            "button_idle": "Reinstalare",
+            "button_processing": "Reinstalare",
+            "desc": "Sigur vreți să reinstalați {{artifact}} {{version}}?",
+            "title": "Reinstalare {{artifact}}"
+        },
+        "update": {
+            "button_idle": "Actualizare",
+            "button_processing": "Se Actualizează",
+            "desc": "Sigur vreți să actualizați {{artifact}} la versiunea {{version}}?",
+            "title": "Actualizare {{artifact}}"
+        }
+    },
+    "PluginListIndex": {
+        "freeze": "Pauză actualizări",
+        "hide": "Acces rapid: Ascunde",
+        "no_plugin": "Niciun plugin instalat!",
+        "plugin_actions": "Acțiuni plugin",
+        "reinstall": "Reinstalare",
+        "reload": "Reîncărcare",
+        "show": "Acces rapid: Afișare",
+        "unfreeze": "Permiteți actualizări",
+        "uninstall": "Dezinstalare",
+        "update_all_few": "Actualizați {{count}} pluginuri",
+        "update_all_one": "Actualizare un plugin",
+        "update_all_other": "Actualizați {{count}} pluginuri",
+        "update_to": "Actualizare pentru {{name}}"
+    },
+    "PluginListLabel": {
+        "hidden": "Ascuns din meniul de acces rapid"
+    },
+    "PluginLoader": {
+        "decky_title": "Decky",
+        "decky_update_available": "Actualizare disponibilă pentru {{tag_name}}!",
+        "error": "Eroare",
+        "plugin_error_uninstall": "Încărcarea pluginului {{name}} a cauzat o excepție, așa cum se arată mai sus. Aceasta înseamnă de obicei că pluginul necesită o actualizare pentru noua versiune de SteamUI. Verificați dacă există o actualizare sau evaluați eliminarea acesteia în setările Decky, în secțiunea Plugin-uri.",
+        "plugin_load_error": {
+            "message": "Eroare la încărcarea pluginului {{name}}",
+            "toast": "Eroare la încărcarea {{name}}"
+        },
+        "plugin_uninstall": {
+            "button": "Dezinstalare",
+            "desc": "Sigur vreți să dezinstalați {{name}}?",
+            "title": "Dezinstalați {{name}}"
+        },
+        "plugin_update_few": "Actualizări disponibile pentru {{count}} plugin-uri!",
+        "plugin_update_one": "Actualizare disponibilă pentru un plugin!",
+        "plugin_update_other": "Actualizări disponibile pentru {{count}} plugin-uri!"
+    },
+    "PluginView": {
+        "hidden_few": "{{count}} pluginuri sunt ascunse din această listă",
+        "hidden_one": "Un plugin este ascuns din această listă",
+        "hidden_other": "{{count}} pluginuri sunt ascunse din această listă"
+    },
+    "RemoteDebugging": {
+        "remote_cef": {
+            "desc": "Permiteți accesul neautentificat la debugger CEF oricui din rețeaua dumneavoastră",
+            "label": "Permiteți Deugging CEF la distanță"
+        }
+    },
+    "SettingsDeveloperIndex": {
+        "cef_console": {
+            "button": "Deschideți Consola",
+            "desc": "Deschide consola CEF. Utilă doar în scopuri de debugging. Informațiile de aici sunt potențial periculoase și ar trebui utilizate doar dacă ești dezvoltator de plugin-uri sau dacă ești îndrumat aici de unul dintre ei.",
+            "label": "Consola CEF"
+        },
+        "header": "Alte",
+        "react_devtools": {
+            "desc": "Permite conectarea la un calculator care rulează React DevTools. Modificarea acestei setări va reîncărca Steam. Setați adresa IP înainte de activare.",
+            "ip_label": "IP",
+            "label": "Activați React DevTools"
+        },
+        "third_party_plugins": {
+            "button_install": "Instalați",
+            "button_zip": "Răsfoiți",
+            "header": "Pluginuri terțe",
+            "label_desc": "URL",
+            "label_url": "Instalați pluginul de la URL",
+            "label_zip": "Instalați pluginul din fișierul ZIP"
+        },
+        "valve_internal": {
+            "desc1": "Activează meniul intern pentru dezvoltatori Valve.",
+            "desc2": "Nu atingeți nimic din acest meniu decât dacă știți ce face.",
+            "label": "Activare Valve Internă"
+        }
+    },
+    "SettingsGeneralIndex": {
+        "about": {
+            "decky_version": "Versiunea Decky",
+            "header": "Despre"
+        },
+        "beta": {
+            "header": "Participarea la beta"
+        },
+        "developer_mode": {
+            "label": "Mod dezvoltator"
+        },
+        "notifications": {
+            "decky_updates_label": "Actualizare Decky disponibilă",
+            "header": "Notificări",
+            "plugin_updates_label": "Actualizări de pluginuri disponibile"
+        },
+        "other": {
+            "header": "Alte"
+        },
+        "updates": {
+            "header": "Actualizări"
+        }
+    },
+    "SettingsIndex": {
+        "developer_title": "Dezvoltator",
+        "general_title": "General",
+        "plugins_title": "Pluginuri",
+        "testing_title": "Testare"
+    },
+    "Store": {
+        "download_progress_info": {
+            "download_remote": "Descărcarea oricăror binări externe",
+            "download_zip": "Se descarcă pluginul",
+            "increment_count": "Se mărește numărul de descărcări",
+            "installing_plugin": "Se instalează plugin",
+            "open_zip": "Deschiderea fișierului zip",
+            "parse_zip": "Analizarea fișierului zip",
+            "start": "Inițializare",
+            "uninstalling_previous": "Se dezinstalează copia anterioară"
+        },
+        "store_contrib": {
+            "desc": "Dacă doriți să contribuiți la Magazinul de Pluginuri Decky, verificați depozitul SteamDeckHomebrew/decky-plugin-template de pe GitHub. Informații despre dezvoltare și distribuție sunt disponibile în fișierul README.",
+            "label": "Contribuţii"
+        },
+        "store_filter": {
+            "label": "Filtru",
+            "label_def": "Toate"
+        },
+        "store_search": {
+            "label": "Căutare"
+        },
+        "store_sort": {
+            "label": "Sortează",
+            "label_def": "Ultima actualizare (cele mai noi)"
+        },
+        "store_source": {
+            "desc": "Tot codul sursă al pluginului este disponibil în depozitul SteamDeckHomebrew/decky-plugin-database de pe GitHub.",
+            "label": "Cod sursă"
+        },
+        "store_tabs": {
+            "about": "Despre",
+            "alph_asce": "Alfabetic (de la Z la A)",
+            "alph_desc": "Alfabetic (de la A la Z)",
+            "date_asce": "Cele mai vechi primele",
+            "date_desc": "Cele mai noi primele",
+            "downloads_asce": "Cele mai puțin descărcate primele",
+            "downloads_desc": "Cele mai descărcate primele",
+            "title": "Răsfoiți"
+        },
+        "store_testing_cta": "Vă rugăm să luați în considerare testarea la noi plugin-uri pentru a ajuta echipa Decky Loader!",
+        "store_testing_warning": {
+            "desc": "Puteți folosi acest canal de magazin pentru a testa versiuni de pluginuri de ultimă generație. Asigură-te că lași feedback pe GitHub, astfel încât pluginul să poată fi actualizat pentru toți utilizatorii.",
+            "label": "Bun venit la Canalul Magazinului de Testare"
+        }
+    },
+    "StoreSelect": {
+        "custom_store": {
+            "label": "Magazin personalizat",
+            "url_label": "URL"
+        },
+        "store_channel": {
+            "custom": "Personalizat",
+            "default": "Standard",
+            "label": "Canalul Magazinului",
+            "testing": "Testare"
+        }
+    },
+    "Testing": {
+        "download": "Descărcare",
+        "error": "Eroare la instalarea PR-ului",
+        "header": "Următoarele versiuni de Decky Loader sunt construite pe baza unor solicitări de extragere (Pull Requests) deschise de la terți. Echipa Decky Loader nu a verificat funcționalitatea sau securitatea acestora și este posibil să fie învechite.",
+        "loading": "Se încarcă cererile de extragere deschise...",
+        "start_download_toast": "Se descarcă PR #{{id}}"
+    },
+    "TitleView": {
+        "decky_store_desc": "Deschide Magazinul Decky",
+        "settings_desc": "Deschide Setările Decky"
+    },
+    "Updater": {
+        "decky_updates": "Actualizări Decky",
+        "no_patch_notes_desc": "Nu există note de patch pentru această versiune",
+        "patch_notes_desc": "Note de patch",
+        "updates": {
+            "check_button": "Verificare pentru actualizări",
+            "checking": "Verificare",
+            "cur_version": "Versiunea curentă: {{ver}}",
+            "install_button": "Instalați actualizarea",
+            "label": "Actualizări",
+            "lat_version": "La zi cu actualizările: rulează {{ver}}",
+            "reloading": "Reîncărcare",
+            "updating": "Actualizare"
+        }
+    }
+}

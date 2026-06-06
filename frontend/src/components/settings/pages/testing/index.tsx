@@ -4,6 +4,7 @@ import {
   DialogControlsSection,
   Field,
   Focusable,
+  NavEntryPositionPreferences,
   Navigation,
   ProgressBar,
   SteamSpinner,
@@ -65,9 +66,9 @@ export default function TestingVersionList() {
 
   if (testingVersions.length === 0) {
     return (
-      <div>
+      <DialogBody>
         <p>No open PRs found</p>
-      </div>
+      </DialogBody>
     );
   }
 
@@ -79,15 +80,21 @@ export default function TestingVersionList() {
         <ul style={{ listStyleType: 'none', padding: '0' }}>
           {testingVersions.map((version) => {
             return (
-              <li>
+              <li key={`${version.id}_${version.name}`}>
                 <Field
                   label={
                     <>
-                      {version.name} <span style={{ opacity: '50%' }}>{'#' + version.id}</span>
+                      {version.name}{' '}
+                      <span style={{ opacity: '50%', whiteSpace: 'nowrap', marginLeft: 'auto', alignSelf: 'center' }}>
+                        {'#' + version.id}
+                      </span>
                     </>
                   }
                 >
-                  <Focusable style={{ height: '40px', marginLeft: 'auto', display: 'flex' }}>
+                  <Focusable
+                    style={{ height: '40px', marginLeft: 'auto', display: 'flex' }}
+                    navEntryPreferPosition={NavEntryPositionPreferences.MAINTAIN_X}
+                  >
                     <DialogButton
                       style={{ height: '40px', minWidth: '60px', marginRight: '10px' }}
                       onClick={async () => {

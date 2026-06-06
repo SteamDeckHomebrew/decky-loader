@@ -105,7 +105,7 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
     })();
   }, []);
 
-  const { plugins: installedPlugins } = useDeckyState();
+  const { installedPlugins } = useDeckyState();
 
   return (
     <>
@@ -240,6 +240,7 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
             })
             .map((plugin: StorePlugin) => (
               <PluginCard
+                key={`${plugin.id}_${plugin.name}`}
                 storePlugin={plugin}
                 installedPlugin={installedPlugins.find((installedPlugin) => installedPlugin.name === plugin.name)}
               />

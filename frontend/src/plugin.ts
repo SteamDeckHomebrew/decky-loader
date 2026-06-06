@@ -15,6 +15,8 @@ export interface Plugin {
   titleView?: JSX.Element;
 }
 
+export type DisabledPlugin = Pick<Plugin, 'name' | 'version'>;
+
 export enum InstallType {
   INSTALL,
   REINSTALL,
@@ -56,3 +58,5 @@ type installPluginsArgs = [
 export let installPlugins = DeckyBackend.callable<installPluginsArgs>('utilities/install_plugins');
 
 export let uninstallPlugin = DeckyBackend.callable<[name: string]>('utilities/uninstall_plugin');
+export let enablePlugin = DeckyBackend.callable<[name: string]>('utilities/enable_plugin');
+export let disablePlugin = DeckyBackend.callable<[name: string]>('utilities/disable_plugin');

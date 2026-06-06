@@ -3,10 +3,11 @@ import { FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaCheck, FaDownload } from 'react-icons/fa';
 
-import { InstallType, InstallTypeTranslationMapping } from '../../plugin';
+import { DisabledPlugin, InstallType, InstallTypeTranslationMapping } from '../../plugin';
 
 interface MultiplePluginsInstallModalProps {
   requests: { name: string; version: string; hash: string; install_type: InstallType }[];
+  disabledPlugins: DisabledPlugin[];
   onOK(): void | Promise<void>;
   onCancel(): void | Promise<void>;
   closeModal?(): void;
@@ -17,6 +18,7 @@ type TitleTranslationMapping = 'mixed' | (typeof InstallTypeTranslationMapping)[
 
 const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
   requests,
+  disabledPlugins,
   onOK,
   onCancel,
   closeModal,
@@ -116,10 +118,11 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
               version,
             });
 
+            const disabled = disabledPlugins.some((p) => p.name === name);
             return (
               <li key={i} style={{ display: 'flex', flexDirection: 'column' }}>
                 <span>
-                  {description}{' '}
+                  {disabled ? `${description} - ${t('PluginInstallModal.disabled')}` : description}{' '}
                   {(pluginsCompleted.includes(name) && <FaCheck />) || (name === pluginInProgress && <FaDownload />)}
                 </span>
                 {hash === 'False' && (

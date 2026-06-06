@@ -84,7 +84,10 @@ export default function TestingVersionList() {
                 <Field
                   label={
                     <>
-                      {version.name} <span style={{ opacity: '50%' }}>{'#' + version.id}</span>
+                      {version.name}{' '}
+                      <span style={{ opacity: '50%', whiteSpace: 'nowrap', marginLeft: 'auto', alignSelf: 'center' }}>
+                        {'#' + version.id}
+                      </span>
                     </>
                   }
                 >

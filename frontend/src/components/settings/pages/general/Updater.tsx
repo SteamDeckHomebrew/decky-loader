@@ -1,4 +1,14 @@
-import { Carousel, DialogButton, Field, Focusable, ProgressBarWithInfo, Spinner, findSP, showModal } from '@decky/ui';
+import {
+  Carousel,
+  DialogButton,
+  Field,
+  Focusable,
+  ProgressBarWithInfo,
+  Spinner,
+  findSP,
+  gamepadDialogClasses,
+  showModal,
+} from '@decky/ui';
 import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaExclamation } from 'react-icons/fa';
@@ -153,13 +163,22 @@ export default function UpdaterSettings() {
                 : t('Updater.updates.install_button')}
           </DialogButton>
         ) : (
-          <ProgressBarWithInfo
-            layout="inline"
-            bottomSeparator="none"
-            nProgress={updateProgress}
-            indeterminate={reloading}
-            sOperationText={reloading ? t('Updater.updates.reloading') : t('Updater.updates.updating')}
-          />
+          <div id="decky-hide-left">
+            <style>
+              {`
+              #decky-hide-left .${gamepadDialogClasses.FieldLeftColumn} {
+                display: none;
+              }
+              `}
+            </style>
+            <ProgressBarWithInfo
+              layout="inline"
+              bottomSeparator="none"
+              nProgress={updateProgress}
+              indeterminate={reloading}
+              sOperationText={reloading ? t('Updater.updates.reloading') : t('Updater.updates.updating')}
+            />
+          </div>
         )}
       </Field>
       {versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current && (

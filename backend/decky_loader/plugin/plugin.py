@@ -94,6 +94,12 @@ class PluginWrapper:
             except CancelledError:
                 self.log.info(f"Stopping response listener for {self.name}")
                 await self._socket.close_socket_connection()
+
+                # Cancel the request so that WSRouter can perform cleanup
+                for request in self._method_call_requests.values():
+                    request.cancel()
+                
+                self._method_call_requests = {}
                 raise
             except:
                 pass

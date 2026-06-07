@@ -59,7 +59,13 @@ export async function getPluginList(
 
   let query: URLSearchParams | string = new URLSearchParams();
   sort_by && query.set('sort_by', sort_by);
-  sort_direction && query.set('sort_direction', sort_direction);
+  if (sort_direction) {
+    // Backend currently interprets asc/desc the opposite way around, so invert the value
+    // to keep the UI-provided sort direction correct. Remove once backend is fixed (issue #862).
+    const backendSortDirection =
+      sort_direction === SortDirections.ascending ? SortDirections.descending : SortDirections.ascending;
+    query.set('sort_direction', backendSortDirection);
+  }
   query = '?' + String(query);
 
   let storeURL;

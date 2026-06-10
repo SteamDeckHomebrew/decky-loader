@@ -20,7 +20,7 @@
     "FilePickerError": {
         "errors": {
             "file_not_found": "O caminho especificado não é válido. Por favor, confira e reinsira corretamente.",
-            "perm_denied": "Você não tem acesso à este diretório. Por favor, verifiquei se seu usuário (deck no Steam Deck) tem as permissões necessárias para acessar este arquivo/pasta.",
+            "perm_denied": "Você não tem acesso à este diretório. Por favor, verifique se o seu usuário (deck no Steam Deck) tem as permissões necessárias para acessar este arquivo/pasta.",
             "unknown": "Ocorreu um erro desconhecido. O erro completo é: {{raw_error}}"
         }
     },
@@ -51,11 +51,13 @@
     },
     "MultiplePluginsInstallModal": {
         "confirm": "Tem certeza que deseja fazer as seguintes modificações?",
-        "description": {
-            "install": "Instalar {{name}} {{version}}",
-            "reinstall": "Reinstalar {{name}} {{version}}",
-            "update": "Atualizar {{name}} para {{version}}"
-        },
+      "description": {
+        "downgrade": "Reverter {{name}} para {{version}}",
+        "install": "Instalar {{name}} {{version}}",
+        "overwrite": "Sobrescrever {{name}} por {{version}}",
+        "reinstall": "Reinstalar {{name}} {{version}}",
+        "update": "Atualizar {{name}} para {{version}}"
+      },
         "ok_button": {
             "idle": "Confirmar",
             "loading": "Carregando"
@@ -76,12 +78,22 @@
         }
     },
     "PluginCard": {
+        "plugin_downgrade": "Reverter",
         "plugin_full_access": "Este plugin tem acesso total ao seu Steam Deck.",
         "plugin_install": "Instalar",
         "plugin_no_desc": "Nenhuma descrição fornecida.",
+        "plugin_overwrite": "Sobrescrever",
+        "plugin_reinstall": "Reinstalar",
+        "plugin_update": "Atualizar",
         "plugin_version_label": "Versão do plugin"
     },
     "PluginInstallModal": {
+        "downgrade": {
+            "button_idle": "Reverter",
+            "button_processing": "Revertendo",
+            "desc": "Você tem certeza que deseja reverter {{artifact}} para a versão {{version}}?",
+            "title": "Reverter {{artifact}}"
+        },
         "install": {
             "button_idle": "Instalar",
             "button_processing": "Instalando",
@@ -89,16 +101,24 @@
             "title": "Instalar {{artifact}}"
         },
         "no_hash": "Este plugin não tem um hash, você o está instalando por sua conta em risco.",
+        "not_installed": "(não instalado)",
+        "disabled": "O plugin será habilitado novamente após a instalação",
+        "overwrite": {
+            "button_idle": "Sobrescrever",
+            "button_processing": "Sobrescrevendo",
+            "desc": "Você tem certeza que deseja sobrescrever {{artifact}} pela versão {{version}}?",
+            "title": "Sobrescrever {{artifact}}"
+        },
         "reinstall": {
             "button_idle": "Reinstalar",
             "button_processing": "Reinstalando",
-            "desc": "Tem certeza que voce deseja reinstalar {{artifact}} {{version}}?",
+            "desc": "Tem certeza que você deseja reinstalar {{artifact}} {{version}}?",
             "title": "Reinstalar {{artifact}}"
         },
         "update": {
             "button_idle": "Atualizar",
             "button_processing": "Atualizando",
-            "desc": "Tem certeza que voce deseja atualizar {{artifact}} {{version}}?",
+            "desc": "Tem certeza que você deseja atualizar {{artifact}} {{version}}?",
             "title": "Atualizar {{artifact}}"
         }
     },
@@ -115,10 +135,12 @@
         "update_all_many": "Atualizar {{count}} plugins",
         "update_all_one": "Atualizar 1 plugin",
         "update_all_other": "Atualizar {{count}} plugins",
-        "update_to": "Atualizar para {{name}}"
+        "update_to": "Atualizar para {{name}}",
+        "enable": "Habilitar"
     },
     "PluginListLabel": {
-        "hidden": "Oculto no menu de acesso rápido"
+        "hidden": "Oculto no menu de acesso rápido",
+        "disabled": "Plugin desabilitado"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -188,7 +210,7 @@
         },
         "notifications": {
             "decky_updates_label": "Atualização do Decky disponível",
-            "header": "Noificações",
+            "header": "Notificações",
             "plugin_updates_label": "Atualizações de Plugin disponíveis"
         },
         "other": {

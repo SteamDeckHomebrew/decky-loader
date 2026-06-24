@@ -18,7 +18,7 @@ async def run(args: list[str], stdin: ProcessIO = DEVNULL, stdout: ProcessIO = P
     proc_stdout, proc_stderr = await proc.communicate()
     return (proc, proc_stdout, proc_stderr)
 
-def _get_service_manager():
+def _get_service_manager() -> str:
     try:
         link = os.path.realpath("/sbin/init")
         service = os.path.basename(link)

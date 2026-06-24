@@ -8,6 +8,8 @@ from ..enums import UserType
 
 logger = logging.getLogger("localplatform")
 
+service_manager = _get_service_manager()
+
 # subprocess._ENV
 ENV = Mapping[str, str]
 ProcessIO = int | IO[Any] | None
@@ -15,6 +17,19 @@ async def run(args: list[str], stdin: ProcessIO = DEVNULL, stdout: ProcessIO = P
     proc = await create_subprocess_exec(args[0], *(args[1:]), stdin=stdin, stdout=stdout, stderr=stderr, env=env)
     proc_stdout, proc_stderr = await proc.communicate()
     return (proc, proc_stdout, proc_stderr)
+
+def _get_service_manager():
+    try:
+        link = os.path.realpath("/sbin/init")
+        service = os.path.basename(link)
+        match service:
+            case "openrc-init":
+                return "openrc"
+            case _:
+                return service
+    except:
+        # As it's the most common, default to Systemd
+        return "systemd"
 
 # Get the user id hosting the plugin loader
 def _get_user_id() -> int:

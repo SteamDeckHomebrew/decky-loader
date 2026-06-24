@@ -1,0 +1,13 @@
+#!/sbin/openrc-run
+
+export UNPRIVILEGED_PATH="${HOMEBREW_FOLDER}"
+export PRIVILEGED_PATH="${HOMEBREW_FOLDER}"
+export LOG_LEVEL="INFO"
+
+supervisor=supervise-daemon
+directory="${HOMEBREW_FOLDER}/services"
+command="${HOMEBREW_FOLDER}/services/PluginLoader"
+
+depend() {
+	need net
+}

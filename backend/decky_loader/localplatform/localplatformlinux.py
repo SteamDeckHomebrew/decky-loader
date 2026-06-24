@@ -22,7 +22,7 @@ def _get_service_manager():
     try:
         link = os.path.realpath("/sbin/init")
         service = os.path.basename(link)
-        match service:
+        match service_manager:
             case "openrc-init":
                 return "openrc"
             case _:
@@ -153,16 +153,36 @@ def setuid(user : UserType = UserType.HOST_USER):
         raise Exception("Unknown user type")
 
 async def service_active(service_name : str) -> bool:
-    res, _, _ = await run(["systemctl", "is-active", service_name], stdout=DEVNULL, stderr=DEVNULL)
+    match service_manager:
+        case "systemd":
+            cmd = ["systemctl", "is-active", service_name]
+        case "openrc":
+            cmd = ["rc-service"]
+            if _get_effective_user_id() != 0: cmd.append("--user")
+            cmd.append(service_name)
+            cmd.append("status")
+        case _:
+            return True # Stub unsupported services
+
+    res, _, _ = await run(cmd, stdout=DEVNULL, stderr=DEVNULL)
     return res.returncode == 0
 
 async def service_restart(service_name : str, block : bool = True) -> bool:
-    await run(["systemctl", "daemon-reload"])
-    logger.info("Systemd reload done.")
-    cmd = ["systemctl", "restart", service_name]
+    match service_manager:
+        case "systemd":
+            await run(["systemctl", "daemon-reload"])
+            logger.info("Systemd reload done.")
+            cmd = ["systemctl", "restart", service_name]
 
-    if not block:
-        cmd.append("--no-block")
+            if not block:
+                cmd.append("--no-block")
+        case "openrc":
+            cmd = ["rc-service"]
+            if _get_effective_user_id() != 0: cmd.append("--user")
+            cmd.append(service_name)
+            cmd.append("restart")
+        case _:
+            return True # Stub unsupported services
 
     res, _, _ = await run(cmd, stdout=PIPE, stderr=STDOUT)
     return res.returncode == 0
@@ -172,7 +192,17 @@ async def service_stop(service_name : str) -> bool:
         # Service isn't running. pretend we stopped it
         return True
 
-    cmd = ["systemctl", "stop", service_name]
+    match service_manager:
+        case "systemd":
+            cmd = ["systemctl", "stop", service_name]
+        case "openrc":
+            cmd = ["rc-service"]
+            if _get_effective_user_id() != 0: cmd.append("--user")
+            cmd.append(service_name)
+            cmd.append("stop")
+        case _:
+            return True # Stub unsupported services
+
     res, _, _ = await run(cmd, stdout=PIPE, stderr=STDOUT)
     return res.returncode == 0
 
@@ -181,7 +211,17 @@ async def service_start(service_name : str) -> bool:
         # Service is running. pretend we started it
         return True
 
-    cmd = ["systemctl", "start", service_name]
+    match service_manager:
+        case "systemd":
+            cmd = ["systemctl", "start", service_name]
+        case "openrc":
+            cmd = ["rc-service"]
+            if _get_effective_user_id() != 0: cmd.append("--user")
+            cmd.append(service_name)
+            cmd.append("start")
+        case _:
+            return True # Stub unsupported services
+
     res, _, _ = await run(cmd, stdout=PIPE, stderr=STDOUT)
     return res.returncode == 0
 

@@ -20,6 +20,7 @@ async def run(args: list[str], stdin: ProcessIO = DEVNULL, stdout: ProcessIO = P
 
 def _get_service_manager() -> str:
     try:
+        if os.getenv("LINUX_SERVICE_MANAGER"): return os.getenv("LINUX_SERVICE_MANAGER")
         link = os.path.realpath("/sbin/init")
         service = os.path.basename(link)
         match service_manager:

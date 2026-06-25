@@ -17,7 +17,9 @@ def _get_service_manager() -> str:
             case "openrc-init":
                 return "openrc"
             case _:
-                return service
+                if service != None and service != "init": return service
+                # Non-supervised or highly non-standard Linux installation
+                return "no_init"
     except:
         # As it's the most common, default to Systemd
         return "systemd"

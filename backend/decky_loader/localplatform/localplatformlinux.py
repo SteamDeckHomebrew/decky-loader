@@ -10,7 +10,7 @@ logger = logging.getLogger("localplatform")
 
 def _get_service_manager() -> str:
     try:
-        if os.getenv("LINUX_SERVICE_MANAGER"): return os.getenv("LINUX_SERVICE_MANAGER")
+        if isinstance(os.getenv("LINUX_SERVICE_MANAGER"), str): return os.getenv("LINUX_SERVICE_MANAGER")
         link = os.path.realpath("/sbin/init")
         if not link: raise Exception("This Linux installation doesn't have /sbin/init.")
         service = os.path.basename(link)

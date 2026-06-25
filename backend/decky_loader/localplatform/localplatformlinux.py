@@ -13,11 +13,12 @@ def _get_service_manager() -> str:
         if os.getenv("LINUX_SERVICE_MANAGER"): return os.getenv("LINUX_SERVICE_MANAGER")
         link = os.path.realpath("/sbin/init")
         service = os.path.basename(link)
+        if service == None: raise Exception("This Linux installation doesn't have /sbin/init.")
         match service:
             case "openrc-init":
                 return "openrc"
             case _:
-                if service != None and service != "init": return service
+                if service != "init": return service
                 # Non-supervised or highly non-standard Linux installation
                 return "no_init"
     except:

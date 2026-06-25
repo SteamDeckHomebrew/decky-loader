@@ -13,7 +13,7 @@ def _get_service_manager() -> str:
         if os.getenv("LINUX_SERVICE_MANAGER"): return os.getenv("LINUX_SERVICE_MANAGER")
         link = os.path.realpath("/sbin/init")
         service = os.path.basename(link)
-        match service_manager:
+        match service:
             case "openrc-init":
                 return "openrc"
             case _:

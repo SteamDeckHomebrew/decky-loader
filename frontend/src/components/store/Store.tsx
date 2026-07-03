@@ -20,6 +20,10 @@ import PluginCard from './PluginCard';
 
 const logger = new Logger('Store');
 
+// Normalize a string for searching: lowercase and strip all whitespace so that
+// queries like "tab master" match plugins named "tabmaster" (see issue #622).
+const normalizeForSearch = (value: string): string => value.toLowerCase().replace(/\s+/g, '');
+
 const StorePage: FC<{}> = () => {
   const [currentTabRoute, setCurrentTabRoute] = useState<string>('browse');
   const [pluginCount, setPluginCount] = useState<number | null>(null);
@@ -231,11 +235,12 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
         ) : (
           pluginList
             .filter((plugin: StorePlugin) => {
+              const query = normalizeForSearch(searchFieldValue);
               return (
-                plugin.name.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
-                plugin.description.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
-                plugin.author.toLowerCase().includes(searchFieldValue.toLowerCase()) ||
-                plugin.tags.some((tag: string) => tag.toLowerCase().includes(searchFieldValue.toLowerCase()))
+                normalizeForSearch(plugin.name).includes(query) ||
+                normalizeForSearch(plugin.description).includes(query) ||
+                normalizeForSearch(plugin.author).includes(query) ||
+                plugin.tags.some((tag: string) => normalizeForSearch(tag).includes(query))
               );
             })
             .map((plugin: StorePlugin) => (

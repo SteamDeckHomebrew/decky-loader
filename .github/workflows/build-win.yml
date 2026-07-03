@@ -37,11 +37,14 @@ jobs:
         C:\Users\runneradmin\.local\bin\poetry self add "poetry-dynamic-versioning[plugin]"
         C:\Users\runneradmin\.local\bin\poetry install --no-interaction
 
+    - name: Set up pnpm 📦
+      uses: pnpm/action-setup@v4
+      with:
+        version: 10
+
     - name: Install JS dependencies ⬇️
       working-directory: ./frontend
-      run: |
-        npm i -g pnpm
-        pnpm i --frozen-lockfile --dangerously-allow-all-builds
+      run: pnpm i --frozen-lockfile --dangerously-allow-all-builds
 
     - name: Build JS Frontend 🛠️
       working-directory: ./frontend

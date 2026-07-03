@@ -31,11 +31,14 @@ jobs:
         working-directory: backend
         run: poetry install --no-interaction
 
+      - name: Set up pnpm 📦
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Install TypeScript dependencies
         working-directory: frontend
-        run: |
-          npm i -g pnpm
-          pnpm i --frozen-lockfile --dangerously-allow-all-builds
+        run: pnpm i --frozen-lockfile --dangerously-allow-all-builds
 
       - name: Run pyright (Python)
         uses: jakebailey/pyright-action@v1

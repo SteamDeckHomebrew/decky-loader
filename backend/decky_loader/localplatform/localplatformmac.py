@@ -1,9 +1,9 @@
 from ..enums import UserType
-import os, sys
+import os
 from . import localplatformlinux
 
 # this should be public
-def _get_effective_user_id() -> int:
+def _get_effective_user_id() -> int: # pyright: ignore [reportUnusedFunction]
     return os.geteuid()
 
 def chown(path : str,  user : UserType = UserType.HOST_USER, recursive : bool = True) -> bool:

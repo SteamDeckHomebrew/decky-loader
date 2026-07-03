@@ -252,6 +252,14 @@ class PluginManager:
         run_app(self.web_app, host=get_server_host(), port=get_server_port(), loop=self.loop, access_log=None, handle_signals=True, shutdown_timeout=40)
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Decky Loader")
+    parser.add_argument("-v", "--version", action="store_true", help="Print version and exit")
+    args, _ = parser.parse_known_args()
+    if args.version:
+        print(get_loader_version())
+        sys.exit(0)
+
     setproctitle(f"Decky Loader {get_loader_version()} ({getproctitle()})")
     setthreadtitle("Decky Loader")
     if ON_WINDOWS:

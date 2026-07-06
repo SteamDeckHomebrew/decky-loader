@@ -75,6 +75,14 @@ For more information about Decky Loader as well as documentation and development
 
 - There is also a fast install for those who can use Konsole. Run `curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/install_release.sh | sh` and type your password when prompted.
 
+### 📦 Offline Installation
+
+If you have limited internet access, you can install Decky Loader offline:
+
+1. Download the `PluginLoader` binary from the [releases page](https://github.com/SteamDeckHomebrew/decky-loader/releases) and the [`install_offline.sh`](./dist/install_offline.sh) script.
+2. Transfer both files to your Steam Deck (via USB, local network, etc).
+3. In Desktop Mode, open Konsole and run: `sudo sh install_offline.sh ./PluginLoader`
+
 ### 👋 Uninstallation
 
 We are sorry to see you go! If you are considering uninstalling because you are having issues, please consider [opening an issue](https://github.com/SteamDeckHomebrew/decky-loader/issues) or [joining our Discord](https://deckbrew.xyz/discord) so we can help you and other users.

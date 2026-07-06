@@ -1,5 +1,9 @@
 from __future__ import annotations
+from datetime import datetime
+import json
+import os
 from os import path, stat_result
+import shutil
 import uuid
 from urllib.parse import unquote
 from json.decoder import JSONDecodeError
@@ -7,6 +11,7 @@ from os.path import splitext
 import re
 from traceback import format_exc
 from stat import FILE_ATTRIBUTE_HIDDEN # pyright: ignore [reportAttributeAccessIssue, reportUnknownVariableType]
+import zipfile
 
 from asyncio import StreamReader, StreamWriter, sleep, start_server, gather, open_connection
 from aiohttp import ClientSession, hdrs
@@ -83,6 +88,8 @@ class Utilities:
             context.ws.add_route("utilities/enable_plugin", self.enable_plugin)
             context.ws.add_route("utilities/disable_plugin", self.disable_plugin)
             context.ws.add_route("utilities/set_all_plugins_disabled", self.set_all_plugins_disabled)
+            context.ws.add_route("utilities/export_settings", self.export_settings)
+            context.ws.add_route("utilities/import_settings", self.import_settings)
 
             context.web_app.add_routes([
                 post("/methods/{method_name}", self._handle_legacy_server_method_call)
@@ -514,3 +521,70 @@ class Utilities:
                 disabled_plugins.append(name)
 
         await self.set_setting("disabled_plugins", disabled_plugins)
+
+    async def export_settings(self, destination_path: str) -> Dict[str, Any]:
+        homebrew_path = helpers.get_homebrew_path()
+        settings_dir = path.join(homebrew_path, "settings")
+        data_dir = path.join(homebrew_path, "data")
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        if path.isdir(destination_path):
+            zip_path = path.join(destination_path, f"decky_backup_{timestamp}.zip")
+        else:
+            zip_path = destination_path
+
+        manifest = {
+            "version": helpers.get_loader_version(),
+            "date": datetime.now().isoformat(),
+            "plugins": list(self.context.plugin_loader.plugins.keys()),
+        }
+
+        with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
+            zf.writestr("manifest.json", json.dumps(manifest, indent=2))
+
+            if path.isdir(settings_dir):
+                for root, _, files in os.walk(settings_dir):
+                    for file in files:
+                        file_path = path.join(root, file)
+                        arcname = path.join("settings", path.relpath(file_path, settings_dir))
+                        zf.write(file_path, arcname)
+
+            if path.isdir(data_dir):
+                for root, _, files in os.walk(data_dir):
+                    for file in files:
+                        file_path = path.join(root, file)
+                        arcname = path.join("data", path.relpath(file_path, data_dir))
+                        zf.write(file_path, arcname)
+
+        self.logger.info(f"Settings exported to {zip_path}")
+        return {"path": zip_path, "size": path.getsize(zip_path)}
+
+    async def import_settings(self, zip_path: str) -> Dict[str, Any]:
+        homebrew_path = helpers.get_homebrew_path()
+        settings_dir = path.join(homebrew_path, "settings")
+        data_dir = path.join(homebrew_path, "data")
+
+        if not path.isfile(zip_path):
+            raise FileNotFoundError(f"File not found: {zip_path}")
+
+        restored: List[str] = []
+
+        with zipfile.ZipFile(zip_path, 'r') as zf:
+            for member in zf.namelist():
+                if member.startswith("settings/"):
+                    target = path.join(settings_dir, member[len("settings/"):])
+                elif member.startswith("data/"):
+                    target = path.join(data_dir, member[len("data/"):])
+                else:
+                    continue
+
+                if member.endswith('/'):
+                    Path(target).mkdir(parents=True, exist_ok=True)
+                else:
+                    Path(path.dirname(target)).mkdir(parents=True, exist_ok=True)
+                    with zf.open(member) as src, open(target, 'wb') as dst:
+                        shutil.copyfileobj(src, dst)
+                    restored.append(member)
+
+        self.logger.info(f"Settings imported from {zip_path}: {len(restored)} files restored")
+        return {"restored_count": len(restored), "files": restored}

@@ -211,6 +211,18 @@
             "decky_version": "Decky Version",
             "header": "About"
         },
+        "backup": {
+            "export_button": "Export",
+            "export_error": "Export failed",
+            "export_label": "Export settings and data",
+            "export_success": "Settings exported",
+            "header": "Backup & Restore",
+            "import_button": "Import",
+            "import_count": "{{count}} files restored",
+            "import_error": "Import failed",
+            "import_label": "Import from backup",
+            "import_success": "Settings imported"
+        },
         "beta": {
             "header": "Beta participation"
         },

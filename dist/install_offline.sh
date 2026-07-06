@@ -2,9 +2,14 @@
 
 set -e
 
-[ "$UID" -eq 0 ] || exec sudo "$0" "$@"
+# Resolve binary path to absolute before potential sudo re-exec
+if [ -n "$1" ] && [ -f "$1" ]; then
+    BINARY_PATH="$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
+else
+    BINARY_PATH="$1"
+fi
 
-BINARY_PATH="$1"
+[ "$UID" -eq 0 ] || exec sudo "$0" "$BINARY_PATH"
 
 if [ -z "$BINARY_PATH" ] || [ ! -f "$BINARY_PATH" ]; then
     echo "Usage: sudo $0 /path/to/PluginLoader"
@@ -27,16 +32,19 @@ fi
 
 HOMEBREW_FOLDER="${USER_DIR}/homebrew"
 
-# Stop existing service if running
-systemctl stop plugin_loader.service 2>/dev/null || true
-
 # Create directory structure
 mkdir -p "${HOMEBREW_FOLDER}/services/.systemd"
 mkdir -p "${HOMEBREW_FOLDER}/plugins"
 mkdir -p "${HOMEBREW_FOLDER}/settings"
 
+# Copy binary to temp location first to validate before stopping service
+cp "$BINARY_PATH" "${HOMEBREW_FOLDER}/services/PluginLoader.new"
+
+# Stop existing service if running (only after copy succeeded)
+systemctl stop plugin_loader.service 2>/dev/null || true
+
 # Install binary
-cp "$BINARY_PATH" "${HOMEBREW_FOLDER}/services/PluginLoader"
+mv "${HOMEBREW_FOLDER}/services/PluginLoader.new" "${HOMEBREW_FOLDER}/services/PluginLoader"
 chmod 755 "${HOMEBREW_FOLDER}/services/PluginLoader"
 
 # Handle SELinux
@@ -45,6 +53,7 @@ if command -v getenforce >/dev/null 2>&1 && [ "$(getenforce)" = "Enforcing" ]; t
 fi
 
 # Install systemd service
+# Keep in sync with dist/plugin_loader-release.service
 cat > /etc/systemd/system/plugin_loader.service <<EOF
 [Unit]
 Description=SteamDeck Plugin Loader
@@ -55,8 +64,8 @@ User=root
 Restart=always
 KillMode=process
 TimeoutStopSec=15
-ExecStart=${HOMEBREW_FOLDER}/services/PluginLoader
-WorkingDirectory=${HOMEBREW_FOLDER}/services
+ExecStart="${HOMEBREW_FOLDER}/services/PluginLoader"
+WorkingDirectory="${HOMEBREW_FOLDER}/services"
 Environment=UNPRIVILEGED_PATH=${HOMEBREW_FOLDER}
 Environment=PRIVILEGED_PATH=${HOMEBREW_FOLDER}
 Environment=LOG_LEVEL=INFO

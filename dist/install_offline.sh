@@ -3,21 +3,30 @@
 set -e
 
 # Resolve binary path to absolute before potential sudo re-exec
-if [ -n "$1" ] && [ -f "$1" ]; then
-    BINARY_PATH="$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
+if [ -n "$1" ]; then
+    dir="$(cd "$(dirname "$1")" 2>/dev/null && pwd)" && BINARY_PATH="${dir}/$(basename "$1")" || BINARY_PATH="$1"
 else
-    BINARY_PATH="$1"
+    BINARY_PATH=""
 fi
 
-[ "$UID" -eq 0 ] || exec sudo "$0" "$BINARY_PATH"
+[ "$(id -u)" -eq 0 ] || exec sudo "$0" "$BINARY_PATH"
 
 if [ -z "$BINARY_PATH" ] || [ ! -f "$BINARY_PATH" ]; then
     echo "Usage: sudo $0 /path/to/PluginLoader"
-    echo ""
+    echo
     echo "Download the PluginLoader binary from:"
     echo "  https://github.com/SteamDeckHomebrew/decky-loader/releases"
     echo "Then run this script with the path to the downloaded binary."
     exit 1
+fi
+
+# Validate binary is an ELF executable
+if command -v file >/dev/null 2>&1; then
+    if ! file "$BINARY_PATH" | grep -qE 'ELF|executable'; then
+        echo "Error: $BINARY_PATH does not appear to be an executable binary."
+        echo "Make sure you downloaded the PluginLoader binary, not a zip or tarball."
+        exit 1
+    fi
 fi
 
 echo "Installing Decky Loader (offline)..."
@@ -30,6 +39,11 @@ else
     exit 1
 fi
 
+if [ -z "$USER_DIR" ] || [ ! -d "$USER_DIR" ]; then
+    echo "Error: Could not determine home directory for $SUDO_USER"
+    exit 1
+fi
+
 HOMEBREW_FOLDER="${USER_DIR}/homebrew"
 
 # Create directory structure
@@ -39,6 +53,14 @@ mkdir -p "${HOMEBREW_FOLDER}/settings"
 
 # Copy binary to temp location first to validate before stopping service
 cp "$BINARY_PATH" "${HOMEBREW_FOLDER}/services/PluginLoader.new"
+
+# Track whether service was running for rollback on failure
+SERVICE_WAS_RUNNING=false
+if systemctl is-active plugin_loader.service >/dev/null 2>&1; then
+    SERVICE_WAS_RUNNING=true
+fi
+
+trap 'if $SERVICE_WAS_RUNNING; then systemctl start plugin_loader.service 2>/dev/null || true; fi' EXIT
 
 # Stop existing service if running (only after copy succeeded)
 systemctl stop plugin_loader.service 2>/dev/null || true
@@ -76,16 +98,25 @@ EOF
 # Backup service file
 cp /etc/systemd/system/plugin_loader.service "${HOMEBREW_FOLDER}/services/.systemd/plugin_loader.service"
 
-# Set ownership (service runs as root but dirs should be user-owned)
-chown -R "$SUDO_USER":"$SUDO_USER" "${HOMEBREW_FOLDER}"
+# Set ownership — plugins/settings are user-owned, but services/PluginLoader must stay root-owned
+chown -R "$SUDO_USER":"$SUDO_USER" "${HOMEBREW_FOLDER}/plugins"
+chown -R "$SUDO_USER":"$SUDO_USER" "${HOMEBREW_FOLDER}/settings"
+chown "$SUDO_USER":"$SUDO_USER" "${HOMEBREW_FOLDER}"
+
+# Binary and services dir stay root-owned (service runs as root — user-writable binary = privesc)
+chown root:root "${HOMEBREW_FOLDER}/services/PluginLoader"
+chmod 755 "${HOMEBREW_FOLDER}/services/PluginLoader"
 
 # Enable and start
 systemctl daemon-reload
 systemctl enable --now plugin_loader.service
 
-echo ""
+# Clear rollback trap — install succeeded
+trap - EXIT
+
+echo
 echo "Decky Loader installed successfully!"
 echo "  Install path: ${HOMEBREW_FOLDER}"
 echo "  Service: plugin_loader.service (running)"
-echo ""
+echo
 echo "Return to Gaming Mode to use Decky."

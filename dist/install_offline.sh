@@ -64,8 +64,8 @@ User=root
 Restart=always
 KillMode=process
 TimeoutStopSec=15
-ExecStart="${HOMEBREW_FOLDER}/services/PluginLoader"
-WorkingDirectory="${HOMEBREW_FOLDER}/services"
+ExecStart=${HOMEBREW_FOLDER}/services/PluginLoader
+WorkingDirectory=${HOMEBREW_FOLDER}/services
 Environment=UNPRIVILEGED_PATH=${HOMEBREW_FOLDER}
 Environment=PRIVILEGED_PATH=${HOMEBREW_FOLDER}
 Environment=LOG_LEVEL=INFO

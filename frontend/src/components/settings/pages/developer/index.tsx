@@ -7,10 +7,11 @@ import {
   Navigation,
   TextField,
   Toggle,
+  showModal,
 } from '@decky/ui';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaFileArchive, FaLink, FaReact, FaSteamSymbol, FaTerminal } from 'react-icons/fa';
+import { FaFileAlt, FaFileArchive, FaLink, FaReact, FaSteamSymbol, FaTerminal } from 'react-icons/fa';
 
 import { setShouldConnectToReactDevTools, setShowValveInternal } from '../../../../developer';
 import Logger from '../../../../logger';
@@ -18,6 +19,7 @@ import { installFromURL } from '../../../../store';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 import { getSetting } from '../../../../utils/settings';
 import { FileSelectionType } from '../../../modals/filepicker';
+import TestReportModal from '../../../modals/TestReportModal';
 import RemoteDebuggingSettings from '../general/RemoteDebugging';
 
 const logger = new Logger('DeveloperIndex');
@@ -154,6 +156,16 @@ export default function DeveloperSettings() {
               setShouldConnectToReactDevTools(toggleValue);
             }}
           />
+        </Field>
+        <DialogControlsSectionHeader>{t('SettingsDeveloperIndex.test_report.header')}</DialogControlsSectionHeader>
+        <Field
+          label={t('SettingsDeveloperIndex.test_report.option_label')}
+          description={t('SettingsDeveloperIndex.test_report.description')}
+          icon={<FaFileAlt style={{ display: 'block' }} />}
+        >
+          <DialogButton onClick={() => showModal(<TestReportModal />)}>
+            {t('SettingsDeveloperIndex.test_report.create')}
+          </DialogButton>
         </Field>
       </DialogControlsSection>
     </DialogBody>

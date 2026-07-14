@@ -8,11 +8,16 @@ declare global {
 
 enum MessageType {
   ERROR = -1,
-  // Call-reply, Frontend -> Backend -> Frontend
+  // Call-reply, Frontend (CALL) -> Backend (REPLY|DISCARD) -> Frontend (RECEIVED_RESPONSE) -> Backend
   CALL = 0,
   REPLY = 1,
+  DISCARD = 2,
+  RECEIVED_RESPONSE = 3,
+  // Call-reply sync on connection lost,
+  //   Frontend (FULL_SYNC) -> Backend (REPLY|DISCARD...) -> Frontend (RECEIVED_RESPONSE...) -> Backend
+  FULL_SYNC = 4,
   // Pub/Sub, Backend -> Frontend
-  EVENT = 3,
+  EVENT = 5,
 }
 
 interface CallMessage {
@@ -26,6 +31,21 @@ interface ReplyMessage {
   type: MessageType.REPLY;
   result: any;
   id: number;
+}
+
+interface DiscardMessage {
+  type: MessageType.DISCARD;
+  id: number;
+}
+
+interface ReceivedResponseMessage {
+  type: MessageType.RECEIVED_RESPONSE;
+  id: number;
+}
+
+interface FullSyncMessage {
+  type: MessageType.FULL_SYNC;
+  messages: CallMessage[];
 }
 
 interface ErrorMessage {
@@ -58,20 +78,21 @@ interface EventMessage {
   args: any;
 }
 
-type Message = CallMessage | ReplyMessage | ErrorMessage | EventMessage;
+type MessageToBackend = CallMessage | ReceivedResponseMessage | FullSyncMessage;
+type MessageFromBackend = ReplyMessage | ErrorMessage | DiscardMessage | EventMessage;
 
 // Helper to resolve a promise from the outside
 interface PromiseResolver<T> {
   resolve: (res: T) => void;
   reject: (error: PyError) => void;
   promise: Promise<T>;
+  message: CallMessage;
 }
 
 export class WSRouter extends Logger {
   runningCalls: Map<number, PromiseResolver<any>> = new Map();
   eventListeners: Map<string, Set<(...args: any) => any>> = new Map();
   ws?: WebSocket;
-  connectPromise?: Promise<void>;
   // Used to map results and errors to calls
   reqId: number = 0;
   constructor() {
@@ -79,34 +100,32 @@ export class WSRouter extends Logger {
   }
 
   connect() {
-    return (this.connectPromise = new Promise<void>((resolve) => {
+    return new Promise<void>((resolve) => {
       // Auth is a query param as JS WebSocket doesn't support headers
       this.ws = new WebSocket(`ws://127.0.0.1:1337/ws?auth=${deckyAuthToken}`);
 
       this.ws.addEventListener('open', () => {
         this.debug('WS Connected');
         resolve();
-        delete this.connectPromise;
+
+        // Synchronize frontend and backend by forwarding all the running calls again
+        // and letting backend reply to them accordingly.
+        const messages = Array.from(this.runningCalls.values()).map((resolver) => resolver.message);
+        this.write({ type: MessageType.FULL_SYNC, messages });
       });
       this.ws.addEventListener('message', this.onMessage.bind(this));
       this.ws.addEventListener('close', this.onError.bind(this));
-      // this.ws.addEventListener('error', this.onError.bind(this));
-    }));
+    });
   }
 
-  createPromiseResolver<T>(): PromiseResolver<T> {
-    let resolver: Partial<PromiseResolver<T>> = {};
+  createPromiseResolver<T>(message: CallMessage): PromiseResolver<T> {
+    let resolver: Partial<PromiseResolver<T>> = { message };
     const promise = new Promise<T>((resolve, reject) => {
       resolver.resolve = resolve;
       resolver.reject = reject;
     });
     resolver.promise = promise;
     return resolver as PromiseResolver<T>;
-  }
-
-  async write(data: Message) {
-    if (this.connectPromise) await this.connectPromise;
-    this.ws?.send(JSON.stringify(data));
   }
 
   addEventListener(event: string, listener: (...args: any) => any) {
@@ -130,7 +149,7 @@ export class WSRouter extends Logger {
 
   async onMessage(msg: MessageEvent) {
     try {
-      const data = JSON.parse(msg.data) as Message;
+      const data = JSON.parse(msg.data) as MessageFromBackend;
       switch (data.type) {
         case MessageType.REPLY:
           if (this.runningCalls.has(data.id)) {
@@ -138,6 +157,8 @@ export class WSRouter extends Logger {
             this.runningCalls.delete(data.id);
             this.debug(`[${data.id}] Resolved PY call with value`, data.result);
           }
+
+          this.write({ type: MessageType.RECEIVED_RESPONSE, id: data.id });
           break;
 
         case MessageType.ERROR:
@@ -147,6 +168,21 @@ export class WSRouter extends Logger {
             this.runningCalls.delete(data.id);
             this.debug(`[${data.id}] Rejected PY call with error`, data.error);
           }
+
+          this.write({ type: MessageType.RECEIVED_RESPONSE, id: data.id });
+          break;
+
+        case MessageType.DISCARD:
+          if (this.runningCalls.has(data.id)) {
+            // We are explicitly not resolving the promise here as this message
+            // is only received (at the moment) when plugin is being unloaded and
+            // the promise should be garbage-collected, unless the plugin is doing
+            // very bad things!
+            this.runningCalls.delete(data.id);
+            this.debug(`[${data.id}] Discarding PY call`);
+          }
+
+          this.write({ type: MessageType.RECEIVED_RESPONSE, id: data.id });
           break;
 
         case MessageType.EVENT:
@@ -177,15 +213,12 @@ export class WSRouter extends Logger {
 
   // this.call<[number, number], string>('methodName', 1, 2);
   call<Args extends any[] = [], Return = void>(route: string, ...args: Args): Promise<Return> {
-    const resolver = this.createPromiseResolver<Return>();
-
     const id = ++this.reqId;
-
+    const resolver = this.createPromiseResolver<Return>({ type: MessageType.CALL, route, args, id });
     this.runningCalls.set(id, resolver);
 
     this.debug(`[${id}] Calling PY method ${route} with args`, args);
-
-    this.write({ type: MessageType.CALL, route, args, id });
+    this.write(resolver.message);
 
     return resolver.promise;
   }
@@ -196,8 +229,17 @@ export class WSRouter extends Logger {
 
   async onError(error: any) {
     this.error('WS DISCONNECTED', error);
-    // TODO queue up lost messages and send them once we connect again
     await sleep(5000);
     await this.connect();
+  }
+
+  private write(data: MessageToBackend) {
+    // In case the message is discarded here:
+    //   - CallMessage will be resent during FULL_SYNC
+    //   - Backend cleanup via missed ReceivedReplyMessage will be done during FULL_SYNC
+    //   - FullSyncMessage will be resent during FULL_SYNC
+    if (this.ws?.readyState === WebSocket.OPEN) {
+      this.ws?.send(JSON.stringify(data));
+    }
   }
 }

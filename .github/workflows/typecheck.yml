@@ -10,17 +10,17 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v4 # Check out the repository first.
+      - uses: actions/checkout@v7 # Check out the repository first.
 
-      - name: Set up NodeJS 20 💎
-        uses: actions/setup-node@v4
+      - name: Set up NodeJS LTS 💎
+        uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: "lts/*"
 
-      - name: Set up Python 3.11.7 🐍
-        uses: actions/setup-python@v5
+      - name: Set up Python 3.11 🐍
+        uses: actions/setup-python@v6
         with:
-          python-version: "3.11.7"
+          python-version: "3.11"
 
       - name: Install Poetry
         uses: snok/install-poetry@v1
@@ -38,10 +38,10 @@ jobs:
           pnpm i --frozen-lockfile --dangerously-allow-all-builds
 
       - name: Run pyright (Python)
-        uses: jakebailey/pyright-action@v1
+        uses: jakebailey/pyright-action@v3
         with:
           python-version: "3.10.6"
-          no-comments: true
+          annotate: "none"
           working-directory: backend
 
       - name: Run tsc (TypeScript)

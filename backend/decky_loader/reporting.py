@@ -61,6 +61,17 @@ def _get_steamos_version() -> str:
         return "unknown"
 
 
+def _classify_steamos_branch(branch_hint: str) -> str:
+    lowered = branch_hint.lower()
+    if "preview" in lowered:
+        return "Preview"
+    if re.search(r"\bmain\b", lowered):
+        return "Main"
+    if "beta" in lowered:
+        return "Beta"
+    return "Stable"
+
+
 class Reporting:
     def __init__(self, context: "PluginManager") -> None:
         self.context = context
@@ -75,24 +86,42 @@ class Reporting:
     def _get_steamos_branch(self) -> str:
         if not ON_LINUX:
             return "Stable"
+        commands = [
+            ["steamos-select-branch", "-c"],
+            ["steamos-select-branch", "--current"],
+        ]
+        for cmd in commands:
+            if not shutil.which(cmd[0]):
+                continue
+            try:
+                result = subprocess.run(
+                    cmd,
+                    capture_output=True,
+                    check=True,
+                    text=True,
+                    timeout=2,
+                )
+                branch_hint = result.stdout.strip()
+                if branch_hint:
+                    return _classify_steamos_branch(branch_hint)
+            except Exception:
+                continue
         candidates = [
             "/etc/steamos-update",
             "/etc/steamos-update.conf",
+            "/etc/steamos-atomupd.conf",
             "/etc/steamos-branch",
             "/etc/steamos-channel",
+            "/etc/os-release",
         ]
-        branch_hint = ""
         for path in candidates:
             try:
                 if Path(path).exists():
                     branch_hint = Path(path).read_text(encoding="utf-8", errors="ignore")
-                    break
+                    if branch_hint:
+                        return _classify_steamos_branch(branch_hint)
             except Exception:
                 continue
-        if branch_hint:
-            lowered = branch_hint.lower()
-            if any(key in lowered for key in ["beta", "preview", "main"]):
-                return "Beta"
         return "Stable"
 
     def _get_decky_branch(self) -> str:
@@ -104,7 +133,7 @@ class Reporting:
         return "Stable"
 
     def _get_steam_branch(self, steam_config: str) -> str:
-        match = re.search(r"\"BetaParticipation\"\\s*\"([^\"]*)\"", steam_config)
+        match = re.search(r'"BetaParticipation"\s*"([^"]*)"', steam_config)
         if not match:
             return "Stable"
         value = match.group(1).strip().lower()
@@ -170,13 +199,19 @@ class Reporting:
 
     def _get_steam_info(self) -> Dict[str, str]:
         home = get_home_path()
-        config_path = Path(home).joinpath(".steam", "steam", "config", "config.vdf")
         config_text = ""
-        try:
-            if config_path.exists():
-                config_text = config_path.read_text(encoding="utf-8", errors="ignore")
-        except Exception:
-            config_text = ""
+        config_paths = [
+            Path(home).joinpath(".steam", "steam", "config", "config.vdf"),
+            Path(home).joinpath(".local", "share", "Steam", "config", "config.vdf"),
+        ]
+        for config_path in config_paths:
+            try:
+                if config_path.exists():
+                    config_text = config_path.read_text(encoding="utf-8", errors="ignore")
+                    if config_text:
+                        break
+            except Exception:
+                continue
         branch = self._get_steam_branch(config_text)
         version = self._get_steam_version(home, branch)
         return {"version": version, "branch": branch}

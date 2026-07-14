@@ -24,7 +24,6 @@ const TranslationHelper: FC<TranslationHelperProps> = ({
   transClass,
   transText,
   i18nArgs = null,
-  installType = 0,
   warnType = WarnThirdPartyType.REPO,
 }) => {
   return (

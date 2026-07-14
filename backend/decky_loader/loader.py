@@ -9,6 +9,7 @@ from typing import Any, Tuple, Dict, cast
 from aiohttp import web
 from os.path import exists
 from decky_loader.helpers import get_homebrew_path
+from decky_loader.localplatform.localplatform import ON_MAC
 from watchdog.events import RegexMatchingEventHandler, FileSystemEvent
 from watchdog.observers import Observer
 
@@ -106,6 +107,10 @@ class Loader:
 
     async def enable_reload_wait(self):
         if self.live_reload:
+            if ON_MAC:
+                self.logger.info("Hot reload is not supported on macOS")
+                return
+
             await sleep(10)
             if self.watcher and self.live_reload:
                 self.logger.info("Hot reload enabled")

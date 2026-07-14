@@ -23,6 +23,7 @@ export default defineConfig([
       }),
       externalGlobals({
         react: 'SP_REACT',
+        'react/jsx-runtime': 'SP_JSX',
         'react-dom': 'SP_REACTDOM',
         // hack to shut up react-markdown
         process: '{cwd: () => {}}',

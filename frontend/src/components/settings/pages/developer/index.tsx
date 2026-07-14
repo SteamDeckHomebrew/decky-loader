@@ -85,7 +85,11 @@ export default function DeveloperSettings() {
                   type={WarnThirdPartyType.ZIP}
                   onOK={() => {
                     setAcceptedWarning(true);
-                    installFromURL(pluginURL);
+                    if (/^https?:\/\//.test(pluginURL)) {
+                      installFromURL(pluginURL);
+                    } else {
+                      installFromURL('https://' + pluginURL);
+                    }
                   }}
                   onCancel={() => {}}
                   seconds={waitTime}

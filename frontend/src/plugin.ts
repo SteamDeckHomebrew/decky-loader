@@ -1,3 +1,4 @@
+import type { JSX } from 'react';
 export enum PluginLoadType {
   LEGACY_EVAL_IIFE = 0, // legacy, uses legacy serverAPI
   ESMODULE_V1 = 1, // esmodule loading with modern @decky/backend apis
@@ -14,11 +15,25 @@ export interface Plugin {
   titleView?: JSX.Element;
 }
 
+export type DisabledPlugin = Pick<Plugin, 'name' | 'version'>;
+
 export enum InstallType {
   INSTALL,
   REINSTALL,
   UPDATE,
+  DOWNGRADE,
+  OVERWRITE,
 }
+
+// values are the JSON keys used in the translation file
+// IMPORTANT! keep in sync with `t(...)` comments where this is used
+export const InstallTypeTranslationMapping = {
+  [InstallType.INSTALL]: 'install',
+  [InstallType.REINSTALL]: 'reinstall',
+  [InstallType.UPDATE]: 'update',
+  [InstallType.DOWNGRADE]: 'downgrade',
+  [InstallType.OVERWRITE]: 'overwrite',
+} as const satisfies Record<InstallType, string>;
 
 type installPluginArgs = [
   artifact: string,
@@ -43,3 +58,5 @@ type installPluginsArgs = [
 export let installPlugins = DeckyBackend.callable<installPluginsArgs>('utilities/install_plugins');
 
 export let uninstallPlugin = DeckyBackend.callable<[name: string]>('utilities/uninstall_plugin');
+export let enablePlugin = DeckyBackend.callable<[name: string]>('utilities/enable_plugin');
+export let disablePlugin = DeckyBackend.callable<[name: string]>('utilities/disable_plugin');

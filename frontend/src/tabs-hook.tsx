@@ -29,7 +29,8 @@ interface Tab {
 class TabsHook extends Logger {
   // private keys = 7;
   tabs: Tab[] = [];
-  private qamPatch?: Patch;
+  private qamBrowserViewPatch?: Patch;
+  private qamEmbeddedPatch?: Patch;
 
   constructor() {
     super('TabsHook');
@@ -40,10 +41,12 @@ class TabsHook extends Logger {
   }
 
   init() {
-    // TODO patch the "embedded" renderer in this module too (seems to be for VR? unsure)
-    const qamModule = findModuleByExport((e) => e?.type?.toString()?.includes('QuickAccessMenuBrowserView'));
-    const qamRenderer = Object.values(qamModule).find((e: any) =>
-      e?.type?.toString()?.includes('QuickAccessMenuBrowserView'),
+    const qamModule = findModuleByExport((e) => e?.type?.toString?.()?.includes('QuickAccessMenuBrowserView'));
+    const qamBrowserViewRenderer = Object.values(qamModule).find((e: any) =>
+      e?.type?.toString?.()?.includes('QuickAccessMenuBrowserView'),
+    );
+    const qamEmbeddedRenderer = Object.values(qamModule).find((e: any) =>
+      e?.type?.toString?.()?.includes('QuickAccessMenuEmbedded'),
     );
 
     const patchHandler = createReactTreePatcher(
@@ -56,12 +59,21 @@ class TabsHook extends Logger {
       'TabsHook',
     );
 
-    this.qamPatch = afterPatch(qamRenderer, 'type', patchHandler);
+    this.qamBrowserViewPatch = afterPatch(qamBrowserViewRenderer, 'type', patchHandler);
+    if (qamEmbeddedRenderer) this.qamEmbeddedPatch = afterPatch(qamEmbeddedRenderer, 'type', patchHandler);
 
     // Patch already rendered qam
     const root = getReactRoot(document.getElementById('root') as any);
-    const qamNode = root && findInReactTree(root, (n: any) => n.elementType == qamRenderer); // need elementType, because type is actually mobx wrapper
+    const qamNode =
+      root &&
+      findInReactTree(
+        root,
+        (n: any) =>
+          n.elementType == qamBrowserViewRenderer ||
+          (qamEmbeddedRenderer != null && n.elementType == qamEmbeddedRenderer),
+      ); // need elementType, because type is actually mobx wrapper
     if (qamNode) {
+      console.log('patching existing qam');
       // Only affects this fiber node so we don't need to unpatch here
       qamNode.type = qamNode.elementType.type;
       if (qamNode?.alternate) {
@@ -71,7 +83,8 @@ class TabsHook extends Logger {
   }
 
   deinit() {
-    this.qamPatch?.unpatch();
+    this.qamBrowserViewPatch?.unpatch();
+    this.qamEmbeddedPatch?.unpatch();
   }
 
   add(tab: Tab) {

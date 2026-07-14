@@ -8,7 +8,8 @@ from traceback import format_exc
 
 from .sandboxed_plugin import SandboxedPlugin
 from .messages import MethodCallRequest, SocketMessageType
-from ..enums import PluginLoadType
+from ..enums import PluginLoadType, UserType
+from ..localplatform.localplatform import file_owner, chown, chmod, get_chown_plugin_path
 from ..localplatform.localsocket import LocalSocket
 from ..helpers import get_homebrew_path, mkdir_as_user
 
@@ -26,9 +27,12 @@ class PluginWrapper:
 
         self.load_type = PluginLoadType.LEGACY_EVAL_IIFE.value
 
-        json = load(open(path.join(plugin_path, plugin_directory, "plugin.json"), "r", encoding="utf-8"))
-        if path.isfile(path.join(plugin_path, plugin_directory, "package.json")):
-            package_json = load(open(path.join(plugin_path, plugin_directory, "package.json"), "r", encoding="utf-8"))
+        plugin_dir_path = path.join(plugin_path, plugin_directory)
+        plugin_json_path = path.join(plugin_dir_path, "plugin.json")
+
+        json = load(open(plugin_json_path, "r", encoding="utf-8"))
+        if path.isfile(path.join(plugin_dir_path, "package.json")):
+            package_json = load(open(path.join(plugin_dir_path, "package.json"), "r", encoding="utf-8"))
             self.version = package_json["version"]
             if ("type" in package_json and package_json["type"] == "module"):
                 self.load_type = PluginLoadType.ESMODULE_V1.value
@@ -37,10 +41,22 @@ class PluginWrapper:
         self.author = json["author"]
         self.flags = json["flags"]
         self.api_version = json["api_version"] if "api_version" in json else 0
+        self.disabled = False
         
         self.passive = not path.isfile(self.file)
 
         self.log = getLogger("plugin")
+
+        if get_chown_plugin_path():
+            # ensure plugin folder ownership
+            if file_owner(plugin_dir_path) != UserType.EFFECTIVE_USER:
+                chown(plugin_dir_path, UserType.EFFECTIVE_USER if "root" in self.flags else UserType.HOST_USER, True)
+                chown(plugin_dir_path, UserType.EFFECTIVE_USER, False)
+                chmod(plugin_dir_path, 755, True)
+            # fix plugin.json permissions
+            if file_owner(plugin_json_path) != UserType.EFFECTIVE_USER:
+                chown(plugin_json_path, UserType.EFFECTIVE_USER, False)
+                chmod(plugin_json_path, 755, False)
 
         self.sandboxed_plugin = SandboxedPlugin(self.name, self.passive, self.flags, self.file, self.plugin_directory, self.plugin_path, self.version, self.author, self.api_version)
         self.proc: Process | None = None
@@ -65,6 +81,13 @@ class PluginWrapper:
     def __str__(self) -> str:
         return self.name
     
+    def get_display_name(self) -> str:
+        """Returns plugin name with version if available, formatted for logging."""
+        if self.version:
+            return f"{self.name} (v{self.version})"
+
+        return self.name
+
     async def _response_listener(self):
         while self._socket.active:
             try:
@@ -76,8 +99,14 @@ class PluginWrapper:
                     elif res["type"] == SocketMessageType.RESPONSE.value:
                         self._method_call_requests.pop(res["id"]).set_result(res)
             except CancelledError:
-                self.log.info(f"Stopping response listener for {self.name}")
+                self.log.info(f"Stopping response listener for {self.get_display_name()}")
                 await self._socket.close_socket_connection()
+
+                # Cancel the request so that WSRouter can perform cleanup
+                for request in self._method_call_requests.values():
+                    request.cancel()
+                
+                self._method_call_requests = {}
                 raise
             except:
                 pass
@@ -85,7 +114,7 @@ class PluginWrapper:
     async def execute_legacy_method(self, method_name: str, kwargs: Dict[Any, Any]):
         if not self.legacy_method_warning:
             self.legacy_method_warning = True
-            self.log.warning(f"Plugin {self.name} is using legacy method calls. This will be removed in a future release.")
+            self.log.warning(f"Plugin {self.get_display_name()} is using legacy method calls. This will be removed in a future release.")
         if self.passive:
             raise RuntimeError("This plugin is passive (aka does not implement main.py)")
         
@@ -120,7 +149,7 @@ class PluginWrapper:
             start_time = time()
             if self.passive:
                 return
-            self.log.info(f"Shutting down {self.name}")
+            self.log.info(f"Shutting down {self.get_display_name()}")
 
             pending: set[Task[None]] | None = None;
 
@@ -140,16 +169,16 @@ class PluginWrapper:
                 for pending_task in pending:
                     pending_task.cancel()
 
-            self.log.info(f"Plugin {self.name} has been stopped in {time() - start_time:.1f}s")
+            self.log.info(f"Plugin {self.get_display_name()} has been stopped in {time() - start_time:.1f}s")
         except Exception as e:
-            self.log.error(f"Error during shutdown for plugin {self.name}: {str(e)}\n{format_exc()}")
+            self.log.error(f"Error during shutdown for plugin {self.get_display_name()}: {str(e)}\n{format_exc()}")
 
     async def kill_if_still_running(self):
         start_time = time()
         while self.proc and self.proc.is_alive():
             elapsed_time = time() - start_time
             if elapsed_time >= 5:
-                self.log.warning(f"Plugin {self.name} still alive 5 seconds after stop request! Sending SIGKILL!")
+                self.log.warning(f"Plugin {self.get_display_name()} still alive 5 seconds after stop request! Sending SIGKILL!")
                 self.terminate(True)
             await sleep(0.1)
 

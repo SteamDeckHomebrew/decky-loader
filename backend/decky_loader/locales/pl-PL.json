@@ -26,7 +26,7 @@
     },
     "FilePickerIndex": {
         "file": {
-            "select": "Wybierz ten plik"
+            "select": "Zaznacz ten plik"
         },
         "files": {
             "all_files": "Wszystkie pliki",
@@ -96,9 +96,9 @@
             "title": "Reinstaluj {{artifact}}"
         },
         "update": {
-            "button_idle": "Aktualizacja",
+            "button_idle": "Aktualizuj",
             "button_processing": "Aktualizowanie",
-            "desc": "Czy na pewno chcesz zaktualizować {{artifact}} {{version}}?",
+            "desc": "Czy na pewno chcesz zaktualizować {{artifact}} do wersji {{version}}?",
             "title": "Zaktualizuj {{artifact}}"
         }
     },
@@ -122,11 +122,11 @@
     },
     "PluginLoader": {
         "decky_title": "Decky",
-        "decky_update_available": "Dostępna aktualizacja do {{tag_name}}!",
+        "decky_update_available": "Aktualizacja do {{tag_name}} jest dostępna!",
         "error": "Błąd",
         "plugin_error_uninstall": "Ładowanie {{name}} spowodowało wyjątek, jak pokazano powyżej. Zwykle oznacza to, że plugin wymaga aktualizacji do nowej wersji SteamUI. Sprawdź, czy aktualizacja jest obecna lub rozważ usunięcie go w ustawieniach Decky, w sekcji Pluginy.",
         "plugin_load_error": {
-            "message": "Błąd ładowania plugin {{name}}",
+            "message": "Błąd ładowania pluginu {{name}}",
             "toast": "Błąd ładowania {{name}}"
         },
         "plugin_uninstall": {
@@ -205,6 +205,15 @@
         "testing_title": "Testowanie"
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "Pobieranie pluginu",
+            "increment_count": "Zwiększanie liczby pobrań",
+            "installing_plugin": "Instalowanie pluginu",
+            "open_zip": "Otwieranie pliku zip",
+            "parse_zip": "Analizowanie pliku zip",
+            "start": "Inicjalizacja",
+            "uninstalling_previous": "Odinstalowywanie poprzednich kopii"
+        },
         "store_contrib": {
             "desc": "Jeśli chcesz przyczynić się do rozwoju Decky Plugin Store, sprawdź repozytorium SteamDeckHomebrew/decky-plugin-template na GitHub. Informacje na temat rozwoju i dystrybucji są dostępne w pliku README.",
             "label": "Współtworzenie"
@@ -236,7 +245,7 @@
         },
         "store_testing_cta": "Rozważ przetestowanie nowych pluginów, aby pomóc zespołowi Decky Loader!",
         "store_testing_warning": {
-            "desc": "Możesz użyć tego kanału sklepu do testowania najnowszych wersji pluginów. Pamiętaj, aby zostawić opinię na GitHub, aby plugin mogła zostać zaktualizowana dla wszystkich użytkowników.",
+            "desc": "Możesz użyć tego kanału sklepu do testowania najnowszych wersji pluginów. Pamiętaj, aby zostawić opinię na GitHub, aby plugin mógł zostać zaktualizowany dla wszystkich użytkowników.",
             "label": "Witamy w Testowym Kanale Sklepu"
         }
     },
@@ -253,7 +262,11 @@
         }
     },
     "Testing": {
-        "download": "Pobierz"
+        "download": "Pobierz",
+        "error": "Błąd instalowania PR",
+        "header": "Następujące wersje Decky Loader są zrobione z open third-party Pull Requests. Zespół Decky Loader nie zweryfikował ich działania czy bezpieczeństwa, mogą też być nie aktualne.",
+        "loading": "Ładowanie open Pull Requests...",
+        "start_download_toast": "Pobieranie PR #{{id}}"
     },
     "TitleView": {
         "decky_store_desc": "Otwórz sklep Decky",

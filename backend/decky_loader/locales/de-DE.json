@@ -198,6 +198,15 @@
         "testing_title": "Testen"
     },
     "Store": {
+        "download_progress_info": {
+            "download_zip": "Plugin herunterladen",
+            "increment_count": "Erhöhen der Downloadanzahl",
+            "installing_plugin": "Plugin installieren",
+            "open_zip": "Öffnen der Zip-Datei",
+            "parse_zip": "Parsen der Zip-Datei",
+            "start": "Initialisieren",
+            "uninstalling_previous": "Vorherige Kopie deinstallieren"
+        },
         "store_contrib": {
             "desc": "Wenn du Erweiterungen im Decky Store veröffentlichen willst, besuche die SteamDeckHomebrew/decky-plugin-template Repository auf GitHub. Informationen rund um Entwicklung und Veröffentlichung findest du in der README.",
             "label": "Mitwirken"
@@ -246,7 +255,11 @@
         }
     },
     "Testing": {
-        "download": "Download"
+        "download": "Download",
+        "error": "Fehler beim Installieren von PR",
+        "header": "Die folgenden Versionen von Decky Loader wurden aus offenen Pull Requests von Dritten erstellt. Das Decky Loader-Team hat ihre Funktionalität oder Sicherheit nicht überprüft, und sie können veraltet sein.",
+        "loading": "Offene Pull Requests laden...",
+        "start_download_toast": "Herunterladen von PR #{{id}}"
     },
     "TitleView": {
         "decky_store_desc": "Decky Store Öffnen",

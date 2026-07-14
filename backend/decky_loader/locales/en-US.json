@@ -52,7 +52,9 @@
     "MultiplePluginsInstallModal": {
         "confirm": "Are you sure you want to make the following modifications?",
         "description": {
+            "downgrade": "Downgrade {{name}} to {{version}}",
             "install": "Install {{name}} {{version}}",
+            "overwrite": "Overwrite {{name}} with {{version}}",
             "reinstall": "Reinstall {{name}} {{version}}",
             "update": "Update {{name}} to {{version}}"
         },
@@ -61,10 +63,14 @@
             "loading": "Working"
         },
         "title": {
+            "downgrade_one": "Downgrade 1 plugin",
+            "downgrade_other": "Downgrade {{count}} plugins",
             "install_one": "Install 1 plugin",
             "install_other": "Install {{count}} plugins",
             "mixed_one": "Modify {{count}} plugin",
             "mixed_other": "Modify {{count}} plugins",
+            "overwrite_one": "Overwrite 1 plugin",
+            "overwrite_other": "Overwrite {{count}} plugins",
             "reinstall_one": "Reinstall 1 plugin",
             "reinstall_other": "Reinstall {{count}} plugins",
             "update_one": "Update 1 plugin",
@@ -72,12 +78,22 @@
         }
     },
     "PluginCard": {
+        "plugin_downgrade": "Downgrade",
         "plugin_full_access": "This plugin has full access to your Steam Deck.",
         "plugin_install": "Install",
         "plugin_no_desc": "No description provided.",
+        "plugin_overwrite": "Overwrite",
+        "plugin_reinstall": "Reinstall",
+        "plugin_update": "Update",
         "plugin_version_label": "Plugin Version"
     },
     "PluginInstallModal": {
+        "downgrade": {
+            "button_idle": "Downgrade",
+            "button_processing": "Downgrading",
+            "desc": "Are you sure you want to downgrade {{artifact}} to version {{version}}?",
+            "title": "Downgrade {{artifact}}"
+        },
         "install": {
             "button_idle": "Install",
             "button_processing": "Installing",
@@ -85,6 +101,14 @@
             "title": "Install {{artifact}}"
         },
         "no_hash": "This plugin does not have a hash, you are installing it at your own risk.",
+        "not_installed": "(not installed)",
+        "disabled": "The plugin will be re-enabled after installation",
+        "overwrite": {
+            "button_idle": "Overwrite",
+            "button_processing": "Overwriting",
+            "desc": "Are you sure you want to overwrite {{artifact}} with version {{version}}?",
+            "title": "Overwrite {{artifact}}"
+        },
         "reinstall": {
             "button_idle": "Reinstall",
             "button_processing": "Reinstalling",
@@ -94,7 +118,7 @@
         "update": {
             "button_idle": "Update",
             "button_processing": "Updating",
-            "desc": "Are you sure you want to update {{artifact}} {{version}}?",
+            "desc": "Are you sure you want to update {{artifact}} to version {{version}}?",
             "title": "Update {{artifact}}"
         }
     },
@@ -110,10 +134,13 @@
         "uninstall": "Uninstall",
         "update_all_one": "Update 1 plugin",
         "update_all_other": "Update {{count}} plugins",
-        "update_to": "Update to {{name}}"
+        "update_to": "Update to {{name}}",
+        "disable": "Disable",
+        "enable": "Enable"
     },
     "PluginListLabel": {
-        "hidden": "Hidden from the quick access menu"
+        "hidden": "Hidden from the quick access menu",
+        "disabled": "Plugin disabled"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -129,12 +156,23 @@
             "desc": "Are you sure you want to uninstall {{name}}?",
             "title": "Uninstall {{name}}"
         },
+        "plugin_disable": {
+            "button": "Disable",
+            "desc": "Are you sure you want to disable {{name}}?",
+            "title": "Disable {{name}}",
+            "error": "Error disabling {{name}}"
+        },
+        "plugin_enable": {
+            "error": "Error enabling {{name}}"
+        },
         "plugin_update_one": "Updates available for 1 plugin!",
         "plugin_update_other": "Updates available for {{count}} plugins!"
     },
     "PluginView": {
         "hidden_one": "1 plugin is hidden from this list",
-        "hidden_other": "{{count}} plugins are hidden from this list"
+        "hidden_other": "{{count}} plugins are hidden from this list",
+        "disabled_one": "1 plugin is disabled",
+        "disabled_other": "{{count}} plugins are disabled"
     },
     "RemoteDebugging": {
         "remote_cef": {
@@ -199,6 +237,7 @@
     },
     "Store": {
         "download_progress_info": {
+            "download_remote": "Downloading any external binaries",
             "download_zip": "Downloading plugin",
             "increment_count": "Incrementing download count",
             "installing_plugin": "Installing plugin",

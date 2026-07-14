@@ -3,26 +3,22 @@ import { FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaCheck, FaDownload } from 'react-icons/fa';
 
-import { InstallType } from '../../plugin';
+import { DisabledPlugin, InstallType, InstallTypeTranslationMapping } from '../../plugin';
 
 interface MultiplePluginsInstallModalProps {
   requests: { name: string; version: string; hash: string; install_type: InstallType }[];
+  disabledPlugins: DisabledPlugin[];
   onOK(): void | Promise<void>;
   onCancel(): void | Promise<void>;
   closeModal?(): void;
 }
 
-// values are the JSON keys used in the translation file
-const InstallTypeTranslationMapping = {
-  [InstallType.INSTALL]: 'install',
-  [InstallType.REINSTALL]: 'reinstall',
-  [InstallType.UPDATE]: 'update',
-} as const satisfies Record<InstallType, string>;
-
+// IMPORTANT! Keep in sync with `t(...)` comments below
 type TitleTranslationMapping = 'mixed' | (typeof InstallTypeTranslationMapping)[InstallType];
 
 const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
   requests,
+  disabledPlugins,
   onOK,
   onCancel,
   closeModal,
@@ -70,6 +66,8 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
     if (requests.every(({ install_type }) => install_type === InstallType.INSTALL)) return 'install';
     if (requests.every(({ install_type }) => install_type === InstallType.REINSTALL)) return 'reinstall';
     if (requests.every(({ install_type }) => install_type === InstallType.UPDATE)) return 'update';
+    if (requests.every(({ install_type }) => install_type === InstallType.DOWNGRADE)) return 'downgrade';
+    if (requests.every(({ install_type }) => install_type === InstallType.OVERWRITE)) return 'overwrite';
     return 'mixed';
   }, [requests]);
 
@@ -86,23 +84,45 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
       onCancel={async () => {
         await onCancel();
       }}
-      strTitle={<div>{t(`MultiplePluginsInstallModal.title.${installTypeGrouped}`, { count: requests.length })}</div>}
-      strOKButtonText={t(`MultiplePluginsInstallModal.ok_button.${loading ? 'loading' : 'idle'}`)}
+      strTitle={
+        <div>
+          {
+            // IMPORTANT! These comments are not cosmetic and are needed for `extracttext` task to work
+            // t('MultiplePluginsInstallModal.title.install', { count: n })
+            // t('MultiplePluginsInstallModal.title.reinstall', { count: n })
+            // t('MultiplePluginsInstallModal.title.update', { count: n })
+            // t('MultiplePluginsInstallModal.title.downgrade', { count: n })
+            // t('MultiplePluginsInstallModal.title.overwrite', { count: n })
+            // t('MultiplePluginsInstallModal.title.mixed', { count: n })
+            t(`MultiplePluginsInstallModal.title.${installTypeGrouped}`, { count: requests.length })
+          }
+        </div>
+      }
+      strOKButtonText={
+        loading ? t('MultiplePluginsInstallModal.ok_button.loading') : t('MultiplePluginsInstallModal.ok_button.idle')
+      }
     >
       <div>
         {t('MultiplePluginsInstallModal.confirm')}
         <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '4px' }}>
           {requests.map(({ name, version, install_type, hash }, i) => {
             const installTypeStr = InstallTypeTranslationMapping[install_type];
+            // IMPORTANT! These comments are not cosmetic and are needed for `extracttext` task to work
+            // t('MultiplePluginsInstallModal.description.install')
+            // t('MultiplePluginsInstallModal.description.reinstall')
+            // t('MultiplePluginsInstallModal.description.update')
+            // t('MultiplePluginsInstallModal.description.downgrade')
+            // t('MultiplePluginsInstallModal.description.overwrite')
             const description = t(`MultiplePluginsInstallModal.description.${installTypeStr}`, {
               name,
               version,
             });
 
+            const disabled = disabledPlugins.some((p) => p.name === name);
             return (
               <li key={i} style={{ display: 'flex', flexDirection: 'column' }}>
                 <span>
-                  {description}{' '}
+                  {disabled ? `${description} - ${t('PluginInstallModal.disabled')}` : description}{' '}
                   {(pluginsCompleted.includes(name) && <FaCheck />) || (name === pluginInProgress && <FaDownload />)}
                 </span>
                 {hash === 'False' && (

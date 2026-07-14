@@ -1,5 +1,5 @@
 from __future__ import annotations
-from os import stat_result
+from os import path, stat_result
 import uuid
 from urllib.parse import unquote
 from json.decoder import JSONDecodeError
@@ -8,8 +8,8 @@ import re
 from traceback import format_exc
 from stat import FILE_ATTRIBUTE_HIDDEN # pyright: ignore [reportAttributeAccessIssue, reportUnknownVariableType]
 
-from asyncio import StreamReader, StreamWriter, start_server, gather, open_connection
-from aiohttp import ClientSession
+from asyncio import StreamReader, StreamWriter, sleep, start_server, gather, open_connection
+from aiohttp import ClientSession, hdrs
 from aiohttp.web import Request, StreamResponse, Response, json_response, post
 from typing import TYPE_CHECKING, Callable, Coroutine, Dict, Any, List, TypedDict
 
@@ -80,6 +80,9 @@ class Utilities:
             context.ws.add_route("utilities/restart_webhelper", self.restart_webhelper)
             context.ws.add_route("utilities/close_cef_socket", self.close_cef_socket)
             context.ws.add_route("utilities/_call_legacy_utility", self._call_legacy_utility)
+            context.ws.add_route("utilities/enable_plugin", self.enable_plugin)
+            context.ws.add_route("utilities/disable_plugin", self.disable_plugin)
+            context.ws.add_route("utilities/set_all_plugins_disabled", self.set_all_plugins_disabled)
 
             context.web_app.add_routes([
                 post("/methods/{method_name}", self._handle_legacy_server_method_call)
@@ -153,14 +156,14 @@ class Utilities:
         headers["User-Agent"] = helpers.user_agent
 
         for excluded_header in excluded_default_headers:
-            self.logger.debug(f"Excluding default header {excluded_header}")
             if excluded_header in headers:
+                self.logger.debug(f"Excluding default header {excluded_header}: {headers[excluded_header]}")
                 del headers[excluded_header]
 
         if "X-Decky-Fetch-Excluded-Headers" in req.headers:
             for excluded_header in req.headers["X-Decky-Fetch-Excluded-Headers"].split(", "):
-                self.logger.debug(f"Excluding header {excluded_header}")
                 if excluded_header in headers:
+                    self.logger.debug(f"Excluding header {excluded_header}: {headers[excluded_header]}")
                     del headers[excluded_header]
 
         for header in req.headers:
@@ -187,7 +190,21 @@ class Utilities:
         # defeat the point of this proxy.
         async with ClientSession(auto_decompress=False) as web:
             async with web.request(req.method, url, headers=headers, data=body, ssl=helpers.get_ssl_context()) as web_res:
-                res = StreamResponse(headers=web_res.headers, status=web_res.status)
+                # Whenever the aiohttp_cors is used, it expects a near complete control over whatever headers are needed
+                # for `aiohttp_cors.ResourceOptions`. As a server, if you delegate CORS handling to aiohttp_cors,
+                # the headers below must NOT be set. Otherwise they would be overwritten by aiohttp_cors and there would be 
+                # logic bugs, so it was probably a smart choice to assert if the headers are present.
+                #
+                # However, this request handler method does not act like our own local server, it always acts like a proxy 
+                # where we do not have control over the response headers. For responses that do not allow CORS, we add the support
+                # via aiohttp_cors. For responses that allow CORS, we have to remove the conflicting headers to allow
+                # aiohttp_cors handle it for us as if there was no CORS support.
+                aiohttp_cors_compatible_headers = web_res.headers.copy()
+                aiohttp_cors_compatible_headers.popall(hdrs.ACCESS_CONTROL_ALLOW_ORIGIN, default=None)
+                aiohttp_cors_compatible_headers.popall(hdrs.ACCESS_CONTROL_ALLOW_CREDENTIALS, default=None)
+                aiohttp_cors_compatible_headers.popall(hdrs.ACCESS_CONTROL_EXPOSE_HEADERS, default=None)
+
+                res = StreamResponse(headers=aiohttp_cors_compatible_headers, status=web_res.status)
                 if web_res.headers.get('Transfer-Encoding', '').lower() == 'chunked':
                     res.enable_chunked_encoding()
 
@@ -200,7 +217,7 @@ class Utilities:
 
     async def http_request_legacy(self, method: str, url: str, extra_opts: Any = {}, timeout: int | None = None):
         async with ClientSession() as web:
-            res = await web.request(method, url, ssl=helpers.get_ssl_context(), timeout=timeout, **extra_opts)
+            res = await web.request(method, url, ssl=helpers.get_ssl_context(), timeout=timeout, **extra_opts) # type: ignore
             text = await res.text()
         return {
             "status": res.status,
@@ -376,7 +393,6 @@ class Utilities:
             "total": len(all),
         }
         
-
     # Based on https://stackoverflow.com/a/46422554/13174603
     def start_rdt_proxy(self, ip: str, port: int):
         async def pipe(reader: StreamReader, writer: StreamWriter):
@@ -460,3 +476,41 @@ class Utilities:
     
     async def get_tab_id(self, name: str):
         return (await get_tab(name)).id
+
+    async def disable_plugin(self, name: str):
+        disabled_plugins: List[str] = await self.get_setting("disabled_plugins", [])
+        if name not in disabled_plugins:
+            disabled_plugins.append(name)
+            await self.set_setting("disabled_plugins", disabled_plugins)
+
+            await self.context.plugin_loader.plugins[name].stop()
+            await self.context.ws.emit("loader/disable_plugin", name)
+    
+    async def enable_plugin(self, name: str):
+        plugin_folder = self.context.plugin_browser.find_plugin_folder(name)
+        assert plugin_folder is not None
+        plugin_dir = path.join(self.context.plugin_browser.plugin_path, plugin_folder)
+        
+        if name in self.context.plugin_loader.plugins:
+            plugin = self.context.plugin_loader.plugins[name]
+            if plugin.proc and plugin.proc.is_alive():
+                await plugin.stop()
+            self.context.plugin_loader.plugins.pop(name, None)
+            await sleep(1)
+            
+        disabled_plugins: List[str] = await self.get_setting("disabled_plugins", [])
+        
+        if name in disabled_plugins:
+            disabled_plugins.remove(name)
+            await self.set_setting("disabled_plugins", disabled_plugins)
+            
+        await self.context.plugin_loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_folder)
+        
+    async def set_all_plugins_disabled(self):
+        disabled_plugins: List[str] = await self.get_setting("disabled_plugins", [])
+
+        for name, _ in self.context.plugin_loader.plugins.items():
+            if name not in disabled_plugins:
+                disabled_plugins.append(name)
+
+        await self.set_setting("disabled_plugins", disabled_plugins)

@@ -19,18 +19,27 @@ class MethodCallResponse:
         self.success = success
         self.result = result
 
+class PluginStopped(Exception):
+    pass
+
 class MethodCallRequest:
     def __init__(self) -> None:
         self.id = str(uuid4())
         self.event = Event()
-        self.response: MethodCallResponse
+        self.response: MethodCallResponse | PluginStopped
     
     def set_result(self, dc: SocketResponseDict):
         self.response = MethodCallResponse(dc["success"], dc["res"])
         self.event.set()
+
+    def cancel(self):
+        self.response = PluginStopped("Plugin has been stopped")
+        self.event.set()
     
     async def wait_for_result(self):
         await self.event.wait()
+        if isinstance(self.response, PluginStopped):
+            raise self.response
         if not self.response.success:
             raise Exception(self.response.result)
         return self.response.result

@@ -1,37 +1,37 @@
 // Sets up DFL, then loads start.ts which starts up the loader
-interface Window {
-  // Shut up TS
-  SP_REACTDOM: any;
-}
 
 (async () => {
-  // Wait for main webpack chunks to definitely be loaded
-  console.time('[Decky:Boot] Waiting for main Webpack chunks...');
-  while (!window.webpackChunksteamui || window.webpackChunksteamui.length < 5) {
-    await new Promise((r) => setTimeout(r, 10)); // Can't use DFL sleep here.
-  }
-  console.timeEnd('[Decky:Boot] Waiting for main Webpack chunks...');
+  console.debug('[Decky:Boot] Frontend init');
 
-  // Wait for the React root to be mounted
-  console.time('[Decky:Boot] Waiting for React root mount...');
-  let root;
-  while (
-    // Does React root node exist?
-    !(root = document.getElementById('root')) ||
-    // Does it have a child element?
-    !(root as any)[Object.keys(root).find((k) => k.startsWith('__reactContainer$')) as string].child
-  ) {
-    await new Promise((r) => setTimeout(r, 10)); // Can't use DFL sleep here.
+  console.time('[Decky:Boot] Waiting for SteamApp init stage 1 to finish...');
+
+  // @ts-expect-error TODO type BFinishedInitStageOne in @decky/ui
+  while (!window.App?.BFinishedInitStageOne()) {
+    await new Promise((r) => setTimeout(r, 0)); // Can't use DFL sleep here.
   }
-  console.timeEnd('[Decky:Boot] Waiting for React root mount...');
+
+  console.timeEnd('[Decky:Boot] Waiting for SteamApp init stage 1 to finish...');
 
   if (!window.SP_REACT) {
     console.debug('[Decky:Boot] Setting up Webpack & React globals...');
-    await new Promise((r) => setTimeout(r, 500)); // Can't use DFL sleep here.
     // deliberate partial import
     const DFLWebpack = await import('@decky/ui/dist/webpack');
     window.SP_REACT = DFLWebpack.findModule((m) => m.Component && m.PureComponent && m.useLayoutEffect);
-    window.SP_REACTDOM = DFLWebpack.findModule((m) => m.createPortal && m.createRoot);
+    window.SP_REACTDOM =
+      DFLWebpack.findModule((m) => m.createPortal && m.createRoot) ||
+      DFLWebpack.findModule((m) => m.createPortal && m.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE);
+
+    console.debug('[Decky:Boot] Setting up JSX internals...');
+    const jsxModule = DFLWebpack.findModule((m) => (m.jsx && m.jsxs) || (m.jsx && Object.keys(m).length == 1));
+    if (jsxModule.jsxs) {
+      window.SP_JSX = jsxModule;
+    } else {
+      window.SP_JSX = {
+        jsx: jsxModule.jsx,
+        jsxs: jsxModule.jsx,
+        Fragment: window.SP_REACT.Fragment,
+      };
+    }
   }
   console.debug('[Decky:Boot] Setting up @decky/ui...');
   window.DFL = await import('@decky/ui');

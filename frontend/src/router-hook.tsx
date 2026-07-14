@@ -1,4 +1,5 @@
 import {
+  EUIMode,
   ErrorBoundary,
   Patch,
   afterPatch,
@@ -8,7 +9,7 @@ import {
   getReactRoot,
   sleep,
 } from '@decky/ui';
-import { FC, ReactElement, ReactNode, cloneElement, createElement } from 'react';
+import { FC, JSX, ReactElement, ReactNode, cloneElement, createElement } from 'react';
 import type { Route } from 'react-router';
 
 import {
@@ -31,17 +32,12 @@ declare global {
   }
 }
 
-export enum UIMode {
-  BigPicture = 4,
-  Desktop = 7,
-}
-
 const isPatched = Symbol('is patched');
 
 class RouterHook extends Logger {
   private routerState: DeckyRouterState = new DeckyRouterState();
   private globalComponentsState: DeckyGlobalComponentsState = new DeckyGlobalComponentsState();
-  private renderedComponents: ReactElement[] = [];
+  private renderedComponents: ReactElement<any>[] = [];
   private Route: any;
   private DeckyGamepadRouterWrapper = this.gamepadRouterWrapper.bind(this);
   private DeckyDesktopRouterWrapper = this.desktopRouterWrapper.bind(this);
@@ -76,13 +72,13 @@ class RouterHook extends Logger {
       this.error('Failed to find router stack module');
     }
 
-    this.modeChangeRegistration = SteamClient.UI.RegisterForUIModeChanged((mode: UIMode) => {
+    this.modeChangeRegistration = SteamClient.UI.RegisterForUIModeChanged((mode: EUIMode) => {
       this.debug(`UI mode changed to ${mode}`);
       if (this.patchedModes.has(mode)) return;
       this.patchedModes.add(mode);
       this.debug(`Patching router for UI mode ${mode}`);
       switch (mode) {
-        case UIMode.BigPicture:
+        case EUIMode.GamePad:
           this.debug('Patching gamepad router');
           this.patchGamepadRouter();
           break;
@@ -135,7 +131,7 @@ class RouterHook extends Logger {
   private async patchDesktopRouter() {
     const root = getReactRoot(document.getElementById('root') as any);
     const findRouterNode = () =>
-      findInReactTree(root, (node) => node?.elementType?.type?.toString()?.includes('bShowDesktopUIContent:'));
+      findInReactTree(root, (node) => node?.elementType?.type?.toString?.()?.includes('bShowDesktopUIContent:'));
     let routerNode = findRouterNode();
     while (!routerNode) {
       this.warn('Failed to find Router node, reattempting in 5 seconds.');
@@ -237,7 +233,7 @@ class RouterHook extends Logger {
     return <>{this.renderedComponents}</>;
   }
 
-  private gamepadRouterWrapper({ children }: { children: ReactElement }) {
+  private gamepadRouterWrapper({ children }: { children: ReactElement<any> }) {
     // Used to store the new replicated routes we create to allow routes to be unpatched.
 
     const { routes, routePatches } = useDeckyRouterState();
@@ -255,7 +251,7 @@ class RouterHook extends Logger {
     return children;
   }
 
-  private desktopRouterWrapper({ children }: { children: ReactElement }) {
+  private desktopRouterWrapper({ children }: { children: ReactElement<any> }) {
     // Used to store the new replicated routes we create to allow routes to be unpatched.
     this.debug('desktop router wrapper render', children);
     const { routes, routePatches } = useDeckyRouterState();
@@ -291,7 +287,7 @@ class RouterHook extends Logger {
     if (routes) {
       if (!routeList[routerIndex - 1]?.length || routeList[routerIndex - 1]?.length !== routes.size) {
         if (routeList[routerIndex - 1]?.length && routeList[routerIndex - 1].length !== routes.size) routerIndex--;
-        const newRouterArray: (ReactElement | JSX.Element)[] = [];
+        const newRouterArray: (ReactElement<any> | JSX.Element)[] = [];
         routes.forEach(({ component, props }, path) => {
           newRouterArray.push(
             <Route path={path} {...props}>

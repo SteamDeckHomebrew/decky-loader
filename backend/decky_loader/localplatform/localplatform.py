@@ -1,11 +1,15 @@
 import platform, os
 
 ON_WINDOWS = platform.system() == "Windows"
-ON_LINUX = not ON_WINDOWS
+ON_MAC = platform.system() == "Darwin"
+ON_LINUX = not ON_WINDOWS and not ON_MAC
 
 if ON_WINDOWS:
     from .localplatformwin import *
     from . import localplatformwin as localplatform
+elif ON_MAC:
+    from .localplatformmac import *
+    from . import localplatformmac as localplatform
 else:
     from .localplatformlinux import *
     from . import localplatformlinux as localplatform

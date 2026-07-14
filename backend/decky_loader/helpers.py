@@ -4,7 +4,6 @@ import uuid
 import os
 import subprocess
 from hashlib import sha256
-from io import BytesIO
 import importlib.metadata
 
 import certifi
@@ -24,6 +23,7 @@ csrf_token = str(uuid.uuid4())
 ssl_ctx = ssl.create_default_context(cafile=certifi.where())
 
 assets_regex = re.compile("^/plugins/.*/assets/.*")
+data_regex = re.compile("^/plugins/.*/data/.*")
 dist_regex = re.compile("^/plugins/.*/dist/.*")
 frontend_regex = re.compile("^/frontend/.*")
 logger = getLogger("Main")
@@ -46,6 +46,7 @@ async def csrf_middleware(request: Request, handler: Handler):
         str(request.rel_url.path) == "/fetch" or \
         str(request.rel_url.path) == "/ws" or \
         assets_regex.match(str(request.rel_url)) or \
+        data_regex.match(str(request.rel_url)) or \
         dist_regex.match(str(request.rel_url)) or \
         frontend_regex.match(str(request.rel_url)):
 
@@ -112,19 +113,20 @@ async def download_remote_binary_to_path(url: str, binHash: str, path: str) -> b
         if os.access(os.path.dirname(path), os.W_OK):
             async with ClientSession() as client:
                 res = await client.get(url, ssl=get_ssl_context())
-            if res.status == 200:
-                data = BytesIO(await res.read())
-                remoteHash = sha256(data.getbuffer()).hexdigest()
-                if binHash == remoteHash:
-                    data.seek(0)
-                    with open(path, 'wb') as f:
-                        f.write(data.getbuffer())
-                        rv = True
+                if res.status == 200:
+                    logger.debug("Download attempt of URL: " + url)
+                    data = await res.read()
+                    remoteHash = sha256(data).hexdigest()
+                    if binHash == remoteHash:
+                        with open(path, 'wb') as f:
+                            f.write(data)
+                            rv = True
+                    else:
+                        raise Exception(f"Fatal Error: Hash Mismatch for remote binary {path}@{url}")
                 else:
-                    raise Exception(f"Fatal Error: Hash Mismatch for remote binary {path}@{url}")
-            else:
-                rv = False
-    except:
+                    rv = False
+    except Exception as e:
+        logger.error("Error during download " + str(e))
         rv = False
 
     return rv
@@ -179,7 +181,8 @@ def get_user_group_id() -> int:
 
 # Get the default home path unless a user is specified
 def get_home_path(username: str | None = None) -> str:
-    return localplatform.get_home_path(UserType.ROOT if username == "root" else UserType.HOST_USER)
+    # TODO hardcoded root is kinda a hack
+    return localplatform.get_home_path(UserType.EFFECTIVE_USER if username == "root" else UserType.HOST_USER)
 
 async def is_systemd_unit_active(unit_name: str) -> bool:
     return await localplatform.service_active(unit_name)

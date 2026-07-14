@@ -3,7 +3,7 @@
   <br>
   Decky Loader
   <br>
-  <a name="download button" href="https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/decky_installer.desktop"><img src="./docs/images/download_button.svg"  alt="Download decky" width="350px" style="padding-top: 15px;"></a>
+  <a name="download button" href="https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/decky_installer.desktop"><img src="./docs/images/download_button.svg"  alt="Download decky" width="150px" style="padding-top: 15px;"></a>
 </h1>
 
 <p align="center">
@@ -15,8 +15,20 @@
   <a href="https://deckbrew.xyz/discord"><img src="https://img.shields.io/discord/960281551428522045?color=%235865F2&label=discord" /></a>
   <br>
   <br>
+  🌐 <a href="./README.md">English</a> · <a href="./README_zh-Hans.md">简体中文</a>
+  <br>
+  <br>
 <!--  <img src="https://media.discordapp.net/attachments/966017112244125756/1012466063893610506/main.jpg" alt="Decky screenshot" width="80%">-->
 </p>
+
+## 🩵 Backers and Sponsors
+
+[Become a backer or sponsor](https://opencollective.com/steamdeckhomebrew) to support our work! Contributing to our collective effort will help Decky Loader developers cover the costs of web servers, acquire new development hardware, and more.
+
+<!-- SPONSORS COMMENTED OUT UNTIL WE GET SOME SPONSORS TO AVOID BLANK SVG SPACE -->
+<a href="https://opencollective.com/steamdeckhomebrew"><img alt="Steam Deck Homebrew sponsors on Open Collective" src="https://opencollective.com/steamdeckhomebrew/sponsors.svg?button=true&avatarHeight=46&width=750"></a>
+
+<a href="https://opencollective.com/steamdeckhomebrew"><img alt="Steam Deck Homebrew backers on Open Collective" src="https://opencollective.com/steamdeckhomebrew/backers.svg?button=false&avatarHeight=46&width=750"></a>
 
 ## 📖 About
 
@@ -40,7 +52,9 @@ For more information about Decky Loader as well as documentation and development
 - Sometimes Decky will disappear on SteamOS updates. This can easily be fixed by just re-running the installer and installing the stable branch again. If this doesn't work, try installing the prerelease instead. If that doesn't work, then [check the existing issues](https://github.com/SteamDeckHomebrew/decky-loader/issues) and if there isn't one then you can [file a new issue](https://github.com/SteamDeckHomebrew/decky-loader/issues/new?assignees=&labels=bug&template=bug_report.yml&title=%5BBUG%5D+%3Ctitle%3E).
 
 ## 💾 Installation
+
 - This installation can be done without an admin/sudo password set.
+
 1. Prepare a mouse and keyboard if possible.
    - Keyboards and mice can be connected to the Steam Deck via USB-C or Bluetooth.
    - Many Bluetooth keyboard and mouse apps are available for iOS and Android. (KDE connect is preinstalled on the steam deck)
@@ -54,7 +68,7 @@ For more information about Decky Loader as well as documentation and development
 1. Either type your admin password or allow Decky to temporarily set your admin password to `Decky!` (this password will be removed after the installer finishes)
 1. Choose the version of Decky Loader you want to install.
    - **Latest Release**  
-     Intended for most users. This is the latest stable version of Decky Loader.  
+     Intended for most users. This is the latest stable version of Decky Loader.
    - **Latest Pre-Release**  
      Intended for plugin developers. Pre-releases are unlikely to be fully stable but contain the latest changes. For more information on plugin development, please consult [the wiki page](https://wiki.deckbrew.xyz/en/loader-dev/development).
 1. Open the Return to Gaming Mode shortcut on your desktop.
@@ -68,6 +82,7 @@ We are sorry to see you go! If you are considering uninstalling because you are 
 1. Press the <img src="./docs/images/light/steam.svg#gh-dark-mode-only" height=16><img src="./docs/images/dark/steam.svg#gh-light-mode-only" height=16> button and open the Power menu.
 1. Select "Switch to Desktop".
 1. Run the installer file again, and select `uninstall decky loader`.
+
 - There is also a fast uninstall for those who can use Konsole. Run `curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/uninstall.sh | sh` and type your password when prompted.
 
 ## 🚀 Getting Started
@@ -95,7 +110,7 @@ Please consult [the wiki page regarding development](https://wiki.deckbrew.xyz/e
 1. In your clone of the repository, run these commands.
    ```bash
    cd frontend
-   pnpm i
+   pnpm i # NOTE: you may need to approve esbuild's build script with pnpm approve-builds
    pnpm run build
    ```
 1. If you are modifying the UI, these commands will need to be run before deploying the changes to your Steam Deck.
@@ -105,7 +120,7 @@ Please consult [the wiki page regarding development](https://wiki.deckbrew.xyz/e
 ⚠️ If you are recieving build errors due to an out of date library, you should run this command inside of your repository.
 
 ```bash
-pnpm update decky-frontend-lib --latest
+pnpm update @decky/ui --latest
 ```
 
 Source control and deploying plugins are left to each respective contributor for the cloned repos in order to keep dependencies up to date.

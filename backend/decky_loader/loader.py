@@ -8,6 +8,7 @@ from typing import Any, Tuple, Dict, cast
 
 from aiohttp import web
 from os.path import exists
+from decky_loader.helpers import get_homebrew_path
 from watchdog.events import RegexMatchingEventHandler, FileSystemEvent
 from watchdog.observers import Observer
 
@@ -77,6 +78,7 @@ class Loader:
         self.live_reload = live_reload
         self.reload_queue: ReloadQueue = Queue()
         self.loop.create_task(self.handle_reloads())
+        self.context: PluginManager = server_instance
 
         if live_reload:
             self.observer = Observer()
@@ -91,6 +93,7 @@ class Loader:
             web.get("/plugins/{plugin_name}/frontend_bundle", self.handle_frontend_bundle),
             web.get("/plugins/{plugin_name}/dist/{path:.*}", self.handle_plugin_dist),
             web.get("/plugins/{plugin_name}/assets/{path:.*}", self.handle_plugin_frontend_assets),
+            web.get("/plugins/{plugin_name}/data/{path:.*}", self.handle_plugin_frontend_assets_from_data),
         ])
 
         server_instance.ws.add_route("loader/get_plugins", self.get_plugins)
@@ -128,7 +131,7 @@ class Loader:
 
     async def get_plugins(self):
         plugins = list(self.plugins.values())
-        return [{"name": str(i), "version": i.version, "load_type": i.load_type} for i in plugins]
+        return [{"name": str(i), "version": i.version, "load_type": i.load_type, "disabled": i.disabled} for i in plugins]
 
     async def handle_plugin_dist(self, request: web.Request):
         plugin = self.plugins[request.match_info["plugin_name"]]
@@ -139,6 +142,13 @@ class Loader:
     async def handle_plugin_frontend_assets(self, request: web.Request):
         plugin = self.plugins[request.match_info["plugin_name"]]
         file = path.join(self.plugin_path, plugin.plugin_directory, "dist/assets", request.match_info["path"])
+
+        return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
+
+    async def handle_plugin_frontend_assets_from_data(self, request: web.Request):
+        plugin = self.plugins[request.match_info["plugin_name"]]
+        home = get_homebrew_path()
+        file = path.join(home, "data", plugin.plugin_directory, request.match_info["path"])
 
         return web.FileResponse(file, headers={"Cache-Control": "no-cache"})
 
@@ -155,18 +165,22 @@ class Loader:
                 await self.ws.emit(f"loader/plugin_event", {"plugin": plugin.name, "event": event, "args": args})
 
             plugin = PluginWrapper(file, plugin_directory, self.plugin_path, plugin_emitted_event)
+            if hasattr(self.context, "utilities") and plugin.name in await self.context.utilities.get_setting("disabled_plugins",[]):
+                plugin.disabled = True
+                self.plugins[plugin.name] = plugin
+                return
             if plugin.name in self.plugins:
                     if not "debug" in plugin.flags and refresh:
-                        self.logger.info(f"Plugin {plugin.name} is already loaded and has requested to not be re-loaded")
+                        self.logger.info(f"Plugin {plugin.get_display_name()} is already loaded and has requested to not be re-loaded")
                         return
                     else:
                         await self.plugins[plugin.name].stop()
                         self.plugins.pop(plugin.name, None)
             if plugin.passive:
-                self.logger.info(f"Plugin {plugin.name} is passive")
+                self.logger.info(f"Plugin {plugin.get_display_name()} is passive")
 
             self.plugins[plugin.name] = plugin.start()
-            self.logger.info(f"Loaded {plugin.name}")
+            self.logger.info(f"Loaded {plugin.get_display_name()}")
             if not batch:
                 self.loop.create_task(self.dispatch_plugin(plugin.name, plugin.version, plugin.load_type))
         except Exception as e:
@@ -174,7 +188,7 @@ class Loader:
             print_exc()
 
     async def dispatch_plugin(self, name: str, version: str | None, load_type: int = PluginLoadType.ESMODULE_V1.value):
-        await self.ws.emit("loader/import_plugin", name, version, load_type)        
+        await self.ws.emit("loader/import_plugin", name, version, load_type, True, 15000)        
 
     async def import_plugins(self):
         self.logger.info(f"import plugins from {self.plugin_path}")
@@ -194,7 +208,7 @@ class Loader:
         plugin = self.plugins[plugin_name]
         try:
           if method_name.startswith("_"):
-              raise RuntimeError(f"Plugin {plugin.name} tried to call private method {method_name}")
+              raise RuntimeError(f"Plugin {plugin.get_display_name()} tried to call private method {method_name}")
           res["result"] = await plugin.execute_legacy_method(method_name, kwargs)
           res["success"] = True
         except Exception as e:
@@ -206,10 +220,10 @@ class Loader:
         plugin = self.plugins[plugin_name]
         try:
           if method_name.startswith("_"):
-              raise RuntimeError(f"Plugin {plugin.name} tried to call private method {method_name}")
+              raise RuntimeError(f"Plugin {plugin.get_display_name()} tried to call private method {method_name}")
           result = await plugin.execute_method(method_name, *args)
         except Exception as e:
-            self.logger.error(f"Method {method_name} of plugin {plugin.name} failed with the following exception:\n{format_exc()}")
+            self.logger.error(f"Method {method_name} of plugin {plugin.get_display_name()} failed with the following exception:\n{format_exc()}")
             raise e # throw again to pass the error to the frontend
         return result
 

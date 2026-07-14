@@ -1,4 +1,6 @@
-import { InstallType, Plugin, installPlugin, installPlugins } from './plugin';
+import { compare, validate } from 'compare-versions';
+
+import { DisabledPlugin, InstallType, Plugin, installPlugin, installPlugins } from './plugin';
 import { getSetting, setSetting } from './utils/settings';
 
 export enum Store {
@@ -80,27 +82,6 @@ export async function getPluginList(
       console.error('Somehow you ended up without a standard URL, using the default URL.');
       storeURL = 'https://plugins.deckbrew.xyz/plugins';
       break;
-      return fetch(storeURL, {
-        method: 'GET',
-        headers: {
-          'X-Decky-Version': version.current,
-        },
-      }).then((r) => r.json());
-  }
-  switch (+store) {
-    case Store.Default:
-      storeURL = 'https://plugins.deckbrew.xyz/plugins';
-      break;
-    case Store.Testing:
-      storeURL = 'https://testing.deckbrew.xyz/plugins';
-      break;
-    case Store.Custom:
-      storeURL = customURL;
-      break;
-    default:
-      console.error('Somehow you ended up without a standard URL, using the default URL.');
-      storeURL = 'https://plugins.deckbrew.xyz/plugins';
-      break;
   }
   return fetch(storeURL + query, {
     method: 'GET',
@@ -132,12 +113,23 @@ export async function requestMultiplePluginInstalls(requests: PluginInstallReque
   );
 }
 
-export async function checkForPluginUpdates(plugins: Plugin[]): Promise<PluginUpdateMapping> {
+export async function checkForPluginUpdates(plugins: (Plugin | DisabledPlugin)[]): Promise<PluginUpdateMapping> {
   const serverData = await getPluginList();
   const updateMap = new Map<string, StorePluginVersion>();
   for (let plugin of plugins) {
     const remotePlugin = serverData?.find((x) => x.name == plugin.name);
-    if (remotePlugin && remotePlugin.versions?.length > 0 && plugin.version != remotePlugin?.versions?.[0]?.name) {
+    //FIXME: Ugly hack since plugin.version might be null during evaluation,
+    //so this will set the older version possible
+    const curVer = plugin.version ? plugin.version : '0.0.0';
+
+    if (
+      remotePlugin &&
+      remotePlugin.versions?.length > 0 &&
+      plugin.version != remotePlugin?.versions?.[0]?.name &&
+      validate(remotePlugin.versions?.[0]?.name) &&
+      validate(curVer) &&
+      compare(remotePlugin?.versions?.[0]?.name, curVer, '>')
+    ) {
       updateMap.set(plugin.name, remotePlugin.versions[0]);
     }
   }

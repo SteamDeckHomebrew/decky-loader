@@ -24,7 +24,7 @@ class ErrorBoundaryHook extends Logger {
     window.__ERRORBOUNDARY_HOOK_INSTANCE = this;
 
     // valve writes only the sanest of code
-    const exp = /^\(\)=>\(.\|\|.\(new .\),.\)$/;
+    const exp = /^\(\)=>\(.\|\|(?:.\(|\(.=)new .\),.\)$/;
     const initErrorReportingStore = findModuleExport(
       (e) => typeof e == 'function' && e?.toString && exp.test(e.toString()),
     );
@@ -79,9 +79,17 @@ class ErrorBoundaryHook extends Logger {
         this.setState(stateClone);
         return null;
       }
-      if (this.state.error) {
+      // yoinked from valve error boundary
+      if (this.state.error && this.props.errorKey == this.state.lastErrorKey) {
         const store = Object.getPrototypeOf(this)?.constructor?.sm_ErrorReportingStore || errorReportingStore;
-        return (
+
+        return void 0 !== this.props.fallback ? (
+          'function' == typeof this.props.fallback ? (
+            this.props.fallback(this.state.error.error)
+          ) : (
+            this.props.fallback
+          )
+        ) : (
           <DeckyErrorBoundary
             error={this.state.error}
             errorKey={this.props.errorKey}

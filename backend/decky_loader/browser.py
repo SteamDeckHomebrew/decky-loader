@@ -18,9 +18,10 @@ from enum import IntEnum
 from typing import Dict, List, TypedDict
 
 # Local modules
-from .localplatform.localplatform import chown, chmod
+from .localplatform.localplatform import chown, chmod, get_chown_plugin_path
 from .loader import Loader, Plugins
 from .helpers import get_ssl_context, download_remote_binary_to_path
+from .enums import UserType
 from .settings import SettingsManager
 
 logger = getLogger("Browser")
@@ -29,6 +30,8 @@ class PluginInstallType(IntEnum):
     INSTALL = 0
     REINSTALL = 1
     UPDATE = 2
+    DOWNGRADE = 3
+    OVERWRITE = 4
 
 class PluginInstallRequest(TypedDict):
     name: str
@@ -58,13 +61,6 @@ class PluginBrowser:
             return False
         zip_file = ZipFile(zip)
         zip_file.extractall(self.plugin_path)
-        plugin_folder = self.find_plugin_folder(name)
-        assert plugin_folder is not None
-        plugin_dir = path.join(self.plugin_path, plugin_folder)
-
-        if not chown(plugin_dir) or not chmod(plugin_dir, 555):
-            logger.error(f"chown/chmod exited with a non-zero exit code")
-            return False
         return True
 
     async def _download_remote_binaries_for_plugin_with_name(self, pluginBasePath: str):
@@ -72,6 +68,8 @@ class PluginBrowser:
         try:
             packageJsonPath = path.join(pluginBasePath, 'package.json')
             pluginBinPath = path.join(pluginBasePath, 'bin')
+
+            logger.debug(f"Checking package.json at {packageJsonPath}")
 
             if access(packageJsonPath, R_OK):
                 with open(packageJsonPath, "r", encoding="utf-8") as f:
@@ -81,6 +79,7 @@ class PluginBrowser:
                         chmod(pluginBasePath, 777)
                         if access(pluginBasePath, W_OK):
                             if not path.exists(pluginBinPath):
+                                logger.debug(f"Creating bin directory at {pluginBinPath}")
                                 mkdir(pluginBinPath)
                             if not access(pluginBinPath, W_OK):
                                 chmod(pluginBinPath, 777)
@@ -91,15 +90,14 @@ class PluginBrowser:
                             binName = remoteBinary["name"]
                             binURL = remoteBinary["url"]
                             binHash = remoteBinary["sha256hash"]
+                            logger.info(f"Attempting to download {binName} from {binURL}")
                             if not await download_remote_binary_to_path(binURL, binHash, path.join(pluginBinPath, binName)):
                                 rv = False
                                 raise Exception(f"Error Downloading Remote Binary {binName}@{binURL} with hash {binHash} to {path.join(pluginBinPath, binName)}")
 
-                        chown(self.plugin_path)
-                        chmod(pluginBasePath, 555)
                     else:
                         rv = True
-                        logger.debug(f"No Remote Binaries to Download")
+                        logger.info(f"No Remote Binaries to Download")
 
         except Exception as e:
             rv = False
@@ -118,6 +116,25 @@ class PluginBrowser:
                     return folder
             except:
                 logger.debug(f"skipping {folder}")
+    
+    def set_plugin_dir_permissions(self, plugin_dir: str) -> bool:
+        plugin_json_path = path.join(plugin_dir, 'plugin.json')
+        logger.debug(f"Checking plugin.json at {plugin_json_path}")
+
+        root_plugin = False
+
+        if access(plugin_json_path, R_OK):
+            with open(plugin_json_path, "r", encoding="utf-8") as f:
+                plugin_json = json.load(f)
+                if "flags" in plugin_json and "root" in plugin_json["flags"]:
+                    root_plugin = True
+
+        logger.debug("root_plugin %d, dir %s", root_plugin, plugin_dir)
+        if get_chown_plugin_path():
+            return chown(plugin_dir, UserType.EFFECTIVE_USER if root_plugin else UserType.HOST_USER, True) and chown(plugin_dir, UserType.EFFECTIVE_USER, False) and chmod(plugin_dir, 755) and chown(plugin_json_path, UserType.EFFECTIVE_USER, False) and chmod(plugin_json_path, 755)
+        else:
+            logger.debug("chown disabled by environment")
+            return True
 
     async def uninstall_plugin(self, name: str):
         if self.loader.watcher:
@@ -133,12 +150,14 @@ class PluginBrowser:
             # plugins_snapshot = self.plugins.copy()
             # snapshot_string = pformat(plugins_snapshot)
             # logger.debug("current plugins: %s", snapshot_string)
+                
             if name in self.plugins:
-                logger.debug("Plugin %s was found", name)
+                plugin_display = self.plugins[name].get_display_name()
+                logger.debug(f"Plugin {plugin_display} was found")
                 await self.plugins[name].stop(uninstall=True)
-                logger.debug("Plugin %s was stopped", name)
+                logger.debug(f"Plugin {plugin_display} was stopped")
                 del self.plugins[name]
-                logger.debug("Plugin %s was removed from the dictionary", name)
+                logger.debug(f"Plugin {plugin_display} was removed from the dictionary")
                 self.cleanup_plugin_settings(name)
             logger.debug("removing files %s" % str(name))
             rmtree(plugin_dir)
@@ -157,8 +176,16 @@ class PluginBrowser:
         # Will be set later in code
         res_zip = None
 
-        # Check if plugin is installed
+        # Check if plugin was already installed before this
         isInstalled = False
+
+        try:
+            pluginFolderPath = self.find_plugin_folder(name)
+            if pluginFolderPath:
+                isInstalled = True
+        except:
+            logger.error(f"Failed to determine if {name} is already installed, continuing anyway.")
+
         # Preserve plugin order before removing plugin (uninstall alters the order and removes the plugin from the list)
         current_plugin_order = self.settings.getSetting("pluginOrder")[:]
         if self.loader.watcher:
@@ -186,7 +213,7 @@ class PluginBrowser:
                 else:
                     logger.fatal(f"Could not fetch from URL. {await res.text()}")
 
-            await self.loader.ws.emit("loader/plugin_download_info", 80, "Store.download_progress_info.increment_count")
+            await self.loader.ws.emit("loader/plugin_download_info", 70, "Store.download_progress_info.increment_count")
             storeUrl = ""
             match self.settings.getSetting("store", 0):
                 case 0: storeUrl = "https://plugins.deckbrew.xyz/plugins" # default
@@ -199,7 +226,7 @@ class PluginBrowser:
                 if res.status != 200:
                     logger.error(f"Server did not accept install count increment request. code: {res.status}")
 
-        await self.loader.ws.emit("loader/plugin_download_info", 85, "Store.download_progress_info.parse_zip")
+        await self.loader.ws.emit("loader/plugin_download_info", 75, "Store.download_progress_info.parse_zip")
         if res_zip and version == "dev":
             with ZipFile(res_zip) as plugin_zip:
                 plugin_json_list = [file for file in plugin_zip.namelist() if file.endswith("/plugin.json") and file.count("/") == 1]
@@ -213,14 +240,19 @@ class PluginBrowser:
                     return
 
                 else:
-                    name = sub(r"/.+$", "", plugin_json_list[0])
-
-        try:
-            pluginFolderPath = self.find_plugin_folder(name)
-            if pluginFolderPath:
-                isInstalled = True
-        except:
-            logger.error(f"Failed to determine if {name} is already installed, continuing anyway.")
+                    plugin_json_file = plugin_json_list[0]
+                    name = sub(r"/.+$", "", plugin_json_file)
+                    try:
+                        with plugin_zip.open(plugin_json_file) as f:
+                            plugin_json_data = json.loads(f.read().decode('utf-8'))
+                            plugin_name_from_plugin_json = plugin_json_data.get('name')
+                            if plugin_name_from_plugin_json and plugin_name_from_plugin_json.strip():
+                                logger.info(f"Extracted plugin name from {plugin_json_file}: {plugin_name_from_plugin_json}")
+                                name = plugin_name_from_plugin_json
+                            else:
+                                logger.warning(f"Nonexistent or invalid 'name' key value in {plugin_json_file}. Falling back to extracting from path.")
+                    except Exception as e:
+                        logger.error(f"Failed to read or parse {plugin_json_file}: {str(e)}. Falling back to extracting from path.")
 
         # Check to make sure we got the file
         if res_zip is None:
@@ -229,7 +261,7 @@ class PluginBrowser:
 
         # If plugin is installed, uninstall it
         if isInstalled:
-            await self.loader.ws.emit("loader/plugin_download_info", 90, "Store.download_progress_info.uninstalling_previous")
+            await self.loader.ws.emit("loader/plugin_download_info", 80, "Store.download_progress_info.uninstalling_previous")
             try:
                 logger.debug("Uninstalling existing plugin...")
                 await self.uninstall_plugin(name)
@@ -237,7 +269,7 @@ class PluginBrowser:
                 logger.error(f"Plugin {name} could not be uninstalled.")
 
 
-        await self.loader.ws.emit("loader/plugin_download_info", 95, "Store.download_progress_info.installing_plugin")
+        await self.loader.ws.emit("loader/plugin_download_info", 90, "Store.download_progress_info.installing_plugin")
         # Install the plugin
         logger.debug("Unzipping...")
         ret = self._unzip_to_plugin_dir(res_zip, name, hash)
@@ -245,8 +277,9 @@ class PluginBrowser:
             plugin_folder = self.find_plugin_folder(name)
             assert plugin_folder is not None
             plugin_dir = path.join(self.plugin_path, plugin_folder)
-            #TODO count again from 0% to 100% quickly for this one if it does anything
+            await self.loader.ws.emit("loader/plugin_download_info", 95, "Store.download_progress_info.download_remote")
             ret = await self._download_remote_binaries_for_plugin_with_name(plugin_dir)
+            chown_ret = self.set_plugin_dir_permissions(plugin_dir)
             if ret:
                 logger.info(f"Installed {name} (Version: {version})")
                 if name in self.loader.plugins:
@@ -259,8 +292,12 @@ class PluginBrowser:
                     self.settings.setSetting("pluginOrder", current_plugin_order)
                     logger.debug("Plugin %s was added to the pluginOrder setting", name)
                 await self.loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_folder)
+            elif not chown_ret:
+                logger.error("Could not chown plugin")
+                return
             else:
-                logger.fatal(f"Failed Downloading Remote Binaries")
+                logger.error("Could not download remote binaries")
+                return
         else:
             logger.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
         if self.loader.watcher:
@@ -311,4 +348,9 @@ class PluginBrowser:
             plugin_order.remove(name)
             self.settings.setSetting("pluginOrder", plugin_order)
             
+        disabled_plugins: List[str] = self.settings.getSetting("disabled_plugins", [])
+        if name in disabled_plugins:
+            disabled_plugins.remove(name)
+            self.settings.setSetting("disabled_plugins", disabled_plugins)
+
         logger.debug("Removed any settings for plugin %s", name)

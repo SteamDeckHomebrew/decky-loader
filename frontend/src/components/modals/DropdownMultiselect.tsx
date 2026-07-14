@@ -2,11 +2,11 @@ import {
   DialogButton,
   DialogCheckbox,
   DialogCheckboxProps,
-  Export,
   Marquee,
   Menu,
   MenuItem,
-  findModuleExport,
+  Module,
+  findModule,
   showContextMenu,
 } from '@decky/ui';
 import { FC, useCallback, useEffect, useState } from 'react';
@@ -14,9 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { FaChevronDown } from 'react-icons/fa';
 
 // TODO add to dfl
-const dropDownControlButtonClass = findModuleExport((e: Export) =>
-  e?.toString()?.includes('gamepaddropdown_DropDownControlButton'),
-);
+const dropDownControlButtonClasses = findModule((m: Module) => m?.DropDownControlButton && m?.['duration-app-launch']);
 
 const DropdownMultiselectItem: FC<
   {
@@ -76,7 +74,7 @@ const DropdownMultiselect: FC<{
         alignItems: 'center',
         maxWidth: '100%',
       }}
-      className={dropDownControlButtonClass}
+      className={dropDownControlButtonClasses?.DropDownControlButton}
       onClick={(evt) => {
         evt.preventDefault();
         showContextMenu(

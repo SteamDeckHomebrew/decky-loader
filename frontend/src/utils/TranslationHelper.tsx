@@ -2,12 +2,10 @@ import { FC } from 'react';
 import { Translation } from 'react-i18next';
 
 import Logger from '../logger';
-import { InstallType } from '../plugin';
 import { WarnThirdPartyType } from './globalTypes';
 
 export enum TranslationClass {
   PLUGIN_LOADER = 'PluginLoader',
-  PLUGIN_INSTALL_MODAL = 'PluginInstallModal',
   DEVELOPER = 'Developer',
   WARN_THIRD_PARTY = 'WarnThirdParty',
 }
@@ -37,21 +35,6 @@ const TranslationHelper: FC<TranslationHelperProps> = ({
             return i18nArgs
               ? t(TranslationClass.PLUGIN_LOADER + '.' + transText, i18nArgs)
               : t(TranslationClass.PLUGIN_LOADER + '.' + transText);
-          case TranslationClass.PLUGIN_INSTALL_MODAL:
-            switch (installType) {
-              case InstallType.INSTALL:
-                return i18nArgs
-                  ? t(TranslationClass.PLUGIN_INSTALL_MODAL + '.install.' + transText, i18nArgs)
-                  : t(TranslationClass.PLUGIN_INSTALL_MODAL + '.install.' + transText);
-              case InstallType.REINSTALL:
-                return i18nArgs
-                  ? t(TranslationClass.PLUGIN_INSTALL_MODAL + '.reinstall.' + transText, i18nArgs)
-                  : t(TranslationClass.PLUGIN_INSTALL_MODAL + '.reinstall.' + transText);
-              case InstallType.UPDATE:
-                return i18nArgs
-                  ? t(TranslationClass.PLUGIN_INSTALL_MODAL + '.update.' + transText, i18nArgs)
-                  : t(TranslationClass.PLUGIN_INSTALL_MODAL + '.update.' + transText);
-            }
           case TranslationClass.DEVELOPER:
             return i18nArgs
               ? t(TranslationClass.DEVELOPER + '.' + transText, i18nArgs)

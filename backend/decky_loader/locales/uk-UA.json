@@ -12,15 +12,49 @@
         "disabling": "Вимкнення React DevTools",
         "enabling": "Увімкнення React DevTools"
     },
+    "DropdownMultiselect": {
+        "button": {
+            "back": "Назад"
+        }
+    },
+    "FilePickerError": {
+        "errors": {
+            "file_not_found": "Вказаний шлях недійсний. Будь ласка, перевірте його та введіть правильно.",
+            "perm_denied": "У вас немає доступу до вказаного каталогу. Будь ласка, перевірте, чи має ваш користувач (deck на Steam Deck) відповідні права доступу до зазначеної папки/файлу.",
+            "unknown": "Сталася невідома помилка. Деталі помилки: {{raw_error}}"
+        }
+    },
     "FilePickerIndex": {
+        "file": {
+            "select": "Виберіть цей файл"
+        },
+        "files": {
+            "all_files": "Усі файли",
+            "file_type": "Тип файлу",
+            "show_hidden": "Показати приховані файли"
+        },
+        "filter": {
+            "created_asce": "Створено (спочатку найстаріші)",
+            "created_desc": "Створено (спочатку найновіші)",
+            "modified_asce": "Змінено (спочатку найстаріші)",
+            "modified_desc": "Змінено (спочатку найновіші)",
+            "name_asce": "Я-А",
+            "name_desc": "А-Я",
+            "size_asce": "Розмір (спочатку найменші)",
+            "size_desc": "Розмір (спочатку найбільші)"
+        },
         "folder": {
-            "select": "Використовувати цю папку"
+            "label": "Папка",
+            "select": "Використовувати цю папку",
+            "show_more": "Показати більше файлів"
         }
     },
     "MultiplePluginsInstallModal": {
         "confirm": "Ви впевнені, що хочете застосувати такі модифікації?",
         "description": {
+            "downgrade": "Понизити {{name}} до версії {{version}}",
             "install": "Встановити {{name}} {{version}}",
+            "overwrite": "Перезаписати {{name}} версією {{version}}",
             "reinstall": "Перевстановити {{name}} {{version}}",
             "update": "Оновити {{name}} до {{version}}"
         },
@@ -29,27 +63,43 @@
             "loading": "Опрацювання"
         },
         "title": {
-            "install_few": "Встановити {{count}} плагінів",
+            "downgrade_few": "Понизити {{count}} плагіни",
+            "downgrade_many": "Понизити {{count}} плагінів",
+            "downgrade_one": "Понизити {{count}} плагін",
+            "install_few": "Встановити {{count}} плагіни",
             "install_many": "Встановити {{count}} плагінів",
-            "install_one": "Встановити 1 плагін",
-            "mixed_few": "Модифікувати {{count}} плагінів",
-            "mixed_many": "",
-            "mixed_one": "Модифікувати 1 плагін",
-            "reinstall_few": "Перевстановити {{count}} плагінів",
+            "install_one": "Встановити {{count}} плагін",
+            "mixed_few": "Модифікувати {{count}} плагіни",
+            "mixed_many": "Модифікувати {{count}} плагінів",
+            "mixed_one": "Модифікувати {{count}} плагін",
+            "overwrite_few": "Перезаписати {{count}} плагіни",
+            "overwrite_many": "Перезаписати {{count}} плагінів",
+            "overwrite_one": "Перезаписати {{count}} плагін",
+            "reinstall_few": "Перевстановити {{count}} плагіни",
             "reinstall_many": "Перевстановити {{count}} плагінів",
-            "reinstall_one": "Перевстановити 1 плагін",
-            "update_few": "Оновити {{count}} плагінів",
+            "reinstall_one": "Перевстановити {{count}} плагін",
+            "update_few": "Оновити {{count}} плагіни",
             "update_many": "Оновити {{count}} плагінів",
-            "update_one": "Оновити 1 плагін"
+            "update_one": "Оновити {{count}} плагін"
         }
     },
     "PluginCard": {
+        "plugin_downgrade": "Понизити",
         "plugin_full_access": "Цей плагін має повний доступ до вашого Steam Deck.",
         "plugin_install": "Встановити",
         "plugin_no_desc": "Опис не надано.",
+        "plugin_overwrite": "Перезаписати",
+        "plugin_reinstall": "Перевстановити",
+        "plugin_update": "Оновити",
         "plugin_version_label": "Версія плагіна"
     },
     "PluginInstallModal": {
+        "downgrade": {
+            "button_idle": "Понизити",
+            "button_processing": "Пониження",
+            "desc": "Ви впевнені, що хочете понизити {{artifact}} до версії {{version}}?",
+            "title": "Понизити {{artifact}}"
+        },
         "install": {
             "button_idle": "Встановити",
             "button_processing": "Встановлення",
@@ -57,6 +107,13 @@
             "title": "Встановити {{artifact}}"
         },
         "no_hash": "Цей плагін не має хешу, ви встановлюєте його на власний ризик.",
+        "not_installed": "(не встановлено)",
+        "overwrite": {
+            "button_idle": "Перезаписати",
+            "button_processing": "Перезаписування",
+            "desc": "Ви впевнені, що хочете перезаписати {{artifact}} версією {{version}}?",
+            "title": "Перезаписати {{artifact}}"
+        },
         "reinstall": {
             "button_idle": "Перевстановити",
             "button_processing": "Перевстановлення",
@@ -66,21 +123,23 @@
         "update": {
             "button_idle": "Оновити",
             "button_processing": "Оновлення",
-            "desc": "Ви впевнені, що хочете оновити {{artifact}} {{version}}?",
+            "desc": "Ви впевнені, що хочете оновити {{artifact}} до версії {{version}}?",
             "title": "Оновити {{artifact}}"
         }
     },
     "PluginListIndex": {
+        "freeze": "Заморозити оновлення",
         "hide": "Швидкий доступ: Приховати",
         "no_plugin": "Плагінів не встановлено!",
         "plugin_actions": "Дії плагінів",
         "reinstall": "Перевстановити",
         "reload": "Перезавантажити",
         "show": "Швидкий доступ: Показати",
+        "unfreeze": "Дозволити оновлення",
         "uninstall": "Видалити",
-        "update_all_few": "Оновити {{count}} плагінів",
+        "update_all_few": "Оновити {{count}} плагіни",
         "update_all_many": "Оновити {{count}} плагінів",
-        "update_all_one": "Оновити 1 плагін",
+        "update_all_one": "Оновити {{count}} плагін",
         "update_to": "Оновити {{name}}"
     },
     "PluginListLabel": {
@@ -100,9 +159,9 @@
             "desc": "Ви впевнені, що хочете видалити {{name}}?",
             "title": "Видалити {{name}}"
         },
-        "plugin_update_few": "Доступне оновлення для {{count}} плагінів!",
+        "plugin_update_few": "Доступне оновлення для {{count}} плагіни!",
         "plugin_update_many": "Доступне оновлення для {{count}} плагінів!",
-        "plugin_update_one": "Доступне оновлення для 1 плагіна!"
+        "plugin_update_one": "Доступне оновлення для {{count}} плагіна!"
     },
     "PluginView": {
         "hidden_few": "{{count}} плагінів приховано з цього списку",
@@ -152,6 +211,11 @@
         "developer_mode": {
             "label": "Розробницький режим"
         },
+        "notifications": {
+            "decky_updates_label": "Доступне оновлення Decky",
+            "header": "Сповіщення",
+            "plugin_updates_label": "Доступні оновлення плагінів"
+        },
         "other": {
             "header": "Інше"
         },
@@ -162,9 +226,20 @@
     "SettingsIndex": {
         "developer_title": "Розробник",
         "general_title": "Загальне",
-        "plugins_title": "Плагіни"
+        "plugins_title": "Плагіни",
+        "testing_title": "Тестування"
     },
     "Store": {
+        "download_progress_info": {
+            "download_remote": "Завантаження будь-яких зовнішніх бінарних файлів",
+            "download_zip": "Завантаження плагіна",
+            "increment_count": "Збільшення лічильника завантажень",
+            "installing_plugin": "Встановлення плагіна",
+            "open_zip": "Відкриття ZIP-файлу",
+            "parse_zip": "Обробка ZIP-файлу",
+            "start": "Ініціалізація",
+            "uninstalling_previous": "Видалення попередньої копії"
+        },
         "store_contrib": {
             "desc": "Якщо ви бажаєте додати щось у Decky Plugin Store, завітайте у репозиторій SteamDeckHomebrew/decky-plugin-template на GitHub. Інформація про розробку та поширення доступна у README.",
             "label": "Зробити внесок"
@@ -188,9 +263,17 @@
             "about": "Інформація",
             "alph_asce": "За алфавітом (Z до A)",
             "alph_desc": "За алфавітом (A до Z)",
+            "date_asce": "Спочатку найстаріші",
+            "date_desc": "Спочатку найновіші",
+            "downloads_asce": "Спочатку найменш завантажені",
+            "downloads_desc": "Спочатку найчастіше завантажувані",
             "title": "Огляд"
         },
-        "store_testing_cta": "Розгляньте можливість тестування нових плагінів, щоб допомогти команді Decky Loader!"
+        "store_testing_cta": "Розгляньте можливість тестування нових плагінів, щоб допомогти команді Decky Loader!",
+        "store_testing_warning": {
+            "desc": "Ви можете використовувати цей канал магазину для тестування найновіших (експериментальних) версій плагінів. Обов’язково залишайте відгук на GitHub, щоб плагін можна було оновити для всіх користувачів.",
+            "label": "Ласкаво просимо до каналу тестування магазину"
+        }
     },
     "StoreSelect": {
         "custom_store": {
@@ -203,6 +286,17 @@
             "label": "Канал магазину",
             "testing": "Тестування"
         }
+    },
+    "Testing": {
+        "download": "Завантажити",
+        "error": "Помилка встановлення PR",
+        "header": "Наведені нижче версії Decky Loader зібрані з відкритих сторонніх Pull Request. Команда Decky Loader не перевіряла їхню функціональність або безпеку, і вони можуть бути застарілими.",
+        "loading": "Завантаження відкритих Pull Request...",
+        "start_download_toast": "Завантаження PR #{{id}}"
+    },
+    "TitleView": {
+        "decky_store_desc": "Відкрити Decky Store",
+        "settings_desc": "Відкрити налаштування Decky"
     },
     "Updater": {
         "decky_updates": "Оновлення Decky",

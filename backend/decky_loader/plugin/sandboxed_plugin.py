@@ -13,7 +13,8 @@ from .messages import SocketResponseDict, SocketMessageType
 from ..localplatform.localsocket import LocalSocket
 from ..localplatform.localplatform import setgid, setuid, get_username, get_home_path, ON_LINUX
 from ..enums import UserType
-from .. import helpers, settings, injector # pyright: ignore [reportUnusedImport]
+from .. import helpers
+from .. import settings # pyright: ignore [reportUnusedImport]
 
 from typing import List, TypeVar, Any
 
@@ -44,6 +45,13 @@ class SandboxedPlugin:
 
         self.log = getLogger("sandboxed_plugin")
 
+    def get_display_name(self) -> str:
+        """Returns plugin name with version if available, formatted for logging."""
+        if self.version:
+            return f"{self.name} (v{self.version})"
+
+        return self.name
+
     def initialize(self, socket: LocalSocket):
         self._socket = socket
 
@@ -61,10 +69,10 @@ class SandboxedPlugin:
             if self.passive:
                 return
                 
-            setgid(UserType.ROOT if "root" in self.flags else UserType.HOST_USER)
-            setuid(UserType.ROOT if "root" in self.flags else UserType.HOST_USER)
+            setgid(UserType.EFFECTIVE_USER if "root" in self.flags else UserType.HOST_USER)
+            setuid(UserType.EFFECTIVE_USER if "root" in self.flags else UserType.HOST_USER)
             # export a bunch of environment variables to help plugin developers
-            environ["HOME"] = get_home_path(UserType.ROOT if "root" in self.flags else UserType.HOST_USER)
+            environ["HOME"] = get_home_path(UserType.EFFECTIVE_USER if "root" in self.flags else UserType.HOST_USER)
             environ["USER"] = "root" if "root" in self.flags else get_username()
             environ["DECKY_VERSION"] = helpers.get_loader_version()
             environ["DECKY_USER"] = get_username()
@@ -124,51 +132,51 @@ class SandboxedPlugin:
                     get_event_loop().create_task(self.Plugin._main(self.Plugin))
             get_event_loop().create_task(socket.setup_server(self.on_new_message))
         except:
-            self.log.error("Failed to start " + self.name + "!\n" + format_exc())
+            self.log.error(f"Failed to start {self.get_display_name()}!\n{format_exc()}")
             sys.exit(0)
         try:
             get_event_loop().run_forever()
         except SystemExit:
             pass
         except:
-            self.log.error("Loop exited for " + self.name + "!\n" + format_exc())
+            self.log.error(f"Loop exited for {self.get_display_name()}!\n{format_exc()}")
         finally:
             get_event_loop().close()
 
     async def _unload(self):
         try:
-            self.log.info("Attempting to unload with plugin " + self.name + "'s \"_unload\" function.\n")
+            self.log.info(f"Attempting to unload with plugin {self.get_display_name()}'s \"_unload\" function.\n")
             if hasattr(self.Plugin, "_unload"):
                 if self.api_version > 0:
                     await self.Plugin._unload()
                 else:
                     await self.Plugin._unload(self.Plugin)
-                self.log.info("Unloaded " + self.name + "\n")
+                self.log.info(f"Unloaded {self.get_display_name()}\n")
             else:
-                self.log.info("Could not find \"_unload\" in " + self.name + "'s main.py" + "\n")
+                self.log.info(f"Could not find \"_unload\" in {self.get_display_name()}'s main.py\n")
         except:
-            self.log.error("Failed to unload " + self.name + "!\n" + format_exc())
+            self.log.error(f"Failed to unload {self.get_display_name()}!\n{format_exc()}")
             pass
 
     async def _uninstall(self):
         try:
-            self.log.info("Attempting to uninstall with plugin " + self.name + "'s \"_uninstall\" function.\n")
+            self.log.info(f"Attempting to uninstall with plugin {self.get_display_name()}'s \"_uninstall\" function.\n")
             if hasattr(self.Plugin, "_uninstall"):
                 if self.api_version > 0:
                     await self.Plugin._uninstall()
                 else:
                     await self.Plugin._uninstall(self.Plugin)
-                self.log.info("Uninstalled " + self.name + "\n")
+                self.log.info(f"Uninstalled {self.get_display_name()}\n")
             else:
-                self.log.info("Could not find \"_uninstall\" in " + self.name + "'s main.py" + "\n")
+                self.log.info(f"Could not find \"_uninstall\" in {self.get_display_name()}'s main.py\n")
         except:
-            self.log.error("Failed to uninstall " + self.name + "!\n" + format_exc())
+            self.log.error(f"Failed to uninstall {self.get_display_name()}!\n{format_exc()}")
             pass
 
     async def shutdown(self):
         if not self.shutdown_running:
             self.shutdown_running = True
-            self.log.info(f"Calling Loader unload function for {self.name}.")
+            self.log.info(f"Calling Loader unload function for {self.get_display_name()}.")
             await self._unload()
 
             if self.uninstalling:
@@ -186,6 +194,7 @@ class SandboxedPlugin:
 
         if "uninstall" in data:
             self.uninstalling = data.get("uninstall")
+            return
 
         d: SocketResponseDict = {"type": SocketMessageType.RESPONSE, "res": None, "success": True, "id": data["id"]}
         try:

@@ -50,7 +50,7 @@ def chown_plugin_dir():
     if not path.exists(plugin_path): # For safety, create the folder before attempting to do anything with it
         mkdir_as_user(plugin_path)
 
-    if not chown(plugin_path, UserType.HOST_USER) or not chmod(plugin_path, 555):
+    if not chown(plugin_path, UserType.EFFECTIVE_USER, False) or not chmod(plugin_path, 755, False):
         logger.error(f"chown/chmod exited with a non-zero exit code")
 
 if get_chown_plugin_path() == True:

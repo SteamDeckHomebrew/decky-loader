@@ -28,7 +28,7 @@ class Toaster extends Logger {
     window.__TOASTER_INSTANCE?.deinit?.();
     window.__TOASTER_INSTANCE = this;
 
-    const ValveToastRenderer = findModuleExport((e) => e?.toString()?.includes(`controller:"notification",method:`));
+    const ValveToastRenderer = findModuleExport((e) => e?.toString?.()?.includes(`controller:"notification",method:`));
     // TODO find a way to undo this if possible?
     const patchedRenderer = injectFCTrampoline(ValveToastRenderer);
     this.toastPatch = replacePatch(patchedRenderer, 'component', (args: any[]) => {
@@ -64,7 +64,7 @@ class Toaster extends Logger {
       nNotificationID: window.NotificationStore.m_nNextTestNotificationID++,
       bNewIndicator: toast.showNewIndicator,
       rtCreated: Date.now(),
-      eType: toast.eType || 13,
+      eType: toast.eType || 31,
       eSource: 1, // Client
       nToastDurationMS: toast.duration || (toast.duration = 5e3),
       data: toast,
@@ -81,6 +81,7 @@ class Toaster extends Logger {
     const info = {
       showToast: toast.showToast,
       sound: toast.sound,
+      playSound: toast.playSound,
       eFeature: 0,
       toastDurationMS: toastData.nToastDurationMS,
       bCritical: toast.critical,

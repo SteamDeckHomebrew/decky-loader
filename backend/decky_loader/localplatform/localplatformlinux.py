@@ -30,7 +30,7 @@ service_manager = _get_service_manager()
 # subprocess._ENV
 ENV = Mapping[str, str]
 ProcessIO = int | IO[Any] | None
-async def run(args: list[str], stdin: ProcessIO = DEVNULL, stdout: ProcessIO = PIPE, stderr: ProcessIO = PIPE, env: ENV | None = {"LD_LIBRARY_PATH": ""}) -> tuple[Process, bytes | None, bytes | None]:
+async def run(args: list[str], stdin: ProcessIO = DEVNULL, stdout: ProcessIO = PIPE, stderr: ProcessIO = PIPE, env: ENV | None = {"PATH":os.getenv("PATH", ""), "LD_LIBRARY_PATH": ""}) -> tuple[Process, bytes | None, bytes | None]:
     proc = await create_subprocess_exec(args[0], *(args[1:]), stdin=stdin, stdout=stdout, stderr=stderr, env=env)
     proc_stdout, proc_stderr = await proc.communicate()
     return (proc, proc_stdout, proc_stderr)

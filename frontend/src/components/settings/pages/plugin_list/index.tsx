@@ -281,7 +281,12 @@ export default function PluginList({ isDeveloper }: { isDeveloper: boolean }) {
         </DialogButton>
       )}
       <DialogControlsSection style={{ marginTop: 0 }}>
-        <ReorderableList<PluginTableData> entries={pluginEntries} onSave={onSave} interactables={PluginInteractables} />
+        <ReorderableList<PluginTableData>
+          entries={pluginEntries}
+          onSave={onSave}
+          interactables={PluginInteractables}
+          disableReordering={sortPlugins}
+        />
       </DialogControlsSection>
     </DialogBody>
   );

@@ -1,8 +1,9 @@
-import { ConfirmModal, Navigation, ProgressBarWithInfo, QuickAccessTab } from '@decky/ui';
+import { ConfirmModal, Navigation, QuickAccessTab } from '@decky/ui';
 import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { InstallType, InstallTypeTranslationMapping } from '../../plugin';
+import PluginInstallProgress from './PluginInstallProgress';
 
 interface PluginInstallModalProps {
   artifact: string;
@@ -66,7 +67,7 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
         await onCancel();
       }}
       strTitle={
-        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
+        <div>
           {
             // IMPORTANT! These comments are not cosmetic and are needed for `extracttext` task to work
             // t('PluginInstallModal.install.title')
@@ -76,16 +77,6 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
             // t('PluginInstallModal.overwrite.title')
             t(`PluginInstallModal.${installTypeTranslationKey}.title`, { artifact: artifact })
           }
-          {loading && (
-            <div style={{ marginLeft: 'auto' }}>
-              <ProgressBarWithInfo
-                layout="inline"
-                bottomSeparator="none"
-                nProgress={percentage}
-                sOperationText={downloadInfo}
-              />
-            </div>
-          )}
         </div>
       }
       strOKButtonText={
@@ -128,6 +119,7 @@ const PluginInstallModal: FC<PluginInstallModalProps> = ({
         }
       </div>
       {hash == 'False' && <span style={{ color: 'red' }}>{t('PluginInstallModal.no_hash')}</span>}
+      {loading && <PluginInstallProgress percentage={percentage} operationText={downloadInfo} />}
     </ConfirmModal>
   );
 };

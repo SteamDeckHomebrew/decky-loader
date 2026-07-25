@@ -1,12 +1,21 @@
 // Sets up DFL, then loads start.ts which starts up the loader
 
+interface SteamAppInitialization {
+  BFinishedInitBeforeLogin?: () => boolean;
+  BFinishedInitStageOne?: () => boolean;
+}
+
+const isSteamAppInitialized = () => {
+  const app = window.App as unknown as SteamAppInitialization | undefined;
+  return app?.BFinishedInitBeforeLogin?.() ?? app?.BFinishedInitStageOne?.() ?? false;
+};
+
 (async () => {
   console.debug('[Decky:Boot] Frontend init');
 
   console.time('[Decky:Boot] Waiting for SteamApp init stage 1 to finish...');
 
-  // @ts-expect-error TODO type BFinishedInitStageOne in @decky/ui
-  while (!window.App?.BFinishedInitStageOne()) {
+  while (!isSteamAppInitialized()) {
     await new Promise((r) => setTimeout(r, 0)); // Can't use DFL sleep here.
   }
 

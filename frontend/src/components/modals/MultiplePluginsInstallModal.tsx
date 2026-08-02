@@ -1,9 +1,10 @@
-import { ConfirmModal, Navigation, ProgressBarWithInfo, QuickAccessTab } from '@decky/ui';
+import { ConfirmModal, Navigation, QuickAccessTab } from '@decky/ui';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaCheck, FaDownload } from 'react-icons/fa';
 
 import { DisabledPlugin, InstallType, InstallTypeTranslationMapping } from '../../plugin';
+import PluginInstallProgress from './PluginInstallProgress';
 
 interface MultiplePluginsInstallModalProps {
   requests: { name: string; version: string; hash: string; install_type: InstallType }[];
@@ -132,15 +133,12 @@ const MultiplePluginsInstallModal: FC<MultiplePluginsInstallModalProps> = ({
             );
           })}
         </ul>
-        {/* TODO: center the progress bar and make it 80% width */}
         {loading && (
-          <ProgressBarWithInfo
+          <PluginInstallProgress
             // when the key changes, react considers this a new component so resets the progress without the smoothing animation
             key={pluginInProgress}
-            bottomSeparator="none"
-            focusable={false}
-            nProgress={percentage}
-            sOperationText={downloadInfo}
+            percentage={percentage}
+            operationText={downloadInfo}
           />
         )}
       </div>

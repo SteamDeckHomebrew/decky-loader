@@ -1,10 +1,12 @@
 from ..enums import UserType
-import os
 from . import localplatformlinux
 
-# this should be public
+# NOTE: localplatformlinux has these private functions that get used in helpers.py
+def _get_user_id() -> int: # pyright: ignore[reportUnusedFunction]
+    return localplatformlinux._get_user_id() # pyright: ignore[reportPrivateUsage]
+
 def _get_effective_user_id() -> int: # pyright: ignore[reportUnusedFunction]
-    return os.geteuid()
+    return localplatformlinux._get_effective_user_id() # pyright: ignore[reportPrivateUsage]
 
 def chown(path : str,  user : UserType = UserType.HOST_USER, recursive : bool = True) -> bool:
     return localplatformlinux.chown(path, user, recursive)
@@ -43,7 +45,7 @@ def get_username() -> str:
     return localplatformlinux.get_username()
 
 def get_privileged_path() -> str:
-    '''On Mac, privileged_path is equal to unprivileged_path'''
+    # On Mac, privileged_path is equal to unprivileged_path
     return get_unprivileged_path()
 
 def get_unprivileged_path() -> str:

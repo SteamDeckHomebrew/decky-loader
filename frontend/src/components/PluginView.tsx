@@ -16,6 +16,7 @@ const PluginView: FC = () => {
     updates,
     activePlugin,
     pluginOrder,
+    sortPlugins,
     setActivePlugin,
     closeActivePlugin,
   } = useDeckyState();
@@ -26,10 +27,14 @@ const PluginView: FC = () => {
     console.log('updating PluginView after changes');
 
     return [...plugins]
-      .sort((a, b) => pluginOrder.indexOf(a.name) - pluginOrder.indexOf(b.name))
+      .sort((a, b) =>
+        sortPlugins
+          ? a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+          : pluginOrder.indexOf(a.name) - pluginOrder.indexOf(b.name),
+      )
       .filter((p) => p.content)
       .filter(({ name }) => !hiddenPlugins.includes(name));
-  }, [plugins, pluginOrder, hiddenPlugins]);
+  }, [plugins, pluginOrder, sortPlugins, hiddenPlugins]);
 
   const numberOfHidden = hiddenPlugins.filter((name) => !!plugins.find((p) => p.name === name)).length;
 

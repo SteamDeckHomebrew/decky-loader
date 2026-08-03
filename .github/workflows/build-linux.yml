@@ -1,16 +1,21 @@
-name: Builder
+name: Builder (Linux)
 
 on:
-  push:
-  pull_request:
   workflow_call:
-  # schedule:
-  #   - cron: '0 13 * * *' # run at 1 PM UTC
+    inputs:
+      arch:
+        description: Architecture to build for (x86_64, arm64)
+        type: string
+        default: x86_64
+      output_name:
+        description: Output name
+        type: string
+        default: PluginLoader
 
 jobs:
   build:
-    name: Build PluginLoader
-    runs-on: ubuntu-22.04
+    name: Build ${{ inputs.output_name }} (Linux ${{ inputs.arch }})
+    runs-on: ${{ inputs.arch == 'arm64' && 'ubuntu-24.04-arm' || 'ubuntu-22.04' }}
 
     steps:
     - name: Checkout 🧰
@@ -55,15 +60,19 @@ jobs:
         poetry dynamic-versioning 
         pyinstaller pyinstaller.spec
 
+    - name: Rename artifact 🛠️
+      if: ${{ inputs.output_name != 'PluginLoader' }}
+      run: mv ./backend/dist/PluginLoader ./backend/dist/${{ inputs.output_name }}
+
     - name: Upload package artifact ⬆️
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v4
       with:
-        name: PluginLoader
-        path: ./backend/dist/PluginLoader
+        name: ${{ inputs.output_name }}
+        path: ./backend/dist/${{ inputs.output_name }}
 
     - name: Download package artifact locally
       if: ${{ env.ACT }}
       uses: actions/upload-artifact@v4
       with:
-        path: ./backend/dist/PluginLoader
+        path: ./backend/dist/${{ inputs.output_name }}

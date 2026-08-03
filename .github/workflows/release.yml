@@ -123,18 +123,24 @@ jobs:
 
   build:
     name: Build tagged artifact
-    uses: ./.github/workflows/build.yml
+    uses: ./.github/workflows/build-linux-x86_64.yml
+    needs: [create_tag]
+
+  build_arm64:
+    name: Build tagged artifact (arm64)
+    uses: ./.github/workflows/build-linux-arm64.yml
     needs: [create_tag]
 
   release:
-    name: Release tagged artifact
+    name: Release tagged artifacts
     runs-on: ubuntu-22.04
-    needs: [create_tag, build]
+    needs: [create_tag, build, build_arm64]
     steps:
-      - name: Fetch package artifact ⬇️
+      - name: Fetch package artifacts ⬇️
         uses: actions/download-artifact@v4
         with:
-          name: PluginLoader
+          pattern: PluginLoader*
+          merge-multiple: true
 
       - name: Pre-release 📦
         if: github.event.inputs.release == 'prerelease'
@@ -142,7 +148,9 @@ jobs:
         with:
           name: Prerelease ${{ needs.create_tag.outputs.tag_name }}
           tag_name: ${{ needs.create_tag.outputs.tag_name }}
-          files: ./PluginLoader
+          files: |
+            ./PluginLoader
+            ./PluginLoader-arm64
           prerelease: true
           generate_release_notes: true
       - name: Release 📦
@@ -151,6 +159,8 @@ jobs:
         with:
           name: Release ${{ needs.create_tag.outputs.tag_name }}
           tag_name: ${{ needs.create_tag.outputs.tag_name }}
-          files: ./PluginLoader
+          files: |
+            ./PluginLoader
+            ./PluginLoader-arm64
           prerelease: false
           generate_release_notes: true

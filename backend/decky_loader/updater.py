@@ -6,7 +6,7 @@ from os import getcwd, path, remove
 from typing import TYPE_CHECKING, List, TypedDict
 if TYPE_CHECKING:
     from .main import PluginManager
-from .localplatform.localplatform import chmod, service_restart, service_stop, ON_LINUX, ON_WINDOWS, get_keep_systemd_service, get_selinux
+from .localplatform.localplatform import chmod, service_restart, service_stop, ON_LINUX, ON_WINDOWS, ON_ARM64, get_keep_systemd_service, get_selinux
 import shutil
 from typing import List, TYPE_CHECKING, TypedDict
 import zipfile
@@ -138,8 +138,35 @@ class Updater:
                 pass
             await sleep(60 * 60 * 6) # 6 hours
 
+    def get_remote_binary_name(self):
+        """
+            The binaries on GitHub contain an extra part in their name to denote their architecture
+            
+            For example:
+                Windows: PluginLoader.exe
+                Linux (x86_64): PluginLoader
+                Linux (arm64): PluginLoader-arm64
+        """
+        binary_name = "PluginLoader"
+
+        if ON_ARM64 and ON_LINUX:
+            binary_name += "-arm64"
+
+        if ON_WINDOWS:
+            binary_name += ".exe"
+
+        return binary_name
+    
+    def get_local_binary_name(self):
+        binary_name = "PluginLoader"
+
+        if ON_WINDOWS:
+            binary_name += ".exe"
+
+        return binary_name
+
     async def download_decky_binary(self, download_url: str, version: str, is_zip: bool = False, size_in_bytes: int | None = None):
-        download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
+        download_filename = self.get_local_binary_name()
         download_temp_filename = download_filename + ".new"
 
         if size_in_bytes == None:
@@ -196,10 +223,10 @@ class Updater:
         version = self.remoteVer["tag_name"]
         download_url = None
         size_in_bytes = None
-        download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
+        remote_binary_name = self.get_remote_binary_name()
 
         for x in self.remoteVer["assets"]:
-            if x["name"] == download_filename:
+            if x["name"] == remote_binary_name:
                 download_url = x["browser_download_url"]
                 size_in_bytes = x["size"]
                 break
@@ -270,10 +297,16 @@ class Updater:
                 works = await res.json()
         #Iterate over the workflow_run to get the two builds if they exists
         for work in works['workflow_runs']:
-            if ON_WINDOWS and work['name'] == 'Builder Win':
+            # Windows x86_64
+            if ON_WINDOWS and work['name'] == 'Builder (Windows)' or work['name'] == 'Builder Win':
                 down_id=work['id']
                 break
-            elif ON_LINUX and work['name'] == 'Builder':
+            # Linux arm64
+            elif ON_LINUX and ON_ARM64 and work['name'] == 'Builder (Linux arm64)':
+                down_id=work['id']
+                break
+            # Linux x86_64
+            elif ON_LINUX and work['name'] == 'Builder (Linux x86_64)' or work['name'] == 'Builder':
                 down_id=work['id']
                 break
         if down_id != '':

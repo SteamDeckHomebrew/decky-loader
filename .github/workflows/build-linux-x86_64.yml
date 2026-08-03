@@ -1,0 +1,13 @@
+name: Builder (Linux x86_64)
+
+on:
+  push:
+  pull_request:
+  workflow_call:
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-linux.yml
+    with:
+      arch: x86_64
+      output_name: PluginLoader

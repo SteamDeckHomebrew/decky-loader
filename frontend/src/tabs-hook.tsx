@@ -29,6 +29,8 @@ interface Tab {
 class TabsHook extends Logger {
   // private keys = 7;
   tabs: Tab[] = [];
+  private qamBrowserViewRenderer?: any;
+  private qamEmbeddedRenderer?: any;
   private qamBrowserViewPatch?: Patch;
   private qamEmbeddedPatch?: Patch;
 
@@ -42,10 +44,10 @@ class TabsHook extends Logger {
 
   init() {
     const qamModule = findModuleByExport((e) => e?.type?.toString?.()?.includes('QuickAccessMenuBrowserView'));
-    const qamBrowserViewRenderer = Object.values(qamModule).find((e: any) =>
+    this.qamBrowserViewRenderer = Object.values(qamModule).find((e: any) =>
       e?.type?.toString?.()?.includes('QuickAccessMenuBrowserView'),
     );
-    const qamEmbeddedRenderer = Object.values(qamModule).find((e: any) =>
+    this.qamEmbeddedRenderer = Object.values(qamModule).find((e: any) =>
       e?.type?.toString?.()?.includes('QuickAccessMenuEmbedded'),
     );
 
@@ -59,8 +61,10 @@ class TabsHook extends Logger {
       'TabsHook',
     );
 
-    this.qamBrowserViewPatch = afterPatch(qamBrowserViewRenderer, 'type', patchHandler);
-    if (qamEmbeddedRenderer) this.qamEmbeddedPatch = afterPatch(qamEmbeddedRenderer, 'type', patchHandler);
+    this.qamBrowserViewPatch = this.installBootstrapPatch(this.qamBrowserViewRenderer, patchHandler);
+    if (this.qamEmbeddedRenderer) {
+      this.qamEmbeddedPatch = this.installBootstrapPatch(this.qamEmbeddedRenderer, patchHandler);
+    }
 
     // Patch already rendered qam
     const root = getReactRoot(document.getElementById('root') as any);
@@ -69,22 +73,63 @@ class TabsHook extends Logger {
       findInReactTree(
         root,
         (n: any) =>
-          n.elementType == qamBrowserViewRenderer ||
-          (qamEmbeddedRenderer != null && n.elementType == qamEmbeddedRenderer),
+          n.elementType == this.qamBrowserViewRenderer ||
+          (this.qamEmbeddedRenderer != null && n.elementType == this.qamEmbeddedRenderer),
       ); // need elementType, because type is actually mobx wrapper
     if (qamNode) {
       console.log('patching existing qam');
-      // Only affects this fiber node so we don't need to unpatch here
-      qamNode.type = qamNode.elementType.type;
+      const patch =
+        qamNode.elementType == this.qamBrowserViewRenderer ? this.qamBrowserViewPatch : this.qamEmbeddedPatch;
+      qamNode.type = patch?.patchedFunction;
       if (qamNode?.alternate) {
         qamNode.alternate.type = qamNode.type;
       }
     }
   }
 
+  private installBootstrapPatch(renderer: any, patchHandler: (args: any[], ret: any) => any): Patch {
+    let patch: Patch;
+    let hasBootstrapped = false;
+    patch = afterPatch(renderer, 'type', (args, ret) => {
+      if (hasBootstrapped) return ret;
+      hasBootstrapped = true;
+
+      const patchedTree = patchHandler(args, ret);
+
+      // createReactTreePatcher has installed the persistent inner patch now. Drop this
+      // outer wrapper after the first render so every QAM render does not traverse and
+      // mutate the React tree. Existing fibers retain their function type, so restore
+      // those after React finishes committing this render as well.
+      patch.unpatch();
+      this.restoreRendererFiber(renderer, patch);
+      queueMicrotask(() => this.restoreRendererFiber(renderer, patch));
+      return patchedTree;
+    });
+    return patch;
+  }
+
+  private restoreRendererFiber(renderer?: any, patch?: Patch) {
+    if (!renderer || !patch) return;
+
+    const root = getReactRoot(document.getElementById('root') as any);
+    const qamNode =
+      root &&
+      findInReactTree(
+        root,
+        (n: any) =>
+          n.elementType == renderer && (n.type == patch.patchedFunction || n.alternate?.type == patch.patchedFunction),
+      );
+    if (!qamNode) return;
+
+    if (qamNode.type == patch.patchedFunction) qamNode.type = patch.original;
+    if (qamNode.alternate?.type == patch.patchedFunction) qamNode.alternate.type = patch.original;
+  }
+
   deinit() {
-    this.qamBrowserViewPatch?.unpatch();
-    this.qamEmbeddedPatch?.unpatch();
+    if (this.qamBrowserViewPatch && !this.qamBrowserViewPatch.hasUnpatched) this.qamBrowserViewPatch.unpatch();
+    if (this.qamEmbeddedPatch && !this.qamEmbeddedPatch.hasUnpatched) this.qamEmbeddedPatch.unpatch();
+    this.restoreRendererFiber(this.qamBrowserViewRenderer, this.qamBrowserViewPatch);
+    this.restoreRendererFiber(this.qamEmbeddedRenderer, this.qamEmbeddedPatch);
   }
 
   add(tab: Tab) {

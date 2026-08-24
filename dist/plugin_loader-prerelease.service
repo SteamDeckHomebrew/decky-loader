@@ -13,4 +13,4 @@ Environment=UNPRIVILEGED_PATH=${HOMEBREW_FOLDER}
 Environment=PRIVILEGED_PATH=${HOMEBREW_FOLDER}
 Environment=LOG_LEVEL=DEBUG
 [Install]
-WantedBy=multi-user.target
+WantedBy=graphical.target

@@ -60,7 +60,7 @@ class RouterHook extends Logger {
     if (reactRouterStackModule) {
       this.Route =
         Object.values(reactRouterStackModule).find(
-          (e) => typeof e == 'function' && /routePath:.\.match\?\.path./.test(e.toString()),
+          (e) => typeof e == 'function' && /routePath:[\w$]+\.match\?\.path./.test(e.toString()),
         ) ||
         Object.values(reactRouterStackModule).find(
           (e) => typeof e == 'function' && /routePath:null===\(.=.\.match\)/.test(e.toString()),

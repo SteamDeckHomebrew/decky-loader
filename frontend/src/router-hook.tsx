@@ -82,10 +82,7 @@ class RouterHook extends Logger {
     const routerModule = findModuleByExport((e) => e?.displayName == 'Router');
     if (routerModule) {
       this.DesktopRoute = Object.values(routerModule).find(
-        (e) =>
-          typeof e == 'function' &&
-          e?.prototype?.render?.toString()?.includes('props.computedMatch') &&
-          e?.prototype?.render?.toString()?.includes('.Children.count('),
+        (e) => typeof e == 'function' && e?.prototype?.render?.toString()?.includes('props.computedMatch'),
       );
       if (!this.DesktopRoute) {
         this.error('Failed to find DesktopRoute component');

@@ -30,8 +30,20 @@ export async function loadPlugin(
   }
 }
 
-function isAbortError(error: any): boolean {
-  return 'name' in error && error.name === 'AbortError';
+function isAbortError(error: unknown): boolean {
+  return typeof error === 'object' && error !== null && 'name' in error && error.name === 'AbortError';
+}
+
+function normalizeLegacyError({
+  error,
+  didTimeout,
+  timeoutException,
+}: {
+  error: unknown;
+  didTimeout: boolean;
+  timeoutException: Error;
+}): unknown {
+  return didTimeout && isAbortError(error) ? timeoutException : error;
 }
 
 async function loadESModulePlugin(
@@ -61,7 +73,13 @@ async function loadLegacyPlugin(
 ): Promise<Plugin> {
   const controller = new AbortController();
   let timeout: number | undefined;
-  if (request.timeoutMS !== undefined) timeout = setTimeout(() => controller.abort(), request.timeoutMS);
+  let didTimeout = false;
+  if (request.timeoutMS !== undefined) {
+    timeout = setTimeout(() => {
+      didTimeout = true;
+      controller.abort();
+    }, request.timeoutMS);
+  }
 
   try {
     const response = await dependencies.fetch(`http://127.0.0.1:1337/plugins/${request.name}/frontend_bundle`, {
@@ -79,8 +97,8 @@ async function loadLegacyPlugin(
         `\n//# sourceURL=decky://decky/legacy_plugin/${encodeURIComponent(request.name)}/index.js`,
     );
     return pluginExport(dependencies.createLegacyPluginAPI(request.name));
-  } catch (error: any) {
-    throw isAbortError(error) ? timeoutException : error;
+  } catch (error: unknown) {
+    throw normalizeLegacyError({ error, didTimeout, timeoutException });
   } finally {
     if (timeout !== undefined) clearTimeout(timeout);
   }

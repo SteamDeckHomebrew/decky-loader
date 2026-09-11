@@ -141,7 +141,44 @@ describe('loadPlugin', () => {
     expect(vi.getTimerCount()).toBe(0);
   });
 
-  it.each([new Error('network failed'), { reason: 'offline' }])(
+  it.each([undefined, 50])('preserves an external abort with timeout %s', async (timeoutMS) => {
+    vi.useFakeTimers();
+    const dependencies = createDependencies();
+    const externalAbort = new DOMException('externally aborted', 'AbortError');
+    vi.mocked(dependencies.fetch).mockRejectedValue(externalAbort);
+
+    await expect(
+      loadPlugin(request({ loadType: PluginLoadType.LEGACY_EVAL_IIFE, timeoutMS }), timeoutException, dependencies),
+    ).rejects.toBe(externalAbort);
+
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it.each([new Error('network failed'), { name: 'NetworkError' }, { reason: 'offline' }, null, 'offline', 503])(
+    'preserves a non-abort rejection after the timeout fires %#',
+    async (failure) => {
+      vi.useFakeTimers();
+      const dependencies = createDependencies();
+      vi.mocked(dependencies.fetch).mockImplementation((_url, init) => {
+        return new Promise((_resolve, reject) => {
+          init?.signal?.addEventListener('abort', () => reject(failure));
+        });
+      });
+
+      const result = loadPlugin(
+        request({ loadType: PluginLoadType.LEGACY_EVAL_IIFE, timeoutMS: 50 }),
+        timeoutException,
+        dependencies,
+      );
+      const expectation = expect(result).rejects.toBe(failure);
+      await vi.advanceTimersByTimeAsync(50);
+
+      await expectation;
+      expect(vi.getTimerCount()).toBe(0);
+    },
+  );
+
+  it.each([new Error('network failed'), { reason: 'offline' }, null, 'offline', 503])(
     'preserves non-timeout legacy failures %#',
     async (failure) => {
       const dependencies = createDependencies();

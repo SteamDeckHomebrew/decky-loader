@@ -90,7 +90,7 @@ type LoaderInternals = {
   }) => Promise<void>;
   importPlugin: PluginLoader['importPlugin'];
   log: ReturnType<typeof vi.fn>;
-  pluginReloadQueue: { name: string; version?: string; loadType: PluginLoadType }[];
+  pluginReloadQueue: { name: string; version?: string; loadType: PluginLoadType; timeoutMS?: number }[];
   pluginEventListeners: Map<string, Map<string, Set<(...args: any[]) => any>>>;
   pluginEventListener: PluginLoader['pluginEventListener'];
   plugins: any[];
@@ -222,23 +222,22 @@ describe('PluginLoader characterization', () => {
     expect(loader.restartWebhelper).toHaveBeenCalledOnce();
   });
 
-  it('serializes queued reloads and forwards the timeout', async () => {
+  it('serializes queued reloads with each request timeout', async () => {
     const loader = createLoader();
     loader.reloadLock = true;
     const importSpy = vi.spyOn(loader, 'importPlugin');
 
-    await loader.importPlugin('Queued', '1.0.0', PluginLoadType.ESMODULE_V1, true, 250);
+    await loader.importPlugin('Queued', '1.0.0', PluginLoadType.ESMODULE_V1, true, 750);
     expect(loader.pluginReloadQueue).toEqual([
-      { name: 'Queued', version: '1.0.0', loadType: PluginLoadType.ESMODULE_V1 },
+      { name: 'Queued', version: '1.0.0', loadType: PluginLoadType.ESMODULE_V1, timeoutMS: 750 },
     ]);
 
     loader.reloadLock = false;
-    loader.pluginReloadQueue.push({ name: 'Next', version: '2.0.0', loadType: PluginLoadType.LEGACY_EVAL_IIFE });
     vi.spyOn(loader, 'unloadPlugin').mockImplementation(() => undefined);
     vi.spyOn(loader, 'importReactPlugin').mockResolvedValue();
     await loader.importPlugin('Current', undefined, PluginLoadType.ESMODULE_V1, true, 250);
 
-    expect(importSpy).toHaveBeenLastCalledWith('Next', '2.0.0', PluginLoadType.LEGACY_EVAL_IIFE, true, 250);
+    expect(importSpy).toHaveBeenLastCalledWith('Queued', '1.0.0', PluginLoadType.ESMODULE_V1, true, 750);
   });
 
   it('notifies for loader and plugin updates in sequence', async () => {

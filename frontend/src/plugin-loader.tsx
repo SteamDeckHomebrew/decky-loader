@@ -131,7 +131,7 @@ class PluginLoader extends Logger {
 
   private reloadLock: boolean = false;
   // stores a list of plugin names which requested to be reloaded
-  private pluginReloadQueue: { name: string; version?: string; loadType: PluginLoadType }[] = [];
+  private pluginReloadQueue: { name: string; version?: string; loadType: PluginLoadType; timeoutMS?: number }[] = [];
 
   private loaderUpdateToast?: ToastNotification;
   private pluginUpdateToast?: ToastNotification;
@@ -453,7 +453,7 @@ class PluginLoader extends Logger {
     const [name, version, loadType = PluginLoadType.ESMODULE_V1, useQueue = true, timeoutMS] = args;
     if (useQueue && this.reloadLock) {
       this.log(`Reload currently in progress, adding ${getPluginDisplayName(name, version)} to queue`);
-      this.pluginReloadQueue.push({ name, version: version, loadType });
+      this.pluginReloadQueue.push({ name, version: version, loadType, timeoutMS });
       return;
     }
 
@@ -477,7 +477,7 @@ class PluginLoader extends Logger {
         this.reloadLock = false;
         const nextPlugin = this.pluginReloadQueue.shift();
         if (nextPlugin) {
-          this.importPlugin(nextPlugin.name, nextPlugin.version, nextPlugin.loadType, true, timeoutMS);
+          this.importPlugin(nextPlugin.name, nextPlugin.version, nextPlugin.loadType, true, nextPlugin.timeoutMS);
         }
       }
     }

@@ -30,6 +30,10 @@ export async function loadPlugin(
   }
 }
 
+function isAbortError(error: any): boolean {
+  return 'name' in error && error.name === 'AbortError';
+}
+
 async function loadESModulePlugin(
   request: PluginImportRequest,
   timeoutException: Error,
@@ -76,7 +80,7 @@ async function loadLegacyPlugin(
     );
     return pluginExport(dependencies.createLegacyPluginAPI(request.name));
   } catch (error: any) {
-    throw 'name' in error && error.name === 'AbortError' ? timeoutException : error;
+    throw isAbortError(error) ? timeoutException : error;
   } finally {
     if (timeout !== undefined) clearTimeout(timeout);
   }

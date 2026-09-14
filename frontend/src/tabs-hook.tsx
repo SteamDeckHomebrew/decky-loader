@@ -73,7 +73,6 @@ class TabsHook extends Logger {
           (qamEmbeddedRenderer != null && n.elementType == qamEmbeddedRenderer),
       ); // need elementType, because type is actually mobx wrapper
     if (qamNode) {
-      console.log('patching existing qam');
       // Only affects this fiber node so we don't need to unpatch here
       qamNode.type = qamNode.elementType.type;
       if (qamNode?.alternate) {

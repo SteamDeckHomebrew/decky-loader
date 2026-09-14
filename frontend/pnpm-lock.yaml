@@ -4,16 +4,13 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  '@decky/ui': link:../../lib
-
 importers:
 
   .:
     dependencies:
       '@decky/ui':
-        specifier: link:../../lib
-        version: link:../../lib
+        specifier: ^4.12.1
+        version: 4.12.1
       compare-versions:
         specifier: ^6.1.1
         version: 6.1.1
@@ -224,6 +221,9 @@ packages:
 
   '@decky/api@1.1.3':
     resolution: {integrity: sha512-XsPCZxfxk5I1UtylIUN3qaWQI31siQbKfbLIskkI5innEatY1m4NQqBv/6hwPaO9mKMbdqYpnh5PSJDeMEOOBA==}
+
+  '@decky/ui@4.12.1':
+    resolution: {integrity: sha512-kJOZ+PRJK15jR0N9/5s3NrMUjjgQSQ+UT4Fb+p18cdh08Ujzi617+0FJZc/x9RPIWj8s7aqkx3WvKa7YWUm72g==}
 
   '@esbuild/aix-ppc64@0.20.2':
     resolution: {integrity: sha512-D+EBOJHXdNZcLJRBkhENNG8Wji2kgc9AZ9KiPr1JuZjsNtyHzrsfLRrY0tk2H2aoFu6RANO1y1iPPUCDYWkb5g==}
@@ -2310,6 +2310,8 @@ snapshots:
       to-fast-properties: 2.0.0
 
   '@decky/api@1.1.3': {}
+
+  '@decky/ui@4.12.1': {}
 
   '@esbuild/aix-ppc64@0.20.2':
     optional: true

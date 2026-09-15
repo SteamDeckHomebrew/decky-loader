@@ -34,6 +34,7 @@ from .loader import Loader
 from .settings import SettingsManager
 from .updater import Updater
 from .utilities import Utilities
+from .reporting import Reporting
 from .enums import UserType
 from .wsrouter import WSRouter
 
@@ -76,6 +77,7 @@ class PluginManager:
         self.plugin_browser = PluginBrowser(plugin_path, self.plugin_loader.plugins, self.plugin_loader, self.settings) 
         self.utilities = Utilities(self)
         self.updater = Updater(self)
+        self.reporting = Reporting(self)
         self.last_webhelper_exit: float = 0
         self.webhelper_crash_count: int = 0
         self.inject_fallback: bool = False

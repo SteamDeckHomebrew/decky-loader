@@ -333,20 +333,24 @@ class Utilities:
 
         #Resolving all files/folders in the requested directory
         for file in path_obj.iterdir():
-            if file.exists():
-                filest = file.stat()
-                is_hidden = file.name.startswith('.')
-                if ON_WINDOWS and not is_hidden:
-                    is_hidden = bool(filest.st_file_attributes & FILE_ATTRIBUTE_HIDDEN) # type: ignore
-                if include_folders and file.is_dir():
-                    if (is_hidden and include_hidden) or not is_hidden:
-                        folders.append({"file": file, "filest": filest, "is_dir": True})
-                elif include_files:
-                    # Handle requested extensions if present
-                    if include_ext == None or len(include_ext) == 0 or 'all_files' in include_ext \
-                        or splitext(file.name)[1].lstrip('.').upper() in (ext.upper() for ext in include_ext):
+            try:
+                if file.exists():
+                    filest = file.stat()
+                    is_hidden = file.name.startswith('.')
+                    if ON_WINDOWS and not is_hidden:
+                        is_hidden = bool(filest.st_file_attributes & FILE_ATTRIBUTE_HIDDEN) # type: ignore
+                    if include_folders and file.is_dir():
                         if (is_hidden and include_hidden) or not is_hidden:
-                            files.append({"file": file, "filest": filest, "is_dir": False})
+                            folders.append({"file": file, "filest": filest, "is_dir": True})
+                    elif include_files:
+                        # Handle requested extensions if present
+                        if include_ext == None or len(include_ext) == 0 or 'all_files' in include_ext \
+                            or splitext(file.name)[1].lstrip('.').upper() in (ext.upper() for ext in include_ext):
+                            if (is_hidden and include_hidden) or not is_hidden:
+                                files.append({"file": file, "filest": filest, "is_dir": False})
+            except (PermissionError, OSError):
+                self.logger.debug(f"Skipping inaccessible file picker entry: {file}")
+                continue
         # Filter logic
         if filter_for is not None:
             try:

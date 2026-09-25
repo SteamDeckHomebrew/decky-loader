@@ -26,7 +26,7 @@ import { styleDefObj } from './iconCustomizations';
 const logger = new Logger('FilePicker');
 
 export interface FilePickerProps {
-  startPath: string;
+  startPath?: string | null;
   includeFiles?: boolean;
   includeFolders?: boolean;
   filter?: RegExp | ((file: File) => boolean);
@@ -97,7 +97,7 @@ const sortOptions = [
 
 const getList = DeckyBackend.callable<
   [
-    path: string,
+    path?: string,
     includeFiles?: boolean,
     includeFolders?: boolean,
     includeExt?: string[] | null,
@@ -137,8 +137,8 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  if (startPath !== '/' && startPath.endsWith('/')) startPath = startPath.substring(0, startPath.length - 1); // remove trailing path
-  const [path, setPath] = useState<string>(startPath);
+  if (startPath !== '/' && startPath !== null && startPath !== undefined && startPath.endsWith('/')) startPath = startPath.substring(0, startPath.length - 1); // remove trailing path
+  const [path, setPath] = useState<string>(startPath || "");
   const [listing, setListing] = useState<FileListing>({ files: [], realpath: path, total: 0 });
   const [files, setFiles] = useState<File[]>([]);
   const [error, setError] = useState<FileErrorTypes>(FileErrorTypes.None);
@@ -193,6 +193,8 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
           page,
           max,
         );
+        // if we start out with an empty or null starting path, the backend will resolve that to the home directory. This ensures that change is reflected
+        if (path != listing.realpath) setPath(listing.realpath);
         setRawError(null);
         setError(FileErrorTypes.None);
         setFiles(listing.files);

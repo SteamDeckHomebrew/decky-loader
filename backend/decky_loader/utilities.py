@@ -323,7 +323,7 @@ class Utilities:
                             page: int = 1,
                             max: int = 1000):
         
-        if path == None:
+        if path == None or path == "":
             path = get_home_path()
 
         path_obj = Path(path).resolve()

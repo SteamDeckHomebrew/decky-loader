@@ -193,6 +193,8 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
           page,
           max,
         );
+       const listingPath = listing.realpath;
+        if (path != listingPath) setPath(listingPath);
         setRawError(null);
         setError(FileErrorTypes.None);
         setFiles(listing.files);

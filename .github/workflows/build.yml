@@ -14,19 +14,19 @@ jobs:
 
     steps:
     - name: Checkout 🧰
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         fetch-depth: 0
 
-    - name: Set up NodeJS 20 💎
-      uses: actions/setup-node@v4
+    - name: Set up NodeJS LTS 💎
+      uses: actions/setup-node@v7
       with:
-        node-version: 20
+        node-version: "lts/*"
       
-    - name: Set up Python 3.11.7 🐍
-      uses: actions/setup-python@v5
+    - name: Set up Python 3.11 🐍
+      uses: actions/setup-python@v6
       with:
-        python-version: "3.11.7"
+        python-version: "3.11"
     
     - name: Install Poetry
       uses: snok/install-poetry@v1
@@ -57,13 +57,13 @@ jobs:
 
     - name: Upload package artifact ⬆️
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: PluginLoader
         path: ./backend/dist/PluginLoader
 
     - name: Download package artifact locally
       if: ${{ env.ACT }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         path: ./backend/dist/PluginLoader

@@ -33,7 +33,7 @@ jobs:
 
     steps:
     - name: Checkout 🧰
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
 
     - name: Install semver-tool asdf
       uses: asdf-vm/actions/install@v4
@@ -132,7 +132,7 @@ jobs:
     needs: [create_tag, build]
     steps:
       - name: Fetch package artifact ⬇️
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: PluginLoader
 

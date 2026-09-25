@@ -93,10 +93,11 @@ user_agent = f"Decky/{get_loader_version()} (https://decky.xyz)"
 # returns the appropriate system python paths
 def get_system_pythonpaths() -> list[str]:
     try:
+        is_linux_or_mac = localplatform.ON_LINUX or localplatform.ON_MAC
         # run as normal normal user if on linux to also include user python paths
-        proc = subprocess.run(["python3" if localplatform.ON_LINUX else "python", "-c", "import sys; print('\\n'.join(x for x in sys.path if x))"],
+        proc = subprocess.run(["python3" if is_linux_or_mac else "python", "-c", "import sys; print('\\n'.join(x for x in sys.path if x))"],
         # TODO make this less insane
-                              capture_output=True, user=localplatform.localplatform._get_user_id() if localplatform.ON_LINUX else None, env={} if localplatform.ON_LINUX else None) # pyright: ignore [reportPrivateUsage]
+                              capture_output=True, user=localplatform.localplatform._get_user_id() if is_linux_or_mac else None, env={} if is_linux_or_mac else None) # pyright: ignore [reportPrivateUsage]
         
         proc.check_returncode()
 

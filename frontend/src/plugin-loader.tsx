@@ -32,6 +32,7 @@ import { HiddenPluginsService } from './hidden-plugins-service';
 import Logger from './logger';
 import { NotificationService } from './notification-service';
 import { DisabledPlugin, InstallType, Plugin, PluginLoadType } from './plugin';
+import { PluginImportRequest, loadPlugin } from './plugin-importer';
 import RouterHook from './router-hook';
 import { deinitSteamFixes, initSteamFixes } from './steamfixes';
 import { checkForPluginUpdates } from './store';
@@ -62,6 +63,54 @@ interface DeckyRequestInit extends RequestInit {
   excludedHeaders: string[];
 }
 
+type BackendPlugin = {
+  name: string;
+  version: string;
+  load_type: PluginLoadType;
+  disabled: boolean;
+};
+
+type PluginInstallPromptArguments = [
+  artifact: string,
+  version: string,
+  requestId: string,
+  hash: string,
+  installType: number,
+];
+
+type ImportPluginArguments = [
+  name: string,
+  version?: string,
+  loadType?: PluginLoadType,
+  useQueue?: boolean,
+  timeoutMS?: number,
+];
+
+type MultiplePluginInstallPromptArguments = [
+  requestId: string,
+  requests: { name: string; version: string; hash: string; install_type: InstallType }[],
+];
+
+type PluginDialogArguments = [name: string, title: string, buttonText: string, description: string];
+type PluginNameArguments = [name: string];
+type UnloadPluginArguments = [name: string, skipStateUpdate?: boolean];
+type LegacyServerMethodArguments = [methodName: string, args?: object];
+type LegacyFilePickerArguments = [startPath: string, selectFiles?: boolean, regex?: RegExp];
+type FilePickerArguments = [
+  select: FileSelectionType,
+  startPath: string,
+  includeFiles?: boolean,
+  includeFolders?: boolean,
+  filter?: RegExp | ((file: File) => boolean),
+  extensions?: string[],
+  showHiddenFiles?: boolean,
+  allowAllFiles?: boolean,
+  max?: number,
+];
+type ExternalResourceArguments = [url: string];
+type FetchNoCorsArguments = [input: string, init?: DeckyRequestInit];
+type LegacyFetchNoCorsArguments = [url: string, request?: any];
+
 const callPluginMethod = DeckyBackend.callable<[pluginName: string, method: string, ...args: any], any>(
   'loader/call_plugin_method',
 );
@@ -82,7 +131,7 @@ class PluginLoader extends Logger {
 
   private reloadLock: boolean = false;
   // stores a list of plugin names which requested to be reloaded
-  private pluginReloadQueue: { name: string; version?: string; loadType: PluginLoadType }[] = [];
+  private pluginReloadQueue: { name: string; version?: string; loadType: PluginLoadType; timeoutMS?: number }[] = [];
 
   private loaderUpdateToast?: ToastNotification;
   private pluginUpdateToast?: ToastNotification;
@@ -176,47 +225,50 @@ class PluginLoader extends Logger {
     }
   }
 
-  private getPluginsFromBackend = DeckyBackend.callable<
-    [],
-    { name: string; version: string; load_type: PluginLoadType; disabled: boolean }[]
-  >('loader/get_plugins');
+  private getPluginsFromBackend = DeckyBackend.callable<[], BackendPlugin[]>('loader/get_plugins');
 
   private restartWebhelper = DeckyBackend.callable<[], void>('utilities/restart_webhelper');
 
   private async loadPlugins() {
+    const uiMode = await this.getInitialUIMode();
+    await this.waitForSP(uiMode);
+    this.runCrashChecker();
+
+    const plugins = await this.getPluginsFromBackend();
+    const disabledPlugins: DisabledPlugin[] = [];
+    const loadStart = performance.now();
+    await Promise.all(plugins.map((plugin) => this.loadBackendPlugin(plugin, disabledPlugins)));
+    this.log(`Loaded ${plugins.length} plugins in ${performance.now() - loadStart}ms`);
+
+    this.checkPluginUpdates();
+  }
+
+  private getInitialUIMode(): Promise<EUIMode> {
     let registration: any;
-    const uiMode = await new Promise(
+    return new Promise(
       (r) =>
         (registration = SteamClient.UI.RegisterForUIModeChanged((mode: EUIMode) => {
           r(mode);
           registration.unregister();
         })),
     );
-    if (uiMode == EUIMode.GamePad) {
-      // wait for SP window to exist before loading plugins
-      while (!findSP()) {
-        await sleep(100);
-      }
-    }
-    this.runCrashChecker();
-    const plugins = await this.getPluginsFromBackend();
-    const pluginLoadPromises = [];
-    const disabledPlugins: DisabledPlugin[] = [];
-    const loadStart = performance.now();
-    for (const plugin of plugins) {
-      if (plugin.disabled) {
-        disabledPlugins.push({ name: plugin.name, version: plugin.version });
-        this.deckyState.setDisabledPlugins(disabledPlugins);
-      } else {
-        if (!this.hasPlugin(plugin.name))
-          pluginLoadPromises.push(this.importPlugin(plugin.name, plugin.version, plugin.load_type, false));
-      }
-    }
-    await Promise.all(pluginLoadPromises);
-    const loadEnd = performance.now();
-    this.log(`Loaded ${plugins.length} plugins in ${loadEnd - loadStart}ms`);
+  }
 
-    this.checkPluginUpdates();
+  private async waitForSP(uiMode: EUIMode) {
+    if (uiMode != EUIMode.GamePad) return;
+    while (!findSP()) {
+      await sleep(100);
+    }
+  }
+
+  private loadBackendPlugin(plugin: BackendPlugin, disabledPlugins: DisabledPlugin[]): Promise<void> | void {
+    if (plugin.disabled) {
+      disabledPlugins.push({ name: plugin.name, version: plugin.version });
+      this.deckyState.setDisabledPlugins(disabledPlugins);
+      return;
+    }
+    if (this.hasPlugin(plugin.name)) return;
+    return this.importPlugin(plugin.name, plugin.version, plugin.load_type, false);
   }
 
   public async getUserInfo() {
@@ -234,28 +286,33 @@ class PluginLoader extends Logger {
 
   public async notifyUpdates() {
     const versionInfo = await this.updateVersion();
-    if (versionInfo?.remote && versionInfo?.remote?.tag_name != versionInfo?.current) {
-      this.deckyState.setHasLoaderUpdate(true);
-      if (this.notificationService.shouldNotify('deckyUpdates')) {
-        this.loaderUpdateToast && this.loaderUpdateToast.dismiss();
-        await this.routerHook.waitForUnlock();
-        this.loaderUpdateToast = this.toaster.toast({
-          title: <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="decky_title" />,
-          body: (
-            <TranslationHelper
-              transClass={TranslationClass.PLUGIN_LOADER}
-              transText="decky_update_available"
-              i18nArgs={{ tag_name: versionInfo?.remote?.tag_name }}
-            />
-          ),
-          logo: <DeckyIcon />,
-          icon: <FaDownload />,
-          onClick: () => Navigation.Navigate('/decky/settings'),
-        });
-      }
+    const updateTag = versionInfo?.remote?.tag_name;
+    if (updateTag && updateTag != versionInfo.current) {
+      await this.notifyLoaderUpdate({ updateTag });
     }
     await sleep(7000);
     await this.notifyPluginUpdates();
+  }
+
+  private async notifyLoaderUpdate({ updateTag }: { updateTag: string }) {
+    this.deckyState.setHasLoaderUpdate(true);
+    if (!this.notificationService.shouldNotify('deckyUpdates')) return;
+
+    this.loaderUpdateToast?.dismiss();
+    await this.routerHook.waitForUnlock();
+    this.loaderUpdateToast = this.toaster.toast({
+      title: <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="decky_title" />,
+      body: (
+        <TranslationHelper
+          transClass={TranslationClass.PLUGIN_LOADER}
+          transText="decky_update_available"
+          i18nArgs={{ tag_name: updateTag }}
+        />
+      ),
+      logo: <DeckyIcon />,
+      icon: <FaDownload />,
+      onClick: () => Navigation.Navigate('/decky/settings'),
+    });
   }
 
   public async checkPluginUpdates() {
@@ -288,41 +345,35 @@ class PluginLoader extends Logger {
     }
   }
 
-  public addPluginInstallPrompt(
-    artifact: string,
-    version: string,
-    request_id: string,
-    hash: string,
-    install_type: number,
-  ) {
+  public addPluginInstallPrompt(...args: PluginInstallPromptArguments) {
+    const [artifact, version, requestId, hash, installType] = args;
     showModal(
       <PluginInstallModal
         artifact={artifact}
         version={version}
         hash={hash}
-        installType={install_type}
+        installType={installType}
         disabled={this.deckyState.publicState().disabledPlugins.some((p) => p.name === artifact)}
-        onOK={() => DeckyBackend.call<[string]>('utilities/confirm_plugin_install', request_id)}
-        onCancel={() => DeckyBackend.call<[string]>('utilities/cancel_plugin_install', request_id)}
+        onOK={() => DeckyBackend.call<[string]>('utilities/confirm_plugin_install', requestId)}
+        onCancel={() => DeckyBackend.call<[string]>('utilities/cancel_plugin_install', requestId)}
       />,
     );
   }
 
-  public addMultiplePluginsInstallPrompt(
-    request_id: string,
-    requests: { name: string; version: string; hash: string; install_type: InstallType }[],
-  ) {
+  public addMultiplePluginsInstallPrompt(...args: MultiplePluginInstallPromptArguments) {
+    const [requestId, requests] = args;
     showModal(
       <MultiplePluginsInstallModal
         requests={requests}
         disabledPlugins={this.deckyState.publicState().disabledPlugins}
-        onOK={() => DeckyBackend.call<[string]>('utilities/confirm_plugin_install', request_id)}
-        onCancel={() => DeckyBackend.call<[string]>('utilities/cancel_plugin_install', request_id)}
+        onOK={() => DeckyBackend.call<[string]>('utilities/confirm_plugin_install', requestId)}
+        onCancel={() => DeckyBackend.call<[string]>('utilities/cancel_plugin_install', requestId)}
       />,
     );
   }
 
-  public uninstallPlugin(name: string, title: string, buttonText: string, description: string) {
+  public uninstallPlugin(...args: PluginDialogArguments) {
+    const [name, title, buttonText, description] = args;
     showModal(
       <PluginUninstallModal
         name={name}
@@ -334,11 +385,12 @@ class PluginLoader extends Logger {
     );
   }
 
-  public disablePlugin(name: string, title: string, buttonText: string, description: string) {
+  public disablePlugin(...args: PluginDialogArguments) {
+    const [name, title, buttonText, description] = args;
     showModal(<PluginDisableModal name={name} title={title} buttonText={buttonText} description={description} />);
   }
 
-  public hasPlugin(name: string) {
+  public hasPlugin(...[name]: PluginNameArguments) {
     return Boolean(this.plugins.find((plugin) => plugin.name == name));
   }
 
@@ -376,7 +428,7 @@ class PluginLoader extends Logger {
     this.errorBoundaryHook.deinit();
   }
 
-  public doDisablePlugin(name: string) {
+  public doDisablePlugin(...[name]: PluginNameArguments) {
     const plugin = this.plugins.find((plugin) => plugin.name === name);
     if (plugin == undefined) return;
 
@@ -389,23 +441,19 @@ class PluginLoader extends Logger {
     this.deckyState.setPlugins(this.plugins);
   }
 
-  public unloadPlugin(name: string, skipStateUpdate: boolean = false) {
+  public unloadPlugin(...args: UnloadPluginArguments) {
+    const [name, skipStateUpdate = false] = args;
     const plugin = this.plugins.find((plugin) => plugin.name === name);
     plugin?.onDismount?.();
     this.plugins = this.plugins.filter((p) => p !== plugin);
     if (!skipStateUpdate) this.deckyState.setPlugins(this.plugins);
   }
 
-  public async importPlugin(
-    name: string,
-    version?: string | undefined,
-    loadType: PluginLoadType = PluginLoadType.ESMODULE_V1,
-    useQueue: boolean = true,
-    timeoutMS?: number,
-  ) {
+  public async importPlugin(...args: ImportPluginArguments) {
+    const [name, version, loadType = PluginLoadType.ESMODULE_V1, useQueue = true, timeoutMS] = args;
     if (useQueue && this.reloadLock) {
       this.log(`Reload currently in progress, adding ${getPluginDisplayName(name, version)} to queue`);
-      this.pluginReloadQueue.push({ name, version: version, loadType });
+      this.pluginReloadQueue.push({ name, version: version, loadType, timeoutMS });
       return;
     }
 
@@ -416,7 +464,7 @@ class PluginLoader extends Logger {
       this.unloadPlugin(name, true);
       const startTime = performance.now();
 
-      await this.importReactPlugin(name, version, loadType, timeoutMS);
+      await this.importReactPlugin({ name, version, loadType, timeoutMS });
       const endTime = performance.now();
 
       this.deckyState.setDisabledPlugins(this.deckyState.publicState().disabledPlugins.filter((d) => d.name !== name));
@@ -429,134 +477,30 @@ class PluginLoader extends Logger {
         this.reloadLock = false;
         const nextPlugin = this.pluginReloadQueue.shift();
         if (nextPlugin) {
-          this.importPlugin(nextPlugin.name, nextPlugin.version, nextPlugin.loadType, true, timeoutMS);
+          this.importPlugin(nextPlugin.name, nextPlugin.version, nextPlugin.loadType, true, nextPlugin.timeoutMS);
         }
       }
     }
   }
 
-  private async importReactPlugin(
-    name: string,
-    version?: string,
-    loadType: PluginLoadType = PluginLoadType.ESMODULE_V1,
-    timeoutMS?: number,
-  ) {
-    let spExists = this.checkForSP();
+  private async importReactPlugin(request: PluginImportRequest) {
+    const { name, version, loadType, timeoutMS } = request;
+    const spExists = this.checkForSP();
     const timeoutException = new Error(
       `${name} failed to load within ${timeoutMS ? `${timeoutMS / 1000} second` : ''} time limit`,
     );
-    let timeout: number | undefined;
-
     try {
-      switch (loadType) {
-        case PluginLoadType.ESMODULE_V1:
-          const importJS = () => import(`http://127.0.0.1:1337/plugins/${name}/dist/index.js?t=${Date.now()}`);
-
-          const promise =
-            timeoutMS === undefined
-              ? importJS()
-              : Promise.race([
-                  importJS(),
-                  new Promise((_, reject) => (timeout = setTimeout(() => reject(timeoutException), timeoutMS))),
-                ]);
-
-          const plugin_exports = await promise;
-          let plugin = plugin_exports.default();
-
-          this.plugins.push({
-            ...plugin,
-            name: name,
-            version: version,
-            loadType,
-          });
-          break;
-
-        case PluginLoadType.LEGACY_EVAL_IIFE:
-          const fetchJS = async () => {
-            const controller = new AbortController();
-            const { signal } = controller;
-
-            if (timeoutMS !== undefined) timeout = setTimeout(() => controller.abort(), timeoutMS);
-
-            try {
-              return await fetch(`http://127.0.0.1:1337/plugins/${name}/frontend_bundle`, {
-                credentials: 'include',
-                headers: {
-                  'X-Decky-Auth': deckyAuthToken,
-                },
-                signal,
-              });
-            } catch (e: any) {
-              throw 'name' in e && e.name === 'AbortError' ? timeoutException : e;
-            }
-          };
-
-          let res = await fetchJS();
-          if (res.ok) {
-            let plugin_export: (serverAPI: any) => Plugin = await eval(
-              (await res.text()) + `\n//# sourceURL=decky://decky/legacy_plugin/${encodeURIComponent(name)}/index.js`,
-            );
-            let plugin = plugin_export(this.createLegacyPluginAPI(name));
-            this.plugins.push({
-              ...plugin,
-              name: name,
-              version: version,
-              loadType,
-            });
-          } else throw new Error(`${getPluginDisplayName(name, version)} frontend_bundle not OK`);
-          break;
-
-        default:
-          throw new Error(`${getPluginDisplayName(name, version)} has no defined loadType.`);
-      }
+      const plugin = await loadPlugin(request, timeoutException, {
+        authToken: deckyAuthToken,
+        createLegacyPluginAPI: (pluginName) => this.createLegacyPluginAPI({ pluginName }),
+        fetch,
+        importESModule: (pluginName) =>
+          import(`http://127.0.0.1:1337/plugins/${pluginName}/dist/index.js?t=${Date.now()}`),
+      });
+      this.plugins.push({ ...plugin, name, version, loadType });
     } catch (e) {
       if (e === timeoutException) throw timeoutException;
-
-      this.error(`Error loading plugin ${getPluginDisplayName(name, version)}`, e);
-
-      const TheError: FC<{}> = () => (
-        <PanelSection>
-          <PanelSectionRow>
-            <div className={quickAccessMenuClasses.FriendsTitle} style={{ display: 'flex', justifyContent: 'center' }}>
-              <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="error" />
-            </div>
-          </PanelSectionRow>
-          <PanelSectionRow>
-            <pre style={{ overflowX: 'scroll' }}>
-              <code>{e instanceof Error ? '' + e.stack : JSON.stringify(e)}</code>
-            </pre>
-          </PanelSectionRow>
-          <PanelSectionRow>
-            <div className={quickAccessMenuClasses.Text}>
-              <TranslationHelper
-                transClass={TranslationClass.PLUGIN_LOADER}
-                transText="plugin_error_uninstall"
-                i18nArgs={{ name: name }}
-              />
-            </div>
-          </PanelSectionRow>
-        </PanelSection>
-      );
-      this.plugins.push({
-        name: name,
-        version: version,
-        content: <TheError />,
-        icon: <FaExclamationCircle />,
-        loadType,
-      });
-      this.toaster.toast({
-        title: (
-          <TranslationHelper
-            transClass={TranslationClass.PLUGIN_LOADER}
-            transText="plugin_load_error.toast"
-            i18nArgs={{ name: name }}
-          />
-        ),
-        body: '' + e,
-        icon: <FaExclamationCircle />,
-      });
-    } finally {
-      if (timeout !== undefined) clearTimeout(timeout);
+      this.addPluginLoadError(request, e);
     }
 
     if (spExists && !this.checkForSP()) {
@@ -566,7 +510,54 @@ class PluginLoader extends Logger {
     }
   }
 
-  async callServerMethod(methodName: string, args = {}) {
+  private addPluginLoadError(request: PluginImportRequest, error: unknown) {
+    this.error(`Error loading plugin ${getPluginDisplayName(request.name, request.version)}`, error);
+
+    const TheError: FC<{}> = () => (
+      <PanelSection>
+        <PanelSectionRow>
+          <div className={quickAccessMenuClasses.FriendsTitle} style={{ display: 'flex', justifyContent: 'center' }}>
+            <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="error" />
+          </div>
+        </PanelSectionRow>
+        <PanelSectionRow>
+          <pre style={{ overflowX: 'scroll' }}>
+            <code>{error instanceof Error ? '' + error.stack : JSON.stringify(error)}</code>
+          </pre>
+        </PanelSectionRow>
+        <PanelSectionRow>
+          <div className={quickAccessMenuClasses.Text}>
+            <TranslationHelper
+              transClass={TranslationClass.PLUGIN_LOADER}
+              transText="plugin_error_uninstall"
+              i18nArgs={{ name: request.name }}
+            />
+          </div>
+        </PanelSectionRow>
+      </PanelSection>
+    );
+    this.plugins.push({
+      name: request.name,
+      version: request.version,
+      content: <TheError />,
+      icon: <FaExclamationCircle />,
+      loadType: request.loadType,
+    });
+    this.toaster.toast({
+      title: (
+        <TranslationHelper
+          transClass={TranslationClass.PLUGIN_LOADER}
+          transText="plugin_load_error.toast"
+          i18nArgs={{ name: request.name }}
+        />
+      ),
+      body: '' + error,
+      icon: <FaExclamationCircle />,
+    });
+  }
+
+  async callServerMethod(...callArgs: LegacyServerMethodArguments) {
+    const [methodName, args = {}] = callArgs;
     this.warn(
       `Calling ${methodName} via callServerMethod, which is deprecated and will be removed in a future release. Please switch to the backend API.`,
     );
@@ -577,11 +568,8 @@ class PluginLoader extends Logger {
     );
   }
 
-  openFilePickerLegacy(
-    startPath: string,
-    selectFiles?: boolean,
-    regex?: RegExp,
-  ): Promise<{ path: string; realpath: string }> {
+  openFilePickerLegacy(...args: LegacyFilePickerArguments): Promise<{ path: string; realpath: string }> {
+    const [startPath, selectFiles, regex] = args;
     this.warn('openFilePicker is deprecated and will be removed. Please migrate to openFilePickerV2');
     if (selectFiles) {
       return this.openFilePicker(FileSelectionType.FILE, startPath, true, true, regex);
@@ -590,17 +578,9 @@ class PluginLoader extends Logger {
     }
   }
 
-  openFilePicker(
-    select: FileSelectionType,
-    startPath: string,
-    includeFiles?: boolean,
-    includeFolders?: boolean,
-    filter?: RegExp | ((file: File) => boolean),
-    extensions?: string[],
-    showHiddenFiles?: boolean,
-    allowAllFiles?: boolean,
-    max?: number,
-  ): Promise<{ path: string; realpath: string }> {
+  openFilePicker(...args: FilePickerArguments): Promise<{ path: string; realpath: string }> {
+    const [select, startPath, includeFiles, includeFolders, filter, extensions, showHiddenFiles, allowAllFiles, max] =
+      args;
     return new Promise((resolve, reject) => {
       const Content = ({ closeModal }: { closeModal?: () => void }) => (
         // Purposely outside of the FilePicker component as lazy-loaded ModalRoots don't focus correctly
@@ -632,12 +612,13 @@ class PluginLoader extends Logger {
   }
 
   // Useful for audio/video streams
-  getExternalResourceURL(url: string) {
+  getExternalResourceURL(...[url]: ExternalResourceArguments) {
     return `http://127.0.0.1:1337/fetch?auth=${deckyAuthToken}&fetch_url=${encodeURIComponent(url)}`;
   }
 
   // Same syntax as fetch but only supports the url-based syntax and an object for headers since it's the most common usage pattern
-  fetchNoCors(input: string, init?: DeckyRequestInit | undefined): Promise<Response> {
+  fetchNoCors(...args: FetchNoCorsArguments): Promise<Response> {
+    const [input, init] = args;
     const { headers: initHeaders = {}, ...restOfInit } = init || {};
     const getPrefixedHeaders = () => {
       let prefixedInitHeaders: { [name: string]: any } = {};
@@ -659,7 +640,8 @@ class PluginLoader extends Logger {
     });
   }
 
-  async legacyFetchNoCors(url: string, request: any = {}) {
+  async legacyFetchNoCors(...args: LegacyFetchNoCorsArguments) {
+    const [url, request = {}] = args;
     let method: string;
     const req = { headers: {}, ...request, data: request.body };
     req?.body && delete req.body;
@@ -763,7 +745,7 @@ class PluginLoader extends Logger {
     }
   };
 
-  createLegacyPluginAPI(pluginName: string) {
+  createLegacyPluginAPI({ pluginName }: { pluginName: string }) {
     const pluginAPI = {
       routerHook: this.routerHook,
       toaster: this.toaster,

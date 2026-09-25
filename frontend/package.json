@@ -7,6 +7,9 @@
     "prepare": "cd .. && husky install frontend/.husky",
     "build": "rollup -c",
     "watch": "rollup -c -w",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:mutation": "stryker run",
     "lint": "prettier -c src",
     "typecheck": "tsc --noEmit",
     "format": "prettier -c src -w",
@@ -20,10 +23,13 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.7",
     "@rollup/plugin-typescript": "^11.1.6",
+    "@stryker-mutator/core": "^10.0.0",
+    "@stryker-mutator/vitest-runner": "^10.0.0",
     "@types/react": "19.1.1",
     "@types/react-dom": "19.1.1",
     "@types/react-file-icon": "^1.0.4",
     "@types/react-router": "5.1.20",
+    "@vitest/coverage-v8": "^4.1.10",
     "husky": "^9.0.11",
     "i18next-parser": "^9.0.0",
     "import-sort-style-module": "^6.0.0",
@@ -38,7 +44,8 @@
     "rollup-plugin-polyfill-node": "^0.13.0",
     "rollup-plugin-visualizer": "^5.12.0",
     "tslib": "^2.6.3",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "vitest": "^4.1.10"
   },
   "importSort": {
     ".js, .jsx, .ts, .tsx": {

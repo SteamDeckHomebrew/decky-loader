@@ -123,18 +123,36 @@ jobs:
 
   build:
     name: Build tagged artifact
-    uses: ./.github/workflows/build.yml
+    uses: ./.github/workflows/build-linux-x86_64.yml
+    needs: [create_tag]
+
+  build_arm64:
+    name: Build tagged artifact (arm64)
+    uses: ./.github/workflows/build-linux-arm64.yml
     needs: [create_tag]
 
   release:
-    name: Release tagged artifact
+    name: Release tagged artifacts
     runs-on: ubuntu-22.04
-    needs: [create_tag, build]
+    needs: [create_tag, build, build_arm64]
     steps:
-      - name: Fetch package artifact ⬇️
+      - name: Fetch package artifact (x86_64) ⬇️
         uses: actions/download-artifact@v4
         with:
           name: PluginLoader
+          path: ./artifacts/x86_64
+
+      - name: Fetch package artifact (arm64) ⬇️
+        uses: actions/download-artifact@v4
+        with:
+          name: PluginLoader-arm64
+          path: ./artifacts/arm64
+
+      # Release assets need unique names; the artifacts both contain "PluginLoader"
+      - name: Name release assets 🛠️
+        run: |
+          mv ./artifacts/x86_64/PluginLoader ./PluginLoader
+          mv ./artifacts/arm64/PluginLoader ./PluginLoader-arm64
 
       - name: Pre-release 📦
         if: github.event.inputs.release == 'prerelease'
@@ -142,7 +160,9 @@ jobs:
         with:
           name: Prerelease ${{ needs.create_tag.outputs.tag_name }}
           tag_name: ${{ needs.create_tag.outputs.tag_name }}
-          files: ./PluginLoader
+          files: |
+            ./PluginLoader
+            ./PluginLoader-arm64
           prerelease: true
           generate_release_notes: true
       - name: Release 📦
@@ -151,6 +171,8 @@ jobs:
         with:
           name: Release ${{ needs.create_tag.outputs.tag_name }}
           tag_name: ${{ needs.create_tag.outputs.tag_name }}
-          files: ./PluginLoader
+          files: |
+            ./PluginLoader
+            ./PluginLoader-arm64
           prerelease: false
           generate_release_notes: true

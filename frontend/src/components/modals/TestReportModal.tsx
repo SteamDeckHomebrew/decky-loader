@@ -14,14 +14,9 @@ import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaFileAlt } from 'react-icons/fa';
 
-type SystemInfo = {
-  steamos: string;
-  steamos_branch: string;
-  steam: string;
-  steam_branch: string;
-  decky: string;
-  decky_branch: string;
-};
+import { DisabledPlugin } from '../../plugin';
+import { ReportSystemInfo, getReportSystemInfo } from '../../utils/reporting';
+import { getSetting } from '../../utils/settings';
 
 type PluginsInfo = {
   plugins: { name: string; version: string | null }[];
@@ -29,6 +24,8 @@ type PluginsInfo = {
 
 interface TestReportModalProps {
   closeModal?(): void;
+  installedPlugins: DisabledPlugin[];
+  deckyVersion: string | null;
 }
 
 const apiFetchJson = async <T,>(path: string, init?: RequestInit): Promise<T> => {
@@ -55,7 +52,7 @@ const apiFetchJson = async <T,>(path: string, init?: RequestInit): Promise<T> =>
 };
 
 const buildReportFull = (
-  system: SystemInfo,
+  system: ReportSystemInfo,
   plugins: PluginsInfo,
   majorIssues: boolean,
   minorIssues: boolean,
@@ -112,7 +109,7 @@ const buildReportFull = (
   ].join('\n');
 };
 
-const buildReportSimple = (system: SystemInfo, plugins: PluginsInfo) => {
+const buildReportSimple = (system: ReportSystemInfo, plugins: PluginsInfo) => {
   const pluginLines = plugins.plugins.length
     ? plugins.plugins.map((plugin) => `- ${plugin.name} - ${plugin.version ?? 'unknown'}`)
     : ['- None'];
@@ -142,13 +139,16 @@ const getPasteOrigin = (url: string | null) => {
   }
 };
 
-const TestReportModal: FC<TestReportModalProps> = ({ closeModal }) => {
+const TestReportModal: FC<TestReportModalProps> = ({ closeModal, installedPlugins, deckyVersion }) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null);
-  const [pluginsInfo, setPluginsInfo] = useState<PluginsInfo | null>(null);
+  const [systemInfo, setSystemInfo] = useState<ReportSystemInfo | null>(null);
+  const pluginsInfo: PluginsInfo = {
+    plugins: installedPlugins.map(({ name, version }) => ({ name, version: version ?? null })),
+  };
+  const [steamBranch, setSteamBranch] = useState('unknown');
   const [copyMessage, setCopyMessage] = useState<string | null>(null);
   const [copyMessageType, setCopyMessageType] = useState<'error' | 'success' | null>(null);
   const [pasteUrl, setPasteUrl] = useState<string | null>(null);
@@ -165,13 +165,10 @@ const TestReportModal: FC<TestReportModalProps> = ({ closeModal }) => {
       setLoading(true);
       setError(null);
       try {
-        const [system, plugins] = await Promise.all([
-          apiFetchJson<SystemInfo>('/report/system'),
-          apiFetchJson<PluginsInfo>('/report/plugins'),
-        ]);
+        const branch = await getSetting<number>('branch', 0);
+        const system = await getReportSystemInfo(deckyVersion, branch);
         if (!active) return;
         setSystemInfo(system);
-        setPluginsInfo(plugins);
       } catch (e) {
         if (!active) return;
         setError((e as Error).message || t('SettingsDeveloperIndex.test_report.system_error'));
@@ -183,7 +180,16 @@ const TestReportModal: FC<TestReportModalProps> = ({ closeModal }) => {
     return () => {
       active = false;
     };
-  }, [t]);
+  }, [deckyVersion, t]);
+
+  useEffect(() => {
+    const registration = SteamClient.Settings.RegisterForSettingsChanges((settings) => {
+      setSteamBranch(
+        settings.bIsInClientBeta === true ? 'Beta' : settings.bIsInClientBeta === false ? 'Stable' : 'unknown',
+      );
+    });
+    return () => registration.unregister();
+  }, []);
 
   const handleSend = async () => {
     if (!systemInfo || !pluginsInfo) return;
@@ -193,6 +199,7 @@ const TestReportModal: FC<TestReportModalProps> = ({ closeModal }) => {
     setCopyMessageType(null);
     setPasteUrl(null);
     try {
+      const reportSystem = { ...systemInfo, steam_branch: steamBranch };
       const hasCustomContent =
         majorIssues ||
         minorIssues ||
@@ -201,7 +208,7 @@ const TestReportModal: FC<TestReportModalProps> = ({ closeModal }) => {
         summary.trim().length > 0;
       const report = hasCustomContent
         ? buildReportFull(
-            systemInfo,
+            reportSystem,
             pluginsInfo,
             majorIssues,
             minorIssues,
@@ -209,7 +216,7 @@ const TestReportModal: FC<TestReportModalProps> = ({ closeModal }) => {
             minorIssuesNotes,
             summary,
           )
-        : buildReportSimple(systemInfo, pluginsInfo);
+        : buildReportSimple(reportSystem, pluginsInfo);
       setLastReport(report);
       const response = await apiFetchJson<{ url: string }>('/report/paste', {
         method: 'POST',
@@ -277,7 +284,7 @@ const TestReportModal: FC<TestReportModalProps> = ({ closeModal }) => {
                   description={
                     <div>
                       <div>{`SteamOS ${systemInfo.steamos} (${systemInfo.steamos_branch})`}</div>
-                      <div>{`Steam ${systemInfo.steam} (${systemInfo.steam_branch})`}</div>
+                      <div>{`Steam ${systemInfo.steam} (${steamBranch})`}</div>
                       <div>{`Decky ${systemInfo.decky} (${systemInfo.decky_branch})`}</div>
                     </div>
                   }

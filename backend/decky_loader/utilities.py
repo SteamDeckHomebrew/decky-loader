@@ -120,13 +120,14 @@ class Utilities:
             res["success"] = False
         return res
 
-    async def install_plugin(self, artifact: str="", name: str="No name", version: str="dev", hash: str="", install_type: PluginInstallType=PluginInstallType.INSTALL):
+    async def install_plugin(self, artifact: str="", name: str="No name", version: str="dev", hash: str="", install_type: PluginInstallType=PluginInstallType.INSTALL, prompt: bool=True):
         return await self.context.plugin_browser.request_plugin_install(
             artifact=artifact,
             name=name,
             version=version,
             hash=hash,
-            install_type=install_type
+            install_type=install_type,
+            prompt=prompt
         )
 
     async def install_plugins(self, requests: List[PluginInstallRequest]):

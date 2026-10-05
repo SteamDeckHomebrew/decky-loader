@@ -304,11 +304,14 @@ class PluginBrowser:
             self.loader.watcher.disabled = False
         await self.loader.ws.emit("loader/plugin_download_finish", name)
 
-    async def request_plugin_install(self, artifact: str, name: str, version: str, hash: str, install_type: PluginInstallType):
+    async def request_plugin_install(self, artifact: str, name: str, version: str, hash: str, install_type: PluginInstallType, prompt: bool=True):
         request_id = str(time())
         self.install_requests[request_id] = PluginInstallContext(artifact, name, version, hash)
 
-        await self.loader.ws.emit("loader/add_plugin_install_prompt", name, version, request_id, hash, install_type)
+        if prompt:
+            await self.loader.ws.emit("loader/add_plugin_install_prompt", name, version, request_id, hash, install_type)
+        else:
+            await self.confirm_plugin_install(request_id)
 
     async def request_multiple_plugin_installs(self, requests: List[PluginInstallRequest]):
         request_id = str(time())

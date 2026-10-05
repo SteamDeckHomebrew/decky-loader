@@ -39,7 +39,7 @@ async def csrf_middleware(request: Request, handler: Handler):
     if str(request.method) == "OPTIONS" or \
         request.headers.get('X-Decky-Auth') == csrf_token or \
         str(request.rel_url) == "/auth/token" or \
-        str(request.rel_url).startswith("/plugins/load_main/") or \
+        str(request.rel_url).startswith("/plugins") or \
         str(request.rel_url).startswith("/static/") or \
         str(request.rel_url).startswith("/steam_resource/") or \
         str(request.rel_url).startswith("/frontend/") or \

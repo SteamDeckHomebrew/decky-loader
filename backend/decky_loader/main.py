@@ -1,4 +1,5 @@
 # Change PyInstaller files permissions
+import json
 import sys
 from typing import Any, Dict
 from .localplatform.localplatform import (chmod, chown, service_stop, service_start,
@@ -20,7 +21,7 @@ import aiohttp_cors # pyright: ignore [reportMissingTypeStubs]
 
 # Partial imports
 from aiohttp import client_exceptions
-from aiohttp.web import Application, Response, Request, get, run_app, static # pyright: ignore [reportUnknownVariableType]
+from aiohttp.web import Application, Response, Request, get, post, run_app, static # pyright: ignore [reportUnknownVariableType]
 from aiohttp_jinja2 import setup as jinja_setup
 from setproctitle import getproctitle, setproctitle, setthreadtitle
 
@@ -95,6 +96,10 @@ class PluginManager:
 
         self.loop.set_exception_handler(self.exception_handler)
         self.web_app.add_routes([get("/auth/token", self.get_auth_token)])
+
+        self.web_app.add_routes([get("/plugins", self.get_plugins)])
+        self.web_app.add_routes([post("/plugins/install", self.install_plugin)])
+        self.web_app.add_routes([post("/plugins/uninstall", self.uninstall_plugin)])
 
         for route in list(self.web_app.router.routes()):
             self.cors.add(route) # pyright: ignore [reportUnknownMemberType]
@@ -173,6 +178,31 @@ class PluginManager:
 
     async def get_auth_token(self, request: Request):
         return Response(text=get_csrf_token())
+
+    async def get_plugins(self, _request: Request):
+        return Response(text=json.dumps([name for name in self.plugin_browser.plugins.keys()]))
+
+    async def install_plugin(self, request: Request):
+        data = await request.json()
+
+        if isinstance(data, str):
+            data = [data]
+
+        for plugin in [d for d in data if isinstance(d, str)]:
+            await self.utilities.install_plugin(plugin, plugin.split('/')[-1].replace('.zip', ''), prompt=False)
+
+        return Response()
+
+    async def uninstall_plugin(self, request: Request):
+        data = await request.json()
+
+        if isinstance(data, str):
+            data = [data]
+
+        for plugin in [d for d in data if isinstance(d, str)]:
+            await self.utilities.uninstall_plugin(plugin)
+
+        return Response()
 
     async def load_plugins(self):
         # await self.wait_for_server()

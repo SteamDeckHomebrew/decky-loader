@@ -41,6 +41,7 @@ import { getVersionInfo } from './updater';
 import { getPluginDisplayName } from './utils/pluginHelpers';
 import { getSetting, setSetting } from './utils/settings';
 import TranslationHelper, { TranslationClass } from './utils/TranslationHelper';
+import VRBarHook from './vr-bar-hook';
 
 const StorePage = lazy(() => import('./components/store/Store'));
 const SettingsPage = lazy(() => import('./components/settings'));
@@ -70,6 +71,8 @@ class PluginLoader extends Logger {
   private plugins: Plugin[] = [];
   public errorBoundaryHook: ErrorBoundaryHook = new ErrorBoundaryHook();
   private tabsHook: TabsHook = new TabsHook();
+  // Shows the tabs added to tabsHook as buttons in the Steam Frame's VR dashboard bar, which has no Quick Access Menu
+  private vrBarHook: VRBarHook = new VRBarHook(this.tabsHook);
   public routerHook: RouterHook = new RouterHook();
   public toaster: Toaster = new Toaster();
   private deckyState: DeckyState = new DeckyState();
@@ -126,6 +129,7 @@ class PluginLoader extends Logger {
         </DeckyStateContextProvider>
       ),
     });
+    this.vrBarHook.init();
 
     this.routerHook.addRoute('/decky/store', () => (
       <DeckyStateContextProvider deckyState={this.deckyState}>
@@ -378,6 +382,7 @@ class PluginLoader extends Logger {
     deinitFilepickerPatches();
     this.routerHook.deinit();
     this.tabsHook.deinit();
+    this.vrBarHook.deinit();
     this.toaster.deinit();
     this.errorBoundaryHook.deinit();
   }

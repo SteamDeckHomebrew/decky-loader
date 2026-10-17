@@ -13,6 +13,7 @@ body:
         - label: This issue is not a duplicate of an existing one
         - label: I have checked the [common issues section in the readme file](https://github.com/SteamDeckHomebrew/decky-loader#-common-issues)
         - label: I have attached logs to this bug report (failure to include logs will mean your issue may not be responded to).
+        - label: By ticking this box I affirm AI/LLM was not used to write any of this issue body or title.
 
   - type: textarea
     attributes:

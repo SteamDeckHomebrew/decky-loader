@@ -1,6 +1,7 @@
 import { DialogBody, DialogControlsSection, DialogControlsSectionHeader, Field, Toggle } from '@decky/ui';
 import { useTranslation } from 'react-i18next';
 
+import { useSetting } from '../../../../utils/hooks/useSetting';
 import { useDeckyState } from '../../../DeckyState';
 import BranchSelect from './BranchSelect';
 import NotificationSettings from './NotificationSettings';
@@ -14,7 +15,8 @@ export default function GeneralSettings({
   isDeveloper: boolean;
   setIsDeveloper: (val: boolean) => void;
 }) {
-  const { versionInfo } = useDeckyState();
+  const { versionInfo, sortPlugins, setSortPlugins } = useDeckyState();
+  const [_, setSortPluginsSetting] = useSetting<boolean>('sortPlugins', false);
   const { t } = useTranslation();
 
   return (
@@ -39,6 +41,15 @@ export default function GeneralSettings({
             value={isDeveloper}
             onChange={(toggleValue) => {
               setIsDeveloper(toggleValue);
+            }}
+          />
+        </Field>
+        <Field label={t('SettingsGeneralIndex.sort_plugins.label')}>
+          <Toggle
+            value={sortPlugins}
+            onChange={(toggleValue) => {
+              setSortPlugins(toggleValue);
+              setSortPluginsSetting(toggleValue);
             }}
           />
         </Field>

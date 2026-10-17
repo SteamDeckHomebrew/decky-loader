@@ -10,6 +10,7 @@ interface PublicDeckyState {
   disabledPlugins: DisabledPlugin[];
   installedPlugins: (Plugin | DisabledPlugin)[];
   pluginOrder: string[];
+  sortPlugins: boolean;
   frozenPlugins: string[];
   hiddenPlugins: string[];
   activePlugin: Plugin | null;
@@ -31,6 +32,7 @@ export class DeckyState {
   private _disabledPlugins: DisabledPlugin[] = [];
   private _installedPlugins: (Plugin | DisabledPlugin)[] = [];
   private _pluginOrder: string[] = [];
+  private _sortPlugins: boolean = false;
   private _frozenPlugins: string[] = [];
   private _hiddenPlugins: string[] = [];
   private _activePlugin: Plugin | null = null;
@@ -49,6 +51,7 @@ export class DeckyState {
       disabledPlugins: this._disabledPlugins,
       installedPlugins: this._installedPlugins,
       pluginOrder: this._pluginOrder,
+      sortPlugins: this._sortPlugins,
       frozenPlugins: this._frozenPlugins,
       hiddenPlugins: this._hiddenPlugins,
       activePlugin: this._activePlugin,
@@ -80,6 +83,11 @@ export class DeckyState {
 
   setPluginOrder(pluginOrder: string[]) {
     this._pluginOrder = pluginOrder;
+    this.notifyUpdate();
+  }
+
+  setSortPlugins(sortPlugins: boolean) {
+    this._sortPlugins = sortPlugins;
     this.notifyUpdate();
   }
 
@@ -139,6 +147,7 @@ interface DeckyStateContext extends PublicDeckyState {
   setActivePlugin(name: string): void;
   setPluginOrder(pluginOrder: string[]): void;
   setDisabledPlugins(disabled: DisabledPlugin[]): void;
+  setSortPlugins(sortPlugins: boolean): void;
   closeActivePlugin(): void;
 }
 
@@ -178,6 +187,7 @@ export const DeckyStateContextProvider: FC<Props> = ({ children, deckyState }) =
   const closeActivePlugin = deckyState.closeActivePlugin.bind(deckyState);
   const setPluginOrder = deckyState.setPluginOrder.bind(deckyState);
   const setDisabledPlugins = deckyState.setDisabledPlugins.bind(deckyState);
+  const setSortPlugins = deckyState.setSortPlugins.bind(deckyState);
 
   return (
     <DeckyStateContext.Provider
@@ -189,6 +199,7 @@ export const DeckyStateContextProvider: FC<Props> = ({ children, deckyState }) =
         closeActivePlugin,
         setPluginOrder,
         setDisabledPlugins,
+        setSortPlugins,
       }}
     >
       {children}

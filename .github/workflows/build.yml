@@ -80,7 +80,7 @@ jobs:
       working-directory: ./backend
       run: |
         poetry dynamic-versioning 
-        DECKY_REPO="${{ github.repository }}" DECKY_BRANCH="${{ github.ref_name }}" ${{ inputs.noconsole == true && 'DECKY_NOCONSOLE=1 ' || '' }}pyinstaller pyinstaller.spec
+        DECKY_REPO="${{ github.repository }}" DECKY_BRANCH="${{ github.event.number && format('PR{0}/{1}', github.event.number, github.head_ref) || github.ref_name }}" ${{ inputs.noconsole == true && 'DECKY_NOCONSOLE=1 ' || '' }}pyinstaller pyinstaller.spec
         echo Builds:
         ls ./dist
 

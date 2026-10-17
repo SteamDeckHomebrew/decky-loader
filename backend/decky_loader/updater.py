@@ -42,7 +42,7 @@ class Updater:
         self.allRemoteVers: List[RemoteVer] = []
         self.localVer = helpers.get_loader_version()
         self.repo = getenv('DECKY_REPO', 'SteamDeckHomebrew/decky-loader')
-        self.git_branch = getenv('DECKY_BRANCH', 'main')
+        self.git_branch = getenv('DECKY_BRANCH', 'dirty')
 
         try:
             self.currentBranch = self.get_branch(self.context.settings)
@@ -95,6 +95,8 @@ class Updater:
     async def get_version_info(self):
         return {
             "current": self.localVer,
+            "repo": self.repo,
+            "gitBranch": self.git_branch,
             "remote": self.remoteVer,
             "all": self.allRemoteVers,
             "updatable": self.localVer != "unknown" and self.localVer != "dev"
@@ -180,7 +182,7 @@ class Updater:
         download_temp_filename = download_filename + ".new"
 
         if size_in_bytes == None:
-            size_in_bytes = 26214400 # 25MiB, a reasonable overestimate (19.6MiB as of 2024/02/25) (2026/09/25 update: this is exactly accurate LOL)
+            size_in_bytes = 35000000 # 35MiB, a reasonable overestimate (30.00 MiB as of 2026/10/05)
 
         async with ClientSession() as web:
             logger.debug("Downloading binary")

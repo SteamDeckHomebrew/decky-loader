@@ -26,6 +26,8 @@ export interface StorePluginVersion {
   artifact: string | undefined | null;
 }
 
+export type UpdateEndpointVersions = { [name: string]: [version: string, hash: string, artifact?: string] };
+
 export interface StorePlugin {
   id: number;
   name: string;
@@ -49,19 +51,9 @@ export async function getStore(): Promise<Store> {
   return await getSetting<Store>('store', Store.Default);
 }
 
-export async function getPluginList(
-  sort_by: SortOptions | null = null,
-  sort_direction: SortDirections | null = null,
-): Promise<StorePlugin[]> {
-  let version = await window.DeckyPluginLoader.updateVersion();
+export async function getStoreBaseURL(): Promise<string> {
   let store = await getSetting<Store | null>('store', null);
-  let customURL = await getSetting<string>('store-url', 'https://plugins.deckbrew.xyz/plugins');
-
-  let query: URLSearchParams | string = new URLSearchParams();
-  sort_by && query.set('sort_by', sort_by);
-  sort_direction && query.set('sort_direction', sort_direction);
-  query = '?' + String(query);
-
+  let customURL = await getSetting<string>('store-url', 'https://plugins.deckbrew.xyz');
   let storeURL;
   if (store === null) {
     console.log('Could not get store, using Default.');
@@ -70,20 +62,49 @@ export async function getPluginList(
   }
   switch (+store) {
     case Store.Default:
-      storeURL = 'https://plugins.deckbrew.xyz/plugins';
+      storeURL = 'https://plugins.deckbrew.xyz';
       break;
     case Store.Testing:
-      storeURL = 'https://testing.deckbrew.xyz/plugins';
+      storeURL = 'https://testing.deckbrew.xyz';
       break;
     case Store.Custom:
       storeURL = customURL;
       break;
     default:
       console.error('Somehow you ended up without a standard URL, using the default URL.');
-      storeURL = 'https://plugins.deckbrew.xyz/plugins';
+      storeURL = 'https://plugins.deckbrew.xyz';
       break;
   }
-  return fetch(storeURL + query, {
+  return storeURL;
+}
+
+export async function getPluginList(
+  sort_by: SortOptions | null = null,
+  sort_direction: SortDirections | null = null,
+): Promise<StorePlugin[]> {
+  let version = await window.DeckyPluginLoader.updateVersion();
+
+  let query: URLSearchParams | string = new URLSearchParams();
+  sort_by && query.set('sort_by', sort_by);
+  sort_direction && query.set('sort_direction', sort_direction);
+  query = '?' + String(query);
+
+  const storeURL = await getStoreBaseURL();
+
+  return fetch(storeURL + '/plugins' + query, {
+    method: 'GET',
+    headers: {
+      'X-Decky-Version': version.current,
+    },
+  }).then((r) => r.json());
+}
+
+export async function getVersionList(): Promise<UpdateEndpointVersions> {
+  let version = await window.DeckyPluginLoader.updateVersion();
+
+  const storeURL = await getStoreBaseURL();
+
+  return fetch(storeURL + '/versions', {
     method: 'GET',
     headers: {
       'X-Decky-Version': version.current,
@@ -114,23 +135,26 @@ export async function requestMultiplePluginInstalls(requests: PluginInstallReque
 }
 
 export async function checkForPluginUpdates(plugins: (Plugin | DisabledPlugin)[]): Promise<PluginUpdateMapping> {
-  const serverData = await getPluginList();
+  const serverData = await getVersionList();
   const updateMap = new Map<string, StorePluginVersion>();
   for (let plugin of plugins) {
-    const remotePlugin = serverData?.find((x) => x.name == plugin.name);
+    const remotePlugin = serverData?.[plugin.name];
     //FIXME: Ugly hack since plugin.version might be null during evaluation,
     //so this will set the older version possible
     const curVer = plugin.version ? plugin.version : '0.0.0';
 
     if (
       remotePlugin &&
-      remotePlugin.versions?.length > 0 &&
-      plugin.version != remotePlugin?.versions?.[0]?.name &&
-      validate(remotePlugin.versions?.[0]?.name) &&
+      plugin.version != remotePlugin[0] &&
+      validate(remotePlugin[0]) &&
       validate(curVer) &&
-      compare(remotePlugin?.versions?.[0]?.name, curVer, '>')
+      compare(remotePlugin[0], curVer, '>')
     ) {
-      updateMap.set(plugin.name, remotePlugin.versions[0]);
+      updateMap.set(plugin.name, {
+        name: remotePlugin[0],
+        hash: remotePlugin[1],
+        artifact: remotePlugin[2],
+      });
     }
   }
   return updateMap;

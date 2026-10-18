@@ -62,19 +62,21 @@ export default function DeveloperSettings() {
           label={t('SettingsDeveloperIndex.third_party_plugins.label_zip')}
           icon={<FaFileArchive style={{ display: 'block' }} />}
         >
-          <DialogButton onClick={() => {
-            showModal(
-              <WarnThirdParty
-                type={WarnThirdPartyType.ZIP}
-                onOK={() => {
-                  setAcceptedWarning(true);
-                  installFromZip();
-                }}
-                onCancel={() => {}}
-                seconds={waitTime}
-              />,
-            )
-          }}>
+          <DialogButton
+            onClick={() => {
+              showModal(
+                <WarnThirdParty
+                  type={WarnThirdPartyType.ZIP}
+                  onOK={() => {
+                    setAcceptedWarning(true);
+                    installFromZip();
+                  }}
+                  onCancel={() => {}}
+                  seconds={waitTime}
+                />,
+              );
+            }}
+          >
             {t('SettingsDeveloperIndex.third_party_plugins.button_zip')}
           </DialogButton>
         </Field>

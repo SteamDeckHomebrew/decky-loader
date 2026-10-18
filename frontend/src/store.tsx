@@ -53,7 +53,7 @@ export async function getStore(): Promise<Store> {
 
 export async function getStoreBaseURL(): Promise<string> {
   let store = await getSetting<Store | null>('store', null);
-  let customURL = await getSetting<string>('store-url', 'https://plugins.deckbrew.xyz');
+  let customURL = await getSetting<string>('store-url', 'https://plugins.deckbrew.xyz/plugins');
   let storeURL;
   if (store === null) {
     console.log('Could not get store, using Default.');
@@ -62,17 +62,17 @@ export async function getStoreBaseURL(): Promise<string> {
   }
   switch (+store) {
     case Store.Default:
-      storeURL = 'https://plugins.deckbrew.xyz';
+      storeURL = 'https://plugins.deckbrew.xyz/plugins';
       break;
     case Store.Testing:
-      storeURL = 'https://testing.deckbrew.xyz';
+      storeURL = 'https://testing.deckbrew.xyz/plugins';
       break;
     case Store.Custom:
       storeURL = customURL;
       break;
     default:
       console.error('Somehow you ended up without a standard URL, using the default URL.');
-      storeURL = 'https://plugins.deckbrew.xyz';
+      storeURL = 'https://plugins.deckbrew.xyz/plugins';
       break;
   }
   return storeURL;
@@ -91,7 +91,7 @@ export async function getPluginList(
 
   const storeURL = await getStoreBaseURL();
 
-  return fetch(storeURL + '/plugins' + query, {
+  return fetch(storeURL + query, {
     method: 'GET',
     headers: {
       'X-Decky-Version': version.current,

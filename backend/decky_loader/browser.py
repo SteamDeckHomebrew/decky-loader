@@ -4,8 +4,8 @@ import json
 # from pprint import pformat
 
 # Partial imports
-from aiohttp import ClientSession
-from asyncio import sleep
+from aiohttp import ClientError, ClientSession, ClientTimeout
+from asyncio import TimeoutError, sleep
 from hashlib import sha256
 from io import BytesIO
 from logging import getLogger
@@ -221,10 +221,18 @@ class PluginBrowser:
                 case 2: storeUrl = self.settings.getSetting("store-url", "https://plugins.deckbrew.xyz/plugins")  # custom
                 case _: storeUrl = "https://plugins.deckbrew.xyz/plugins"
             logger.info(f"Incrementing installs for {name} from URL {storeUrl} (version {version})")
-            async with ClientSession() as client:
-                res = await client.post(storeUrl+f"/{name}/versions/{version}/increment?isUpdate={isInstalled}", ssl=get_ssl_context())
-                if res.status != 200:
-                    logger.error(f"Server did not accept install count increment request. code: {res.status}")
+            # A failed download-count request should not prevent installation.
+            try:
+                async with ClientSession() as client:
+                    res = await client.post(
+                        storeUrl + f"/{name}/versions/{version}/increment?isUpdate={isInstalled}",
+                        ssl=get_ssl_context(),
+                        timeout=ClientTimeout(total=5),
+                    )
+                    if res.status != 200:
+                        logger.warning(f"Server did not accept install count increment request. code: {res.status}")
+            except (TimeoutError, ClientError) as e:
+                logger.warning(f"Failed to increment install count for {name}, continuing installation: {e}")
 
         await self.loader.ws.emit("loader/plugin_download_info", 75, "Store.download_progress_info.parse_zip")
         if res_zip and version == "dev":

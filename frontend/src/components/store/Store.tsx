@@ -183,7 +183,7 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
         </Focusable>
       </PanelSectionRow>
       <div style={{ justifyContent: 'center', display: 'flex' }}>
-        <Focusable style={{ display: 'flex', alignItems: 'center', width: '96%' }}>
+        <Focusable style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
           <div style={{ width: '100%' }}>
             <TextField
               label={t('Store.store_search.label')}

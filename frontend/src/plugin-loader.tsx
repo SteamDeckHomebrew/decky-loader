@@ -224,7 +224,7 @@ class PluginLoader extends Logger {
 
   private async notifySupportStatus() {
     await this.routerHook.waitForUnlock();
-    if (this.deckyState.publicState().versionInfo?.supported) {
+    if (!this.deckyState.publicState().versionInfo?.supported) {
       this.toaster.toast({
         title: <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="decky_unsupported" />,
         body: <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="decky_unsupported_body" />,

@@ -88,6 +88,7 @@
         "plugin_version_label": "Plugin Version"
     },
     "PluginInstallModal": {
+        "disabled": "The plugin will be re-enabled after installation",
         "downgrade": {
             "button_idle": "Downgrade",
             "button_processing": "Downgrading",
@@ -102,7 +103,6 @@
         },
         "no_hash": "This plugin does not have a hash, you are installing it at your own risk.",
         "not_installed": "(not installed)",
-        "disabled": "The plugin will be re-enabled after installation",
         "overwrite": {
             "button_idle": "Overwrite",
             "button_processing": "Overwriting",
@@ -123,6 +123,8 @@
         }
     },
     "PluginListIndex": {
+        "disable": "Disable",
+        "enable": "Enable",
         "freeze": "Freeze updates",
         "hide": "Quick access: Hide",
         "no_plugin": "No plugins installed!",
@@ -134,18 +136,27 @@
         "uninstall": "Uninstall",
         "update_all_one": "Update 1 plugin",
         "update_all_other": "Update {{count}} plugins",
-        "update_to": "Update to {{name}}",
-        "disable": "Disable",
-        "enable": "Enable"
+        "update_to": "Update to {{name}}"
     },
     "PluginListLabel": {
-        "hidden": "Hidden from the quick access menu",
-        "disabled": "Plugin disabled"
+        "disabled": "Plugin disabled",
+        "hidden": "Hidden from the quick access menu"
     },
     "PluginLoader": {
         "decky_title": "Decky",
+        "decky_unsupported": "Unsupported Installation!",
+        "decky_unsupported_body": "No official support will be provided.",
         "decky_update_available": "Update to {{tag_name}} available!",
         "error": "Error",
+        "plugin_disable": {
+            "button": "Disable",
+            "desc": "Are you sure you want to disable {{name}}?",
+            "error": "Error disabling {{name}}",
+            "title": "Disable {{name}}"
+        },
+        "plugin_enable": {
+            "error": "Error enabling {{name}}"
+        },
         "plugin_error_uninstall": "Loading {{name}} caused an exception as shown above. This usually means that the plugin requires an update for the new version of SteamUI. Check if an update is present or evaluate its removal in the Decky settings, in the Plugins section.",
         "plugin_load_error": {
             "message": "Error loading plugin {{name}}",
@@ -156,23 +167,14 @@
             "desc": "Are you sure you want to uninstall {{name}}?",
             "title": "Uninstall {{name}}"
         },
-        "plugin_disable": {
-            "button": "Disable",
-            "desc": "Are you sure you want to disable {{name}}?",
-            "title": "Disable {{name}}",
-            "error": "Error disabling {{name}}"
-        },
-        "plugin_enable": {
-            "error": "Error enabling {{name}}"
-        },
         "plugin_update_one": "Updates available for 1 plugin!",
         "plugin_update_other": "Updates available for {{count}} plugins!"
     },
     "PluginView": {
-        "hidden_one": "1 plugin is hidden from this list",
-        "hidden_other": "{{count}} plugins are hidden from this list",
         "disabled_one": "1 plugin is disabled",
-        "disabled_other": "{{count}} plugins are disabled"
+        "disabled_other": "{{count}} plugins are disabled",
+        "hidden_one": "1 plugin is hidden from this list",
+        "hidden_other": "{{count}} plugins are hidden from this list"
     },
     "RemoteDebugging": {
         "remote_cef": {
@@ -217,9 +219,6 @@
         "developer_mode": {
             "label": "Developer mode"
         },
-        "sort_plugins": {
-            "label": "Sort plugins alphabetically"
-        },
         "notifications": {
             "decky_updates_label": "Decky update available",
             "header": "Notifications",
@@ -227,6 +226,9 @@
         },
         "other": {
             "header": "Other"
+        },
+        "sort_plugins": {
+            "label": "Sort plugins alphabetically"
         },
         "updates": {
             "header": "Updates"
@@ -296,15 +298,6 @@
             "testing": "Testing"
         }
     },
-    "WarnThirdParty":{
-        "title_zip": "Third-Party Plugin Installation",
-        "title_repo": "Third-Party Store Selection",
-        "button_processing_one": "Please wait {{timer}} second",
-        "button_processing_many": "Please wait {{timer}} seconds",
-        "button_idle": "Continue",
-        "desc_zip": "The Decky Loader team has not reviewed this plugin. It may contain malware, such as software to steal your Steam account or harm your device. By installing this plugin, you agree you have assumed all risks to your device.",
-        "desc_repo": "The Decky Loader team does not maintain this plugin store. It and its plugins may contain malware, such as software to steal your Steam account or harm your device. By adding this store, you agree you have assumed all risks to your device."
-    },
     "Testing": {
         "download": "Download",
         "error": "Error Installing PR",
@@ -316,6 +309,8 @@
         "decky_store_desc": "Open Decky Store",
         "settings_desc": "Open Decky Settings"
     },
+    "undefined_repo": "",
+    "undefined_zip": "",
     "Updater": {
         "decky_updates": "Decky Updates",
         "no_patch_notes_desc": "no patch notes for this version",
@@ -330,5 +325,14 @@
             "reloading": "Reloading",
             "updating": "Updating"
         }
+    },
+    "WarnThirdParty": {
+        "button_idle": "Continue",
+        "button_processing_many": "Please wait {{timer}} seconds",
+        "button_processing_one": "Please wait {{timer}} second",
+        "desc_repo": "The Decky Loader team does not maintain this plugin store. It and its plugins may contain malware, such as software to steal your Steam account or harm your device. By adding this store, you agree you have assumed all risks to your device.",
+        "desc_zip": "The Decky Loader team has not reviewed this plugin. It may contain malware, such as software to steal your Steam account or harm your device. By installing this plugin, you agree you have assumed all risks to your device.",
+        "title_repo": "Third-Party Store Selection",
+        "title_zip": "Third-Party Plugin Installation"
     }
 }

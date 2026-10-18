@@ -23,6 +23,7 @@ export interface VerInfo {
   remote: RemoteVerInfo | null;
   all: RemoteVerInfo[] | null;
   updatable: boolean;
+  supported: boolean;
 }
 
 export const doUpdate = DeckyBackend.callable('updater/do_update');

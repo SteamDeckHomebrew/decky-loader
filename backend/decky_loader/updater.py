@@ -41,6 +41,7 @@ class Updater:
         self.remoteVer: RemoteVer | None = None
         self.allRemoteVers: List[RemoteVer] = []
         self.localVer = helpers.get_loader_version()
+        self.isSupported: bool = ON_LINUX
         self.repo = getenv('DECKY_REPO', 'SteamDeckHomebrew/decky-loader')
         self.git_branch = getenv('DECKY_BRANCH', 'dirty')
 
@@ -99,7 +100,8 @@ class Updater:
             "gitBranch": self.git_branch,
             "remote": self.remoteVer,
             "all": self.allRemoteVers,
-            "updatable": self.localVer != "unknown" and self.localVer != "dev"
+            "updatable": self.localVer != "unknown" and self.localVer != "dev",
+            "supported": self.isSupported
         }
 
     async def check_for_updates(self):

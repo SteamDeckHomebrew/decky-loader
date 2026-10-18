@@ -224,7 +224,7 @@ class PluginBrowser:
             async with ClientSession() as client:
                 res = await client.post(storeUrl+f"/{name}/versions/{version}/increment?isUpdate={isInstalled}", headers={
                     "X-Decky-Version": get_loader_version()
-                } ssl=get_ssl_context())
+                }, ssl=get_ssl_context())
                 if res.status != 200:
                     logger.error(f"Server did not accept install count increment request. code: {res.status}")
 

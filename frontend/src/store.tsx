@@ -26,7 +26,7 @@ export interface StorePluginVersion {
   artifact: string | undefined | null;
 }
 
-export type UpdateEndpointVersions = {[name: string]: [version: string, hash: string, artifact?: string]}
+export type UpdateEndpointVersions = { [name: string]: [version: string, hash: string, artifact?: string] };
 
 export interface StorePlugin {
   id: number;
@@ -91,7 +91,7 @@ export async function getPluginList(
 
   const storeURL = await getStoreBaseURL();
 
-  return fetch(storeURL + "/plugins" + query, {
+  return fetch(storeURL + '/plugins' + query, {
     method: 'GET',
     headers: {
       'X-Decky-Version': version.current,
@@ -104,7 +104,7 @@ export async function getVersionList(): Promise<UpdateEndpointVersions> {
 
   const storeURL = await getStoreBaseURL();
 
-  return fetch(storeURL + "/versions", {
+  return fetch(storeURL + '/versions', {
     method: 'GET',
     headers: {
       'X-Decky-Version': version.current,
@@ -153,7 +153,7 @@ export async function checkForPluginUpdates(plugins: (Plugin | DisabledPlugin)[]
       updateMap.set(plugin.name, {
         name: remotePlugin[0],
         hash: remotePlugin[1],
-        artifact: remotePlugin[2]
+        artifact: remotePlugin[2],
       });
     }
   }

@@ -1,0 +1,19 @@
+name: Builder (Windows, arm64)
+
+on:
+  push:
+  pull_request:
+  workflow_call:
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    strategy:
+      matrix:
+        noconsole: [false, true]
+    with:
+      os: Windows
+      arch: arm64
+      artifact_name: PluginLoader-win-arm64${{ matrix.noconsole == true && '-noconsole' || '' }}
+      binary_name: PluginLoader.exe
+      noconsole: ${{ matrix.noconsole }}

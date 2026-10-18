@@ -10,17 +10,17 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v4 # Check out the repository first.
+      - uses: actions/checkout@v7 # Check out the repository first.
 
-      - name: Set up NodeJS 20 💎
-        uses: actions/setup-node@v4
+      - name: Set up NodeJS 26 💎
+        uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 26
 
-      - name: Set up Python 3.11.7 🐍
-        uses: actions/setup-python@v5
+      - name: Set up Python 3.14.8 🐍
+        uses: actions/setup-python@v7
         with:
-          python-version: "3.11.7"
+          python-version: "3.14.8"
 
       - name: Install Poetry
         uses: snok/install-poetry@v1
@@ -40,7 +40,7 @@ jobs:
       - name: Run pyright (Python)
         uses: jakebailey/pyright-action@v1
         with:
-          python-version: "3.10.6"
+          python-version: "3.14.8"
           no-comments: true
           working-directory: backend
 

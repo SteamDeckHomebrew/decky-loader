@@ -27,13 +27,13 @@ permissions:
 jobs:
   create_tag:
     name: Tag a new version of the package
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-26.04
     outputs:
       tag_name: ${{ steps.ready_tag.outputs.tag_name }}
 
     steps:
     - name: Checkout 🧰
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
 
     - name: Install semver-tool asdf
       uses: asdf-vm/actions/install@v4
@@ -42,11 +42,11 @@ jobs:
           semver 3.4.0
 
     - name: Get latest release
-      uses: rez0n/actions-github-release@main
+      uses: rez0n/actions-github-release@v2.1
       id: latest_release
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        repository: "SteamDeckHomebrew/decky-loader"
+        repository: ${{ github.repository }}
         type: "nodraft"
 
     - name: Prepare tag ⚙️
@@ -115,42 +115,89 @@ jobs:
         echo tag_name=v$OUT >> $GITHUB_OUTPUT
 
     - name: Push tag 📤
-      uses: rickstaa/action-create-tag@v1.3.2
+      uses: rickstaa/action-create-tag@v1.7.2
       if: ${{ steps.ready_tag.outputs.tag_name && !env.ACT }}
       with:
         tag: ${{ steps.ready_tag.outputs.tag_name }}
         message: Pre-release ${{ steps.ready_tag.outputs.tag_name }}
 
-  build:
-    name: Build tagged artifact
-    uses: ./.github/workflows/build.yml
+  build_linux_x86_64:
+    name: Build tagged artifact (Linux, x86_64)
+    uses: ./.github/workflows/build-linux-x86_64.yml
+    needs: [create_tag]
+
+  build_linux_arm64:
+    name: Build tagged artifact (Linux, arm64)
+    uses: ./.github/workflows/build-linux-arm64.yml
+    needs: [create_tag]
+
+  build_win_x86_64:
+    name: Build tagged artifact (Windows, arm64)
+    uses: ./.github/workflows/build-win-arm64.yml
+    needs: [create_tag]
+
+  build_win_arm64:
+    name: Build tagged artifact (Windows, x86_64)
+    uses: ./.github/workflows/build-win-x86_64.yml
+    needs: [create_tag]
+
+  build_macos:
+    name: Build tagged artifact (macOS)
+    uses: ./.github/workflows/build-mac.yml
     needs: [create_tag]
 
   release:
-    name: Release tagged artifact
-    runs-on: ubuntu-22.04
-    needs: [create_tag, build]
+    name: Release tagged artifacts
+    runs-on: ubuntu-26.04
+    needs: [create_tag, build_linux_x86_64, build_linux_arm64, build_win_x86_64, build_win_arm64, build_macos]
     steps:
-      - name: Fetch package artifact ⬇️
-        uses: actions/download-artifact@v4
+      - name: Fetch package artifacts ⬇️
+        uses: actions/download-artifact@v8
         with:
-          name: PluginLoader
+          path: ./temp_artifacts
+
+      - name: Name release assets 🛠️
+        run: |
+          ARTIFACTS=("default" "arm64" "win" "win-noconsole" "win-arm64" "win-arm64-noconsole" "mac")
+
+          for artifact in "${ARTIFACTS[@]}"; do
+            echo "naming $artifact"
+
+            if [ "$artifact" = "default" ]; then
+              suffix=""
+            else
+              suffix="-$artifact"
+            fi
+
+            # stupid windows
+            if [[ "$artifact" == win* ]]; then
+              ext=".exe"
+            else
+              ext=""
+            fi
+
+            source="./temp_artifacts/PluginLoader$suffix"
+            dest="./PluginLoader$suffix$ext"
+            mv "$source"/PluginLoader$ext "$dest"
+          done
 
       - name: Pre-release 📦
         if: github.event.inputs.release == 'prerelease'
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           name: Prerelease ${{ needs.create_tag.outputs.tag_name }}
           tag_name: ${{ needs.create_tag.outputs.tag_name }}
-          files: ./PluginLoader
+          files: |
+            ./PluginLoade*
           prerelease: true
           generate_release_notes: true
       - name: Release 📦
         if: github.event.inputs.release == 'release'
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           name: Release ${{ needs.create_tag.outputs.tag_name }}
           tag_name: ${{ needs.create_tag.outputs.tag_name }}
-          files: ./PluginLoader
+          files: |
+            ./PluginLoade*
           prerelease: false
           generate_release_notes: true

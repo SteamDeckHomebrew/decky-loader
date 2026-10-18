@@ -18,6 +18,8 @@ export interface RemoteVerInfo {
 
 export interface VerInfo {
   current: string;
+  repo: string;
+  gitBranch: string;
   remote: RemoteVerInfo | null;
   all: RemoteVerInfo[] | null;
   updatable: boolean;

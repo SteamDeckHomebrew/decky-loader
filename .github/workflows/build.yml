@@ -1,32 +1,59 @@
 name: Builder
 
 on:
-  push:
-  pull_request:
   workflow_call:
-  # schedule:
-  #   - cron: '0 13 * * *' # run at 1 PM UTC
+    inputs:
+      arch:
+        description: Architecture to build for (x86_64, arm64)
+        type: string
+        default: x86_64
+      os:
+        description: OS to build for (Linux, macOS, Windows)
+        type: string
+        default: Linux
+      artifact_name:
+        description: Name of the uploaded artifact
+        type: string
+        default: PluginLoader
+      binary_name:
+        description: Name of the PluginLoader binary
+        type: string
+        default: PluginLoader
+      noconsole:
+        description: If the windows build is no-console
+        type: boolean
+        default: false
 
 jobs:
   build:
-    name: Build PluginLoader
-    runs-on: ubuntu-22.04
+    name: Build ${{ inputs.artifact_name }} (${{ inputs.os }} ${{ inputs.arch }})
+    # No support for mac x86, sorry
+    runs-on: ${{
+      (inputs.os == 'Linux' && inputs.arch == 'arm64' && 'ubuntu-26.04-arm') || 
+      (inputs.os == 'Linux' && inputs.arch == 'x86_64' && 'ubuntu-26.04') ||
+      (inputs.os == 'macOS' && inputs.arch == 'arm64' && 'xcode-27') || 
+      (inputs.os == 'Windows' && inputs.arch == 'arm64' && 'windows-11-arm') ||
+      (inputs.os == 'Windows' && inputs.arch == 'x86_64' && 'windows-2025')
+       }}
+    defaults:
+      run:
+        shell: bash
 
     steps:
     - name: Checkout 🧰
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         fetch-depth: 0
 
-    - name: Set up NodeJS 20 💎
-      uses: actions/setup-node@v4
+    - name: Set up NodeJS 26 💎
+      uses: actions/setup-node@v7
       with:
-        node-version: 20
+        node-version: 26
       
-    - name: Set up Python 3.11.7 🐍
-      uses: actions/setup-python@v5
+    - name: Set up Python 3.14.8 🐍
+      uses: actions/setup-python@v7
       with:
-        python-version: "3.11.7"
+        python-version: "3.14.8"
     
     - name: Install Poetry
       uses: snok/install-poetry@v1
@@ -53,17 +80,19 @@ jobs:
       working-directory: ./backend
       run: |
         poetry dynamic-versioning 
-        pyinstaller pyinstaller.spec
+        DECKY_REPO="${{ github.repository }}" DECKY_BRANCH="${{ github.event.number && format('PR{0}/{1}', github.event.number, github.head_ref) || github.ref_name }}" ${{ inputs.noconsole == true && 'DECKY_NOCONSOLE=1 ' || '' }}pyinstaller pyinstaller.spec
+        echo Builds:
+        ls ./dist
 
     - name: Upload package artifact ⬆️
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
-        name: PluginLoader
-        path: ./backend/dist/PluginLoader
+        name: ${{ inputs.artifact_name }}
+        path: ./backend/dist/${{ inputs.binary_name }}
 
     - name: Download package artifact locally
       if: ${{ env.ACT }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
-        path: ./backend/dist/PluginLoader
+        path: ./backend/dist/${{ inputs.binary_name }}

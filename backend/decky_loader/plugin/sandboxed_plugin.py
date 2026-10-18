@@ -211,5 +211,4 @@ class SandboxedPlugin:
         except Exception as e:
             d["res"] = str(e)
             d["success"] = False
-        finally:
-            return dumps(d, ensure_ascii=False)
+        return dumps(d, ensure_ascii=False)

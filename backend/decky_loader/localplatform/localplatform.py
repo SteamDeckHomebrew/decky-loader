@@ -4,6 +4,9 @@ ON_WINDOWS = platform.system() == "Windows"
 ON_MAC = platform.system() == "Darwin"
 ON_LINUX = not ON_WINDOWS and not ON_MAC
 
+# macOS reports arm64, Linux reports aarch64
+ON_ARM64 = platform.machine() == "arm64" or platform.machine() == "aarch64" 
+
 if ON_WINDOWS:
     from .localplatformwin import *
     from . import localplatformwin as localplatform

@@ -328,6 +328,10 @@ class Utilities:
 
         path_obj = Path(path).resolve()
 
+        if path_obj.is_file():
+            path_obj = path_obj.parent
+            path = str(path_obj)
+
         files: List[FilePickerObj] = []
         folders: List[FilePickerObj] = []
 

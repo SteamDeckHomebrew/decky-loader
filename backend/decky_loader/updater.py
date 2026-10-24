@@ -186,7 +186,8 @@ class Updater:
         if size_in_bytes == None:
             size_in_bytes = 35000000 # 35MiB, a reasonable overestimate (30.00 MiB as of 2026/10/05)
 
-        async with ClientSession() as web:
+        # GitHub release redirects can carry CSP headers larger than 8 KiB.
+        async with ClientSession(max_field_size=32 * 1024) as web:
             logger.debug("Downloading binary")
             async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
                 total = int(res.headers.get('content-length', size_in_bytes))

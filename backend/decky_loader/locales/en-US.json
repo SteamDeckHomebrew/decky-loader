@@ -251,6 +251,11 @@
             "start": "Initializing",
             "uninstalling_previous": "Uninstalling previous copy"
         },
+        "errors": {
+            "load_failed": "Unable to load the plugin store. Please try again.",
+            "update_required": "Update Decky Loader to use the plugin store."
+        },
+        "retry": "Retry",
         "store_contrib": {
             "desc": "If you would like to contribute to the Decky Plugin Store, check the SteamDeckHomebrew/decky-plugin-template repository on GitHub. Information on development and distribution is available in the README.",
             "label": "Contributing"

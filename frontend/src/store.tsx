@@ -47,6 +47,13 @@ export interface PluginInstallRequest {
 // name: version
 export type PluginUpdateMapping = Map<string, StorePluginVersion>;
 
+export class StoreRequestError extends Error {
+  constructor(public readonly status: number) {
+    super(`Plugin store request failed (HTTP ${status})`);
+    this.name = 'StoreRequestError';
+  }
+}
+
 export async function getStore(): Promise<Store> {
   return await getSetting<Store>('store', Store.Default);
 }
@@ -81,35 +88,38 @@ export async function getStoreBaseURL(): Promise<string> {
 export async function getPluginList(
   sort_by: SortOptions | null = null,
   sort_direction: SortDirections | null = null,
+  signal?: AbortSignal,
 ): Promise<StorePlugin[]> {
-  let version = await window.DeckyPluginLoader.updateVersion();
-
   let query: URLSearchParams | string = new URLSearchParams();
   sort_by && query.set('sort_by', sort_by);
   sort_direction && query.set('sort_direction', sort_direction);
   query = '?' + String(query);
 
-  const storeURL = await getStoreBaseURL();
-
-  return fetch(storeURL + query, {
-    method: 'GET',
-    headers: {
-      'X-Decky-Version': version.current,
-    },
-  }).then((r) => r.json());
+  const data = await getStoreData(query, signal);
+  if (!Array.isArray(data)) throw new Error('Plugin store returned an invalid plugin list');
+  return data;
 }
 
 export async function getVersionList(): Promise<UpdateEndpointVersions> {
-  let version = await window.DeckyPluginLoader.updateVersion();
+  const data = await getStoreData('/versions');
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    throw new Error('Plugin store returned an invalid version list');
+  }
+  return data as UpdateEndpointVersions;
+}
 
+async function getStoreData(path: string, signal?: AbortSignal): Promise<unknown> {
+  const version = await window.DeckyPluginLoader.updateVersion();
   const storeURL = await getStoreBaseURL();
-
-  return fetch(storeURL + '/versions', {
+  const response = await fetch(storeURL + path, {
     method: 'GET',
+    signal,
     headers: {
       'X-Decky-Version': version.current,
     },
-  }).then((r) => r.json());
+  });
+  if (!response.ok) throw new StoreRequestError(response.status);
+  return response.json();
 }
 
 export async function installFromURL(url: string) {

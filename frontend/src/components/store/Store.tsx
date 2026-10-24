@@ -1,4 +1,5 @@
 import {
+  DialogButton,
   Dropdown,
   DropdownOption,
   Focusable,
@@ -13,7 +14,15 @@ import { useTranslation } from 'react-i18next';
 
 import logo from '../../../assets/plugin_store.png';
 import Logger from '../../logger';
-import { SortDirections, SortOptions, Store, StorePlugin, getPluginList, getStore } from '../../store';
+import {
+  SortDirections,
+  SortOptions,
+  Store,
+  StorePlugin,
+  StoreRequestError,
+  getPluginList,
+  getStore,
+} from '../../store';
 import { useDeckyState } from '../DeckyState';
 import ExternalLink from '../ExternalLink';
 import PluginCard from './PluginCard';
@@ -86,22 +95,40 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
   // const [selectedFilter, setFilter] = useState<number>(filterOptions[0].data);
   const [searchFieldValue, setSearchValue] = useState<string>('');
   const [pluginList, setPluginList] = useState<StorePlugin[] | null>(null);
+  const [loadError, setLoadError] = useState<Error | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
   const [isTesting, setIsTesting] = useState<boolean>(false);
 
   useEffect(() => {
+    const controller = new AbortController();
+    setPluginList(null);
+    setPluginCount(null);
+    setLoadError(null);
     (async () => {
-      const res = await getPluginList(selectedSort[0], selectedSort[1]);
-      logger.debug('got data!', res);
-      setPluginList(res);
-      setPluginCount(res.length);
+      try {
+        const res = await getPluginList(selectedSort[0], selectedSort[1], controller.signal);
+        if (controller.signal.aborted) return;
+        logger.debug('got data!', res);
+        setPluginList(res);
+        setPluginCount(res.length);
+      } catch (error) {
+        if (controller.signal.aborted) return;
+        logger.error('Failed to load the plugin store', error);
+        setLoadError(error instanceof Error ? error : new Error(String(error)));
+      }
     })();
-  }, [selectedSort]);
+    return () => controller.abort();
+  }, [selectedSort, retryCount, setPluginCount]);
 
   useEffect(() => {
     (async () => {
-      const storeRes = await getStore();
-      logger.debug(`store is ${storeRes}, isTesting is ${storeRes === Store.Testing}`);
-      setIsTesting(storeRes === Store.Testing);
+      try {
+        const storeRes = await getStore();
+        logger.debug(`store is ${storeRes}, isTesting is ${storeRes === Store.Testing}`);
+        setIsTesting(storeRes === Store.Testing);
+      } catch (error) {
+        logger.error('Failed to read the store channel', error);
+      }
     })();
   }, []);
 
@@ -224,7 +251,16 @@ const BrowseTab: FC<{ setPluginCount: Dispatch<SetStateAction<number | null>> }>
         </div>
       )}
       <div>
-        {!pluginList ? (
+        {loadError ? (
+          <div role="alert" style={{ padding: '20px', textAlign: 'center' }}>
+            <p>
+              {loadError instanceof StoreRequestError && loadError.status === 426
+                ? t('Store.errors.update_required')
+                : t('Store.errors.load_failed')}
+            </p>
+            <DialogButton onClick={() => setRetryCount((count) => count + 1)}>{t('Store.retry')}</DialogButton>
+          </div>
+        ) : !pluginList ? (
           <div style={{ height: '100%' }}>
             <SteamSpinner background="transparent" />
           </div>

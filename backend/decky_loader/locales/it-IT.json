@@ -1,7 +1,7 @@
 {
     "BranchSelect": {
         "update_channel": {
-            "label": "Canale di aggiornamento",
+            "label": "Canale di aggiornamenti",
             "prerelease": "Prerilascio",
             "stable": "Stabile",
             "testing": "In prova"

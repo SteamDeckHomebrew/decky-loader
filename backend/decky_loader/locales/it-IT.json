@@ -312,5 +312,8 @@
             "reloading": "Ricaricando",
             "updating": "Aggiornando"
         }
+    },
+    "WarnThirdParty": {
+        "button_processing": "Attendi {{timer}} secondi"
     }
 }

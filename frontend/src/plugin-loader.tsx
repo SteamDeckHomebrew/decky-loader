@@ -34,7 +34,7 @@ import { NotificationService } from './notification-service';
 import { DisabledPlugin, InstallType, Plugin, PluginLoadType } from './plugin';
 import RouterHook from './router-hook';
 import { deinitSteamFixes, initSteamFixes } from './steamfixes';
-import { checkForPluginUpdates } from './store';
+import { PluginUpdateMapping, checkForPluginUpdates } from './store';
 import TabsHook from './tabs-hook';
 import Toaster from './toaster';
 import { getVersionInfo } from './updater';
@@ -274,19 +274,24 @@ class PluginLoader extends Logger {
     await this.notifyPluginUpdates();
   }
 
-  public async checkPluginUpdates() {
-    const frozenPlugins = this.deckyState.publicState().frozenPlugins;
+  public async checkPluginUpdates(): Promise<PluginUpdateMapping | null> {
+    try {
+      const frozenPlugins = this.deckyState.publicState().frozenPlugins;
 
-    const updates = await checkForPluginUpdates(
-      this.deckyState.publicState().installedPlugins.filter((p) => !frozenPlugins.includes(p.name)),
-    );
-    this.deckyState.setUpdates(updates);
-    return updates;
+      const updates = await checkForPluginUpdates(
+        this.deckyState.publicState().installedPlugins.filter((p) => !frozenPlugins.includes(p.name)),
+      );
+      this.deckyState.setUpdates(updates);
+      return updates;
+    } catch (error) {
+      this.error('Failed to check for plugin updates', error);
+      return null;
+    }
   }
 
   public async notifyPluginUpdates() {
     const updates = await this.checkPluginUpdates();
-    if (updates?.size > 0 && this.notificationService.shouldNotify('pluginUpdates')) {
+    if (updates && updates.size > 0 && this.notificationService.shouldNotify('pluginUpdates')) {
       this.pluginUpdateToast && this.pluginUpdateToast.dismiss();
       this.pluginUpdateToast = this.toaster.toast({
         title: <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="decky_title" />,

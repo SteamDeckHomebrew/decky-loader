@@ -117,6 +117,13 @@ class PluginBrowser:
             except:
                 logger.debug(f"skipping {folder}")
     
+    def _is_plugin_installed(self, name: str) -> bool:
+        try:
+            return self.find_plugin_folder(name) is not None
+        except:
+            logger.error(f"Failed to determine if {name} is already installed, continuing anyway.")
+            return False
+
     def set_plugin_dir_permissions(self, plugin_dir: str) -> bool:
         plugin_json_path = path.join(plugin_dir, 'plugin.json')
         logger.debug(f"Checking plugin.json at {plugin_json_path}")
@@ -177,14 +184,7 @@ class PluginBrowser:
         res_zip = None
 
         # Check if plugin was already installed before this
-        isInstalled = False
-
-        try:
-            pluginFolderPath = self.find_plugin_folder(name)
-            if pluginFolderPath:
-                isInstalled = True
-        except:
-            logger.error(f"Failed to determine if {name} is already installed, continuing anyway.")
+        isInstalled = self._is_plugin_installed(name)
 
         # Preserve plugin order before removing plugin (uninstall alters the order and removes the plugin from the list)
         current_plugin_order = self.settings.getSetting("pluginOrder")[:]
@@ -255,6 +255,11 @@ class PluginBrowser:
                                 logger.warning(f"Nonexistent or invalid 'name' key value in {plugin_json_file}. Falling back to extracting from path.")
                     except Exception as e:
                         logger.error(f"Failed to read or parse {plugin_json_file}: {str(e)}. Falling back to extracting from path.")
+
+            # The name passed in comes from the ZIP file name, which can differ from the real plugin name.
+            # Check again with the real name, so that an installed plugin is uninstalled before the ZIP is extracted over it.
+            if not isInstalled:
+                isInstalled = self._is_plugin_installed(name)
 
         # Check to make sure we got the file
         if res_zip is None:

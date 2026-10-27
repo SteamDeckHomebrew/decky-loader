@@ -16,7 +16,7 @@ os.environ['DECKY_PACKAGED_BUILD'] = '1'
 # Build info
 os.environ['DECKY_REPO'] = {repr(repo)}
 os.environ['DECKY_BRANCH'] = {repr(branch)}
-if pr is not None:
+if {repr(pr)} is not None:
     os.environ['DECKY_PR'] = {repr(pr)}
 
 # Windows-specific

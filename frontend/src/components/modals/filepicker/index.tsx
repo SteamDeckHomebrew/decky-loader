@@ -137,8 +137,9 @@ const FilePicker: FunctionComponent<FilePickerProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  if (startPath !== '/' && startPath !== null && startPath !== undefined && startPath.endsWith('/')) startPath = startPath.substring(0, startPath.length - 1); // remove trailing path
-  const [path, setPath] = useState<string>(startPath || "");
+  if (startPath !== '/' && startPath !== null && startPath !== undefined && startPath.endsWith('/'))
+    startPath = startPath.substring(0, startPath.length - 1); // remove trailing path
+  const [path, setPath] = useState<string>(startPath || '');
   const [listing, setListing] = useState<FileListing>({ files: [], realpath: path, total: 0 });
   const [files, setFiles] = useState<File[]>([]);
   const [error, setError] = useState<FileErrorTypes>(FileErrorTypes.None);

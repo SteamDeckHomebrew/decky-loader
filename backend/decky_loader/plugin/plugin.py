@@ -1,6 +1,9 @@
 from asyncio import CancelledError, Task, create_task, sleep, wait
 from json import dumps, load, loads
 from logging import getLogger
+import logging
+import os
+import signal
 from os import path
 from multiprocessing import Process
 from time import time
@@ -16,6 +19,28 @@ from ..helpers import get_homebrew_path, mkdir_as_user
 from typing import Any, Callable, Coroutine, Dict, List
 
 EmittedEventCallbackType = Callable[[str, Any], Coroutine[Any, Any, Any]]
+
+_held_locks: List[Any] = []
+
+def _before_fork():
+    for ref in list(getattr(logging, "_handlerList", [])):
+        lock = getattr(ref(), "lock", None)
+        if lock is not None and lock.acquire(timeout=0.5):
+            _held_locks.append(lock)
+
+def _after_fork_in_parent():
+    while _held_locks:
+        _held_locks.pop().release()
+
+def _after_fork_in_child():
+    _held_locks.clear()
+    signal.set_wakeup_fd(-1)
+    for sig in (signal.SIGTERM, signal.SIGINT):
+        if signal.getsignal(sig) != signal.SIG_IGN:
+            signal.signal(sig, signal.SIG_DFL)
+
+if hasattr(os, "register_at_fork"):
+    os.register_at_fork(before=_before_fork, after_in_parent=_after_fork_in_parent, after_in_child=_after_fork_in_child)
 
 class PluginWrapper:
     def __init__(self, file: str, plugin_directory: str, plugin_path: str, emit_callback: EmittedEventCallbackType) -> None:
@@ -92,6 +117,15 @@ class PluginWrapper:
         while self._socket.active:
             try:
                 line = await self._socket.read_single_line()
+                if line is None and self.proc and not self.proc.is_alive():
+                    self.log.error(f"{self.get_display_name()} exited unexpectedly (exit code {self.proc.exitcode})")
+                    await self._socket.close_socket_connection()
+                    for request in self._method_call_requests.values():
+                        request.cancel()
+                    self._method_call_requests = {}
+                    return
+                if line is None:
+                    await sleep(0.5)
                 if line != None:
                     res = loads(line)
                     if res["type"] == SocketMessageType.EVENT.value:

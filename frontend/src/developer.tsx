@@ -11,12 +11,11 @@ let removeSettingsObserver: () => void = () => {};
 
 export async function setShowValveInternal(show: boolean) {
   if (show) {
-    const mobx =
-      (window.settingsStore as any)[
-        Object.getOwnPropertySymbols(window.settingsStore).find(
-          (x) => x.toString() == 'Symbol(mobx administration)',
-        ) as any
-      ];
+    const mobx = (window.settingsStore as any)[
+      Object.getOwnPropertySymbols(window.settingsStore).find(
+        (x) => x.toString() == 'Symbol(mobx administration)',
+      ) as any
+    ];
 
     removeSettingsObserver = (mobx.observe_ || mobx.observe).call(mobx, (e: any) => {
       e.newValue.bIsValveEmail = true;

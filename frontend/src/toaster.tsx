@@ -1,5 +1,13 @@
 import type { ToastData, ToastNotification } from '@decky/api';
-import { ESteamNotificationAction, ErrorBoundary, Patch, callOriginal, findModuleExport, injectFCTrampoline, replacePatch } from '@decky/ui';
+import {
+  ESteamNotificationAction,
+  ErrorBoundary,
+  Patch,
+  callOriginal,
+  findModuleExport,
+  injectFCTrampoline,
+  replacePatch,
+} from '@decky/ui';
 
 import Toast from './components/Toast';
 import Logger from './logger';

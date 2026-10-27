@@ -1,21 +1,20 @@
 import type { ToastData, ToastNotification } from '@decky/api';
-import { ErrorBoundary, Patch, callOriginal, findModuleExport, injectFCTrampoline, replacePatch } from '@decky/ui';
+import {
+  ESteamNotificationAction,
+  ErrorBoundary,
+  Patch,
+  callOriginal,
+  findModuleExport,
+  injectFCTrampoline,
+  replacePatch,
+} from '@decky/ui';
 
 import Toast from './components/Toast';
 import Logger from './logger';
 
-// TODO export
-enum ToastType {
-  New,
-  Update,
-  Remove,
-}
-
 declare global {
   interface Window {
     __TOASTER_INSTANCE: any;
-    settingsStore: any;
-    NotificationStore: any;
   }
 }
 
@@ -111,7 +110,7 @@ class Toaster extends Logger {
       }, toast.expiration);
     }
     try {
-      window.NotificationStore.ProcessNotification(info, toastData, ToastType.New);
+      window.NotificationStore.ProcessNotification(info, toastData, ESteamNotificationAction.New);
     } catch (e) {
       this.error('Error while sending toast:', e);
     }

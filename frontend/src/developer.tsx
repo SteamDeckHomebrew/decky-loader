@@ -9,17 +9,12 @@ const logger = new Logger('DeveloperMode');
 
 let removeSettingsObserver: () => void = () => {};
 
-declare global {
-  interface Window {
-    settingsStore: any;
-  }
-}
-
 export async function setShowValveInternal(show: boolean) {
   if (show) {
+    const settingsStore = window.settingsStore as any;
     const mobx =
-      window.settingsStore[
-        Object.getOwnPropertySymbols(window.settingsStore).find(
+      settingsStore[
+        Object.getOwnPropertySymbols(settingsStore).find(
           (x) => x.toString() == 'Symbol(mobx administration)',
         ) as any
       ];
@@ -28,11 +23,11 @@ export async function setShowValveInternal(show: boolean) {
       e.newValue.bIsValveEmail = true;
     });
 
-    window.settingsStore.m_Settings.bIsValveEmail = true;
+    settingsStore.m_Settings.bIsValveEmail = true;
     logger.log('Enabled Valve Internal menu');
   } else {
     removeSettingsObserver();
-    window.settingsStore.m_Settings.bIsValveEmail = false;
+    (window.settingsStore as any).m_Settings.bIsValveEmail = false;
     logger.log('Disabled Valve Internal menu');
   }
 }

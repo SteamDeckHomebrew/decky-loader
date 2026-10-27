@@ -1,5 +1,7 @@
-import type { SystemInfo } from '@decky/ui/dist/globals/steam-client/system';
-import type { OSBranch } from '@decky/ui/dist/globals/steam-client/Updates';
+import type { SteamClient } from '@decky/ui';
+
+type SystemInfo = Awaited<ReturnType<SteamClient['System']['GetSystemInfo']>>;
+type OSBranch = Awaited<ReturnType<SteamClient['Updates']['GetCurrentOSBranch']>>;
 
 export type ReportSystemInfo = {
   steamos: string;

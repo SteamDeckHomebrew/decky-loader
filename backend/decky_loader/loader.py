@@ -163,7 +163,11 @@ class Loader:
         with open(path.join(self.plugin_path, plugin.plugin_directory, "dist/index.js"), "r", encoding="utf-8") as bundle:
             return web.Response(text=bundle.read(), content_type="application/javascript")
 
-    async def import_plugin(self, file: str, plugin_directory: str, refresh: bool | None = False, batch: bool | None = False):
+    async def import_plugin(
+        self, file: str, plugin_directory: str,
+        refresh: bool | None = False, batch: bool | None = False,
+        *, ensure_started: bool = False,
+    ):
         try:
             async def plugin_emitted_event(event: str, args: Any):
                 self.logger.debug(f"PLUGIN EMITTED EVENT: {event} with args {args}")
@@ -185,12 +189,19 @@ class Loader:
                 self.logger.info(f"Plugin {plugin.get_display_name()} is passive")
 
             self.plugins[plugin.name] = plugin.start()
+            if ensure_started:
+                # Updates need startup failures to reach the caller for rollback.
+                await plugin.wait_started()
+
             self.logger.info(f"Loaded {plugin.get_display_name()}")
             if not batch:
                 self.loop.create_task(self.dispatch_plugin(plugin.name, plugin.version, plugin.load_type))
         except Exception as e:
             self.logger.error(f"Could not load {file}. {e}")
             print_exc()
+
+            if ensure_started:
+                raise
 
     async def dispatch_plugin(self, name: str, version: str | None, load_type: int = PluginLoadType.ESMODULE_V1.value):
         await self.ws.emit("loader/import_plugin", name, version, load_type, True, 15000)        

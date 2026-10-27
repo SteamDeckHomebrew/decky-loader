@@ -9,7 +9,7 @@ import {
   Toggle,
   showModal,
 } from '@decky/ui';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaFileArchive, FaLink, FaReact, FaSteamSymbol, FaTerminal } from 'react-icons/fa';
 
@@ -49,7 +49,6 @@ export default function DeveloperSettings() {
   const [acceptedWarning, setAcceptedWarning] = useSetting<boolean>('developer.warn.third_party', false);
   const waitTime = acceptedWarning ? 0 : 5;
   const [pluginURL, setPluginURL] = useState('');
-  const textRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 
   return (
@@ -82,13 +81,6 @@ export default function DeveloperSettings() {
         </Field>
         <Field
           label={t('SettingsDeveloperIndex.third_party_plugins.label_url')}
-          description={
-            <TextField
-              label={t('SettingsDeveloperIndex.third_party_plugins.label_desc')}
-              value={pluginURL}
-              onChange={(e) => setPluginURL(e?.target.value)}
-            />
-          }
           icon={<FaLink style={{ display: 'block' }} />}
         >
           <DialogButton
@@ -114,6 +106,11 @@ export default function DeveloperSettings() {
             {t('SettingsDeveloperIndex.third_party_plugins.button_install')}
           </DialogButton>
         </Field>
+        <TextField
+          label={t('SettingsDeveloperIndex.third_party_plugins.label_desc')}
+          value={pluginURL}
+          onChange={(e) => setPluginURL(e?.target.value)}
+        />
       </DialogControlsSection>
       <DialogControlsSection>
         <DialogControlsSectionHeader>{t('SettingsDeveloperIndex.header')}</DialogControlsSectionHeader>
@@ -160,18 +157,7 @@ export default function DeveloperSettings() {
         <Field
           label={t('SettingsDeveloperIndex.react_devtools.label')}
           description={
-            <>
-              <span style={{ whiteSpace: 'pre-line' }}>{t('SettingsDeveloperIndex.react_devtools.desc')}</span>
-              <br />
-              <br />
-              <div ref={textRef}>
-                <TextField
-                  label={t('SettingsDeveloperIndex.react_devtools.ip_label')}
-                  value={reactDevtoolsIP}
-                  onChange={(e) => setReactDevtoolsIP(e?.target.value)}
-                />
-              </div>
-            </>
+            <span style={{ whiteSpace: 'pre-line' }}>{t('SettingsDeveloperIndex.react_devtools.desc')}</span>
           }
           icon={<FaReact style={{ display: 'block' }} />}
         >
@@ -184,6 +170,11 @@ export default function DeveloperSettings() {
             }}
           />
         </Field>
+        <TextField
+          label={t('SettingsDeveloperIndex.react_devtools.ip_label')}
+          value={reactDevtoolsIP}
+          onChange={(e) => setReactDevtoolsIP(e?.target.value)}
+        />
       </DialogControlsSection>
     </DialogBody>
   );

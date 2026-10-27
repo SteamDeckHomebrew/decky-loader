@@ -442,7 +442,7 @@ class Utilities:
                             enumerable: true,
                             configurable: true,
                             get: function() {
-                                return (GamepadNavTree?.m_context?.m_controller || FocusNavController)?.m_ActiveContext?.ActiveWindow || window;
+                                return (window?.GamepadNavTree?.m_context?.m_controller || window?.FocusNavController)?.m_ActiveContext?.ActiveWindow || window;
                             }
                         });
                     """ + await res.text() + "\n}"

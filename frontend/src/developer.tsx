@@ -9,20 +9,13 @@ const logger = new Logger('DeveloperMode');
 
 let removeSettingsObserver: () => void = () => {};
 
-declare global {
-  interface Window {
-    settingsStore: any;
-  }
-}
-
 export async function setShowValveInternal(show: boolean) {
   if (show) {
-    const mobx =
-      window.settingsStore[
-        Object.getOwnPropertySymbols(window.settingsStore).find(
-          (x) => x.toString() == 'Symbol(mobx administration)',
-        ) as any
-      ];
+    const mobx = (window.settingsStore as any)[
+      Object.getOwnPropertySymbols(window.settingsStore).find(
+        (x) => x.toString() == 'Symbol(mobx administration)',
+      ) as any
+    ];
 
     removeSettingsObserver = (mobx.observe_ || mobx.observe).call(mobx, (e: any) => {
       e.newValue.bIsValveEmail = true;
@@ -37,17 +30,18 @@ export async function setShowValveInternal(show: boolean) {
   }
 }
 
-export async function setShouldConnectToReactDevTools(enable: boolean) {
-  DeckyPluginLoader.toaster.toast({
-    title: enable ? (
-      <TranslationHelper transClass={TranslationClass.DEVELOPER} transText={'enabling'} />
-    ) : (
-      <TranslationHelper transClass={TranslationClass.DEVELOPER} transText={'disabling'} />
-    ),
-    body: <TranslationHelper transClass={TranslationClass.DEVELOPER} transText={'5secreload'} />,
-    icon: <FaReact />,
-  });
-  await sleep(5000);
+export async function setShouldConnectToReactDevTools(enable: boolean, skipWait?: boolean) {
+  skipWait ||
+    DeckyPluginLoader.toaster.toast({
+      title: enable ? (
+        <TranslationHelper transClass={TranslationClass.DEVELOPER} transText={'enabling'} />
+      ) : (
+        <TranslationHelper transClass={TranslationClass.DEVELOPER} transText={'disabling'} />
+      ),
+      body: <TranslationHelper transClass={TranslationClass.DEVELOPER} transText={'5secreload'} />,
+      icon: <FaReact />,
+    });
+  skipWait || (await sleep(5000));
   return enable ? DeckyBackend.call('utilities/enable_rdt') : DeckyBackend.call('utilities/disable_rdt');
 }
 
@@ -58,5 +52,5 @@ export async function startup() {
   if (isValveInternalEnabled) setShowValveInternal(isValveInternalEnabled);
 
   if ((isRDTEnabled && !window.deckyHasConnectedRDT) || (!isRDTEnabled && window.deckyHasConnectedRDT))
-    setShouldConnectToReactDevTools(isRDTEnabled);
+    setShouldConnectToReactDevTools(isRDTEnabled, true);
 }

@@ -7,6 +7,7 @@ noconsole_str = os.getenv('DECKY_NOCONSOLE', '0')
 noconsole = bool(noconsole_str)
 repo = os.getenv('DECKY_REPO', 'SteamDeckHomebrew/decky-loader')
 branch = os.getenv('DECKY_BRANCH', 'main')
+pr = os.getenv('DECKY_PR', None)
 with open('build_config.py', 'w') as f:
     f.write(f"""
 import os
@@ -15,6 +16,8 @@ os.environ['DECKY_PACKAGED_BUILD'] = '1'
 # Build info
 os.environ['DECKY_REPO'] = {repr(repo)}
 os.environ['DECKY_BRANCH'] = {repr(branch)}
+if {repr(pr)} is not None:
+    os.environ['DECKY_PR'] = {repr(pr)}
 
 # Windows-specific
 os.environ['DECKY_NOCONSOLE'] = {repr(noconsole_str)}

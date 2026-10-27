@@ -7,9 +7,11 @@ import {
   PanelSectionRow,
   QuickAccessTab,
   findSP,
+  joinClassNames,
   quickAccessMenuClasses,
   showModal,
   sleep,
+  vrDashboardClasses,
 } from '@decky/ui';
 import { FC, lazy } from 'react';
 import { FaDownload, FaExclamationCircle, FaExclamationTriangle, FaPlug } from 'react-icons/fa';
@@ -24,19 +26,20 @@ import PluginInstallModal from './components/modals/PluginInstallModal';
 import PluginUninstallModal from './components/modals/PluginUninstallModal';
 import NotificationBadge from './components/NotificationBadge';
 import PluginView from './components/PluginView';
-import { useQuickAccessVisible } from './components/QuickAccessVisibleState';
+import { QuickAccessVisibleStateProvider, useQuickAccessVisible } from './components/QuickAccessVisibleState';
 import WithSuspense from './components/WithSuspense';
 import ErrorBoundaryHook from './errorboundary-hook';
 import { FrozenPluginService } from './frozen-plugins-service';
 import { HiddenPluginsService } from './hidden-plugins-service';
+import RouterHook from './hooks/router';
+import TabsHook from './hooks/tabs';
+import Toaster from './hooks/toaster';
+import VRDashboardBarHook from './hooks/vr-dashboard-bar';
 import Logger from './logger';
 import { NotificationService } from './notification-service';
 import { DisabledPlugin, InstallType, Plugin, PluginLoadType } from './plugin';
-import RouterHook from './router-hook';
 import { deinitSteamFixes, initSteamFixes } from './steamfixes';
 import { PluginUpdateMapping, checkForPluginUpdates } from './store';
-import TabsHook from './tabs-hook';
-import Toaster from './toaster';
 import { getVersionInfo } from './updater';
 import { getPluginDisplayName } from './utils/pluginHelpers';
 import { getSetting, setSetting } from './utils/settings';
@@ -70,6 +73,7 @@ class PluginLoader extends Logger {
   private plugins: Plugin[] = [];
   public errorBoundaryHook: ErrorBoundaryHook = new ErrorBoundaryHook();
   private tabsHook: TabsHook = new TabsHook();
+  private vrDashboardBarHook: VRDashboardBarHook = new VRDashboardBarHook(); // TODO public? unsure
   public routerHook: RouterHook = new RouterHook();
   public toaster: Toaster = new Toaster();
   private deckyState: DeckyState = new DeckyState();
@@ -105,10 +109,11 @@ class PluginLoader extends Logger {
     DeckyBackend.addEventListener(`loader/plugin_event`, this.pluginEventListener);
 
     this.tabsHook.init();
+    this.vrDashboardBarHook.init();
 
-    const TabBadge = () => {
+    const TabBadge = ({ vr }: { vr?: boolean }) => {
       const { updates, hasLoaderUpdate } = useDeckyState();
-      return <NotificationBadge show={(updates && updates.size > 0) || hasLoaderUpdate} />;
+      return <NotificationBadge vr={vr} show={(updates && updates.size > 0) || hasLoaderUpdate} />;
     };
 
     this.tabsHook.add({
@@ -123,6 +128,44 @@ class PluginLoader extends Logger {
         <DeckyStateContextProvider deckyState={this.deckyState}>
           <FaPlug />
           <TabBadge />
+        </DeckyStateContextProvider>
+      ),
+    });
+
+    this.vrDashboardBarHook.addRightSideButton({
+      id: 999,
+      tooltip: 'Decky',
+      popupContents: (
+        <QuickAccessVisibleStateProvider initialVal={true}>
+          {' '}
+          {/*for compat only, these don't render when inactive*/}
+          <DeckyStateContextProvider deckyState={this.deckyState}>
+            <div className={joinClassNames(vrDashboardClasses.DashboardBarPopupContents)}>
+              <PluginView vr={true} />
+            </div>
+          </DeckyStateContextProvider>
+        </QuickAccessVisibleStateProvider>
+      ),
+      children: (
+        <DeckyStateContextProvider deckyState={this.deckyState}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            className={'deckyVRIcon'}
+          >
+            <FaPlug style={{ marginRight: '0px' }} />
+            <TabBadge vr={true} />
+            <style>
+              {`
+                div:has(>.deckyVRIcon) {
+                  overflow: visible !important;
+                }
+              `}
+            </style>
+          </div>
         </DeckyStateContextProvider>
       ),
     });
@@ -399,6 +442,7 @@ class PluginLoader extends Logger {
     deinitFilepickerPatches();
     this.routerHook.deinit();
     this.tabsHook.deinit();
+    this.vrDashboardBarHook.deinit();
     this.toaster.deinit();
     this.errorBoundaryHook.deinit();
   }

@@ -10,8 +10,8 @@ import {
   getReactRoot,
 } from '@decky/ui';
 
-import { QuickAccessVisibleStateProvider } from './components/QuickAccessVisibleState';
-import Logger from './logger';
+import { QuickAccessVisibleStateProvider } from '../components/QuickAccessVisibleState';
+import Logger from '../logger';
 
 declare global {
   interface Window {

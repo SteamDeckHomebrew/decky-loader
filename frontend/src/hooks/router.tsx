@@ -16,15 +16,15 @@ import {
   DeckyGlobalComponentsState,
   DeckyGlobalComponentsStateContextProvider,
   useDeckyGlobalComponentsState,
-} from './components/DeckyGlobalComponentsState';
+} from '../components/DeckyGlobalComponentsState';
 import {
   DeckyRouterState,
   DeckyRouterStateContextProvider,
   RoutePatch,
   RouterEntry,
   useDeckyRouterState,
-} from './components/DeckyRouterState';
-import Logger from './logger';
+} from '../components/DeckyRouterState';
+import Logger from '../logger';
 
 declare global {
   interface Window {
@@ -83,7 +83,7 @@ class RouterHook extends Logger {
           this.patchGamepadRouter();
           break;
         // Not fully implemented yet
-        // case UIMode.Desktop:
+        // case EUIMode.Desktop:
         //   this.debug("Patching desktop router");
         //   this.patchDesktopRouter();
         //   break;

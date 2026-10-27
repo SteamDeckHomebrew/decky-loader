@@ -168,7 +168,7 @@ class Tab:
             # Page finishes loading when breakpoint hits
 
             for _ in range(20):
-                # this works around 1/5 of the time, so just send it 8 times.
+                # this works around 1/5 of the time, so just send it 20 times.
                 # the js accounts for being injected multiple times allowing only one instance to run at a time anyway
                 await self._send_devtools_cmd({
                     "method": "Runtime.evaluate",
@@ -435,4 +435,4 @@ async def close_old_tabs():
         if not t.title or (t.title not in SHARED_CTX_NAMES and any(url in t.url for url in CLOSEABLE_URLS) and not any(url in t.url for url in DO_NOT_CLOSE_URLS)):
             logger.debug("Closing tab: " + getattr(t, "title", "Untitled"))
             await t.close()
-            await sleep(0.5)
+            # await sleep(0.5)

@@ -9,8 +9,8 @@ import {
   replacePatch,
 } from '@decky/ui';
 
-import Toast from './components/Toast';
-import Logger from './logger';
+import Toast from '../components/Toast';
+import Logger from '../logger';
 
 declare global {
   interface Window {

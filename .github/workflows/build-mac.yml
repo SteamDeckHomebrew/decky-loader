@@ -1,0 +1,14 @@
+name: Builder (macOS)
+
+on:
+  push:
+  pull_request:
+  workflow_call:
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      arch: arm64
+      os: macOS
+      artifact_name: PluginLoader-mac

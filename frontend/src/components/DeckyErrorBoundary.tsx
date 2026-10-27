@@ -202,7 +202,7 @@ const DeckyErrorBoundary: FunctionComponent<DeckyErrorBoundaryProps> = ({ error,
         <pre className={joinClassNames(classes.marginBottom)} style={{ marginTop: '0px' }}>
           <code>
             {identifier && `Error Reference: ${identifier}`}
-            {versionInfo?.current && `\nDecky Version: ${versionInfo.current}`}
+            {versionInfo?.current && `\nDecky Version: ${versionInfo.current}${versionInfo.supported ? '' : '[U]'}`}
           </code>
         </pre>
         <div className={joinClassNames(classes.likelyOccurred, classes.marginBottom)}>

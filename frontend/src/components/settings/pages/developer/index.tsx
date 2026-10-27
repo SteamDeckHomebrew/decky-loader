@@ -16,11 +16,13 @@ import { FaFileAlt, FaFileArchive, FaLink, FaReact, FaSteamSymbol, FaTerminal } 
 import { setShouldConnectToReactDevTools, setShowValveInternal } from '../../../../developer';
 import Logger from '../../../../logger';
 import { installFromURL } from '../../../../store';
+import { WarnThirdPartyType } from '../../../../utils/globalTypes';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 import { getSetting } from '../../../../utils/settings';
 import { useDeckyState } from '../../../DeckyState';
 import { FileSelectionType } from '../../../modals/filepicker';
 import TestReportModal from '../../../modals/TestReportModal';
+import WarnThirdParty from '../../../modals/WarnThirdParty';
 import RemoteDebuggingSettings from '../general/RemoteDebugging';
 
 const logger = new Logger('DeveloperIndex');
@@ -47,6 +49,8 @@ export default function DeveloperSettings() {
   const [enableValveInternal, setEnableValveInternal] = useSetting<boolean>('developer.valve_internal', false);
   const [reactDevtoolsEnabled, setReactDevtoolsEnabled] = useSetting<boolean>('developer.rdt.enabled', false);
   const [reactDevtoolsIP, setReactDevtoolsIP] = useSetting<string>('developer.rdt.ip', '');
+  const [acceptedWarning, setAcceptedWarning] = useSetting<boolean>('developer.warn.third_party', false);
+  const waitTime = acceptedWarning ? 0 : 5;
   const [pluginURL, setPluginURL] = useState('');
   const textRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
@@ -61,7 +65,21 @@ export default function DeveloperSettings() {
           label={t('SettingsDeveloperIndex.third_party_plugins.label_zip')}
           icon={<FaFileArchive style={{ display: 'block' }} />}
         >
-          <DialogButton onClick={installFromZip}>
+          <DialogButton
+            onClick={() => {
+              showModal(
+                <WarnThirdParty
+                  type={WarnThirdPartyType.ZIP}
+                  onOK={() => {
+                    setAcceptedWarning(true);
+                    installFromZip();
+                  }}
+                  onCancel={() => {}}
+                  seconds={waitTime}
+                />,
+              );
+            }}
+          >
             {t('SettingsDeveloperIndex.third_party_plugins.button_zip')}
           </DialogButton>
         </Field>
@@ -78,13 +96,23 @@ export default function DeveloperSettings() {
         >
           <DialogButton
             disabled={pluginURL.length == 0}
-            onClick={() => {
-              if (/^https?:\/\//.test(pluginURL)) {
-                installFromURL(pluginURL);
-              } else {
-                installFromURL('https://' + pluginURL);
-              }
-            }}
+            onClick={() =>
+              showModal(
+                <WarnThirdParty
+                  type={WarnThirdPartyType.ZIP}
+                  onOK={() => {
+                    setAcceptedWarning(true);
+                    if (/^https?:\/\//.test(pluginURL)) {
+                      installFromURL(pluginURL);
+                    } else {
+                      installFromURL('https://' + pluginURL);
+                    }
+                  }}
+                  onCancel={() => {}}
+                  seconds={waitTime}
+                />,
+              )
+            }
           >
             {t('SettingsDeveloperIndex.third_party_plugins.button_install')}
           </DialogButton>

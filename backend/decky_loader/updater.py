@@ -1,12 +1,11 @@
 from __future__ import annotations
 from asyncio import sleep
 from logging import getLogger
-import os
-from os import getcwd, path, remove
+from os import getcwd, getenv, path, remove, mkdir
 from typing import TYPE_CHECKING, List, TypedDict
 if TYPE_CHECKING:
     from .main import PluginManager
-from .localplatform.localplatform import chmod, service_restart, service_stop, ON_LINUX, ON_WINDOWS, get_keep_systemd_service, get_selinux
+from .localplatform.localplatform import chmod, service_restart, service_stop, ON_LINUX, ON_WINDOWS, ON_MAC, ON_ARM64, get_keep_systemd_service, get_selinux
 import shutil
 from typing import List, TYPE_CHECKING, TypedDict
 import zipfile
@@ -42,6 +41,9 @@ class Updater:
         self.remoteVer: RemoteVer | None = None
         self.allRemoteVers: List[RemoteVer] = []
         self.localVer = helpers.get_loader_version()
+        self.isSupported: bool = ON_LINUX
+        self.repo = getenv('DECKY_REPO', 'SteamDeckHomebrew/decky-loader')
+        self.git_branch = getenv('DECKY_BRANCH', 'dirty')
 
         try:
             self.currentBranch = self.get_branch(self.context.settings)
@@ -50,13 +52,13 @@ class Updater:
             logger.error("Current branch could not be determined, defaulting to \"Stable\"")
 
         if context:
-            context.ws.add_route("updater/get_version_info", self.get_version_info);
-            context.ws.add_route("updater/check_for_updates", self.check_for_updates);
-            context.ws.add_route("updater/do_restart", self.do_restart);
-            context.ws.add_route("updater/do_shutdown", self.do_shutdown);
-            context.ws.add_route("updater/do_update", self.do_update);
-            context.ws.add_route("updater/get_testing_versions", self.get_testing_versions);
-            context.ws.add_route("updater/download_testing_version", self.download_testing_version);
+            context.ws.add_route("updater/get_version_info", self.get_version_info)
+            context.ws.add_route("updater/check_for_updates", self.check_for_updates)
+            context.ws.add_route("updater/do_restart", self.do_restart)
+            context.ws.add_route("updater/do_shutdown", self.do_shutdown)
+            context.ws.add_route("updater/do_update", self.do_update)
+            context.ws.add_route("updater/get_testing_versions", self.get_testing_versions)
+            context.ws.add_route("updater/download_testing_version", self.download_testing_version)
             context.loop.create_task(self.version_reloader())
 
     def get_branch(self, manager: SettingsManager):
@@ -83,27 +85,30 @@ class Updater:
         branch = self.get_branch(self.context.settings)
         match branch:
             case 0:
-                url = "https://raw.githubusercontent.com/SteamDeckHomebrew/decky-loader/main/dist/plugin_loader-release.service"
+                url = f"https://raw.githubusercontent.com/{self.repo}/{self.git_branch}/dist/plugin_loader-release.service"
             case 1 | 2:
-                url = "https://raw.githubusercontent.com/SteamDeckHomebrew/decky-loader/main/dist/plugin_loader-prerelease.service"
+                url = f"https://raw.githubusercontent.com/{self.repo}/{self.git_branch}/dist/plugin_loader-prerelease.service"
             case _:
                 logger.error("You have an invalid branch set... Defaulting to prerelease service, please send the logs to the devs!")
-                url = "https://raw.githubusercontent.com/SteamDeckHomebrew/decky-loader/main/dist/plugin_loader-prerelease.service"
+                url = f"https://raw.githubusercontent.com/{self.repo}/{self.git_branch}/dist/plugin_loader-prerelease.service"
         return str(url)
 
     async def get_version_info(self):
         return {
             "current": self.localVer,
+            "repo": self.repo,
+            "gitBranch": self.git_branch,
             "remote": self.remoteVer,
             "all": self.allRemoteVers,
-            "updatable": self.localVer != "unknown" and self.localVer != "dev"
+            "updatable": self.localVer != "unknown" and self.localVer != "dev",
+            "supported": self.isSupported
         }
 
     async def check_for_updates(self):
         logger.debug("checking for updates")
         selectedBranch = self.get_branch(self.context.settings)
         async with ClientSession() as web:
-            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases", headers={'X-GitHub-Api-Version': '2022-11-28'}, ssl=helpers.get_ssl_context()) as res:
+            async with web.request("GET", f"https://api.github.com/repos/{self.repo}/releases", headers={'X-GitHub-Api-Version': '2022-11-28'}, ssl=helpers.get_ssl_context()) as res:
                 remoteVersions: List[RemoteVer] = await res.json()
                 if selectedBranch == 0:
                     logger.debug("release type: release")
@@ -138,14 +143,51 @@ class Updater:
                 pass
             await sleep(60 * 60 * 6) # 6 hours
 
+    def get_remote_binary_name(self, with_extension: bool = True):
+        """
+            The binaries on GitHub contain an extra part in their name to denote their architecture
+            
+            For example:
+                Windows: PluginLoader.exe
+                Linux (x86_64): PluginLoader
+                Linux (arm64): PluginLoader-arm64
+        """
+        binary_name = "PluginLoader"
+
+        if ON_ARM64 and ON_LINUX:
+            binary_name += "-arm64"
+
+        if ON_WINDOWS:
+            binary_name += "-win"
+            if ON_ARM64:
+                binary_name += "-arm64"
+            if bool(getenv("DECKY_NOCONSOLE", "0")):
+                binary_name += "-noconsole"
+            if with_extension:
+                binary_name += ".exe"
+
+        if ON_MAC:
+            binary_name += "-mac"
+
+        return binary_name
+    
+    def get_local_binary_name(self):
+        binary_name = "PluginLoader"
+
+        if ON_WINDOWS:
+            binary_name += ".exe"
+
+        return binary_name
+
     async def download_decky_binary(self, download_url: str, version: str, is_zip: bool = False, size_in_bytes: int | None = None):
-        download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
+        download_filename = self.get_local_binary_name()
         download_temp_filename = download_filename + ".new"
 
         if size_in_bytes == None:
-            size_in_bytes = 26214400 # 25MiB, a reasonable overestimate (19.6MiB as of 2024/02/25)
+            size_in_bytes = 35000000 # 35MiB, a reasonable overestimate (30.00 MiB as of 2026/10/05)
 
-        async with ClientSession() as web:
+        # GitHub release redirects can carry CSP headers larger than 8 KiB.
+        async with ClientSession(max_field_size=32 * 1024) as web:
             logger.debug("Downloading binary")
             async with web.request("GET", download_url, ssl=helpers.get_ssl_context(), allow_redirects=True) as res:
                 total = int(res.headers.get('content-length', size_in_bytes))
@@ -196,10 +238,10 @@ class Updater:
         version = self.remoteVer["tag_name"]
         download_url = None
         size_in_bytes = None
-        download_filename = "PluginLoader" if ON_LINUX else "PluginLoader.exe"
+        remote_binary_name = self.get_remote_binary_name()
 
         for x in self.remoteVer["assets"]:
-            if x["name"] == download_filename:
+            if x["name"] == remote_binary_name:
                 download_url = x["browser_download_url"]
                 size_in_bytes = x["size"]
                 break
@@ -233,8 +275,8 @@ class Updater:
                 logger.debug("Saved service file")
                 logger.debug("Copying service file over current file.")
                 shutil.copy(service_file_path, "/etc/systemd/system/plugin_loader.service")
-                if not os.path.exists(path.join(getcwd(), ".systemd")):
-                    os.mkdir(path.join(getcwd(), ".systemd"))
+                if not path.exists(path.join(getcwd(), ".systemd")):
+                    mkdir(path.join(getcwd(), ".systemd"))
                 shutil.move(service_file_path, path.join(getcwd(), ".systemd")+"/plugin_loader.service")
             
         await self.download_decky_binary(download_url, version, size_in_bytes=size_in_bytes)
@@ -249,7 +291,7 @@ class Updater:
     async def get_testing_versions(self) -> List[TestingVersion]:
         result: List[TestingVersion] = []
         async with ClientSession() as web:
-            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/pulls", 
+            async with web.request("GET", f"https://api.github.com/repos/{self.repo}/pulls", 
                     headers={'X-GitHub-Api-Version': '2022-11-28'}, params={'state':'open'}, ssl=helpers.get_ssl_context()) as res:
                 open_prs = await res.json()
                 for pr in open_prs:
@@ -265,27 +307,42 @@ class Updater:
         down_id = ''
         #Get all the associated workflow run for the given sha_id code hash
         async with ClientSession() as web:
-            async with web.request("GET", "https://api.github.com/repos/SteamDeckHomebrew/decky-loader/actions/runs", 
+            async with web.request("GET", f"https://api.github.com/repos/{self.repo}/actions/runs", 
                     headers={'X-GitHub-Api-Version': '2022-11-28'}, params={'head_sha': sha_id}, ssl=helpers.get_ssl_context()) as res:
                 works = await res.json()
         #Iterate over the workflow_run to get the two builds if they exists
         for work in works['workflow_runs']:
-            if ON_WINDOWS and work['name'] == 'Builder Win':
+            if ON_WINDOWS and ON_ARM64 and work['name'] == 'Builder (Windows, arm64)':
                 down_id=work['id']
                 break
-            elif ON_LINUX and work['name'] == 'Builder':
+            elif ON_WINDOWS and not ON_ARM64 and work['name'] == 'Builder (Windows, x86_64)':
                 down_id=work['id']
                 break
+            elif ON_LINUX and ON_ARM64 and work['name'] == 'Builder (Linux, arm64)':
+                down_id=work['id']
+                break
+            elif ON_LINUX and not ON_ARM64 and work['name'] == 'Builder (Linux, x86_64)':
+                down_id=work['id']
+                break
+            elif ON_MAC and work['name'] == 'Builder (macOS)':
+                down_id=work['id']
+                break
+        
         if down_id != '':
             async with ClientSession() as web:
-                async with web.request("GET", f"https://api.github.com/repos/SteamDeckHomebrew/decky-loader/actions/runs/{down_id}/artifacts",
+                async with web.request("GET", f"https://api.github.com/repos/{self.repo}/actions/runs/{down_id}/artifacts",
                         headers={'X-GitHub-Api-Version': '2022-11-28'}, ssl=helpers.get_ssl_context()) as res:
                     jresp = await res.json()
                     #If the request found at least one artifact to download...
                     if int(jresp['total_count']) != 0:
                         # this assumes that the artifact we want is the first one!
                         artifact = jresp['artifacts'][0]
-                        down_link = f"https://nightly.link/SteamDeckHomebrew/decky-loader/actions/artifacts/{artifact['id']}.zip"
+                        target_art = self.get_remote_binary_name(False)
+                        for art in jresp['artifacts']:
+                            if art['name'] == target_art:
+                                artifact = art
+                                break
+                        down_link = f"https://nightly.link/{self.repo}/actions/artifacts/{artifact['id']}.zip"
                         #Then fetch it and restart itself
                         await self.download_decky_binary(down_link, f'PR-{pr_id}', is_zip=True, size_in_bytes=artifact.get('size_in_bytes',None))
         else:

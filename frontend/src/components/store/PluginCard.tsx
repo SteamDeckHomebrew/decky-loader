@@ -1,5 +1,5 @@
 import {
-  ButtonItem,
+  DialogButton,
   Dropdown,
   Focusable,
   NavEntryPositionPreferences,
@@ -162,9 +162,7 @@ const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
                   } as CSSProperties
                 }
               >
-                <ButtonItem
-                  bottomSeparator="none"
-                  layout="below"
+                <DialogButton
                   onClick={() =>
                     requestPluginInstall(storePlugin.name, storePlugin.versions[selectedOption], installType)
                   }
@@ -196,7 +194,7 @@ const PluginCard: FC<PluginCardProps> = ({ storePlugin, installedPlugin }) => {
                       </>
                     )}
                   </span>
-                </ButtonItem>
+                </DialogButton>
               </div>
               <div className="deckyStoreCardVersionContainer" style={{ minWidth: '130px' }}>
                 <Dropdown

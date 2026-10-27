@@ -12,7 +12,7 @@ import {
   sleep,
 } from '@decky/ui';
 import { FC, lazy } from 'react';
-import { FaDownload, FaExclamationCircle, FaPlug } from 'react-icons/fa';
+import { FaDownload, FaExclamationCircle, FaExclamationTriangle, FaPlug } from 'react-icons/fa';
 
 import DeckyIcon from './components/DeckyIcon';
 import { DeckyState, DeckyStateContextProvider, UserInfo, useDeckyState } from './components/DeckyState';
@@ -34,7 +34,7 @@ import { NotificationService } from './notification-service';
 import { DisabledPlugin, InstallType, Plugin, PluginLoadType } from './plugin';
 import RouterHook from './router-hook';
 import { deinitSteamFixes, initSteamFixes } from './steamfixes';
-import { checkForPluginUpdates } from './store';
+import { PluginUpdateMapping, checkForPluginUpdates } from './store';
 import TabsHook from './tabs-hook';
 import Toaster from './toaster';
 import { getVersionInfo } from './updater';
@@ -153,6 +153,9 @@ class PluginLoader extends Logger {
     Promise.all([this.getUserInfo(), this.updateVersion()])
       .then(() => this.loadPlugins())
       .then(() => this.log('Initialized'))
+      .then(() => {
+        this.notifySupportStatus();
+      }) // TODO safeguard this
       .then(() => sleep(30000)) // Internet might not immediately be up
       .then(() => this.checkPluginUpdates());
   }
@@ -219,6 +222,19 @@ class PluginLoader extends Logger {
     this.checkPluginUpdates();
   }
 
+  private async notifySupportStatus() {
+    await this.routerHook.waitForUnlock();
+    if (!this.deckyState.publicState().versionInfo?.supported) {
+      this.toaster.toast({
+        title: <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="decky_unsupported" />,
+        body: <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="decky_unsupported_body" />,
+        logo: <DeckyIcon />,
+        icon: <FaExclamationTriangle />,
+        onClick: () => Navigation.Navigate('/decky/settings'),
+      });
+    }
+  }
+
   public async getUserInfo() {
     const userInfo = await DeckyBackend.call<[], UserInfo>('utilities/get_user_info');
     setSetting('user_info.user_name', userInfo.username);
@@ -258,19 +274,24 @@ class PluginLoader extends Logger {
     await this.notifyPluginUpdates();
   }
 
-  public async checkPluginUpdates() {
-    const frozenPlugins = this.deckyState.publicState().frozenPlugins;
+  public async checkPluginUpdates(): Promise<PluginUpdateMapping | null> {
+    try {
+      const frozenPlugins = this.deckyState.publicState().frozenPlugins;
 
-    const updates = await checkForPluginUpdates(
-      this.deckyState.publicState().installedPlugins.filter((p) => !frozenPlugins.includes(p.name)),
-    );
-    this.deckyState.setUpdates(updates);
-    return updates;
+      const updates = await checkForPluginUpdates(
+        this.deckyState.publicState().installedPlugins.filter((p) => !frozenPlugins.includes(p.name)),
+      );
+      this.deckyState.setUpdates(updates);
+      return updates;
+    } catch (error) {
+      this.error('Failed to check for plugin updates', error);
+      return null;
+    }
   }
 
   public async notifyPluginUpdates() {
     const updates = await this.checkPluginUpdates();
-    if (updates?.size > 0 && this.notificationService.shouldNotify('pluginUpdates')) {
+    if (updates && updates.size > 0 && this.notificationService.shouldNotify('pluginUpdates')) {
       this.pluginUpdateToast && this.pluginUpdateToast.dismiss();
       this.pluginUpdateToast = this.toaster.toast({
         title: <TranslationHelper transClass={TranslationClass.PLUGIN_LOADER} transText="decky_title" />,

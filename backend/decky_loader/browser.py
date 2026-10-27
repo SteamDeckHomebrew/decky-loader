@@ -20,7 +20,7 @@ from typing import Dict, List, TypedDict
 # Local modules
 from .localplatform.localplatform import chown, chmod, get_chown_plugin_path
 from .loader import Loader, Plugins
-from .helpers import get_ssl_context, download_remote_binary_to_path
+from .helpers import get_ssl_context, download_remote_binary_to_path, get_loader_version
 from .enums import UserType
 from .settings import SettingsManager
 
@@ -222,7 +222,9 @@ class PluginBrowser:
                 case _: storeUrl = "https://plugins.deckbrew.xyz/plugins"
             logger.info(f"Incrementing installs for {name} from URL {storeUrl} (version {version})")
             async with ClientSession() as client:
-                res = await client.post(storeUrl+f"/{name}/versions/{version}/increment?isUpdate={isInstalled}", ssl=get_ssl_context())
+                res = await client.post(storeUrl+f"/{name}/versions/{version}/increment?isUpdate={isInstalled}", headers={
+                    "X-Decky-Version": get_loader_version()
+                }, ssl=get_ssl_context())
                 if res.status != 200:
                     logger.error(f"Server did not accept install count increment request. code: {res.status}")
 

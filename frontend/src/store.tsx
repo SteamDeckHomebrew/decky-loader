@@ -26,6 +26,8 @@ export interface StorePluginVersion {
   artifact: string | undefined | null;
 }
 
+export type UpdateEndpointVersions = { [name: string]: [version: string, hash: string, artifact?: string] };
+
 export interface StorePlugin {
   id: number;
   name: string;
@@ -45,23 +47,20 @@ export interface PluginInstallRequest {
 // name: version
 export type PluginUpdateMapping = Map<string, StorePluginVersion>;
 
+export class StoreRequestError extends Error {
+  constructor(public readonly status: number) {
+    super(`Plugin store request failed (HTTP ${status})`);
+    this.name = 'StoreRequestError';
+  }
+}
+
 export async function getStore(): Promise<Store> {
   return await getSetting<Store>('store', Store.Default);
 }
 
-export async function getPluginList(
-  sort_by: SortOptions | null = null,
-  sort_direction: SortDirections | null = null,
-): Promise<StorePlugin[]> {
-  let version = await window.DeckyPluginLoader.updateVersion();
+export async function getStoreBaseURL(): Promise<string> {
   let store = await getSetting<Store | null>('store', null);
   let customURL = await getSetting<string>('store-url', 'https://plugins.deckbrew.xyz/plugins');
-
-  let query: URLSearchParams | string = new URLSearchParams();
-  sort_by && query.set('sort_by', sort_by);
-  sort_direction && query.set('sort_direction', sort_direction);
-  query = '?' + String(query);
-
   let storeURL;
   if (store === null) {
     console.log('Could not get store, using Default.');
@@ -83,12 +82,44 @@ export async function getPluginList(
       storeURL = 'https://plugins.deckbrew.xyz/plugins';
       break;
   }
-  return fetch(storeURL + query, {
+  return storeURL;
+}
+
+export async function getPluginList(
+  sort_by: SortOptions | null = null,
+  sort_direction: SortDirections | null = null,
+  signal?: AbortSignal,
+): Promise<StorePlugin[]> {
+  let query: URLSearchParams | string = new URLSearchParams();
+  sort_by && query.set('sort_by', sort_by);
+  sort_direction && query.set('sort_direction', sort_direction);
+  query = '?' + String(query);
+
+  const data = await getStoreData(query, signal);
+  if (!Array.isArray(data)) throw new Error('Plugin store returned an invalid plugin list');
+  return data;
+}
+
+export async function getVersionList(): Promise<UpdateEndpointVersions> {
+  const data = await getStoreData('/versions');
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    throw new Error('Plugin store returned an invalid version list');
+  }
+  return data as UpdateEndpointVersions;
+}
+
+async function getStoreData(path: string, signal?: AbortSignal): Promise<unknown> {
+  const version = await window.DeckyPluginLoader.updateVersion();
+  const storeURL = await getStoreBaseURL();
+  const response = await fetch(storeURL + path, {
     method: 'GET',
+    signal,
     headers: {
       'X-Decky-Version': version.current,
     },
-  }).then((r) => r.json());
+  });
+  if (!response.ok) throw new StoreRequestError(response.status);
+  return response.json();
 }
 
 export async function installFromURL(url: string) {
@@ -114,23 +145,26 @@ export async function requestMultiplePluginInstalls(requests: PluginInstallReque
 }
 
 export async function checkForPluginUpdates(plugins: (Plugin | DisabledPlugin)[]): Promise<PluginUpdateMapping> {
-  const serverData = await getPluginList();
+  const serverData = await getVersionList();
   const updateMap = new Map<string, StorePluginVersion>();
   for (let plugin of plugins) {
-    const remotePlugin = serverData?.find((x) => x.name == plugin.name);
+    const remotePlugin = serverData?.[plugin.name];
     //FIXME: Ugly hack since plugin.version might be null during evaluation,
     //so this will set the older version possible
     const curVer = plugin.version ? plugin.version : '0.0.0';
 
     if (
       remotePlugin &&
-      remotePlugin.versions?.length > 0 &&
-      plugin.version != remotePlugin?.versions?.[0]?.name &&
-      validate(remotePlugin.versions?.[0]?.name) &&
+      plugin.version != remotePlugin[0] &&
+      validate(remotePlugin[0]) &&
       validate(curVer) &&
-      compare(remotePlugin?.versions?.[0]?.name, curVer, '>')
+      compare(remotePlugin[0], curVer, '>')
     ) {
-      updateMap.set(plugin.name, remotePlugin.versions[0]);
+      updateMap.set(plugin.name, {
+        name: remotePlugin[0],
+        hash: remotePlugin[1],
+        artifact: remotePlugin[2],
+      });
     }
   }
   return updateMap;

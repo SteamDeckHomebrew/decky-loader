@@ -52,7 +52,9 @@
     "MultiplePluginsInstallModal": {
         "confirm": "Bist du sicher, dass du die folgenden Änderungen vornehmen möchtest?",
         "description": {
+            "downgrade": "Downgrade {{name}} auf {{version}}",
             "install": "{{name}} {{version}} installieren",
+            "overwrite": "{{name}} durch {{version}} überschreiben",
             "reinstall": "{{name}} {{version}} neu installieren",
             "update": "{{name}} auf {{version}} aktualisieren"
         },
@@ -61,10 +63,14 @@
             "loading": "An der Arbeit"
         },
         "title": {
+            "downgrade_one": "Downgrade 1 Plugin",
+            "downgrade_other": "Downgrade {{count}} Plugins",
             "install_one": "{{count}} Plugin installieren",
             "install_other": "{{count}} Plugins installieren",
             "mixed_one": "{{count}} Plugin bearbeiten",
             "mixed_other": "{{count}} Plugins bearbeiten",
+            "overwrite_one": "1 Plugin überschreiben",
+            "overwrite_other": "{{count}} Plugins überschreiben",
             "reinstall_one": "{{count}} Plugin neu installieren",
             "reinstall_other": "{{count}} Plugins neu installieren",
             "update_one": "{{count}} Plugin aktualisieren",
@@ -72,12 +78,22 @@
         }
     },
     "PluginCard": {
+        "plugin_downgrade": "Downgrade",
         "plugin_full_access": "Diese Erweiterung hat uneingeschränkten Zugriff auf dein Steam Deck.",
         "plugin_install": "Installieren",
         "plugin_no_desc": "Keine Beschreibung angegeben.",
+        "plugin_overwrite": "Überschreiben",
+        "plugin_reinstall": "Neu installieren",
+        "plugin_update": "Aktualisierung",
         "plugin_version_label": "Erweiterungs Version"
     },
     "PluginInstallModal": {
+        "downgrade": {
+            "button_idle": "Downgrade",
+            "button_processing": "Downgrade läuft",
+            "desc": "Möchtest du {{artifact}} wirklich auf Version {{version}} downgraden?",
+            "title": "Downgrade {{artifact}}"
+        },
         "install": {
             "button_idle": "Installieren",
             "button_processing": "Wird installiert",
@@ -85,6 +101,13 @@
             "title": "Installiere {{artifact}}"
         },
         "no_hash": "Diese Erweiterung besitzt keine Prüfsumme, Installation auf eigene Gefahr.",
+        "not_installed": "(nicht installiert)",
+        "overwrite": {
+            "button_idle": "Überschreiben",
+            "button_processing": "Wird überschrieben",
+            "desc": "Möchtest du {{artifact}} wirklich mit Version {{version}} überschreiben?",
+            "title": "{{artifact}} überschreiben"
+        },
         "reinstall": {
             "button_idle": "Neu installieren",
             "button_processing": "Wird neu installiert",
@@ -94,7 +117,7 @@
         "update": {
             "button_idle": "Aktualisieren",
             "button_processing": "Wird aktualisiert",
-            "desc": "Bist du dir sicher, dass du {{artifact}} {{version}} aktualisieren willst?",
+            "desc": "Bist du dir sicher, dass du {{artifact}} auf Version {{version}} aktualisieren willst?",
             "title": "Aktualisiere {{artifact}}"
         }
     },
@@ -199,6 +222,7 @@
     },
     "Store": {
         "download_progress_info": {
+            "download_remote": "Externe Binärdateien werden heruntergeladen",
             "download_zip": "Plugin herunterladen",
             "increment_count": "Erhöhen der Downloadanzahl",
             "installing_plugin": "Plugin installieren",

@@ -1,7 +1,7 @@
 {
     "BranchSelect": {
         "update_channel": {
-            "label": "Canale di aggiornamento",
+            "label": "Canale di aggiornamenti",
             "prerelease": "Prerilascio",
             "stable": "Stabile",
             "testing": "In prova"
@@ -312,5 +312,8 @@
             "reloading": "Ricaricando",
             "updating": "Aggiornando"
         }
+    },
+    "WarnThirdParty": {
+        "button_processing": "Attendi {{timer}} secondi"
     }
 }

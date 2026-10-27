@@ -12,8 +12,8 @@ importers:
   .:
     dependencies:
       '@decky/ui':
-        specifier: link:../../lib
-        version: link:../../lib
+        specifier: ^4.16.4
+        version: 4.16.4
       compare-versions:
         specifier: ^6.1.1
         version: 6.1.1
@@ -224,6 +224,9 @@ packages:
 
   '@decky/api@1.1.3':
     resolution: {integrity: sha512-XsPCZxfxk5I1UtylIUN3qaWQI31siQbKfbLIskkI5innEatY1m4NQqBv/6hwPaO9mKMbdqYpnh5PSJDeMEOOBA==}
+
+  '@decky/ui@4.16.4':
+    resolution: {integrity: sha512-XvnLXa0RcffsIMkl82s2puWQjgSYMnZj9C6N/xoL+9SmJ53V/65HPXU6Yw840hky6784Llc1sVRb5z/jByhB+A==}
 
   '@esbuild/aix-ppc64@0.20.2':
     resolution: {integrity: sha512-D+EBOJHXdNZcLJRBkhENNG8Wji2kgc9AZ9KiPr1JuZjsNtyHzrsfLRrY0tk2H2aoFu6RANO1y1iPPUCDYWkb5g==}
@@ -2310,6 +2313,8 @@ snapshots:
       to-fast-properties: 2.0.0
 
   '@decky/api@1.1.3': {}
+
+  '@decky/ui@4.16.4': {}
 
   '@esbuild/aix-ppc64@0.20.2':
     optional: true

@@ -3,6 +3,7 @@ Please tick as appropriate:
 - [ ] My changes generate no new errors/warnings
 - [ ] This is a bugfix/hotfix
 - [ ] This is a new feature
+- [ ] NO AI/LLM USED IN THE DEVELOPMENT OF THIS PULL REQUEST
 
 If you're wanting to update a translation or add a new one, please use the weblate page: https://weblate.werwolv.net/projects/decky/
 

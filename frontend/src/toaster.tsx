@@ -59,8 +59,13 @@ class Toaster extends Logger {
         eFeature: l.uX
       }
     */
+    const notificationID = window.NotificationStore.m_nNextTestNotificationID++;
+    let dismissed = false;
+    let shownAt: number | undefined;
     let toastData = {
-      nNotificationID: window.NotificationStore.m_nNextTestNotificationID++,
+      // Steam matches toasts and tray groups by notificationID
+      notificationID,
+      nNotificationID: notificationID,
       bNewIndicator: toast.showNewIndicator,
       rtCreated: Date.now(),
       eType: toast.eType || 31,
@@ -68,6 +73,12 @@ class Toaster extends Logger {
       nToastDurationMS: toast.duration || (toast.duration = 5e3),
       data: toast,
       decky: true,
+      // Steam calls this every frame while the toast is on screen and hides the toast when it returns true.
+      // Steam then does not use its own duration timer, so check the duration here too.
+      fnNotificationResolved() {
+        shownAt ??= Date.now();
+        return dismissed || Date.now() - shownAt >= toastData.nToastDurationMS;
+      },
     };
     let group: any;
     function fnTray(toast: any, tray: any) {
@@ -93,8 +104,11 @@ class Toaster extends Logger {
       dismiss() {
         // it checks against the id of notifications[0]
         try {
+          dismissed = true;
           expirationTimeout && clearTimeout(expirationTimeout);
           group && window.NotificationStore.RemoveGroupFromTray(group);
+          // the toast queue holds a copy of toastData, so match by id. the predicate keeps the toasts it returns true for
+          window.NotificationStore.RemoveFromToastsWhere((e: any) => e?.notificationID !== notificationID);
         } catch (e) {
           self.error('Error while dismissing toast:', e);
         }

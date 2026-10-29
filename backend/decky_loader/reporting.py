@@ -5,7 +5,7 @@ import subprocess
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from aiohttp import ClientSession, ClientTimeout, web
+from aiohttp import ClientSession, ClientTimeout
 
 from . import helpers
 
@@ -24,22 +24,12 @@ clipboard_commands = (
 class Reporting:
     def __init__(self, context: "PluginManager") -> None:
         self.context = context
-        routes = [
-            web.post("/report/paste", self.upload_report),
-            web.post("/report/clipboard", self.copy_to_clipboard),
-        ]
-        context.web_app.add_routes(routes)
+        context.ws.add_route("reporting/upload_report", self.upload_report)
+        context.ws.add_route("reporting/copy_to_clipboard", self.copy_to_clipboard)
 
-    async def upload_report(self, request: web.Request) -> web.Response:
-        try:
-            data = await request.json()
-        except Exception:
-            return web.json_response({"error": "Invalid JSON payload"}, status=400)
-
-        body = data.get("body")
+    async def upload_report(self, body: object) -> str:
         if not isinstance(body, str):
-            return web.json_response({"error": "Missing or invalid fields"}, status=400)
-
+            raise ValueError("Missing or invalid report body")
         try:
             async with ClientSession(timeout=paste_timeout) as session:
                 async with session.put(
@@ -54,36 +44,28 @@ class Reporting:
                     if res.status < 200 or res.status >= 300:
                         text = await res.text()
                         logger.error(f"lp.deckbrew.xyz upload failed: {res.status} {text}")
-                        return web.json_response({"error": "Paste upload failed"}, status=502)
+                        raise RuntimeError("Paste upload failed")
                     payload = await res.json()
                     paste_id = payload.get("id")
                     if not isinstance(paste_id, str) or not paste_id:
                         logger.error(f"lp.deckbrew.xyz returned invalid payload: {payload}")
-                        return web.json_response({"error": "Paste upload failed"}, status=502)
-                    url = f"https://lp.deckbrew.xyz/{paste_id}"
+                        raise RuntimeError("Paste upload failed")
+                    return f"https://lp.deckbrew.xyz/{paste_id}"
         except Exception as e:
             logger.error(f"Failed to upload report: {e}")
-            return web.json_response({"error": "Paste upload failed"}, status=502)
+            raise RuntimeError("Paste upload failed") from e
 
-        return web.json_response({"success": True, "url": url})
-
-    async def copy_to_clipboard(self, request: web.Request) -> web.Response:
-        try:
-            data = await request.json()
-        except Exception:
-            return web.json_response({"error": "Invalid JSON payload"}, status=400)
-
-        text = data.get("text")
+    async def copy_to_clipboard(self, text: object) -> None:
         if not isinstance(text, str):
-            return web.json_response({"error": "Missing or invalid fields"}, status=400)
+            raise ValueError("Missing or invalid clipboard text")
 
         for cmd in clipboard_commands:
             if shutil.which(cmd[0]):
                 try:
                     subprocess.run(cmd, input=text.encode("utf-8"), check=True)
-                    return web.json_response({"success": True})
+                    return
                 except Exception as e:
                     logger.error(f"Clipboard copy failed with {cmd[0]}: {e}")
                     continue
 
-        return web.json_response({"error": "No clipboard utility available (install wl-clipboard)"}, status=502)
+        raise RuntimeError("No clipboard utility available (install wl-clipboard)")

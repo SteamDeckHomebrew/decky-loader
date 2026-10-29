@@ -31,6 +31,10 @@ jobs:
         working-directory: backend
         run: poetry install --no-interaction
 
+      - name: Run backend unit tests
+        working-directory: backend
+        run: python -m unittest discover -s tests -v
+
       - name: Install TypeScript dependencies
         working-directory: frontend
         run: |

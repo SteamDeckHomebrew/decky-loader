@@ -28,28 +28,8 @@ interface TestReportModalProps {
   deckyVersion: string | null;
 }
 
-const apiFetchJson = async <T,>(path: string, init?: RequestInit): Promise<T> => {
-  const res = await fetch(`http://127.0.0.1:1337${path}`, {
-    ...init,
-    headers: {
-      'X-Decky-Auth': deckyAuthToken,
-      ...(init?.headers || {}),
-    },
-  });
-  if (!res.ok) {
-    let message = res.statusText;
-    try {
-      const body = await res.json();
-      message = body?.error || message;
-    } catch {
-      try {
-        message = await res.text();
-      } catch {}
-    }
-    throw new Error(message);
-  }
-  return res.json() as Promise<T>;
-};
+const uploadReport = DeckyBackend.callable<[body: string], string>('reporting/upload_report');
+const copyToClipboard = DeckyBackend.callable<[text: string], void>('reporting/copy_to_clipboard');
 
 const buildReportFull = (
   system: ReportSystemInfo,
@@ -218,17 +198,13 @@ const TestReportModal: FC<TestReportModalProps> = ({ closeModal, installedPlugin
           )
         : buildReportSimple(reportSystem, pluginsInfo);
       setLastReport(report);
-      const response = await apiFetchJson<{ url: string }>('/report/paste', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ body: report }),
-      });
+      const url = await uploadReport(report);
       DeckyPluginLoader.toaster.toast({
         title: t('SettingsDeveloperIndex.test_report.toast_title'),
         body: t('SettingsDeveloperIndex.test_report.toast_body'),
         icon: <FaFileAlt />,
       });
-      setPasteUrl(response.url);
+      setPasteUrl(url);
     } catch (e) {
       setError((e as Error).message || t('SettingsDeveloperIndex.test_report.system_error'));
     } finally {
@@ -239,11 +215,7 @@ const TestReportModal: FC<TestReportModalProps> = ({ closeModal, installedPlugin
   const handleCopy = async (value: string | null, successKey: string, failKey: string) => {
     if (!value) return;
     try {
-      await apiFetchJson('/report/clipboard', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: value }),
-      });
+      await copyToClipboard(value);
       setCopyMessage(t(successKey));
       setCopyMessageType('success');
       return;

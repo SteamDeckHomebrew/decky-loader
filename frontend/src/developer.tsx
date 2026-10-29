@@ -14,9 +14,7 @@ export async function setShowValveInternal(show: boolean) {
     const settingsStore = window.settingsStore as any;
     const mobx =
       settingsStore[
-        Object.getOwnPropertySymbols(settingsStore).find(
-          (x) => x.toString() == 'Symbol(mobx administration)',
-        ) as any
+        Object.getOwnPropertySymbols(settingsStore).find((x) => x.toString() == 'Symbol(mobx administration)') as any
       ];
 
     removeSettingsObserver = (mobx.observe_ || mobx.observe).call(mobx, (e: any) => {

@@ -11,21 +11,21 @@ let removeSettingsObserver: () => void = () => {};
 
 export async function setShowValveInternal(show: boolean) {
   if (show) {
-    const mobx = (window.settingsStore as any)[
-      Object.getOwnPropertySymbols(window.settingsStore).find(
-        (x) => x.toString() == 'Symbol(mobx administration)',
-      ) as any
-    ];
+    const settingsStore = window.settingsStore as any;
+    const mobx =
+      settingsStore[
+        Object.getOwnPropertySymbols(settingsStore).find((x) => x.toString() == 'Symbol(mobx administration)') as any
+      ];
 
     removeSettingsObserver = (mobx.observe_ || mobx.observe).call(mobx, (e: any) => {
       e.newValue.bIsValveEmail = true;
     });
 
-    window.settingsStore.m_Settings.bIsValveEmail = true;
+    settingsStore.m_Settings.bIsValveEmail = true;
     logger.log('Enabled Valve Internal menu');
   } else {
     removeSettingsObserver();
-    window.settingsStore.m_Settings.bIsValveEmail = false;
+    (window.settingsStore as any).m_Settings.bIsValveEmail = false;
     logger.log('Disabled Valve Internal menu');
   }
 }

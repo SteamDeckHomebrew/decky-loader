@@ -11,7 +11,7 @@ import {
 } from '@decky/ui';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaFileArchive, FaLink, FaReact, FaSteamSymbol, FaTerminal } from 'react-icons/fa';
+import { FaFileAlt, FaFileArchive, FaLink, FaReact, FaSteamSymbol, FaTerminal } from 'react-icons/fa';
 
 import { setShouldConnectToReactDevTools, setShowValveInternal } from '../../../../developer';
 import Logger from '../../../../logger';
@@ -19,7 +19,9 @@ import { installFromURL } from '../../../../store';
 import { WarnThirdPartyType } from '../../../../utils/globalTypes';
 import { useSetting } from '../../../../utils/hooks/useSetting';
 import { getSetting } from '../../../../utils/settings';
+import { useDeckyState } from '../../../DeckyState';
 import { FileSelectionType } from '../../../modals/filepicker';
+import TestReportModal from '../../../modals/TestReportModal';
 import WarnThirdParty from '../../../modals/WarnThirdParty';
 import RemoteDebuggingSettings from '../general/RemoteDebugging';
 
@@ -43,6 +45,7 @@ const installFromZip = async () => {
 const getTabID = DeckyBackend.callable<[name: string], string>('utilities/get_tab_id');
 
 export default function DeveloperSettings() {
+  const { installedPlugins, versionInfo } = useDeckyState();
   const [enableValveInternal, setEnableValveInternal] = useSetting<boolean>('developer.valve_internal', false);
   const [reactDevtoolsEnabled, setReactDevtoolsEnabled] = useSetting<boolean>('developer.rdt.enabled', false);
   const [reactDevtoolsIP, setReactDevtoolsIP] = useSetting<string>('developer.rdt.ip', '');
@@ -183,6 +186,22 @@ export default function DeveloperSettings() {
               setShouldConnectToReactDevTools(toggleValue);
             }}
           />
+        </Field>
+        <DialogControlsSectionHeader>{t('SettingsDeveloperIndex.test_report.header')}</DialogControlsSectionHeader>
+        <Field
+          label={t('SettingsDeveloperIndex.test_report.option_label')}
+          description={t('SettingsDeveloperIndex.test_report.description')}
+          icon={<FaFileAlt style={{ display: 'block' }} />}
+        >
+          <DialogButton
+            onClick={() =>
+              showModal(
+                <TestReportModal installedPlugins={installedPlugins} deckyVersion={versionInfo?.current ?? null} />,
+              )
+            }
+          >
+            {t('SettingsDeveloperIndex.test_report.create')}
+          </DialogButton>
         </Field>
       </DialogControlsSection>
     </DialogBody>

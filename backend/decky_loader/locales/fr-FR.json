@@ -2,7 +2,7 @@
     "BranchSelect": {
         "update_channel": {
             "label": "Canal de mise à jour",
-            "prerelease": "Préliminaire",
+            "prerelease": "Préversion",
             "stable": "Stable",
             "testing": "Test"
         }
@@ -21,7 +21,7 @@
         "errors": {
             "file_not_found": "Le chemin spécifié n'est pas valide. Veuillez vérifier et essayer à nouveau.",
             "perm_denied": "Vous n'avez pas accès au dossier spécifié. Veuillez vérifier que votre utilisateur (deck sur un Steam Deck) possède les permissions requises pour accéder au dossier/fichier spécifié.",
-            "unknown": "Une erreur inconnue est survenue. L'erreur est : {{raw_error}}"
+            "unknown": "Une erreur inconnue est survenue. L'erreur brute est : {{raw_error}}"
         }
     },
     "FilePickerIndex": {
@@ -29,19 +29,19 @@
             "select": "Sélectionner ce fichier"
         },
         "files": {
-            "all_files": "Tout les fichiers",
+            "all_files": "Tous les fichiers",
             "file_type": "Type de fichier",
             "show_hidden": "Afficher les fichiers cachés"
         },
         "filter": {
-            "created_asce": "Création (Plus vieux)",
-            "created_desc": "Création (Plus récent)",
-            "modified_asce": "Modifié (Plus vieux)",
-            "modified_desc": "Modifié (Plus récent)",
+            "created_asce": "Création (la plus ancienne)",
+            "created_desc": "Création (la plus récente)",
+            "modified_asce": "Modifié (le plus ancien)",
+            "modified_desc": "Modifié (le plus récent)",
             "name_asce": "Z-A",
             "name_desc": "A-Z",
-            "size_asce": "Taille (Plus petit)",
-            "size_desc": "Taille (Plus grand)"
+            "size_asce": "Taille (la plus petite)",
+            "size_desc": "Taille (la plus grande)"
         },
         "folder": {
             "label": "Dossier",
@@ -56,7 +56,7 @@
             "install": "Installer {{name}} {{version}}",
             "overwrite": "Écraser {{name}} avec {{version}}",
             "reinstall": "Réinstaller {{name}} {{version}}",
-            "update": "Mettre à jour {{name}} en {{version}}"
+            "update": "Mettre à jour {{name}} vers {{version}}"
         },
         "ok_button": {
             "idle": "Confirmer",
@@ -134,10 +134,10 @@
         "freeze": "Geler les mises à jour",
         "hide": "Accès rapide : Cacher",
         "no_plugin": "Aucun plugin installé !",
-        "plugin_actions": "Plugin Actions",
+        "plugin_actions": "Actions du plugin",
         "reinstall": "Réinstaller",
         "reload": "Recharger",
-        "show": "Accès Rapide : Afficher",
+        "show": "Accès rapide : Afficher",
         "unfreeze": "Autoriser les mises à jour",
         "uninstall": "Désinstaller",
         "update_all_many": "Mettre à jour {{count}} plugins",
@@ -147,7 +147,7 @@
     },
     "PluginListLabel": {
         "disabled": "Plugin désactivé",
-        "hidden": "Caché du menu d'accès rapide"
+        "hidden": "Masqué du menu d'accès rapide"
     },
     "PluginLoader": {
         "decky_title": "Decky",
@@ -164,27 +164,27 @@
         "plugin_enable": {
             "error": "Erreur lors de l'activation de {{name}}"
         },
-        "plugin_error_uninstall": "Le chargement de {{name}} a provoqué une exception comme indiqué ci-dessus. Cela signifie généralement que le plugin nécessite une mise à jour pour la nouvelle version de SteamUI. Vérifiez si une mise à jour est présente ou évaluez sa suppression dans les paramètres de Decky, dans la section Plugins.",
+        "plugin_error_uninstall": "Le chargement de {{name}} a provoqué une exception comme indiqué ci-dessus. Cela signifie généralement que le plugin nécessite une mise à jour pour la nouvelle version de SteamUI. Vérifiez si une mise à jour est présente ou envisagez de le supprimer dans les paramètres de Decky, dans la section Plugins.",
         "plugin_load_error": {
             "message": "Erreur lors du chargement du plugin {{name}}",
             "toast": "Erreur lors du chargement de {{name}}"
         },
         "plugin_uninstall": {
             "button": "Désinstaller",
-            "desc": "Êtes-vous sûr.e de vouloir désinstaller {{name}} ?",
+            "desc": "Êtes-vous sûr de vouloir désinstaller {{name}} ?",
             "title": "Désinstaller {{name}}"
         },
-        "plugin_update_many": "Mises à jour disponible pour {{count}} plugins !",
+        "plugin_update_many": "Mises à jour disponibles pour {{count}} plugins !",
         "plugin_update_one": "Mise à jour disponible pour 1 plugin !",
-        "plugin_update_other": "Mises à jour disponible pour {{count}} plugins !"
+        "plugin_update_other": "Mises à jour disponibles pour {{count}} plugins !"
     },
     "PluginView": {
         "disabled_many": "{{count}} plugins sont désactivés",
         "disabled_one": "1 plugin est désactivé",
         "disabled_other": "{{count}} plugins sont désactivés",
-        "hidden_many": "{{count}} plugins sont masqués de cette liste",
+        "hidden_many": "{{count}} plugins sont masqués dans cette liste",
         "hidden_one": "1 plugin est masqué dans cette liste",
-        "hidden_other": "{{count}} plugins sont masqués de cette liste"
+        "hidden_other": "{{count}} plugins sont masqués dans cette liste"
     },
     "RemoteDebugging": {
         "remote_cef": {
@@ -195,7 +195,7 @@
     "SettingsDeveloperIndex": {
         "cef_console": {
             "button": "Ouvrir la console",
-            "desc": "Ouvre la console CEF. Utile uniquement à des fins de débogage. Les éléments présentés ici sont potentiellement dangereux et ne doivent être utilisés que si vous êtes un développeur de plugins ou si vous êtes dirigé ici par un de ces développeurs.",
+            "desc": "Ouvre la console CEF. Utile uniquement à des fins de débogage. Les éléments présentés ici sont potentiellement dangereux et ne doivent être utilisés que si vous êtes un développeur de plugins ou si l'un de ces développeurs vous a indiqué de venir ici.",
             "label": "Console CEF"
         },
         "header": "Autre",
@@ -209,7 +209,7 @@
             "button_zip": "Parcourir",
             "header": "Plugins tiers",
             "label_desc": "URL",
-            "label_url": "Installer le plugin à partir d'un URL",
+            "label_url": "Installer le plugin à partir d'une URL",
             "label_zip": "Installer le plugin à partir d'un fichier ZIP"
         },
         "valve_internal": {
@@ -224,7 +224,7 @@
             "header": "À propos"
         },
         "beta": {
-            "header": "Participation à la Bêta"
+            "header": "Participation à la bêta"
         },
         "developer_mode": {
             "label": "Mode développeur"
@@ -252,7 +252,7 @@
     },
     "Store": {
         "download_progress_info": {
-            "download_remote": "Téléchargement des binaires externes",
+            "download_remote": "Téléchargement des éventuels binaires externes",
             "download_zip": "Téléchargement du plugin",
             "increment_count": "Incrémentation du nombre de téléchargements",
             "installing_plugin": "Installation du plugin",
@@ -279,26 +279,26 @@
         },
         "store_sort": {
             "label": "Trier",
-            "label_def": "Mises à jour (Plus récentes)"
+            "label_def": "Dernière mise à jour (la plus récente)"
         },
         "store_source": {
             "desc": "Tout le code source des plugins est disponible sur le dépôt SteamDeckHomebrew/decky-plugin-database sur GitHub.",
-            "label": "Code Source"
+            "label": "Code source"
         },
         "store_tabs": {
             "about": "À propos",
             "alph_asce": "Alphabétique (Z à A)",
             "alph_desc": "Alphabétique (A à Z)",
-            "date_asce": "Plus ancien en premier",
-            "date_desc": "Le plus récent d'abord",
+            "date_asce": "Les plus anciens en premier",
+            "date_desc": "Les plus récents en premier",
             "downloads_asce": "Le moins téléchargé en premier",
             "downloads_desc": "Les plus téléchargés en premier",
             "title": "Explorer"
         },
         "store_testing_cta": "Pensez à tester de nouveaux plugins pour aider l'équipe Decky Loader !",
         "store_testing_warning": {
-            "desc": "Vous pouvez utiliser cette chaîne de magasin pour tester des versions de plugins. Assurez-vous de laisser des commentaires sur GitHub afin que le plugin puisse être mis à jour pour tous les utilisateurs.",
-            "label": "Bienvenue sur le canal test de la boutique"
+            "desc": "Vous pouvez utiliser cette chaîne de magasin pour tester des versions expérimentales de plugins. Assurez-vous de laisser des commentaires sur GitHub afin que le plugin puisse être mis à jour pour tous les utilisateurs.",
+            "label": "Bienvenue sur le canal de test du magasin"
         }
     },
     "StoreSelect": {
@@ -309,7 +309,7 @@
         "store_channel": {
             "custom": "Personnalisé",
             "default": "Par défaut",
-            "label": "Canal magasin",
+            "label": "Canal du magasin",
             "testing": "Test"
         }
     },
@@ -330,11 +330,11 @@
         "patch_notes_desc": "Notes de mise à jour",
         "updates": {
             "check_button": "Vérifier les mises à jour",
-            "checking": "Recherche",
-            "cur_version": "Version actuelle: {{ver}}",
+            "checking": "Vérification",
+            "cur_version": "Version actuelle : {{ver}}",
             "install_button": "Installer la mise à jour",
             "label": "Mises à jour",
-            "lat_version": "À jour: version {{ver}}",
+            "lat_version": "À jour : version {{ver}} installée",
             "reloading": "Rechargement",
             "updating": "Mise à jour en cours"
         }

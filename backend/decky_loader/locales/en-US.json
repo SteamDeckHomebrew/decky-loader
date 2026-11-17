@@ -7,6 +7,9 @@
             "testing": "Testing"
         }
     },
+    "Common": {
+        "Confirm": "Confirm"
+    },
     "Developer": {
         "5secreload": "Reloading in 5 seconds",
         "disabling": "Disabling React DevTools",
@@ -47,6 +50,20 @@
             "label": "Folder",
             "select": "Use this folder",
             "show_more": "Show more files"
+        }
+    },
+    "HashMismatchModal": {
+        "HashMismatch": {
+            "Description": "The downloaded file from GitHub do not match the expected hash from GitHub itself. This might be just a temporary issue with GitHub itself or your connection to the internet. Please retry the operation later and see if this fixes your issue.",
+            "Title": "The hash of the binary do not match!"
+        },
+        "NullHashRelease": {
+            "Description": "The hash returned from GitHub do not provide a valid hash back to Decky! This should not happen on new releases, please signal this problem back to the Decky developers on our discord channels!",
+            "Title": "No hash returned from GitHub releases API!"
+        },
+        "NullHashTesting": {
+            "Description": "The hash returned from GitHub action is not valid! This can happen to old builds, where the corresponding action never saved a corresponding hash. If the build is really needed for testing, the action will need to be rerun again to generate a valid hash. Otherwise just ignore this, it might just be old non-working builds anyway.",
+            "Title": "No hash returned from GitHub action API!"
         }
     },
     "MultiplePluginsInstallModal": {

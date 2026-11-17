@@ -15,6 +15,7 @@ import { FaExclamation } from 'react-icons/fa';
 
 import { VerInfo, checkForUpdates, doUpdate } from '../../../../updater';
 import { useDeckyState } from '../../../DeckyState';
+import HashMismatchModal, { HashMismatchTypes } from '../../../modals/HashMismatchModal';
 import InlinePatchNotes from '../../../patchnotes/InlinePatchNotes';
 import WithSuspense from '../../../WithSuspense';
 
@@ -108,9 +109,24 @@ export default function UpdaterSettings() {
       setReloading(true);
     });
 
+    const c = DeckyBackend.addEventListener('updater/sha256_actions_null_value', () => {
+      showModal(<HashMismatchModal idType={HashMismatchTypes.NULL_HASH_TESTING} />);
+    });
+
+    const d = DeckyBackend.addEventListener('updater/sha256_update_null_value', () => {
+      showModal(<HashMismatchModal idType={HashMismatchTypes.NULL_HASH_RELEASE} />);
+    });
+
+    const e = DeckyBackend.addEventListener('updater/sha256_mismatch', () => {
+      showModal(<HashMismatchModal idType={HashMismatchTypes.HASH_MISMATCH} />);
+    });
+
     return () => {
       DeckyBackend.removeEventListener('updater/update_download_percentage', a);
       DeckyBackend.removeEventListener('updater/finish_download', b);
+      DeckyBackend.removeEventListener('updater/sha256_actions_null_value', c);
+      DeckyBackend.removeEventListener('updater/sha256_update_null_value', d);
+      DeckyBackend.removeEventListener('updater/sha256_mismatch', e);
     };
   }, []);
 

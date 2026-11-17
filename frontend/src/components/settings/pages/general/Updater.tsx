@@ -108,9 +108,24 @@ export default function UpdaterSettings() {
       setReloading(true);
     });
 
+    const c = DeckyBackend.addEventListener('updater/sha256_actions_null_value', () => {
+
+    });
+
+    const d = DeckyBackend.addEventListener('updater/sha256_update_null_value', () =>{
+
+    });
+
+    const e = DeckyBackend.addEventListener('updater/sha256_mismatch', () =>{
+
+    });
+
     return () => {
       DeckyBackend.removeEventListener('updater/update_download_percentage', a);
       DeckyBackend.removeEventListener('updater/finish_download', b);
+      DeckyBackend.removeEventListener('updater/sha256_actions_null_value', c);
+      DeckyBackend.removeEventListener('updater/sha256_update_null_value', d);
+      DeckyBackend.removeEventListener('updater/sha256_mismatch', e);
     };
   }, []);
 

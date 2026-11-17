@@ -17,6 +17,7 @@ import { VerInfo, checkForUpdates, doUpdate } from '../../../../updater';
 import { useDeckyState } from '../../../DeckyState';
 import InlinePatchNotes from '../../../patchnotes/InlinePatchNotes';
 import WithSuspense from '../../../WithSuspense';
+import HashMismatchModal, { HashMismatchTypes } from '../../../modals/HashMismatchModal';
 
 const MarkdownRenderer = lazy(() => import('../../../Markdown'));
 
@@ -109,15 +110,15 @@ export default function UpdaterSettings() {
     });
 
     const c = DeckyBackend.addEventListener('updater/sha256_actions_null_value', () => {
-
+      showModal(<HashMismatchModal idType={HashMismatchTypes.NULL_HASH_TESTING}/>);
     });
 
     const d = DeckyBackend.addEventListener('updater/sha256_update_null_value', () =>{
-
+      showModal(<HashMismatchModal idType={HashMismatchTypes.NULL_HASH_RELEASE}/>);
     });
 
     const e = DeckyBackend.addEventListener('updater/sha256_mismatch', () =>{
-
+      showModal(<HashMismatchModal idType={HashMismatchTypes.HASH_MISMATCH}/>);
     });
 
     return () => {

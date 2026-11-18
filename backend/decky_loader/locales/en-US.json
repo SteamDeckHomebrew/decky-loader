@@ -314,8 +314,6 @@
         "decky_store_desc": "Open Decky Store",
         "settings_desc": "Open Decky Settings"
     },
-    "undefined_repo": "",
-    "undefined_zip": "",
     "Updater": {
         "decky_updates": "Decky Updates",
         "no_patch_notes_desc": "no patch notes for this version",
@@ -338,5 +336,7 @@
         "desc_zip": "The Decky Loader team has not reviewed this plugin. It may contain malware, such as software to steal your Steam account or harm your device. By installing this plugin, you agree you have assumed all risks to your device.",
         "title_repo": "Third-Party Store Selection",
         "title_zip": "Third-Party Plugin Installation"
-    }
+    },
+    "undefined_repo": "",
+    "undefined_zip": ""
 }

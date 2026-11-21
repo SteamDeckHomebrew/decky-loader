@@ -31,6 +31,8 @@ class TabsHook extends Logger {
   tabs: Tab[] = [];
   private qamBrowserViewPatch?: Patch;
   private qamEmbeddedPatch?: Patch;
+  private injectTabsRetry?: number;
+  private qamTabs?: any[];
 
   constructor() {
     super('TabsHook');
@@ -42,12 +44,25 @@ class TabsHook extends Logger {
 
   init() {
     const qamModule = findModuleByExport((e) => e?.type?.toString?.()?.includes('QuickAccessMenuBrowserView'));
-    const qamBrowserViewRenderer = Object.values(qamModule).find((e: any) =>
-      e?.type?.toString?.()?.includes('QuickAccessMenuBrowserView'),
-    );
-    const qamEmbeddedRenderer = Object.values(qamModule).find((e: any) =>
-      e?.type?.toString?.()?.includes('QuickAccessMenuEmbedded'),
-    );
+    const qamBrowserViewRenderer = qamModule
+      ? Object.values(qamModule).find((e: any) => e?.type?.toString?.()?.includes('QuickAccessMenuBrowserView'))
+      : undefined;
+
+    if (qamBrowserViewRenderer) {
+      this.patchQamModule(qamBrowserViewRenderer);
+      return;
+    }
+
+    // Vite-based SteamUI (late 2026) no longer exports the Quick Access Menu
+    // renderer. Its tab list is a stable array passed through props, so inject
+    // our tab into that array directly.
+    this.injectTabsFromTree(0);
+  }
+
+  private patchQamModule(qamBrowserViewRenderer: any) {
+    const qamEmbeddedRenderer = Object.values(
+      findModuleByExport((e) => e?.type?.toString?.()?.includes('QuickAccessMenuBrowserView')) ?? {},
+    ).find((e: any) => e?.type?.toString?.()?.includes('QuickAccessMenuEmbedded'));
 
     const patchHandler = createReactTreePatcher(
       [(tree) => findInReactTree(tree, (node) => node?.props?.onFocusNavDeactivated)],
@@ -81,14 +96,40 @@ class TabsHook extends Logger {
     }
   }
 
+  private injectTabsFromTree(attempt: number) {
+    const root = getReactRoot(document.getElementById('root') as any);
+    if (root) {
+      const tabsNode = findInReactTree(
+        root,
+        (node: any) => Array.isArray(node?.memoizedProps?.tabs) && node.memoizedProps.tabs.length > 0,
+      );
+      if (tabsNode) {
+        // Steam only mounts a tab's panel while it is active, so a mounted
+        // Decky panel is always visible.
+        this.qamTabs = tabsNode.memoizedProps.tabs;
+        this.render(this.qamTabs, true);
+        this.debug('Injected tab into Quick Access Menu');
+        return;
+      }
+    }
+
+    if (attempt >= 10) {
+      this.warn('Could not find Quick Access Menu tabs');
+      return;
+    }
+    this.injectTabsRetry = window.setTimeout(() => this.injectTabsFromTree(attempt + 1), 1000);
+  }
+
   deinit() {
     this.qamBrowserViewPatch?.unpatch();
     this.qamEmbeddedPatch?.unpatch();
+    if (this.injectTabsRetry) window.clearTimeout(this.injectTabsRetry);
   }
 
   add(tab: Tab) {
     this.debug('Adding tab', tab.id, 'to render array');
     this.tabs.push(tab);
+    if (this.qamTabs) this.render(this.qamTabs, true);
   }
 
   removeById(id: number) {
@@ -114,9 +155,11 @@ class TabsHook extends Logger {
       const tab: any = {
         key: id,
         title,
+        strTitle: 'Decky',
         tab: icon,
         decky: true,
         initialVisibility: visible,
+        vrLocation: 'quick-access-menu',
       };
       tab.panel = (
         <ErrorBoundary>

@@ -34,6 +34,15 @@ declare global {
 
 const isPatched = Symbol('is patched');
 
+// Steam route pages provide their own page background; Decky routes are mounted
+// directly in Steam's route switch, so give them the same base surface.
+const deckyRouteStyle = {
+  position: 'absolute' as const,
+  inset: 0,
+  background: '#0e141b',
+  overflow: 'hidden' as const,
+};
+
 class RouterHook extends Logger {
   private routerState: DeckyRouterState = new DeckyRouterState();
   private globalComponentsState: DeckyGlobalComponentsState = new DeckyGlobalComponentsState();
@@ -48,6 +57,11 @@ class RouterHook extends Logger {
   private modeChangeRegistration?: any;
   private patchedModes = new Set<number>();
   public routes?: any[];
+  private history?: any;
+  private lastNonDeckyRoute?: string;
+  private routeWatchTimer?: number;
+  private viteRouteType?: any;
+  private viteRouteElement?: any;
 
   constructor() {
     super('RouterHook');
@@ -72,8 +86,26 @@ class RouterHook extends Logger {
       this.error('Failed to find router stack module');
     }
 
+    // The Vite-based SteamUI (late 2026) no longer exports its Route component,
+    // so take it from the rendered route tree instead.
+    if (!this.Route) {
+      const root = getReactRoot(document.getElementById('root') as any);
+      const routeNode = root && findInReactTree(root, (node) => /routePath:[\w$]+\.match\?\.path/.test(String(node?.type)));
+      this.Route = routeNode?.type;
+      if (!this.Route) {
+        this.warn('Router patching is unavailable in this SteamUI version');
+        return;
+      }
+    }
+
     this.modeChangeRegistration = SteamClient.UI.RegisterForUIModeChanged((mode: EUIMode) => {
       this.debug(`UI mode changed to ${mode}`);
+      // Steam recreates the whole Gamepad UI (and its router) when switching UI
+      // modes, so the router has to be patched again every time.
+      if (!window.webpackChunksteamui) {
+        if (mode === EUIMode.GamePad) this.patchGamepadRouter();
+        return;
+      }
       if (this.patchedModes.has(mode)) return;
       this.patchedModes.add(mode);
       this.debug(`Patching router for UI mode ${mode}`);
@@ -110,21 +142,158 @@ class RouterHook extends Logger {
       await this.waitForUnlock();
       routerNode = findRouterNode();
     }
-    if (routerNode) {
-      // Patch the component globally
-      this.gamepadRouterPatch = afterPatch(routerNode.elementType, 'type', this.handleGamepadRouterRender.bind(this));
-      // Swap out the current instance
-      routerNode.type = routerNode.elementType.type;
-      if (routerNode?.alternate) {
-        routerNode.alternate.type = routerNode.type;
-      }
-      // Force a full rerender via our custom error boundary
-      const errorBoundaryNode = findInTree(routerNode, (e) => e?.stateNode?._deckyForceRerender, {
-        walkable: ['return'],
-      });
-      errorBoundaryNode?.stateNode?._deckyForceRerender?.();
+    if (!routerNode) return;
+
+    if (!window.webpackChunksteamui) {
+      this.patchViteRouter(routerNode);
+      return;
     }
+
+    // Patch the component globally
+    this.gamepadRouterPatch = afterPatch(routerNode.elementType, 'type', this.handleGamepadRouterRender.bind(this));
+    // Swap out the current instance
+    routerNode.type = routerNode.elementType.type;
+    if (routerNode?.alternate) {
+      routerNode.alternate.type = routerNode.type;
+    }
+    // Force a full rerender via our custom error boundary
+    const errorBoundaryNode = findInTree(routerNode, (e) => e?.stateNode?._deckyForceRerender, {
+      walkable: ['return'],
+    });
+    errorBoundaryNode?.stateNode?._deckyForceRerender?.();
   }
+
+  /**
+   * The Vite-based SteamUI routes through a <Switch>: only the matching route
+   * is mounted, so Decky routes cannot simply be appended to a rendered list.
+   * Add our own route element to the Switch instead. Switch re-reads its
+   * children on every navigation, so updating the paths later also works.
+   */
+  private patchViteRouter(routerNode: any) {
+    const stack = [routerNode];
+    let switchProps: any;
+    let routeType: any;
+    while (stack.length && !switchProps) {
+      const fiber = stack.pop();
+      const props = fiber?.stateNode?.props;
+      const children = props?.children;
+      if (Array.isArray(children) && children.some((child: any) => child?.props?.path)) {
+        switchProps = props;
+        routeType = children.find((child: any) => child?.props?.path)?.type;
+      }
+      const contextValue = fiber?.memoizedProps?.value;
+      if (!this.history && contextValue?.history && contextValue?.location) {
+        this.history = contextValue.history;
+      }
+      if (fiber?.sibling) stack.push(fiber.sibling);
+      if (fiber?.child) stack.push(fiber.child);
+    }
+    if (!switchProps || !routeType) {
+      this.warn('Failed to find the route switch to hook into');
+      return;
+    }
+    if (switchProps.children.includes(this.viteRouteElement)) return;
+
+    this.viteRouteType = routeType;
+    this.viteRouteElement = createElement(routeType, {
+      path: this.viteRoutePaths(),
+      children: () => (
+        <DeckyRouterStateContextProvider deckyRouterState={this.routerState}>
+          <DeckyGlobalComponentsStateContextProvider deckyGlobalComponentsState={this.globalComponentsState}>
+            <this.DeckyRouteHost />
+          </DeckyGlobalComponentsStateContextProvider>
+        </DeckyRouterStateContextProvider>
+      ),
+    });
+    switchProps.children = [...switchProps.children, this.viteRouteElement];
+    this.watchDeckyRouteLifetime();
+    this.debug('Added Decky route to the Steam route switch');
+  }
+
+  /**
+   * Steam keeps whichever route Decky opened. If the side menu is closed while
+   * a Decky page is active, go back to the previous Steam route so opening the
+   * overlay in-game does not cover the game with an opaque page.
+   */
+  private watchDeckyRouteLifetime() {
+    if (this.routeWatchTimer) window.clearInterval(this.routeWatchTimer);
+    const history = this.history;
+    if (!history) return;
+    if (this.lastNonDeckyRoute === undefined) {
+      this.lastNonDeckyRoute = history.location?.pathname;
+    }
+    history.listen?.((location: any) => {
+      if (!location.pathname.startsWith('/decky')) this.lastNonDeckyRoute = location.pathname;
+    });
+
+    const menuStore = window.SteamUIStore?.WindowStore?.SteamUIWindows?.[0]?.m_MenuStore;
+    if (!menuStore) return;
+    let wasOpen = false;
+    this.routeWatchTimer = window.setInterval(() => {
+      const open = !!menuStore.GetOpenSideMenu?.();
+      const pathname: string = history.location?.pathname ?? '';
+      if (wasOpen && !open && pathname.startsWith('/decky')) {
+        history.replace(this.lastNonDeckyRoute && !this.lastNonDeckyRoute.startsWith('/decky') ? this.lastNonDeckyRoute : '/library/home');
+      }
+      wasOpen = open;
+    }, 500);
+  }
+
+  private viteRoutePaths(): string[] {
+    const paths = [...this.routerState.publicState().routes.keys()];
+    // '/decky' also covers plugin pages registered after this runs.
+    return ['/decky', ...paths.filter((path) => path !== '/decky')];
+  }
+
+  /** Refresh the route switch after Decky routes change. */
+  private syncViteRoutes() {
+    if (!this.viteRouteElement) return;
+    this.viteRouteElement.props.path = this.viteRoutePaths();
+    const history = this.history;
+    if (history?.location) history.replace(history.location);
+  }
+
+  private DeckyRouteHost = () => {
+    const { routes } = useDeckyRouterState();
+    const pathname = this.history?.location?.pathname ?? window.location.pathname;
+    let matchedPath = '';
+    let matchedRoute: RouterEntry | undefined;
+    for (const [path, entry] of routes) {
+      const pattern = new RegExp(`^${path.replace(/\/:[^/]+/g, '/[^/]+').replace(/\*/g, '.*')}/?$`);
+      if (pattern.test(pathname) && path.length > matchedPath.length) {
+        matchedPath = path;
+        matchedRoute = entry;
+      }
+    }
+    return (
+      <>
+        <style>{`
+          .decky-route .DialogContent {
+            /* Steam's overlay header/footer are drawn on top of the page area. */
+            padding-top: 48px;
+            padding-bottom: 24px;
+            overflow-y: auto;
+          }
+          .decky-route .DialogBody::after {
+            content: '';
+            display: block;
+            height: 72px;
+          }
+          .decky-route .DialogInput_Wrapper,
+          .decky-route .DialogInput {
+            width: 100%;
+            box-sizing: border-box;
+          }
+        `}</style>
+        {matchedRoute && (
+          <div className="decky-route" style={deckyRouteStyle}>
+            <ErrorBoundary>{createElement(matchedRoute.component, matchedRoute.props)}</ErrorBoundary>
+          </div>
+        )}
+        <this.DeckyGlobalComponentsWrapper />
+      </>
+    );
+  };
 
   // Currently unused
   // @ts-expect-error 6133
@@ -235,17 +404,18 @@ class RouterHook extends Logger {
 
   private gamepadRouterWrapper({ children }: { children: ReactElement<any> }) {
     // Used to store the new replicated routes we create to allow routes to be unpatched.
-
     const { routes, routePatches } = useDeckyRouterState();
-    // TODO make more redundant
-    if (!children?.props?.children?.[0]?.props?.children) {
+    // The Steam render tree has changed shape several times; instead of relying
+    // on fixed child indexes, look for the array that holds the route elements.
+    const routeList = findInReactTree(
+      children,
+      (node: any) => Array.isArray(node) && node.some((child: any) => child?.props?.path),
+    );
+    if (!routeList) {
       this.debug('routerWrapper wrong component?', children);
       return children;
     }
-    const mainRouteList = children.props.children[0].props.children;
-    const ingameRouteList = children.props.children[1].props.children; // /appoverlay and /apprunning
-    this.processList(mainRouteList, routes, routePatches, true);
-    this.processList(ingameRouteList, null, routePatches, false);
+    this.processList(routeList, routes, routePatches, true);
 
     this.debug('Rerendered gamepadui routes list');
     return children;
@@ -327,6 +497,7 @@ class RouterHook extends Logger {
 
   addRoute(path: string, component: RouterEntry['component'], props: RouterEntry['props'] = {}) {
     this.routerState.addRoute(path, component, props);
+    this.syncViteRoutes();
   }
 
   addPatch(path: string, patch: RoutePatch) {
@@ -347,10 +518,12 @@ class RouterHook extends Logger {
 
   removeRoute(path: string) {
     this.routerState.removeRoute(path);
+    this.syncViteRoutes();
   }
 
   deinit() {
     this.modeChangeRegistration?.unregister();
+    if (this.routeWatchTimer) window.clearInterval(this.routeWatchTimer);
     this.gamepadRouterPatch?.unpatch();
     this.desktopRouterPatch?.unpatch();
   }

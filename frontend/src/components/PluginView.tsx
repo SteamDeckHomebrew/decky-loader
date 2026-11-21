@@ -57,6 +57,7 @@ const PluginView: FC = () => {
         }}
       >
         <PanelSection>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {pluginList.map(({ name, icon }) => (
             <PanelSectionRow key={name}>
               <ButtonItem layout="below" onClick={() => setActivePlugin(name)}>
@@ -68,6 +69,7 @@ const PluginView: FC = () => {
               </ButtonItem>
             </PanelSectionRow>
           ))}
+          </div>
           <div
             style={{
               display: 'flex',

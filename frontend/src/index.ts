@@ -21,6 +21,9 @@ const isSteamAppInitialized = () => {
 
   console.timeEnd('[Decky:Boot] Waiting for SteamApp init stage 1 to finish...');
 
+  const { initViteModuleCache } = await import('@decky/ui/dist/vite');
+  await initViteModuleCache();
+
   if (!window.SP_REACT) {
     console.debug('[Decky:Boot] Setting up Webpack & React globals...');
     // deliberate partial import

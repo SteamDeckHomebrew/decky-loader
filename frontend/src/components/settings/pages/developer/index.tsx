@@ -82,37 +82,41 @@ export default function DeveloperSettings() {
         </Field>
         <Field
           label={t('SettingsDeveloperIndex.third_party_plugins.label_url')}
-          description={
-            <TextField
-              label={t('SettingsDeveloperIndex.third_party_plugins.label_desc')}
-              value={pluginURL}
-              onChange={(e) => setPluginURL(e?.target.value)}
-            />
-          }
           icon={<FaLink style={{ display: 'block' }} />}
+          childrenLayout="below"
         >
-          <DialogButton
-            disabled={pluginURL.length == 0}
-            onClick={() =>
-              showModal(
-                <WarnThirdParty
-                  type={WarnThirdPartyType.ZIP}
-                  onOK={() => {
-                    setAcceptedWarning(true);
-                    if (/^https?:\/\//.test(pluginURL)) {
-                      installFromURL(pluginURL);
-                    } else {
-                      installFromURL('https://' + pluginURL);
-                    }
-                  }}
-                  onCancel={() => {}}
-                  seconds={waitTime}
-                />,
-              )
-            }
-          >
-            {t('SettingsDeveloperIndex.third_party_plugins.button_install')}
-          </DialogButton>
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px', width: '100%' }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <TextField
+                placeholder={t('SettingsDeveloperIndex.third_party_plugins.label_desc')}
+                value={pluginURL}
+                onChange={(e) => setPluginURL(e?.target.value)}
+              />
+            </div>
+            <DialogButton
+              style={{ width: 120, flexShrink: 0 }}
+              disabled={pluginURL.length == 0}
+              onClick={() =>
+                showModal(
+                  <WarnThirdParty
+                    type={WarnThirdPartyType.ZIP}
+                    onOK={() => {
+                      setAcceptedWarning(true);
+                      if (/^https?:\/\//.test(pluginURL)) {
+                        installFromURL(pluginURL);
+                      } else {
+                        installFromURL('https://' + pluginURL);
+                      }
+                    }}
+                    onCancel={() => {}}
+                    seconds={waitTime}
+                  />,
+                )
+              }
+            >
+              {t('SettingsDeveloperIndex.third_party_plugins.button_install')}
+            </DialogButton>
+          </div>
         </Field>
       </DialogControlsSection>
       <DialogControlsSection>
@@ -166,7 +170,7 @@ export default function DeveloperSettings() {
               <br />
               <div ref={textRef}>
                 <TextField
-                  label={t('SettingsDeveloperIndex.react_devtools.ip_label')}
+                  placeholder={t('SettingsDeveloperIndex.react_devtools.ip_label')}
                   value={reactDevtoolsIP}
                   onChange={(e) => setReactDevtoolsIP(e?.target.value)}
                 />

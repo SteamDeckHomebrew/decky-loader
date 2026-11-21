@@ -32,10 +32,7 @@ const logger = new Logger('Store');
 const StorePage: FC<{}> = () => {
   const [currentTabRoute, setCurrentTabRoute] = useState<string>('browse');
   const [pluginCount, setPluginCount] = useState<number | null>(null);
-  const { TabCount } = findModule((m) => {
-    if (m?.TabCount && m?.TabTitle) return true;
-    return false;
-  });
+  const TabCount = findModule((m) => m?.TabCount && m?.TabTitle)?.TabCount ?? '';
 
   const { t } = useTranslation();
 

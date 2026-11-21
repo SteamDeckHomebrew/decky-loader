@@ -30,7 +30,7 @@ class ErrorBoundaryHook extends Logger {
     );
 
     if (!initErrorReportingStore) {
-      this.error('could not find initErrorReportingStore! error boundary hook disabled!');
+      this.debug('could not find initErrorReportingStore, error boundary hook disabled');
       return;
     }
     // will replace the existing one for us seemingly? doesnt matter anyway lol

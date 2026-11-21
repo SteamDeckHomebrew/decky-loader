@@ -8,7 +8,9 @@ import { useDeckyState } from './DeckyState';
 
 const titleStyles: CSSProperties = {
   display: 'flex',
-  paddingRight: '16px',
+  alignItems: 'center',
+  gap: '8px',
+  padding: '6px 16px 0',
   position: 'sticky',
   top: '0px',
 };

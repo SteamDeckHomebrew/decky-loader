@@ -31,6 +31,11 @@ class TabsHook extends Logger {
   tabs: Tab[] = [];
   private qamBrowserViewPatch?: Patch;
   private qamEmbeddedPatch?: Patch;
+  private openMenuPatch?: Patch;
+  private closeMenuPatch?: Patch;
+  private toggleMenuPatch?: Patch;
+  private injectTabsRetry?: number;
+  private qamTabs?: any[];
 
   constructor() {
     super('TabsHook');
@@ -42,12 +47,54 @@ class TabsHook extends Logger {
 
   init() {
     const qamModule = findModuleByExport((e) => e?.type?.toString?.()?.includes('QuickAccessMenuBrowserView'));
-    const qamBrowserViewRenderer = Object.values(qamModule).find((e: any) =>
-      e?.type?.toString?.()?.includes('QuickAccessMenuBrowserView'),
-    );
-    const qamEmbeddedRenderer = Object.values(qamModule).find((e: any) =>
-      e?.type?.toString?.()?.includes('QuickAccessMenuEmbedded'),
-    );
+    const qamBrowserViewRenderer = qamModule
+      ? Object.values(qamModule).find((e: any) => e?.type?.toString?.()?.includes('QuickAccessMenuBrowserView'))
+      : undefined;
+
+    if (qamBrowserViewRenderer) {
+      this.patchQamModule(qamBrowserViewRenderer);
+      return;
+    }
+
+    // Vite build: inject into the QAM tab array.
+    this.injectTabsFromTree(0);
+    this.guardInGameMenuOpen();
+  }
+
+  /** The in-game QAM view cannot show the Decky panel while opening. */
+  private guardInGameMenuOpen() {
+    const menuStore = window.SteamUIStore?.WindowStore?.SteamUIWindows?.[0]?.m_MenuStore;
+    if (!menuStore) return;
+    const proto = Object.getPrototypeOf(menuStore);
+    const inGame = () => window.location.pathname.startsWith('/routes/apprunning');
+    const tab = () => menuStore.GetQuickAccessTab?.();
+    let wantDecky = false;
+
+    const park = () => {
+      if (!inGame()) return;
+      wantDecky = tab() === QuickAccessTab.Decky;
+      if (wantDecky) menuStore.SetQuickAccessTab?.(QuickAccessTab.Notifications);
+    };
+    const restore = () => {
+      if (wantDecky && inGame()) menuStore.SetQuickAccessTab?.(QuickAccessTab.Decky);
+    };
+
+    if (inGame() && !menuStore.GetOpenSideMenu?.() && tab() === QuickAccessTab.Decky) {
+      wantDecky = true;
+      menuStore.SetQuickAccessTab?.(QuickAccessTab.Notifications);
+    }
+
+    this.openMenuPatch = afterPatch(proto, 'OpenQuickAccessMenu', restore);
+    this.toggleMenuPatch = afterPatch(proto, 'ToggleSideMenu', () => {
+      if (menuStore.GetOpenSideMenu?.()) restore();
+    });
+    this.closeMenuPatch = afterPatch(proto, 'CloseSideMenus', park);
+  }
+
+  private patchQamModule(qamBrowserViewRenderer: any) {
+    const qamEmbeddedRenderer = Object.values(
+      findModuleByExport((e) => e?.type?.toString?.()?.includes('QuickAccessMenuBrowserView')) ?? {},
+    ).find((e: any) => e?.type?.toString?.()?.includes('QuickAccessMenuEmbedded'));
 
     const patchHandler = createReactTreePatcher(
       [(tree) => findInReactTree(tree, (node) => node?.props?.onFocusNavDeactivated)],
@@ -81,14 +128,41 @@ class TabsHook extends Logger {
     }
   }
 
+  private injectTabsFromTree(attempt: number) {
+    const root = getReactRoot(document.getElementById('root') as any);
+    if (root) {
+      const tabsNode = findInReactTree(
+        root,
+        (node: any) => Array.isArray(node?.memoizedProps?.tabs) && node.memoizedProps.tabs.length > 0,
+      );
+      if (tabsNode) {
+        this.qamTabs = tabsNode.memoizedProps.tabs;
+        this.render(this.qamTabs, true);
+        this.debug('Injected tab into Quick Access Menu');
+        return;
+      }
+    }
+
+    if (attempt >= 10) {
+      this.warn('Could not find Quick Access Menu tabs');
+      return;
+    }
+    this.injectTabsRetry = window.setTimeout(() => this.injectTabsFromTree(attempt + 1), 1000);
+  }
+
   deinit() {
     this.qamBrowserViewPatch?.unpatch();
     this.qamEmbeddedPatch?.unpatch();
+    this.openMenuPatch?.unpatch();
+    this.toggleMenuPatch?.unpatch();
+    this.closeMenuPatch?.unpatch();
+    if (this.injectTabsRetry) window.clearTimeout(this.injectTabsRetry);
   }
 
   add(tab: Tab) {
     this.debug('Adding tab', tab.id, 'to render array');
     this.tabs.push(tab);
+    if (this.qamTabs) this.render(this.qamTabs, true);
   }
 
   removeById(id: number) {
@@ -114,9 +188,11 @@ class TabsHook extends Logger {
       const tab: any = {
         key: id,
         title,
+        strTitle: 'Decky',
         tab: icon,
         decky: true,
         initialVisibility: visible,
+        vrLocation: 'quick-access-menu',
       };
       tab.panel = (
         <ErrorBoundary>

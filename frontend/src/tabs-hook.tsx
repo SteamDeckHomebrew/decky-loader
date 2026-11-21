@@ -31,6 +31,9 @@ class TabsHook extends Logger {
   tabs: Tab[] = [];
   private qamBrowserViewPatch?: Patch;
   private qamEmbeddedPatch?: Patch;
+  private openMenuPatch?: Patch;
+  private closeMenuPatch?: Patch;
+  private toggleMenuPatch?: Patch;
   private injectTabsRetry?: number;
   private qamTabs?: any[];
 
@@ -53,10 +56,39 @@ class TabsHook extends Logger {
       return;
     }
 
-    // Vite-based SteamUI (late 2026) no longer exports the Quick Access Menu
-    // renderer. Its tab list is a stable array passed through props, so inject
-    // our tab into that array directly.
+    // Vite build: inject into the QAM tab array.
     this.injectTabsFromTree(0);
+    this.guardInGameMenuOpen();
+  }
+
+  /** The in-game QAM view cannot show the Decky panel while opening. */
+  private guardInGameMenuOpen() {
+    const menuStore = window.SteamUIStore?.WindowStore?.SteamUIWindows?.[0]?.m_MenuStore;
+    if (!menuStore) return;
+    const proto = Object.getPrototypeOf(menuStore);
+    const inGame = () => window.location.pathname.startsWith('/routes/apprunning');
+    const tab = () => menuStore.GetQuickAccessTab?.();
+    let wantDecky = false;
+
+    const park = () => {
+      if (!inGame()) return;
+      wantDecky = tab() === QuickAccessTab.Decky;
+      if (wantDecky) menuStore.SetQuickAccessTab?.(QuickAccessTab.Notifications);
+    };
+    const restore = () => {
+      if (wantDecky && inGame()) menuStore.SetQuickAccessTab?.(QuickAccessTab.Decky);
+    };
+
+    if (inGame() && !menuStore.GetOpenSideMenu?.() && tab() === QuickAccessTab.Decky) {
+      wantDecky = true;
+      menuStore.SetQuickAccessTab?.(QuickAccessTab.Notifications);
+    }
+
+    this.openMenuPatch = afterPatch(proto, 'OpenQuickAccessMenu', restore);
+    this.toggleMenuPatch = afterPatch(proto, 'ToggleSideMenu', () => {
+      if (menuStore.GetOpenSideMenu?.()) restore();
+    });
+    this.closeMenuPatch = afterPatch(proto, 'CloseSideMenus', park);
   }
 
   private patchQamModule(qamBrowserViewRenderer: any) {
@@ -104,8 +136,6 @@ class TabsHook extends Logger {
         (node: any) => Array.isArray(node?.memoizedProps?.tabs) && node.memoizedProps.tabs.length > 0,
       );
       if (tabsNode) {
-        // Steam only mounts a tab's panel while it is active, so a mounted
-        // Decky panel is always visible.
         this.qamTabs = tabsNode.memoizedProps.tabs;
         this.render(this.qamTabs, true);
         this.debug('Injected tab into Quick Access Menu');
@@ -123,6 +153,9 @@ class TabsHook extends Logger {
   deinit() {
     this.qamBrowserViewPatch?.unpatch();
     this.qamEmbeddedPatch?.unpatch();
+    this.openMenuPatch?.unpatch();
+    this.toggleMenuPatch?.unpatch();
+    this.closeMenuPatch?.unpatch();
     if (this.injectTabsRetry) window.clearTimeout(this.injectTabsRetry);
   }
 

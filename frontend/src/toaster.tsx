@@ -58,9 +58,7 @@ class Toaster extends Logger {
   }
 
   private showViteToast(toast: ToastData): ToastNotification {
-    // The Vite-based SteamUI crashes in its game recording notification
-    // handler when Steam's notification pipeline receives Decky notifications,
-    // so render a lightweight toast ourselves.
+    // Steam's notification pipeline crashes on Decky toasts in the Vite build.
     const container =
       this.viteToastContainer ??
       (this.viteToastContainer = (() => {

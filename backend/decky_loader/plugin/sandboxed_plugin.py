@@ -5,7 +5,7 @@ from json import dumps, loads
 from logging import getLogger
 from traceback import format_exc
 from asyncio import (ensure_future, get_event_loop, new_event_loop,
-                     set_event_loop)
+                     set_event_loop, sleep)
 from signal import SIGINT, SIGTERM
 from setproctitle import setproctitle, setthreadtitle
 
@@ -125,12 +125,25 @@ class SandboxedPlugin:
                     get_event_loop().run_until_complete(self.Plugin._migration())
                 else:
                     get_event_loop().run_until_complete(self.Plugin._migration(self.Plugin))
+
+            main_task = None
             if hasattr(self.Plugin, "_main"):
                 if self.api_version > 0:
-                    get_event_loop().create_task(self.Plugin._main())
+                    main_task = get_event_loop().create_task(self.Plugin._main())
                 else:
-                    get_event_loop().create_task(self.Plugin._main(self.Plugin))
-            get_event_loop().create_task(socket.setup_server(self.on_new_message))
+                    main_task = get_event_loop().create_task(self.Plugin._main(self.Plugin))
+
+            async def initialize_socket():
+                # Let _main enter before advertising readiness to the installer.
+                await sleep(0)
+
+                if main_task is not None and main_task.done():
+                    # Re-raise an immediate _main failure before opening IPC.
+                    main_task.result()
+
+                await socket.setup_server(self.on_new_message)
+
+            get_event_loop().run_until_complete(initialize_socket())
         except:
             self.log.error(f"Failed to start {self.get_display_name()}!\n{format_exc()}")
             sys.exit(0)

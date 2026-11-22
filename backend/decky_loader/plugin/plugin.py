@@ -144,6 +144,24 @@ class PluginWrapper:
         self._listener_task = create_task(self._response_listener())
         return self
 
+    async def wait_started(self):
+        """Wait for backend initialization and its IPC server, bounded to 20 seconds."""
+        if self.passive or self.disabled:
+            return
+
+        deadline = time() + 20
+
+        while time() < deadline:
+            if self.proc is None or not self.proc.is_alive():
+                raise RuntimeError(f"Plugin {self.name} exited during startup")
+
+            # The response listener opens the connection once initialization completes.
+            if self._socket.writer is not None:
+                return
+            await sleep(0.1)
+
+        raise TimeoutError(f"Plugin {self.name} did not initialize within 20 seconds")
+
     async def stop(self, uninstall: bool = False):
         try:
             start_time = time()

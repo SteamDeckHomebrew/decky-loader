@@ -5,13 +5,13 @@ import json
 
 # Partial imports
 from aiohttp import ClientSession
-from asyncio import sleep
+from asyncio import Lock
 from hashlib import sha256
 from io import BytesIO
 from logging import getLogger
-from os import R_OK, W_OK, path, listdir, access, mkdir
-from re import sub
+from os import R_OK, W_OK, path, listdir, access, mkdir, rename
 from shutil import rmtree
+from tempfile import mkdtemp
 from time import time
 from zipfile import ZipFile
 from enum import IntEnum
@@ -53,15 +53,8 @@ class PluginBrowser:
         self.plugins = plugins
         self.loader = loader
         self.settings = settings
+        self._install_lock = Lock()
         self.install_requests: Dict[str, PluginInstallContext | List[PluginInstallContext]] = {}
-
-    def _unzip_to_plugin_dir(self, zip: BytesIO, name: str, hash: str):
-        zip_hash = sha256(zip.getbuffer()).hexdigest()
-        if hash and (zip_hash != hash):
-            return False
-        zip_file = ZipFile(zip)
-        zip_file.extractall(self.plugin_path)
-        return True
 
     async def _download_remote_binaries_for_plugin_with_name(self, pluginBasePath: str):
         rv = False
@@ -88,6 +81,16 @@ class PluginBrowser:
                         for remoteBinary in packageJson["remote_binary"]:
                             # Required Fields. If any Remote Binary is missing these fail the install.
                             binName = remoteBinary["name"]
+                            # A binary must stay inside the staged bin directory.
+                            if (
+                                not isinstance(binName, str)
+                                or not binName
+                                or binName in (".", "..")
+                                or "/" in binName
+                                or "\\" in binName
+                            ):
+                                raise ValueError("Invalid remote binary name")
+
                             binURL = remoteBinary["url"]
                             binHash = remoteBinary["sha256hash"]
                             logger.info(f"Attempting to download {binName} from {binURL}")
@@ -171,31 +174,23 @@ class PluginBrowser:
                 self.loader.watcher.disabled = False
 
     async def _install(self, artifact: str, name: str, version: str, hash: str):
+        # Serialize swaps and watcher ownership, including concurrent install requests.
+        async with self._install_lock:
+            await self._stage_install(artifact, name, version, hash)
+
+    async def _stage_install(self, artifact: str, name: str, version: str, hash: str):
         await self.loader.ws.emit("loader/plugin_download_start", name)
         await self.loader.ws.emit("loader/plugin_download_info", 5, "Store.download_progress_info.start")
-        # Will be set later in code
         res_zip = None
 
-        # Check if plugin was already installed before this
-        isInstalled = False
-
-        try:
-            pluginFolderPath = self.find_plugin_folder(name)
-            if pluginFolderPath:
-                isInstalled = True
-        except:
-            logger.error(f"Failed to determine if {name} is already installed, continuing anyway.")
-
-        # Preserve plugin order before removing plugin (uninstall alters the order and removes the plugin from the list)
-        current_plugin_order = self.settings.getSetting("pluginOrder")[:]
-        if self.loader.watcher:
-            self.loader.watcher.disabled = True
+        isInstalled = self.find_plugin_folder(name) is not None
 
         # Check if the file is a local file or a URL
         if artifact.startswith("file://"):
             logger.info(f"Installing {name} from local ZIP file (Version: {version})")
             await self.loader.ws.emit("loader/plugin_download_info", 10, "Store.download_progress_info.open_zip")
-            res_zip = BytesIO(open(artifact[7:], "rb").read())
+            with open(artifact[7:], "rb") as archive:
+                res_zip = BytesIO(archive.read())
         else:
             logger.info(f"Installing {name} from URL (Version: {version})")
             await self.loader.ws.emit("loader/plugin_download_info", 10, "Store.download_progress_info.download_zip")
@@ -229,82 +224,185 @@ class PluginBrowser:
                     logger.error(f"Server did not accept install count increment request. code: {res.status}")
 
         await self.loader.ws.emit("loader/plugin_download_info", 75, "Store.download_progress_info.parse_zip")
-        if res_zip and version == "dev":
-            with ZipFile(res_zip) as plugin_zip:
-                plugin_json_list = [file for file in plugin_zip.namelist() if file.endswith("/plugin.json") and file.count("/") == 1]
-
-                if len(plugin_json_list) == 0:
-                    logger.fatal("No plugin.json found in plugin ZIP")
-                    return
-
-                elif len(plugin_json_list) > 1:
-                    logger.fatal("Multiple plugin.json found in plugin ZIP")
-                    return
-
-                else:
-                    plugin_json_file = plugin_json_list[0]
-                    name = sub(r"/.+$", "", plugin_json_file)
-                    try:
-                        with plugin_zip.open(plugin_json_file) as f:
-                            plugin_json_data = json.loads(f.read().decode('utf-8'))
-                            plugin_name_from_plugin_json = plugin_json_data.get('name')
-                            if plugin_name_from_plugin_json and plugin_name_from_plugin_json.strip():
-                                logger.info(f"Extracted plugin name from {plugin_json_file}: {plugin_name_from_plugin_json}")
-                                name = plugin_name_from_plugin_json
-                            else:
-                                logger.warning(f"Nonexistent or invalid 'name' key value in {plugin_json_file}. Falling back to extracting from path.")
-                    except Exception as e:
-                        logger.error(f"Failed to read or parse {plugin_json_file}: {str(e)}. Falling back to extracting from path.")
-
-        # Check to make sure we got the file
         if res_zip is None:
-            logger.fatal(f"Could not fetch {artifact}")
+            raise RuntimeError(f"Could not fetch {artifact}")
+
+        if hash and sha256(res_zip.getbuffer()).hexdigest() != hash:
+            raise ValueError(f"SHA-256 mismatch for {name}")
+
+        # A sibling of the plugin root stays on the same filesystem without exposing
+        # staged main.py/dist files to the recursive live-reload watcher.
+        workspace = mkdtemp(
+            prefix=".decky-install-",
+            dir=path.dirname(path.realpath(self.plugin_path)),
+        )
+        staging = path.join(workspace, "staged")
+        backup = path.join(workspace, "previous")
+        committed = False
+
+        try:
+            # Everything in this phase works on temporary files. The installed
+            # plugin keeps running until extraction, binaries and permissions pass.
+            with ZipFile(res_zip) as archive:
+                folder, name = self._extract_plugin_archive(archive, staging, name, version)
+
+            staged_plugin = path.join(staging, folder)
+
+            await self.loader.ws.emit(
+                "loader/plugin_download_info", 95, "Store.download_progress_info.download_remote"
+            )
+            if not await self._download_remote_binaries_for_plugin_with_name(staged_plugin):
+                raise RuntimeError("Could not download remote binaries")
+
+            if not self.set_plugin_dir_permissions(staged_plugin):
+                raise RuntimeError("Could not prepare plugin permissions")
+
+            new_install = await self._replace_plugin(staged_plugin, folder, name, backup)
+            committed = True
+
+            # An update leaves all existing settings alone. Only a first install
+            # needs to add the plugin to the order shown in the frontend.
+            if new_install:
+                plugin_order: List[str] = self.settings.getSetting("pluginOrder", [])
+                if name not in plugin_order:
+                    plugin_order.append(name)
+                    self.settings.setSetting("pluginOrder", plugin_order)
+
+            await self.loader.ws.emit("loader/plugin_download_finish", name)
+        finally:
+            self._cleanup_install(workspace, backup, committed)
+
+    def _extract_plugin_archive(
+        self, archive: ZipFile, staging: str, name: str, version: str
+    ) -> tuple[str, str]:
+        """Validate the archive layout and identity, then extract into staging."""
+        manifests = [
+            entry for entry in archive.namelist()
+            if entry.endswith("/plugin.json") and entry.count("/") == 1
+        ]
+        if len(manifests) != 1:
+            raise ValueError("Expected exactly one top-level plugin.json")
+
+        folder = manifests[0].split("/")[0]
+        if folder in ("", ".", "..") or "\\" in folder:
+            raise ValueError("Invalid plugin directory")
+
+        # Reject extra roots, traversal and symlinks before writing any files.
+        # Otherwise an archive could escape staging and overwrite an installation.
+        for entry in archive.infolist():
+            parts = entry.filename.rstrip("/").split("/")
+            if parts[0] != folder or any(part in ("", ".", "..") for part in parts):
+                raise ValueError(f"Invalid ZIP entry: {entry.filename}")
+
+            is_symlink = (entry.external_attr >> 16) & 0o170000 == 0o120000
+            if "\\" in entry.filename or is_symlink:
+                raise ValueError(f"Invalid ZIP entry: {entry.filename}")
+
+        manifest = json.loads(archive.read(manifests[0]))
+        archive_name = manifest["name"]
+        if not isinstance(archive_name, str) or not archive_name.strip():
+            raise ValueError("Invalid plugin name")
+
+        # Local development installs may not know the name until the ZIP is read.
+        if version == "dev":
+            name = archive_name
+        elif archive_name != name:
+            raise ValueError("Plugin name does not match requested plugin")
+
+        archive.extractall(staging)
+        return folder, name
+
+    async def _replace_plugin(
+        self, staged_plugin: str, folder: str, name: str, backup: str
+    ) -> bool:
+        """Swap in a prepared plugin, restoring the previous version on failure.
+
+        Return True for a first install, False when replacing an existing plugin.
+        """
+        previous_folder = self.find_plugin_folder(name)
+
+        # Settings and data paths depend on this directory name, so keep it even
+        # when the new archive uses a different folder name.
+        target_folder = previous_folder or folder
+        target = path.join(self.plugin_path, target_folder)
+        if previous_folder is None and path.exists(target):
+            raise ValueError(f"Plugin directory already exists: {target_folder}")
+
+        watcher = self.loader.watcher
+        watcher_disabled = watcher.disabled if watcher else False
+        if watcher:
+            watcher.disabled = True
+
+        stopped = False
+        swapped = False
+
+        try:
+            if previous_folder:
+                await self.loader.ws.emit(
+                    "loader/plugin_download_info", 80,
+                    "Store.download_progress_info.uninstalling_previous",
+                )
+                await self.loader.ws.emit("loader/unload_plugin", name)
+
+            # Stop without uninstalling. Uninstall would run plugin cleanup hooks
+            # and remove the user's disabled, hidden, frozen and ordering settings.
+            if name in self.plugins:
+                stopped = True
+                await self.plugins[name].stop()
+                self.plugins.pop(name, None)
+
+            if previous_folder:
+                rename(target, backup)
+
+            await self.loader.ws.emit(
+                "loader/plugin_download_info", 90, "Store.download_progress_info.installing_plugin"
+            )
+            rename(staged_plugin, target)
+            swapped = True
+
+            # Keep the backup until backend initialization succeeds. Starting a
+            # process alone does not tell us whether the plugin can actually load.
+            await self.loader.import_plugin(
+                path.join(target, "main.py"), target_folder, ensure_started=True
+            )
+        except BaseException:
+            # Cancellation needs the same recovery as a failed load. Stop the new
+            # backend before removing its files, then put the old directory back.
+            failed_plugin = self.plugins.pop(name, None) if swapped else None
+            if failed_plugin:
+                await failed_plugin.stop()
+
+            if swapped:
+                rmtree(target)
+
+            if path.exists(backup):
+                rename(backup, target)
+                stopped = True
+
+            if stopped and previous_folder:
+                try:
+                    await self.loader.import_plugin(
+                        path.join(target, "main.py"), target_folder, ensure_started=True
+                    )
+                except Exception:
+                    logger.exception("Could not reload previous plugin %s; installation restored", name)
+
+            raise
+        finally:
+            # Restore the previous state, which may already have been disabled.
+            if watcher:
+                watcher.disabled = watcher_disabled
+
+        return previous_folder is None
+
+    def _cleanup_install(self, workspace: str, backup: str, committed: bool) -> None:
+        # If restoring the old directory failed, the backup may be its only copy.
+        # Leave it for manual recovery rather than deleting it with staging files.
+        if path.exists(backup) and not committed:
+            logger.error("Previous installation retained for recovery at %s", backup)
             return
 
-        # If plugin is installed, uninstall it
-        if isInstalled:
-            await self.loader.ws.emit("loader/plugin_download_info", 80, "Store.download_progress_info.uninstalling_previous")
-            try:
-                logger.debug("Uninstalling existing plugin...")
-                await self.uninstall_plugin(name)
-            except:
-                logger.error(f"Plugin {name} could not be uninstalled.")
-
-
-        await self.loader.ws.emit("loader/plugin_download_info", 90, "Store.download_progress_info.installing_plugin")
-        # Install the plugin
-        logger.debug("Unzipping...")
-        ret = self._unzip_to_plugin_dir(res_zip, name, hash)
-        if ret:
-            plugin_folder = self.find_plugin_folder(name)
-            assert plugin_folder is not None
-            plugin_dir = path.join(self.plugin_path, plugin_folder)
-            await self.loader.ws.emit("loader/plugin_download_info", 95, "Store.download_progress_info.download_remote")
-            ret = await self._download_remote_binaries_for_plugin_with_name(plugin_dir)
-            chown_ret = self.set_plugin_dir_permissions(plugin_dir)
-            if ret:
-                logger.info(f"Installed {name} (Version: {version})")
-                if name in self.loader.plugins:
-                    await self.loader.plugins[name].stop()
-                    self.loader.plugins.pop(name, None)
-                await sleep(1)
-                if not isInstalled:
-                    current_plugin_order = self.settings.getSetting("pluginOrder")
-                    current_plugin_order.append(name)
-                    self.settings.setSetting("pluginOrder", current_plugin_order)
-                    logger.debug("Plugin %s was added to the pluginOrder setting", name)
-                await self.loader.import_plugin(path.join(plugin_dir, "main.py"), plugin_folder)
-            elif not chown_ret:
-                logger.error("Could not chown plugin")
-                return
-            else:
-                logger.error("Could not download remote binaries")
-                return
-        else:
-            logger.fatal(f"SHA-256 Mismatch!!!! {name} (Version: {version})")
-        if self.loader.watcher:
-            self.loader.watcher.disabled = False
-        await self.loader.ws.emit("loader/plugin_download_finish", name)
+        rmtree(workspace)
 
     async def request_plugin_install(self, artifact: str, name: str, version: str, hash: str, install_type: PluginInstallType):
         request_id = str(time())

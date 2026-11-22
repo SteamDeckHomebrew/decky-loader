@@ -37,35 +37,43 @@ const StoreSelect: FunctionComponent<{}> = () => {
             }))}
           selectedOption={selectedStore}
           onChange={async (newVal) => {
+            if (newVal.data === selectedStore) return;
+
+            if (newVal.data === Store.Custom) {
+              showModal(
+                <WarnThirdParty
+                  type={WarnThirdPartyType.REPO}
+                  seconds={waitTime}
+                  onOK={async () => {
+                    await setAcceptedWarning(true);
+                    await setSelectedStore(Store.Custom);
+                    logger.log('switching stores!');
+                  }}
+                  onCancel={() => {}}
+                />,
+              );
+              return;
+            }
+
             await setSelectedStore(newVal.data);
             logger.log('switching stores!');
           }}
         />
       </Field>
-      {selectedStore == Store.Custom &&
-        showModal(
-          <WarnThirdParty
-            type={WarnThirdPartyType.REPO}
-            seconds={waitTime}
-            onOK={() => {
-              setAcceptedWarning(true);
-            }}
-            onCancel={() => setSelectedStore(Store.Default)}
-          />,
-        ) && (
-          <Field
-            label={t('StoreSelect.custom_store.label')}
-            indentLevel={1}
-            description={
-              <TextField
-                label={t('StoreSelect.custom_store.url_label')}
-                value={selectedStoreURL || undefined}
-                onChange={(e) => setSelectedStoreURL(e?.target.value || null)}
-              />
-            }
-            icon={<FaShapes style={{ display: 'block' }} />}
-          ></Field>
-        )}
+      {selectedStore == Store.Custom && (
+        <Field
+          label={t('StoreSelect.custom_store.label')}
+          indentLevel={1}
+          description={
+            <TextField
+              label={t('StoreSelect.custom_store.url_label')}
+              value={selectedStoreURL || undefined}
+              onChange={(e) => setSelectedStoreURL(e?.target.value || null)}
+            />
+          }
+          icon={<FaShapes style={{ display: 'block' }} />}
+        ></Field>
+      )}
     </>
   );
 };

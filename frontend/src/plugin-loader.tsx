@@ -554,7 +554,7 @@ class PluginLoader extends Logger {
             </pre>
           </PanelSectionRow>
           <PanelSectionRow>
-            <div className={quickAccessMenuClasses.Text}>
+            <div>
               <TranslationHelper
                 transClass={TranslationClass.PLUGIN_LOADER}
                 transText="plugin_error_uninstall"

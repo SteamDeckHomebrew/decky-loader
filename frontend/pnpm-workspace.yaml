@@ -3,3 +3,5 @@ minimumReleaseAgeExclude:
 - "@decky/ui"
 allowBuilds:
   esbuild: true
+overrides:
+  '@decky/ui': link:../../lib

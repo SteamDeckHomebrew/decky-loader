@@ -256,6 +256,13 @@ class PluginBrowser:
                     except Exception as e:
                         logger.error(f"Failed to read or parse {plugin_json_file}: {str(e)}. Falling back to extracting from path.")
 
+            # URL updates can hang because the archive filename may not match the installed plugin name.
+            # Re-check the installed plugin using the name from plugin.json.
+            if not isInstalled:
+                pluginFolderPath = self.find_plugin_folder(name)
+                if pluginFolderPath:
+                    isInstalled = True
+
         # Check to make sure we got the file
         if res_zip is None:
             logger.fatal(f"Could not fetch {artifact}")

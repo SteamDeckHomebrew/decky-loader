@@ -67,7 +67,6 @@ class WSRouter:
 
     async def _call_route(self, route: str, args: ..., call_id: int):
         try:
-            self.logger.debug("CALL ROUTE %s", route);
             res = await self.routes[route](*args)
             message = {"type": MessageType.REPLY.value, "id": call_id, "result": res}
         except PluginStopped as err:

@@ -58,7 +58,8 @@ export default function GeneralSettings({
         <DialogControlsSectionHeader>{t('SettingsGeneralIndex.about.header')}</DialogControlsSectionHeader>
         <Field label={t('SettingsGeneralIndex.about.decky_version')} focusable={true}>
           <div style={{ color: 'var(--gpSystemLighterGrey)' }}>
-            {versionInfo?.current} ({versionInfo?.repo}#{versionInfo?.gitBranch})
+            {versionInfo?.current} ({versionInfo?.repo}#{versionInfo?.gitBranch}
+            {versionInfo?.gitPR ? ` (#${versionInfo.gitPR})` : ''})
           </div>
         </Field>
       </DialogControlsSection>

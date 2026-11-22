@@ -10,7 +10,7 @@ fi
 
 
 # https://jackson.dev/post/a-portable-nix-shell-shebang/
-if [ -z "$INSIDE_NIX_RANDOMSTRING" ] && command -v nix &> /dev/null; then
+if [ -z "$INSIDE_NIX_RANDOMSTRING" ] && command -v nix &> /dev/null && test -e /etc/NIXOS; then
   # If the user has nix, relaunch in nix shell with dependencies added
   INSIDE_NIX_RANDOMSTRING=1 nix shell \
       nixpkgs#websocat \

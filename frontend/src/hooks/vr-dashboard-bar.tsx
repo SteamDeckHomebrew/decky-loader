@@ -1,5 +1,5 @@
 // Hook the SteamVR Hotbar
-import { ErrorBoundary, Patch, afterPatch, findInReactTree, findModuleExport, getReactRoot } from '@decky/ui';
+import { ErrorBoundary, Patch, afterPatch, findInReactTree, findVar, getReactRoot } from '@decky/ui';
 import { ReactNode, createElement } from 'react';
 
 import Logger from '../logger';
@@ -41,8 +41,8 @@ class VRDashboardBarHook extends Logger {
   }
 
   init() {
-    this.barButton = findModuleExport((e) => e?.render?.toString()?.includes('VRDashboardBarSmallButtonActive'));
-    const barComponent = findModuleExport((e) => e?.type?.toString()?.includes('vrLocation=="dashboard-bar"'));
+    this.barButton = findVar((e) => e?.render?.toString()?.includes('VRDashboardBarSmallButtonActive'));
+    const barComponent = findVar((e) => e?.type?.toString()?.includes('vrLocation==`dashboard-bar`'));
 
     this.barPatch = afterPatch(barComponent, 'type', (_, ret) => {
       const nodes = findInReactTree(ret, (x) => x?.length > 6);
@@ -51,6 +51,7 @@ class VRDashboardBarHook extends Logger {
     });
 
     // Patch already rendered bar
+    // THIS DOES NOT WORK so frame needs a lockscreen for now :/
     const root = getReactRoot(document.getElementById('root') as any);
     const barNode =
       root &&

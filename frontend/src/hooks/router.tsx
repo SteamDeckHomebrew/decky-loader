@@ -56,7 +56,7 @@ class RouterHook extends Logger {
     window.__ROUTER_HOOK_INSTANCE?.deinit?.();
     window.__ROUTER_HOOK_INSTANCE = this;
 
-    this.Route = findVar((e) => /routePath:[\w$]+\.match\?\.path./.test(e.toString()))
+    this.Route = findVar((e) => /routePath:[\w$]+\.match\?\.path./.test(e.toString()));
     if (!this.Route) {
       this.error('Failed to find Route component');
     }

@@ -24,13 +24,13 @@ interface ToastRendererProps extends ToastProps {
 }
 
 const popupClasses = {
-  "ShortTemplate": "kg8VJS07NZk-",
-  "Content": "vjeKRorxqWY-",
-  "Header": "UWjdKshdhD8-",
-  "Icon": "q9vQBNOskjU-",
-  "Title": "RZ1644uUH-k-",
-  "Body": "_5LTIC-a3DVw-"
-}
+  ShortTemplate: 'kg8VJS07NZk-',
+  Content: 'vjeKRorxqWY-',
+  Header: 'UWjdKshdhD8-',
+  Icon: 'q9vQBNOskjU-',
+  Title: 'RZ1644uUH-k-',
+  Body: '_5LTIC-a3DVw-',
+};
 
 // These are memoized as they like to randomly rerender
 

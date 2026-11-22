@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .main import PluginManager
 from .injector import Tab
-from .wsrouter import WSRouter
 
 logger = getLogger("Instrumentation")
 

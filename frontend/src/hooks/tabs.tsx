@@ -6,12 +6,12 @@ import {
   afterPatch,
   createReactTreePatcher,
   findInReactTree,
-  findModuleByExport,
+  findModuleScopeByVar,
   getReactRoot,
 } from '@decky/ui';
 
-import { QuickAccessVisibleStateProvider } from './components/QuickAccessVisibleState';
-import Logger from './logger';
+import { QuickAccessVisibleStateProvider } from '../components/QuickAccessVisibleState';
+import Logger from '../logger';
 
 declare global {
   interface Window {
@@ -41,7 +41,7 @@ class TabsHook extends Logger {
   }
 
   init() {
-    const qamModule = findModuleByExport((e) => e?.type?.toString?.()?.includes('QuickAccessMenuBrowserView'));
+    const qamModule = findModuleScopeByVar((e) => e?.type?.toString?.()?.includes('QuickAccessMenuBrowserView'));
     const qamBrowserViewRenderer = Object.values(qamModule).find((e: any) =>
       e?.type?.toString?.()?.includes('QuickAccessMenuBrowserView'),
     );

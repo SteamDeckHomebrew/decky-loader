@@ -68,7 +68,7 @@ class WSRouter:
     async def _call_route(self, route: str, args: ..., call_id: int):
         try:
             res = await self.routes[route](*args)
-            message = {"type": MessageType.REPLY.value, "id": call_id, "result": res}
+            message: Any = {"type": MessageType.REPLY.value, "id": call_id, "result": res}
         except PluginStopped as err:
             message = {"type": MessageType.DISCARD.value, "id": call_id}
         except Exception as err:
@@ -143,7 +143,8 @@ class WSRouter:
             self.logger.debug(f'Started PY call {data["route"]} ID {call_id}')
             self.loop.create_task(self._call_route(data["route"], data["args"], call_id))
         else:
-            error = {"error":f'Route {data["route"]} does not exist.', "name": "RouteNotFoundError", "traceback": None}
+            # TODO type better
+            error: Dict[str, str | None] = {"error":f'Route {data["route"]} does not exist.', "name": "RouteNotFoundError", "traceback": None}
             self.loop.create_task(self.write({"type": MessageType.ERROR.value, "id": call_id, "error": error}))
 
     def handle_received_response_message(self, call_id: int):

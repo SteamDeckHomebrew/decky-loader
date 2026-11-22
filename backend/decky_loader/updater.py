@@ -44,6 +44,7 @@ class Updater:
         self.isSupported: bool = ON_LINUX
         self.repo = getenv('DECKY_REPO', 'SteamDeckHomebrew/decky-loader')
         self.git_branch = getenv('DECKY_BRANCH', 'dirty')
+        self.git_pr = getenv('DECKY_PR', None)
 
         try:
             self.currentBranch = self.get_branch(self.context.settings)
@@ -98,6 +99,7 @@ class Updater:
             "current": self.localVer,
             "repo": self.repo,
             "gitBranch": self.git_branch,
+            "gitPR": self.git_pr,
             "remote": self.remoteVer,
             "all": self.allRemoteVers,
             "updatable": self.localVer != "unknown" and self.localVer != "dev",

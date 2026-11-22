@@ -4,13 +4,13 @@ import {
   ErrorBoundary,
   Patch,
   callOriginal,
-  findModuleExport,
+  findVar,
   injectFCTrampoline,
   replacePatch,
 } from '@decky/ui';
 
-import Toast from './components/Toast';
-import Logger from './logger';
+import Toast from '../components/Toast';
+import Logger from '../logger';
 
 declare global {
   interface Window {
@@ -27,7 +27,10 @@ class Toaster extends Logger {
     window.__TOASTER_INSTANCE?.deinit?.();
     window.__TOASTER_INSTANCE = this;
 
-    const ValveToastRenderer = findModuleExport((e) => e?.toString?.()?.includes(`controller:"notification",method:`));
+    // TODO regex?
+    const ValveToastRenderer = findVar(
+      (e) => typeof e == 'function' && e?.toString?.()?.includes(`controller:\`notification\`,method:`),
+    );
     // TODO find a way to undo this if possible?
     const patchedRenderer = injectFCTrampoline(ValveToastRenderer);
     this.toastPatch = replacePatch(patchedRenderer, 'component', (args: any[]) => {

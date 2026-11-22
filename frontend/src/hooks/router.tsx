@@ -5,7 +5,7 @@ import {
   afterPatch,
   findInReactTree,
   findInTree,
-  findModuleByExport,
+  findVar,
   getReactRoot,
   sleep,
 } from '@decky/ui';
@@ -16,15 +16,15 @@ import {
   DeckyGlobalComponentsState,
   DeckyGlobalComponentsStateContextProvider,
   useDeckyGlobalComponentsState,
-} from './components/DeckyGlobalComponentsState';
+} from '../components/DeckyGlobalComponentsState';
 import {
   DeckyRouterState,
   DeckyRouterStateContextProvider,
   RoutePatch,
   RouterEntry,
   useDeckyRouterState,
-} from './components/DeckyRouterState';
-import Logger from './logger';
+} from '../components/DeckyRouterState';
+import Logger from '../logger';
 
 declare global {
   interface Window {
@@ -56,20 +56,9 @@ class RouterHook extends Logger {
     window.__ROUTER_HOOK_INSTANCE?.deinit?.();
     window.__ROUTER_HOOK_INSTANCE = this;
 
-    const reactRouterStackModule = findModuleByExport((e) => typeof e == 'string' && e == 'router-backstack', 20);
-    if (reactRouterStackModule) {
-      this.Route =
-        Object.values(reactRouterStackModule).find(
-          (e) => typeof e == 'function' && /routePath:[\w$]+\.match\?\.path./.test(e.toString()),
-        ) ||
-        Object.values(reactRouterStackModule).find(
-          (e) => typeof e == 'function' && /routePath:null===\(.=.\.match\)/.test(e.toString()),
-        );
-      if (!this.Route) {
-        this.error('Failed to find Route component');
-      }
-    } else {
-      this.error('Failed to find router stack module');
+    this.Route = findVar((e) => typeof e == 'function' && /routePath:[\w$]+\.match\?\.path./.test(e.toString()));
+    if (!this.Route) {
+      this.error('Failed to find Route component');
     }
 
     this.modeChangeRegistration = SteamClient.UI.RegisterForUIModeChanged((mode: EUIMode) => {
@@ -83,7 +72,7 @@ class RouterHook extends Logger {
           this.patchGamepadRouter();
           break;
         // Not fully implemented yet
-        // case UIMode.Desktop:
+        // case EUIMode.Desktop:
         //   this.debug("Patching desktop router");
         //   this.patchDesktopRouter();
         //   break;

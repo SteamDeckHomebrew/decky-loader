@@ -2,10 +2,11 @@
 
 from asyncio import sleep
 from logging import getLogger
-from typing import Any, Callable, List, TypedDict, Dict
+from typing import Any, AsyncGenerator, Callable, List, Set, TypedDict, Dict
 
 from aiohttp import ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientConnectorError, ClientOSError
+from asyncio import Queue, create_task
 from asyncio.exceptions import TimeoutError
 import uuid
 
@@ -27,6 +28,8 @@ class Tab:
         self.id: str = res["id"]
         self.url: str = res["url"]
         self.ws_url: str = res["webSocketDebuggerUrl"]
+        self.queues: Set[Queue[Any]] = set()
+        self.reader = None
 
         self.websocket = None
         self.client = None
@@ -41,13 +44,31 @@ class Tab:
         if self.client:
             await self.client.close()
 
-    async def listen_for_message(self):
+    async def message_reader(self):
         if self.websocket:
-            async for message in self.websocket:
-                data = message.json()
-                yield data
-            logger.warning(f"The Tab {self.title} socket has been disconnected while listening for messages.")
-            await self.close_websocket()
+            try:
+                async for message in self.websocket:
+                    data = message.json()
+                    for q in self.queues:
+                        q.put_nowait(data)
+                logger.warning(f"The Tab {self.title} socket has been disconnected while listening for messages.")
+            finally:
+                for q in self.queues:
+                    q.put_nowait(None)
+                await self.close_websocket()
+
+    async def listen_for_message(self) -> AsyncGenerator[Any]:
+        if self.websocket:
+            if not self.reader or self.reader.done():
+                self.reader = create_task(self.message_reader())
+
+            q: Queue[Any] = Queue()
+            self.queues.add(q)
+            try:
+                while (data := await q.get()) is not None:
+                    yield data
+            finally:
+                self.queues.discard(q)
             
     async def _send_devtools_cmd(self, dc: Dict[str, Any], receive: bool = True):
         if self.websocket:
@@ -168,7 +189,7 @@ class Tab:
             # Page finishes loading when breakpoint hits
 
             for _ in range(20):
-                # this works around 1/5 of the time, so just send it 8 times.
+                # this works around 1/5 of the time, so just send it 20 times.
                 # the js accounts for being injected multiple times allowing only one instance to run at a time anyway
                 await self._send_devtools_cmd({
                     "method": "Runtime.evaluate",
@@ -297,7 +318,7 @@ class Tab:
 
         return res["result"]["result"]["value"]
 
-    async def inject_css(self, style: str, manage_socket: bool = True):
+    async def inject_css(self, style: str, manage_socket: bool = True) -> Any:
         try:
             css_id = str(uuid.uuid4())
 
@@ -329,7 +350,7 @@ class Tab:
                 "result": e
             }
 
-    async def remove_css(self, css_id: str, manage_socket: bool = True):
+    async def remove_css(self, css_id: str, manage_socket: bool = True) -> Any:
         try:
             result = await self.evaluate_js(
                 f"""
@@ -362,6 +383,57 @@ class Tab:
         res = await self.evaluate_js(f'(async function test() {{ return await (await fetch("{url}")).text() }})()', True)
         assert res is not None
         return res["result"]["result"]["value"]
+
+    async def get_module_scope(self, object_key: int):
+        # Evaluate the value of the module function export to get its object id
+        eval = await self._send_devtools_cmd({
+                "method": "Runtime.evaluate",
+                "params": {
+                    "expression": f"window._deckyModuleResolverInternals.scopedObjects.get({object_key})",
+                    "userGesture": True,
+                    "generatePreview": False,
+                    "returnByValue": False,
+                    "awaitPromise": False
+                }
+            })
+
+        if eval is not None and "result" in eval["result"]:
+            fnObjId = eval["result"]["result"]["objectId"]
+            # getProperties to get the internal [[Scopes]] property of V8 objectId
+            props = await self._send_devtools_cmd({
+                "method": "Runtime.getProperties",
+                "params": {
+                    "objectId": fnObjId
+                }
+            })
+            if props is not None and "internalProperties" in props["result"]:
+                internalProps = props["result"]["internalProperties"]
+                modScopesObj = next(s for s in internalProps if s["name"] == "[[Scopes]]")
+                # getProperties to get the Module scope objectId
+                scopeListR = await self._send_devtools_cmd({
+                    "method": "Runtime.getProperties",
+                    "params": {
+                        "objectId": modScopesObj["value"]["objectId"]
+                    }
+                })
+                if scopeListR is not None and "result" in scopeListR["result"]:
+                    scopeList = scopeListR["result"]["result"]
+                    scope = next(s for s in scopeList if s["value"]["description"] == "Module")
+                    scopeId = scope["value"]["objectId"]
+                    # expose the module scope back to the JS side using its objectId
+                    await self._send_devtools_cmd({
+                        "method": "Runtime.callFunctionOn",
+                        "params": {
+                            "functionDeclaration": f"""function(_moduleKey, _moduleScope) {{
+                                window._deckyModuleResolverInternals.scopes.set(_moduleKey, _moduleScope);
+                            }}""",
+                            "objectId": fnObjId,
+                            "arguments": [
+                                { "value": object_key },
+                                { "objectId": scopeId }
+                            ]
+                        }
+                    })
 
     def __repr__(self):
         return self.title
@@ -435,4 +507,4 @@ async def close_old_tabs():
         if not t.title or (t.title not in SHARED_CTX_NAMES and any(url in t.url for url in CLOSEABLE_URLS) and not any(url in t.url for url in DO_NOT_CLOSE_URLS)):
             logger.debug("Closing tab: " + getattr(t, "title", "Untitled"))
             await t.close()
-            await sleep(0.5)
+            # await sleep(0.5)

@@ -36,6 +36,7 @@ from .updater import Updater
 from .utilities import Utilities
 from .enums import UserType
 from .wsrouter import WSRouter
+from .instrumentation import Instrumentation
 
 
 basicConfig(
@@ -76,6 +77,7 @@ class PluginManager:
         self.plugin_browser = PluginBrowser(plugin_path, self.plugin_loader.plugins, self.plugin_loader, self.settings) 
         self.utilities = Utilities(self)
         self.updater = Updater(self)
+        self.instrumentation = Instrumentation(self)
         self.last_webhelper_exit: float = 0
         self.webhelper_crash_count: int = 0
         self.inject_fallback: bool = False
@@ -207,6 +209,7 @@ class PluginManager:
             await tab.open_websocket()
             self.js_ctx_tab = tab
             await tab.enable()
+            self.instrumentation.set_tab(tab)
             await self.inject_javascript(tab, True)
             try:
                 async for msg in tab.listen_for_message():

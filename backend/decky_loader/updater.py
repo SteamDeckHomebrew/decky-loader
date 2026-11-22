@@ -2,13 +2,13 @@ from __future__ import annotations
 from asyncio import sleep
 from logging import getLogger
 from os import getcwd, getenv, path, remove, mkdir
-from typing import TYPE_CHECKING, List, TypedDict
+from typing import TYPE_CHECKING, TypedDict
 if TYPE_CHECKING:
     from .main import PluginManager
 from .localplatform.localplatform import chmod, service_restart, service_stop, ON_LINUX, ON_WINDOWS, ON_MAC, ON_ARM64, get_keep_systemd_service, get_selinux
 import shutil
-from typing import List, TYPE_CHECKING, TypedDict
 import zipfile
+import hashlib
 
 from aiohttp import ClientSession
 
@@ -23,11 +23,12 @@ logger = getLogger("Updater")
 class RemoteVerAsset(TypedDict):
     name: str
     size: int
+    digest: str | None
     browser_download_url: str
 class RemoteVer(TypedDict):
     tag_name: str
     prerelease: bool
-    assets: List[RemoteVerAsset]
+    assets: list[RemoteVerAsset]
 class TestingVersion(TypedDict):
     id: int
     name: str
@@ -39,7 +40,7 @@ class Updater:
         self.context = context
         self.settings = self.context.settings
         self.remoteVer: RemoteVer | None = None
-        self.allRemoteVers: List[RemoteVer] = []
+        self.allRemoteVers: list[RemoteVer] = []
         self.localVer = helpers.get_loader_version()
         self.isSupported: bool = ON_LINUX
         self.repo = getenv('DECKY_REPO', 'SteamDeckHomebrew/decky-loader')
@@ -111,7 +112,7 @@ class Updater:
         selectedBranch = self.get_branch(self.context.settings)
         async with ClientSession() as web:
             async with web.request("GET", f"https://api.github.com/repos/{self.repo}/releases", headers={'X-GitHub-Api-Version': '2022-11-28'}, ssl=helpers.get_ssl_context()) as res:
-                remoteVersions: List[RemoteVer] = await res.json()
+                remoteVersions: list[RemoteVer] = await res.json()
                 if selectedBranch == 0:
                     logger.debug("release type: release")
                     remoteVersions = list(filter(lambda ver: ver["tag_name"].startswith("v") and not ver["prerelease"] and not ver["tag_name"].find("-pre") > 0 and ver["tag_name"], remoteVersions))
@@ -181,7 +182,7 @@ class Updater:
 
         return binary_name
 
-    async def download_decky_binary(self, download_url: str, version: str, is_zip: bool = False, size_in_bytes: int | None = None):
+    async def download_decky_binary(self, download_url: str, version: str, sha256: str | None, validate: bool = True, is_zip: bool = False, size_in_bytes: int | None = None):
         download_filename = self.get_local_binary_name()
         download_temp_filename = download_filename + ".new"
 
@@ -215,8 +216,18 @@ class Updater:
                     file.getinfo(download_filename).filename = download_filename + ".unzipped"
                     file.extract(download_filename)
                 remove(path.join(getcwd(), download_temp_filename))
+
+                # If the hashes do not match, signal it to the user and return without overwriting the file.
+                if validate and sha256 is not None and not self.check_file_hash(path.join(getcwd(), download_filename + ".unzipped"), sha256):
+                    await self.context.ws.emit("updater/sha256_mismatch")
+                    return
                 shutil.move(path.join(getcwd(), download_filename + ".unzipped"), path.join(getcwd(), download_filename))
             else:
+
+                # Same as above.
+                if validate and sha256 is not None and not self.check_file_hash(path.join(getcwd(), download_temp_filename), sha256):
+                    await self.context.ws.emit("updater/sha256_mismatch")
+                    return
                 shutil.move(path.join(getcwd(), download_temp_filename), path.join(getcwd(), download_filename))
             
             chmod(path.join(getcwd(), download_filename), 777, False)
@@ -229,6 +240,23 @@ class Updater:
         await self.context.ws.emit("updater/finish_download")
         await self.do_restart()
 
+    def check_file_hash(self, file_path: str, exp_sha256: str) -> bool:
+        down_sha256 = self._sha256_on_file(file_path)
+        # If the hash doesn't match, delete the file, signal it to the user and return from this function.
+        if down_sha256 != exp_sha256:
+            remove(file_path)
+            return False
+        else:
+            return True
+
+    # Hash the file in blocks of 4096 bytes each and update the hash each time, then returns the corresponding .hexdigest representation for comparison.
+    def _sha256_on_file(self, fpath: str) -> str:
+        digest = hashlib.sha256()
+        with open(fpath, "rb") as file:
+            for block in iter(lambda: file.read(4096), b""):
+                digest.update(block)
+        return digest.hexdigest()
+
     async def do_update(self):
         logger.debug("Starting update.")
         try:
@@ -240,16 +268,23 @@ class Updater:
         version = self.remoteVer["tag_name"]
         download_url = None
         size_in_bytes = None
+        sha256 = None
         remote_binary_name = self.get_remote_binary_name()
 
         for x in self.remoteVer["assets"]:
             if x["name"] == remote_binary_name:
                 download_url = x["browser_download_url"]
                 size_in_bytes = x["size"]
+                # According to GitHub API, the returned digest value can be null. Set it to none to distinguish from a mismatch case.
+                sha256 = x["digest"].split(sep=':')[1] if x["digest"] is not None else None
                 break
         
         if download_url == None:
             raise Exception("Download url not found")
+        
+        if sha256 == None:
+            await self.context.ws.emit("updater/sha256_update_null_value")
+            return
 
         service_url = self.get_service_url()
         logger.debug("Retrieved service URL")
@@ -281,7 +316,7 @@ class Updater:
                     mkdir(path.join(getcwd(), ".systemd"))
                 shutil.move(service_file_path, path.join(getcwd(), ".systemd")+"/plugin_loader.service")
             
-        await self.download_decky_binary(download_url, version, size_in_bytes=size_in_bytes)
+        await self.download_decky_binary(download_url, version, sha256, size_in_bytes=size_in_bytes)
 
     async def do_restart(self):
         logger.info("Restarting loader for update.")
@@ -290,8 +325,8 @@ class Updater:
     async def do_shutdown(self):
         await service_stop("plugin_loader")
 
-    async def get_testing_versions(self) -> List[TestingVersion]:
-        result: List[TestingVersion] = []
+    async def get_testing_versions(self) -> list[TestingVersion]:
+        result: list[TestingVersion] = []
         async with ClientSession() as web:
             async with web.request("GET", f"https://api.github.com/repos/{self.repo}/pulls", 
                     headers={'X-GitHub-Api-Version': '2022-11-28'}, params={'state':'open'}, ssl=helpers.get_ssl_context()) as res:
@@ -312,6 +347,7 @@ class Updater:
             async with web.request("GET", f"https://api.github.com/repos/{self.repo}/actions/runs", 
                     headers={'X-GitHub-Api-Version': '2022-11-28'}, params={'head_sha': sha_id}, ssl=helpers.get_ssl_context()) as res:
                 works = await res.json()
+        
         #Iterate over the workflow_run to get the two builds if they exists
         for work in works['workflow_runs']:
             if ON_WINDOWS and ON_ARM64 and work['name'] == 'Builder (Windows, arm64)':
@@ -345,8 +381,14 @@ class Updater:
                                 artifact = art
                                 break
                         down_link = f"https://nightly.link/{self.repo}/actions/artifacts/{artifact['id']}.zip"
-                        #Then fetch it and restart itself
-                        await self.download_decky_binary(down_link, f'PR-{pr_id}', is_zip=True, size_in_bytes=artifact.get('size_in_bytes',None))
+
+                        if artifact['digest'] is None:
+                            # FIXME: Do we want this to fail safe and warn the user on a null value or just ignore it and install it regardless?
+                            await self.context.ws.emit("updater/sha256_actions_null_value")
+                            return
+                        
+                        # Then fetch it and restart itself
+                        await self.download_decky_binary(down_link, f'PR-{pr_id}', artifact['digest'], is_zip=True, size_in_bytes=artifact.get('size_in_bytes',None))
         else:
             logger.error("workflow run not found", str(works))
             raise Exception("Workflow run not found.")

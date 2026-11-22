@@ -9,7 +9,6 @@ from aiohttp.client_exceptions import ClientConnectorError, ClientOSError
 from asyncio import Queue, create_task
 from asyncio.exceptions import TimeoutError
 import uuid
-import json
 
 BASE_ADDRESS = "http://localhost:8080"
 

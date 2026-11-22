@@ -2,7 +2,7 @@
 
 from asyncio import sleep
 from logging import getLogger
-from typing import Any, Callable, List, TypedDict, Dict
+from typing import Any, AsyncGenerator, Callable, List, Set, TypedDict, Dict
 
 from aiohttp import ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientConnectorError, ClientOSError
@@ -28,7 +28,7 @@ class Tab:
         self.id: str = res["id"]
         self.url: str = res["url"]
         self.ws_url: str = res["webSocketDebuggerUrl"]
-        self.queues = set()
+        self.queues: Set[Queue[Any]] = set()
         self.reader = None
 
         self.websocket = None
@@ -57,12 +57,12 @@ class Tab:
                     q.put_nowait(None)
                 await self.close_websocket()
 
-    async def listen_for_message(self):
+    async def listen_for_message(self) -> AsyncGenerator[Any]:
         if self.websocket:
             if not self.reader or self.reader.done():
                 self.reader = create_task(self.message_reader())
 
-            q = Queue()
+            q: Queue[Any] = Queue()
             self.queues.add(q)
             try:
                 while (data := await q.get()) is not None:
@@ -318,7 +318,7 @@ class Tab:
 
         return res["result"]["result"]["value"]
 
-    async def inject_css(self, style: str, manage_socket: bool = True):
+    async def inject_css(self, style: str, manage_socket: bool = True) -> Any:
         try:
             css_id = str(uuid.uuid4())
 
@@ -350,7 +350,7 @@ class Tab:
                 "result": e
             }
 
-    async def remove_css(self, css_id: str, manage_socket: bool = True):
+    async def remove_css(self, css_id: str, manage_socket: bool = True) -> Any:
         try:
             result = await self.evaluate_js(
                 f"""
